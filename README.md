@@ -1,4 +1,4 @@
-rust-GSL
+rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL)
 ========
 
 A `Rust` binding for [GSL library](http://www.gnu.org/software/gsl/).
