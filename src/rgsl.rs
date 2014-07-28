@@ -14,6 +14,8 @@
 
 extern crate libc;
 
+pub use airy::Airy;
+
 mod ffi;
 pub mod airy;
 pub mod types;
