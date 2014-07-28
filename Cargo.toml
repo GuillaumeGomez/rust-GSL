@@ -1,0 +1,10 @@
+[package]
+
+name = "rust-GSL"
+version = "0.1.0"
+authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
+
+[[lib]]
+
+name = "rgsl"
+crate-type = ["dylib", "rlib"]

@@ -1,0 +1,10 @@
+env:
+  global:
+    - LD_LIBRARY_PATH=/usr/local/lib
+install:
+  - curl http://www.rust-lang.org/rustup.sh | sudo sh -
+  - sudo apt-get install libgsl0-dev
+script:
+  - rustc --version
+  - cargo build
+  - rustdoc -o doc src/rgsl.rs
