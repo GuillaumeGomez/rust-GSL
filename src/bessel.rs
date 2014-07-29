@@ -289,4 +289,90 @@ pub mod Bessel {
     pub fn sequence_Jnu(nu: f64, mode: Gsl::Mode, v: &mut [f64]) -> i32 {
         unsafe { ffi::gsl_sf_bessel_sequence_Jnu_e(nu, mode as u32, v.len() as i64, v.as_mut_ptr()) }
     }
+
+    /// These routines compute the irregular modified cylindrical Bessel function of zeroth order, K_0(x), for x > 0.
+    pub fn K0(x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_bessel_K0(x) }
+    }
+
+    pub fn K0_e(x: f64) -> (i32, GslResult) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_bessel_K0_e(x, &mut result) };
+
+        (ret, GslResult{val: result.val, err: result.err})
+    }
+
+    /// These routines compute the irregular modified cylindrical Bessel function of first order, K_1(x), for x > 0.
+    pub fn K1(x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_bessel_K1(x) }
+    }
+
+    pub fn K1_e(x: f64) -> (i32, GslResult) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_bessel_K1_e(x, &mut result) };
+
+        (ret, GslResult{val: result.val, err: result.err})
+    }
+
+    /// These routines compute the irregular modified cylindrical Bessel function of order n, K_n(x), for x > 0.
+    pub fn Kn(n: i32, x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_bessel_Kn(n, x) }
+    }
+
+    pub fn Kn_e(n: i32, x: f64) -> (i32, GslResult) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_bessel_Kn_e(n, x, &mut result) };
+
+        (ret, GslResult{val: result.val, err: result.err})
+    }
+
+    /// This routine computes the values of the irregular modified cylindrical Bessel functions K_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
+    /// The start of the range nmin must be positive or zero. The domain of the function is x>0.
+    /// The values are computed using recurrence relations for efficiency, and therefore may differ slightly from the exact values.
+    pub fn Kn_array(nmin: i32, nmax: i32, x: f64, result_array: &mut [f64]) -> i32 {
+        unsafe { ffi::gsl_sf_bessel_Kn_array(nmin, nmax, x, result_array.as_mut_ptr()) }
+    }
+
+    /// These routines compute the scaled irregular modified cylindrical Bessel function of zeroth order \exp(x) K_0(x) for x>0.
+    pub fn K0_scaled(x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_bessel_K0_scaled(x) }
+    }
+
+    pub fn K0_scaled_e(x: f64) -> (i32, GslResult) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_bessel_K0_scaled_e(x, &mut result) };
+
+        (ret, GslResult{val: result.val, err: result.err})
+    }
+
+    /// These routines compute the scaled irregular modified cylindrical Bessel function of first order \exp(x) K_1(x) for x>0.
+    pub fn K1_scaled(x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_bessel_K1_scaled(x) }
+    }
+
+    pub fn K1_scaled_e(x: f64) -> (i32, GslResult) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_bessel_K1_scaled_e(x, &mut result) };
+
+        (ret, GslResult{val: result.val, err: result.err})
+    }
+
+    /// These routines compute the scaled irregular modified cylindrical Bessel function of order n, \exp(x) K_n(x), for x>0.
+    pub fn Kn_scaled(n: i32, x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_bessel_Kn_scaled(n, x) }
+    }
+
+    pub fn Kn_scaled_e(n: i32, x: f64) -> (i32, GslResult) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_bessel_Kn_scaled_e(n, x, &mut result) };
+
+        (ret, GslResult{val: result.val, err: result.err})
+    }
+
+    /// This routine computes the values of the scaled irregular cylindrical Bessel functions \exp(x) K_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
+    /// The start of the range nmin must be positive or zero. The domain of the function is x>0.
+    /// The values are computed using recurrence relations for efficiency, and therefore may differ slightly from the exact values.
+    pub fn Kn_scaled_array(nmin: i32, nmax: i32, x: f64, result_array: &mut [f64]) -> i32 {
+        unsafe { ffi::gsl_sf_bessel_Kn_scaled_array(nmin, nmax, x, result_array.as_mut_ptr()) }
+    }
 }

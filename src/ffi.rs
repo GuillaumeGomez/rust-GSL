@@ -86,6 +86,22 @@ extern "C" {
     pub fn gsl_sf_bessel_Jnu(nu: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_bessel_Jnu_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> c_int;
     pub fn gsl_sf_bessel_sequence_Jnu_e(nu: c_double, mode: types::gsl_mode_t, size: i64, v: *mut c_double) -> c_int;
+    // Irregular Modified Cylindrical Bessel Functions
+    pub fn gsl_sf_bessel_K0(x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_K0_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_bessel_K1(x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_K1_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_bessel_Kn(n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_Kn_e(n: c_int, x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_bessel_Kn_array(nmin: c_int, nmax: c_int, x: c_double, result_array: *mut c_double) -> c_int;
+    pub fn gsl_sf_bessel_K0_scaled(x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_K0_scaled_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_bessel_K1_scaled(x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_K1_scaled_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_bessel_Kn_scaled(n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_Kn_scaled_e(n: c_int, x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_bessel_Kn_scaled_array(nmin: c_int, nmax: c_int, x: c_double, result_array: *mut c_double) -> c_int;
+
 }
 
 pub struct gsl_sf_result {
