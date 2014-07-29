@@ -1,5 +1,6 @@
 env:
-  global:
+  global:global:
+    - secure: UbBFC1c7nxMQCJ+AIsU2PYFnNvh33UPeeobGWE89fIyV4HQ7k3IMX7zZKKCiRuHC5AZzVa3t2jEq/yQlBpk1Opy0rAU4S/F+RcygVlsfOXGDtZkdWpBekVhjAsxSDLzCWjLhlajje3jzFLu/5UomJweubmmZ0xtX0gx8zU0nPhU=
     - LD_LIBRARY_PATH=/usr/local/lib
 install:
   - curl http://www.rust-lang.org/rustup.sh | sudo sh -
@@ -8,3 +9,5 @@ script:
   - rustc --version
   - cargo build
   - rustdoc -o doc src/rgsl.rs
+after_script:
+  - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
