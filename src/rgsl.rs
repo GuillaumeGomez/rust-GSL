@@ -15,10 +15,12 @@
 extern crate libc;
 
 pub use airy::Airy;
+pub use bessel::Bessel;
 
 mod ffi;
 pub mod airy;
 pub mod types;
+pub mod bessel;
 
 #[cfg(target_os = "linux")]
 mod platform {

@@ -5,5 +5,6 @@
 extern crate rgsl;
 
 fn main() {
-	println!("Simple test : {}", rgsl::Airy::Ai(0.5f64, rgsl::types::Gsl::PrecDouble));
+	println!("Simple Airy test : {}", rgsl::Airy::Ai(0.5f64, rgsl::types::Gsl::PrecDouble));
+	println!("Simple Bessel test : {}", rgsl::Bessel::I0(0.5f64));
 }
