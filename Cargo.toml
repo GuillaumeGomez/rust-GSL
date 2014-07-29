@@ -8,3 +8,8 @@ authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
 name = "rgsl"
 crate-type = ["dylib", "rlib"]
+
+[[bin]]
+
+name = "simple"
+path = "examples/simple/main.rs"
