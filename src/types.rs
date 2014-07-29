@@ -14,8 +14,11 @@ pub mod Gsl {
     }
 }
 
+/// The error handling form of the special functions always calculate an error estimate along with the value of the result. Therefore, structures are provided for amalgamating a value and error estimate.
 pub struct GslResult {
+    /// Contains the value.
     pub val: f64,
+    /// Contains an estimate of the absolute error in the value.
     pub err: f64
 }
 
