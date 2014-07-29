@@ -1,11 +1,11 @@
 rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL)
 ========
 
-A `Rust` binding for [GSL library](http://www.gnu.org/software/gsl/).
+A __Rust__ binding for the [GSL library](http://www.gnu.org/software/gsl/).
 
 ##Installation
 
-This binding requires the `GSL` library to be installed.
+This binding requires the __GSL__ library to be installed.
 
 To build it, please use :
 
@@ -35,4 +35,4 @@ Then open this file with an internet browser :
 file:///{rgsl_location}/doc/rgsl/index.html
 
 ## License
-`rust-GSL` is a wrapper for `GSL`, therefore inherits the [GPL licence](http://www.gnu.org/copyleft/gpl.html).
+__rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL licence](http://www.gnu.org/copyleft/gpl.html).

@@ -2,6 +2,48 @@
  * A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
  */
 
+/*!
+rust-gsl
+========
+
+A __Rust__ binding for the [GSL library](http://www.gnu.org/software/gsl/).
+
+##Installation
+
+This binding requires the __GSL__ library to be installed.
+
+To build it, please use :
+
+```Shell
+> make
+```
+
+This command build __rgsl__, the examples and the documentation.
+
+You can build them separatly too.
+
+```Shell
+> make rgsl
+> make examples
+> make doc
+```
+
+##Documentation
+
+You can access the __rgsl__ documentation locally, just build it :
+
+```Shell
+> make doc
+```
+
+Then open this file with an internet browser :
+file:///{rgsl_location}/doc/rgsl/index.html
+
+## License
+__rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL licence](http://www.gnu.org/copyleft/gpl.html).
+
+Here is the list of all modules :
+!*/
 #![crate_name = "rgsl"]
 #![desc = "Rust binding for GSL"]
 #![crate_type = "rlib"]
