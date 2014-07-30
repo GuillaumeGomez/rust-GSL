@@ -44,6 +44,7 @@ __rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL licence](http
 
 Here is the list of all modules :
 !*/
+
 #![crate_name = "rgsl"]
 #![desc = "Rust binding for GSL"]
 #![crate_type = "rlib"]
@@ -53,18 +54,22 @@ Here is the list of all modules :
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case_functions)]
+#![allow(uppercase_variables)]
 
 extern crate libc;
 
 pub use airy::Airy;
 pub use bessel::Bessel;
 pub use canonical::Canonical;
+pub use cblas::Cblas;
 
 mod ffi;
+pub mod enums;
 pub mod types;
 pub mod airy;
 pub mod bessel;
 pub mod canonical;
+pub mod cblas;
 
 #[cfg(target_os = "linux")]
 mod platform {

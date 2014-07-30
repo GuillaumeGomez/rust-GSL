@@ -5,6 +5,7 @@
 pub mod Bessel {
     use ffi;
     use types::*;
+    use enums::*;
     use std::mem::zeroed;
 
     /// These routines compute the regular modified cylindrical Bessel function of zeroth order, I_0(x)

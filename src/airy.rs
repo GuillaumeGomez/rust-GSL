@@ -5,6 +5,7 @@
 pub mod Airy {
     use ffi;
     use types::*;
+    use enums::*;
     use std::mem::zeroed;
 
     /// These routines compute the Airy function Ai(x) with an accuracy specified by mode.

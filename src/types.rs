@@ -3,16 +3,7 @@
  */
 
 pub type gsl_mode_t = u32;
-
-pub mod Gsl {
-    #[deriving(PartialEq, PartialOrd, Show)]
-    #[repr(C)]
-    pub enum Mode {
-        PrecDouble,
-        PrecSingle,
-        PrecApprox
-    }
-}
+pub struct CblasIndex(pub u32);
 
 /// The error handling form of the special functions always calculate an error estimate along with the value of the result. Therefore, structures are provided for amalgamating a value and error estimate.
 pub struct GslResult {
