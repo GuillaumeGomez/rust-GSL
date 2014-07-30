@@ -2,10 +2,10 @@
  * A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
  */
 
-use libc::{c_double, c_int, c_uint, c_float, c_void, c_ulong};
+use libc::{c_double, c_int, c_uint, c_float, c_void};
 use types;
 
-pub type CBLAS_INDEX = c_ulong;
+pub type CBLAS_INDEX = c_uint;
 
 extern "C" {
     // Airy functions
@@ -171,14 +171,14 @@ extern "C" {
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
     pub fn cblas_sdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_ddot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
-    pub fn cblas_cdotu_sub(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int, dotu: *mut c_void);
-    pub fn cblas_cdotc_sub(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int, dotc: *mut c_void);
-    pub fn cblas_zdotu_sub(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int, dotu: *mut c_void);
-    pub fn cblas_zdotc_sub(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int, dotc: *mut c_void);
+    pub fn cblas_cdotu_sub(N: c_int, x: *const c_void, incx: c_int, y: *const c_void, incy: c_int, dotu: *mut c_void);
+    pub fn cblas_cdotc_sub(N: c_int, x: *const c_void, incx: c_int, y: *const c_void, incy: c_int, dotc: *mut c_void);
+    pub fn cblas_zdotu_sub(N: c_int, x: *const c_void, incx: c_int, y: *const c_void, incy: c_int, dotu: *mut c_void);
+    pub fn cblas_zdotc_sub(N: c_int, x: *const c_void, incx: c_int, y: *const c_void, incy: c_int, dotc: *mut c_void);
     pub fn cblas_snrm2(N: c_int, x: *const c_float, incx: c_int) -> c_float;
     pub fn cblas_sasum(N: c_int, x: *const c_float, incx: c_int) -> c_float;
-    pub fn cblas_dnrm2(N: c_int, x: *const c_double, incx: c_int) -> c_float;
-    pub fn cblas_dasum(N: c_int, x: *const c_double, incx: c_int) -> c_float;
+    pub fn cblas_dnrm2(N: c_int, x: *const c_double, incx: c_int) -> c_double;
+    pub fn cblas_dasum(N: c_int, x: *const c_double, incx: c_int) -> c_double;
     pub fn cblas_scnrm2(N: c_int, x: *const c_void, incx: c_int) -> c_float;
     pub fn cblas_scasum(N: c_int, x: *const c_void, incx: c_int) -> c_float;
     pub fn cblas_dznrm2(N: c_int, x: *const c_void, incx: c_int) -> c_double;
@@ -195,10 +195,10 @@ extern "C" {
     pub fn cblas_daxpy(N: c_int, alpha: c_double, x: *const c_double, incx: c_int, y: *mut c_double, incy: c_int);
     pub fn cblas_cswap(N: c_int, x: *mut c_void, incx: c_int, y: *mut c_void, incy: c_int);
     pub fn cblas_ccopy(N: c_int, x: *const c_void, incx: c_int, y: *mut c_void, incy: c_int);
-    pub fn cblas_caxpy(N: c_int, alpha: *mut c_void, x: *const c_void, incx: c_int, y: *mut c_void, incy: c_int);
+    pub fn cblas_caxpy(N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int, y: *mut c_void, incy: c_int);
     pub fn cblas_zswap(N: c_int, x: *mut c_void, incx: c_int, y: *mut c_void, incy: c_int);
     pub fn cblas_zcopy(N: c_int, x: *const c_void, incx: c_int, y: *mut c_void, incy: c_int);
-    pub fn cblas_zaxpy(N: c_int, alpha: *mut c_void, x: *const c_void, incx: c_int, y: *mut c_void, incy: c_int);
+    pub fn cblas_zaxpy(N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int, y: *mut c_void, incy: c_int);
     pub fn cblas_srotg(a: *mut c_float, b: *mut c_float, c: *mut c_float, s: *mut c_float);
     pub fn cblas_srotmg(d1: *mut c_float, d2: *mut c_float, b1: *mut c_float, b2: *const c_float, P: *mut c_float);
     pub fn cblas_srot(N: c_int, x: *mut c_float, incx: c_int, y: *mut c_float, incy: c_int, c: c_float, s: c_float);
