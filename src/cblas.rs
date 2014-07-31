@@ -170,28 +170,68 @@ pub mod Cblas {
             unsafe { ::ffi::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
         }
 
+        /// Multiple each element of a matrix/vector by a constant.
+        ///
+        /// __Postcondition__: Every incX'th element of X has been multiplied by a factor of alpha
+        ///
+        /// __Parameters__:
+        ///
+        /// * N : number of elements in x to scale
+        /// * alpha : factor to scale by
+        /// * X : pointer to the vector/matrix data
+        /// * incx : Amount to increment counter after each scaling, ie incX=2 mean to scale elements {1,3,...}
+        ///
+        /// Note that the allocated length of X must be incX*N-1 as N indicates the number of scaling operations to perform.
         pub fn sscal(N: i32, alpha: f32, x: &mut [f32], incx: i32) {
             unsafe { ::ffi::cblas_sscal(N, alpha, x.as_mut_ptr(), incx) }
         }
 
+        /// Multiple each element of a matrix/vector by a constant.
         pub fn dscal(N: i32, alpha: f64, x: &mut [f64], incx: i32) {
             unsafe { ::ffi::cblas_dscal(N, alpha, x.as_mut_ptr(), incx) }
         }
 
+        /// Multiple each element of a matrix/vector by a constant.
         pub fn cscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
             unsafe { ::ffi::cblas_cscal(N, alpha.as_ptr() as *const ::libc::c_void, x.as_mut_ptr() as *mut ::libc::c_void, incx) }
         }
 
+        /// Multiple each element of a matrix/vector by a constant. 
         pub fn zscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
             unsafe { ::ffi::cblas_zscal(N, alpha.as_ptr() as *const ::libc::c_void, x.as_mut_ptr() as *mut ::libc::c_void, incx) }
         }
 
+        /// Multiple each element of a matrix/vector by a constant.
         pub fn csscal<T>(N: i32, alpha: f32, x: &mut [T], incx: i32) {
             unsafe { ::ffi::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut ::libc::c_void, incx) }
         }
 
+        /// Multiple each element of a matrix/vector by a constant.
         pub fn zdscal<T>(N: i32, alpha: f64, x: &mut [T], incx: i32) {
             unsafe { ::ffi::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut ::libc::c_void, incx) }
+        }
+    }
+
+    pub mod Level2 {
+        /// Multiplies a matrix and a vector.
+        ///
+        /// * order : Whether matrices are row major order (C-Style) for column major order (Fortran-style). One of enum CblasRowMajor or CblasColMajor
+        /// * transA :  Whether to transpose matrix A. One of enum CblasNoTrans, CBlasTrans.
+        /// * M : Rows in matrix A
+        /// * N : Columns in matrix A
+        /// * alpha : scalar factor for (sigma * op(A) * x)
+        /// * A : matrix A
+        /// * lda : The size of the first dimension of matrix A
+        /// * X : vector X
+        /// * incx : use every incX'th element of X
+        /// * beta : scalar factor y
+        /// * Y : vector Y
+        /// * incy : use every incY'th element of Y
+        ///
+        /// For parameter lda, if you are passing a matrix A[m][n], the value of parameter lda should be m.
+        pub fn sgemv(order: ::enums::Gsl::CblasOrder, transA: ::enums::Gsl::CblasTranspose, M: i32, N: i32, alpha: f32, A: &[f32],
+            lda: i32, X: &[f32], incx: i32, beta: f32, Y: &mut [f32], incy: i32) {
+            unsafe { ::ffi::cblas_sgemv(order, transA, M, N, alpha, A.as_ptr(), lda, X.as_ptr(), incx, beta, Y.as_mut_ptr(), incy) }
         }
     }
 }

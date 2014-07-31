@@ -4,6 +4,7 @@
 
 use libc::{c_double, c_int, c_uint, c_float, c_void};
 use types;
+use enums;
 
 pub type CBLAS_INDEX = c_uint;
 
@@ -213,6 +214,9 @@ extern "C" {
     pub fn cblas_zscal(N: c_int, alpha: *const c_void, x: *mut c_void, incx: c_int);
     pub fn cblas_csscal(N: c_int, alpha: c_float, x: *mut c_void, incx: c_int);
     pub fn cblas_zdscal(N: c_int, alpha: c_double, x: *mut c_void, incx: c_int);
+    // Level 2 CBLAS functions
+    pub fn cblas_sgemv  (order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, alpha: c_float,
+        A: *const c_float, lda: c_int, x: *const c_float, incx: c_int, beta: c_float, y: *mut c_float, incy: c_int);
 }
 
 pub struct gsl_sf_result {
