@@ -215,8 +215,139 @@ extern "C" {
     pub fn cblas_csscal(N: c_int, alpha: c_float, x: *mut c_void, incx: c_int);
     pub fn cblas_zdscal(N: c_int, alpha: c_double, x: *mut c_void, incx: c_int);
     // Level 2 CBLAS functions
-    pub fn cblas_sgemv  (order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, alpha: c_float,
+    pub fn cblas_sgemv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, alpha: c_float,
         A: *const c_float, lda: c_int, x: *const c_float, incx: c_int, beta: c_float, y: *mut c_float, incy: c_int);
+    pub fn cblas_sgbmv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, KL: c_int, KU: c_int,
+        alpha: c_float, A: *const c_float, lda: c_int, x: *const c_float, incx: c_int, beta: c_float, y: *mut c_float, incy: c_int);
+    pub fn cblas_strmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_float, lda: c_int, x: *mut c_float, incx: c_int);
+    pub fn cblas_stbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_float, lda: c_int, x: *mut c_float, incx: c_int);
+    pub fn cblas_stpmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_float, x: *mut c_float, incx: c_int);
+    pub fn cblas_strsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_float, lda: c_int, x: *mut c_float, incx: c_int);
+    pub fn cblas_stbsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_float, lda: c_int, x: *mut c_float, incx: c_int);
+    pub fn cblas_stpsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_float, x: *mut c_float, incx: c_int);
+    pub fn cblas_dgemv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, alpha: c_double,
+        A: *const c_double, lda: c_int, x: *const c_double, incx: c_int, beta: c_double, y: *mut c_double, incy: c_int);
+    pub fn cblas_dgbmv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, KL: c_int, KU: c_int,
+        alpha: c_double, A: *const c_double, lda: c_int, x: *const c_double, incx: c_int, beta: c_double, y: *mut c_double, incy: c_int);
+    pub fn cblas_dtrmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_double, lda: c_int, x: *mut c_double, incx: c_int);
+    pub fn cblas_dtbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_double, lda: c_int, x: *mut c_double, incx: c_int);
+    pub fn cblas_dtpmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_double, x: *mut c_double, incx: c_int);
+    pub fn cblas_dtrsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_double, lda: c_int, x: *mut c_double, incx: c_int);
+    pub fn cblas_dtbsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_double, lda: c_int, x: *mut c_double, incx: c_int);
+    pub fn cblas_dtpsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_double, x: *mut c_double, incx: c_int);
+    pub fn cblas_cgemv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, alpha: *const c_void,
+        A: *const c_void, lda: c_int, x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_cgbmv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, KL: c_int, KU: c_int,
+        alpha: *const c_void, A: *const c_void, lda: c_int, x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_ctrmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ctbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ctpmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_void, x: *mut c_void, incx: c_int);
+    pub fn cblas_ctrsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ctbsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ctpsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_void, x: *mut c_void, incx: c_int);
+    pub fn cblas_zgemv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, alpha: *const c_void,
+        A: *const c_void, lda: c_int, x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_zgbmv(order: enums::Gsl::CblasOrder, transA: enums::Gsl::CblasTranspose, M: c_int, N: c_int, KL: c_int, KU: c_int,
+        alpha: *const c_void, A: *const c_void, lda: c_int, x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_ztrmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ztbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ztpmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_void, x: *mut c_void, incx: c_int);
+    pub fn cblas_ztrsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ztbsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, K: c_int, A: *const c_void, lda: c_int, x: *mut c_void, incx: c_int);
+    pub fn cblas_ztpsv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
+        diag: enums::Gsl::CblasDiag, N: c_int, Ap: *const c_void, x: *mut c_void, incx: c_int);
+    pub fn cblas_ssymv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_float, A: *const c_float, lda: c_int,
+        x: *const c_float, incx: c_int, beta: c_float, y: *mut c_float, incy: c_int);
+    pub fn cblas_ssbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, K: c_int, alpha: c_float, A: *const c_float,
+        lda: c_int, x: *const c_float, incx: c_int, beta: c_float, y: *mut c_float, incy: c_int);
+    pub fn cblas_sspmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_float, Ap: *const c_float,
+        x: *const c_float, incx: c_int, beta: c_float, y: *mut c_float, incy: c_int);
+    pub fn cblas_sger(order: enums::Gsl::CblasOrder, M: c_int, N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float,
+        incy: c_int, A: *mut c_float, lda: c_int);
+    pub fn cblas_ssyr(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_float, x: *const c_float, incx: c_int,
+        A: *mut c_float, lda: c_int);
+    pub fn cblas_sspr(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_float, x: *const c_float, incx: c_int,
+        Ap: *mut c_float);
+    pub fn cblas_ssyr2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_float, x: *const c_float, incx: c_int,
+        y: *const c_float, incy: c_int, A: *mut c_float, lda: c_int);
+    pub fn cblas_sspr2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_float, x: *const c_float, incx: c_int,
+        y: *const c_float, incy: c_int, A: *mut c_float);
+    pub fn cblas_dsymv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_double, A: *const c_double, lda: c_int,
+        x: *const c_double, incx: c_int, beta: c_double, y: *mut c_double, incy: c_int);
+    pub fn cblas_dsbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, K: c_int, alpha: c_double, A: *const c_double,
+        lda: c_int, x: *const c_double, incx: c_int, beta: c_double, y: *mut c_double, incy: c_int);
+    pub fn cblas_dspmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_double, Ap: *const c_double,
+        x: *const c_double, incx: c_int, beta: c_double, y: *mut c_double, incy: c_int);
+    pub fn cblas_dger(order: enums::Gsl::CblasOrder, M: c_int, N: c_int, alpha: c_double, x: *const c_double, incx: c_int, y: *const c_double,
+        incy: c_int, A: *mut c_double, lda: c_int);
+    pub fn cblas_dsyr(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_double, x: *const c_double, incx: c_int,
+        A: *mut c_double, lda: c_int);
+    pub fn cblas_dspr(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_double, x: *const c_double, incx: c_int,
+        Ap: *mut c_double);
+    pub fn cblas_dsyr2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_double, x: *const c_double, incx: c_int,
+        y: *const c_double, incy: c_int, A: *mut c_double, lda: c_int);
+    pub fn cblas_dspr2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: c_double, x: *const c_double, incx: c_int,
+        y: *const c_double, incy: c_int, A: *mut c_double);
+    pub fn cblas_csymv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, A: *const c_void, lda: c_int,
+        x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_csbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, K: c_int, alpha: *const c_void, A: *const c_void,
+        lda: c_int, x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_cspmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, Ap: *const c_void,
+        x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_cgeru(order: enums::Gsl::CblasOrder, M: c_int, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int, y: *const c_void,
+        incy: c_int, A: *mut c_void, lda: c_int);
+    pub fn cblas_cgerc(order: enums::Gsl::CblasOrder, M: c_int, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int, y: *const c_void,
+        incy: c_int, A: *mut c_void, lda: c_int);
+    pub fn cblas_cher(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        A: *mut c_void, lda: c_int);
+    pub fn cblas_chpr(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        Ap: *mut c_void);
+    pub fn cblas_cher2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        y: *const c_void, incy: c_int, A: *mut c_void, lda: c_int);
+    pub fn cblas_chpr2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        y: *const c_void, incy: c_int, Ap: *mut c_void);
+
+    pub fn cblas_zsymv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, A: *const c_void, lda: c_int,
+        x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_zsbmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, K: c_int, alpha: *const c_void, A: *const c_void,
+        lda: c_int, x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_zspmv(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, Ap: *const c_void,
+        x: *const c_void, incx: c_int, beta: *const c_void, y: *mut c_void, incy: c_int);
+    pub fn cblas_zgeru(order: enums::Gsl::CblasOrder, M: c_int, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int, y: *const c_void,
+        incy: c_int, A: *mut c_void, lda: c_int);
+    pub fn cblas_zgerc(order: enums::Gsl::CblasOrder, M: c_int, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int, y: *const c_void,
+        incy: c_int, A: *mut c_void, lda: c_int);
+    pub fn cblas_zher(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        A: *mut c_void, lda: c_int);
+    pub fn cblas_zhpr(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        Ap: *mut c_void);
+    pub fn cblas_zher2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        y: *const c_void, incy: c_int, A: *mut c_void, lda: c_int);
+    pub fn cblas_zhpr2(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, N: c_int, alpha: *const c_void, x: *const c_void, incx: c_int,
+        y: *const c_void, incy: c_int, Ap: *mut c_void);
 }
 
 pub struct gsl_sf_result {
