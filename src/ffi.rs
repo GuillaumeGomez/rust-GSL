@@ -398,7 +398,6 @@ extern "C" {
         diag: enums::Gsl::CblasDiag, M: c_int, N: c_int, alpha: *const c_void, A: *const c_void, lda: c_int, B: *mut c_void, ldb: c_int);
     pub fn cblas_ztrsm(order: enums::Gsl::CblasOrder, side: enums::Gsl::CblasSide, uplo: enums::Gsl::CblasUplo, transA: enums::Gsl::CblasTranspose,
         diag: enums::Gsl::CblasDiag, M: c_int, N: c_int, alpha: *const c_void, A: *const c_void, lda: c_int, B: *mut c_void, ldb: c_int);
-
     pub fn cblas_chemm(order: enums::Gsl::CblasOrder, side: enums::Gsl::CblasSide, uplo: enums::Gsl::CblasUplo, M: c_int, N: c_int,
         alpha: *const c_void, A: *const c_void, lda: c_int, B: *const c_void, ldb: c_int, beta: *const c_void, C: *mut c_void, ldc: c_int);
     pub fn cblas_cherk(order: enums::Gsl::CblasOrder, uplo: enums::Gsl::CblasUplo, trans: enums::Gsl::CblasTranspose, N: c_int, K: c_int,

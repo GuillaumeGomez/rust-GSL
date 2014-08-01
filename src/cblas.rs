@@ -716,7 +716,6 @@ pub mod Cblas {
                 lda, B.as_mut_ptr() as *mut ::libc::c_void, ldb) }
         }
 
-
         pub fn zgemm<T>(order: ::enums::Gsl::CblasOrder, transA: ::enums::Gsl::CblasTranspose, transB: ::enums::Gsl::CblasTranspose, M: i32, N: i32,
             K: i32, alpha: &[T], A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
             unsafe { ::ffi::cblas_zgemm(order, transA, transB, M, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
