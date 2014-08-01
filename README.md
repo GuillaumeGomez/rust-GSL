@@ -23,6 +23,12 @@ You can build them separatly too.
 > make doc
 ```
 
+Since this project supports cargo, you can also build it like this :
+
+```Shell
+> cargo build
+```
+
 ##Documentation
 
 You can access the __rgsl__ documentation locally, just build it :
