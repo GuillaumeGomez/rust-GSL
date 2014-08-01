@@ -581,4 +581,212 @@ pub mod Cblas {
                 y.as_ptr() as *const ::libc::c_void, incy, Ap.as_mut_ptr() as *mut ::libc::c_void) }
         }
     }
+
+    pub mod Level3 {
+        /// General Matrix-Matrix multiplication for single precision float.
+        /// 
+        /// __Parameters:__
+        /// 
+        /// * order : Whether matrices are row major order (C-Style) for column major order (Fortran-style). One of enum CblasRowMajor or CblasColMajor.
+        /// * transA : Whether to transpose matrix A. One of enum CblasNoTrans, CBlasTrans, CBlasConjTrans.
+        /// * transB : Whether to transpose matrix B. One of enum CblasNoTrans, CBlasTrans, CBlasConjTrans.
+        /// * M : Rows in matrices A and C
+        /// * N : Columns in Matrices B and C
+        /// * K : Columns in matrix A and Rows in matrix B
+        /// * alpha : scalar factor for op(A)op(B)
+        /// * A : matrix A
+        /// * lda : The size of the first dimension of matrix A
+        /// * B : matrix B
+        /// * ldb : The size of the first dimension of matrix B
+        /// * beta : scalar factor for C
+        /// * C : matrix C
+        /// * ldc : The size of the first dimension of matrix C
+        /// 
+        /// For parameters lda, ldb, and ldc, if you are passing a matrix D[m][n], the value of parameter lda, ldb, or ldc should be m.
+        pub fn sgemm(order: ::enums::Gsl::CblasOrder, transA: ::enums::Gsl::CblasTranspose, transB: ::enums::Gsl::CblasTranspose, M: i32, N: i32,
+            K: i32, alpha: f32, A: &[f32], lda: i32, B: &[f32], ldb: i32, beta: f32, C: &mut [f32], ldc: i32) {
+            unsafe { ::ffi::cblas_sgemm(order, transA, transB, M, N, K, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
+        }
+        
+        /// Symmetric Matrix-Matrix multiplication for single precision float.
+        /// 
+        /// __Parameters:__
+        /// 
+        /// * order : Whether matrices are row major order (C-Style) for column major order (Fortran-style). One of enum CblasRowMajor or CblasColMajor.
+        /// * side : If CBlasSideLeft, perform (sigma(A)(B) + beta C). If CBlasSideRight, perform (sigma (B)(A) + beta C)
+        /// * uplo : Indicates whether to use the upper (CBlasUpper) or lower (CBlasLower) triangle of matrix A
+        /// * M : Rows in matrices A and C
+        /// * N : Columns in Matrices B and C
+        /// * alpha : scalar factor for op(A)op(B)
+        /// * A : matrix A
+        /// * lda : The size of the first dimension of matrix A
+        /// * B : matrix B
+        /// * ldb : The size of the first dimension of matrix B
+        /// * beta : scalar factor for C
+        /// * C : matrix C
+        /// * ldc : The size of the first dimension of matrix C
+        pub fn ssymm(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, M: i32, N: i32, alpha: f32,
+            A: &[f32], lda: i32, B: &[f32], ldb: i32, beta: f32, C: &mut [f32], ldc: i32) {
+            unsafe { ::ffi::cblas_ssymm(order, side, uplo, M, N, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
+        }
+
+        pub fn ssyrk(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: f32,
+            A: &[f32], lda: i32, beta: f32, C: &mut [f32], ldc: i32) {
+            unsafe { ::ffi::cblas_ssyrk(order, uplo, trans, N, K, alpha, A.as_ptr(), lda, beta, C.as_mut_ptr(), ldc) }
+        }
+
+        pub fn ssyr2k(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: f32,
+            A: &[f32], lda: i32, B: &[f32], ldb: i32, beta: f32, C: &mut [f32], ldc: i32) {
+            unsafe { ::ffi::cblas_ssyr2k(order, uplo, trans, N, K, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
+        }
+        
+        pub fn strmm(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: f32, A: &[f32], lda: i32, B: &mut [f32], ldb: i32) {
+            unsafe { ::ffi::cblas_strmm(order, side, uplo, transA, diag, M, N, alpha, A.as_ptr(), lda, B.as_mut_ptr(), ldb) }
+        }
+        
+        pub fn strsm(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: f32, A: &[f32], lda: i32, B: &mut [f32], ldb: i32) {
+            unsafe { ::ffi::cblas_strsm(order, side, uplo, transA, diag, M, N, alpha, A.as_ptr(), lda, B.as_mut_ptr(), ldb) }
+        }
+
+        pub fn dgemm(order: ::enums::Gsl::CblasOrder, transA: ::enums::Gsl::CblasTranspose, transB: ::enums::Gsl::CblasTranspose, M: i32, N: i32,
+            K: i32, alpha: f64, A: &[f64], lda: i32, B: &[f64], ldb: i32, beta: f64, C: &mut [f64], ldc: i32) {
+            unsafe { ::ffi::cblas_dgemm(order, transA, transB, M, N, K, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
+        }
+
+        pub fn dsymm(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, M: i32, N: i32, alpha: f64,
+            A: &[f64], lda: i32, B: &[f64], ldb: i32, beta: f64, C: &mut [f64], ldc: i32) {
+            unsafe { ::ffi::cblas_dsymm(order, side, uplo, M, N, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
+        }
+
+        pub fn dsyrk(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: f64,
+            A: &[f64], lda: i32, beta: f64, C: &mut [f64], ldc: i32) {
+            unsafe { ::ffi::cblas_dsyrk(order, uplo, trans, N, K, alpha, A.as_ptr(), lda, beta, C.as_mut_ptr(), ldc) }
+        }
+
+        pub fn dsyr2k(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: f64,
+            A: &[f64], lda: i32, B: &[f64], ldb: i32, beta: f64, C: &mut [f64], ldc: i32) {
+            unsafe { ::ffi::cblas_dsyr2k(order, uplo, trans, N, K, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
+        }
+        
+        pub fn dtrmm(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: f64, A: &[f64], lda: i32, B: &mut [f64], ldb: i32) {
+            unsafe { ::ffi::cblas_dtrmm(order, side, uplo, transA, diag, M, N, alpha, A.as_ptr(), lda, B.as_mut_ptr(), ldb) }
+        }
+        
+        pub fn dtrsm(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: f64, A: &[f64], lda: i32, B: &mut [f64], ldb: i32) {
+            unsafe { ::ffi::cblas_dtrsm(order, side, uplo, transA, diag, M, N, alpha, A.as_ptr(), lda, B.as_mut_ptr(), ldb) }
+        }
+
+        pub fn cgemm<T>(order: ::enums::Gsl::CblasOrder, transA: ::enums::Gsl::CblasTranspose, transB: ::enums::Gsl::CblasTranspose, M: i32, N: i32,
+            K: i32, alpha: &[T], A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_cgemm(order, transA, transB, M, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn csymm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, M: i32, N: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_csymm(order, side, uplo, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn csyrk<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: &[T],
+            A: &[T], lda: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_csyrk(order, uplo, trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void, lda,
+                beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn csyr2k<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_csyr2k(order, uplo, trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void, lda,
+                B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+        
+        pub fn ctrmm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: &[T], A: &[T], lda: i32, B: &mut [T], ldb: i32) {
+            unsafe { ::ffi::cblas_ctrmm(order, side, uplo, transA, diag, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_mut_ptr() as *mut ::libc::c_void, ldb) }
+        }
+        
+        pub fn ctrsm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: &[T], A: &[T], lda: i32, B: &mut [T], ldb: i32) {
+            unsafe { ::ffi::cblas_ctrsm(order, side, uplo, transA, diag, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_mut_ptr() as *mut ::libc::c_void, ldb) }
+        }
+
+
+        pub fn zgemm<T>(order: ::enums::Gsl::CblasOrder, transA: ::enums::Gsl::CblasTranspose, transB: ::enums::Gsl::CblasTranspose, M: i32, N: i32,
+            K: i32, alpha: &[T], A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zgemm(order, transA, transB, M, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn zsymm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, M: i32, N: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zsymm(order, side, uplo, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn zsyrk<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: &[T],
+            A: &[T], lda: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zsyrk(order, uplo, trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void, lda,
+                beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn zsyr2k<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zsyr2k(order, uplo, trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void, lda,
+                B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn ztrmm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: &[T], A: &[T], lda: i32, B: &mut [T], ldb: i32) {
+            unsafe { ::ffi::cblas_ztrmm(order, side, uplo, transA, diag, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_mut_ptr() as *mut ::libc::c_void, ldb) }
+        }
+
+        pub fn ztrsm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, transA: ::enums::Gsl::CblasTranspose,
+            diag: ::enums::Gsl::CblasDiag, M: i32, N: i32, alpha: &[T], A: &[T], lda: i32, B: &mut [T], ldb: i32) {
+            unsafe { ::ffi::cblas_ztrsm(order, side, uplo, transA, diag, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_mut_ptr() as *mut ::libc::c_void, ldb) }
+        }
+
+        pub fn chemm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, M: i32, N: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_chemm(order, side, uplo, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn cherk<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32,
+            alpha: &[T],  A: &[T], lda: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_cherk(order, uplo,trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn cher2k<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32,
+            alpha: &[T],  A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_cher2k(order, uplo,trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn zhemm<T>(order: ::enums::Gsl::CblasOrder, side: ::enums::Gsl::CblasSide, uplo: ::enums::Gsl::CblasUplo, M: i32, N: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zhemm(order, side, uplo, M, N, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void,
+                lda, B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+    
+        pub fn zherk<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: f64,
+            A: &[T], lda: i32, beta: f64, C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zherk(order, uplo, trans, N, K, alpha, A.as_ptr() as *const ::libc::c_void, lda, beta,
+                C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+
+        pub fn zher2k<T>(order: ::enums::Gsl::CblasOrder, uplo: ::enums::Gsl::CblasUplo, trans: ::enums::Gsl::CblasTranspose, N: i32, K: i32, alpha: &[T],
+            A: &[T], lda: i32, B: &[T], ldb: i32, beta: &[T], C: &mut [T], ldc: i32) {
+            unsafe { ::ffi::cblas_zher2k(order, uplo, trans, N, K, alpha.as_ptr() as *const ::libc::c_void, A.as_ptr() as *const ::libc::c_void, lda,
+                B.as_ptr() as *const ::libc::c_void, ldb, beta.as_ptr() as *const ::libc::c_void, C.as_mut_ptr() as *mut ::libc::c_void, ldc) }
+        }
+    }
 }
