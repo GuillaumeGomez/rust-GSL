@@ -412,6 +412,17 @@ extern "C" {
         alpha: *const c_void, A: *const c_void, lda: c_int, B: *const c_void, ldb: c_int, beta: *const c_void, C: *mut c_void, ldc: c_int);
     //to bind later
     //pub fn cblas_xerbla(p: c_int, rout: *const c_char, form: *const c_char, ...);
+
+    // Elementary functions
+    pub fn gsl_log1p(x: c_double) -> c_double;
+    pub fn gsl_expm1(x: c_double) -> c_double;
+    pub fn gsl_hypot(x: c_double, y: c_double) -> c_double;
+    pub fn gsl_hypot3(x: c_double, y: c_double, z: c_double) -> c_double;
+    pub fn gsl_acosh(x: c_double) -> c_double;
+    pub fn gsl_asinh(x: c_double) -> c_double;
+    pub fn gsl_atanh(x: c_double) -> c_double;
+    pub fn gsl_ldexp(x: c_double, e: c_int) -> c_double;
+    pub fn gsl_frexp(x: c_double, e: *mut c_int) -> c_double;
 }
 
 pub struct gsl_sf_result {

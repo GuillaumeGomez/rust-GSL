@@ -62,6 +62,7 @@ pub use airy::Airy;
 pub use bessel::Bessel;
 pub use canonical::Canonical;
 pub use cblas::Cblas;
+pub use elementary::Elementary;
 
 mod ffi;
 pub mod enums;
@@ -70,6 +71,7 @@ pub mod airy;
 pub mod bessel;
 pub mod canonical;
 pub mod cblas;
+pub mod elementary;
 
 #[cfg(target_os = "linux")]
 mod platform {
