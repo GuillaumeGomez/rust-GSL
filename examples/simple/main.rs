@@ -12,4 +12,9 @@ fn main() {
     println!("Simple Elementary test (acosh(1.0)) : {}", rgsl::Elementary::acosh(1f64));
     println!("Simple Elementary test (asinh(1.0)) : {}", rgsl::Elementary::asinh(1f64));
     println!("Simple Elementary test (atanh(1.0)) : {}", rgsl::Elementary::atanh(1f64));
+
+    println!("=== VectorFloat tests ===");
+    let tmp_vec = rgsl::Gsl::VectorFloat::from_slice([1f32, 0f32, 3f32, 2f32]).unwrap();
+    println!("min value : {}\nmin value index : {}\n", tmp_vec.min(), tmp_vec.min_index());
+    println!("max value : {}\nmax value index : {}\n", tmp_vec.max(), tmp_vec.max_index());
 }

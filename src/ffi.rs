@@ -423,9 +423,56 @@ extern "C" {
     pub fn gsl_atanh(x: c_double) -> c_double;
     pub fn gsl_ldexp(x: c_double, e: c_int) -> c_double;
     pub fn gsl_frexp(x: c_double, e: *mut c_int) -> c_double;
+
+    // VectorFloat functions
+    pub fn gsl_vector_float_alloc(size: u32) -> *mut gsl_vector_float;
+    pub fn gsl_vector_float_calloc(size: u32) -> *mut gsl_vector_float;
+    pub fn gsl_vector_float_free(vector: *mut gsl_vector_float);
+    pub fn gsl_vector_float_get(vector: *mut gsl_vector_float, i: c_uint) -> c_float;
+    pub fn gsl_vector_float_set(vector: *mut gsl_vector_float, i: c_uint, x: c_float);
+    pub fn gsl_vector_float_set_all(vector: *mut gsl_vector_float, x: c_float);
+    pub fn gsl_vector_float_set_zero(vector: *mut gsl_vector_float);
+    pub fn gsl_vector_float_set_basis(vector: *mut gsl_vector_float, i: c_uint);
+    pub fn gsl_vector_float_memcpy(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_swap(v: *mut gsl_vector_float, w: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_swap_elements(vector: *mut gsl_vector_float, i: c_uint, j: c_uint) -> c_int;
+    pub fn gsl_vector_float_reverse(vector: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_add(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_sub(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_mul(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_div(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_scale(dest: *mut gsl_vector_float, x: c_float) -> c_int;
+    pub fn gsl_vector_float_add_constant(dest: *mut gsl_vector_float, x: c_float) -> c_int;
+    pub fn gsl_vector_float_max(vector: *mut gsl_vector_float) -> c_float;
+    pub fn gsl_vector_float_min(vector: *mut gsl_vector_float) -> c_float;
+    pub fn gsl_vector_float_minmax(vector: *mut gsl_vector_float, min_out: *mut c_float, max_out: *mut c_float);
+    pub fn gsl_vector_float_max_index(vector: *mut gsl_vector_float) -> c_uint;
+    pub fn gsl_vector_float_min_index(vector: *mut gsl_vector_float) -> c_uint;
+    pub fn gsl_vector_float_minmax_index(vector: *mut gsl_vector_float, imin: *mut c_uint, imax: *mut c_uint);
+    pub fn gsl_vector_float_isnull(vector: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_ispos(vector: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_isneg(vector: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_isnonneg(vector: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_vector_float_equal(u: *const gsl_vector_float, v: *const gsl_vector_float) -> c_int;
+
+    // Blas functions
+    pub fn gsl_blas_sdsdot(alpha: c_float, x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_float) -> c_int;
 }
 
 pub struct gsl_sf_result {
     pub val: c_double,
     pub err: c_double
+}
+
+pub struct gsl_vector_float {
+    pub size: u32,
+    pub stride: u32,
+    pub data: *mut c_float,
+    pub block: *mut gsl_block_float,
+    pub owner: c_int
+}
+
+pub struct gsl_block_float {
+    pub size: u32,
+    pub data: *mut c_float
 }

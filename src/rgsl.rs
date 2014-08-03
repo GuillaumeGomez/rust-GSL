@@ -28,6 +28,12 @@ You can build them separatly too.
 > make doc
 ```
 
+Since this project supports cargo, you can also build it like this :
+
+```Shell
+> cargo build
+```
+
 ##Documentation
 
 You can access the __rgsl__ documentation locally, just build it :
@@ -60,18 +66,22 @@ extern crate libc;
 
 pub use airy::Airy;
 pub use bessel::Bessel;
+pub use blas::Blas;
 pub use canonical::Canonical;
 pub use cblas::Cblas;
 pub use elementary::Elementary;
+pub use vector::Gsl;
 
 mod ffi;
 pub mod enums;
 pub mod types;
 pub mod airy;
 pub mod bessel;
+pub mod blas;
 pub mod canonical;
 pub mod cblas;
 pub mod elementary;
+pub mod vector;
 
 #[cfg(target_os = "linux")]
 mod platform {
