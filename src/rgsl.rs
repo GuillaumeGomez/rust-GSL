@@ -71,7 +71,25 @@ pub use blas::Blas;
 pub use canonical::Canonical;
 pub use cblas::Cblas;
 pub use elementary::Elementary;
-pub use vector::Gsl;
+pub use types::Gsl;
+
+pub use self::enums::{
+    mode,
+    cblas_order,
+    cblas_side,
+    cblas_transpose,
+    cblas_uplo,
+    cblas_diag
+};
+
+pub use self::enums::{
+    Mode,
+    CblasOrder,
+    CblasSide,
+    CblasTranspose,
+    CblasUplo,
+    CblasDiag
+};
 
 mod ffi;
 pub mod enums;
@@ -82,7 +100,6 @@ pub mod blas;
 pub mod canonical;
 pub mod cblas;
 pub mod elementary;
-pub mod vector;
 
 #[cfg(target_os = "linux")]
 mod platform {

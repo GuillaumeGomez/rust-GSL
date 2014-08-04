@@ -4,8 +4,8 @@
 
 pub mod Bessel {
     use ffi;
-    use types::*;
-    use enums::*;
+    use Gsl;
+    use enums;
     use std::mem::zeroed;
 
     /// These routines compute the regular modified cylindrical Bessel function of zeroth order, I_0(x)
@@ -13,11 +13,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_I0(x) }
     }
 
-    pub fn I0_e(x: f64) -> (i32, GslResult) {
+    pub fn I0_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_I0_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular modified cylindrical Bessel function of first order, I_1(x).
@@ -25,11 +25,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_I1(x) }
     }
 
-    pub fn I1_e(x: f64) -> (i32, GslResult) {
+    pub fn I1_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_I1_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular modified cylindrical Bessel function of order n, I_n(x).
@@ -37,11 +37,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_In(n, x) }
     }
 
-    pub fn In_e(n: i32, x: f64) -> (i32, GslResult) {
+    pub fn In_e(n: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_In_e(n, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the regular modified cylindrical Bessel functions I_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -56,11 +56,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_I0_scaled(x) }
     }
 
-    pub fn I0_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn I0_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_I0_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled regular modified cylindrical Bessel function of first order \exp(-|x|) I_1(x).
@@ -68,11 +68,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_I1_scaled(x) }
     }
 
-    pub fn I1_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn I1_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_I1_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled regular modified cylindrical Bessel function of order n, \exp(-|x|) I_n(x)
@@ -80,11 +80,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_In_scaled(n, x) }
     }
 
-    pub fn In_scaled_e(n: i32, x: f64) -> (i32, GslResult) {
+    pub fn In_scaled_e(n: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_In_scaled_e(n, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the scaled regular cylindrical Bessel functions \exp(-|x|) I_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -99,11 +99,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_i0_scaled(x) }
     }
 
-    pub fn i0_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn i0_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_i0_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled regular modified spherical Bessel function of first order, \exp(-|x|) i_1(x).
@@ -111,11 +111,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_i1_scaled(x) }
     }
 
-    pub fn i1_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn i1_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_i1_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled regular modified spherical Bessel function of second order, \exp(-|x|) i_2(x)
@@ -123,11 +123,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_i2_scaled(x) }
     }
 
-    pub fn i2_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn i2_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_i2_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled regular modified spherical Bessel function of order l, \exp(-|x|) i_l(x)
@@ -135,11 +135,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_il_scaled(l, x) }
     }
 
-    pub fn il_scaled_e(l: i32, x: f64) -> (i32, GslResult) {
+    pub fn il_scaled_e(l: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_il_scaled_e(l, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the scaled regular modified cylindrical Bessel functions \exp(-|x|) i_l(x) for l from 0 to lmax inclusive for lmax >= 0, storing the results in the array result_array. The values are computed using recurrence relations for efficiency, and therefore may differ slightly from the exact values.
@@ -152,11 +152,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Inu(nu, x) }
     }
 
-    pub fn Inu_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn Inu_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Inu_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled regular modified Bessel function of fractional order \nu, \exp(-|x|)I_\nu(x) for x>0, \nu>0.
@@ -164,11 +164,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Inu_scaled(nu, x) }
     }
 
-    pub fn Inu_scaled_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn Inu_scaled_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Inu_scaled_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular cylindrical Bessel function of zeroth order, J_0(x).
@@ -176,11 +176,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_J0(x) }
     }
 
-    pub fn J0_e(x: f64) -> (i32, GslResult) {
+    pub fn J0_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_J0_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular cylindrical Bessel function of first order, J_1(x).
@@ -188,11 +188,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_J1(x) }
     }
 
-    pub fn J1_e(x: f64) -> (i32, GslResult) {
+    pub fn J1_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_J1_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular cylindrical Bessel function of order n, J_n(x).
@@ -200,11 +200,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Jn(n, x) }
     }
 
-    pub fn Jn_e(n: i32, x: f64) -> (i32, GslResult) {
+    pub fn Jn_e(n: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Jn_e(n, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the regular cylindrical Bessel functions J_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -218,11 +218,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_j0(x) }
     }
 
-    pub fn j0_e(x: f64) -> (i32, GslResult) {
+    pub fn j0_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_j0_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular spherical Bessel function of first order, j_1(x) = (\sin(x)/x - \cos(x))/x.
@@ -230,11 +230,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_j1(x) }
     }
 
-    pub fn j1_e(x: f64) -> (i32, GslResult) {
+    pub fn j1_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_j1_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular spherical Bessel function of second order, j_2(x) = ((3/x^2 - 1)\sin(x) - 3\cos(x)/x)/x.
@@ -242,11 +242,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_j2(x) }
     }
 
-    pub fn j2_e(x: f64) -> (i32, GslResult) {
+    pub fn j2_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_j2_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular spherical Bessel function of order l, j_l(x), for l >= 0 and x >= 0.
@@ -254,11 +254,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_jl(l, x) }
     }
 
-    pub fn jl_e(l: i32, x: f64) -> (i32, GslResult) {
+    pub fn jl_e(l: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_jl_e(l, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the regular spherical Bessel functions j_l(x) for l from 0 to lmax inclusive for lmax >= 0 and x >= 0, storing the results in the array result_array.
@@ -278,16 +278,16 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Jnu(nu, x) }
     }
 
-    pub fn Jnu_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn Jnu_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Jnu_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This function computes the regular cylindrical Bessel function of fractional order \nu, J_\nu(x), evaluated at a series of x values. The array v of length size contains the x values.
     /// They are assumed to be strictly ordered and positive. The array is over-written with the values of J_\nu(x_i).
-    pub fn sequence_Jnu(nu: f64, mode: Gsl::Mode, v: &mut [f64]) -> i32 {
+    pub fn sequence_Jnu(nu: f64, mode: enums::Mode, v: &mut [f64]) -> i32 {
         unsafe { ffi::gsl_sf_bessel_sequence_Jnu_e(nu, mode as u32, v.len() as i64, v.as_mut_ptr()) }
     }
 
@@ -296,11 +296,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_K0(x) }
     }
 
-    pub fn K0_e(x: f64) -> (i32, GslResult) {
+    pub fn K0_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_K0_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular modified cylindrical Bessel function of first order, K_1(x), for x > 0.
@@ -308,11 +308,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_K1(x) }
     }
 
-    pub fn K1_e(x: f64) -> (i32, GslResult) {
+    pub fn K1_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_K1_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular modified cylindrical Bessel function of order n, K_n(x), for x > 0.
@@ -320,11 +320,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Kn(n, x) }
     }
 
-    pub fn Kn_e(n: i32, x: f64) -> (i32, GslResult) {
+    pub fn Kn_e(n: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Kn_e(n, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the irregular modified cylindrical Bessel functions K_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -339,11 +339,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_K0_scaled(x) }
     }
 
-    pub fn K0_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn K0_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_K0_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled irregular modified cylindrical Bessel function of first order \exp(x) K_1(x) for x>0.
@@ -351,11 +351,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_K1_scaled(x) }
     }
 
-    pub fn K1_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn K1_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_K1_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled irregular modified cylindrical Bessel function of order n, \exp(x) K_n(x), for x>0.
@@ -363,11 +363,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Kn_scaled(n, x) }
     }
 
-    pub fn Kn_scaled_e(n: i32, x: f64) -> (i32, GslResult) {
+    pub fn Kn_scaled_e(n: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Kn_scaled_e(n, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the scaled irregular cylindrical Bessel functions \exp(x) K_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -383,11 +383,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_k0_scaled(x) }
     }
 
-    pub fn k0_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn k0_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_k0_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled irregular modified spherical Bessel function of first order, \exp(x) k_1(x), for x>0.
@@ -395,11 +395,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_k1_scaled(x) }
     }
 
-    pub fn k1_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn k1_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_k1_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled irregular modified spherical Bessel function of second order, \exp(x) k_2(x), for x>0.
@@ -407,11 +407,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_k2_scaled(x) }
     }
 
-    pub fn k2_scaled_e(x: f64) -> (i32, GslResult) {
+    pub fn k2_scaled_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_k2_scaled_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled irregular modified spherical Bessel function of order l, \exp(x) k_l(x), for x>0.
@@ -419,11 +419,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_kl_scaled(l, x) }
     }
 
-    pub fn kl_scaled_e(l: i32, x: f64) -> (i32, GslResult) {
+    pub fn kl_scaled_e(l: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_kl_scaled_e(l, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the scaled irregular modified spherical Bessel functions \exp(x) k_l(x) for l from 0 to lmax inclusive for lmax >= 0 and x>0, storing the results in the array result_array.
@@ -437,11 +437,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Knu(nu, x) }
     }
 
-    pub fn Knu_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn Knu_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Knu_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
@@ -449,11 +449,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_InKnu(nu, x) }
     }
 
-    pub fn InKnu_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn InKnu_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_InKnu_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the scaled irregular modified Bessel function of fractional order \nu, \exp(+|x|) K_\nu(x) for x>0, \nu>0.
@@ -461,11 +461,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Knu_scaled(nu, x) }
     }
 
-    pub fn Knu_scaled_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn Knu_scaled_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Knu_scaled_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular cylindrical Bessel function of zeroth order, Y_0(x), for x>0.
@@ -473,11 +473,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Y0(x) }
     }
 
-    pub fn Y0_e(x: f64) -> (i32, GslResult) {
+    pub fn Y0_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Y0_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular cylindrical Bessel function of first order, Y_1(x), for x>0.
@@ -485,22 +485,22 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Y1(x) }
     }
 
-    pub fn Y1_e(x: f64) -> (i32, GslResult) {
+    pub fn Y1_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Y1_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     pub fn Yn(n: i32, x: f64) -> f64 {
         unsafe { ffi::gsl_sf_bessel_Yn(n, x) }
     }
 
-    pub fn Yn_e(n: i32, x: f64) -> (i32, GslResult) {
+    pub fn Yn_e(n: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Yn_e(n, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the irregular cylindrical Bessel functions Y_n(x) for n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -515,11 +515,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_y0(x) }
     }
 
-    pub fn y0_e(x: f64) -> (i32, GslResult) {
+    pub fn y0_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_y0_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular spherical Bessel function of first order, y_1(x) = -(\cos(x)/x + \sin(x))/x.
@@ -527,11 +527,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_y1(x) }
     }
 
-    pub fn y1_e(x: f64) -> (i32, GslResult) {
+    pub fn y1_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_y1_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular spherical Bessel function of second order, y_2(x) = (-3/x^3 + 1/x)\cos(x) - (3/x^2)\sin(x).
@@ -539,11 +539,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_y2(x) }
     }
 
-    pub fn y2_e(x: f64) -> (i32, GslResult) {
+    pub fn y2_e(x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_y2_e(x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the irregular spherical Bessel function of order l, y_l(x), for l >= 0.
@@ -551,11 +551,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_yl(l, x) }
     }
 
-    pub fn yl_e(l: i32, x: f64) -> (i32, GslResult) {
+    pub fn yl_e(l: i32, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_yl_e(l, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the values of the irregular spherical Bessel functions y_l(x) for l from 0 to lmax inclusive for lmax >= 0, storing the results in the array result_array.
@@ -569,11 +569,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_Ynu(nu, x) }
     }
 
-    pub fn Ynu_e(nu: f64, x: f64) -> (i32, GslResult) {
+    pub fn Ynu_e(nu: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_Ynu_e(nu, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the location of the s-th positive zero of the Bessel function J_0(x).
@@ -581,11 +581,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_zero_J0(s) }
     }
 
-    pub fn zero_J0_e(s: u32) -> (i32, GslResult) {
+    pub fn zero_J0_e(s: u32) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_zero_J0_e(s, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the location of the s-th positive zero of the Bessel function J_1(x).
@@ -593,11 +593,11 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_zero_J1(s) }
     }
 
-    pub fn zero_J1_e(s: u32) -> (i32, GslResult) {
+    pub fn zero_J1_e(s: u32) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_zero_J1_e(s, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the location of the s-th positive zero of the Bessel function J_\nu(x).
@@ -606,10 +606,10 @@ pub mod Bessel {
         unsafe { ffi::gsl_sf_bessel_zero_Jnu(nu, s) }
     }
 
-    pub fn zero_Jnu_e(nu: f64, s: u32) -> (i32, GslResult) {
+    pub fn zero_Jnu_e(nu: f64, s: u32) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_bessel_zero_Jnu_e(nu, s, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 }

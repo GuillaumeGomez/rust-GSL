@@ -5,7 +5,7 @@
 /// The Conical Functions P^\mu_{-(1/2)+i\lambda}(x) and Q^\mu_{-(1/2)+i\lambda} are described in Abramowitz & Stegun, Section 8.12.
 pub mod Canonical {
     use ffi;
-    use types::*;
+    use Gsl;
     use std::mem::zeroed;
 
     /// These routines compute the irregular Spherical Conical Function P^{1/2}_{-1/2 + i \lambda}(x) for x > -1.
@@ -13,11 +13,11 @@ pub mod Canonical {
         unsafe { ffi::gsl_sf_conicalP_half(lambda, x) }
     }
 
-    pub fn half_e(lambda: f64, x: f64) -> (i32, GslResult) {
+    pub fn half_e(lambda: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_conicalP_half_e(lambda, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the regular Spherical Conical Function P^{-1/2}_{-1/2 + i \lambda}(x) for x > -1.
@@ -25,11 +25,11 @@ pub mod Canonical {
         unsafe { ffi::gsl_sf_conicalP_mhalf(lambda, x) }
     }
 
-    pub fn mhalf_e(lambda: f64, x: f64) -> (i32, GslResult) {
+    pub fn mhalf_e(lambda: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_conicalP_mhalf_e(lambda, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the conical function P^0_{-1/2 + i \lambda}(x) for x > -1.
@@ -37,11 +37,11 @@ pub mod Canonical {
         unsafe { ffi::gsl_sf_conicalP_0(lambda, x) }
     }
 
-    pub fn _0_e(lambda: f64, x: f64) -> (i32, GslResult) {
+    pub fn _0_e(lambda: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_conicalP_0_e(lambda, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the conical function P^1_{-1/2 + i \lambda}(x) for x > -1.
@@ -49,11 +49,11 @@ pub mod Canonical {
         unsafe { ffi::gsl_sf_conicalP_1(lambda, x) }
     }
 
-    pub fn _1_e(lambda: f64, x: f64) -> (i32, GslResult) {
+    pub fn _1_e(lambda: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_conicalP_1_e(lambda, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the Regular Spherical Conical Function P^{-1/2-l}_{-1/2 + i \lambda}(x) for x > -1, l >= -1.
@@ -61,11 +61,11 @@ pub mod Canonical {
         unsafe { ffi::gsl_sf_conicalP_sph_reg(l, lambda, x) }
     }
 
-    pub fn sph_reg_e(l: i32, lambda: f64, x: f64) -> (i32, GslResult) {
+    pub fn sph_reg_e(l: i32, lambda: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_conicalP_sph_reg_e(l, lambda, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the Regular Cylindrical Conical Function P^{-m}_{-1/2 + i \lambda}(x) for x > -1, m >= -1.
@@ -73,10 +73,10 @@ pub mod Canonical {
         unsafe { ffi::gsl_sf_conicalP_cyl_reg(m, lambda, x) }
     }
 
-    pub fn cyl_reg_e(m: i32, lambda: f64, x: f64) -> (i32, GslResult) {
+    pub fn cyl_reg_e(m: i32, lambda: f64, x: f64) -> (i32, Gsl::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_conicalP_cyl_reg_e(m, lambda, x, &mut result) };
 
-        (ret, GslResult{val: result.val, err: result.err})
+        (ret, Gsl::Result{val: result.val, err: result.err})
     }
 }
