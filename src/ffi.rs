@@ -1,6 +1,6 @@
-/*
- * A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
- */
+//
+// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+//
 
 use libc::{c_double, c_int, c_uint, c_float, c_void};
 use types;
@@ -455,6 +455,37 @@ extern "C" {
     pub fn gsl_vector_isnonneg(vector: *mut gsl_vector) -> c_int;
     pub fn gsl_vector_equal(u: *const gsl_vector, v: *const gsl_vector) -> c_int;
 
+    // VectorComplex functions
+    pub fn gsl_vector_complex_alloc(size: u32) -> *mut gsl_vector_complex;
+    pub fn gsl_vector_complex_calloc(size: u32) -> *mut gsl_vector_complex;
+    pub fn gsl_vector_complex_free(vector: *mut gsl_vector_complex);
+    pub fn gsl_vector_complex_get(vector: *mut gsl_vector_complex, i: c_uint) -> c_double;
+    pub fn gsl_vector_complex_set(vector: *mut gsl_vector_complex, i: c_uint, x: c_double);
+    pub fn gsl_vector_complex_set_all(vector: *mut gsl_vector_complex, x: c_double);
+    pub fn gsl_vector_complex_set_zero(vector: *mut gsl_vector_complex);
+    pub fn gsl_vector_complex_set_basis(vector: *mut gsl_vector_complex, i: c_uint);
+    pub fn gsl_vector_complex_memcpy(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_swap(v: *mut gsl_vector_complex, w: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_swap_elements(vector: *mut gsl_vector_complex, i: c_uint, j: c_uint) -> c_int;
+    pub fn gsl_vector_complex_reverse(vector: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_add(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_sub(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_mul(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_div(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_scale(dest: *mut gsl_vector_complex, x: c_double) -> c_int;
+    pub fn gsl_vector_complex_add_constant(dest: *mut gsl_vector_complex, x: c_double) -> c_int;
+    pub fn gsl_vector_complex_max(vector: *mut gsl_vector_complex) -> c_double;
+    pub fn gsl_vector_complex_min(vector: *mut gsl_vector_complex) -> c_double;
+    pub fn gsl_vector_complex_minmax(vector: *mut gsl_vector_complex, min_out: *mut c_double, max_out: *mut c_double);
+    pub fn gsl_vector_complex_max_index(vector: *mut gsl_vector_complex) -> c_uint;
+    pub fn gsl_vector_complex_min_index(vector: *mut gsl_vector_complex) -> c_uint;
+    pub fn gsl_vector_complex_minmax_index(vector: *mut gsl_vector_complex, imin: *mut c_uint, imax: *mut c_uint);
+    pub fn gsl_vector_complex_isnull(vector: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_ispos(vector: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_isneg(vector: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_isnonneg(vector: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_vector_complex_equal(u: *const gsl_vector_complex, v: *const gsl_vector_complex) -> c_int;
+
     // VectorFloat functions
     pub fn gsl_vector_float_alloc(size: u32) -> *mut gsl_vector_float;
     pub fn gsl_vector_float_calloc(size: u32) -> *mut gsl_vector_float;
@@ -486,11 +517,44 @@ extern "C" {
     pub fn gsl_vector_float_isnonneg(vector: *mut gsl_vector_float) -> c_int;
     pub fn gsl_vector_float_equal(u: *const gsl_vector_float, v: *const gsl_vector_float) -> c_int;
 
+    // VectorComplexFloat functions
+    pub fn gsl_vector_complex_float_alloc(size: u32) -> *mut gsl_vector_complex_float;
+    pub fn gsl_vector_complex_float_calloc(size: u32) -> *mut gsl_vector_complex_float;
+    pub fn gsl_vector_complex_float_free(vector: *mut gsl_vector_complex_float);
+    pub fn gsl_vector_complex_float_get(vector: *mut gsl_vector_complex_float, i: c_uint) -> c_float;
+    pub fn gsl_vector_complex_float_set(vector: *mut gsl_vector_complex_float, i: c_uint, x: c_float);
+    pub fn gsl_vector_complex_float_set_all(vector: *mut gsl_vector_complex_float, x: c_float);
+    pub fn gsl_vector_complex_float_set_zero(vector: *mut gsl_vector_complex_float);
+    pub fn gsl_vector_complex_float_set_basis(vector: *mut gsl_vector_complex_float, i: c_uint);
+    pub fn gsl_vector_complex_float_memcpy(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_swap(v: *mut gsl_vector_complex_float, w: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_swap_elements(vector: *mut gsl_vector_complex_float, i: c_uint, j: c_uint) -> c_int;
+    pub fn gsl_vector_complex_float_reverse(vector: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_add(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_sub(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_mul(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_div(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_scale(dest: *mut gsl_vector_complex_float, x: c_float) -> c_int;
+    pub fn gsl_vector_complex_float_add_constant(dest: *mut gsl_vector_complex_float, x: c_float) -> c_int;
+    pub fn gsl_vector_complex_float_max(vector: *mut gsl_vector_complex_float) -> c_float;
+    pub fn gsl_vector_complex_float_min(vector: *mut gsl_vector_complex_float) -> c_float;
+    pub fn gsl_vector_complex_float_minmax(vector: *mut gsl_vector_complex_float, min_out: *mut c_float, max_out: *mut c_float);
+    pub fn gsl_vector_complex_float_max_index(vector: *mut gsl_vector_complex_float) -> c_uint;
+    pub fn gsl_vector_complex_float_min_index(vector: *mut gsl_vector_complex_float) -> c_uint;
+    pub fn gsl_vector_complex_float_minmax_index(vector: *mut gsl_vector_complex_float, imin: *mut c_uint, imax: *mut c_uint);
+    pub fn gsl_vector_complex_float_isnull(vector: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_ispos(vector: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_isneg(vector: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_isnonneg(vector: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_vector_complex_float_equal(u: *const gsl_vector_complex_float, v: *const gsl_vector_complex_float) -> c_int;
+
     // Blas functions
     pub fn gsl_blas_sdsdot(alpha: c_float, x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_float) -> c_int;
     pub fn gsl_blas_sdot(x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_float) -> c_int;
     pub fn gsl_blas_dsdot(x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_double) -> c_int;
     pub fn gsl_blas_ddot(x: *const gsl_vector, y: *const gsl_vector, result: *mut c_double) -> c_int;
+    pub fn gsl_blas_cdotu(x: *const gsl_vector_complex_float, y: *const gsl_vector_complex_float, dotu: *mut gsl_complex_float) -> c_int;
+    pub fn gsl_blas_zdotu(x: *const gsl_vector_complex, y: *const gsl_vector_complex, dotu: *mut gsl_complex) -> c_int;
 }
 
 pub struct gsl_sf_result {
@@ -522,4 +586,38 @@ pub struct gsl_vector {
 pub struct gsl_block {
     pub size: u32,
     pub data: *mut c_double
+}
+
+pub struct gsl_vector_complex_float {
+    pub size: u32,
+    pub stride: u32,
+    pub data: *mut c_float,
+    pub block: *mut gsl_block_complex_float,
+    pub owner: c_int
+}
+
+pub struct gsl_block_complex_float {
+    pub size: u32,
+    pub data: *mut c_float
+}
+
+pub struct gsl_vector_complex {
+    pub size: u32,
+    pub stride: u32,
+    pub data: *mut c_double,
+    pub block: *mut gsl_block,
+    pub owner: c_int
+}
+
+pub struct gsl_block_complex {
+    pub size: u32,
+    pub data: *mut c_double
+}
+
+pub struct gsl_complex {
+    pub data: [c_double, ..2]
+}
+
+pub struct gsl_complex_float {
+    pub data: [c_float, ..2]
 }

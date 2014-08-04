@@ -1,6 +1,6 @@
-/*
- * A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
- */
+//
+// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+//
 
 extern crate rgsl;
 

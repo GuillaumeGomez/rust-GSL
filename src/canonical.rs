@@ -1,6 +1,6 @@
-/*
- * A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
- */
+//
+// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+//
 
 /// The Conical Functions P^\mu_{-(1/2)+i\lambda}(x) and Q^\mu_{-(1/2)+i\lambda} are described in Abramowitz & Stegun, Section 8.12.
 pub mod Canonical {

@@ -57,6 +57,7 @@ Here is the list of all modules :
 #![crate_type = "dylib"]
 
 #![feature(globs)]
+#![feature(macro_rules)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case_functions)]
