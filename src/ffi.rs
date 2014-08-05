@@ -7,6 +7,7 @@ use types;
 use enums;
 
 pub type CBLAS_INDEX = c_uint;
+pub type CBLAS_INDEX_t = CBLAS_INDEX;
 
 extern "C" {
     // Airy functions
@@ -548,13 +549,54 @@ extern "C" {
     pub fn gsl_vector_complex_float_isnonneg(vector: *mut gsl_vector_complex_float) -> c_int;
     pub fn gsl_vector_complex_float_equal(u: *const gsl_vector_complex_float, v: *const gsl_vector_complex_float) -> c_int;
 
-    // Blas functions
+    // Level 1 BLAS functions
     pub fn gsl_blas_sdsdot(alpha: c_float, x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_float) -> c_int;
     pub fn gsl_blas_sdot(x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_float) -> c_int;
     pub fn gsl_blas_dsdot(x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_double) -> c_int;
     pub fn gsl_blas_ddot(x: *const gsl_vector, y: *const gsl_vector, result: *mut c_double) -> c_int;
     pub fn gsl_blas_cdotu(x: *const gsl_vector_complex_float, y: *const gsl_vector_complex_float, dotu: *mut gsl_complex_float) -> c_int;
     pub fn gsl_blas_zdotu(x: *const gsl_vector_complex, y: *const gsl_vector_complex, dotu: *mut gsl_complex) -> c_int;
+    pub fn gsl_blas_cdotc(x: *const gsl_vector_complex_float, y: *const gsl_vector_complex_float, dotc: *mut gsl_complex_float) -> c_int;
+    pub fn gsl_blas_zdotc(x: *const gsl_vector_complex, y: *const gsl_vector_complex, dotc: *mut gsl_complex) -> c_int;
+    pub fn gsl_blas_snrm2(x: *const gsl_vector_float) -> c_float;
+    pub fn gsl_blas_dnrm2(x: *const gsl_vector) -> c_double;
+    pub fn gsl_blas_scnrm2(x: *const gsl_vector_complex_float) -> c_float;
+    pub fn gsl_blas_dznrm2(x: *const gsl_vector_complex) -> c_double;
+    pub fn gsl_blas_sasum(x: *const gsl_vector_float) -> c_float;
+    pub fn gsl_blas_dasum(x: *const gsl_vector) -> c_double;
+    pub fn gsl_blas_scasum(x: *const gsl_vector_complex_float) -> c_float;
+    pub fn gsl_blas_dzasum(x: *const gsl_vector_complex) -> c_double;
+
+    pub fn gsl_blas_isamax(x: *const gsl_vector_float) -> CBLAS_INDEX_t;
+    pub fn gsl_blas_idamax(x: *const gsl_vector) -> CBLAS_INDEX_t;
+    pub fn gsl_blas_icamax(x: *const gsl_vector_complex_float) -> CBLAS_INDEX_t;
+    pub fn gsl_blas_izamax(x: *const gsl_vector_complex) -> CBLAS_INDEX_t;
+    pub fn gsl_blas_sswap(x: *mut gsl_vector_float, y: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_blas_dswap(x: *mut gsl_vector, y: *mut gsl_vector) -> c_int;
+    pub fn gsl_blas_cswap(x: *mut gsl_vector_complex_float, y: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_blas_zswap(x: *mut gsl_vector_complex, y: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_blas_scopy(x: *const gsl_vector_float, y: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_blas_dcopy(x: *const gsl_vector, y: *mut gsl_vector) -> c_int;
+    pub fn gsl_blas_ccopy(x: *const gsl_vector_complex_float, y: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_blas_zcopy(x: *const gsl_vector_complex, y: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_blas_saxpy(alpha: c_float, x: *const gsl_vector_float, y: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_blas_daxpy(alpha: f64, x: *const gsl_vector, y: *mut gsl_vector) -> c_int;
+    pub fn gsl_blas_caxpy(alpha: gsl_complex_float, x: *const gsl_vector_complex_float, y: *mut gsl_vector_complex_float) -> c_int;
+    pub fn gsl_blas_zaxpy(alpha: gsl_complex, x: *const gsl_vector_complex, y: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_blas_sscal(alpha: c_float, x: *mut gsl_vector_float);
+    pub fn gsl_blas_dscal(alpha: c_double, x: *mut gsl_vector);
+    pub fn gsl_blas_cscal(alpha: gsl_complex_float, x: *mut gsl_vector_complex_float);
+    pub fn gsl_blas_zscal(alpha: gsl_complex, x: *mut gsl_vector_complex);
+    pub fn gsl_blas_csscal(alpha: c_float, x: *mut gsl_vector_complex_float);
+    pub fn gsl_blas_zdscal(alpha: c_double, x: *mut gsl_vector_complex);
+    pub fn gsl_blas_srotg(a: *mut c_float, b: *mut c_float, c: *mut c_float, d: *mut c_float) -> c_int;
+    pub fn gsl_blas_drotg(a: *mut c_double, b: *mut c_double, c: *mut c_double, d: *mut c_double) -> c_int;
+    pub fn gsl_blas_srot(a: *mut gsl_vector_float, b: *mut gsl_vector_float, c: c_float, d: c_float) -> c_int;
+    pub fn gsl_blas_drot(a: *mut gsl_vector, b: *mut gsl_vector, c: c_double, d: c_double) -> c_int;
+    pub fn gsl_blas_srotmg(d1: *mut c_float, d2: *mut c_float, b1: *mut c_float, b2: c_float, P: *mut c_float) -> c_int;
+    pub fn gsl_blas_drotmg(d1: *mut c_double, d2: *mut c_double, b1: *mut c_double, b2: c_double, P: *mut c_double) -> c_int;
+    pub fn gsl_blas_srotm(x: *mut gsl_vector_float, y: *mut gsl_vector_float, P: *mut c_float) -> c_int;
+    pub fn gsl_blas_drotm(x: *mut gsl_vector, y: *mut gsl_vector, P: *mut c_double) -> c_int;
 }
 
 pub struct gsl_sf_result {
