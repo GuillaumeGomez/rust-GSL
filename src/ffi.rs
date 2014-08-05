@@ -566,7 +566,6 @@ extern "C" {
     pub fn gsl_blas_dasum(x: *const gsl_vector) -> c_double;
     pub fn gsl_blas_scasum(x: *const gsl_vector_complex_float) -> c_float;
     pub fn gsl_blas_dzasum(x: *const gsl_vector_complex) -> c_double;
-
     pub fn gsl_blas_isamax(x: *const gsl_vector_float) -> CBLAS_INDEX_t;
     pub fn gsl_blas_idamax(x: *const gsl_vector) -> CBLAS_INDEX_t;
     pub fn gsl_blas_icamax(x: *const gsl_vector_complex_float) -> CBLAS_INDEX_t;
