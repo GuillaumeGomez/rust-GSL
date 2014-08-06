@@ -19,4 +19,17 @@ fn main() {
     let tmp_vec = rgsl::Gsl::VectorFloat::from_slice([1f32, 0f32, 3f32, 2f32]).unwrap();
     println!("min value : {}\nmin value index : {}", tmp_vec.min(), tmp_vec.min_index());
     println!("max value : {}\nmax value index : {}", tmp_vec.max(), tmp_vec.max_index());
+    println!("{}", tmp_vec);
+
+    println!("\n=== MatrixFloat tests ===");
+    let tmp_mat = rgsl::Gsl::MatrixFloat::new(2u64, 3u64).unwrap();
+    tmp_mat.set(1, 2, 42f32);
+    tmp_mat.set(0, 0, 1f32);
+    match tmp_mat.min_index() {
+        (i, j) => {println!("min value : {}\nmin value index : {}-{}", tmp_mat.min(), i, j);}
+    };
+    match tmp_mat.max_index() {
+        (i, j) => {println!("max value : {}\nmax value index : {}-{}", tmp_mat.max(), i, j);}
+    };
+    println!("{}", tmp_mat);
 }

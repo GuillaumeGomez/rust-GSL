@@ -269,4 +269,30 @@ pub mod Blas {
             unsafe { ::ffi::gsl_blas_drotm(x. get_ffi(), y.get_ffi(), P.as_mut_ptr()) }
         }
     }
+
+    pub mod Level2 {
+        use Gsl;
+
+        pub fn sgemv(transA: ::enums::CblasTranspose, alpha: f32, A: &Gsl::MatrixFloat, x: &Gsl::VectorFloat, beta: f32, y: &mut Gsl::VectorFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_sgemv(transA, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float, x.get_ffi() as *const ::ffi::gsl_vector_float,
+                beta, y.get_ffi()) }
+        }
+
+        pub fn dgemv(transA: ::enums::CblasTranspose, alpha: f64, A: &Gsl::Matrix, x: &Gsl::Vector, beta: f64, y: &mut Gsl::Vector) -> i32 {
+            unsafe { ::ffi::gsl_blas_dgemv(transA, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, x.get_ffi() as *const ::ffi::gsl_vector,
+                beta, y.get_ffi()) }
+        }
+
+        pub fn cgemv(transA: ::enums::CblasTranspose, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, x: &Gsl::VectorComplexFloat,
+            beta: &Gsl::ComplexFloat, y: &mut Gsl::VectorComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cgemv(transA, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                x.get_ffi() as *const ::ffi::gsl_vector_complex_float, ::std::mem::transmute(*beta), y.get_ffi()) }
+        }
+
+        pub fn zgemv(transA: ::enums::CblasTranspose, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, x: &Gsl::VectorComplex, beta: &Gsl::Complex,
+            y: &mut Gsl::VectorComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zgemv(transA, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                x.get_ffi() as *const ::ffi::gsl_vector_complex, ::std::mem::transmute(*beta), y.get_ffi()) }
+        }
+    }
 }
