@@ -273,26 +273,228 @@ pub mod Blas {
     pub mod Level2 {
         use Gsl;
 
+        /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
         pub fn sgemv(transA: ::enums::CblasTranspose, alpha: f32, A: &Gsl::MatrixFloat, x: &Gsl::VectorFloat, beta: f32, y: &mut Gsl::VectorFloat) -> i32 {
             unsafe { ::ffi::gsl_blas_sgemv(transA, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float, x.get_ffi() as *const ::ffi::gsl_vector_float,
                 beta, y.get_ffi()) }
         }
 
+        /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
         pub fn dgemv(transA: ::enums::CblasTranspose, alpha: f64, A: &Gsl::Matrix, x: &Gsl::Vector, beta: f64, y: &mut Gsl::Vector) -> i32 {
             unsafe { ::ffi::gsl_blas_dgemv(transA, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, x.get_ffi() as *const ::ffi::gsl_vector,
                 beta, y.get_ffi()) }
         }
 
+        /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
         pub fn cgemv(transA: ::enums::CblasTranspose, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, x: &Gsl::VectorComplexFloat,
             beta: &Gsl::ComplexFloat, y: &mut Gsl::VectorComplexFloat) -> i32 {
             unsafe { ::ffi::gsl_blas_cgemv(transA, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
                 x.get_ffi() as *const ::ffi::gsl_vector_complex_float, ::std::mem::transmute(*beta), y.get_ffi()) }
         }
 
+        /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
         pub fn zgemv(transA: ::enums::CblasTranspose, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, x: &Gsl::VectorComplex, beta: &Gsl::Complex,
             y: &mut Gsl::VectorComplex) -> i32 {
             unsafe { ::ffi::gsl_blas_zgemv(transA, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
                 x.get_ffi() as *const ::ffi::gsl_vector_complex, ::std::mem::transmute(*beta), y.get_ffi()) }
+        }
+
+        /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn strmv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::MatrixFloat,
+            x: &mut Gsl::VectorFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_strmv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix_float, x.get_ffi()) }
+        }
+
+        /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn dtrmv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::Matrix,
+            x: &mut Gsl::Vector) -> i32 {
+            unsafe { ::ffi::gsl_blas_dtrmv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix, x.get_ffi()) }
+        }
+    
+        /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ctrmv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::MatrixComplexFloat,
+            x: &mut Gsl::VectorComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ctrmv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix_complex_float, x.get_ffi()) }
+        }
+    
+        /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ztrmv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::MatrixComplex,
+            x: &mut Gsl::VectorComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_ztrmv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix_complex, x.get_ffi()) }
+        }
+
+        /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn strsv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::MatrixFloat,
+            x: &mut Gsl::VectorFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_strsv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix_float, x.get_ffi()) }
+        }
+
+        /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn dtrsv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::Matrix,
+            x: &mut Gsl::Vector) -> i32 {
+            unsafe { ::ffi::gsl_blas_dtrsv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix, x.get_ffi()) }
+        }
+    
+        /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ctrsv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::MatrixComplexFloat,
+            x: &mut Gsl::VectorComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ctrsv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix_complex_float, x.get_ffi()) }
+        }
+    
+        /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
+        /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
+        /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ztrsv(uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag, A: &Gsl::MatrixComplex,
+            x: &mut Gsl::VectorComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_ztrsv(uplo, transA, diag, A.get_ffi() as *const ::ffi::gsl_matrix_complex, x.get_ffi()) }
+        }
+
+        /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the symmetric matrix A.
+        /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn ssymv(uplo: ::enums::CblasUplo, alpha: f32, A: &Gsl::MatrixFloat, x: &Gsl::VectorFloat, beta: f32, y: &mut Gsl::VectorFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ssymv(uplo, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float,
+                x.get_ffi() as *const ::ffi::gsl_vector_float, beta, y.get_ffi()) }
+        }
+
+        /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the symmetric matrix A.
+        /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn dsymv(uplo: ::enums::CblasUplo, alpha: f64, A: &Gsl::Matrix, x: &Gsl::Vector, beta: f64, y: &mut Gsl::Vector) -> i32 {
+            unsafe { ::ffi::gsl_blas_dsymv(uplo, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, x.get_ffi() as *const ::ffi::gsl_vector,
+                beta, y.get_ffi()) }
+        }
+
+        /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the hermitian matrix A.
+        /// Since the matrix A is hermitian only its upper half or lower half need to be stored. When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically assumed to be zero and are not referenced.
+        pub fn chemv(uplo: ::enums::CblasUplo, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, x: &Gsl::VectorComplexFloat,
+            beta: &Gsl::ComplexFloat, y: &mut Gsl::VectorComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_chemv(uplo, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                x.get_ffi() as *const ::ffi::gsl_vector_complex_float, ::std::mem::transmute(*beta), y.get_ffi()) }
+        }
+
+        /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the hermitian matrix A.
+        /// Since the matrix A is hermitian only its upper half or lower half need to be stored. When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically assumed to be zero and are not referenced.
+        pub fn zhemv(uplo: ::enums::CblasUplo, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, x: &Gsl::VectorComplex, beta: &Gsl::Complex,
+            y: &mut Gsl::VectorComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zhemv(uplo, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                x.get_ffi() as *const ::ffi::gsl_vector_complex, ::std::mem::transmute(*beta), y.get_ffi()) }
+        }
+
+        /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
+        pub fn sger(alpha: f32, x: &Gsl::VectorFloat, y: &Gsl::VectorFloat, A: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_sger(alpha, x.get_ffi() as *const ::ffi::gsl_vector_float,
+                y.get_ffi() as *const ::ffi::gsl_vector_float, A.get_ffi()) }
+        }
+
+        /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
+        pub fn dger(alpha: f64, x: &Gsl::Vector, y: &Gsl::Vector, A: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dger(alpha, x.get_ffi() as *const ::ffi::gsl_vector, y.get_ffi() as *const ::ffi::gsl_vector,
+                A.get_ffi()) }
+        }
+
+        /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
+        pub fn cgeru(alpha: &Gsl::ComplexFloat, x: &Gsl::VectorComplexFloat, y: &Gsl::VectorComplexFloat, A: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cgeru(::std::mem::transmute(*alpha), x.get_ffi() as *const ::ffi::gsl_vector_complex_float,
+                y.get_ffi() as *const ::ffi::gsl_vector_complex_float, A.get_ffi()) }
+        }
+
+        /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
+        pub fn zgeru(alpha: &Gsl::Complex, x: &Gsl::VectorComplex, y: &Gsl::VectorComplex, A: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zgeru(::std::mem::transmute(*alpha), x.get_ffi() as *const ::ffi::gsl_vector_complex,
+                y.get_ffi() as *const ::ffi::gsl_vector_complex, A.get_ffi()) }
+        }
+
+        /// This function computes the conjugate rank-1 update A = \alpha x y^H + A of the matrix A.
+        pub fn cgerc(alpha: &Gsl::ComplexFloat, x: &Gsl::VectorComplexFloat, y: &Gsl::VectorComplexFloat, A: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cgerc(::std::mem::transmute(*alpha), x.get_ffi() as *const ::ffi::gsl_vector_complex_float,
+                y.get_ffi() as *const ::ffi::gsl_vector_complex_float, A.get_ffi()) }
+        }
+
+        /// This function computes the conjugate rank-1 update A = \alpha x y^H + A of the matrix A.
+        pub fn zgerc(alpha: &Gsl::Complex, x: &Gsl::VectorComplex, y: &Gsl::VectorComplex, A: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zgerc(::std::mem::transmute(*alpha), x.get_ffi() as *const ::ffi::gsl_vector_complex,
+                y.get_ffi() as *const ::ffi::gsl_vector_complex, A.get_ffi()) }
+        }
+
+        /// This function computes the symmetric rank-1 update A = \alpha x x^T + A of the symmetric matrix A. Since the matrix A is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn ssyr(uplo: ::enums::CblasUplo, alpha: f32, x: &Gsl::VectorFloat, A: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ssyr(uplo, alpha, x.get_ffi() as *const ::ffi::gsl_vector_float, A.get_ffi()) }
+        }
+
+        /// This function computes the symmetric rank-1 update A = \alpha x x^T + A of the symmetric matrix A. Since the matrix A is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn dsyr(uplo: ::enums::CblasUplo, alpha: f64, x: &Gsl::Vector, A: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dsyr(uplo, alpha, x.get_ffi() as *const ::ffi::gsl_vector, A.get_ffi()) }
+        }
+
+        /// These functions compute the hermitian rank-1 update A = \alpha x x^H + A of the hermitian matrix A.
+        /// Since the matrix A is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn cher(uplo: ::enums::CblasUplo, alpha: f32, x: &Gsl::VectorComplexFloat, A: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cher(uplo, alpha, x.get_ffi() as *const ::ffi::gsl_vector_complex_float, A.get_ffi()) }
+        }
+
+        /// These functions compute the hermitian rank-1 update A = \alpha x x^H + A of the hermitian matrix A.
+        /// Since the matrix A is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn zher(uplo: ::enums::CblasUplo, alpha: f64, x: &Gsl::VectorComplex, A: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zher(uplo, alpha, x.get_ffi() as *const ::ffi::gsl_vector_complex, A.get_ffi()) }
+        }
+
+        /// These functions compute the symmetric rank-2 update A = \alpha x y^T + \alpha y x^T + A of the symmetric matrix A.
+        /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn ssyr2(uplo: ::enums::CblasUplo, alpha: f32, x: &Gsl::VectorFloat, y: &Gsl::VectorFloat, A: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ssyr2(uplo, alpha, x.get_ffi() as *const ::ffi::gsl_vector_float, y.get_ffi() as *const ::ffi::gsl_vector_float,
+                A.get_ffi()) }
+        }
+
+        /// These functions compute the symmetric rank-2 update A = \alpha x y^T + \alpha y x^T + A of the symmetric matrix A.
+        /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn dsyr2(uplo: ::enums::CblasUplo, alpha: f64, x: &Gsl::Vector, y: &Gsl::Vector, A: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dsyr2(uplo, alpha, x.get_ffi() as *const ::ffi::gsl_vector, y.get_ffi() as *const ::ffi::gsl_vector,
+                A.get_ffi()) }
+        }
+
+        /// These functions compute the hermitian rank-2 update A = \alpha x y^H + \alpha^* y x^H + A of the hermitian matrix A.
+        /// Since the matrix A is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn cher2(uplo: ::enums::CblasUplo, alpha: &Gsl::ComplexFloat, x: &Gsl::VectorComplexFloat, y: &Gsl::VectorComplexFloat,
+            A: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cher2(uplo, ::std::mem::transmute(*alpha), x.get_ffi() as *const ::ffi::gsl_vector_complex_float,
+                y.get_ffi() as *const ::ffi::gsl_vector_complex_float, A.get_ffi()) }
+        }
+
+        /// These functions compute the hermitian rank-2 update A = \alpha x y^H + \alpha^* y x^H + A of the hermitian matrix A.
+        /// Since the matrix A is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn zher2(uplo: ::enums::CblasUplo, alpha: &Gsl::Complex, x: &Gsl::VectorComplex, y: &Gsl::VectorComplex,
+            A: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zher2(uplo, ::std::mem::transmute(*alpha), x.get_ffi() as *const ::ffi::gsl_vector_complex,
+                y.get_ffi() as *const ::ffi::gsl_vector_complex, A.get_ffi()) }
         }
     }
 }
