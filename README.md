@@ -1,7 +1,7 @@
 rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL)
 ========
 
-A __Rust__ binding for the [GSL library](http://www.gnu.org/software/gsl/).
+A __Rust__ binding for the [GSL library](http://www.gnu.org/software/gsl/) (the GNU Scientific Library).
 
 ##Installation
 
