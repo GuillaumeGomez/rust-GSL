@@ -52,4 +52,36 @@ fn main() {
     println!("Simple Elementary test (acosh(1.0)) : {}", rgsl::Elementary::acosh(1f64));
     println!("Simple Elementary test (asinh(1.0)) : {}", rgsl::Elementary::asinh(1f64));
     println!("Simple Elementary test (atanh(1.0)) : {}", rgsl::Elementary::atanh(1f64));
+
+    println!("\n=== Fit tests ===");
+    let x = [1970f64, 1980f64, 1990f64, 2000f64];
+    let y = [12f64, 11f64, 14f64, 13f64];
+    let w = [0.1f64, 0.2f64, 0.3f64, 0.4f64];
+    let mut c0 = 0f64;
+    let mut c1 = 0f64;
+    let mut cov00 = 0f64;
+    let mut cov01 = 0f64;
+    let mut cov11 = 0f64;
+    let mut chisq = 0f64;
+
+    rgsl::Fit::wlinear(x, 1, w, 1, y, 1, x.len() as u64, &mut c0, &mut c1, &mut cov00, &mut cov01, &mut cov11, &mut chisq);
+    println!("=> wlinear test :");
+    println!("best fit: Y = {} + {} X", c0, c1);
+    println!("covariance matrix:");
+    println!("[{}, {}\n {}, {}]", cov00, cov01, cov01, cov11);
+    println!("chisq = {}\n", chisq);
+
+    let dx = [2.3f64, 2.4f64, 2.1f64, 2.6f64, 3f64];
+    let dfx = [10f64, 12f64, 15f64, 8f64, 16f64];
+    let mut sumsq = 0f64;
+
+    rgsl::Fit::mul(dx, 1, dfx, 1, dx.len() as u64, &mut c1, &mut cov11, &mut sumsq);
+    println!("=> mul test :");
+    for i in range(0, dx.len()) {
+        println!("dfx[{}]/dx[{}] = {} / {} = {}", i, i, dfx[i], dx[i], dfx[i] / dx[i]);
+    }
+    println!("---------------------------");
+    println!("Y = c1 X ==> c1 = {}", c1);
+    println!("cov11 = {}", cov11);
+    println!("sumsq = {}", sumsq);
 }

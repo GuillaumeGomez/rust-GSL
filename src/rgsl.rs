@@ -1,6 +1,6 @@
-/*
- * A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
- */
+//
+// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+//
 
 /*!
 rust-gsl
@@ -71,6 +71,7 @@ pub use blas::Blas;
 pub use canonical::Canonical;
 pub use cblas::Cblas;
 pub use elementary::Elementary;
+pub use fit::Fit;
 pub use types::Gsl;
 
 pub use self::enums::{
@@ -100,6 +101,7 @@ pub mod blas;
 pub mod canonical;
 pub mod cblas;
 pub mod elementary;
+pub mod fit;
 
 #[cfg(target_os = "linux")]
 mod platform {

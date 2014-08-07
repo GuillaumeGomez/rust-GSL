@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use libc::{c_double, c_int, c_uint, c_float, c_void, c_ulong};
+use libc::{c_double, c_int, c_uint, c_float, c_void, c_ulong, size_t};
 use types;
 use enums;
 
@@ -962,6 +962,20 @@ extern "C" {
         B: *const gsl_matrix_complex_float, beta: c_float, C: *mut gsl_matrix_complex_float) -> c_int;
     pub fn gsl_blas_zher2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
         B: *const gsl_matrix_complex, beta: c_double, C: *mut gsl_matrix_complex) -> c_int;
+
+    // Fit functions
+    pub fn gsl_fit_linear(x: *const c_double, xstride: size_t, y: *const c_double, ystride: size_t, n: size_t, c0: *mut c_double, c1: *mut c_double,
+        cov00: *mut c_double, cov01: *mut c_double, cov11: *mut c_double, sumsq: c_double) -> c_int;
+    pub fn gsl_fit_wlinear(x: *const c_double, xstride: size_t, w: *const c_double, wstride: size_t, y: *const c_double, ystride: size_t,
+        n: size_t, c0: *mut c_double, c1: *mut c_double, cov00: *mut c_double, cov01: *mut c_double, cov11: *mut c_double,
+        chisq: *mut c_double) -> c_int;
+    pub fn gsl_fit_linear_est(x: c_double, c0: c_double, c1: c_double, cov00: c_double, cov01: c_double, cov11: c_double, y: *mut c_double,
+        y_err: *mut c_double) -> c_int;
+    pub fn gsl_fit_mul(x: *const c_double, xstride: size_t, y: *const c_double, ystride: size_t, n: size_t, c1: *mut c_double,
+        cov11: *mut c_double, sumsq: *mut c_double) -> c_int;
+    pub fn gsl_fit_wmul(x: *const c_double, xstride: size_t, w: *const c_double, wstride: size_t, y: *const c_double, ystride: size_t,
+        n: size_t, c1: *mut c_double, cov11: *mut c_double, sumsq: *mut c_double) -> c_int;
+    pub fn gsl_fit_mul_est(x: c_double, c1: c_double, cov11: c_double, y: *mut c_double, y_err: *mut c_double) -> c_int;
 }
 
 pub struct gsl_sf_result {
