@@ -497,4 +497,270 @@ pub mod Blas {
                 y.get_ffi() as *const ::ffi::gsl_vector_complex, A.get_ffi()) }
         }
     }
+
+    pub mod Level3 {
+        use Gsl;
+
+        /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
+        pub fn sgemm(transA: ::enums::CblasTranspose, transB: ::enums::CblasTranspose, alpha: f32, A: &Gsl::MatrixFloat,
+            B: &Gsl::MatrixFloat, beta: f32, C: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_sgemm(transA, transB, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_float, beta, C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
+        pub fn dgemm(transA: ::enums::CblasTranspose, transB: ::enums::CblasTranspose, alpha: f64, A: &Gsl::Matrix, B: &Gsl::Matrix,
+            beta: f64, C: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dgemm(transA, transB, alpha, A.get_ffi() as *const ::ffi::gsl_matrix,
+                B.get_ffi() as *const ::ffi::gsl_matrix, beta, C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
+        pub fn cgemm(transA: ::enums::CblasTranspose, transB: ::enums::CblasTranspose, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat,
+            B: &Gsl::MatrixComplexFloat, beta: &Gsl::ComplexFloat, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cgemm(transA, transB, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex_float, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
+        pub fn zgemm(transA: ::enums::CblasTranspose, transB: ::enums::CblasTranspose, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex,
+            B: &Gsl::MatrixComplex, beta: &Gsl::Complex, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zgemm(transA, transB, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn ssymm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, alpha: f32, A: &Gsl::MatrixFloat, B: &Gsl::MatrixFloat, beta: f32,
+            C: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ssymm(side, uplo, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float, B.get_ffi() as *const ::ffi::gsl_matrix_float,
+                beta, C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn dsymm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, alpha: f64, A: &Gsl::Matrix, B: &Gsl::Matrix, beta: f64,
+            C: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dsymm(side, uplo, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, B.get_ffi() as *const ::ffi::gsl_matrix,
+                beta, C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn csymm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, B: &Gsl::MatrixComplexFloat,
+            beta: &Gsl::ComplexFloat, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_csymm(side, uplo, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex_float, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        pub fn zsymm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, B: &Gsl::MatrixComplex,
+            beta: &Gsl::Complex, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zsymm(side, uplo, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is Left and C = \alpha B A + \beta C for Side is Right, where the matrix A is hermitian.
+        /// When Uplo is Upper then the upper triangle and diagonal of A are used, and when Uplo is Lower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn chemm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, B: &Gsl::MatrixComplexFloat,
+            beta: &Gsl::ComplexFloat, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_chemm(side, uplo, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex_float, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is hermitian.
+        /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn zhemm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, B: &Gsl::MatrixComplex,
+            beta: &Gsl::Complex, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zhemm(side, uplo, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn strmm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: f32, A: &Gsl::MatrixFloat, B: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_strmm(side, uplo, transA, diag, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float, B.get_ffi()) }
+        }
+
+        /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn dtrmm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: f64, A: &Gsl::Matrix, B: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dtrmm(side, uplo, transA, diag, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, B.get_ffi()) }
+        }
+        
+        /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ctrmm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, B: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ctrmm(side, uplo, transA, diag, ::std::mem::transmute(*alpha),
+                A.get_ffi() as *const ::ffi::gsl_matrix_complex_float, B.get_ffi()) }
+        }
+        
+        /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ztrmm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, B: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_ztrmm(side, uplo, transA, diag, ::std::mem::transmute(*alpha),
+                A.get_ffi() as *const ::ffi::gsl_matrix_complex, B.get_ffi()) }
+        }
+
+        /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn strsm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: f32, A: &Gsl::MatrixFloat, B: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_strsm(side, uplo, transA, diag, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float, B.get_ffi()) }
+        }
+
+        /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn dtrsm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: f64, A: &Gsl::Matrix, B: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dtrsm(side, uplo, transA, diag, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, B.get_ffi()) }
+        }
+
+        /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ctrsm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat, B: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ctrsm(side, uplo, transA, diag, ::std::mem::transmute(*alpha),
+                A.get_ffi() as *const ::ffi::gsl_matrix_complex_float, B.get_ffi()) }
+        }
+
+        /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
+        /// The matrix A is triangular and op(A) = A, A^T, A^H for TransA = NoTrans, Trans, ConjTrans.
+        /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
+        /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
+        pub fn ztrsm(side: ::enums::CblasSide, uplo: ::enums::CblasUplo, transA: ::enums::CblasTranspose, diag: ::enums::CblasDiag,
+            alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, B: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_ztrsm(side, uplo, transA, diag, ::std::mem::transmute(*alpha),
+                A.get_ffi() as *const ::ffi::gsl_matrix_complex, B.get_ffi()) }
+        }
+
+        /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn ssyrk(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: f32, A: &Gsl::MatrixFloat, beta: f32,
+            C: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ssyrk(uplo, trans, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float, beta, C.get_ffi()) }
+        }
+
+        /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn dsyrk(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: f64, A: &Gsl::Matrix, beta: f64,
+            C: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dsyrk(uplo, trans, alpha, A.get_ffi() as *const ::ffi::gsl_matrix, beta, C.get_ffi()) }
+        }
+
+        /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn csyrk(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat,
+            beta: &Gsl::ComplexFloat, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_csyrk(uplo, trans, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn zsyrk(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex,
+            beta: &Gsl::Complex, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zsyrk(uplo, trans, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// These functions compute a rank-k update of the hermitian matrix C, C = \alpha A A^H + \beta C when Trans is NoTrans and C = \alpha A^H A + \beta C when Trans is ConjTrans.
+        /// Since the matrix C is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn cherk(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: f32, A: &Gsl::MatrixComplexFloat,
+            beta: f32, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cherk(uplo, trans, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_complex_float, beta, C.get_ffi()) }
+        }
+
+        /// These functions compute a rank-k update of the hermitian matrix C, C = \alpha A A^H + \beta C when Trans is NoTrans and C = \alpha A^H A + \beta C when Trans is ConjTrans.
+        /// Since the matrix C is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn zherk(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: f64, A: &Gsl::MatrixComplex,
+            beta: f64, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zherk(uplo, trans, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_complex, beta, C.get_ffi()) }
+        }
+
+        /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn ssyr2k(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: f32, A: &Gsl::MatrixFloat, B: &Gsl::MatrixFloat,
+            beta: f32,  C: &mut Gsl::MatrixFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_ssyr2k(uplo, trans, alpha, A.get_ffi() as *const ::ffi::gsl_matrix_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_float, beta, C.get_ffi()) }
+        }
+
+        /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn dsyr2k(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: f64, A: &Gsl::Matrix, B: &Gsl::Matrix, beta: f64,
+            C: &mut Gsl::Matrix) -> i32 {
+            unsafe { ::ffi::gsl_blas_dsyr2k(uplo, trans, alpha, A.get_ffi() as *const ::ffi::gsl_matrix,
+                B.get_ffi() as *const ::ffi::gsl_matrix, beta, C.get_ffi()) }
+        }
+
+        /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn csyr2k(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat,
+            B: &Gsl::MatrixComplexFloat, beta: &Gsl::ComplexFloat, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_csyr2k(uplo, trans, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex_float, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+
+        /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
+        /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        pub fn zsyr2k(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, B: &Gsl::MatrixComplex,
+            beta: &Gsl::Complex, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zsyr2k(uplo, trans, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex, ::std::mem::transmute(*beta), C.get_ffi()) }
+        }
+        
+        /// This function computes a rank-2k update of the hermitian matrix C, C = \alpha A B^H + \alpha^* B A^H + \beta C when Trans is NoTrans and C = \alpha A^H B + \alpha^* B^H A + \beta C when Trans is ConjTrans.
+        /// Since the matrix C is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn cher2k(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: &Gsl::ComplexFloat, A: &Gsl::MatrixComplexFloat,
+            B: &Gsl::MatrixComplexFloat, beta: f32, C: &mut Gsl::MatrixComplexFloat) -> i32 {
+            unsafe { ::ffi::gsl_blas_cher2k(uplo, trans, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex_float,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex_float, beta, C.get_ffi()) }
+        }
+
+        /// This function computes a rank-2k update of the hermitian matrix C, C = \alpha A B^H + \alpha^* B A^H + \beta C when Trans is NoTrans and C = \alpha A^H B + \alpha^* B^H A + \beta C when Trans is ConjTrans.
+        /// Since the matrix C is hermitian only its upper half or lower half need to be stored.
+        /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
+        /// The imaginary elements of the diagonal are automatically set to zero.
+        pub fn zher2k(uplo: ::enums::CblasUplo, trans: ::enums::CblasTranspose, alpha: &Gsl::Complex, A: &Gsl::MatrixComplex, B: &Gsl::MatrixComplex,
+            beta: f64, C: &mut Gsl::MatrixComplex) -> i32 {
+            unsafe { ::ffi::gsl_blas_zher2k(uplo, trans, ::std::mem::transmute(*alpha), A.get_ffi() as *const ::ffi::gsl_matrix_complex,
+                B.get_ffi() as *const ::ffi::gsl_matrix_complex, beta, C.get_ffi()) }
+        }
+    }
 }

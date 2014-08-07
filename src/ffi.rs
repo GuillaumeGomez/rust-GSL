@@ -11,6 +11,7 @@ pub type CBLAS_INDEX_t = CBLAS_INDEX;
 pub type CBLAS_TRANSPOSE_t = enums::CblasTranspose;
 pub type CBLAS_UPLO_t = enums::CblasUplo;
 pub type CBLAS_DIAG_t = enums::CblasDiag;
+pub type CBLAS_SIDE_t = enums::CblasSide;
 
 extern "C" {
     // Airy functions
@@ -780,6 +781,67 @@ extern "C" {
         A: *mut gsl_matrix_complex_float) -> c_int;
     pub fn gsl_blas_zher2(uplo: CBLAS_UPLO_t, alpha: gsl_complex, x: *const gsl_vector_complex, y: *const gsl_vector_complex,
         A: *mut gsl_matrix_complex) -> c_int;
+    // Level 3 BLAS functions
+    pub fn gsl_blas_sgemm(transA: CBLAS_TRANSPOSE_t, transB: CBLAS_TRANSPOSE_t, alpha: c_float, A: *const gsl_matrix_float,
+        B: *const gsl_matrix_float, beta: c_float, C: *mut gsl_matrix_float) -> c_int;
+    pub fn gsl_blas_dgemm(transA: CBLAS_TRANSPOSE_t, transB: CBLAS_TRANSPOSE_t, alpha: c_double, A: *const gsl_matrix,
+        B: *const gsl_matrix, beta: c_double, C: *mut gsl_matrix) -> c_int;
+    pub fn gsl_blas_cgemm(transA: CBLAS_TRANSPOSE_t, transB: CBLAS_TRANSPOSE_t, alpha: gsl_complex_float, A: *const gsl_matrix_complex_float,
+        B: *const gsl_matrix_complex_float, beta: gsl_complex_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zgemm(transA: CBLAS_TRANSPOSE_t, transB: CBLAS_TRANSPOSE_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
+        B: *const gsl_matrix_complex, beta: gsl_complex, C: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_ssymm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, alpha: c_float, A: *const gsl_matrix_float, B: *const gsl_matrix_float,
+        beta: c_float, C: *mut gsl_matrix_float) -> c_int;
+    pub fn gsl_blas_dsymm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, alpha: c_double, A: *const gsl_matrix, B: *const gsl_matrix,
+        beta: c_double, C: *mut gsl_matrix) -> c_int;
+    pub fn gsl_blas_csymm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, alpha: gsl_complex_float, A: *const gsl_matrix_complex_float,
+        B: *const gsl_matrix_complex_float, beta: gsl_complex_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zsymm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
+        B: *const gsl_matrix_complex, beta: gsl_complex, C: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_chemm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, alpha: gsl_complex_float, A: *const gsl_matrix_complex_float,
+        B: *const gsl_matrix_complex_float, beta: gsl_complex_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zhemm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
+        B: *const gsl_matrix_complex, beta: gsl_complex, C: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_strmm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: c_float,
+        A: *const gsl_matrix_float, B: *mut gsl_matrix_float) -> c_int;
+    pub fn gsl_blas_dtrmm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: c_double,
+        A: *const gsl_matrix, B: *mut gsl_matrix) -> c_int;
+    pub fn gsl_blas_ctrmm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: gsl_complex_float,
+        A: *const gsl_matrix_complex_float, B: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_ztrmm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: gsl_complex,
+        A: *const gsl_matrix_complex, B: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_strsm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: c_float,
+        A: *const gsl_matrix_float, B: *mut gsl_matrix_float) -> c_int;
+    pub fn gsl_blas_dtrsm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: c_double,
+        A: *const gsl_matrix, B: *mut gsl_matrix) -> c_int;
+    pub fn gsl_blas_ctrsm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: gsl_complex_float,
+        A: *const gsl_matrix_complex_float, B: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_ztrsm(side: CBLAS_SIDE_t, uplo: CBLAS_UPLO_t, transA: CBLAS_TRANSPOSE_t, diag: CBLAS_DIAG_t, alpha: gsl_complex,
+        A: *const gsl_matrix_complex, B: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_ssyrk(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: c_float, A: *const gsl_matrix_float, beta: c_float,
+        C: *mut gsl_matrix_float) -> c_int;
+    pub fn gsl_blas_dsyrk(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: c_double, A: *const gsl_matrix, beta: c_double,
+        C: *mut gsl_matrix) -> c_int;
+    pub fn gsl_blas_csyrk(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex_float, A: *const gsl_matrix_complex_float,
+        beta: gsl_complex_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zsyrk(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
+        beta: gsl_complex, C: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_cherk(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: c_float, A: *const gsl_matrix_complex_float,
+        beta: c_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zherk(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: c_double, A: *const gsl_matrix_complex,
+        beta: c_double, C: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_ssyr2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: c_float, A: *const gsl_matrix_float,
+        B: *const gsl_matrix_float, beta: c_float, C: *mut gsl_matrix_float) -> c_int;
+    pub fn gsl_blas_dsyr2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: c_double, A: *const gsl_matrix, B: *const gsl_matrix,
+        beta: c_double, C: *mut gsl_matrix) -> c_int;
+    pub fn gsl_blas_csyr2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex_float, A: *const gsl_matrix_complex_float,
+        B: *const gsl_matrix_complex_float, beta: gsl_complex_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zsyr2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
+        B: *const gsl_matrix_complex, beta: gsl_complex, C: *mut gsl_matrix_complex) -> c_int;
+    pub fn gsl_blas_cher2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex_float, A: *const gsl_matrix_complex_float,
+        B: *const gsl_matrix_complex_float, beta: c_float, C: *mut gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_blas_zher2k(uplo: CBLAS_UPLO_t, trans: CBLAS_TRANSPOSE_t, alpha: gsl_complex, A: *const gsl_matrix_complex,
+        B: *const gsl_matrix_complex, beta: c_double, C: *mut gsl_matrix_complex) -> c_int;
 }
 
 pub struct gsl_sf_result {
