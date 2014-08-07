@@ -4,6 +4,8 @@
 
 extern crate rgsl;
 
+use std::default::Default;
+
 fn main() {
     println!("=== VectorFloat tests ===");
     let tmp_vec = rgsl::Gsl::VectorFloat::from_slice([1f32, 0f32, 3f32, 2f32]).unwrap();
@@ -22,6 +24,16 @@ fn main() {
         (i, j) => {println!("max value : {}\nmax value index : {}-{}", tmp_mat.max(), i, j);}
     };
     println!("{}", tmp_mat);
+
+    println!("\n=== Complex tests ===");
+    let mut tmp_complex : rgsl::Gsl::Complex = Default::default();
+    tmp_complex.data[0] = -1f64;
+    println!("abs : {}", tmp_complex.abs());
+    println!("add_real : {}", tmp_complex.add_real(14f64));
+    tmp_complex.data[0] = 3f64;
+    println!("sqrt : {}", tmp_complex.sqrt());
+    tmp_complex.data[1] = 14f64;
+    println!("sqrt : {}", tmp_complex.sqrt());
 
     println!("\n=== Modules tests ===");
     println!("Simple Airy test : {}", rgsl::Airy::Ai(0.5f64, rgsl::mode::PrecDouble));

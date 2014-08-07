@@ -681,7 +681,9 @@ extern "C" {
     pub fn gsl_matrix_complex_float_isnonneg(m: *const gsl_matrix_complex_float) -> c_int;
     pub fn gsl_matrix_complex_float_equal(u: *const gsl_matrix_complex_float, v: *const gsl_matrix_complex_float) -> c_int;
 
-    // Complex numbers
+    // Complex number functions
+    pub fn gsl_complex_rect(x: c_double, y: c_double) -> gsl_complex;
+    pub fn gsl_complex_polar(r: c_double, theta: c_double) -> gsl_complex;
     pub fn gsl_complex_arg(z: gsl_complex) -> c_double;
     pub fn gsl_complex_abs(z: gsl_complex) -> c_double;
     pub fn gsl_complex_abs2(z: gsl_complex) -> c_double;
@@ -739,6 +741,65 @@ extern "C" {
     pub fn gsl_complex_arcsech(z: gsl_complex) -> gsl_complex;
     pub fn gsl_complex_arccsch(z: gsl_complex) -> gsl_complex;
     pub fn gsl_complex_arccoth(z: gsl_complex) -> gsl_complex;
+
+    // ComplexFloat number functions
+    /*pub fn gsl_complex_float_arg(z: gsl_complex_float) -> c_float;
+    pub fn gsl_complex_float_abs(z: gsl_complex_float) -> c_float;
+    pub fn gsl_complex_float_abs2(z: gsl_complex_float) -> c_float;
+    pub fn gsl_complex_float_logabs(z: gsl_complex_float) -> c_float;
+    pub fn gsl_complex_float_add(a: gsl_complex_float, b: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sub(a: gsl_complex_float, b: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_mul(a: gsl_complex_float, b: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_div(a: gsl_complex_float, b: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_add_real(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sub_real(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_mul_real(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_div_real(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_add_imag(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sub_imag(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_mul_imag(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_div_imag(a: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_conjugate(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_inverse(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_negative(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sqrt(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sqrt_real(x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_pow(z: gsl_complex_float, a: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_pow_real(z: gsl_complex_float, x: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_exp(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_log(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_log10(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_log_b(z: gsl_complex_float, b: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sin(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_cos(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_tan(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sec(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_csc(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_cot(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arcsin(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arcsin_real(z: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccos(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccos_real(z: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arctan(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arcsec(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arcsec_real(z: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccsc(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccsc_real(z: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccot(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sinh(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_cosh(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_tanh(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_sech(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_csch(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_coth(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arcsinh(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccosh(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccosh_real(z: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arctanh(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arctanh_real(z: c_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arcsech(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccsch(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccoth(z: gsl_complex_float) -> gsl_complex_float;*/
 
     // Level 1 BLAS functions
     pub fn gsl_blas_sdsdot(alpha: c_float, x: *const gsl_vector_float, y: *const gsl_vector_float, result: *mut c_float) -> c_int;
