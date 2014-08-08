@@ -72,6 +72,8 @@ pub use canonical::Canonical;
 pub use cblas::Cblas;
 pub use elementary::Elementary;
 pub use fit::Fit;
+pub use pow::Pow;
+pub use trigonometric::Trigonometric;
 pub use types::Gsl;
 
 pub use self::enums::{
@@ -102,6 +104,8 @@ pub mod canonical;
 pub mod cblas;
 pub mod elementary;
 pub mod fit;
+pub mod pow;
+pub mod trigonometric;
 
 #[cfg(target_os = "linux")]
 mod platform {

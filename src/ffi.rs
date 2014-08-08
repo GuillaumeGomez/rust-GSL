@@ -172,6 +172,31 @@ extern "C" {
     pub fn gsl_sf_conicalP_cyl_reg(m: c_int, lambda: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_conicalP_cyl_reg_e(m: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> c_int;
 
+    // Trigonometric Functions
+    pub fn gsl_sf_sin(x: c_double) -> c_double;
+    pub fn gsl_sf_sin_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_cos(x: c_double) -> c_double;
+    pub fn gsl_sf_cos_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_hypot(x: c_double) -> c_double;
+    pub fn gsl_sf_hypot_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_sinc(x: c_double) -> c_double;
+    pub fn gsl_sf_sinc_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_complex_sin_e(zr: c_double, zi: c_double, szr: *mut gsl_sf_result, szi: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_complex_cos_e(zr: c_double, zi: c_double, czr: *mut gsl_sf_result, czi: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_complex_logsin_e(zr: c_double, zi: c_double, lszr: *mut gsl_sf_result, lszi: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_lnsinh(x: c_double) -> c_double;
+    pub fn gsl_sf_lnsinh_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_lncosh(x: c_double) -> c_double;
+    pub fn gsl_sf_lncosh_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_polar_to_rect(r: c_double, theta: c_double, x: *mut gsl_sf_result, y: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_rect_to_polar(x: c_double, y: c_double, r: *mut gsl_sf_result, theta: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_angle_restrict_symm(theta: c_double) -> c_double;
+    pub fn gsl_sf_angle_restrict_symm_e(theta: *mut c_double) -> c_int;
+    pub fn gsl_sf_angle_restrict_pos(theta: c_double) -> c_double;
+    pub fn gsl_sf_angle_restrict_pos_e(theta: *mut c_double) -> c_int;
+    pub fn gsl_sf_sin_err_e(x: c_double, dx: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_cos_err_e(x: c_double, dx: c_double, result: *mut gsl_sf_result) -> c_int;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
@@ -976,6 +1001,18 @@ extern "C" {
     pub fn gsl_fit_wmul(x: *const c_double, xstride: size_t, w: *const c_double, wstride: size_t, y: *const c_double, ystride: size_t,
         n: size_t, c1: *mut c_double, cov11: *mut c_double, sumsq: *mut c_double) -> c_int;
     pub fn gsl_fit_mul_est(x: c_double, c1: c_double, cov11: c_double, y: *mut c_double, y_err: *mut c_double) -> c_int;
+
+    // Pow functions
+    pub fn gsl_pow_int(x: c_double, n: c_int) -> c_double;
+    pub fn gsl_pow_uint(x: c_double, n: c_uint) -> c_double;
+    pub fn gsl_pow_2(x: c_double) -> c_double;
+    pub fn gsl_pow_3(x: c_double) -> c_double;
+    pub fn gsl_pow_4(x: c_double) -> c_double;
+    pub fn gsl_pow_5(x: c_double) -> c_double;
+    pub fn gsl_pow_6(x: c_double) -> c_double;
+    pub fn gsl_pow_7(x: c_double) -> c_double;
+    pub fn gsl_pow_8(x: c_double) -> c_double;
+    pub fn gsl_pow_9(x: c_double) -> c_double;
 }
 
 pub struct gsl_sf_result {

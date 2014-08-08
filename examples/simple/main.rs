@@ -52,6 +52,9 @@ fn main() {
     println!("Simple Elementary test (acosh(1.0)) : {}", rgsl::Elementary::acosh(1f64));
     println!("Simple Elementary test (asinh(1.0)) : {}", rgsl::Elementary::asinh(1f64));
     println!("Simple Elementary test (atanh(1.0)) : {}", rgsl::Elementary::atanh(1f64));
+    println!("Simple Trigonometric test sin(1.0) : {}", rgsl::Trigonometric::sin(1f64));
+    println!("Simple Trigonometric test cos(1.0) : {}", rgsl::Trigonometric::cos(1f64));
+    println!("Simple Trigonometric test hypot(1.0) : {}", rgsl::Trigonometric::hypot(1f64));
 
     println!("\n=== Fit tests ===");
     let x = [1970f64, 1980f64, 1990f64, 2000f64];
@@ -84,4 +87,9 @@ fn main() {
     println!("Y = c1 X ==> c1 = {}", c1);
     println!("cov11 = {}", cov11);
     println!("sumsq = {}", sumsq);
+
+    println!("\n=== Pow tests ===");
+    println!("pow::_int(2, 3) : {}", rgsl::Pow::_int(2f64, 3));
+    println!("pow::_3(2) : {}", rgsl::Pow::_3(2f64));
+    println!("pow::_9(2) : {}", rgsl::Pow::_9(2f64));
 }
