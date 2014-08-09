@@ -8,10 +8,12 @@ use std::default::Default;
 
 fn main() {
     println!("=== VectorFloat tests ===");
-    let tmp_vec = rgsl::Gsl::VectorFloat::from_slice([1f32, 0f32, 3f32, 2f32]).unwrap();
+    let mut tmp_vec = rgsl::Gsl::VectorFloat::from_slice([1f32, 0f32, 3f32, 2f32]).unwrap();
+    let mut tmp_vec2 = rgsl::Gsl::VectorFloat::from_slice([14f32, 6f32, -3f32, 1.2f32]).unwrap();
     println!("min value : {}\nmin value index : {}", tmp_vec.min(), tmp_vec.min_index());
     println!("max value : {}\nmax value index : {}", tmp_vec.max(), tmp_vec.max_index());
     println!("{}", tmp_vec);
+    println!("sswap : {}", rgsl::Blas::Level1::sswap(&mut tmp_vec, &mut tmp_vec2));
 
     println!("\n=== MatrixFloat tests ===");
     let mut tmp_mat = rgsl::Gsl::MatrixFloat::new(2u64, 3u64).unwrap();

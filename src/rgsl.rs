@@ -70,7 +70,9 @@ pub use bessel::Bessel;
 pub use blas::Blas;
 pub use canonical::Canonical;
 pub use cblas::Cblas;
+pub use clausen::Clausen;
 pub use elementary::Elementary;
+pub use exponential_integrals::ExponentialIntegrals;
 pub use fit::Fit;
 pub use pow::Pow;
 pub use trigonometric::Trigonometric;
@@ -82,7 +84,8 @@ pub use self::enums::{
     cblas_side,
     cblas_transpose,
     cblas_uplo,
-    cblas_diag
+    cblas_diag,
+    gsl_value
 };
 
 pub use self::enums::{
@@ -91,7 +94,8 @@ pub use self::enums::{
     CblasSide,
     CblasTranspose,
     CblasUplo,
-    CblasDiag
+    CblasDiag,
+    GslValue
 };
 
 mod ffi;
@@ -101,8 +105,10 @@ pub mod airy;
 pub mod bessel;
 pub mod blas;
 pub mod canonical;
+pub mod clausen;
 pub mod cblas;
 pub mod elementary;
+pub mod exponential_integrals;
 pub mod fit;
 pub mod pow;
 pub mod trigonometric;
