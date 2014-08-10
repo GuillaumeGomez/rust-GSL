@@ -289,6 +289,31 @@ extern "C" {
     // complex argument
     pub fn gsl_sf_complex_dilog_e(r: c_double, theta: c_double, result: *mut gsl_sf_result, result_im: *mut gsl_sf_result) -> enums::GslValue;
 
+    // Elementary Operations functions
+    pub fn gsl_sf_multiply_e(x: c_double, y: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_multiply_err_e(x: c_double, dx: c_double, y: c_double, dy: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+
+    // Elliptic functions (Jacobi)
+    pub fn gsl_sf_elljac_e(u: c_double, m: c_double, sn: *mut c_double, cn: *mut c_double, dn: *mut c_double) -> enums::GslValue;
+
+    // Error functions
+    pub fn gsl_sf_erf(x: c_double) -> c_double;
+    pub fn gsl_sf_erf_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    // Complementary Error functions
+    pub fn gsl_sf_erfc(x: c_double) -> c_double;
+    pub fn gsl_sf_erfc_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    // Log Complementary Error functions
+    pub fn gsl_sf_log_erfc(x: c_double) -> c_double;
+    pub fn gsl_sf_log_erfc_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    // Probability functions
+    // The probability functions for the Normal or Gaussian distribution are described in Abramowitz & Stegun, Section 26.2.
+    pub fn gsl_sf_erf_Z(x: c_double) -> c_double;
+    pub fn gsl_sf_erf_Z_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_erf_Q(x: c_double) -> c_double;
+    pub fn gsl_sf_erf_Q_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_hazard(x: c_double) -> c_double;
+    pub fn gsl_sf_hazard_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
