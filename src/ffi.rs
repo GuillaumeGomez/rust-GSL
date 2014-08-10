@@ -252,6 +252,43 @@ extern "C" {
     pub fn gsl_sf_coulomb_CL_e(L: c_double, eta: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
     pub fn gsl_sf_coulomb_CL_array(Lmin: c_double, kmax: c_int, eta: c_double, cl: *mut c_double) -> enums::GslValue;
 
+    // Coupling Coefficients functions
+    pub fn gsl_sf_coupling_3j(two_ja: c_int, two_jb: c_int, two_jc: c_int, two_ma: c_int, two_mc: c_int, two_mc: c_int) -> c_double;
+    pub fn gsl_sf_coupling_3j_e(two_ja: c_int, two_jb: c_int, two_jc: c_int, two_ma: c_int, two_mc: c_int, two_mc: c_int,
+        result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_coupling_6j(two_ja: c_int, two_jb: c_int, two_jc: c_int, two_jd: c_int, two_je: c_int, two_jf: c_int) -> c_double;
+    pub fn gsl_sf_coupling_6j_e(two_ja: c_int, two_jb: c_int, two_jc: c_int, two_jd: c_int, two_je: c_int, two_jf: c_int,
+        result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_coupling_9j(two_ja: c_int, two_jb: c_int, two_jc: c_int, two_jd: c_int, two_je: c_int, two_jf: c_int,
+        two_jg: c_int, two_jh: c_int, two_ji: c_int) -> c_double;
+    pub fn gsl_sf_coupling_9j_e(two_ja: c_int, two_jb: c_int, two_jc: c_int, two_jd: c_int, two_je: c_int, two_jf: c_int,
+        two_jg: c_int, two_jh: c_int, two_ji: c_int, result: *mut gsl_sf_result) -> enums::GslValue;
+
+    // Dawson functions
+    pub fn gsl_sf_dawson(x: c_double) -> c_double;
+    pub fn gsl_sf_dawson_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+
+    // Debye functions
+    pub fn gsl_sf_debye_1(x: c_double) -> c_double;
+    pub fn gsl_sf_debye_1_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_debye_2(x: c_double) -> c_double;
+    pub fn gsl_sf_debye_2_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_debye_3(x: c_double) -> c_double;
+    pub fn gsl_sf_debye_3_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_debye_4(x: c_double) -> c_double;
+    pub fn gsl_sf_debye_4_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_debye_5(x: c_double) -> c_double;
+    pub fn gsl_sf_debye_5_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_debye_6(x: c_double) -> c_double;
+    pub fn gsl_sf_debye_6_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+
+    // Dilogarithm functions
+    // real argument
+    pub fn gsl_sf_dilog(x: c_double) -> c_double;
+    pub fn gsl_sf_dilog_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    // complex argument
+    pub fn gsl_sf_complex_dilog_e(r: c_double, theta: c_double, result: *mut gsl_sf_result, result_im: *mut gsl_sf_result) -> enums::GslValue;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
