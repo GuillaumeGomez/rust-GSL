@@ -224,12 +224,33 @@ extern "C" {
     pub fn gsl_sf_clausen_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
 
     // Coulomb functions
+    // Normalized Hydrogenic Bound States
     pub fn gsl_sf_hydrogenicR_1(Z: c_double, r: c_double) -> c_double;
     pub fn gsl_sf_hydrogenicR_1_e(Z: c_double, r: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
     pub fn gsl_sf_hydrogenicR(n: c_int, l: c_int, Z: c_double, r: c_double) -> c_double;
     pub fn gsl_sf_hydrogenicR_e(n: c_int, l: c_int, Z: c_double, r: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    // Coulomb Wave Functions
+    // The Coulomb wave functions F_L(\eta,x), G_L(\eta,x) are described in Abramowitz & Stegun, Chapter 14. Because there can be a large dynamic range of values for these functions, overflows are handled gracefully. If an overflow occurs, GSL_EOVRFLW is signalled and exponent(s) are returned through the modifiable parameters exp_F, exp_G. The full solution can be reconstructed from the following relations,
+    // 
+    // F_L(eta,x)  =  fc[k_L] * exp(exp_F)
+    // G_L(eta,x)  =  gc[k_L] * exp(exp_G)
+    // 
+    // F_L'(eta,x) = fcp[k_L] * exp(exp_F)
+    // G_L'(eta,x) = gcp[k_L] * exp(exp_G)
     pub fn gsl_sf_coulomb_wave_FG_e(eta: c_double, x: c_double, L_F: c_double, k: c_int, F: *mut gsl_sf_result, Fp: *mut gsl_sf_result,
-        G: *mut gsl_sf_result, Gp: *mut gsl_sf_result, exp_F: *mut c_double, exp_G: *mut c_double) -> c_int;
+        G: *mut gsl_sf_result, Gp: *mut gsl_sf_result, exp_F: *mut c_double, exp_G: *mut c_double) -> enums::GslValue;
+    pub fn gsl_sf_coulomb_wave_F_array(L_min: c_double, kmax: c_int, eta: c_double, x: c_double, fc_array: *mut c_double,
+        F_exponent: *mut c_double) -> enums::GslValue;
+    pub fn gsl_sf_coulomb_wave_FG_array(L_min: c_double, kmax: c_int, eta: c_double, x: c_double, fc_array: *mut c_double,
+        gc_array: *mut c_double, F_exponent: *mut c_double, G_exponent: *mut c_double) -> enums::GslValue;
+    pub fn gsl_sf_coulomb_wave_FGp_array(L_min: c_double, kmax: c_int, eta: c_double, x: c_double, fc_array: *mut c_double,
+        fcp_array: *mut c_double, gc_array: *mut c_double, gcp_array: *mut c_double, F_exponent: *mut c_double,
+        G_exponent: *mut c_double) -> enums::GslValue;
+    pub fn gsl_sf_coulomb_wave_sphF_array(L_min: c_double, kmax: c_int, eta: c_double, x: c_double, fc_array: *mut c_double,
+        f_exponent: *mut c_double) -> enums::GslValue;
+    // Coulomb Wave Function Normalization Constant
+    pub fn gsl_sf_coulomb_CL_e(L: c_double, eta: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_coulomb_CL_array(Lmin: c_double, kmax: c_int, eta: c_double, cl: *mut c_double) -> enums::GslValue;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;

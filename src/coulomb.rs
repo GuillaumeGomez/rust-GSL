@@ -53,8 +53,53 @@ pub mod Coulomb {
         let mut Fp = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let mut G = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let mut Gp = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_coulomb_wave_FG_e(eta, x, L_F, k, &mut F, &mut Fp, &mut G, &mut Gp, exp_f, exp_G); }
+        let ret = unsafe { ffi::gsl_sf_coulomb_wave_FG_e(eta, x, L_F, k, &mut F, &mut Fp, &mut G, &mut Gp, exp_F, exp_G) };
 
-        (ret, F, Fp, G, Gp)
+        (ret,
+         Gsl::Result{val: F.val, err: F.err},
+         Gsl::Result{val: Fp.val, err: Fp.err},
+         Gsl::Result{val: G.val, err: G.err},
+         Gsl::Result{val: Gp.val, err: Gp.err})
+    }
+
+    /// This function computes the Coulomb wave function F_L(\eta,x) for L = Lmin \dots Lmin + kmax, storing the results in fc_array.
+    /// In the case of overflow the exponent is stored in F_exponent.
+    pub fn wave_F_array(L_min: f64, eta: f64, x: f64, fc_array: &mut[f64], F_exponent: &mut f64) -> enums::GslValue {
+        unsafe { ffi::gsl_sf_coulomb_wave_F_array(L_min, fc_array.len() as i32, eta, x, fc_array.as_mut_ptr(), F_exponent) }
+    }
+
+    /// This function computes the functions F_L(\eta,x), G_L(\eta,x) for L = Lmin \dots Lmin + kmax storing the results in fc_array and gc_array.
+    /// In the case of overflow the exponents are stored in F_exponent and G_exponent.
+    pub fn wave_FG_array(L_min: f64, eta: f64, x: f64, fc_array: &mut[f64], gc_array: &mut[f64], F_exponent: &mut f64,
+        G_exponent: &mut f64) -> enums::GslValue {
+        unsafe { ffi::gsl_sf_coulomb_wave_FG_array(L_min, fc_array.len() as i32, eta, x, fc_array.as_mut_ptr(), fg_array.as_mut_ptr(),
+            F_exponent, G_exponent) }
+    }
+
+    /// This function computes the functions F_L(\eta,x), G_L(\eta,x) and their derivatives F'_L(\eta,x), G'_L(\eta,x) for L = Lmin \dots Lmin + kmax storing the results in fc_array, gc_array, fcp_array and gcp_array.
+    /// In the case of overflow the exponents are stored in F_exponent and G_exponent.
+    pub fn wave_FGp_array(L_min: f64, eta: f64, x: f64, fc_array: &mut[f64], fcp_array: &mut[f64], gc_array: &mut[f64], gcp_array: &mut[f64],
+        F_exponent: &mut f64, G_exponent: &mut f64) -> enums::GslValue {
+        unsafe { ffi::gsl_sf_coulomb_wave_FGp_array(L_min, fc_array.len() as i32, eta, x, fc_array.as_mut_ptr(), fcp_array.as_mut_ptr(),
+            fg_array.as_mut_ptr(), fgp_array.as_mut_ptr(), F_exponent, G_exponent) }
+    }
+
+    /// This function computes the Coulomb wave function divided by the argument F_L(\eta, x)/x for L = Lmin \dots Lmin + kmax, storing the results in fc_array.
+    /// In the case of overflow the exponent is stored in F_exponent. This function reduces to spherical Bessel functions in the limit \eta \to 0.
+    pub fn wave_sphF_array(L_min: f64, eta: f64, x: f64, fc_array: &mut[f64], F_exponent: &mut f64) -> enums::GslValue {
+        unsafe { ffi::gsl_sf_coulomb_wave_sphF_array(L_min, fc_array.len() as i32, eta, x, fc_array.as_mut_ptr(), F_exponent) }
+    }
+
+    /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L > -1.
+    pub fn CL_e(L: f64, eta: f64) -> (enums::GslValue, Gsl::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_coulomb_CL_e(L, eta, &mut result) };
+
+        (ret, Gsl::Result{val: result.val, err: result.err})
+    }
+
+    /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L = Lmin \dots Lmin + kmax, Lmin > -1.
+    pub fn CL_array(Lmin: f64, eta: f64, cl: &mut [f64]) -> enums::GslValue {
+        unsafe { ffi::gsl_sf_coulomb_CL_array(Lmin, cl.len() as i32, eta, cl.as_mut_ptr()) }
     }
 }
