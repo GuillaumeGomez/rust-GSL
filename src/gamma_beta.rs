@@ -28,6 +28,6 @@ pub mod gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gamma_e(x, &mut result) };
 
-        (ret, ::types::Result::from_ffi(&result))
+        (ret, ::ffi::FFI::wrap(&result))
     }
 }

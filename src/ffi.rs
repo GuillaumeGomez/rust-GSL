@@ -13,6 +13,11 @@ pub type CBLAS_UPLO_t = enums::CblasUplo;
 pub type CBLAS_DIAG_t = enums::CblasDiag;
 pub type CBLAS_SIDE_t = enums::CblasSide;
 
+pub trait FFI<T> {
+    fn wrap(r: &T) -> Self;
+    fn get(&self) -> T;
+}
+
 extern "C" {
     // Airy functions
     pub fn gsl_sf_airy_Ai(x: c_double, mode: types::gsl_mode_t) -> c_double;

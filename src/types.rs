@@ -32,20 +32,27 @@ impl Default for Result {
     }
 }
 
+impl ffi::FFI<ffi::gsl_sf_result> for Result {
+    fn wrap(r: &ffi::gsl_sf_result) -> Result {
+        Result {
+            val: r.val,
+            err: r.err
+        }
+    }
+
+    fn get(&self) -> ffi::gsl_sf_result {
+        ffi::gsl_sf_result {
+            val: self.val,
+            err: self.err
+        }
+    }
+}
+
 impl Result {
     pub fn new() -> Result {
         Result {
             val: 0f64,
             err: 0f64
-        }
-    }
-
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn from_ffi(r: &ffi::gsl_sf_result) -> Result {
-        Result {
-            val: r.val,
-            err: r.err
         }
     }
 }
@@ -67,6 +74,24 @@ impl Default for ResultE10 {
     }
 }
 
+impl ffi::FFI<ffi::gsl_sf_result_e10> for ResultE10 {
+    fn wrap(r: &ffi::gsl_sf_result_e10) -> ResultE10 {
+        ResultE10 {
+            val: r.val,
+            err: r.err,
+            e10: r.e10
+        }
+    }
+
+    fn get(&self) -> ffi::gsl_sf_result_e10 {
+        ffi::gsl_sf_result_e10 {
+            val: self.val,
+            err: self.err,
+            e10: self.e10
+        }
+    }
+}
+
 impl ResultE10 {
     pub fn new() -> ResultE10 {
         ResultE10 {
@@ -75,30 +100,20 @@ impl ResultE10 {
             e10: 0i32
         }
     }
-
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn from_ffi(r: &ffi::gsl_sf_result_e10) -> ResultE10 {
-        ResultE10 {
-            val: r.val,
-            err: r.err,
-            e10: r.e10
-        }
-    }
 }
 
-pub struct Complex {
+pub struct ComplexF64 {
     pub data: [f64, ..2]
 }
 
-impl Complex {
+impl ComplexF64 {
     /// This function uses the rectangular Cartesian components (x,y) to return the complex number z = x + i y.
-    pub fn rect(x: f64, y: f64) -> Complex {
+    pub fn rect(x: f64, y: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_rect(x, y)) }
     }
 
     /// This function returns the complex number z = r \exp(i \theta) = r (\cos(\theta) + i \sin(\theta)) from the polar representation (r,theta).
-    pub fn polar(r: f64, theta: f64) -> Complex {
+    pub fn polar(r: f64, theta: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_polar(r, theta)) }
     }
 
@@ -125,157 +140,157 @@ impl Complex {
     }
 
     /// This function returns the sum of the complex numbers a and b, z=a+b.
-    pub fn add(&self, other: &Complex) -> Complex {
+    pub fn add(&self, other: &ComplexF64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_add(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the difference of the complex numbers a and b, z=a-b.
-    pub fn sub(&self, other: &Complex) -> Complex {
+    pub fn sub(&self, other: &ComplexF64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sub(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the product of the complex numbers a and b, z=ab.
-    pub fn mul(&self, other: &Complex) -> Complex {
+    pub fn mul(&self, other: &ComplexF64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_mul(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the quotient of the complex numbers a and b, z=a/b.
-    pub fn div(&self, other: &Complex) -> Complex {
+    pub fn div(&self, other: &ComplexF64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_div(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the sum of the complex number a and the real number x, z=a+x.
-    pub fn add_real(&self, x: f64) -> Complex {
+    pub fn add_real(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_add_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the difference of the complex number a and the real number x, z=a-x.
-    pub fn sub_real(&self, x: f64) -> Complex {
+    pub fn sub_real(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sub_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the product of the complex number a and the real number x, z=ax.
-    pub fn mul_real(&self, x: f64) -> Complex {
+    pub fn mul_real(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_mul_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the quotient of the complex number a and the real number x, z=a/x.
-    pub fn div_real(&self, x: f64) -> Complex {
+    pub fn div_real(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_div_real(::std::mem::transmute(self.data), x)) }
     }
     
     /// This function returns the sum of the complex number a and the imaginary number iy, z=a+iy.
-    pub fn add_imag(&self, x: f64) -> Complex {
+    pub fn add_imag(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_add_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the difference of the complex number a and the imaginary number iy, z=a-iy.
-    pub fn sub_imag(&self, x: f64) -> Complex {
+    pub fn sub_imag(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sub_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the product of the complex number a and the imaginary number iy, z=a*(iy).
-    pub fn mul_imag(&self, x: f64) -> Complex {
+    pub fn mul_imag(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_mul_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the quotient of the complex number a and the imaginary number iy, z=a/(iy).
-    pub fn div_imag(&self, x: f64) -> Complex {
+    pub fn div_imag(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_div_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the complex conjugate of the complex number z, z^* = x - i y.
-    pub fn conjugate(&self) -> Complex {
+    pub fn conjugate(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_conjugate(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the inverse, or reciprocal, of the complex number z, 1/z = (x - i y)/(x^2 + y^2).
-    pub fn inverse(&self) -> Complex {
+    pub fn inverse(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_inverse(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the negative of the complex number z, -z = (-x) + i(-y).
-    pub fn negative(&self) -> Complex {
+    pub fn negative(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_negative(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the square root of the complex number z, \sqrt z.
     /// The branch cut is the negative real axis. The result always lies in the right half of the complex plane.
-    pub fn sqrt(&self) -> Complex {
+    pub fn sqrt(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sqrt(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex square root of the real number x, where x may be negative.
-    pub fn sqrt_real(x: f64) -> Complex {
+    pub fn sqrt_real(x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sqrt_real(x)) }
     }
 
     /// The function returns the complex number z raised to the complex power a, z^a.
     /// This is computed as \exp(\log(z)*a) using complex logarithms and complex exponentials.
-    pub fn pow(&self, other: &Complex) -> Complex {
+    pub fn pow(&self, other: &ComplexF64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_pow(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the complex number z raised to the real power x, z^x.
-    pub fn pow_real(&self, x: f64) -> Complex {
+    pub fn pow_real(&self, x: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_pow_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the complex exponential of the complex number z, \exp(z).
-    pub fn exp(&self) -> Complex {
+    pub fn exp(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_exp(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex natural logarithm (base e) of the complex number z, \log(z).
     /// The branch cut is the negative real axis.
-    pub fn log(&self) -> Complex {
+    pub fn log(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_log(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex base-10 logarithm of the complex number z, \log_10 (z).
-    pub fn log10(&self) -> Complex {
+    pub fn log10(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_log10(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex base-b logarithm of the complex number z, \log_b(z).
     /// This quantity is computed as the ratio \log(z)/\log(b).
-    pub fn log_b(&self, other: &Complex) -> Complex {
+    pub fn log_b(&self, other: &ComplexF64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_log_b(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the complex sine of the complex number z, \sin(z) = (\exp(iz) - \exp(-iz))/(2i).
-    pub fn sin(&self) -> Complex {
+    pub fn sin(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sin(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex cosine of the complex number z, \cos(z) = (\exp(iz) + \exp(-iz))/2.
-    pub fn cos(&self) -> Complex {
+    pub fn cos(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_cos(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex tangent of the complex number z, \tan(z) = \sin(z)/\cos(z).
-    pub fn tan(&self) -> Complex {
+    pub fn tan(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_tan(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex secant of the complex number z, \sec(z) = 1/\cos(z).
-    pub fn sec(&self) -> Complex {
+    pub fn sec(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sec(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex cosecant of the complex number z, \csc(z) = 1/\sin(z).
-    pub fn csc(&self) -> Complex {
+    pub fn csc(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_csc(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex cotangent of the complex number z, \cot(z) = 1/\tan(z).
-    pub fn cot(&self) -> Complex {
+    pub fn cot(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_cot(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arcsine of the complex number z, \arcsin(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
-    pub fn arcsin(&self) -> Complex {
+    pub fn arcsin(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arcsin(::std::mem::transmute(self.data))) }
     }
 
@@ -284,13 +299,13 @@ impl Complex {
     /// * For z between -1 and 1, the function returns a real value in the range [-\pi/2,\pi/2].
     /// * For z less than -1 the result has a real part of -\pi/2 and a positive imaginary part.
     /// * For z greater than 1 the result has a real part of \pi/2 and a negative imaginary part.
-    pub fn arcsin_real(z: f64) -> Complex {
+    pub fn arcsin_real(z: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arcsin_real(z)) }
     }
 
     /// This function returns the complex arccosine of the complex number z, \arccos(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
-    pub fn arccos(&self) -> Complex {
+    pub fn arccos(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccos(::std::mem::transmute(self.data))) }
     }
 
@@ -299,144 +314,144 @@ impl Complex {
     /// * For z between -1 and 1, the function returns a real value in the range [0,\pi].
     /// * For z less than -1 the result has a real part of \pi and a negative imaginary part.
     /// * For z greater than 1 the result is purely imaginary and positive.
-    pub fn arccos_real(z: f64) -> Complex {
+    pub fn arccos_real(z: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccos_real(z)) }
     }
 
     /// This function returns the complex arctangent of the complex number z, \arctan(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
-    pub fn arctan(&self) -> Complex {
+    pub fn arctan(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arctan(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arcsecant of the complex number z, \arcsec(z) = \arccos(1/z).
-    pub fn arcsec(&self) -> Complex {
+    pub fn arcsec(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arcsec(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arcsecant of the real number z, \arcsec(z) = \arccos(1/z).
-    pub fn arcsec_real(z: f64) -> Complex {
+    pub fn arcsec_real(z: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arcsec_real(z)) }
     }
 
     /// This function returns the complex arccosecant of the complex number z, \arccsc(z) = \arcsin(1/z).
-    pub fn arccsc(&self) -> Complex {
+    pub fn arccsc(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccsc(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arccosecant of the real number z, \arccsc(z) = \arcsin(1/z).
-    pub fn arccsc_real(z: f64) -> Complex {
+    pub fn arccsc_real(z: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccsc_real(z)) }
     }
 
     /// This function returns the complex arccotangent of the complex number z, \arccot(z) = \arctan(1/z).
-    pub fn arccot(&self) -> Complex {
+    pub fn arccot(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccot(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic sine of the complex number z, \sinh(z) = (\exp(z) - \exp(-z))/2.
-    pub fn sinh(&self) -> Complex {
+    pub fn sinh(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sinh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic cosine of the complex number z, \cosh(z) = (\exp(z) + \exp(-z))/2.
-    pub fn cosh(&self) -> Complex {
+    pub fn cosh(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_cosh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic tangent of the complex number z, \tanh(z) = \sinh(z)/\cosh(z).
-    pub fn tanh(&self) -> Complex {
+    pub fn tanh(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_tanh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic secant of the complex number z, \sech(z) = 1/\cosh(z).
-    pub fn sech(&self) -> Complex {
+    pub fn sech(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_sech(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic cosecant of the complex number z, \csch(z) = 1/\sinh(z).
-    pub fn csch(&self) -> Complex {
+    pub fn csch(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_csch(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic cotangent of the complex number z, \coth(z) = 1/\tanh(z).
-    pub fn coth(&self) -> Complex {
+    pub fn coth(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_coth(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arcsine of the complex number z, \arcsinh(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
-    pub fn arcsinh(&self) -> Complex {
+    pub fn arcsinh(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arcsinh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccosine of the complex number z, \arccosh(z).
     /// The branch cut is on the real axis, less than 1.
     /// Note that in this case we use the negative square root in formula 4.6.21 of Abramowitz & Stegun giving \arccosh(z)=\log(z-\sqrt{z^2-1}).
-    pub fn arccosh(&self) -> Complex {
+    pub fn arccosh(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccosh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccosine of the real number z, \arccosh(z).
-    pub fn arccosh_real(z: f64) -> Complex {
+    pub fn arccosh_real(z: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccosh_real(z)) }
     }
 
     /// This function returns the complex hyperbolic arctangent of the complex number z, \arctanh(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
-    pub fn arctanh(&self) -> Complex {
+    pub fn arctanh(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arctanh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arctangent of the real number z, \arctanh(z).
-    pub fn arctanh_real(z: f64) -> Complex {
+    pub fn arctanh_real(z: f64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arctanh_real(z)) }
     }
 
     /// This function returns the complex hyperbolic arcsecant of the complex number z, \arcsech(z) = \arccosh(1/z).
-    pub fn arcsech(&self) -> Complex {
+    pub fn arcsech(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arcsech(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccosecant of the complex number z, \arccsch(z) = \arcsin(1/z).
-    pub fn arccsch(&self) -> Complex {
+    pub fn arccsch(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccsch(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccotangent of the complex number z, \arccoth(z) = \arctanh(1/z).
-    pub fn arccoth(&self) -> Complex {
+    pub fn arccoth(&self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_arccoth(::std::mem::transmute(self.data))) }
     }
 }
 
-impl Show for Complex {
+impl Show for ComplexF64 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[{}, {}]", self.data[0], self.data[1])
     }
 }
 
-impl Clone for Complex {
-    fn clone(&self) -> Complex {
-        Complex {
+impl Clone for ComplexF64 {
+    fn clone(&self) -> ComplexF64 {
+        ComplexF64 {
             data: [self.data[0], self.data[1]]
         }
     }
 }
 
-impl Default for Complex {
-    fn default() -> Complex {
-        Complex {
+impl Default for ComplexF64 {
+    fn default() -> ComplexF64 {
+        ComplexF64 {
             data: [0f64, 0f64]
         }
     }
 }
 
-pub struct ComplexFloat {
+pub struct ComplexF32 {
     pub data: [f32, ..2]
 }
 
 // I'll implement it in Rust directly
-/*impl ComplexFloat {
+/*impl ComplexF32 {
     /// This function returns the argument of the complex number z, \arg(z), where -\pi < \arg(z) <= \pi.
     pub fn arg(&self) -> f32 {
         unsafe { ::ffi::gsl_complex_float_arg(::std::mem::transmute(self.data)) }
@@ -460,157 +475,157 @@ pub struct ComplexFloat {
     }
 
     /// This function returns the sum of the complex numbers a and b, z=a+b.
-    pub fn add(&self, other: &ComplexFloat) -> ComplexFloat {
+    pub fn add(&self, other: &ComplexF32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_add(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the difference of the complex numbers a and b, z=a-b.
-    pub fn sub(&self, other: &ComplexFloat) -> ComplexFloat {
+    pub fn sub(&self, other: &ComplexF32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sub(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the product of the complex numbers a and b, z=ab.
-    pub fn mul(&self, other: &ComplexFloat) -> ComplexFloat {
+    pub fn mul(&self, other: &ComplexF32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_mul(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the quotient of the complex numbers a and b, z=a/b.
-    pub fn div(&self, other: &ComplexFloat) -> ComplexFloat {
+    pub fn div(&self, other: &ComplexF32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_div(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the sum of the complex number a and the real number x, z=a+x.
-    pub fn add_real(&self, x: f32) -> ComplexFloat {
+    pub fn add_real(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_add_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the difference of the complex number a and the real number x, z=a-x.
-    pub fn sub_real(&self, x: f32) -> ComplexFloat {
+    pub fn sub_real(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sub_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the product of the complex number a and the real number x, z=ax.
-    pub fn mul_real(&self, x: f32) -> ComplexFloat {
+    pub fn mul_real(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_mul_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the quotient of the complex number a and the real number x, z=a/x.
-    pub fn div_real(&self, x: f32) -> ComplexFloat {
+    pub fn div_real(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_div_real(::std::mem::transmute(self.data), x)) }
     }
     
     /// This function returns the sum of the complex number a and the imaginary number iy, z=a+iy.
-    pub fn add_imag(&self, x: f32) -> ComplexFloat {
+    pub fn add_imag(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_add_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the difference of the complex number a and the imaginary number iy, z=a-iy.
-    pub fn sub_imag(&self, x: f32) -> ComplexFloat {
+    pub fn sub_imag(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sub_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the product of the complex number a and the imaginary number iy, z=a*(iy).
-    pub fn mul_imag(&self, x: f32) -> ComplexFloat {
+    pub fn mul_imag(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_mul_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the quotient of the complex number a and the imaginary number iy, z=a/(iy).
-    pub fn div_imag(&self, x: f32) -> ComplexFloat {
+    pub fn div_imag(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_div_imag(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the complex conjugate of the complex number z, z^* = x - i y.
-    pub fn conjugate(&self) -> ComplexFloat {
+    pub fn conjugate(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_conjugate(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the inverse, or reciprocal, of the complex number z, 1/z = (x - i y)/(x^2 + y^2).
-    pub fn inverse(&self) -> ComplexFloat {
+    pub fn inverse(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_inverse(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the negative of the complex number z, -z = (-x) + i(-y).
-    pub fn negative(&self) -> ComplexFloat {
+    pub fn negative(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_negative(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the square root of the complex number z, \sqrt z.
     /// The branch cut is the negative real axis. The result always lies in the right half of the complex plane.
-    pub fn sqrt(&self) -> ComplexFloat {
+    pub fn sqrt(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sqrt(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex square root of the real number x, where x may be negative.
-    pub fn sqrt_real(x: f32) -> ComplexFloat {
+    pub fn sqrt_real(x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sqrt_real(x)) }
     }
 
     /// The function returns the complex number z raised to the complex power a, z^a.
     /// This is computed as \exp(\log(z)*a) using complex logarithms and complex exponentials.
-    pub fn pow(&self, other: &ComplexFloat) -> ComplexFloat {
+    pub fn pow(&self, other: &ComplexF32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_pow(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the complex number z raised to the real power x, z^x.
-    pub fn pow_real(&self, x: f32) -> ComplexFloat {
+    pub fn pow_real(&self, x: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_pow_real(::std::mem::transmute(self.data), x)) }
     }
 
     /// This function returns the complex exponential of the complex number z, \exp(z).
-    pub fn exp(&self) -> ComplexFloat {
+    pub fn exp(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_exp(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex natural logarithm (base e) of the complex number z, \log(z).
     /// The branch cut is the negative real axis.
-    pub fn log(&self) -> ComplexFloat {
+    pub fn log(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_log(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex base-10 logarithm of the complex number z, \log_10 (z).
-    pub fn log10(&self) -> ComplexFloat {
+    pub fn log10(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_log10(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex base-b logarithm of the complex number z, \log_b(z).
     /// This quantity is computed as the ratio \log(z)/\log(b).
-    pub fn log_b(&self, other: &ComplexFloat) -> ComplexFloat {
+    pub fn log_b(&self, other: &ComplexF32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_log_b(::std::mem::transmute(self.data), ::std::mem::transmute(other.data))) }
     }
 
     /// This function returns the complex sine of the complex number z, \sin(z) = (\exp(iz) - \exp(-iz))/(2i).
-    pub fn sin(&self) -> ComplexFloat {
+    pub fn sin(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sin(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex cosine of the complex number z, \cos(z) = (\exp(iz) + \exp(-iz))/2.
-    pub fn cos(&self) -> ComplexFloat {
+    pub fn cos(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_cos(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex tangent of the complex number z, \tan(z) = \sin(z)/\cos(z).
-    pub fn tan(&self) -> ComplexFloat {
+    pub fn tan(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_tan(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex secant of the complex number z, \sec(z) = 1/\cos(z).
-    pub fn sec(&self) -> ComplexFloat {
+    pub fn sec(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sec(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex cosecant of the complex number z, \csc(z) = 1/\sin(z).
-    pub fn csc(&self) -> ComplexFloat {
+    pub fn csc(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_csc(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex cotangent of the complex number z, \cot(z) = 1/\tan(z).
-    pub fn cot(&self) -> ComplexFloat {
+    pub fn cot(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_cot(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arcsine of the complex number z, \arcsin(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
-    pub fn arcsin(&self) -> ComplexFloat {
+    pub fn arcsin(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arcsin(::std::mem::transmute(self.data))) }
     }
 
@@ -619,13 +634,13 @@ pub struct ComplexFloat {
     /// * For z between -1 and 1, the function returns a real value in the range [-\pi/2,\pi/2].
     /// * For z less than -1 the result has a real part of -\pi/2 and a positive imaginary part.
     /// * For z greater than 1 the result has a real part of \pi/2 and a negative imaginary part.
-    pub fn arcsin_real(z: f32) -> ComplexFloat {
+    pub fn arcsin_real(z: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arcsin_real(z)) }
     }
 
     /// This function returns the complex arccosine of the complex number z, \arccos(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
-    pub fn arccos(&self) -> ComplexFloat {
+    pub fn arccos(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccos(::std::mem::transmute(self.data))) }
     }
 
@@ -634,169 +649,169 @@ pub struct ComplexFloat {
     /// * For z between -1 and 1, the function returns a real value in the range [0,\pi].
     /// * For z less than -1 the result has a real part of \pi and a negative imaginary part.
     /// * For z greater than 1 the result is purely imaginary and positive.
-    pub fn arccos_real(z: f32) -> ComplexFloat {
+    pub fn arccos_real(z: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccos_real(z)) }
     }
 
     /// This function returns the complex arctangent of the complex number z, \arctan(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
-    pub fn arctan(&self) -> ComplexFloat {
+    pub fn arctan(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arctan(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arcsecant of the complex number z, \arcsec(z) = \arccos(1/z).
-    pub fn arcsec(&self) -> ComplexFloat {
+    pub fn arcsec(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arcsec(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arcsecant of the real number z, \arcsec(z) = \arccos(1/z).
-    pub fn arcsec_real(z: f32) -> ComplexFloat {
+    pub fn arcsec_real(z: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arcsec_real(z)) }
     }
 
     /// This function returns the complex arccosecant of the complex number z, \arccsc(z) = \arcsin(1/z).
-    pub fn arccsc(&self) -> ComplexFloat {
+    pub fn arccsc(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccsc(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex arccosecant of the real number z, \arccsc(z) = \arcsin(1/z).
-    pub fn arccsc_real(z: f32) -> ComplexFloat {
+    pub fn arccsc_real(z: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccsc_real(z)) }
     }
 
     /// This function returns the complex arccotangent of the complex number z, \arccot(z) = \arctan(1/z).
-    pub fn arccot(&self) -> ComplexFloat {
+    pub fn arccot(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccot(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic sine of the complex number z, \sinh(z) = (\exp(z) - \exp(-z))/2.
-    pub fn sinh(&self) -> ComplexFloat {
+    pub fn sinh(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sinh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic cosine of the complex number z, \cosh(z) = (\exp(z) + \exp(-z))/2.
-    pub fn cosh(&self) -> ComplexFloat {
+    pub fn cosh(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_cosh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic tangent of the complex number z, \tanh(z) = \sinh(z)/\cosh(z).
-    pub fn tanh(&self) -> ComplexFloat {
+    pub fn tanh(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_tanh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic secant of the complex number z, \sech(z) = 1/\cosh(z).
-    pub fn sech(&self) -> ComplexFloat {
+    pub fn sech(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_sech(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic cosecant of the complex number z, \csch(z) = 1/\sinh(z).
-    pub fn csch(&self) -> ComplexFloat {
+    pub fn csch(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_csch(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic cotangent of the complex number z, \coth(z) = 1/\tanh(z).
-    pub fn coth(&self) -> ComplexFloat {
+    pub fn coth(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_coth(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arcsine of the complex number z, \arcsinh(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
-    pub fn arcsinh(&self) -> ComplexFloat {
+    pub fn arcsinh(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arcsinh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccosine of the complex number z, \arccosh(z).
     /// The branch cut is on the real axis, less than 1.
     /// Note that in this case we use the negative square root in formula 4.6.21 of Abramowitz & Stegun giving \arccosh(z)=\log(z-\sqrt{z^2-1}).
-    pub fn arccosh(&self) -> ComplexFloat {
+    pub fn arccosh(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccosh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccosine of the real number z, \arccosh(z).
-    pub fn arccosh_real(z: f32) -> ComplexFloat {
+    pub fn arccosh_real(z: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccosh_real(z)) }
     }
 
     /// This function returns the complex hyperbolic arctangent of the complex number z, \arctanh(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
-    pub fn arctanh(&self) -> ComplexFloat {
+    pub fn arctanh(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arctanh(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arctangent of the real number z, \arctanh(z).
-    pub fn arctanh_real(z: f32) -> ComplexFloat {
+    pub fn arctanh_real(z: f32) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arctanh_real(z)) }
     }
 
     /// This function returns the complex hyperbolic arcsecant of the complex number z, \arcsech(z) = \arccosh(1/z).
-    pub fn arcsech(&self) -> ComplexFloat {
+    pub fn arcsech(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arcsech(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccosecant of the complex number z, \arccsch(z) = \arcsin(1/z).
-    pub fn arccsch(&self) -> ComplexFloat {
+    pub fn arccsch(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccsch(::std::mem::transmute(self.data))) }
     }
 
     /// This function returns the complex hyperbolic arccotangent of the complex number z, \arccoth(z) = \arctanh(1/z).
-    pub fn arccoth(&self) -> ComplexFloat {
+    pub fn arccoth(&self) -> ComplexF32 {
         unsafe { ::std::mem::transmute(::ffi::gsl_complex_float_arccoth(::std::mem::transmute(self.data))) }
     }
 }*/
 
-impl Show for ComplexFloat {
+impl Show for ComplexF32 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[{}, {}]", self.data[0], self.data[1])
     }
 }
 
-impl Clone for ComplexFloat {
-    fn clone(&self) -> ComplexFloat {
-        ComplexFloat {
+impl Clone for ComplexF32 {
+    fn clone(&self) -> ComplexF32 {
+        ComplexF32 {
             data: [self.data[0], self.data[1]]
         }
     }
 }
 
-impl Default for ComplexFloat {
-    fn default() -> ComplexFloat {
-        ComplexFloat {
+impl Default for ComplexF32 {
+    fn default() -> ComplexF32 {
+        ComplexF32 {
             data: [0f32, 0f32]
         }
     }
 }
 
-pub struct VectorFloat {
+pub struct VectorF32 {
     vec: *mut ffi::gsl_vector_float
 }
 
-impl VectorFloat {
+impl VectorF32 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_vector_float {
         self.vec
     }
 
-    /// create a new VectorFloat with all elements set to zero
-    pub fn new(size: u64) -> Option<VectorFloat> {
+    /// create a new VectorF32 with all elements set to zero
+    pub fn new(size: u64) -> Option<VectorF32> {
         let tmp = unsafe { ffi::gsl_vector_float_calloc(size) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(VectorFloat {
+            Some(VectorF32 {
                 vec: tmp
             })
         }
     }
 
-    pub fn from_slice(slice: &[f32]) -> Option<VectorFloat> {
+    pub fn from_slice(slice: &[f32]) -> Option<VectorF32> {
         let tmp = unsafe { ffi::gsl_vector_float_alloc(slice.len() as u64) };
 
         if tmp.is_null() {
             None
         } else {
-            let v = VectorFloat {
+            let v = VectorF32 {
                 vec: tmp
             };
             let mut pos = 0u64;
@@ -843,17 +858,17 @@ impl VectorFloat {
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&self, other: &VectorFloat) -> i32 {
+    pub fn copy_from(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_memcpy(self.vec, other.vec as *const ffi::gsl_vector_float) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &VectorFloat) -> i32 {
+    pub fn copy_to(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_memcpy(other.vec, self.vec as *const ffi::gsl_vector_float) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&self, other: &VectorFloat) -> i32 {
+    pub fn swap(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_swap(other.vec, self.vec) }
     }
 
@@ -869,25 +884,25 @@ impl VectorFloat {
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&self, other: &VectorFloat) -> i32 {
+    pub fn add(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_add(self.vec, other.vec as *const ffi::gsl_vector_float) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&self, other: &VectorFloat) -> i32 {
+    pub fn sub(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_sub(self.vec, other.vec as *const ffi::gsl_vector_float) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&self, other: &VectorFloat) -> i32 {
+    pub fn mul(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_mul(self.vec, other.vec as *const ffi::gsl_vector_float) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&self, other: &VectorFloat) -> i32 {
+    pub fn div(&self, other: &VectorF32) -> i32 {
         unsafe { ffi::gsl_vector_float_div(self.vec, other.vec as *const ffi::gsl_vector_float) }
     }
 
@@ -970,7 +985,7 @@ impl VectorFloat {
         }
     }
 
-    pub fn equal(&self, other: &VectorFloat) -> bool {
+    pub fn equal(&self, other: &VectorF32) -> bool {
         match unsafe { ffi::gsl_vector_float_equal(self.vec as *const ffi::gsl_vector_float, other.vec as *const ffi::gsl_vector_float) } {
             1 => true,
             _ => false
@@ -992,12 +1007,12 @@ impl VectorFloat {
         }
     }*/
 
-    pub fn clone(&self) -> Option<VectorFloat> {
+    pub fn clone(&self) -> Option<VectorF32> {
         unsafe {
             if self.vec.is_null() {
                 None
             } else {
-                match VectorFloat::new((*self.vec).size) {
+                match VectorF32::new((*self.vec).size) {
                     Some(v) => {
                         v.copy_from(self);
                         Some(v)
@@ -1009,14 +1024,14 @@ impl VectorFloat {
     }
 }
 
-impl Drop for VectorFloat {
+impl Drop for VectorF32 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_vector_float_free(self.vec) };
         self.vec = ::std::ptr::mut_null();
     }
 }
 
-impl Show for VectorFloat {
+impl Show for VectorF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -1033,37 +1048,37 @@ impl Show for VectorFloat {
     }
 }
 
-pub struct Vector {
+pub struct VectorF64 {
     vec: *mut ffi::gsl_vector
 }
 
-impl Vector {
+impl VectorF64 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_vector {
         self.vec
     }
 
-    /// create a new Vector with all elements set to zero
-    pub fn new(size: u64) -> Option<Vector> {
+    /// create a new VectorF64 with all elements set to zero
+    pub fn new(size: u64) -> Option<VectorF64> {
         let tmp = unsafe { ffi::gsl_vector_calloc(size) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(Vector {
+            Some(VectorF64 {
                 vec: tmp
             })
         }
     }
 
-    pub fn from_slice(slice: &[f64]) -> Option<Vector> {
+    pub fn from_slice(slice: &[f64]) -> Option<VectorF64> {
         let tmp = unsafe { ffi::gsl_vector_alloc(slice.len() as u64) };
 
         if tmp.is_null() {
             None
         } else {
-            let v = Vector {
+            let v = VectorF64 {
                 vec: tmp
             };
             let mut pos = 0u64;
@@ -1110,17 +1125,17 @@ impl Vector {
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&self, other: &Vector) -> i32 {
+    pub fn copy_from(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_memcpy(self.vec, other.vec as *const ffi::gsl_vector) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &Vector) -> i32 {
+    pub fn copy_to(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_memcpy(other.vec, self.vec as *const ffi::gsl_vector) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&self, other: &Vector) -> i32 {
+    pub fn swap(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_swap(other.vec, self.vec) }
     }
 
@@ -1136,25 +1151,25 @@ impl Vector {
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&self, other: &Vector) -> i32 {
+    pub fn add(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_add(self.vec, other.vec as *const ffi::gsl_vector) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&self, other: &Vector) -> i32 {
+    pub fn sub(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_sub(self.vec, other.vec as *const ffi::gsl_vector) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&self, other: &Vector) -> i32 {
+    pub fn mul(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_mul(self.vec, other.vec as *const ffi::gsl_vector) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&self, other: &Vector) -> i32 {
+    pub fn div(&self, other: &VectorF64) -> i32 {
         unsafe { ffi::gsl_vector_div(self.vec, other.vec as *const ffi::gsl_vector) }
     }
 
@@ -1237,7 +1252,7 @@ impl Vector {
         }
     }
 
-    pub fn equal(&self, other: &Vector) -> bool {
+    pub fn equal(&self, other: &VectorF64) -> bool {
         match unsafe { ffi::gsl_vector_equal(self.vec as *const ffi::gsl_vector, other.vec as *const ffi::gsl_vector) } {
             1 => true,
             _ => false
@@ -1259,12 +1274,12 @@ impl Vector {
         }
     }*/
 
-    pub fn clone(&self) -> Option<Vector> {
+    pub fn clone(&self) -> Option<VectorF64> {
         unsafe {
             if self.vec.is_null() {
                 None
             } else {
-                match Vector::new((*self.vec).size) {
+                match VectorF64::new((*self.vec).size) {
                     Some(v) => {
                         v.copy_from(self);
                         Some(v)
@@ -1276,14 +1291,14 @@ impl Vector {
     }
 }
 
-impl Drop for Vector {
+impl Drop for VectorF64 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_vector_free(self.vec) };
         self.vec = ::std::ptr::mut_null();
     }
 }
 
-impl Show for Vector {
+impl Show for VectorF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -1300,37 +1315,37 @@ impl Show for Vector {
     }
 }
 
-pub struct VectorComplex {
+pub struct VectorComplexF64 {
     vec: *mut ffi::gsl_vector_complex
 }
 
-impl VectorComplex {
+impl VectorComplexF64 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_vector_complex {
         self.vec
     }
 
-    /// create a new VectorComplex with all elements set to zero
-    pub fn new(size: u64) -> Option<VectorComplex> {
+    /// create a new VectorComplexF64 with all elements set to zero
+    pub fn new(size: u64) -> Option<VectorComplexF64> {
         let tmp = unsafe { ffi::gsl_vector_complex_calloc(size) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(VectorComplex {
+            Some(VectorComplexF64 {
                 vec: tmp
             })
         }
     }
 
-    pub fn from_slice(slice: &[Complex]) -> Option<VectorComplex> {
+    pub fn from_slice(slice: &[ComplexF64]) -> Option<VectorComplexF64> {
         let tmp = unsafe { ffi::gsl_vector_complex_alloc(slice.len() as u64) };
 
         if tmp.is_null() {
             None
         } else {
-            let v = VectorComplex {
+            let v = VectorComplexF64 {
                 vec: tmp
             };
             let mut pos = 0u64;
@@ -1352,17 +1367,17 @@ impl VectorComplex {
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: u64) -> Complex {
+    pub fn get(&self, i: u64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(ffi::gsl_vector_complex_get(self.vec as *const ffi::gsl_vector_complex, i)) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&self, i: u64, x: &Complex) {
+    pub fn set(&self, i: u64, x: &ComplexF64) {
         unsafe { ffi::gsl_vector_complex_set(self.vec, i, ::std::mem::transmute(*x)) }
     }
 
     /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&self, x: &Complex) {
+    pub fn set_all(&self, x: &ComplexF64) {
         unsafe { ffi::gsl_vector_complex_set_all(self.vec, ::std::mem::transmute(*x)) }
     }
 
@@ -1377,17 +1392,17 @@ impl VectorComplex {
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&self, other: &VectorComplex) -> i32 {
+    pub fn copy_from(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_memcpy(self.vec, other.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &VectorComplex) -> i32 {
+    pub fn copy_to(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_memcpy(other.vec, self.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&self, other: &VectorComplex) -> i32 {
+    pub fn swap(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_swap(other.vec, self.vec) }
     }
 
@@ -1403,35 +1418,35 @@ impl VectorComplex {
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&self, other: &VectorComplex) -> i32 {
+    pub fn add(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_add(self.vec, other.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&self, other: &VectorComplex) -> i32 {
+    pub fn sub(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_sub(self.vec, other.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&self, other: &VectorComplex) -> i32 {
+    pub fn mul(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_mul(self.vec, other.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&self, other: &VectorComplex) -> i32 {
+    pub fn div(&self, other: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_div(self.vec, other.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&self, x: &Complex) -> i32 {
+    pub fn scale(&self, x: &ComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_scale(self.vec, ::std::mem::transmute(*x)) }
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&self, x: &Complex) -> i32 {
+    pub fn add_constant(&self, x: &ComplexF64) -> i32 {
         unsafe { ffi::gsl_vector_complex_add_constant(self.vec, ::std::mem::transmute(*x)) }
     }
 
@@ -1467,7 +1482,7 @@ impl VectorComplex {
         }
     }
 
-    pub fn equal(&self, other: &VectorComplex) -> bool {
+    pub fn equal(&self, other: &VectorComplexF64) -> bool {
         match unsafe { ffi::gsl_vector_complex_equal(self.vec as *const ffi::gsl_vector_complex, other.vec as *const ffi::gsl_vector_complex) } {
             1 => true,
             _ => false
@@ -1489,12 +1504,12 @@ impl VectorComplex {
         }
     }*/
 
-    pub fn clone(&self) -> Option<VectorComplex> {
+    pub fn clone(&self) -> Option<VectorComplexF64> {
         unsafe {
             if self.vec.is_null() {
                 None
             } else {
-                match VectorComplex::new((*self.vec).size) {
+                match VectorComplexF64::new((*self.vec).size) {
                     Some(v) => {
                         v.copy_from(self);
                         Some(v)
@@ -1506,14 +1521,14 @@ impl VectorComplex {
     }
 }
 
-impl Drop for VectorComplex {
+impl Drop for VectorComplexF64 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_vector_complex_free(self.vec) };
         self.vec = ::std::ptr::mut_null();
     }
 }
 
-impl Show for VectorComplex {
+impl Show for VectorComplexF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -1530,37 +1545,37 @@ impl Show for VectorComplex {
     }
 }
 
-pub struct VectorComplexFloat {
+pub struct VectorComplexF32 {
     vec: *mut ffi::gsl_vector_complex_float
 }
 
-impl VectorComplexFloat {
+impl VectorComplexF32 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_vector_complex_float {
         self.vec
     }
 
-    /// create a new VectorComplexFloat with all elements set to zero
-    pub fn new(size: u64) -> Option<VectorComplexFloat> {
+    /// create a new VectorComplexF32 with all elements set to zero
+    pub fn new(size: u64) -> Option<VectorComplexF32> {
         let tmp = unsafe { ffi::gsl_vector_complex_float_calloc(size) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(VectorComplexFloat {
+            Some(VectorComplexF32 {
                 vec: tmp
             })
         }
     }
 
-    pub fn from_slice(slice: &[ComplexFloat]) -> Option<VectorComplexFloat> {
+    pub fn from_slice(slice: &[ComplexF32]) -> Option<VectorComplexF32> {
         let tmp = unsafe { ffi::gsl_vector_complex_float_alloc(slice.len() as u64) };
 
         if tmp.is_null() {
             None
         } else {
-            let v = VectorComplexFloat {
+            let v = VectorComplexF32 {
                 vec: tmp
             };
             let mut pos = 0u64;
@@ -1582,17 +1597,17 @@ impl VectorComplexFloat {
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: u64) -> ComplexFloat {
+    pub fn get(&self, i: u64) -> ComplexF32 {
         unsafe { ::std::mem::transmute(ffi::gsl_vector_complex_float_get(self.vec as *const ffi::gsl_vector_complex_float, i)) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&self, i: u64, x: &ComplexFloat) {
+    pub fn set(&self, i: u64, x: &ComplexF32) {
         unsafe { ffi::gsl_vector_complex_float_set(self.vec, i, ::std::mem::transmute(*x)) }
     }
 
     /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&self, x: &ComplexFloat) {
+    pub fn set_all(&self, x: &ComplexF32) {
         unsafe { ffi::gsl_vector_complex_float_set_all(self.vec, ::std::mem::transmute(*x)) }
     }
 
@@ -1607,17 +1622,17 @@ impl VectorComplexFloat {
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn copy_from(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_memcpy(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn copy_to(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_memcpy(other.vec, self.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn swap(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_swap(other.vec, self.vec) }
     }
 
@@ -1633,35 +1648,35 @@ impl VectorComplexFloat {
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn add(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_add(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn sub(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_sub(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn mul(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_mul(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&self, other: &VectorComplexFloat) -> i32 {
+    pub fn div(&self, other: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_div(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&self, x: &ComplexFloat) -> i32 {
+    pub fn scale(&self, x: &ComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_scale(self.vec, ::std::mem::transmute(*x)) }
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&self, x: &ComplexFloat) -> i32 {
+    pub fn add_constant(&self, x: &ComplexF32) -> i32 {
         unsafe { ffi::gsl_vector_complex_float_add_constant(self.vec, ::std::mem::transmute(*x)) }
     }
 
@@ -1697,7 +1712,7 @@ impl VectorComplexFloat {
         }
     }
 
-    pub fn equal(&self, other: &VectorComplexFloat) -> bool {
+    pub fn equal(&self, other: &VectorComplexF32) -> bool {
         match unsafe { ffi::gsl_vector_complex_float_equal(self.vec as *const ffi::gsl_vector_complex_float,
             other.vec as *const ffi::gsl_vector_complex_float) } {
             1 => true,
@@ -1720,12 +1735,12 @@ impl VectorComplexFloat {
         }
     }*/
 
-    pub fn clone(&self) -> Option<VectorComplexFloat> {
+    pub fn clone(&self) -> Option<VectorComplexF32> {
         unsafe {
             if self.vec.is_null() {
                 None
             } else {
-                match VectorComplexFloat::new((*self.vec).size) {
+                match VectorComplexF32::new((*self.vec).size) {
                     Some(v) => {
                         v.copy_from(self);
                         Some(v)
@@ -1737,14 +1752,14 @@ impl VectorComplexFloat {
     }
 }
 
-impl Drop for VectorComplexFloat {
+impl Drop for VectorComplexF32 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_vector_complex_float_free(self.vec) };
         self.vec = ::std::ptr::mut_null();
     }
 }
 
-impl Show for VectorComplexFloat {
+impl Show for VectorComplexF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -1761,31 +1776,31 @@ impl Show for VectorComplexFloat {
     }
 }
 
-pub struct Matrix {
+pub struct MatrixF64 {
     mat: *mut ffi::gsl_matrix
 }
 
-impl Matrix {
+impl MatrixF64 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_matrix {
         self.mat
     }
 
-    /// Creates a new Matrix with all elements set to zero
+    /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
     /// 
     /// XX XX XX
     /// 
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<Matrix> {
+    pub fn new(n1: u64, n2: u64) -> Option<MatrixF64> {
         let tmp = unsafe { ffi::gsl_matrix_calloc(n1, n2) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(Matrix {
+            Some(MatrixF64 {
                 mat: tmp
             })
         }
@@ -1820,22 +1835,22 @@ impl Matrix {
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&self, other: &Matrix) -> i32 {
+    pub fn copy_from(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_memcpy(self.mat, other.mat as *const ffi::gsl_matrix) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &Matrix) -> i32 {
+    pub fn copy_to(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_memcpy(other.mat, self.mat as *const ffi::gsl_matrix) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&self, other: &Matrix) -> i32 {
+    pub fn swap(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_swap(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(Vector, i32)> {
+    pub fn get_row(&self, y: u64) -> Option<(VectorF64, i32)> {
         let tmp = unsafe { ffi::gsl_vector_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -1843,12 +1858,12 @@ impl Matrix {
         } else {
             let ret = unsafe { ffi::gsl_matrix_get_row(tmp, self.mat as *const ffi::gsl_matrix, y) };
 
-            Some((Vector{vec: tmp}, ret))
+            Some((VectorF64{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(Vector, i32)> {
+    pub fn get_col(&self, x: u64) -> Option<(VectorF64, i32)> {
         let tmp = unsafe { ffi::gsl_vector_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -1856,19 +1871,19 @@ impl Matrix {
         } else {
             let ret = unsafe { ffi::gsl_matrix_get_col(tmp, self.mat as *const ffi::gsl_matrix, x) };
 
-            Some((Vector{vec: tmp}, ret))
+            Some((VectorF64{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: u64, v: &Vector) -> i32 {
+    pub fn set_row(&self, y: u64, v: &VectorF64) -> i32 {
         unsafe { ffi::gsl_matrix_set_row(self.mat, y, v.vec as *const ffi::gsl_vector) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: u64, v: &Vector) -> i32 {
+    pub fn set_col(&self, x: u64, v: &VectorF64) -> i32 {
         unsafe { ffi::gsl_matrix_set_col(self.mat, x, v.vec as *const ffi::gsl_vector) }
     }
 
@@ -1889,7 +1904,7 @@ impl Matrix {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(Matrix, i32)> {
+    pub fn transpose_memcpy(&self) -> Option<(MatrixF64, i32)> {
         let dest = unsafe { ffi::gsl_matrix_alloc((*self.mat).size1, (*self.mat).size2) };
 
         if dest.is_null() {
@@ -1897,7 +1912,7 @@ impl Matrix {
         } else {
             let ret = unsafe { ffi::gsl_matrix_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix) };
 
-            Some((Matrix {mat: dest}, ret))
+            Some((MatrixF64 {mat: dest}, ret))
         }
     }
 
@@ -1909,25 +1924,25 @@ impl Matrix {
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&self, other: &Matrix) -> i32 {
+    pub fn add(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_add(self.mat, other.mat as *const ffi::gsl_matrix) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&self, other: &Matrix) -> i32 {
+    pub fn sub(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_sub(self.mat, other.mat as *const ffi::gsl_matrix) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&self, other: &Matrix) -> i32 {
+    pub fn mul_elements(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&self, other: &Matrix) -> i32 {
+    pub fn div_elements(&self, other: &MatrixF64) -> i32 {
         unsafe { ffi::gsl_matrix_div_elements(self.mat, other.mat as *const ffi::gsl_matrix) }
     }
 
@@ -2021,19 +2036,19 @@ impl Matrix {
     }
 
     /// This function returns true if all elements of the two matrix are equal.
-    pub fn equal(&self, other: &Matrix) -> bool {
+    pub fn equal(&self, other: &MatrixF64) -> bool {
         match unsafe { ffi::gsl_matrix_equal(self.mat as *const ffi::gsl_matrix, other.mat as *const ffi::gsl_matrix) } {
             1 => true,
             _ => false
         }
     }
 
-    pub fn clone(&self) -> Option<Matrix> {
+    pub fn clone(&self) -> Option<MatrixF64> {
         unsafe {
             if self.mat.is_null() {
                 None
             } else {
-                match Matrix::new((*self.mat).size1, (*self.mat).size2) {
+                match MatrixF64::new((*self.mat).size1, (*self.mat).size2) {
                     Some(m) => {
                         m.copy_from(self);
                         Some(m)
@@ -2045,14 +2060,14 @@ impl Matrix {
     }
 }
 
-impl Drop for Matrix {
+impl Drop for MatrixF64 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_matrix_free(self.mat) };
         self.mat = ::std::ptr::mut_null();
     }
 }
 
-impl Show for Matrix {
+impl Show for MatrixF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -2074,31 +2089,31 @@ impl Show for Matrix {
     }
 }
 
-pub struct MatrixFloat {
+pub struct MatrixF32 {
     mat: *mut ffi::gsl_matrix_float
 }
 
-impl MatrixFloat {
+impl MatrixF32 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_matrix_float {
         self.mat
     }
 
-    /// Creates a new Matrix with all elements set to zero
+    /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
     /// 
     /// XX XX XX
     /// 
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixFloat> {
+    pub fn new(n1: u64, n2: u64) -> Option<MatrixF32> {
         let tmp = unsafe { ffi::gsl_matrix_float_calloc(n1, n2) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(MatrixFloat {
+            Some(MatrixF32 {
                 mat: tmp
             })
         }
@@ -2133,22 +2148,22 @@ impl MatrixFloat {
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&self, other: &MatrixFloat) -> i32 {
+    pub fn copy_from(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_memcpy(self.mat, other.mat as *const ffi::gsl_matrix_float) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &MatrixFloat) -> i32 {
+    pub fn copy_to(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_memcpy(other.mat, self.mat as *const ffi::gsl_matrix_float) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&self, other: &MatrixFloat) -> i32 {
+    pub fn swap(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_swap(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorFloat, i32)> {
+    pub fn get_row(&self, y: u64) -> Option<(VectorF32, i32)> {
         let tmp = unsafe { ffi::gsl_vector_float_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -2156,12 +2171,12 @@ impl MatrixFloat {
         } else {
             let ret = unsafe { ffi::gsl_matrix_float_get_row(tmp, self.mat as *const ffi::gsl_matrix_float, y) };
 
-            Some((VectorFloat{vec: tmp}, ret))
+            Some((VectorF32{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorFloat, i32)> {
+    pub fn get_col(&self, x: u64) -> Option<(VectorF32, i32)> {
         let tmp = unsafe { ffi::gsl_vector_float_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -2169,19 +2184,19 @@ impl MatrixFloat {
         } else {
             let ret = unsafe { ffi::gsl_matrix_float_get_col(tmp, self.mat as *const ffi::gsl_matrix_float, x) };
 
-            Some((VectorFloat{vec: tmp}, ret))
+            Some((VectorF32{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: u64, v: &VectorFloat) -> i32 {
+    pub fn set_row(&self, y: u64, v: &VectorF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_set_row(self.mat, y, v.vec as *const ffi::gsl_vector_float) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: u64, v: &VectorFloat) -> i32 {
+    pub fn set_col(&self, x: u64, v: &VectorF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_set_col(self.mat, x, v.vec as *const ffi::gsl_vector_float) }
     }
 
@@ -2202,7 +2217,7 @@ impl MatrixFloat {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixFloat, i32)> {
+    pub fn transpose_memcpy(&self) -> Option<(MatrixF32, i32)> {
         let dest = unsafe { ffi::gsl_matrix_float_alloc((*self.mat).size1, (*self.mat).size2) };
 
         if dest.is_null() {
@@ -2210,7 +2225,7 @@ impl MatrixFloat {
         } else {
             let ret = unsafe { ffi::gsl_matrix_float_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_float) };
 
-            Some((MatrixFloat{mat: dest}, ret))
+            Some((MatrixF32{mat: dest}, ret))
         }
     }
 
@@ -2222,25 +2237,25 @@ impl MatrixFloat {
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&self, other: &MatrixFloat) -> i32 {
+    pub fn add(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_add(self.mat, other.mat as *const ffi::gsl_matrix_float) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&self, other: &MatrixFloat) -> i32 {
+    pub fn sub(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_sub(self.mat, other.mat as *const ffi::gsl_matrix_float) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&self, other: &MatrixFloat) -> i32 {
+    pub fn mul_elements(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix_float) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&self, other: &MatrixFloat) -> i32 {
+    pub fn div_elements(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_float_div_elements(self.mat, other.mat as *const ffi::gsl_matrix_float) }
     }
 
@@ -2334,19 +2349,19 @@ impl MatrixFloat {
     }
 
     /// This function returns true if all elements of the two matrix are equal.
-    pub fn equal(&self, other: &MatrixFloat) -> bool {
+    pub fn equal(&self, other: &MatrixF32) -> bool {
         match unsafe { ffi::gsl_matrix_float_equal(self.mat as *const ffi::gsl_matrix_float, other.mat as *const ffi::gsl_matrix_float) } {
             1 => true,
             _ => false
         }
     }
 
-    pub fn clone(&self) -> Option<MatrixFloat> {
+    pub fn clone(&self) -> Option<MatrixF32> {
         unsafe {
             if self.mat.is_null() {
                 None
             } else {
-                match MatrixFloat::new((*self.mat).size1, (*self.mat).size2) {
+                match MatrixF32::new((*self.mat).size1, (*self.mat).size2) {
                     Some(m) => {
                         m.copy_from(self);
                         Some(m)
@@ -2358,14 +2373,14 @@ impl MatrixFloat {
     }
 }
 
-impl Drop for MatrixFloat {
+impl Drop for MatrixF32 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_matrix_float_free(self.mat) };
         self.mat = ::std::ptr::mut_null();
     }
 }
 
-impl Show for MatrixFloat {
+impl Show for MatrixF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -2387,31 +2402,31 @@ impl Show for MatrixFloat {
     }
 }
 
-pub struct MatrixComplex {
+pub struct MatrixComplexF64 {
     mat: *mut ffi::gsl_matrix_complex
 }
 
-impl MatrixComplex {
+impl MatrixComplexF64 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_matrix_complex {
         self.mat
     }
 
-    /// Creates a new Matrix with all elements set to zero
+    /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
     /// 
     /// XX XX XX
     /// 
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixComplex> {
+    pub fn new(n1: u64, n2: u64) -> Option<MatrixComplexF64> {
         let tmp = unsafe { ffi::gsl_matrix_complex_calloc(n1, n2) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(MatrixComplex {
+            Some(MatrixComplexF64 {
                 mat: tmp
             })
         }
@@ -2419,18 +2434,18 @@ impl MatrixComplex {
 
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, y: u64, x: u64) -> Complex {
+    pub fn get(&self, y: u64, x: u64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_get(self.mat as *const ffi::gsl_matrix_complex, y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: u64, x: u64, value: &Complex) {
+    pub fn set(&self, y: u64, x: u64, value: &ComplexF64) {
         unsafe { ffi::gsl_matrix_complex_set(self.mat, y, x, ::std::mem::transmute(*value)) }
     }
 
     /// This function sets all the elements of the matrix to the value x.
-    pub fn set_all(&self, x: &Complex) {
+    pub fn set_all(&self, x: &ComplexF64) {
         unsafe { ffi::gsl_matrix_complex_set_all(self.mat, ::std::mem::transmute(*x)) }
     }
 
@@ -2446,22 +2461,22 @@ impl MatrixComplex {
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&self, other: &MatrixComplex) -> i32 {
+    pub fn copy_from(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_memcpy(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &MatrixComplex) -> i32 {
+    pub fn copy_to(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_memcpy(other.mat, self.mat as *const ffi::gsl_matrix_complex) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&self, other: &MatrixComplex) -> i32 {
+    pub fn swap(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_swap(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorComplex, i32)> {
+    pub fn get_row(&self, y: u64) -> Option<(VectorComplexF64, i32)> {
         let tmp = unsafe { ffi::gsl_vector_complex_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -2469,12 +2484,12 @@ impl MatrixComplex {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_get_row(tmp, self.mat as *const ffi::gsl_matrix_complex, y) };
 
-            Some((VectorComplex{vec: tmp}, ret))
+            Some((VectorComplexF64{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorComplex, i32)> {
+    pub fn get_col(&self, x: u64) -> Option<(VectorComplexF64, i32)> {
         let tmp = unsafe { ffi::gsl_vector_complex_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -2482,19 +2497,19 @@ impl MatrixComplex {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_get_col(tmp, self.mat as *const ffi::gsl_matrix_complex, x) };
 
-            Some((VectorComplex{vec: tmp}, ret))
+            Some((VectorComplexF64{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: u64, v: &VectorComplex) -> i32 {
+    pub fn set_row(&self, y: u64, v: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_set_row(self.mat, y, v.vec as *const ffi::gsl_vector_complex) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: u64, v: &VectorComplex) -> i32 {
+    pub fn set_col(&self, x: u64, v: &VectorComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_set_col(self.mat, x, v.vec as *const ffi::gsl_vector_complex) }
     }
 
@@ -2515,7 +2530,7 @@ impl MatrixComplex {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixComplex, i32)> {
+    pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF64, i32)> {
         let dest = unsafe { ffi::gsl_matrix_complex_alloc((*self.mat).size1, (*self.mat).size2) };
 
         if dest.is_null() {
@@ -2523,7 +2538,7 @@ impl MatrixComplex {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_complex) };
 
-            Some((MatrixComplex{mat: dest}, ret))
+            Some((MatrixComplexF64{mat: dest}, ret))
         }
     }
 
@@ -2535,35 +2550,35 @@ impl MatrixComplex {
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&self, other: &MatrixComplex) -> i32 {
+    pub fn add(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_add(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&self, other: &MatrixComplex) -> i32 {
+    pub fn sub(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_sub(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&self, other: &MatrixComplex) -> i32 {
+    pub fn mul_elements(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&self, other: &MatrixComplex) -> i32 {
+    pub fn div_elements(&self, other: &MatrixComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_div_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
-    pub fn scale(&self, x: &Complex) -> i32 {
+    pub fn scale(&self, x: &ComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_scale(self.mat, ::std::mem::transmute(*x)) }
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
-    pub fn add_constant(&self, x: &Complex) -> i32 {
+    pub fn add_constant(&self, x: &ComplexF64) -> i32 {
         unsafe { ffi::gsl_matrix_complex_add_constant(self.mat, ::std::mem::transmute(*x)) }
     }
 
@@ -2600,19 +2615,19 @@ impl MatrixComplex {
     }
 
     /// This function returns true if all elements of the two matrix are equal.
-    pub fn equal(&self, other: &MatrixComplex) -> bool {
+    pub fn equal(&self, other: &MatrixComplexF64) -> bool {
         match unsafe { ffi::gsl_matrix_complex_equal(self.mat as *const ffi::gsl_matrix_complex, other.mat as *const ffi::gsl_matrix_complex) } {
             1 => true,
             _ => false
         }
     }
 
-    pub fn clone(&self) -> Option<MatrixComplex> {
+    pub fn clone(&self) -> Option<MatrixComplexF64> {
         unsafe {
             if self.mat.is_null() {
                 None
             } else {
-                match MatrixComplex::new((*self.mat).size1, (*self.mat).size2) {
+                match MatrixComplexF64::new((*self.mat).size1, (*self.mat).size2) {
                     Some(m) => {
                         m.copy_from(self);
                         Some(m)
@@ -2624,14 +2639,14 @@ impl MatrixComplex {
     }
 }
 
-impl Drop for MatrixComplex {
+impl Drop for MatrixComplexF64 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_matrix_complex_free(self.mat) };
         self.mat = ::std::ptr::mut_null();
     }
 }
 
-impl Show for MatrixComplex {
+impl Show for MatrixComplexF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -2658,31 +2673,31 @@ impl Show for MatrixComplex {
 
 
 
-pub struct MatrixComplexFloat {
+pub struct MatrixComplexF32 {
     mat: *mut ffi::gsl_matrix_complex_float
 }
 
-impl MatrixComplexFloat {
+impl MatrixComplexF32 {
     #[doc(hidden)]
     #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_matrix_complex_float {
         self.mat
     }
 
-    /// Creates a new Matrix with all elements set to zero
+    /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
     /// 
     /// XX XX XX
     /// 
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixComplexFloat> {
+    pub fn new(n1: u64, n2: u64) -> Option<MatrixComplexF32> {
         let tmp = unsafe { ffi::gsl_matrix_complex_float_calloc(n1, n2) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(MatrixComplexFloat {
+            Some(MatrixComplexF32 {
                 mat: tmp
             })
         }
@@ -2690,18 +2705,18 @@ impl MatrixComplexFloat {
 
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, y: u64, x: u64) -> ComplexFloat {
+    pub fn get(&self, y: u64, x: u64) -> ComplexF32 {
         unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_float_get(self.mat as *const ffi::gsl_matrix_complex_float, y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: u64, x: u64, value: &ComplexFloat) {
+    pub fn set(&self, y: u64, x: u64, value: &ComplexF32) {
         unsafe { ffi::gsl_matrix_complex_float_set(self.mat, y, x, ::std::mem::transmute(*value)) }
     }
 
     /// This function sets all the elements of the matrix to the value x.
-    pub fn set_all(&self, x: &ComplexFloat) {
+    pub fn set_all(&self, x: &ComplexF32) {
         unsafe { ffi::gsl_matrix_complex_float_set_all(self.mat, ::std::mem::transmute(*x)) }
     }
 
@@ -2717,22 +2732,22 @@ impl MatrixComplexFloat {
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&self, other: &MatrixComplexFloat) -> i32 {
+    pub fn copy_from(&self, other: &MatrixComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_memcpy(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &MatrixComplexFloat) -> i32 {
+    pub fn copy_to(&self, other: &MatrixComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_memcpy(other.mat, self.mat as *const ffi::gsl_matrix_complex_float) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&self, other: &MatrixComplexFloat) -> i32 {
+    pub fn swap(&self, other: &MatrixComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_swap(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorComplexFloat, i32)> {
+    pub fn get_row(&self, y: u64) -> Option<(VectorComplexF32, i32)> {
         let tmp = unsafe { ffi::gsl_vector_complex_float_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -2740,12 +2755,12 @@ impl MatrixComplexFloat {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_float_get_row(tmp, self.mat as *const ffi::gsl_matrix_complex_float, y) };
 
-            Some((VectorComplexFloat{vec: tmp}, ret))
+            Some((VectorComplexF32{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorComplexFloat, i32)> {
+    pub fn get_col(&self, x: u64) -> Option<(VectorComplexF32, i32)> {
         let tmp = unsafe { ffi::gsl_vector_complex_float_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -2753,19 +2768,19 @@ impl MatrixComplexFloat {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_float_get_col(tmp, self.mat as *const ffi::gsl_matrix_complex_float, x) };
 
-            Some((VectorComplexFloat{vec: tmp}, ret))
+            Some((VectorComplexF32{vec: tmp}, ret))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: u64, v: &VectorComplexFloat) -> i32 {
+    pub fn set_row(&self, y: u64, v: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_set_row(self.mat, y, v.vec as *const ffi::gsl_vector_complex_float) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: u64, v: &VectorComplexFloat) -> i32 {
+    pub fn set_col(&self, x: u64, v: &VectorComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_set_col(self.mat, x, v.vec as *const ffi::gsl_vector_complex_float) }
     }
 
@@ -2786,7 +2801,7 @@ impl MatrixComplexFloat {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixComplexFloat, i32)> {
+    pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF32, i32)> {
         let dest = unsafe { ffi::gsl_matrix_complex_float_alloc((*self.mat).size1, (*self.mat).size2) };
 
         if dest.is_null() {
@@ -2794,7 +2809,7 @@ impl MatrixComplexFloat {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_complex_float) };
 
-            Some((MatrixComplexFloat{mat: dest}, ret))
+            Some((MatrixComplexF32{mat: dest}, ret))
         }
     }
 
@@ -2806,35 +2821,35 @@ impl MatrixComplexFloat {
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&self, other: &MatrixComplexFloat) -> i32 {
+    pub fn add(&self, other: &MatrixComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_add(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&self, other: &MatrixComplexFloat) -> i32 {
+    pub fn sub(&self, other: &MatrixComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_sub(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&self, other: &MatrixComplexFloat) -> i32 {
+    pub fn mul_elements(&self, other: &MatrixComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&self, other: &MatrixFloat) -> i32 {
+    pub fn div_elements(&self, other: &MatrixF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_div_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
-    pub fn scale(&self, x: &ComplexFloat) -> i32 {
+    pub fn scale(&self, x: &ComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_scale(self.mat, ::std::mem::transmute(*x)) }
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
-    pub fn add_constant(&self, x: &ComplexFloat) -> i32 {
+    pub fn add_constant(&self, x: &ComplexF32) -> i32 {
         unsafe { ffi::gsl_matrix_complex_float_add_constant(self.mat, ::std::mem::transmute(*x)) }
     }
 
@@ -2871,7 +2886,7 @@ impl MatrixComplexFloat {
     }
 
     /// This function returns true if all elements of the two matrix are equal.
-    pub fn equal(&self, other: &MatrixComplexFloat) -> bool {
+    pub fn equal(&self, other: &MatrixComplexF32) -> bool {
         match unsafe { ffi::gsl_matrix_complex_float_equal(self.mat as *const ffi::gsl_matrix_complex_float,
             other.mat as *const ffi::gsl_matrix_complex_float) } {
             1 => true,
@@ -2879,12 +2894,12 @@ impl MatrixComplexFloat {
         }
     }
 
-    pub fn clone(&self) -> Option<MatrixComplexFloat> {
+    pub fn clone(&self) -> Option<MatrixComplexF32> {
         unsafe {
             if self.mat.is_null() {
                 None
             } else {
-                match MatrixComplexFloat::new((*self.mat).size1, (*self.mat).size2) {
+                match MatrixComplexF32::new((*self.mat).size1, (*self.mat).size2) {
                     Some(m) => {
                         m.copy_from(self);
                         Some(m)
@@ -2896,14 +2911,14 @@ impl MatrixComplexFloat {
     }
 }
 
-impl Drop for MatrixComplexFloat {
+impl Drop for MatrixComplexF32 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_matrix_complex_float_free(self.mat) };
         self.mat = ::std::ptr::mut_null();
     }
 }
 
-impl Show for MatrixComplexFloat {
+impl Show for MatrixComplexF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {

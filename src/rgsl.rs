@@ -72,16 +72,16 @@ pub use types::{
     SF_DOUBLEFACT_NMAX,
     Result,
     ResultE10,
-    Matrix,
-    MatrixFloat,
-    MatrixComplex,
-    MatrixComplexFloat,
-    Vector,
-    VectorFloat,
-    VectorComplex,
-    VectorComplexFloat,
-    Complex,
-    ComplexFloat
+    MatrixF64,
+    MatrixF32,
+    MatrixComplexF64,
+    MatrixComplexF32,
+    VectorF64,
+    VectorF32,
+    VectorComplexF64,
+    VectorComplexF32,
+    ComplexF64,
+    ComplexF32
 };
 
 pub use self::enums::{

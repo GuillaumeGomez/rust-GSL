@@ -582,7 +582,7 @@ pub mod level2 {
 }
 
 pub mod level3 {
-    /// General ::types::Matrix-Matrix multiplication for single precision float.
+    /// General ::types::Matrix-MatrixF64 multiplication for single precision float.
     /// 
     /// __Parameters:__
     /// 
@@ -607,7 +607,7 @@ pub mod level3 {
         unsafe { ::ffi::cblas_sgemm(order, transA, transB, M, N, K, alpha, A.as_ptr(), lda, B.as_ptr(), ldb, beta, C.as_mut_ptr(), ldc) }
     }
     
-    /// Symmetric ::types::Matrix-Matrix multiplication for single precision float.
+    /// Symmetric ::types::Matrix-MatrixF64 multiplication for single precision float.
     /// 
     /// __Parameters:__
     /// 
