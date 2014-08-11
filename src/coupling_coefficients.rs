@@ -8,80 +8,78 @@ Since the arguments of the standard coupling coefficient functions are integer o
 are, by convention, integers equal to twice the actual spin value.
 !*/
 
-pub mod CouplingCoefficients {
-    use Gsl;
-    use std::mem::zeroed;
-    use enums;
+use gsl;
+use std::mem::zeroed;
+use enums;
 
-    /// This routine computes the Wigner 3-j coefficient,
-    /// 
-    /// (ja jb jc
-    ///  ma mb mc)
-    /// 
-    /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
-    pub fn _3j(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_mc: i32) -> f64 {
-        unsafe { ::ffi::gsl_sf_coupling_3j(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc) }
-    }
+/// This routine computes the Wigner 3-j coefficient,
+/// 
+/// (ja jb jc
+///  ma mb mc)
+/// 
+/// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+pub fn _3j(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_mc: i32) -> f64 {
+    unsafe { ::ffi::gsl_sf_coupling_3j(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc) }
+}
 
-    /// This routine computes the Wigner 3-j coefficient,
-    /// 
-    /// (ja jb jc
-    ///  ma mb mc)
-    /// 
-    /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
-    pub fn _3j_e(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_mc: i32) -> (enums::GslValue, Gsl::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_coupling_3j_e(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc, &mut result) };
+/// This routine computes the Wigner 3-j coefficient,
+/// 
+/// (ja jb jc
+///  ma mb mc)
+/// 
+/// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+pub fn _3j_e(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_mc: i32) -> (enums::GslValue, gsl::Result) {
+    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
+    let ret = unsafe { ::ffi::gsl_sf_coupling_3j_e(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc, &mut result) };
 
-        (ret, Gsl::Result{val: result.val, err: result.err})
-    }
+    (ret, gsl::Result{val: result.val, err: result.err})
+}
 
-    /// This routine computes the Wigner 6-j coefficient,
-    /// 
-    /// {ja jb jc
-    /// jd je jf}
-    /// 
-    /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
-    pub fn _6j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32) -> f64 {
-        unsafe { ::ffi::gsl_sf_coupling_6j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf) }
-    }
+/// This routine computes the Wigner 6-j coefficient,
+/// 
+/// {ja jb jc
+/// jd je jf}
+/// 
+/// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+pub fn _6j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32) -> f64 {
+    unsafe { ::ffi::gsl_sf_coupling_6j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf) }
+}
 
-    /// This routine computes the Wigner 6-j coefficient,
-    /// 
-    /// {ja jb jc
-    /// jd je jf}
-    /// 
-    /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
-    pub fn _6j_e(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32) -> (enums::GslValue, Gsl::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_coupling_6j_e(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, &mut result) };
+/// This routine computes the Wigner 6-j coefficient,
+/// 
+/// {ja jb jc
+/// jd je jf}
+/// 
+/// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+pub fn _6j_e(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32) -> (enums::GslValue, gsl::Result) {
+    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
+    let ret = unsafe { ::ffi::gsl_sf_coupling_6j_e(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, &mut result) };
 
-        (ret, Gsl::Result{val: result.val, err: result.err})
-    }
+    (ret, gsl::Result{val: result.val, err: result.err})
+}
 
-    /// This routine computes the Wigner 9-j coefficient,
-    /// 
-    /// {ja jb jc
-    /// jd je jf
-    /// jg jh ji}
-    /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
-    pub fn _9j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32, two_jg: i32,
-        two_jh: i32, two_ji: i32) -> f64 {
-        unsafe { ::ffi::gsl_sf_coupling_9j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, two_jg, two_jh, two_ji) }
-    }
+/// This routine computes the Wigner 9-j coefficient,
+/// 
+/// {ja jb jc
+/// jd je jf
+/// jg jh ji}
+/// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+pub fn _9j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32, two_jg: i32,
+    two_jh: i32, two_ji: i32) -> f64 {
+    unsafe { ::ffi::gsl_sf_coupling_9j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, two_jg, two_jh, two_ji) }
+}
 
-    /// This routine computes the Wigner 9-j coefficient,
-    /// 
-    /// {ja jb jc
-    /// jd je jf
-    /// jg jh ji}
-    /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
-    pub fn _9j_e(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32, two_jg: i32,
-        two_jh: i32, two_ji: i32) -> (enums::GslValue, Gsl::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_coupling_9j_e(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, two_jg, two_jh, two_ji,
-            &mut result) };
+/// This routine computes the Wigner 9-j coefficient,
+/// 
+/// {ja jb jc
+/// jd je jf
+/// jg jh ji}
+/// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+pub fn _9j_e(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32, two_jg: i32,
+    two_jh: i32, two_ji: i32) -> (enums::GslValue, gsl::Result) {
+    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
+    let ret = unsafe { ::ffi::gsl_sf_coupling_9j_e(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, two_jg, two_jh, two_ji,
+        &mut result) };
 
-        (ret, Gsl::Result{val: result.val, err: result.err})
-    }
+    (ret, gsl::Result{val: result.val, err: result.err})
 }

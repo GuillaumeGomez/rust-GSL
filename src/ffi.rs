@@ -336,6 +336,10 @@ extern "C" {
     pub fn gsl_sf_exp_mult_err_e(x: c_double, dx: c_double, y: c_double, dy: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
     pub fn gsl_sf_exp_mult_err_e10_e(x: c_double, dx: c_double, y: c_double, dy: c_double, result: *mut gsl_sf_result_e10) -> enums::GslValue;
 
+    // Gamma Beta functions
+    pub fn gsl_sf_gamma(x: c_double) -> c_double;
+    pub fn gsl_sf_gamma_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;

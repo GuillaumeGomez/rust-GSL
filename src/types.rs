@@ -5,11 +5,18 @@
 pub type gsl_mode_t = u32;
 pub struct CblasIndex(pub u32);
 
-pub mod Gsl {
+pub mod gsl {
     use std::default::Default;
     use ffi;
     use std::fmt::{Formatter,Show};
     use std::fmt;
+
+    /// The maximum x such that gamma(x) is not considered an overflow.
+    pub static SF_GAMMA_XMAX : f64 = 171.0;
+    /// The maximum n such that gsl_sf_fact(n) does not give an overflow.
+    pub static SF_FACT_NMAX : f64 = 170.0;
+    /// The maximum n such that gsl_sf_doublefact(n) does not give an overflow.
+    pub static SF_DOUBLEFACT_NMAX : f64 = 297.0;
 
     /// The error handling form of the special functions always calculate an error estimate along with the value of the result.
     /// Therefore, structures are provided for amalgamating a value and error estimate.

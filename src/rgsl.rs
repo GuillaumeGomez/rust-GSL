@@ -65,27 +65,7 @@ Here is the list of all modules :
 
 extern crate libc;
 
-pub use airy::Airy;
-pub use bessel::Bessel;
-pub use blas::Blas;
-pub use canonical::Canonical;
-pub use cblas::Cblas;
-pub use clausen::Clausen;
-pub use coulomb::Coulomb;
-pub use coupling_coefficients::CouplingCoefficients;
-pub use dawson::Dawson;
-pub use debye::Debye;
-pub use dilogarithm::Dilogarithm;
-pub use elementary::Elementary;
-pub use elementary_operations::ElementaryOperations;
-pub use error::Error;
-pub use exponential::Exponential;
-pub use exponential_integrals::ExponentialIntegrals;
-pub use fit::Fit;
-pub use jacobian_elliptic::JacobianElliptic;
-pub use pow::Pow;
-pub use trigonometric::Trigonometric;
-pub use types::Gsl;
+pub use types::gsl;
 
 pub use self::enums::{
     mode,
@@ -127,6 +107,7 @@ pub mod error;
 pub mod exponential;
 pub mod exponential_integrals;
 pub mod fit;
+pub mod gamma_beta;
 pub mod jacobian_elliptic;
 pub mod pow;
 pub mod trigonometric;
