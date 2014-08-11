@@ -196,9 +196,9 @@ extern "C" {
     pub fn gsl_sf_polar_to_rect(r: c_double, theta: c_double, x: *mut gsl_sf_result, y: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_rect_to_polar(x: c_double, y: c_double, r: *mut gsl_sf_result, theta: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_angle_restrict_symm(theta: c_double) -> c_double;
-    pub fn gsl_sf_angle_restrict_symm_e(theta: *mut c_double) -> c_int;
+    pub fn gsl_sf_angle_restrict_symm_e(theta: *mut c_double) -> enums::Value;
     pub fn gsl_sf_angle_restrict_pos(theta: c_double) -> c_double;
-    pub fn gsl_sf_angle_restrict_pos_e(theta: *mut c_double) -> c_int;
+    pub fn gsl_sf_angle_restrict_pos_e(theta: *mut c_double) -> enums::Value;
     pub fn gsl_sf_sin_err_e(x: c_double, dx: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_cos_err_e(x: c_double, dx: c_double, result: *mut gsl_sf_result) -> enums::Value;
 

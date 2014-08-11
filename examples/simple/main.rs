@@ -5,6 +5,7 @@
 extern crate rgsl;
 
 use std::default::Default;
+use rgsl::{Pow, Elementary, Trigonometric};
 
 fn main() {
     println!("=== VectorFloat tests ===");
@@ -51,12 +52,12 @@ fn main() {
     rgsl::blas::level2::sger(1.7f32, &tmp_vec, &rgsl::VectorF32::from_slice([0.4f32, 14f32, 3f32, 2f32]).unwrap(), &mut tmp_mat);
     println!("=> Simple BLAS level2 test after :\n{}", tmp_mat);
     println!("\nSimple CBLAS level1 test : {}", rgsl::cblas::level1::sdsdot(1i32, 0.6f32, [1.1f32], 1i32, [2.07f32], 1i32));
-    println!("Simple Elementary test (acosh(1.0)) : {}", rgsl::elementary::acosh(1f64));
-    println!("Simple Elementary test (asinh(1.0)) : {}", rgsl::elementary::asinh(1f64));
-    println!("Simple Elementary test (atanh(1.0)) : {}", rgsl::elementary::atanh(1f64));
-    println!("Simple Trigonometric test sin(1.0) : {}", rgsl::trigonometric::sin(1f64));
-    println!("Simple Trigonometric test cos(1.0) : {}", rgsl::trigonometric::cos(1f64));
-    println!("Simple Trigonometric test hypot(1.0) : {}", rgsl::trigonometric::hypot(1f64));
+    println!("Simple Elementary test (acosh(1.0)) : {}", 1f64.acosh());
+    println!("Simple Elementary test (asinh(1.0)) : {}", 1f64.asinh());
+    println!("Simple Elementary test (atanh(1.0)) : {}", 1f64.atanh());
+    println!("Simple Trigonometric test sin(1.0) : {}", 1f64.sin());
+    println!("Simple Trigonometric test cos(1.0) : {}", 1f64.cos());
+    println!("Simple Trigonometric test sf_hypot(1.0) : {}", 1f64.sf_hypot());
 
     println!("\n=== Fit tests ===");
     let x = [1970f64, 1980f64, 1990f64, 2000f64];
@@ -91,7 +92,7 @@ fn main() {
     println!("sumsq = {}", sumsq);
 
     println!("\n=== Pow tests ===");
-    println!("pow::_int(2, 3) : {}", rgsl::pow::_int(2f64, 3));
-    println!("pow::_3(2) : {}", rgsl::pow::_3(2f64));
-    println!("pow::_9(2) : {}", rgsl::pow::_9(2f64));
+    println!("pow::_int(2, 3) : {}", 2f64._int(3));
+    println!("pow::_3(2) : {}", 2f64._3());
+    println!("pow::_9(2) : {}", 2f64._9());
 }

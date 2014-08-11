@@ -85,6 +85,10 @@ pub use enums::{
     Value
 };
 
+pub use elementary::Elementary;
+pub use pow::Pow;
+pub use trigonometric::Trigonometric;
+
 mod ffi;
 pub mod types;
 pub mod enums;
