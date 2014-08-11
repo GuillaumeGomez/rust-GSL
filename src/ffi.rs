@@ -314,6 +314,28 @@ extern "C" {
     pub fn gsl_sf_hazard(x: c_double) -> c_double;
     pub fn gsl_sf_hazard_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
 
+    // Exponential functions
+    pub fn gsl_sf_exp(x: c_double) -> c_double;
+    pub fn gsl_sf_exp_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exp_e10_e(x: c_double, result: *mut gsl_sf_result_e10) -> enums::GslValue;
+    pub fn gsl_sf_exp_mult(x: c_double, y: c_double) -> c_double;
+    pub fn gsl_sf_exp_mult_e(x: c_double, y: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exp_mult_e10_e(x: c_double, y: c_double, result: *mut gsl_sf_result_e10) -> enums::GslValue;
+    // Relative Exponential functions
+    pub fn gsl_sf_expm1(x: c_double) -> c_double;
+    pub fn gsl_sf_expm1_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exprel(x: c_double) -> c_double;
+    pub fn gsl_sf_exprel_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exprel_2(x: c_double) -> c_double;
+    pub fn gsl_sf_exprel_2_e(x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exprel_n(n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_exprel_n_e(n: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    // Exponentiation With Error Estimate
+    pub fn gsl_sf_exp_err_e(x: c_double, dx: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exp_err_e10_e(x: c_double, dx: c_double, result: *mut gsl_sf_result_e10) -> enums::GslValue;
+    pub fn gsl_sf_exp_mult_err_e(x: c_double, dx: c_double, y: c_double, dy: c_double, result: *mut gsl_sf_result) -> enums::GslValue;
+    pub fn gsl_sf_exp_mult_err_e10_e(x: c_double, dx: c_double, y: c_double, dy: c_double, result: *mut gsl_sf_result_e10) -> enums::GslValue;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
@@ -1135,6 +1157,12 @@ extern "C" {
 pub struct gsl_sf_result {
     pub val: c_double,
     pub err: c_double
+}
+
+pub struct gsl_sf_result_e10 {
+    pub val: c_double,
+    pub err: c_double,
+    pub e10: c_int
 }
 
 pub struct gsl_vector_float {
