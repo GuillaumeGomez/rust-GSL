@@ -344,6 +344,14 @@ extern "C" {
     // Gamma Beta functions
     pub fn gsl_sf_gamma(x: c_double) -> c_double;
     pub fn gsl_sf_gamma_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lngamma(x: c_double) -> c_double;
+    pub fn gsl_sf_lngamma_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lngamma_sgn_e(x: c_double, result_lg: *mut gsl_sf_result, sgn: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_gammastar(x: c_double) -> c_double;
+    pub fn gsl_sf_gammastar_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gammainv(x: c_double) -> c_double;
+    pub fn gsl_sf_gammainv_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lngamma_e(zr: c_double, zi: c_double, lnr: *mut gsl_sf_result, arg: *mut gsl_sf_result) -> enums::Value;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
