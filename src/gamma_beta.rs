@@ -24,10 +24,10 @@ pub mod gamma {
     }
 
     /// This routine provides an exponential function \exp(x) using GSL semantics and error checking.
-    pub fn gamma_e(x: f64) -> (enums::GslValue, ::types::Result) {
+    pub fn gamma_e(x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gamma_e(x, &mut result) };
 
-        (ret, ::ffi::FFI::wrap(&result))
+        (ret, ::types::Result{val: result.val, err: result.err})
     }
 }

@@ -20,7 +20,7 @@ pub fn clausen(x: f64) -> f64 {
 }
 
 /// This routine computes the Clausen integral Cl_2(x).
-pub fn clausen_e(x: f64) -> (enums::GslValue, ::types::Result) {
+pub fn clausen_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_clausen_e(x, &mut result) };
 

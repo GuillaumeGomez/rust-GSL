@@ -66,10 +66,8 @@ Here is the list of all modules :
 extern crate libc;
 
 pub use types::{
-    CblasIndex,
-    SF_GAMMA_XMAX,
-    SF_FACT_NMAX,
-    SF_DOUBLEFACT_NMAX,
+    ComplexF32,
+    ComplexF64,
     Result,
     ResultE10,
     MatrixF64,
@@ -79,34 +77,18 @@ pub use types::{
     VectorF64,
     VectorF32,
     VectorComplexF64,
-    VectorComplexF32,
-    ComplexF64,
-    ComplexF32
+    VectorComplexF32
 };
 
-pub use self::enums::{
-    mode,
-    cblas_order,
-    cblas_side,
-    cblas_transpose,
-    cblas_uplo,
-    cblas_diag,
-    gsl_value
-};
-
-pub use self::enums::{
-    Mode,
-    CblasOrder,
-    CblasSide,
-    CblasTranspose,
-    CblasUplo,
-    CblasDiag,
-    GslValue
+pub use enums::{
+    PrecDouble,
+    Value
 };
 
 mod ffi;
-pub mod enums;
 pub mod types;
+pub mod enums;
+
 pub mod airy;
 pub mod bessel;
 pub mod blas;

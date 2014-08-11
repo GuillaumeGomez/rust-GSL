@@ -38,7 +38,7 @@ fn main() {
     println!("sqrt : {}", tmp_complex.sqrt());
 
     println!("\n=== Modules tests ===");
-    println!("Simple Airy test : {}", rgsl::airy::Ai(0.5f64, rgsl::mode::PrecDouble));
+    println!("Simple Airy test : {}", rgsl::airy::Ai(0.5f64, rgsl::PrecDouble));
     println!("Simple Bessel test : {}", rgsl::bessel::I0(0.5f64));
     println!("Simple Canonical test : {}", rgsl::canonical::half(0.37f64, 1.2f64));
     println!("Simple BLAS level1 test : {}", rgsl::blas::level1::snrm2(&tmp_vec));
