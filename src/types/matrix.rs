@@ -45,24 +45,28 @@ impl MatrixF64 {
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: u64, x: u64, value: f64) {
-        unsafe { ffi::gsl_matrix_set(self.mat, y, x, value) }
+    pub fn set(&self, y: u64, x: u64, value: f64) -> &MatrixF64 {
+        unsafe { ffi::gsl_matrix_set(self.mat, y, x, value) };
+        self
     }
 
     /// This function sets all the elements of the matrix to the value x.
-    pub fn set_all(&self, x: f64) {
-        unsafe { ffi::gsl_matrix_set_all(self.mat, x) }
+    pub fn set_all(&self, x: f64) -> &MatrixF64 {
+        unsafe { ffi::gsl_matrix_set_all(self.mat, x) };
+        self
     }
 
     /// This function sets all the elements of the matrix to zero.
-    pub fn set_zero(&self) {
-        unsafe { ffi::gsl_matrix_set_zero(self.mat) }
+    pub fn set_zero(&self) -> &MatrixF64 {
+        unsafe { ffi::gsl_matrix_set_zero(self.mat) };
+        self
     }
 
     /// This function sets the elements of the matrix to the corresponding elements of the identity matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
-    pub fn set_identity(&self) {
-        unsafe { ffi::gsl_matrix_set_identity(self.mat) }
+    pub fn set_identity(&self) -> &MatrixF64 {
+        unsafe { ffi::gsl_matrix_set_identity(self.mat) };
+        self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
@@ -358,24 +362,28 @@ impl MatrixF32 {
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: u64, x: u64, value: f32) {
-        unsafe { ffi::gsl_matrix_float_set(self.mat, y, x, value) }
+    pub fn set(&self, y: u64, x: u64, value: f32) -> &MatrixF32 {
+        unsafe { ffi::gsl_matrix_float_set(self.mat, y, x, value) };
+        self
     }
 
     /// This function sets all the elements of the matrix to the value x.
-    pub fn set_all(&self, x: f32) {
-        unsafe { ffi::gsl_matrix_float_set_all(self.mat, x) }
+    pub fn set_all(&self, x: f32) -> &MatrixF32 {
+        unsafe { ffi::gsl_matrix_float_set_all(self.mat, x) };
+        self
     }
 
     /// This function sets all the elements of the matrix to zero.
-    pub fn set_zero(&self) {
-        unsafe { ffi::gsl_matrix_float_set_zero(self.mat) }
+    pub fn set_zero(&self) -> &MatrixF32 {
+        unsafe { ffi::gsl_matrix_float_set_zero(self.mat) };
+        self
     }
 
     /// This function sets the elements of the matrix to the corresponding elements of the identity matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
-    pub fn set_identity(&self) {
-        unsafe { ffi::gsl_matrix_float_set_identity(self.mat) }
+    pub fn set_identity(&self) -> &MatrixF32 {
+        unsafe { ffi::gsl_matrix_float_set_identity(self.mat) };
+        self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.

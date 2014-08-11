@@ -63,23 +63,27 @@ impl VectorF32 {
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&self, i: u64, x: f32) {
-        unsafe { ffi::gsl_vector_float_set(self.vec, i, x) }
+    pub fn set(&self, i: u64, x: f32) -> &VectorF32 {
+        unsafe { ffi::gsl_vector_float_set(self.vec, i, x) };
+        self
     }
 
     /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&self, x: f32) {
-        unsafe { ffi::gsl_vector_float_set_all(self.vec, x) }
+    pub fn set_all(&self, x: f32) -> &VectorF32 {
+        unsafe { ffi::gsl_vector_float_set_all(self.vec, x) };
+        self
     }
 
     /// This function sets all the elements of the vector v to zero.
-    pub fn set_zero(&self) {
-        unsafe { ffi::gsl_vector_float_set_zero(self.vec) }
+    pub fn set_zero(&self) -> &VectorF32 {
+        unsafe { ffi::gsl_vector_float_set_zero(self.vec) };
+        self
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&self, i: u64) {
-        unsafe { ffi::gsl_vector_float_set_basis(self.vec, i) }
+    pub fn set_basis(&self, i: u64) -> &VectorF32 {
+        unsafe { ffi::gsl_vector_float_set_basis(self.vec, i) };
+        self
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
@@ -342,23 +346,27 @@ impl VectorF64 {
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&self, i: u64, x: f64) {
-        unsafe { ffi::gsl_vector_set(self.vec, i, x) }
+    pub fn set(&self, i: u64, x: f64) -> &VectorF64 {
+        unsafe { ffi::gsl_vector_set(self.vec, i, x) };
+        self
     }
 
     /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&self, x: f64) {
-        unsafe { ffi::gsl_vector_set_all(self.vec, x) }
+    pub fn set_all(&self, x: f64) -> &VectorF64 {
+        unsafe { ffi::gsl_vector_set_all(self.vec, x) };
+        self
     }
 
     /// This function sets all the elements of the vector v to zero.
-    pub fn set_zero(&self) {
-        unsafe { ffi::gsl_vector_set_zero(self.vec) }
+    pub fn set_zero(&self) -> &VectorF64 {
+        unsafe { ffi::gsl_vector_set_zero(self.vec) };
+        self
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&self, i: u64) {
-        unsafe { ffi::gsl_vector_set_basis(self.vec, i) }
+    pub fn set_basis(&self, i: u64) -> &VectorF64 {
+        unsafe { ffi::gsl_vector_set_basis(self.vec, i) };
+        self
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
