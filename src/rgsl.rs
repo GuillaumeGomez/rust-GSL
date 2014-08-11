@@ -65,7 +65,24 @@ Here is the list of all modules :
 
 extern crate libc;
 
-pub use types::gsl;
+pub use types::{
+    CblasIndex,
+    SF_GAMMA_XMAX,
+    SF_FACT_NMAX,
+    SF_DOUBLEFACT_NMAX,
+    Result,
+    ResultE10,
+    Matrix,
+    MatrixFloat,
+    MatrixComplex,
+    MatrixComplexFloat,
+    Vector,
+    VectorFloat,
+    VectorComplex,
+    VectorComplexFloat,
+    Complex,
+    ComplexFloat
+};
 
 pub use self::enums::{
     mode,

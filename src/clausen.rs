@@ -11,7 +11,6 @@ It is related to the dilogarithm by Cl_2(\theta) = \Im Li_2(\exp(i\theta)).
 !*/
 
 use ffi;
-use gsl;
 use enums;
 use std::mem::zeroed;
 
@@ -21,9 +20,9 @@ pub fn clausen(x: f64) -> f64 {
 }
 
 /// This routine computes the Clausen integral Cl_2(x).
-pub fn clausen_e(x: f64) -> (enums::GslValue, gsl::Result) {
+pub fn clausen_e(x: f64) -> (enums::GslValue, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_clausen_e(x, &mut result) };
 
-    (ret, gsl::Result{val: result.val, err: result.err})
+    (ret, ::types::Result{val: result.val, err: result.err})
 }
