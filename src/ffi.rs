@@ -376,6 +376,21 @@ extern "C" {
     pub fn gsl_sf_lnpoch_sgn_e(a: c_double, x: c_double, result: *mut gsl_sf_result, sgn: *mut c_double) -> enums::Value;
     pub fn gsl_sf_pochrel(a: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_pochrel_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Beta functions
+    pub fn gsl_sf_beta(a: c_double, b: c_double) -> c_double;
+    pub fn gsl_sf_beta_e(a: c_double, b: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lnbeta(a: c_double, b: c_double) -> c_double;
+    pub fn gsl_sf_lnbeta_e(a: c_double, b: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Incomplete Gamma functions
+    pub fn gsl_sf_gamma_inc(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gamma_inc_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gamma_inc_Q(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gamma_inc_Q_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gamma_inc_P(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gamma_inc_P_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Incomplete Beta functions
+    pub fn gsl_sf_beta_inc(a: c_double, b: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_beta_inc_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;

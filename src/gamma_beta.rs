@@ -267,3 +267,107 @@ pub mod pochhammer_symbol {
         (ret, ::types::Result{val: result.val, err: result.err})
     }
 }
+
+pub mod beta {
+    use ffi;
+    use std::mem::zeroed;
+    use enums;
+
+    /// This routine computes the Beta Function, B(a,b) = \Gamma(a)\Gamma(b)/\Gamma(a+b) subject to a and b not being negative integers.
+    pub fn beta(a: f64, b: f64) -> f64 {
+        unsafe { ffi::gsl_sf_beta(a, b) }
+    }
+
+    /// This routine computes the Beta Function, B(a,b) = \Gamma(a)\Gamma(b)/\Gamma(a+b) subject to a and b not being negative integers.
+    pub fn beta_e(a: f64, b: f64) -> (enums::Value, ::types::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_beta_e(a, b, &mut result) };
+
+        (ret, ::types::Result{val: result.val, err: result.err})
+    }
+
+    /// This routine computes the logarithm of the Beta Function, \log(B(a,b)) subject to a and b not being negative integers.
+    pub fn lnbeta(a: f64, b: f64) -> f64 {
+        unsafe { ffi::gsl_sf_lnbeta(a, b) }
+    }
+
+    /// This routine computes the logarithm of the Beta Function, \log(B(a,b)) subject to a and b not being negative integers.
+    pub fn lnbeta_e(a: f64, b: f64) -> (enums::Value, ::types::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_lnbeta_e(a, b, &mut result) };
+
+        (ret, ::types::Result{val: result.val, err: result.err})
+    }
+}
+
+pub mod incomplete_gamma {
+    use ffi;
+    use std::mem::zeroed;
+    use enums;
+
+    /// This routine computes the unnormalized incomplete Gamma Function \Gamma(a,x) = \int_x^\infty dt t^{a-1} \exp(-t) for a real and x >= 0.
+    pub fn gamma_inc(a: f64, x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_gamma_inc(a, x) }
+    }
+
+    /// This routine computes the unnormalized incomplete Gamma Function \Gamma(a,x) = \int_x^\infty dt t^{a-1} \exp(-t) for a real and x >= 0.
+    pub fn gamma_inc_e(a: f64, x: f64) -> (enums::Value, ::types::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_gamma_inc_e(a, x, &mut result) };
+
+        (ret, ::types::Result{val: result.val, err: result.err})
+    }
+
+    /// This routine computes the normalized incomplete Gamma Function Q(a,x) = 1/\Gamma(a) \int_x^\infty dt t^{a-1} \exp(-t) for a > 0, x >= 0.
+    pub fn gamma_inc_Q(a: f64, x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_gamma_inc_Q(a, x) }
+    }
+
+    /// This routine computes the normalized incomplete Gamma Function Q(a,x) = 1/\Gamma(a) \int_x^\infty dt t^{a-1} \exp(-t) for a > 0, x >= 0.
+    pub fn gamma_inc_Q_e(a: f64, x: f64) -> (enums::Value, ::types::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_gamma_inc_Q_e(a, x, &mut result) };
+
+        (ret, ::types::Result{val: result.val, err: result.err})
+    }
+
+    /// This routine computes the complementary normalized incomplete Gamma Function P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt t^{a-1} \exp(-t) for a > 0, x >= 0.
+    /// 
+    /// Note that Abramowitz & Stegun call P(a,x) the incomplete gamma function (section 6.5).
+    pub fn gamma_inc_P(a: f64, x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_gamma_inc_P(a, x) }
+    }
+
+    /// This routine computes the complementary normalized incomplete Gamma Function P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt t^{a-1} \exp(-t) for a > 0, x >= 0.
+    /// 
+    /// Note that Abramowitz & Stegun call P(a,x) the incomplete gamma function (section 6.5).
+    pub fn gamma_inc_P_e(a: f64, x: f64) -> (enums::Value, ::types::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_gamma_inc_P_e(a, x, &mut result) };
+
+        (ret, ::types::Result{val: result.val, err: result.err})
+    }
+}
+
+pub mod incomplete_beta {
+    use ffi;
+    use std::mem::zeroed;
+    use enums;
+
+    /// This routine computes the normalized incomplete Beta function I_x(a,b)=B_x(a,b)/B(a,b) where B_x(a,b) = \int_0^x t^{a-1} (1-t)^{b-1} dt for 0 <= x <= 1.
+    /// For a > 0, b > 0 the value is computed using a continued fraction expansion.
+    /// For all other values it is computed using the relation I_x(a,b,x) = (1/a) x^a 2F1(a,1-b,a+1,x)/B(a,b).
+    pub fn beta_inc(a: f64, b: f64, x: f64) -> f64 {
+        unsafe { ffi::gsl_sf_beta_inc(a, b, x) }
+    }
+
+    /// This routine computes the normalized incomplete Beta function I_x(a,b)=B_x(a,b)/B(a,b) where B_x(a,b) = \int_0^x t^{a-1} (1-t)^{b-1} dt for 0 <= x <= 1.
+    /// For a > 0, b > 0 the value is computed using a continued fraction expansion.
+    /// For all other values it is computed using the relation I_x(a,b,x) = (1/a) x^a 2F1(a,1-b,a+1,x)/B(a,b).
+    pub fn beta_inc_e(a: f64, b: f64, x: f64) -> (enums::Value, ::types::Result) {
+        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+        let ret = unsafe { ffi::gsl_sf_beta_inc_e(a, b, x, &mut result) };
+
+        (ret, ::types::Result{val: result.val, err: result.err})
+    }
+}
