@@ -342,6 +342,7 @@ extern "C" {
     pub fn gsl_sf_exp_mult_err_e10_e(x: c_double, dx: c_double, y: c_double, dy: c_double, result: *mut gsl_sf_result_e10) -> enums::Value;
 
     // Gamma Beta functions
+    // Gamma functions
     pub fn gsl_sf_gamma(x: c_double) -> c_double;
     pub fn gsl_sf_gamma_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_lngamma(x: c_double) -> c_double;
@@ -352,6 +353,29 @@ extern "C" {
     pub fn gsl_sf_gammainv(x: c_double) -> c_double;
     pub fn gsl_sf_gammainv_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_lngamma_complex_e(zr: c_double, zi: c_double, lnr: *mut gsl_sf_result, arg: *mut gsl_sf_result) -> enums::Value;
+    // Factorials
+    pub fn gsl_sf_fact(n: c_uint) -> c_double;
+    pub fn gsl_sf_fact_e(n: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_doublefact(n: c_uint) -> c_double;
+    pub fn gsl_sf_doublefact_e(n: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lnfact(n: c_uint) -> c_double;
+    pub fn gsl_sf_lnfact_e(n: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lndoublefact(n: c_uint) -> c_double;
+    pub fn gsl_sf_lndoublefact_e(n: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_choose(n: c_uint, m: c_uint) -> c_double;
+    pub fn gsl_sf_choose_e(n: c_uint, m: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lnchoose(n: c_uint, m: c_uint) -> c_double;
+    pub fn gsl_sf_lnchoose_e(n: c_uint, m: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_taylorcoeff(n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_taylorcoeff_e(n: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Pochhammer Symbol
+    pub fn gsl_sf_poch(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_poch_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lnpoch(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_lnpoch_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lnpoch_sgn_e(a: c_double, x: c_double, result: *mut gsl_sf_result, sgn: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_pochrel(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_pochrel_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
