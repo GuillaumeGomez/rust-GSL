@@ -59,7 +59,7 @@ pub mod gamma {
     /// 
     /// \Gamma^*(x) = \Gamma(x)/(\sqrt{2\pi} x^{(x-1/2)} \exp(-x))
     /// 
-    ///         = (1 + (1/12x) + ...)  for x \to \infty
+    ///             = (1 + (1/12x) + ...)  for x to infty
     /// 
     /// and is a useful suggestion of Temme.
     pub fn gammastar(x: f64) -> f64 {
@@ -70,7 +70,7 @@ pub mod gamma {
     /// 
     /// \Gamma^*(x) = \Gamma(x)/(\sqrt{2\pi} x^{(x-1/2)} \exp(-x))
     /// 
-    ///         = (1 + (1/12x) + ...)  for x \to \infty
+    ///             = (1 + (1/12x) + ...)  for x to infty
     /// 
     /// and is a useful suggestion of Temme.
     pub fn gammastar_e(x: f64) -> (enums::Value, ::types::Result) {
