@@ -351,7 +351,7 @@ extern "C" {
     pub fn gsl_sf_gammastar_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_gammainv(x: c_double) -> c_double;
     pub fn gsl_sf_gammainv_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_lngamma_e(zr: c_double, zi: c_double, lnr: *mut gsl_sf_result, arg: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lngamma_complex_e(zr: c_double, zi: c_double, lnr: *mut gsl_sf_result, arg: *mut gsl_sf_result) -> enums::Value;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
