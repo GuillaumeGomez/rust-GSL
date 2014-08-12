@@ -4,7 +4,6 @@
 
 //! This following routines compute the gamma and beta functions in their full and incomplete forms, as well as various kinds of factorials.
 
-
 /// The Gamma function is defined by the following integral,
 /// 
 /// \Gamma(x) = \int_0^\infty dt  t^{x-1} \exp(-t)

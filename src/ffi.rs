@@ -392,6 +392,17 @@ extern "C" {
     pub fn gsl_sf_beta_inc(a: c_double, b: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_beta_inc_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
 
+    // Gegenbauer functions
+    pub fn gsl_sf_gegenpoly_1(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gegenpoly_2(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gegenpoly_3(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gegenpoly_1_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gegenpoly_2_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gegenpoly_3_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gegenpoly_n(n: c_int, lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_gegenpoly_n_e(n: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_gegenpoly_array(nmax: c_int, lambda: c_double, x: c_double, result_array: *mut c_double) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;

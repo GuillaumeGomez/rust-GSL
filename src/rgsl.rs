@@ -111,6 +111,7 @@ pub mod exponential;
 pub mod exponential_integrals;
 pub mod fit;
 pub mod gamma_beta;
+pub mod gegenbauer;
 pub mod jacobian_elliptic;
 pub mod pow;
 pub mod trigonometric;
