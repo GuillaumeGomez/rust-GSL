@@ -92,7 +92,7 @@ fn main() {
     println!("sumsq = {}", sumsq);
 
     println!("\n=== Pow tests ===");
-    println!("pow::_int(2, 3) : {}", 2f64.pow_int(3));
-    println!("pow::_3(2) : {}", 2f64.pow_3());
-    println!("pow::_9(2) : {}", 2f64.pow_9());
+    println!("pow_int(2, 3) : {}", 2f64.pow_int(3));
+    println!("pow3(2) : {}", 2f64.pow3());
+    println!("pow9(2) : {}", 2f64.pow9());
 }
