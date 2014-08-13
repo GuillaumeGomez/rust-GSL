@@ -437,6 +437,12 @@ extern "C" {
     pub fn gsl_sf_laguerre_n(n: c_int, a: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_laguerre_n_e(n: c_int, a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
 
+    // Lambert W functions
+    pub fn gsl_sf_lambert_W0(x: c_double) -> c_double;
+    pub fn gsl_sf_lambert_W0_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_lambert_Wm1(x: c_double) -> c_double;
+    pub fn gsl_sf_lambert_Wm1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;

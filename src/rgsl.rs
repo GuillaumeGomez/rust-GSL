@@ -118,6 +118,7 @@ pub mod gegenbauer;
 pub mod hypergeometric;
 pub mod jacobian_elliptic;
 pub mod laguerre;
+pub mod lambert_w;
 pub mod pow;
 pub mod trigonometric;
 
