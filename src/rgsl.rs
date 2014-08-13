@@ -82,7 +82,10 @@ pub use types::{
 
 pub use enums::{
     PrecDouble,
-    Value
+    Value,
+    SF_GAMMA_XMAX,
+    SF_FACT_NMAX,
+    SF_DOUBLEFACT_NMAX
 };
 
 pub use elementary::Elementary;
@@ -112,6 +115,7 @@ pub mod exponential_integrals;
 pub mod fit;
 pub mod gamma_beta;
 pub mod gegenbauer;
+pub mod hypergeometric;
 pub mod jacobian_elliptic;
 pub mod pow;
 pub mod trigonometric;

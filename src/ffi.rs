@@ -403,6 +403,30 @@ extern "C" {
     pub fn gsl_sf_gegenpoly_n_e(n: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_gegenpoly_array(nmax: c_int, lambda: c_double, x: c_double, result_array: *mut c_double) -> enums::Value;
 
+    // Hypergeometric functions
+    pub fn gsl_sf_hyperg_0F1(c: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_0F1_e(c: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_1F1_int(m: c_int, n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_1F1_int_e(m: c_int, n: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_1F1(a: c_double, b: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_1F1_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_U_int(m: c_int, n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_U_int_e(m: c_int, n: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_U_int_e10_e(m: c_int, n: c_int, x: c_double, result: *mut gsl_sf_result_e10) -> enums::Value;
+    pub fn gsl_sf_hyperg_U(a: c_double, b: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_U_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_U_e10_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result_e10) -> enums::Value;
+    pub fn gsl_sf_hyperg_2F1(a: c_double, b: c_double, c: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_2F1_e(a: c_double, b: c_double, c: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_2F1_conj(aR: c_double, aI: c_double, c: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_2F1_conj_e(aR: c_double, aI: c_double, c: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_2F1_renorm(a: c_double, b: c_double, c: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_2F1_renorm_e(a: c_double, b: c_double, c: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_2F1_conj_renorm(aR: c_double, aI: c_double, c: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_2F1_conj_renorm_e(aR: c_double, aI: c_double, c: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_hyperg_2F0(a: c_double, b: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_hyperg_2F0_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
