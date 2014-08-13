@@ -99,7 +99,6 @@ pub mod enums;
 pub mod airy;
 pub mod bessel;
 pub mod blas;
-pub mod canonical;
 pub mod cblas;
 pub mod clausen;
 pub mod coulomb;
@@ -119,6 +118,7 @@ pub mod hypergeometric;
 pub mod jacobian_elliptic;
 pub mod laguerre;
 pub mod lambert_w;
+pub mod legendre;
 pub mod pow;
 pub mod trigonometric;
 

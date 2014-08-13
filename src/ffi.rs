@@ -163,20 +163,6 @@ extern "C" {
     pub fn gsl_sf_bessel_zero_Jnu(nu: f64, s: c_uint) -> c_double;
     pub fn gsl_sf_bessel_zero_Jnu_e(nu: f64, s: c_uint, result: *mut gsl_sf_result) -> enums::Value;
 
-    // Conical Functions
-    pub fn gsl_sf_conicalP_half(lambda: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_conicalP_half_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_conicalP_mhalf(lambda: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_conicalP_mhalf_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_conicalP_0(lambda: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_conicalP_0_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_conicalP_1(lambda: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_conicalP_1_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_conicalP_sph_reg(l: c_int, lambda: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_conicalP_sph_reg_e(l: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_conicalP_cyl_reg(m: c_int, lambda: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_conicalP_cyl_reg_e(m: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-
     // Trigonometric Functions
     pub fn gsl_sf_sin(x: c_double) -> c_double;
     pub fn gsl_sf_sin_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
@@ -442,6 +428,59 @@ extern "C" {
     pub fn gsl_sf_lambert_W0_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_lambert_Wm1(x: c_double) -> c_double;
     pub fn gsl_sf_lambert_Wm1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
+    // Legendre functions
+    // Legendre Polynomials
+    pub fn gsl_sf_legendre_P1(x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_P2(x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_P3(x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_P1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_P2_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_P3_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_Pl(l: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_Pl_e(l: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_Pl_array(lmax: c_int, x: c_double, result_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_legendre_Pl_deriv_array(lmax: c_int, x: c_double, result_array: *mut c_double,
+        result_deriv_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_legendre_Q0(x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_Q0_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_Q1(x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_Q1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_Ql(l: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_Ql_e(l: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Associated Legendre Polynomials and Spherical Harmonics
+    pub fn gsl_sf_legendre_Plm(l: c_int, m: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_Plm_e(l: c_int, m: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_Plm_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_legendre_Plm_deriv_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double,
+        result_deriv_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_legendre_sphPlm(l: c_int, m: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_legendre_sphPlm_e(l: c_int, m: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_sphPlm_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_legendre_sphPlm_deriv_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double,
+        result_deriv_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_legendre_array_size(lmax: c_int, m: c_int) -> c_int;
+    // Conical functions
+    pub fn gsl_sf_conicalP_half(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_conicalP_half_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_conicalP_mhalf(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_conicalP_mhalf_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_conicalP_0(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_conicalP_0_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_conicalP_1(lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_conicalP_1_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_conicalP_sph_reg(l: c_int, lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_conicalP_sph_reg_e(l: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_conicalP_cyl_reg(m: c_int, lambda: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_conicalP_cyl_reg_e(m: c_int, lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Radial Functions for Hyperbolic Space
+    pub fn gsl_sf_legendre_H3d_0(lambda: c_double, eta: c_double) -> c_double;
+    pub fn gsl_sf_legendre_H3d_0_e(lambda: c_double, eta: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_H3d_1(lambda: c_double, eta: c_double) -> c_double;
+    pub fn gsl_sf_legendre_H3d_1_e(lambda: c_double, eta: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_H3d(l: c_int, lambda: c_double, eta: c_double) -> c_double;
+    pub fn gsl_sf_legendre_H3d_e(l: c_int, lambda: c_double, eta: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_legendre_H3d_array(lmax: c_int, lambda: c_double, eta: c_double, result_array: *mut c_double) -> enums::Value;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;

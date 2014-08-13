@@ -41,7 +41,7 @@ fn main() {
     println!("\n=== Modules tests ===");
     println!("Simple Airy test : {}", rgsl::airy::Ai(0.5f64, rgsl::PrecDouble));
     println!("Simple Bessel test : {}", rgsl::bessel::I0(0.5f64));
-    println!("Simple Canonical test : {}", rgsl::canonical::half(0.37f64, 1.2f64));
+    println!("Simple Legendre::conical test : {}", rgsl::legendre::conical::half(0.37f64, 1.2f64));
     println!("Simple BLAS level1 test : {}", rgsl::blas::level1::snrm2(&tmp_vec));
     tmp_mat = rgsl::MatrixF32::new(4u64, 4u64).unwrap();
     tmp_mat.set(1, 2, 42f32);
