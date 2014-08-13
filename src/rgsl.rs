@@ -121,6 +121,7 @@ pub mod lambert_w;
 pub mod legendre;
 pub mod logarithm;
 pub mod pow;
+pub mod power;
 pub mod trigonometric;
 
 #[cfg(target_os = "linux")]
