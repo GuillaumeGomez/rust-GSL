@@ -122,6 +122,7 @@ pub mod legendre;
 pub mod logarithm;
 pub mod pow;
 pub mod power;
+pub mod psi;
 pub mod trigonometric;
 
 #[cfg(target_os = "linux")]

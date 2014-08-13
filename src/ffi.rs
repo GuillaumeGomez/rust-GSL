@@ -497,6 +497,23 @@ extern "C" {
     pub fn gsl_sf_pow_int(x: c_double, n: c_int) -> c_double;
     pub fn gsl_sf_pow_int_e(x: c_double, n: c_int, result: *mut gsl_sf_result) -> enums::Value;
 
+    // Psi (Digamma) functions
+    // Digamma functions
+    pub fn gsl_sf_psi_int(n: c_int) -> c_double;
+    pub fn gsl_sf_psi_int_e(n: c_int, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_psi(x: c_double) -> c_double;
+    pub fn gsl_sf_psi_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_psi_1piy(y: c_double) -> c_double;
+    pub fn gsl_sf_psi_1piy_e(y: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Trigamma functions
+    pub fn gsl_sf_psi_1_int(n: c_int) -> c_double;
+    pub fn gsl_sf_psi_1_int_e(n: c_int, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_psi_1(x: c_double) -> c_double;
+    pub fn gsl_sf_psi_1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Polygamma functions
+    pub fn gsl_sf_psi_n(n: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_psi_n_e(n: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
