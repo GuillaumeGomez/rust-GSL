@@ -2,9 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-/*!
-The error function is described in Abramowitz & Stegun, Chapter 7.
-!*/
+//! The error function is described in Abramowitz & Stegun, Chapter 7.
 
 use std::mem::zeroed;
 use enums;

@@ -39,10 +39,12 @@ fn main() {
     println!("sqrt : {}", tmp_complex.sqrt());
 
     println!("\n=== Modules tests ===");
-    println!("Simple Airy test : {}", rgsl::airy::Ai(0.5f64, rgsl::PrecDouble));
-    println!("Simple Bessel test : {}", rgsl::bessel::I0(0.5f64));
+    println!("Simple Airy::Ai test : {}", rgsl::airy::Ai(0.5f64, rgsl::PrecDouble));
+    println!("Simple Bessel::I0 test : {}", rgsl::bessel::I0(0.5f64));
     println!("Simple Legendre::conical test : {}", rgsl::legendre::conical::half(0.37f64, 1.2f64));
-    println!("Simple BLAS level1 test : {}", rgsl::blas::level1::snrm2(&tmp_vec));
+    println!("Simple Legendre::conical test : {}", rgsl::legendre::conical::half(0.37f64, 1.2f64));
+    println!("Simple BLAS::level1::snrm2 test : {}", rgsl::blas::level1::snrm2(&tmp_vec));
+    println!("Simple Logarithm::log test : {}", rgsl::logarithm::log(0.1f64));
     tmp_mat = rgsl::MatrixF32::new(4u64, 4u64).unwrap();
     tmp_mat.set(1, 2, 42f32);
     tmp_mat.set(0, 0, 1f32);

@@ -482,6 +482,17 @@ extern "C" {
     pub fn gsl_sf_legendre_H3d_e(l: c_int, lambda: c_double, eta: c_double, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_legendre_H3d_array(lmax: c_int, lambda: c_double, eta: c_double, result_array: *mut c_double) -> enums::Value;
 
+    // Logarithm and Related Functions
+    pub fn gsl_sf_log(x: c_double) -> c_double;
+    pub fn gsl_sf_log_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_log_abs(x: c_double) -> c_double;
+    pub fn gsl_sf_log_abs_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_complex_log_e(zr: c_double, zi: c_double, lnr: *mut gsl_sf_result, theta: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_log_1plusx(x: c_double) -> c_double;
+    pub fn gsl_sf_log_1plusx_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_log_1plusx_mx(x: c_double) -> c_double;
+    pub fn gsl_sf_log_1plusx_mx_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;

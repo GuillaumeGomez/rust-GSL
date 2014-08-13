@@ -119,6 +119,7 @@ pub mod jacobian_elliptic;
 pub mod laguerre;
 pub mod lambert_w;
 pub mod legendre;
+pub mod logarithm;
 pub mod pow;
 pub mod trigonometric;
 
