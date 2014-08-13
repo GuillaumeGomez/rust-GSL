@@ -427,6 +427,16 @@ extern "C" {
     pub fn gsl_sf_hyperg_2F0(a: c_double, b: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_hyperg_2F0_e(a: c_double, b: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
 
+    /// Laguerre functions
+    pub fn gsl_sf_laguerre_1(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_laguerre_2(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_laguerre_3(a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_laguerre_1_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_laguerre_2_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_laguerre_3_e(a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_laguerre_n(n: c_int, a: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_laguerre_n_e(n: c_int, a: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
