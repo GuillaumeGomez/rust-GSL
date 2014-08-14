@@ -176,7 +176,7 @@ pub mod associated_polynomials {
     }
 
     /// This function returns the size of result_array[] needed for the array versions of P_l^m(x), lmax - m + 1.
-    pub fn legendre_array_size(lmax: i32, m: i32) -> i32 {
+    pub fn legendre_array_size(lmax: i32, m: i32) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_array_size(lmax, m) }
     }
 }
