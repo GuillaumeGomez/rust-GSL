@@ -577,6 +577,28 @@ extern "C" {
     pub fn gsl_sf_ellint_RJ(x: c_double, y: c_double, z: c_double, p: c_double, mode: enums::Mode) -> c_double;
     pub fn gsl_sf_ellint_RJ_e(x: c_double, y: c_double, z: c_double, p: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
 
+    // Fermi-Dirac functions
+    // Complete Fermi-Dirac Integrals
+    pub fn gsl_sf_fermi_dirac_m1(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_m1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_0(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_0_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_1(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_2(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_2_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_int(j: c_int, x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_int_e(j: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_mhalf(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_mhalf_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_half(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_half_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_fermi_dirac_3half(x: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_3half_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Incomplete Fermi-Dirac Integrals
+    pub fn gsl_sf_fermi_dirac_inc_0(x: c_double, b: c_double) -> c_double;
+    pub fn gsl_sf_fermi_dirac_inc_0_e(x: c_double, b: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;

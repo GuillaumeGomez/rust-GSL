@@ -112,6 +112,7 @@ pub mod elliptic;
 pub mod error;
 pub mod exponential;
 pub mod exponential_integrals;
+pub mod fermi_dirac;
 pub mod fit;
 pub mod gamma_beta;
 pub mod gegenbauer;
