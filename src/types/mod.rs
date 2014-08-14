@@ -8,8 +8,10 @@ pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};
 pub use self::result::{Result, ResultE10};
 pub use self::vector::{VectorF32, VectorF64};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
+pub use self::mathieu::{MathieuWorkspace};
 
 pub mod complex;
+pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
 pub mod result;

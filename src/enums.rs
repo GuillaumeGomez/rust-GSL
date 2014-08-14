@@ -11,6 +11,8 @@ pub static SF_FACT_NMAX : f64 = 170.0;
 /// The maximum n such that gsl_sf_doublefact(n) does not give an overflow.
 pub static SF_DOUBLEFACT_NMAX : f64 = 297.0;
 
+pub static SF_MATHIEU_COEFF : u32 = 100;
+
 #[deriving(PartialEq, PartialOrd, Show)]
 #[repr(C)]
 pub enum Mode {

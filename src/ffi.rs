@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use libc::{c_double, c_int, c_uint, c_float, c_void, c_ulong, size_t};
+use libc::{c_double, c_int, c_uint, c_float, c_void, size_t};
 use enums;
 use cblas;
 
@@ -808,17 +808,17 @@ extern "C" {
     pub fn gsl_frexp(x: c_double, e: *mut c_int) -> c_double;
 
     // Vector functions
-    pub fn gsl_vector_alloc(size: c_ulong) -> *mut gsl_vector;
-    pub fn gsl_vector_calloc(size: c_ulong) -> *mut gsl_vector;
+    pub fn gsl_vector_alloc(size: size_t) -> *mut gsl_vector;
+    pub fn gsl_vector_calloc(size: size_t) -> *mut gsl_vector;
     pub fn gsl_vector_free(vector: *mut gsl_vector);
-    pub fn gsl_vector_get(vector: *const gsl_vector, i: c_ulong) -> c_double;
-    pub fn gsl_vector_set(vector: *mut gsl_vector, i: c_ulong, x: c_double);
+    pub fn gsl_vector_get(vector: *const gsl_vector, i: size_t) -> c_double;
+    pub fn gsl_vector_set(vector: *mut gsl_vector, i: size_t, x: c_double);
     pub fn gsl_vector_set_all(vector: *mut gsl_vector, x: c_double);
     pub fn gsl_vector_set_zero(vector: *mut gsl_vector);
-    pub fn gsl_vector_set_basis(vector: *mut gsl_vector, i: c_ulong);
+    pub fn gsl_vector_set_basis(vector: *mut gsl_vector, i: size_t);
     pub fn gsl_vector_memcpy(dest: *mut gsl_vector, src: *const gsl_vector) -> c_int;
     pub fn gsl_vector_swap(v: *mut gsl_vector, w: *mut gsl_vector) -> c_int;
-    pub fn gsl_vector_swap_elements(vector: *mut gsl_vector, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_vector_swap_elements(vector: *mut gsl_vector, i: size_t, j: size_t) -> c_int;
     pub fn gsl_vector_reverse(vector: *mut gsl_vector) -> c_int;
     pub fn gsl_vector_add(dest: *mut gsl_vector, src: *const gsl_vector) -> c_int;
     pub fn gsl_vector_sub(dest: *mut gsl_vector, src: *const gsl_vector) -> c_int;
@@ -829,9 +829,9 @@ extern "C" {
     pub fn gsl_vector_max(vector: *const gsl_vector) -> c_double;
     pub fn gsl_vector_min(vector: *const gsl_vector) -> c_double;
     pub fn gsl_vector_minmax(vector: *const gsl_vector, min_out: *mut c_double, max_out: *mut c_double);
-    pub fn gsl_vector_max_index(vector: *const gsl_vector) -> c_ulong;
-    pub fn gsl_vector_min_index(vector: *const gsl_vector) -> c_ulong;
-    pub fn gsl_vector_minmax_index(vector: *const gsl_vector, imin: *mut c_ulong, imax: *mut c_ulong);
+    pub fn gsl_vector_max_index(vector: *const gsl_vector) -> size_t;
+    pub fn gsl_vector_min_index(vector: *const gsl_vector) -> size_t;
+    pub fn gsl_vector_minmax_index(vector: *const gsl_vector, imin: *mut size_t, imax: *mut size_t);
     pub fn gsl_vector_isnull(vector: *const gsl_vector) -> c_int;
     pub fn gsl_vector_ispos(vector: *const gsl_vector) -> c_int;
     pub fn gsl_vector_isneg(vector: *const gsl_vector) -> c_int;
@@ -839,17 +839,17 @@ extern "C" {
     pub fn gsl_vector_equal(u: *const gsl_vector, v: *const gsl_vector) -> c_int;
 
     // VectorComplex functions
-    pub fn gsl_vector_complex_alloc(size: c_ulong) -> *mut gsl_vector_complex;
-    pub fn gsl_vector_complex_calloc(size: c_ulong) -> *mut gsl_vector_complex;
+    pub fn gsl_vector_complex_alloc(size: size_t) -> *mut gsl_vector_complex;
+    pub fn gsl_vector_complex_calloc(size: size_t) -> *mut gsl_vector_complex;
     pub fn gsl_vector_complex_free(vector: *mut gsl_vector_complex);
-    pub fn gsl_vector_complex_get(vector: *const gsl_vector_complex, i: c_ulong) -> gsl_complex;
-    pub fn gsl_vector_complex_set(vector: *mut gsl_vector_complex, i: c_ulong, x: gsl_complex);
+    pub fn gsl_vector_complex_get(vector: *const gsl_vector_complex, i: size_t) -> gsl_complex;
+    pub fn gsl_vector_complex_set(vector: *mut gsl_vector_complex, i: size_t, x: gsl_complex);
     pub fn gsl_vector_complex_set_all(vector: *mut gsl_vector_complex, x: gsl_complex);
     pub fn gsl_vector_complex_set_zero(vector: *mut gsl_vector_complex);
-    pub fn gsl_vector_complex_set_basis(vector: *mut gsl_vector_complex, i: c_ulong);
+    pub fn gsl_vector_complex_set_basis(vector: *mut gsl_vector_complex, i: size_t);
     pub fn gsl_vector_complex_memcpy(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
     pub fn gsl_vector_complex_swap(v: *mut gsl_vector_complex, w: *mut gsl_vector_complex) -> c_int;
-    pub fn gsl_vector_complex_swap_elements(vector: *mut gsl_vector_complex, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_vector_complex_swap_elements(vector: *mut gsl_vector_complex, i: size_t, j: size_t) -> c_int;
     pub fn gsl_vector_complex_reverse(vector: *mut gsl_vector_complex) -> c_int;
     pub fn gsl_vector_complex_add(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
     pub fn gsl_vector_complex_sub(dest: *mut gsl_vector_complex, src: *const gsl_vector_complex) -> c_int;
@@ -864,17 +864,17 @@ extern "C" {
     pub fn gsl_vector_complex_equal(u: *const gsl_vector_complex, v: *const gsl_vector_complex) -> c_int;
 
     // VectorFloat functions
-    pub fn gsl_vector_float_alloc(size: c_ulong) -> *mut gsl_vector_float;
-    pub fn gsl_vector_float_calloc(size: c_ulong) -> *mut gsl_vector_float;
+    pub fn gsl_vector_float_alloc(size: size_t) -> *mut gsl_vector_float;
+    pub fn gsl_vector_float_calloc(size: size_t) -> *mut gsl_vector_float;
     pub fn gsl_vector_float_free(vector: *mut gsl_vector_float);
-    pub fn gsl_vector_float_get(vector: *const gsl_vector_float, i: c_ulong) -> c_float;
-    pub fn gsl_vector_float_set(vector: *mut gsl_vector_float, i: c_ulong, x: c_float);
+    pub fn gsl_vector_float_get(vector: *const gsl_vector_float, i: size_t) -> c_float;
+    pub fn gsl_vector_float_set(vector: *mut gsl_vector_float, i: size_t, x: c_float);
     pub fn gsl_vector_float_set_all(vector: *mut gsl_vector_float, x: c_float);
     pub fn gsl_vector_float_set_zero(vector: *mut gsl_vector_float);
-    pub fn gsl_vector_float_set_basis(vector: *mut gsl_vector_float, i: c_ulong);
+    pub fn gsl_vector_float_set_basis(vector: *mut gsl_vector_float, i: size_t);
     pub fn gsl_vector_float_memcpy(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
     pub fn gsl_vector_float_swap(v: *mut gsl_vector_float, w: *mut gsl_vector_float) -> c_int;
-    pub fn gsl_vector_float_swap_elements(vector: *mut gsl_vector_float, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_vector_float_swap_elements(vector: *mut gsl_vector_float, i: size_t, j: size_t) -> c_int;
     pub fn gsl_vector_float_reverse(vector: *mut gsl_vector_float) -> c_int;
     pub fn gsl_vector_float_add(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
     pub fn gsl_vector_float_sub(dest: *mut gsl_vector_float, src: *const gsl_vector_float) -> c_int;
@@ -885,9 +885,9 @@ extern "C" {
     pub fn gsl_vector_float_max(vector: *const gsl_vector_float) -> c_float;
     pub fn gsl_vector_float_min(vector: *const gsl_vector_float) -> c_float;
     pub fn gsl_vector_float_minmax(vector: *const gsl_vector_float, min_out: *mut c_float, max_out: *mut c_float);
-    pub fn gsl_vector_float_max_index(vector: *const gsl_vector_float) -> c_ulong;
-    pub fn gsl_vector_float_min_index(vector: *const gsl_vector_float) -> c_ulong;
-    pub fn gsl_vector_float_minmax_index(vector: *const gsl_vector_float, imin: *mut c_ulong, imax: *mut c_ulong);
+    pub fn gsl_vector_float_max_index(vector: *const gsl_vector_float) -> size_t;
+    pub fn gsl_vector_float_min_index(vector: *const gsl_vector_float) -> size_t;
+    pub fn gsl_vector_float_minmax_index(vector: *const gsl_vector_float, imin: *mut size_t, imax: *mut size_t);
     pub fn gsl_vector_float_isnull(vector: *const gsl_vector_float) -> c_int;
     pub fn gsl_vector_float_ispos(vector: *const gsl_vector_float) -> c_int;
     pub fn gsl_vector_float_isneg(vector: *const gsl_vector_float) -> c_int;
@@ -895,17 +895,17 @@ extern "C" {
     pub fn gsl_vector_float_equal(u: *const gsl_vector_float, v: *const gsl_vector_float) -> c_int;
 
     // VectorComplexFloat functions
-    pub fn gsl_vector_complex_float_alloc(size: c_ulong) -> *mut gsl_vector_complex_float;
-    pub fn gsl_vector_complex_float_calloc(size: c_ulong) -> *mut gsl_vector_complex_float;
+    pub fn gsl_vector_complex_float_alloc(size: size_t) -> *mut gsl_vector_complex_float;
+    pub fn gsl_vector_complex_float_calloc(size: size_t) -> *mut gsl_vector_complex_float;
     pub fn gsl_vector_complex_float_free(vector: *mut gsl_vector_complex_float);
-    pub fn gsl_vector_complex_float_get(vector: *const gsl_vector_complex_float, i: c_ulong) -> gsl_complex_float;
-    pub fn gsl_vector_complex_float_set(vector: *mut gsl_vector_complex_float, i: c_ulong, x: gsl_complex_float);
+    pub fn gsl_vector_complex_float_get(vector: *const gsl_vector_complex_float, i: size_t) -> gsl_complex_float;
+    pub fn gsl_vector_complex_float_set(vector: *mut gsl_vector_complex_float, i: size_t, x: gsl_complex_float);
     pub fn gsl_vector_complex_float_set_all(vector: *mut gsl_vector_complex_float, x: gsl_complex_float);
     pub fn gsl_vector_complex_float_set_zero(vector: *mut gsl_vector_complex_float);
-    pub fn gsl_vector_complex_float_set_basis(vector: *mut gsl_vector_complex_float, i: c_ulong);
+    pub fn gsl_vector_complex_float_set_basis(vector: *mut gsl_vector_complex_float, i: size_t);
     pub fn gsl_vector_complex_float_memcpy(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
     pub fn gsl_vector_complex_float_swap(v: *mut gsl_vector_complex_float, w: *mut gsl_vector_complex_float) -> c_int;
-    pub fn gsl_vector_complex_float_swap_elements(vector: *mut gsl_vector_complex_float, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_vector_complex_float_swap_elements(vector: *mut gsl_vector_complex_float, i: size_t, j: size_t) -> c_int;
     pub fn gsl_vector_complex_float_reverse(vector: *mut gsl_vector_complex_float) -> c_int;
     pub fn gsl_vector_complex_float_add(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
     pub fn gsl_vector_complex_float_sub(dest: *mut gsl_vector_complex_float, src: *const gsl_vector_complex_float) -> c_int;
@@ -920,23 +920,23 @@ extern "C" {
     pub fn gsl_vector_complex_float_equal(u: *const gsl_vector_complex_float, v: *const gsl_vector_complex_float) -> c_int;
 
     // Matrix functions
-    pub fn gsl_matrix_alloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix;
-    pub fn gsl_matrix_calloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix;
+    pub fn gsl_matrix_alloc(size1: size_t, size2: size_t) -> *mut gsl_matrix;
+    pub fn gsl_matrix_calloc(size1: size_t, size2: size_t) -> *mut gsl_matrix;
     pub fn gsl_matrix_free(m: *mut gsl_matrix);
-    pub fn gsl_matrix_get(m: *const gsl_matrix, i: c_ulong, j: c_ulong) -> c_double;
-    pub fn gsl_matrix_set(m: *mut gsl_matrix, i: c_ulong, j: c_ulong, x: c_double);
+    pub fn gsl_matrix_get(m: *const gsl_matrix, i: size_t, j: size_t) -> c_double;
+    pub fn gsl_matrix_set(m: *mut gsl_matrix, i: size_t, j: size_t, x: c_double);
     pub fn gsl_matrix_set_all(m: *mut gsl_matrix, x: c_double);
     pub fn gsl_matrix_set_zero(m: *mut gsl_matrix);
     pub fn gsl_matrix_set_identity(m: *mut gsl_matrix);
     pub fn gsl_matrix_memcpy(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_swap(m: *mut gsl_matrix, w: *mut gsl_matrix) -> c_int;
-    pub fn gsl_matrix_get_row(vector: *mut gsl_vector, m: *const gsl_matrix, i: c_ulong) -> c_int;
-    pub fn gsl_matrix_get_col(vector: *mut gsl_vector, m: *const gsl_matrix, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_set_row(m: *mut gsl_matrix, i: c_ulong, v: *const gsl_vector) -> c_int;
-    pub fn gsl_matrix_set_col(m: *mut gsl_matrix, j: c_ulong, v: *const gsl_vector) -> c_int;
-    pub fn gsl_matrix_swap_rows(m: *mut gsl_matrix, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_swap_columns(m: *mut gsl_matrix, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_swap_rowcol(m: *mut gsl_matrix, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_matrix_get_row(vector: *mut gsl_vector, m: *const gsl_matrix, i: size_t) -> c_int;
+    pub fn gsl_matrix_get_col(vector: *mut gsl_vector, m: *const gsl_matrix, j: size_t) -> c_int;
+    pub fn gsl_matrix_set_row(m: *mut gsl_matrix, i: size_t, v: *const gsl_vector) -> c_int;
+    pub fn gsl_matrix_set_col(m: *mut gsl_matrix, j: size_t, v: *const gsl_vector) -> c_int;
+    pub fn gsl_matrix_swap_rows(m: *mut gsl_matrix, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_swap_columns(m: *mut gsl_matrix, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_swap_rowcol(m: *mut gsl_matrix, i: size_t, j: size_t) -> c_int;
     pub fn gsl_matrix_transpose_memcpy(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_transpose(m: *mut gsl_matrix) -> c_int;
     pub fn gsl_matrix_add(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
@@ -948,9 +948,9 @@ extern "C" {
     pub fn gsl_matrix_max(m: *const gsl_matrix) -> c_double;
     pub fn gsl_matrix_min(m: *const gsl_matrix) -> c_double;
     pub fn gsl_matrix_minmax(m: *const gsl_matrix, min_out: *mut c_double, max_out: *mut c_double);
-    pub fn gsl_matrix_max_index(m: *const gsl_matrix, imax: *mut c_ulong, jmax: *mut c_ulong);
-    pub fn gsl_matrix_min_index(m: *const gsl_matrix, imin: *mut c_ulong, jmin: *mut c_ulong);
-    pub fn gsl_matrix_minmax_index(m: *const gsl_matrix, imin: *mut c_ulong, jmin: *mut c_ulong, imax: *mut c_ulong, jmax: *mut c_ulong);
+    pub fn gsl_matrix_max_index(m: *const gsl_matrix, imax: *mut size_t, jmax: *mut size_t);
+    pub fn gsl_matrix_min_index(m: *const gsl_matrix, imin: *mut size_t, jmin: *mut size_t);
+    pub fn gsl_matrix_minmax_index(m: *const gsl_matrix, imin: *mut size_t, jmin: *mut size_t, imax: *mut size_t, jmax: *mut size_t);
     pub fn gsl_matrix_isnull(m: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_ispos(m: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_isneg(m: *const gsl_matrix) -> c_int;
@@ -958,23 +958,23 @@ extern "C" {
     pub fn gsl_matrix_equal(u: *const gsl_matrix, v: *const gsl_matrix) -> c_int;
 
     // MatrixFloat functions
-    pub fn gsl_matrix_float_alloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix_float;
-    pub fn gsl_matrix_float_calloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix_float;
+    pub fn gsl_matrix_float_alloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_float;
+    pub fn gsl_matrix_float_calloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_float;
     pub fn gsl_matrix_float_free(m: *mut gsl_matrix_float);
-    pub fn gsl_matrix_float_get(m: *const gsl_matrix_float, i: c_ulong, j: c_ulong) -> c_float;
-    pub fn gsl_matrix_float_set(m: *mut gsl_matrix_float, i: c_ulong, j: c_ulong, x: c_float);
+    pub fn gsl_matrix_float_get(m: *const gsl_matrix_float, i: size_t, j: size_t) -> c_float;
+    pub fn gsl_matrix_float_set(m: *mut gsl_matrix_float, i: size_t, j: size_t, x: c_float);
     pub fn gsl_matrix_float_set_all(m: *mut gsl_matrix_float, x: c_float);
     pub fn gsl_matrix_float_set_zero(m: *mut gsl_matrix_float);
     pub fn gsl_matrix_float_set_identity(m: *mut gsl_matrix_float);
     pub fn gsl_matrix_float_memcpy(dest: *mut gsl_matrix_float, src: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_swap(m: *mut gsl_matrix_float, w: *mut gsl_matrix_float) -> c_int;
-    pub fn gsl_matrix_float_get_row(vector: *mut gsl_vector_float, m: *const gsl_matrix_float, i: c_ulong) -> c_int;
-    pub fn gsl_matrix_float_get_col(vector: *mut gsl_vector_float, m: *const gsl_matrix_float, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_float_set_row(m: *mut gsl_matrix_float, i: c_ulong, v: *const gsl_vector_float) -> c_int;
-    pub fn gsl_matrix_float_set_col(m: *mut gsl_matrix_float, j: c_ulong, v: *const gsl_vector_float) -> c_int;
-    pub fn gsl_matrix_float_swap_rows(m: *mut gsl_matrix_float, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_float_swap_columns(m: *mut gsl_matrix_float, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_float_swap_rowcol(m: *mut gsl_matrix_float, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_matrix_float_get_row(vector: *mut gsl_vector_float, m: *const gsl_matrix_float, i: size_t) -> c_int;
+    pub fn gsl_matrix_float_get_col(vector: *mut gsl_vector_float, m: *const gsl_matrix_float, j: size_t) -> c_int;
+    pub fn gsl_matrix_float_set_row(m: *mut gsl_matrix_float, i: size_t, v: *const gsl_vector_float) -> c_int;
+    pub fn gsl_matrix_float_set_col(m: *mut gsl_matrix_float, j: size_t, v: *const gsl_vector_float) -> c_int;
+    pub fn gsl_matrix_float_swap_rows(m: *mut gsl_matrix_float, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_float_swap_columns(m: *mut gsl_matrix_float, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_float_swap_rowcol(m: *mut gsl_matrix_float, i: size_t, j: size_t) -> c_int;
     pub fn gsl_matrix_float_transpose_memcpy(dest: *mut gsl_matrix_float, src: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_transpose(m: *mut gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_add(dest: *mut gsl_matrix_float, src: *const gsl_matrix_float) -> c_int;
@@ -986,9 +986,9 @@ extern "C" {
     pub fn gsl_matrix_float_max(m: *const gsl_matrix_float) -> c_float;
     pub fn gsl_matrix_float_min(m: *const gsl_matrix_float) -> c_float;
     pub fn gsl_matrix_float_minmax(m: *const gsl_matrix_float, min_out: *mut c_float, max_out: *mut c_float);
-    pub fn gsl_matrix_float_max_index(m: *const gsl_matrix_float, imax: *mut c_ulong, jmax: *mut c_ulong);
-    pub fn gsl_matrix_float_min_index(m: *const gsl_matrix_float, imin: *mut c_ulong, jmin: *mut c_ulong);
-    pub fn gsl_matrix_float_minmax_index(m: *const gsl_matrix_float, imin: *mut c_ulong, jmin: *mut c_ulong, imax: *mut c_ulong, jmax: *mut c_ulong);
+    pub fn gsl_matrix_float_max_index(m: *const gsl_matrix_float, imax: *mut size_t, jmax: *mut size_t);
+    pub fn gsl_matrix_float_min_index(m: *const gsl_matrix_float, imin: *mut size_t, jmin: *mut size_t);
+    pub fn gsl_matrix_float_minmax_index(m: *const gsl_matrix_float, imin: *mut size_t, jmin: *mut size_t, imax: *mut size_t, jmax: *mut size_t);
     pub fn gsl_matrix_float_isnull(m: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_ispos(m: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_isneg(m: *const gsl_matrix_float) -> c_int;
@@ -996,23 +996,23 @@ extern "C" {
     pub fn gsl_matrix_float_equal(u: *const gsl_matrix_float, v: *const gsl_matrix_float) -> c_int;
 
     // MatrixComplex functions
-    pub fn gsl_matrix_complex_alloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix_complex;
-    pub fn gsl_matrix_complex_calloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix_complex;
+    pub fn gsl_matrix_complex_alloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_complex;
+    pub fn gsl_matrix_complex_calloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_complex;
     pub fn gsl_matrix_complex_free(m: *mut gsl_matrix_complex);
-    pub fn gsl_matrix_complex_get(m: *const gsl_matrix_complex, i: c_ulong, j: c_ulong) -> gsl_complex;
-    pub fn gsl_matrix_complex_set(m: *mut gsl_matrix_complex, i: c_ulong, j: c_ulong, x: gsl_complex);
+    pub fn gsl_matrix_complex_get(m: *const gsl_matrix_complex, i: size_t, j: size_t) -> gsl_complex;
+    pub fn gsl_matrix_complex_set(m: *mut gsl_matrix_complex, i: size_t, j: size_t, x: gsl_complex);
     pub fn gsl_matrix_complex_set_all(m: *mut gsl_matrix_complex, x: gsl_complex);
     pub fn gsl_matrix_complex_set_zero(m: *mut gsl_matrix_complex);
     pub fn gsl_matrix_complex_set_identity(m: *mut gsl_matrix_complex);
     pub fn gsl_matrix_complex_memcpy(dest: *mut gsl_matrix_complex, src: *const gsl_matrix_complex) -> c_int;
     pub fn gsl_matrix_complex_swap(m: *mut gsl_matrix_complex, w: *mut gsl_matrix_complex) -> c_int;
-    pub fn gsl_matrix_complex_get_row(vector: *mut gsl_vector_complex, m: *const gsl_matrix_complex, i: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_get_col(vector: *mut gsl_vector_complex, m: *const gsl_matrix_complex, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_set_row(m: *mut gsl_matrix_complex, i: c_ulong, v: *const gsl_vector_complex) -> c_int;
-    pub fn gsl_matrix_complex_set_col(m: *mut gsl_matrix_complex, j: c_ulong, v: *const gsl_vector_complex) -> c_int;
-    pub fn gsl_matrix_complex_swap_rows(m: *mut gsl_matrix_complex, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_swap_columns(m: *mut gsl_matrix_complex, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_swap_rowcol(m: *mut gsl_matrix_complex, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_matrix_complex_get_row(vector: *mut gsl_vector_complex, m: *const gsl_matrix_complex, i: size_t) -> c_int;
+    pub fn gsl_matrix_complex_get_col(vector: *mut gsl_vector_complex, m: *const gsl_matrix_complex, j: size_t) -> c_int;
+    pub fn gsl_matrix_complex_set_row(m: *mut gsl_matrix_complex, i: size_t, v: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_matrix_complex_set_col(m: *mut gsl_matrix_complex, j: size_t, v: *const gsl_vector_complex) -> c_int;
+    pub fn gsl_matrix_complex_swap_rows(m: *mut gsl_matrix_complex, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_complex_swap_columns(m: *mut gsl_matrix_complex, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_complex_swap_rowcol(m: *mut gsl_matrix_complex, i: size_t, j: size_t) -> c_int;
     pub fn gsl_matrix_complex_transpose_memcpy(dest: *mut gsl_matrix_complex, src: *const gsl_matrix_complex) -> c_int;
     pub fn gsl_matrix_complex_transpose(m: *mut gsl_matrix_complex) -> c_int;
     pub fn gsl_matrix_complex_add(dest: *mut gsl_matrix_complex, src: *const gsl_matrix_complex) -> c_int;
@@ -1028,23 +1028,23 @@ extern "C" {
     pub fn gsl_matrix_complex_equal(u: *const gsl_matrix_complex, v: *const gsl_matrix_complex) -> c_int;
 
     // MatrixComplexFloat functions
-    pub fn gsl_matrix_complex_float_alloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix_complex_float;
-    pub fn gsl_matrix_complex_float_calloc(size1: c_ulong, size2: c_ulong) -> *mut gsl_matrix_complex_float;
+    pub fn gsl_matrix_complex_float_alloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_complex_float;
+    pub fn gsl_matrix_complex_float_calloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_complex_float;
     pub fn gsl_matrix_complex_float_free(m: *mut gsl_matrix_complex_float);
-    pub fn gsl_matrix_complex_float_get(m: *const gsl_matrix_complex_float, i: c_ulong, j: c_ulong) -> gsl_complex_float;
-    pub fn gsl_matrix_complex_float_set(m: *mut gsl_matrix_complex_float, i: c_ulong, j: c_ulong, x: gsl_complex_float);
+    pub fn gsl_matrix_complex_float_get(m: *const gsl_matrix_complex_float, i: size_t, j: size_t) -> gsl_complex_float;
+    pub fn gsl_matrix_complex_float_set(m: *mut gsl_matrix_complex_float, i: size_t, j: size_t, x: gsl_complex_float);
     pub fn gsl_matrix_complex_float_set_all(m: *mut gsl_matrix_complex_float, x: gsl_complex_float);
     pub fn gsl_matrix_complex_float_set_zero(m: *mut gsl_matrix_complex_float);
     pub fn gsl_matrix_complex_float_set_identity(m: *mut gsl_matrix_complex_float);
     pub fn gsl_matrix_complex_float_memcpy(dest: *mut gsl_matrix_complex_float, src: *const gsl_matrix_complex_float) -> c_int;
     pub fn gsl_matrix_complex_float_swap(m: *mut gsl_matrix_complex_float, w: *mut gsl_matrix_complex_float) -> c_int;
-    pub fn gsl_matrix_complex_float_get_row(vector: *mut gsl_vector_complex_float, m: *const gsl_matrix_complex_float, i: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_float_get_col(vector: *mut gsl_vector_complex_float, m: *const gsl_matrix_complex_float, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_float_set_row(m: *mut gsl_matrix_complex_float, i: c_ulong, v: *const gsl_vector_complex_float) -> c_int;
-    pub fn gsl_matrix_complex_float_set_col(m: *mut gsl_matrix_complex_float, j: c_ulong, v: *const gsl_vector_complex_float) -> c_int;
-    pub fn gsl_matrix_complex_float_swap_rows(m: *mut gsl_matrix_complex_float, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_float_swap_columns(m: *mut gsl_matrix_complex_float, i: c_ulong, j: c_ulong) -> c_int;
-    pub fn gsl_matrix_complex_float_swap_rowcol(m: *mut gsl_matrix_complex_float, i: c_ulong, j: c_ulong) -> c_int;
+    pub fn gsl_matrix_complex_float_get_row(vector: *mut gsl_vector_complex_float, m: *const gsl_matrix_complex_float, i: size_t) -> c_int;
+    pub fn gsl_matrix_complex_float_get_col(vector: *mut gsl_vector_complex_float, m: *const gsl_matrix_complex_float, j: size_t) -> c_int;
+    pub fn gsl_matrix_complex_float_set_row(m: *mut gsl_matrix_complex_float, i: size_t, v: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_matrix_complex_float_set_col(m: *mut gsl_matrix_complex_float, j: size_t, v: *const gsl_vector_complex_float) -> c_int;
+    pub fn gsl_matrix_complex_float_swap_rows(m: *mut gsl_matrix_complex_float, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_complex_float_swap_columns(m: *mut gsl_matrix_complex_float, i: size_t, j: size_t) -> c_int;
+    pub fn gsl_matrix_complex_float_swap_rowcol(m: *mut gsl_matrix_complex_float, i: size_t, j: size_t) -> c_int;
     pub fn gsl_matrix_complex_float_transpose_memcpy(dest: *mut gsl_matrix_complex_float, src: *const gsl_matrix_complex_float) -> c_int;
     pub fn gsl_matrix_complex_float_transpose(m: *mut gsl_matrix_complex_float) -> c_int;
     pub fn gsl_matrix_complex_float_add(dest: *mut gsl_matrix_complex_float, src: *const gsl_matrix_complex_float) -> c_int;
@@ -1058,6 +1058,32 @@ extern "C" {
     pub fn gsl_matrix_complex_float_isneg(m: *const gsl_matrix_complex_float) -> c_int;
     pub fn gsl_matrix_complex_float_isnonneg(m: *const gsl_matrix_complex_float) -> c_int;
     pub fn gsl_matrix_complex_float_equal(u: *const gsl_matrix_complex_float, v: *const gsl_matrix_complex_float) -> c_int;
+
+    // Mathieu functions
+    // Mathieu functions Workspace
+    pub fn gsl_sf_mathieu_alloc(n: size_t, qmax: c_double) -> *mut gsl_sf_mathieu_workspace;
+    pub fn gsl_sf_mathieu_free(work: *mut gsl_sf_mathieu_workspace);
+    // Mathieu functions Characteristic Values
+    pub fn gsl_sf_mathieu_a(n: c_int, q: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_mathieu_b(n: c_int, q: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_mathieu_a_array(order_min: c_int, order_max: c_int, q: c_double, work: *mut gsl_sf_mathieu_workspace,
+        result_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_mathieu_b_array(order_min: c_int, order_max: c_int, q: c_double, work: *mut gsl_sf_mathieu_workspace,
+        result_array: *mut c_double) -> enums::Value;
+    // Angular Mathieu functions
+    pub fn gsl_sf_mathieu_ce(n: c_int, q: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_mathieu_se(n: c_int, q: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_mathieu_ce_array(nmin: c_int, nmax: c_int, q: c_double, x: c_double, work: *mut gsl_sf_mathieu_workspace,
+        result_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_mathieu_se_array(nmin: c_int, nmax: c_int, q: c_double, x: c_double, work: *mut gsl_sf_mathieu_workspace,
+        result_array: *mut c_double) -> enums::Value;
+    // Radial Mathieu functions
+    pub fn gsl_sf_mathieu_Mc(j: c_int, n: c_int, q: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_mathieu_Ms(j: c_int, n: c_int, q: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_mathieu_Mc_array(j: c_int, nmin: c_int, nmax: c_int, q: c_double, x: c_double, work: *mut gsl_sf_mathieu_workspace,
+        result_array: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_mathieu_Ms_array(j: c_int, nmin: c_int, nmax: c_int, q: c_double, x: c_double, work: *mut gsl_sf_mathieu_workspace,
+        result_array: *mut c_double) -> enums::Value;
 
     // Complex number functions
     pub fn gsl_complex_rect(x: c_double, y: c_double) -> gsl_complex;
@@ -1380,54 +1406,54 @@ pub struct gsl_sf_result_e10 {
 }
 
 pub struct gsl_vector_float {
-    pub size: c_ulong,
-    pub stride: c_ulong,
+    pub size: size_t,
+    pub stride: size_t,
     pub data: *mut c_float,
     pub block: *mut gsl_block_float,
     pub owner: c_int
 }
 
 pub struct gsl_block_float {
-    pub size: c_ulong,
+    pub size: size_t,
     pub data: *mut c_float
 }
 
 pub struct gsl_vector {
-    pub size: c_ulong,
-    pub stride: c_ulong,
+    pub size: size_t,
+    pub stride: size_t,
     pub data: *mut c_double,
     pub block: *mut gsl_block,
     pub owner: c_int
 }
 
 pub struct gsl_block {
-    pub size: c_ulong,
+    pub size: size_t,
     pub data: *mut c_double
 }
 
 pub struct gsl_vector_complex_float {
-    pub size: c_ulong,
-    pub stride: c_ulong,
+    pub size: size_t,
+    pub stride: size_t,
     pub data: *mut c_float,
     pub block: *mut gsl_block_complex_float,
     pub owner: c_int
 }
 
 pub struct gsl_block_complex_float {
-    pub size: c_ulong,
+    pub size: size_t,
     pub data: *mut c_float
 }
 
 pub struct gsl_vector_complex {
-    pub size: c_ulong,
-    pub stride: c_ulong,
+    pub size: size_t,
+    pub stride: size_t,
     pub data: *mut c_double,
     pub block: *mut gsl_block_complex,
     pub owner: c_int
 }
 
 pub struct gsl_block_complex {
-    pub size: c_ulong,
+    pub size: size_t,
     pub data: *mut c_double
 }
 
@@ -1440,37 +1466,64 @@ pub struct gsl_complex_float {
 }
 
 pub struct gsl_matrix {
-    pub size1: c_ulong,
-    pub size2: c_ulong,
-    pub tda: c_ulong,
+    pub size1: size_t,
+    pub size2: size_t,
+    pub tda: size_t,
     pub data: *mut c_double,
     pub block: *mut gsl_block,
     pub owner: c_int
 }
 
 pub struct gsl_matrix_float {
-    pub size1: c_ulong,
-    pub size2: c_ulong,
-    pub tda: c_ulong,
+    pub size1: size_t,
+    pub size2: size_t,
+    pub tda: size_t,
     pub data: *mut c_float,
     pub block: *mut gsl_block_float,
     pub owner: c_int
 }
 
 pub struct gsl_matrix_complex {
-    pub size1: c_ulong,
-    pub size2: c_ulong,
-    pub tda: c_ulong,
+    pub size1: size_t,
+    pub size2: size_t,
+    pub tda: size_t,
     pub data: *mut c_double,
     pub block: *mut gsl_block_complex,
     pub owner: c_int
 }
 
 pub struct gsl_matrix_complex_float {
-    pub size1: c_ulong,
-    pub size2: c_ulong,
-    pub tda: c_ulong,
+    pub size1: size_t,
+    pub size2: size_t,
+    pub tda: size_t,
     pub data: *mut c_float,
     pub block: *mut gsl_block_complex_float,
     pub owner: c_int
+}
+
+pub struct gsl_sf_mathieu_workspace {
+    pub size: size_t,
+    pub even_order: size_t,
+    pub odd_order: size_t,
+    pub extra_values: c_int,
+    pub qa: c_double, // allow for caching of results: not implemented yet
+    pub qb: c_double, // allow for caching of results: not implemented yet
+    pub aa: *mut c_double,
+    pub bb: *mut c_double,
+    pub dd: *mut c_double,
+    pub ee: *mut c_double,
+    pub tt: *mut c_double,
+    pub e2: *mut c_double,
+    pub zz: *mut c_double,
+    pub eval: *mut gsl_vector,
+    pub evec: *mut gsl_matrix,
+    pub wmat: *mut gsl_eigen_symmv_workspace
+}
+
+pub struct gsl_eigen_symmv_workspace {
+    pub size: size_t,
+    pub d: *mut c_double,
+    pub sd: *mut c_double,
+    pub gc: *mut c_double,
+    pub gs: *mut c_double
 }
