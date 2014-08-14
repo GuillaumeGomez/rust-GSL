@@ -123,7 +123,10 @@ pub mod logarithm;
 pub mod pow;
 pub mod power;
 pub mod psi;
+pub mod synchrotron;
+pub mod transport;
 pub mod trigonometric;
+pub mod zeta;
 
 #[cfg(target_os = "linux")]
 mod platform {

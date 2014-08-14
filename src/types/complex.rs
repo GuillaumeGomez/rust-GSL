@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+// TODO : port to Rust type : http://doc.rust-lang.org/num/complex/struct.Complex.html
+
 use std::fmt::{Formatter,Show};
 use std::fmt;
 use std::default::Default;

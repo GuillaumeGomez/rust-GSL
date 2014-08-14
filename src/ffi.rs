@@ -514,6 +514,42 @@ extern "C" {
     pub fn gsl_sf_psi_n(n: c_int, x: c_double) -> c_double;
     pub fn gsl_sf_psi_n_e(n: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
 
+    // Synchrotron functions
+    pub fn gsl_sf_synchrotron_1(x: c_double) -> c_double;
+    pub fn gsl_sf_synchrotron_1_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_synchrotron_2(x: c_double) -> c_double;
+    pub fn gsl_sf_synchrotron_2_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
+    // Transport functions
+    pub fn gsl_sf_transport_2(x: c_double) -> c_double;
+    pub fn gsl_sf_transport_2_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_transport_3(x: c_double) -> c_double;
+    pub fn gsl_sf_transport_3_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_transport_4(x: c_double) -> c_double;
+    pub fn gsl_sf_transport_4_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_transport_5(x: c_double) -> c_double;
+    pub fn gsl_sf_transport_5_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
+    // Zeta functions
+    // Riemann Zeta functions
+    pub fn gsl_sf_zeta_int(n: c_int) -> c_double;
+    pub fn gsl_sf_zeta_int_e(n: c_int, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_zeta(s: c_double) -> c_double;
+    pub fn gsl_sf_zeta_e(s: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Riemann Zeta functions Minus One
+    pub fn gsl_sf_zetam1_int(n: c_int) -> c_double;
+    pub fn gsl_sf_zetam1_int_e(n: c_int, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_zetam1(s: c_double) -> c_double;
+    pub fn gsl_sf_zetam1_e(s: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Hurwitz Zeta functions
+    pub fn gsl_sf_hzeta(s: c_double, q: c_double) -> c_double;
+    pub fn gsl_sf_hzeta_e(s: c_double, q: c_double, result: *mut gsl_sf_result) -> enums::Value;
+    // Eta functions
+    pub fn gsl_sf_eta_int(n: c_int) -> c_double;
+    pub fn gsl_sf_eta_int_e(n: c_int, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_eta(s: c_double) -> c_double;
+    pub fn gsl_sf_eta_e(s: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;
     pub fn cblas_dsdot(N: c_int, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_double;
