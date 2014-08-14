@@ -20,23 +20,23 @@ pub trait FFI<T> {
 
 extern "C" {
     // Airy functions
-    pub fn gsl_sf_airy_Ai(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Ai_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_airy_Bi(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Bi_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_airy_Ai_scaled(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Ai_scaled_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_airy_Bi_scaled(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Bi_scaled_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Ai(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Ai_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Bi(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Bi_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Ai_scaled(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Ai_scaled_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Bi_scaled(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Bi_scaled_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
     // Derivatives of Airy Functions
-    pub fn gsl_sf_airy_Ai_deriv(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Ai_deriv_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_airy_Bi_deriv(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Bi_deriv_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_airy_Ai_deriv_scaled(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Ai_deriv_scaled_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_airy_Bi_deriv_scaled(x: c_double, mode: enums::gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Bi_deriv_scaled_e(x: c_double, mode: enums::gsl_mode_t, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Ai_deriv(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Ai_deriv_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Bi_deriv(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Bi_deriv_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Ai_deriv_scaled(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Ai_deriv_scaled_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_airy_Bi_deriv_scaled(x: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_airy_Bi_deriv_scaled_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
     //  Zeros of Airy Functions
     pub fn gsl_sf_airy_zero_Ai(s: c_uint) -> c_double;
     pub fn gsl_sf_airy_zero_Ai_e(s: c_uint, result: *mut gsl_sf_result) -> enums::Value;
@@ -101,7 +101,7 @@ extern "C" {
     // Regular Bessel Function—Fractional Order
     pub fn gsl_sf_bessel_Jnu(nu: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_bessel_Jnu_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_bessel_sequence_Jnu_e(nu: c_double, mode: enums::gsl_mode_t, size: i64, v: *mut c_double) -> enums::Value;
+    pub fn gsl_sf_bessel_sequence_Jnu_e(nu: c_double, mode: enums::Mode, size: i64, v: *mut c_double) -> enums::Value;
     // Irregular Modified Cylindrical Bessel Functions
     pub fn gsl_sf_bessel_K0(x: c_double) -> c_double;
     pub fn gsl_sf_bessel_K0_e(x: c_double, result: *mut gsl_sf_result) -> enums::Value;
@@ -549,6 +549,33 @@ extern "C" {
     pub fn gsl_sf_eta_int_e(n: c_int, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_eta(s: c_double) -> c_double;
     pub fn gsl_sf_eta_e(s: c_double, result: *mut gsl_sf_result) -> enums::Value;
+
+    // Elliptic Integrals
+    // Legendre Form of Complete Elliptic Integrals
+    pub fn gsl_sf_ellint_Kcomp(k: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_Kcomp_e(k: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_Ecomp(k: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_Ecomp_e(k: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_Pcomp(k: c_double, n: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_Pcomp_e(k: c_double, n: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    // Legendre Form of Incomplete Elliptic Integrals
+    pub fn gsl_sf_ellint_F(phi: c_double, k: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_F_e(phi: c_double, k: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_E(phi: c_double, k: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_E_e(phi: c_double, k: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_P(phi: c_double, k: c_double, n: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_P_e(phi: c_double, k: c_double, n: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_D(phi: c_double, k: c_double, n: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_D_e(phi: c_double, k: c_double, n: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    // Carlson Forms
+    pub fn gsl_sf_ellint_RC(x: c_double, y: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RC_e(x: c_double, y: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_RD(x: c_double, y: c_double, z: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RD_e(x: c_double, y: c_double, z: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_RF(x: c_double, y: c_double, z: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RF_e(x: c_double, y: c_double, z: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_ellint_RJ(x: c_double, y: c_double, z: c_double, p: c_double, mode: enums::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RJ_e(x: c_double, y: c_double, z: c_double, p: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
 
     // Level 1 CBLAS functions
     pub fn cblas_sdsdot(N: c_int, alpha: c_float, x: *const c_float, incx: c_int, y: *const c_float, incy: c_int) -> c_float;

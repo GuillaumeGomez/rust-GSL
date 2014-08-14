@@ -306,7 +306,7 @@ pub fn Jnu_e(nu: f64, x: f64) -> (enums::Value, ::types::Result) {
 /// This function computes the regular cylindrical Bessel function of fractional order \nu, J_\nu(x), evaluated at a series of x values. The array v of length size contains the x values.
 /// They are assumed to be strictly ordered and positive. The array is over-written with the values of J_\nu(x_i).
 pub fn sequence_Jnu(nu: f64, mode: enums::Mode, v: &mut [f64]) -> enums::Value {
-    unsafe { ffi::gsl_sf_bessel_sequence_Jnu_e(nu, mode as u32, v.len() as i64, v.as_mut_ptr()) }
+    unsafe { ffi::gsl_sf_bessel_sequence_Jnu_e(nu, mode, v.len() as i64, v.as_mut_ptr()) }
 }
 
 /// This routine computes the irregular modified cylindrical Bessel function of zeroth order, K_0(x), for x > 0.

@@ -2,8 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-pub type gsl_mode_t = u32;
-
 /// The maximum x such that gamma(x) is not considered an overflow.
 pub static SF_GAMMA_XMAX : f64 = 171.0;
 /// The maximum n such that gsl_sf_fact(n) does not give an overflow.

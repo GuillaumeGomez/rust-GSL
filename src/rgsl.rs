@@ -108,6 +108,7 @@ pub mod debye;
 pub mod dilogarithm;
 pub mod elementary;
 pub mod elementary_operations;
+pub mod elliptic;
 pub mod error;
 pub mod exponential;
 pub mod exponential_integrals;

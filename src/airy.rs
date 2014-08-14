@@ -8,104 +8,104 @@ use std::mem::zeroed;
 
 /// This routine computes the Airy function Ai(x) with an accuracy specified by mode.
 pub fn Ai(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Ai(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Ai(x, mode) }
 }
 
 /// This routine computes the Airy function Ai(x) with an accuracy specified by mode.
 pub fn Ai_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Ai_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Ai_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the Airy function Bi(x) with an accuracy specified by mode.
 pub fn Bi(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Bi(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Bi(x, mode) }
 }
 
 /// This routine computes the Airy function Bi(x) with an accuracy specified by mode.
 pub fn Bi_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Bi_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Bi_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes a scaled version of the Airy function S_A(x) Ai(x). For x>0 the scaling factor S_A(x) is \exp(+(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Ai_scaled(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Ai_scaled(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Ai_scaled(x, mode) }
 }
 
 /// This routine computes a scaled version of the Airy function S_A(x) Ai(x). For x>0 the scaling factor S_A(x) is \exp(+(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Ai_scaled_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Ai_scaled_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Ai_scaled_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes a scaled version of the Airy function S_B(x) Bi(x). For x>0 the scaling factor S_B(x) is exp(-(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Bi_scaled(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Bi_scaled(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Bi_scaled(x, mode) }
 }
 
 /// This routine computes a scaled version of the Airy function S_B(x) Bi(x). For x>0 the scaling factor S_B(x) is exp(-(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Bi_scaled_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Bi_scaled_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Bi_scaled_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the Airy function derivative Ai'(x) with an accuracy specified by mode.
 pub fn Ai_deriv(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Ai_deriv(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Ai_deriv(x, mode) }
 }
 
 /// This routine computes the Airy function derivative Ai'(x) with an accuracy specified by mode.
 pub fn Ai_deriv_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Ai_deriv_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Ai_deriv_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the Airy function derivative Bi'(x) with an accuracy specified by mode.
 pub fn Bi_deriv(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Bi_deriv(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Bi_deriv(x, mode) }
 }
 
 /// This routine computes the Airy function derivative Bi'(x) with an accuracy specified by mode.
 pub fn Bi_deriv_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Bi_deriv_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Bi_deriv_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the scaled Airy function derivative S_A(x) Ai'(x). For x>0 the scaling factor S_A(x) is \exp(+(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Ai_deriv_scaled(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Ai_deriv_scaled(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Ai_deriv_scaled(x, mode) }
 }
 
 /// This routine computes the scaled Airy function derivative S_A(x) Ai'(x). For x>0 the scaling factor S_A(x) is \exp(+(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Ai_deriv_scaled_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Ai_deriv_scaled_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Ai_deriv_scaled_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the scaled Airy function derivative S_B(x) Bi'(x). For x>0 the scaling factor S_B(x) is exp(-(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Bi_deriv_scaled(x: f64, mode: enums::Mode) -> f64 {
-    unsafe { ffi::gsl_sf_airy_Bi_deriv_scaled(x, mode as u32) }
+    unsafe { ffi::gsl_sf_airy_Bi_deriv_scaled(x, mode) }
 }
 
 /// This routine computes the scaled Airy function derivative S_B(x) Bi'(x). For x>0 the scaling factor S_B(x) is exp(-(2/3) x^(3/2)), and is 1 for x<0.
 pub fn Bi_deriv_scaled_e(x: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_airy_Bi_deriv_scaled_e(x, mode as u32, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_airy_Bi_deriv_scaled_e(x, mode, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }
