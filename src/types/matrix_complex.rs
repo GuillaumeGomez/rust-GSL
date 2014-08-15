@@ -14,12 +14,6 @@ pub struct MatrixComplexF64 {
 }
 
 impl MatrixComplexF64 {
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn get_ffi(&self) -> *mut ffi::gsl_matrix_complex {
-        self.mat
-    }
-
     /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
@@ -279,17 +273,23 @@ impl Show for MatrixComplexF64 {
     }
 }
 
+impl ffi::FFI<ffi::gsl_matrix_complex> for MatrixComplexF64 {
+    fn wrap(r: *mut ffi::gsl_matrix_complex) -> MatrixComplexF64 {
+        MatrixComplexF64 {
+            mat: r
+        }
+    }
+
+    fn unwrap(m: &MatrixComplexF64) -> *mut ffi::gsl_matrix_complex {
+        m.mat
+    }
+}
+
 pub struct MatrixComplexF32 {
     mat: *mut ffi::gsl_matrix_complex_float
 }
 
 impl MatrixComplexF32 {
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn get_ffi(&self) -> *mut ffi::gsl_matrix_complex_float {
-        self.mat
-    }
-
     /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
@@ -547,5 +547,17 @@ impl Show for MatrixComplexF32 {
             }
         }
         write!(f, "]")
+    }
+}
+
+impl ffi::FFI<ffi::gsl_matrix_complex_float> for MatrixComplexF32 {
+    fn wrap(r: *mut ffi::gsl_matrix_complex_float) -> MatrixComplexF32 {
+        MatrixComplexF32 {
+            mat: r
+        }
+    }
+
+    fn unwrap(m: &MatrixComplexF32) -> *mut ffi::gsl_matrix_complex_float {
+        m.mat
     }
 }

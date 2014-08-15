@@ -13,12 +13,6 @@ pub struct MatrixF64 {
 }
 
 impl MatrixF64 {
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn get_ffi(&self) -> *mut ffi::gsl_matrix {
-        self.mat
-    }
-
     /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
@@ -326,17 +320,23 @@ impl Show for MatrixF64 {
     }
 }
 
+impl ffi::FFI<ffi::gsl_matrix> for MatrixF64 {
+    fn wrap(r: *mut ffi::gsl_matrix) -> MatrixF64 {
+        MatrixF64 {
+            mat: r
+        }
+    }
+
+    fn unwrap(m: &MatrixF64) -> *mut ffi::gsl_matrix {
+        m.mat
+    }
+}
+
 pub struct MatrixF32 {
     mat: *mut ffi::gsl_matrix_float
 }
 
 impl MatrixF32 {
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn get_ffi(&self) -> *mut ffi::gsl_matrix_float {
-        self.mat
-    }
-
     /// Creates a new MatrixF64 with all elements set to zero
     /// 
     /// Example with n1 = 2 and n2 = 3 :
@@ -640,5 +640,17 @@ impl Show for MatrixF32 {
             }
         }
         write!(f, "]")
+    }
+}
+
+impl ffi::FFI<ffi::gsl_matrix_float> for MatrixF32 {
+    fn wrap(r: *mut ffi::gsl_matrix_float) -> MatrixF32 {
+        MatrixF32 {
+            mat: r
+        }
+    }
+
+    fn unwrap(m: &MatrixF32) -> *mut ffi::gsl_matrix_float {
+        m.mat
     }
 }

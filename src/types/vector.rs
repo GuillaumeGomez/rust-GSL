@@ -12,12 +12,6 @@ pub struct VectorF32 {
 }
 
 impl VectorF32 {
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn get_ffi(&self) -> *mut ffi::gsl_vector_float {
-        self.vec
-    }
-
     /// create a new VectorF32 with all elements set to zero
     pub fn new(size: u64) -> Option<VectorF32> {
         let tmp = unsafe { ffi::gsl_vector_float_calloc(size) };
@@ -295,12 +289,6 @@ pub struct VectorF64 {
 }
 
 impl VectorF64 {
-    #[doc(hidden)]
-    #[allow(visible_private_types)]
-    pub fn get_ffi(&self) -> *mut ffi::gsl_vector {
-        self.vec
-    }
-
     /// create a new VectorF64 with all elements set to zero
     pub fn new(size: u64) -> Option<VectorF64> {
         let tmp = unsafe { ffi::gsl_vector_calloc(size) };
