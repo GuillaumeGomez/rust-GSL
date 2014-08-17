@@ -54,5 +54,18 @@ If the range of the distribution is 1 to n inclusive then P(n)=1, Q(n)=0 while P
 !*/
 
 pub mod bivariate_gaussian;
+pub mod cauchy;
+pub mod chi_squared;
+pub mod exponential;
+pub mod exponential_power;
+pub mod flat;
+pub mod gamma;
 pub mod gaussian;
 pub mod gaussian_tail;
+pub mod landau;
+pub mod laplace;
+pub mod levy_alpha;
+pub mod levy_skew;
+pub mod lognormal;
+pub mod rayleigh;
+pub mod rayleigh_tail;

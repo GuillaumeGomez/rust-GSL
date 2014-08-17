@@ -1528,17 +1528,17 @@ extern "C" {
     // The Cauchy Distribution
     pub fn gsl_ran_cauchy(r: *const gsl_rng, a: c_double) -> c_double;
     pub fn gsl_ran_cauchy_pdf(x: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_cauchy_P(x: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_cauchy_Q(x: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_cauchy_Pinv(P: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_cauchy_Qinv(Q: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_cauchy_P(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_cauchy_Q(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_cauchy_Pinv(P: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_cauchy_Qinv(Q: c_double, a: c_double) -> c_double;
     // The Rayleigh Distribution
     pub fn gsl_ran_rayleigh(r: *const gsl_rng, sigma: c_double) -> c_double;
     pub fn gsl_ran_rayleigh_pdf(x: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_rayleigh_P(x: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_rayleigh_Q(x: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_rayleigh_Pinv(P: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_rayleigh_Qinv(Q: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_rayleigh_P(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_rayleigh_Q(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_rayleigh_Pinv(P: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_rayleigh_Qinv(Q: c_double, sigma: c_double) -> c_double;
     // The Rayleigh Tail Distribution
     pub fn gsl_ran_rayleigh_tail(r: *const gsl_rng, a: c_double, sigma: c_double) -> c_double;
     pub fn gsl_ran_rayleigh_tail_pdf(x: c_double, a: c_double, sigma: c_double) -> c_double;
@@ -1553,31 +1553,31 @@ extern "C" {
     pub fn gsl_ran_gamma(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_gamma_knuth(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_gamma_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gamma_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gamma_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gamma_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gamma_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gamma_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gamma_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gamma_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gamma_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Flat (Uniform) Distribution
     pub fn gsl_ran_flat(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_flat_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_flat_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_flat_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_flat_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_flat_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_flat_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_flat_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_flat_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_flat_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Lognormal Distribution
     pub fn gsl_ran_lognormal(r: *const gsl_rng, zeta: c_double, sigma: c_double) -> c_double;
     pub fn gsl_ran_lognormal_pdf(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_lognormal_P(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_lognormal_Q(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_lognormal_Pinv(P: c_double, zeta: c_double, sigma: c_double) -> c_double;
-    pub fn gsl_ran_lognormal_Qinv(Q: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_lognormal_P(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_lognormal_Q(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_lognormal_Pinv(P: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_lognormal_Qinv(Q: c_double, zeta: c_double, sigma: c_double) -> c_double;
     // The Chi-squared Distribution
     pub fn gsl_ran_chisq(r: *const gsl_rng, nu: c_double) -> c_double;
     pub fn gsl_ran_chisq_pdf(x: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_chisq_P(x: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_chisq_Q(x: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_chisq_Pinv(P: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_chisq_Qinv(Q: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_chisq_P(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_chisq_Q(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_chisq_Pinv(P: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_chisq_Qinv(Q: c_double, nu: c_double) -> c_double;
     // The F-distribution
     pub fn gsl_ran_fdist(r: *const gsl_rng, nu1: c_double, nu2: c_double) -> c_double;
     pub fn gsl_ran_fdist_pdf(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
