@@ -4,7 +4,7 @@ name = "rust-GSL"
 version = "0.1.0"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
-[[lib]]
+[lib]
 
 name = "rgsl"
 crate-type = ["dylib", "rlib"]
@@ -13,3 +13,8 @@ crate-type = ["dylib", "rlib"]
 
 name = "simple"
 path = "examples/simple/main.rs"
+
+[[bin]]
+
+name = "rng"
+path = "examples/rng/main.rs"

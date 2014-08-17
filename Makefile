@@ -11,6 +11,7 @@ rgsl:
 examples: rgsl
 	  mkdir -p bin
 	  rustc -o bin/simple -L ./lib examples/simple/main.rs
+	  rustc -o bin/rng -L ./lib examples/rng/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
@@ -18,5 +19,6 @@ doc:
 clean:
 	rm -rf lib
 	rm -rf bin/simple
+	rm -rf bin/rng
 
 re: clean all

@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use libc::{c_double, c_int, c_uint, c_float, c_void, size_t};
+use libc::{c_double, c_int, c_uint, c_float, c_void, size_t, c_ulong, c_char};
 use enums;
 use cblas;
 
@@ -19,6 +19,9 @@ pub trait FFI<T> {
 }
 
 extern "C" {
+    pub static gsl_rng_default : *const gsl_rng_type;
+    pub static gsl_rng_default_seed : c_ulong;
+
     // Airy functions
     pub fn gsl_sf_airy_Ai(x: c_double, mode: enums::Mode) -> c_double;
     pub fn gsl_sf_airy_Ai_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
@@ -1458,6 +1461,29 @@ extern "C" {
     pub fn gsl_pow_7(x: c_double) -> c_double;
     pub fn gsl_pow_8(x: c_double) -> c_double;
     pub fn gsl_pow_9(x: c_double) -> c_double;
+
+    // Random Number Generation
+    pub fn gsl_rng_alloc(T: *const gsl_rng_type) -> *mut gsl_rng;
+    pub fn gsl_rng_set(r: *const gsl_rng, s: c_ulong);
+    pub fn gsl_rng_free(r: *const gsl_rng);
+    pub fn gsl_rng_get(r: *const gsl_rng) -> c_ulong;
+    pub fn gsl_rng_uniform(r: *const gsl_rng) -> c_double;
+    pub fn gsl_rng_uniform_pos(r: *const gsl_rng) -> c_double;
+    pub fn gsl_rng_uniform_int(r: *const gsl_rng, n: c_ulong) -> c_ulong;
+    pub fn gsl_rng_name(r: *const gsl_rng) -> *const c_char;
+    pub fn gsl_rng_max(r: *const gsl_rng) -> c_ulong;
+    pub fn gsl_rng_min(r: *const gsl_rng) -> c_ulong;
+    pub fn gsl_rng_state(r: *const gsl_rng) -> *mut c_void;
+    pub fn gsl_rng_size(r: *const gsl_rng) -> size_t;
+    pub fn gsl_rng_types_setup() -> *const *mut gsl_rng_type;
+    pub fn gsl_rng_memcpy(dest: *mut gsl_rng, src: *const gsl_rng) -> enums::Value;
+    pub fn gsl_rng_clone(r: *const gsl_rng) -> *mut gsl_rng;
+
+    pub fn gsl_rng_env_setup() -> *const gsl_rng_type;
+
+    // Random Number Distributions
+    // The Gaussian Distribution
+    pub fn gsl_ran_gaussian(r: *const gsl_rng, sigma: c_double) -> c_double;
 }
 
 pub struct gsl_sf_result {
@@ -1610,4 +1636,23 @@ pub struct gsl_bspline_deriv_workspace {
     pub k: size_t,          // spline order
     pub A: *mut gsl_matrix, // work matrix
     pub dB: *mut gsl_matrix // temporary derivative results
+}
+
+pub type rng_set = Option<extern "C" fn(state: *mut c_void, seed: c_ulong)>;
+pub type rng_get = Option<extern "C" fn(state: *mut c_void) -> c_ulong>;
+pub type rng_get_double = Option<extern "C" fn(state: *mut c_void) -> c_double>;
+
+pub struct gsl_rng_type {
+    pub name: *const c_char,
+    pub max: c_ulong,
+    pub min: c_ulong,
+    pub size: size_t,
+    pub set: rng_set,
+    pub get: rng_get,
+    pub get_double: rng_get_double
+}
+
+pub struct gsl_rng {
+    pub _type: *const gsl_rng_type,
+    pub state: *mut c_void
 }

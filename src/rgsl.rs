@@ -77,7 +77,9 @@ pub use types::{
     VectorF64,
     VectorF32,
     VectorComplexF64,
-    VectorComplexF32
+    VectorComplexF32,
+    Rng,
+    RngType
 };
 
 pub use enums::{
@@ -93,6 +95,7 @@ pub use pow::Pow;
 pub use trigonometric::Trigonometric;
 
 mod ffi;
+pub mod randist;
 pub mod types;
 pub mod enums;
 
