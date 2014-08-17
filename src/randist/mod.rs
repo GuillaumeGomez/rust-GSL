@@ -53,4 +53,6 @@ giving the sum of probabilities for all values greater than k. These two definit
 If the range of the distribution is 1 to n inclusive then P(n)=1, Q(n)=0 while P(1) = p(1), Q(1)=1-p(1).
 !*/
 
+pub mod bivariate_gaussian;
 pub mod gaussian;
+pub mod gaussian_tail;

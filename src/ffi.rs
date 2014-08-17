@@ -1478,12 +1478,220 @@ extern "C" {
     pub fn gsl_rng_types_setup() -> *const *mut gsl_rng_type;
     pub fn gsl_rng_memcpy(dest: *mut gsl_rng, src: *const gsl_rng) -> enums::Value;
     pub fn gsl_rng_clone(r: *const gsl_rng) -> *mut gsl_rng;
-
     pub fn gsl_rng_env_setup() -> *const gsl_rng_type;
 
     // Random Number Distributions
     // The Gaussian Distribution
     pub fn gsl_ran_gaussian(r: *const gsl_rng, sigma: c_double) -> c_double;
+    pub fn gsl_ran_gaussian_pdf(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_gaussian_ziggurat(r: *const gsl_rng, sigma: c_double) -> c_double;
+    pub fn gsl_ran_gaussian_ratio_method(r: *const gsl_rng, sigma: c_double) -> c_double;
+    pub fn gsl_ran_ugaussian(r: *const gsl_rng) -> c_double;
+    pub fn gsl_ran_ugaussian_pdf(x: c_double) -> c_double;
+    pub fn gsl_ran_ugaussian_ratio_method(r: *const gsl_rng) -> c_double;
+    pub fn gsl_cdf_gaussian_P(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_gaussian_Q(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_gaussian_Pinv(P: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_gaussian_Qinv(Q: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_cdf_ugaussian_P(x: c_double) -> c_double;
+    pub fn gsl_cdf_ugaussian_Q(x: c_double) -> c_double;
+    pub fn gsl_cdf_ugaussian_Pinv(P: c_double) -> c_double;
+    pub fn gsl_cdf_ugaussian_Qinv(Q: c_double) -> c_double;
+    // The Gaussian Tail Distribution
+    pub fn gsl_ran_gaussian_tail(r: *const gsl_rng, a: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_gaussian_tail_pdf(x: c_double, a: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_ugaussian_tail(r: *const gsl_rng, a: c_double) -> c_double;
+    pub fn gsl_ran_ugaussian_tail_pdf(x: c_double, a: c_double) -> c_double;
+    // The Bivariate Gaussian Distribution
+    pub fn gsl_ran_bivariate_gaussian(r: *const gsl_rng, sigma_x: c_double, sigma_y: c_double, rho: c_double, x: *mut c_double,
+        y: *mut c_double);
+    pub fn gsl_ran_bivariate_gaussian_pdf(x: c_double, y: c_double, sigma_x: c_double, sigma_y: c_double, rho: c_double) -> c_double;
+    // The Exponential Distribution
+    pub fn gsl_ran_exponential(r: *const gsl_rng, mu: c_double) -> c_double;
+    pub fn gsl_ran_exponential_pdf(x: c_double, mu: c_double) -> c_double;
+    pub fn gsl_cdf_exponential_P(x: c_double, mu: c_double) -> c_double;
+    pub fn gsl_cdf_exponential_Q(x: c_double, mu: c_double) -> c_double;
+    pub fn gsl_cdf_exponential_Pinv(P: c_double, mu: c_double) -> c_double;
+    pub fn gsl_cdf_exponential_Qinv(Q: c_double, mu: c_double) -> c_double;
+    // The Laplace Distribution
+    pub fn gsl_ran_laplace(r: *const gsl_rng, a: c_double) -> c_double;
+    pub fn gsl_ran_laplace_pdf(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_laplace_P(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_laplace_Q(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_laplace_Pinv(P: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_laplace_Qinv(Q: c_double, a: c_double) -> c_double;
+    // The Exponential Power Distribution
+    pub fn gsl_ran_exppow(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_exppow_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_exppow_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_exppow_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    // The Cauchy Distribution
+    pub fn gsl_ran_cauchy(r: *const gsl_rng, a: c_double) -> c_double;
+    pub fn gsl_ran_cauchy_pdf(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_cauchy_P(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_cauchy_Q(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_cauchy_Pinv(P: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_cauchy_Qinv(Q: c_double, a: c_double) -> c_double;
+    // The Rayleigh Distribution
+    pub fn gsl_ran_rayleigh(r: *const gsl_rng, sigma: c_double) -> c_double;
+    pub fn gsl_ran_rayleigh_pdf(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_rayleigh_P(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_rayleigh_Q(x: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_rayleigh_Pinv(P: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_rayleigh_Qinv(Q: c_double, sigma: c_double) -> c_double;
+    // The Rayleigh Tail Distribution
+    pub fn gsl_ran_rayleigh_tail(r: *const gsl_rng, a: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_rayleigh_tail_pdf(x: c_double, a: c_double, sigma: c_double) -> c_double;
+    // The Landau Distribution
+    pub fn gsl_ran_landau(r: *const gsl_rng) -> c_double;
+    pub fn gsl_ran_landau_pdf(x: c_double) -> c_double;
+    // The Levy alpha-Stable Distributions
+    pub fn gsl_ran_levy(r: *const gsl_rng, c: c_double, alpha: c_double) -> c_double;
+    // The Levy skew alpha-Stable Distribution
+    pub fn gsl_ran_levy_skew(r: *const gsl_rng, c: c_double, alpha: c_double, beta: c_double) -> c_double;
+    // The Gamma Distribution
+    pub fn gsl_ran_gamma(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gamma_knuth(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gamma_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gamma_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gamma_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gamma_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gamma_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // The Flat (Uniform) Distribution
+    pub fn gsl_ran_flat(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_flat_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_flat_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_flat_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_flat_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_flat_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // The Lognormal Distribution
+    pub fn gsl_ran_lognormal(r: *const gsl_rng, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_lognormal_pdf(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_lognormal_P(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_lognormal_Q(x: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_lognormal_Pinv(P: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    pub fn gsl_ran_lognormal_Qinv(Q: c_double, zeta: c_double, sigma: c_double) -> c_double;
+    // The Chi-squared Distribution
+    pub fn gsl_ran_chisq(r: *const gsl_rng, nu: c_double) -> c_double;
+    pub fn gsl_ran_chisq_pdf(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_chisq_P(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_chisq_Q(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_chisq_Pinv(P: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_chisq_Qinv(Q: c_double, nu: c_double) -> c_double;
+    // The F-distribution
+    pub fn gsl_ran_fdist(r: *const gsl_rng, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_ran_fdist_pdf(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_ran_fdist_P(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_ran_fdist_Q(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_ran_fdist_Pinv(P: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_ran_fdist_Qinv(Q: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    // The t-distribution
+    pub fn gsl_ran_tdist(r: *const gsl_rng, nu: c_double) -> c_double;
+    pub fn gsl_ran_tdist_pdf(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_tdist_P(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_tdist_Q(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_tdist_Pinv(P: c_double, nu: c_double) -> c_double;
+    pub fn gsl_ran_tdist_Qinv(Q: c_double, nu: c_double) -> c_double;
+    // The Beta Distribution
+    pub fn gsl_ran_beta(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_beta_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_beta_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_beta_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_beta_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_beta_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // The Logistic Distribution
+    pub fn gsl_ran_logistic(r: *const gsl_rng, a: c_double) -> c_double;
+    pub fn gsl_ran_logistic_pdf(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_logistic_P(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_logistic_Q(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_logistic_Pinv(P: c_double, a: c_double) -> c_double;
+    pub fn gsl_ran_logistic_Qinv(Q: c_double, a: c_double) -> c_double;
+    // The Pareto Distribution
+    pub fn gsl_ran_pareto(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_pareto_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_pareto_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_pareto_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_pareto_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_pareto_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // Spherical Vector Distributions
+    pub fn gsl_ran_dir_2d(r: *const gsl_rng, x: *mut c_double, y: *mut c_double);
+    pub fn gsl_ran_dir_2d_trig_method(r: *const gsl_rng, x: *mut c_double, y: *mut c_double);
+    pub fn gsl_ran_dir_3d(r: *const gsl_rng, x: *mut c_double, y: *mut c_double, z: *mut c_double);
+    pub fn gsl_ran_dir_nd(r: *const gsl_rng, n: size_t, x: *mut c_double);
+    // The Weibull Distribution
+    pub fn gsl_ran_weibull(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_weibull_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_weibull_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_weibull_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_weibull_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_weibull_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // The Type-1 Gumbel Distribution
+    pub fn gsl_ran_gumbel1(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel1_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel1_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel1_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel1_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel1_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // The Type-2 Gumbel Distribution
+    pub fn gsl_ran_gumbel2(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel2_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel2_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel2_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel2_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_ran_gumbel2_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    // The Dirichlet Distribution
+    pub fn gsl_ran_dirichlet(r: *const gsl_rng, K: size_t, alpha: *const c_double, theta: *mut c_double);
+    pub fn gsl_ran_dirichlet_pdf(K: size_t, alpha: *const c_double, theta: *const c_double) -> c_double;
+    pub fn gsl_ran_dirichlet_lnpdf(K: size_t, alpha: *const c_double, theta: *const c_double) -> c_double;
+    // General Discrete Distributions
+    pub fn gsl_ran_discrete_preproc(K: size_t, P: *const c_double) -> *mut gsl_ran_discrete_t;
+    pub fn gsl_ran_discrete(r: *const gsl_rng, g: *const gsl_ran_discrete_t) -> size_t;
+    pub fn gsl_ran_discrete_pdf(k: size_t, g: *const gsl_ran_discrete_t) -> c_double;
+    pub fn gsl_ran_discrete_free(g: *mut gsl_ran_discrete_t);
+    // The Poisson Distribution
+    pub fn gsl_ran_poisson(r: *const gsl_rng, mu: c_double) -> c_uint;
+    pub fn gsl_ran_poisson_pdf(k: c_uint, mu: c_double) -> c_double;
+    pub fn gsl_ran_poisson_P(k: c_uint, mu: c_double) -> c_double;
+    pub fn gsl_ran_poisson_Q(k: c_uint, mu: c_double) -> c_double;
+    // The Bernoulli Distribution
+    pub fn gsl_ran_bernoulli(r: *const gsl_rng, p: c_double) -> c_uint;
+    pub fn gsl_ran_bernoulli_pdf(k: c_uint, p: c_double) -> c_double;
+    // The Binomial Distribution
+    pub fn gsl_ran_binomial(r: *const gsl_rng, p: c_double, n: c_uint) -> c_uint;
+    pub fn gsl_ran_binomial_pdf(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_ran_binomial_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_ran_binomial_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    // The Multinomial Distribution
+    pub fn gsl_ran_multinomial(r: *const gsl_rng, K: size_t, N: c_uint, p: *const c_double, n: *mut c_uint);
+    pub fn gsl_ran_multinomial_pdf(K: size_t, p: *const c_double, n: *const c_uint) -> c_double;
+    pub fn gsl_ran_multinomial_lnpdf(K: size_t, p: *const c_double, n: *const c_uint) -> c_double;
+    // The Negative Binomial Distribution
+    pub fn gsl_ran_negative_binomial(r: *const gsl_rng, p: c_double, n: c_double) -> c_uint;
+    pub fn gsl_ran_negative_binomial_pdf(k: c_uint, p: c_double, n: c_double) -> c_double;
+    pub fn gsl_ran_negative_binomial_P(k: c_uint, p: c_double, n: c_double) -> c_double;
+    pub fn gsl_ran_negative_binomial_Q(k: c_uint, p: c_double, n: c_double) -> c_double;
+    // The Pascal Distribution
+    pub fn gsl_ran_pascal(r: *const gsl_rng, p: c_double, n: c_uint) -> c_uint;
+    pub fn gsl_ran_pascal_pdf(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_ran_pascal_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_ran_pascal_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    // The Geometric Distribution
+    pub fn gsl_ran_geometric(r: *const gsl_rng, p: c_double) -> c_uint;
+    pub fn gsl_ran_geometric_pdf(k: c_uint, p: c_double) -> c_double;
+    pub fn gsl_ran_geometric_P(k: c_uint, p: c_double) -> c_double;
+    pub fn gsl_ran_geometric_Q(k: c_uint, p: c_double) -> c_double;
+    // The Hypergeometric Distribution
+    pub fn gsl_ran_hypergeometric(r: *const gsl_rng, n1: c_uint, n2: c_uint, t: c_uint) -> c_uint;
+    pub fn gsl_ran_hypergeometric_pdf(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
+    pub fn gsl_ran_hypergeometric_P(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
+    pub fn gsl_ran_hypergeometric_Q(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
+    // The Logarithmic Distribution
+    pub fn gsl_ran_logarithmic(r: *const gsl_rng, p: c_double) -> c_uint;
+    pub fn gsl_ran_logarithmic_pdf(k: c_uint, p: c_double) -> c_double;
+    // Shuffling and Sampling
+    pub fn gsl_ran_shuffle(r: *const gsl_rng, base: *mut c_void, n: size_t, size: size_t);
+    pub fn gsl_ran_choose(r: *const gsl_rng, dest: *mut c_void, k: size_t, src: *mut c_void, n: size_t, size: size_t) -> enums::Value;
+    pub fn gsl_ran_sample(r: *const gsl_rng, dest: *mut c_void, k: size_t, src: *mut c_void, n: size_t, size: size_t) -> enums::Value;
 }
 
 pub struct gsl_sf_result {
@@ -1655,4 +1863,10 @@ pub struct gsl_rng_type {
 pub struct gsl_rng {
     pub _type: *const gsl_rng_type,
     pub state: *mut c_void
+}
+
+pub struct gsl_ran_discrete_t {
+    pub K: size_t,
+    pub A: *mut size_t,
+    pub F: *mut c_double
 }
