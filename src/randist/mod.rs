@@ -53,19 +53,26 @@ giving the sum of probabilities for all values greater than k. These two definit
 If the range of the distribution is 1 to n inclusive then P(n)=1, Q(n)=0 while P(1) = p(1), Q(1)=1-p(1).
 !*/
 
+pub mod beta;
 pub mod bivariate_gaussian;
 pub mod cauchy;
 pub mod chi_squared;
 pub mod exponential;
 pub mod exponential_power;
+pub mod f_distribution;
 pub mod flat;
 pub mod gamma;
 pub mod gaussian;
 pub mod gaussian_tail;
+pub mod gumbel;
 pub mod landau;
 pub mod laplace;
 pub mod levy_alpha;
 pub mod levy_skew;
+pub mod logistic;
 pub mod lognormal;
+pub mod pareto;
 pub mod rayleigh;
 pub mod rayleigh_tail;
+pub mod spherical_vector;
+pub mod t_distribution;

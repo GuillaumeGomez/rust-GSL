@@ -1581,38 +1581,38 @@ extern "C" {
     // The F-distribution
     pub fn gsl_ran_fdist(r: *const gsl_rng, nu1: c_double, nu2: c_double) -> c_double;
     pub fn gsl_ran_fdist_pdf(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
-    pub fn gsl_ran_fdist_P(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
-    pub fn gsl_ran_fdist_Q(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
-    pub fn gsl_ran_fdist_Pinv(P: c_double, nu1: c_double, nu2: c_double) -> c_double;
-    pub fn gsl_ran_fdist_Qinv(Q: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_cdf_fdist_P(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_cdf_fdist_Q(x: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_cdf_fdist_Pinv(P: c_double, nu1: c_double, nu2: c_double) -> c_double;
+    pub fn gsl_cdf_fdist_Qinv(Q: c_double, nu1: c_double, nu2: c_double) -> c_double;
     // The t-distribution
     pub fn gsl_ran_tdist(r: *const gsl_rng, nu: c_double) -> c_double;
     pub fn gsl_ran_tdist_pdf(x: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_tdist_P(x: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_tdist_Q(x: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_tdist_Pinv(P: c_double, nu: c_double) -> c_double;
-    pub fn gsl_ran_tdist_Qinv(Q: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_tdist_P(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_tdist_Q(x: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_tdist_Pinv(P: c_double, nu: c_double) -> c_double;
+    pub fn gsl_cdf_tdist_Qinv(Q: c_double, nu: c_double) -> c_double;
     // The Beta Distribution
     pub fn gsl_ran_beta(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_beta_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_beta_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_beta_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_beta_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_beta_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_beta_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_beta_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_beta_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_beta_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Logistic Distribution
     pub fn gsl_ran_logistic(r: *const gsl_rng, a: c_double) -> c_double;
     pub fn gsl_ran_logistic_pdf(x: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_logistic_P(x: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_logistic_Q(x: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_logistic_Pinv(P: c_double, a: c_double) -> c_double;
-    pub fn gsl_ran_logistic_Qinv(Q: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_logistic_P(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_logistic_Q(x: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_logistic_Pinv(P: c_double, a: c_double) -> c_double;
+    pub fn gsl_cdf_logistic_Qinv(Q: c_double, a: c_double) -> c_double;
     // The Pareto Distribution
     pub fn gsl_ran_pareto(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_pareto_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_pareto_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_pareto_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_pareto_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_pareto_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_pareto_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_pareto_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_pareto_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_pareto_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // Spherical Vector Distributions
     pub fn gsl_ran_dir_2d(r: *const gsl_rng, x: *mut c_double, y: *mut c_double);
     pub fn gsl_ran_dir_2d_trig_method(r: *const gsl_rng, x: *mut c_double, y: *mut c_double);
@@ -1621,24 +1621,24 @@ extern "C" {
     // The Weibull Distribution
     pub fn gsl_ran_weibull(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_weibull_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_weibull_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_weibull_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_weibull_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_weibull_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_weibull_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_weibull_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_weibull_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_weibull_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Type-1 Gumbel Distribution
     pub fn gsl_ran_gumbel1(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_gumbel1_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel1_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel1_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel1_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel1_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel1_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel1_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel1_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel1_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Type-2 Gumbel Distribution
     pub fn gsl_ran_gumbel2(r: *const gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_gumbel2_pdf(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel2_P(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel2_Q(x: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel2_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
-    pub fn gsl_ran_gumbel2_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel2_P(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel2_Q(x: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel2_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
+    pub fn gsl_cdf_gumbel2_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Dirichlet Distribution
     pub fn gsl_ran_dirichlet(r: *const gsl_rng, K: size_t, alpha: *const c_double, theta: *mut c_double);
     pub fn gsl_ran_dirichlet_pdf(K: size_t, alpha: *const c_double, theta: *const c_double) -> c_double;

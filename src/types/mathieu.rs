@@ -93,9 +93,6 @@ impl MathieuWorkspace {
         unsafe { ffi::gsl_sf_mathieu_se_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr()) }
     }
 
-
-
-
     /// This routine computes the radial j-th kind Mathieu functions Mc_n^{(j)}(q,x) and Ms_n^{(j)}(q,x) of order n.
     /// 
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
