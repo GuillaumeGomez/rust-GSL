@@ -93,6 +93,7 @@ pub use enums::{
 pub use elementary::Elementary;
 pub use pow::Pow;
 pub use trigonometric::Trigonometric;
+pub use types::rng;
 
 mod ffi;
 pub mod randist;

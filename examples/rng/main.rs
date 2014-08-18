@@ -27,7 +27,7 @@ use rgsl::{RngType};
 
 fn main() {
     rgsl::RngType::env_setup();
-    let t : RngType = rgsl::types::rng::default();
+    let t : RngType = rgsl::rng::default();
     let r = rgsl::Rng::new(&t).unwrap();
 
     println!("=== DEFAULT ===");

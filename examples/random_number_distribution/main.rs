@@ -10,7 +10,7 @@ fn main() {
     rgsl::RngType::env_setup();
 
     let mu = 3f64;
-    let t = rgsl::types::rng::default();
+    let t = rgsl::rng::default();
     let r = Rng::new(&t).unwrap();
 
     // print n random variates chosen from the poisson distribution with mean parameter mu
