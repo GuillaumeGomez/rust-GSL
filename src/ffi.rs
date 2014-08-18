@@ -1668,23 +1668,23 @@ extern "C" {
     // The Negative Binomial Distribution
     pub fn gsl_ran_negative_binomial(r: *const gsl_rng, p: c_double, n: c_double) -> c_uint;
     pub fn gsl_ran_negative_binomial_pdf(k: c_uint, p: c_double, n: c_double) -> c_double;
-    pub fn gsl_ran_negative_binomial_P(k: c_uint, p: c_double, n: c_double) -> c_double;
-    pub fn gsl_ran_negative_binomial_Q(k: c_uint, p: c_double, n: c_double) -> c_double;
+    pub fn gsl_cdf_negative_binomial_P(k: c_uint, p: c_double, n: c_double) -> c_double;
+    pub fn gsl_cdf_negative_binomial_Q(k: c_uint, p: c_double, n: c_double) -> c_double;
     // The Pascal Distribution
     pub fn gsl_ran_pascal(r: *const gsl_rng, p: c_double, n: c_uint) -> c_uint;
     pub fn gsl_ran_pascal_pdf(k: c_uint, p: c_double, n: c_uint) -> c_double;
-    pub fn gsl_ran_pascal_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
-    pub fn gsl_ran_pascal_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_cdf_pascal_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_cdf_pascal_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
     // The Geometric Distribution
     pub fn gsl_ran_geometric(r: *const gsl_rng, p: c_double) -> c_uint;
     pub fn gsl_ran_geometric_pdf(k: c_uint, p: c_double) -> c_double;
-    pub fn gsl_ran_geometric_P(k: c_uint, p: c_double) -> c_double;
-    pub fn gsl_ran_geometric_Q(k: c_uint, p: c_double) -> c_double;
+    pub fn gsl_cdf_geometric_P(k: c_uint, p: c_double) -> c_double;
+    pub fn gsl_cdf_geometric_Q(k: c_uint, p: c_double) -> c_double;
     // The Hypergeometric Distribution
     pub fn gsl_ran_hypergeometric(r: *const gsl_rng, n1: c_uint, n2: c_uint, t: c_uint) -> c_uint;
     pub fn gsl_ran_hypergeometric_pdf(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
-    pub fn gsl_ran_hypergeometric_P(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
-    pub fn gsl_ran_hypergeometric_Q(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
+    pub fn gsl_cdf_hypergeometric_P(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
+    pub fn gsl_cdf_hypergeometric_Q(k: c_uint, n1: c_uint, n2: c_uint, t: c_uint) -> c_double;
     // The Logarithmic Distribution
     pub fn gsl_ran_logarithmic(r: *const gsl_rng, p: c_double) -> c_uint;
     pub fn gsl_ran_logarithmic_pdf(k: c_uint, p: c_double) -> c_double;

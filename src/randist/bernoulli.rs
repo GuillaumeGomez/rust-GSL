@@ -14,6 +14,6 @@ pub fn bernoulli(r: &Rng, p: f64) -> u32 {
 }
 
 /// This function computes the probability p(k) of obtaining k from a Bernoulli distribution with probability parameter p, using the formula given above.
-pub fn bernoulli_pdf(x: f64, p: f64) -> f64 {
+pub fn bernoulli_pdf(x: u32, p: f64) -> f64 {
     unsafe { ffi::gsl_ran_bernoulli_pdf(x, p) }
 }
