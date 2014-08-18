@@ -18,3 +18,8 @@ path = "examples/simple/main.rs"
 
 name = "rng"
 path = "examples/rng/main.rs"
+
+[[bin]]
+
+name = "random_number_distribution"
+path = "examples/random_number_distribution/main.rs"

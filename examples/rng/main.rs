@@ -23,12 +23,11 @@
 
 extern crate rgsl;
 
-use std::default::Default;
 use rgsl::{RngType};
 
 fn main() {
     rgsl::RngType::env_setup();
-    let t : RngType = Default::default();
+    let t : RngType = rgsl::types::rng::default();
     let r = rgsl::Rng::new(&t).unwrap();
 
     println!("=== DEFAULT ===");

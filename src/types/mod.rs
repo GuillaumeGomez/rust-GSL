@@ -10,8 +10,8 @@ pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
 pub use self::vector::{VectorF32, VectorF64};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
-pub use self::mathieu::{MathieuWorkspace};
-pub use self::ran_discrete::{RanDiscrete};
+pub use self::mathieu::MathieuWorkspace;
+pub use self::ran_discrete::RanDiscrete;
 
 pub mod basis_spline;
 pub mod complex;

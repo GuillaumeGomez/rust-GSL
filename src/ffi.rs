@@ -19,7 +19,50 @@ pub trait FFI<T> {
 }
 
 extern "C" {
+    pub static gsl_rng_mt19937 : *const gsl_rng_type;
+    pub static gsl_rng_ranlxs0 : *const gsl_rng_type;
+    pub static gsl_rng_ranlxs1 : *const gsl_rng_type;
+    pub static gsl_rng_ranlxs2 : *const gsl_rng_type;
+    pub static gsl_rng_ranlxd1 : *const gsl_rng_type;
+    pub static gsl_rng_ranlxd2 : *const gsl_rng_type;
+    pub static gsl_rng_ranlux : *const gsl_rng_type;
+    pub static gsl_rng_ranlux389 : *const gsl_rng_type;
+    pub static gsl_rng_cmrg : *const gsl_rng_type;
+    pub static gsl_rng_mrg : *const gsl_rng_type;
+    pub static gsl_rng_taus : *const gsl_rng_type;
+    pub static gsl_rng_taus2 : *const gsl_rng_type;
+    pub static gsl_rng_gfsr4 : *const gsl_rng_type;
+
+    pub static gsl_rng_rand : *const gsl_rng_type;
+    pub static gsl_rng_random_bsd : *const gsl_rng_type;
+    pub static gsl_rng_random_libc5 : *const gsl_rng_type;
+    pub static gsl_rng_random_glibc2 : *const gsl_rng_type;
+    pub static gsl_rng_rand48 : *const gsl_rng_type;
+
     pub static gsl_rng_default : *const gsl_rng_type;
+    pub static gsl_rng_ranf : *const gsl_rng_type;
+    pub static gsl_rng_ranmar : *const gsl_rng_type;
+    pub static gsl_rng_r250 : *const gsl_rng_type;
+    pub static gsl_rng_tt800 : *const gsl_rng_type;
+    pub static gsl_rng_vax : *const gsl_rng_type;
+    pub static gsl_rng_transputer : *const gsl_rng_type;
+    pub static gsl_rng_randu : *const gsl_rng_type;
+    pub static gsl_rng_minstd : *const gsl_rng_type;
+    pub static gsl_rng_uni : *const gsl_rng_type;
+    pub static gsl_rng_uni32 : *const gsl_rng_type;
+    pub static gsl_rng_slatec : *const gsl_rng_type;
+    pub static gsl_rng_zuf : *const gsl_rng_type;
+    pub static gsl_rng_knuthran2 : *const gsl_rng_type;
+    pub static gsl_rng_knuthran2002 : *const gsl_rng_type;
+    pub static gsl_rng_knuthran : *const gsl_rng_type;
+    pub static gsl_rng_borosh13 : *const gsl_rng_type;
+    pub static gsl_rng_fishman18 : *const gsl_rng_type;
+    pub static gsl_rng_fishman20 : *const gsl_rng_type;
+    pub static gsl_rng_lecuyer21 : *const gsl_rng_type;
+    pub static gsl_rng_waterman14 : *const gsl_rng_type;
+    pub static gsl_rng_fishman2x : *const gsl_rng_type;
+    pub static gsl_rng_coveyou : *const gsl_rng_type;
+
     pub static gsl_rng_default_seed : c_ulong;
 
     // Airy functions
