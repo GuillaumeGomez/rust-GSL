@@ -16,9 +16,9 @@ use types::Rng;
 /// This function returns a random variate from the F-distribution with degrees of freedom nu1 and nu2. The distribution function is,
 /// 
 /// p(x) dx = 
-/// { \Gamma((\nu_1 + \nu_2)/2)
+/// { Gamma((\nu_1 + \nu_2)/2)
 ///
-///         \over \Gamma(\nu_1/2) \Gamma(\nu_2/2) } 
+///         over Gamma(nu_1/2) Gamma(nu_2/2) } 
 /// 
 /// \nu_1^{\nu_1/2} \nu_2^{\nu_2/2} 
 /// 

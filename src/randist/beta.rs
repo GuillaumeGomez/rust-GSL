@@ -7,7 +7,7 @@ use types::Rng;
 
 /// This function returns a random variate from the beta distribution. The distribution function is,
 /// 
-/// p(x) dx = {\Gamma(a+b) \over \Gamma(a) \Gamma(b)} x^{a-1} (1-x)^{b-1} dx
+/// p(x) dx = {Gamma(a+b) over Gamma(a) Gamma(b)} x^{a-1} (1-x)^{b-1} dx
 /// 
 /// for 0 <= x <= 1.
 pub fn beta(r: &Rng, a: f64, b: f64) -> f64 {

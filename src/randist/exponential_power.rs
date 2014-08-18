@@ -7,7 +7,7 @@ use types::Rng;
 
 /// This function returns a random variate from the exponential power distribution with scale parameter a and exponent b. The distribution is,
 /// 
-/// p(x) dx = {1 \over 2 a \Gamma(1+1/b)} \exp(-|x/a|^b) dx
+/// p(x) dx = {1 \over 2 a Gamma(1+1/b)} \exp(-|x/a|^b) dx
 /// 
 /// for x >= 0. For b = 1 this reduces to the Laplace distribution. For b = 2 it has the same form as a Gaussian distribution, but with a = \sqrt{2} \sigma.
 pub fn exppow(r: &Rng, a: f64, b: f64) -> f64 {

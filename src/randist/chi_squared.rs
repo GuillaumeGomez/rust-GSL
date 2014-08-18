@@ -15,7 +15,7 @@ use types::Rng;
 
 /// This function returns a random variate from the chi-squared distribution with nu degrees of freedom. The distribution function is,
 /// 
-/// p(x) dx = {1 \over 2 \Gamma(\nu/2) } (x/2)^{\nu/2 - 1} \exp(-x/2) dx
+/// p(x) dx = {1 \over 2 Gamma(\nu/2) } (x/2)^{\nu/2 - 1} \exp(-x/2) dx
 /// 
 /// for x >= 0.
 pub fn chisq(r: &Rng, nu: f64) -> f64 {

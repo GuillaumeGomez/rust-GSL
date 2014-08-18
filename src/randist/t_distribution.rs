@@ -15,7 +15,7 @@ use types::Rng;
 
 /// This function returns a random variate from the t-distribution. The distribution function is,
 /// 
-/// p(x) dx = {\Gamma((\nu + 1)/2) \over \sqrt{\pi \nu} \Gamma(\nu/2)}
+/// p(x) dx = {Gamma((\nu + 1)/2) \over \sqrt{\pi \nu} Gamma(\nu/2)}
 /// 
 ///    (1 + x^2/\nu)^{-(\nu + 1)/2} dx
 /// 

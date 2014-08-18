@@ -7,7 +7,7 @@ use types::Rng;
 
 /// This function returns a random variate from the gamma distribution. The distribution function is,
 /// 
-/// p(x) dx = {1 \over \Gamma(a) b^a} x^{a-1} e^{-x/b} dx
+/// p(x) dx = {1 over Gamma(a) b^a} x^{a-1} e^{-x/b} dx
 /// 
 /// for x > 0.
 /// 
