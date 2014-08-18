@@ -54,9 +54,11 @@ If the range of the distribution is 1 to n inclusive then P(n)=1, Q(n)=0 while P
 !*/
 
 pub mod beta;
+pub mod binomial;
 pub mod bivariate_gaussian;
 pub mod cauchy;
 pub mod chi_squared;
+pub mod dirichlet;
 pub mod exponential;
 pub mod exponential_power;
 pub mod f_distribution;
@@ -71,7 +73,9 @@ pub mod levy_alpha;
 pub mod levy_skew;
 pub mod logistic;
 pub mod lognormal;
+pub mod multinomial;
 pub mod pareto;
+pub mod poisson;
 pub mod rayleigh;
 pub mod rayleigh_tail;
 pub mod spherical_vector;

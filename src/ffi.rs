@@ -1651,16 +1651,16 @@ extern "C" {
     // The Poisson Distribution
     pub fn gsl_ran_poisson(r: *const gsl_rng, mu: c_double) -> c_uint;
     pub fn gsl_ran_poisson_pdf(k: c_uint, mu: c_double) -> c_double;
-    pub fn gsl_ran_poisson_P(k: c_uint, mu: c_double) -> c_double;
-    pub fn gsl_ran_poisson_Q(k: c_uint, mu: c_double) -> c_double;
+    pub fn gsl_cdf_poisson_P(k: c_uint, mu: c_double) -> c_double;
+    pub fn gsl_cdf_poisson_Q(k: c_uint, mu: c_double) -> c_double;
     // The Bernoulli Distribution
     pub fn gsl_ran_bernoulli(r: *const gsl_rng, p: c_double) -> c_uint;
     pub fn gsl_ran_bernoulli_pdf(k: c_uint, p: c_double) -> c_double;
     // The Binomial Distribution
     pub fn gsl_ran_binomial(r: *const gsl_rng, p: c_double, n: c_uint) -> c_uint;
     pub fn gsl_ran_binomial_pdf(k: c_uint, p: c_double, n: c_uint) -> c_double;
-    pub fn gsl_ran_binomial_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
-    pub fn gsl_ran_binomial_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_cdf_binomial_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
+    pub fn gsl_cdf_binomial_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
     // The Multinomial Distribution
     pub fn gsl_ran_multinomial(r: *const gsl_rng, K: size_t, N: c_uint, p: *const c_double, n: *mut c_uint);
     pub fn gsl_ran_multinomial_pdf(K: size_t, p: *const c_double, n: *const c_uint) -> c_double;
