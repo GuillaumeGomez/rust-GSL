@@ -14,6 +14,7 @@ examples: rgsl
 	  rustc -o bin/rng -L ./lib examples/rng/main.rs
 	  rustc -o bin/random_number_distribution -L ./lib examples/random_number_distribution/main.rs
 	  rustc -o bin/permutation -L ./lib examples/permutation/main.rs
+	  rustc -o bin/sorting -L ./lib examples/sorting/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
@@ -24,5 +25,6 @@ clean:
 	rm -rf bin/rng
 	rm -rf bin/random_number_distribution
 	rm -rf bin/permutation
+	rm -rf bin/sorting
 
 re: clean all

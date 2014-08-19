@@ -141,13 +141,13 @@ pub mod select {
     /// This function copies the k smallest elements of the array src, of size n and stride stride, in ascending numerical order into the array dest. The size
     /// k of the subset must be less than or equal to n. The data src is not modified by this operation.
     pub fn sort_smallest(dest: &mut [f64], k: u64, src: &[f64], stride: u64) -> enums::Value {
-        unsafe { ffi::gsl_sort_smallest(dest.as_mut_ptr(), k, src.as_ptr(), stride, dest.len() as u64) }
+        unsafe { ffi::gsl_sort_smallest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as u64) }
     }
 
     /// This function copies the k largest elements of the array src, of size n and stride stride, in descending numerical order into the array dest. k must
     /// be less than or equal to n. The data src is not modified by this operation.
     pub fn sort_largest(dest: &mut [f64], k: u64, src: &[f64], stride: u64) -> enums::Value {
-        unsafe { ffi::gsl_sort_largest(dest.as_mut_ptr(), k, src.as_ptr(), stride, dest.len() as u64) }
+        unsafe { ffi::gsl_sort_largest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as u64) }
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
