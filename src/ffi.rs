@@ -1761,6 +1761,27 @@ extern "C" {
     pub fn gsl_permutation_inversions(p: *const gsl_permutation) -> size_t;
     pub fn gsl_permutation_linear_cycles(p: *const gsl_permutation) -> size_t;
     pub fn gsl_permutation_canonical_cycles(p: *const gsl_permutation) -> size_t;
+
+    // Sorting functions
+    // Sorting objects
+    //pub fn gsl_heapsort<T>(array: *mut c_void, count: size_t, size: size_t, compare: ::comparison_fn<T>);
+    //pub fn gsl_heapsort_index<T>(p: *mut size_t, array: *const c_void, count: size_t, size: size_t, compare: ::comparison_fn<T>) -> enums::Value;
+    // Sorting vectors
+    pub fn gsl_sort(data: *mut c_double, stride: size_t, n: size_t);
+    pub fn gsl_sort2(data1: *mut c_double, stride1: size_t, data2: *mut c_double, stride2: size_t, n: size_t);
+    pub fn gsl_sort_vector(v: *mut gsl_vector);
+    pub fn gsl_sort_vector2(v1: *mut gsl_vector, v2: *mut gsl_vector);
+    pub fn gsl_sort_index(p: *mut size_t, data: *const c_double, stride: size_t, n: size_t);
+    pub fn gsl_sort_vector_index(p: *mut gsl_permutation, v: *const gsl_vector) -> enums::Value;
+    // Selecting the k smallest or largest elements
+    pub fn gsl_sort_smallest(dest: *mut c_double, k: size_t, src: *const c_double, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_sort_largest(dest: *mut c_double, k: size_t, src: *const c_double, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_sort_vector_smallest(dest: *mut c_double, k: size_t, v: *const gsl_vector) -> enums::Value;
+    pub fn gsl_sort_vector_largest(dest: *mut c_double, k: size_t, v: *const gsl_vector) -> enums::Value;
+    pub fn gsl_sort_smallest_index(p: *mut size_t, k: size_t, src: *const c_double, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_sort_largest_index(p: *mut size_t, k: size_t, src: *const c_double, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_sort_vector_smallest_index(p: *mut size_t, k: size_t, v: *const gsl_vector) -> enums::Value;
+    pub fn gsl_sort_vector_largest_index(p: *mut size_t, k: size_t, v: *const gsl_vector) -> enums::Value;
 }
 
 pub struct gsl_sf_result {

@@ -130,6 +130,7 @@ pub mod logarithm;
 pub mod pow;
 pub mod power;
 pub mod psi;
+pub mod sort;
 pub mod synchrotron;
 pub mod transport;
 pub mod trigonometric;
