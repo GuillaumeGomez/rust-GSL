@@ -136,7 +136,7 @@ pub mod transport;
 pub mod trigonometric;
 pub mod zeta;
 
-pub type comparison_fn<T> = Option<fn(a: &[T], b: &[T])>;
+pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
 
 #[cfg(target_os = "linux")]
 mod platform {

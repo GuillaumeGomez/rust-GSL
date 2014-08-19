@@ -27,8 +27,6 @@ Robert Sedgewick, Algorithms in C, Addison-Wesley, ISBN 0201514257.
 /// 
 /// The functions described in this section are defined in the header file gsl_heapsort.h.
 pub mod objects {
-    use ffi;
-    use libc::c_void;
     use enums;
 
     /// This function sorts the count elements of the array array, each of size size, into ascending order using the comparison function compare.
@@ -64,9 +62,39 @@ pub mod objects {
     /// for equal elements in the comparison function does not work for the heapsort algorithm. The heapsort algorithm performs an internal
     /// rearrangement of the data which destroys its initial ordering.
     pub fn heapsort<T>(array: &mut[T], compare: ::comparison_fn<T>) {
-        unsafe { ffi::gsl_heapsort(array.as_mut_ptr() as *mut c_void, array.len() as u64,
-            ::std::mem::size_of::<T>() as u64,
-            ::std::mem::transmute(compare)) }
+        if array.len() == 0 {
+            return;
+        }
+        let mut n = array.len() as u64 - 1;
+        let mut k = n / 2;
+        k += 1;
+        while k > 0 {
+            k -= 1;
+            downheap(array, n, k, compare);
+        }
+        while n > 0 {
+            array.swap(0u, n as uint);
+            n -= 1;
+            downheap(array, n, 0, compare);
+        }
+    }
+
+    fn downheap<T>(array: &mut[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
+        let mut k = t_k;
+
+        while k <= n / 2 {
+            let mut j = 2 * k;
+
+            if j < n && compare(&array[j as uint], &array[j as uint + 1]) < 0 {
+                j += 1;
+            }
+            if compare(&array[k as uint], &array[j as uint]) < 0 {
+                array.swap(j as uint, k as uint);
+            } else {
+                break;
+            }
+            k = j;
+        }
     }
 
     /// This function indirectly sorts the count elements of the array array, each of size size, into ascending order using the comparison
@@ -74,9 +102,44 @@ pub mod objects {
     /// which would have been stored in that position if the array had been sorted in place. The first element of p gives the index of the
     /// least element in array, and the last element of p gives the index of the greatest element in array. The array itself is not changed.
     pub fn heapsort_index<T>(p: &mut[u64], array: &[T], compare: ::comparison_fn<T>) -> enums::Value {
-        unsafe { ffi::gsl_heapsort_index(p.as_mut_ptr(), array.as_ptr() as *const c_void, array.len() as u64,
-            ::std::mem::size_of::<T>() as u64,
-            ::std::mem::transmute(compare)) }
+        if array.len() == 0 {
+            return enums::Success;
+        }
+        for tmp in range(0u64, array.len() as u64) {
+            p[tmp as uint] = tmp;
+        }
+        let mut n = array.len() as u64 - 1;
+        let mut k = n / 2;
+        k += 1;
+        while k > 0 {
+            k -= 1;
+            downheap_index(p, array, n, k, compare);
+        }
+        while n > 0 {
+            p.swap(0u, n as uint);
+            n -= 1;
+            downheap_index(p, array, n, 0, compare);
+        }
+        enums::Success
+    }
+
+    fn downheap_index<T>(p: &mut[u64], array: &[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
+        let pki = p[t_k as uint];
+        let mut k = t_k;
+
+        while k <= n / 2 {
+            let mut j = 2 * k;
+
+            if j < n && compare(&array[p[j as uint] as uint], &array[p[j as uint + 1] as uint]) < 0 {
+                j += 1;
+            }
+            if compare(&array[pki as uint], &array[p[j as uint] as uint]) >= 0 {
+                break;
+            }
+            p[k as uint] = p[j as uint];
+            k = j;
+        }
+        p[k as uint] = pki;
     }
 }
 

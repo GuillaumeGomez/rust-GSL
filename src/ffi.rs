@@ -18,8 +18,6 @@ pub trait FFI<T> {
     fn unwrap(&Self) -> *mut T;
 }
 
-pub type compare_fn = Option<fn(a: *mut c_void, b: *mut c_void) -> c_int>;
-
 extern "C" {
     pub static gsl_rng_mt19937 : *const gsl_rng_type;
     pub static gsl_rng_ranlxs0 : *const gsl_rng_type;
@@ -1766,8 +1764,8 @@ extern "C" {
 
     // Sorting functions
     // Sorting objects
-    pub fn gsl_heapsort(array: *mut c_void, count: size_t, size: size_t, compare: compare_fn);
-    pub fn gsl_heapsort_index(p: *mut size_t, array: *const c_void, count: size_t, size: size_t, compare: compare_fn) -> enums::Value;
+    //pub fn gsl_heapsort(array: *mut c_void, count: size_t, size: size_t, compare: compare_fn);
+    //pub fn gsl_heapsort_index(p: *mut size_t, array: *const c_void, count: size_t, size: size_t, compare: compare_fn) -> enums::Value;
     // Sorting vectors
     pub fn gsl_sort(data: *mut c_double, stride: size_t, n: size_t);
     pub fn gsl_sort2(data1: *mut c_double, stride1: size_t, data2: *mut c_double, stride2: size_t, n: size_t);
