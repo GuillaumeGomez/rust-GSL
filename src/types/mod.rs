@@ -12,12 +12,14 @@ pub use self::vector::{VectorF32, VectorF64};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
 pub use self::mathieu::MathieuWorkspace;
 pub use self::ran_discrete::RanDiscrete;
+pub use self::permutation::Permutation;
 
 pub mod basis_spline;
 pub mod complex;
 pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
+pub mod permutation;
 pub mod ran_discrete;
 pub mod result;
 pub mod rng;

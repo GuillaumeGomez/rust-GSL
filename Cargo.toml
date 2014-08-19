@@ -23,3 +23,8 @@ path = "examples/rng/main.rs"
 
 name = "random_number_distribution"
 path = "examples/random_number_distribution/main.rs"
+
+[[bin]]
+
+name = "permutation"
+path = "examples/permutation/main.rs"

@@ -79,7 +79,8 @@ pub use types::{
     VectorComplexF64,
     VectorComplexF32,
     Rng,
-    RngType
+    RngType,
+    Permutation
 };
 
 pub use enums::{
@@ -133,6 +134,8 @@ pub mod synchrotron;
 pub mod transport;
 pub mod trigonometric;
 pub mod zeta;
+
+pub type comparison_fn<T> = Option<fn(a: &[T], b: &[T])>;
 
 #[cfg(target_os = "linux")]
 mod platform {
