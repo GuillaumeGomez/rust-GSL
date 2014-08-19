@@ -21,7 +21,6 @@ The Heapsort algorithm is described in the following book,
 Robert Sedgewick, Algorithms in C, Addison-Wesley, ISBN 0201514257.
 !*/
 
-/*
 /// The following function provides a simple alternative to the standard library function qsort. It is intended for systems lacking qsort, not
 /// as a replacement for it. The function qsort should be used whenever possible, as it will be faster and can provide stable ordering of equal
 /// elements. Documentation for qsort is available in the GNU C Library Reference Manual.
@@ -67,7 +66,7 @@ pub mod objects {
     pub fn heapsort<T>(array: &mut[T], compare: ::comparison_fn<T>) {
         unsafe { ffi::gsl_heapsort(array.as_mut_ptr() as *mut c_void, array.len() as u64,
             ::std::mem::size_of::<T>() as u64,
-            compare) }
+            ::std::mem::transmute(compare)) }
     }
 
     /// This function indirectly sorts the count elements of the array array, each of size size, into ascending order using the comparison
@@ -75,9 +74,11 @@ pub mod objects {
     /// which would have been stored in that position if the array had been sorted in place. The first element of p gives the index of the
     /// least element in array, and the last element of p gives the index of the greatest element in array. The array itself is not changed.
     pub fn heapsort_index<T>(p: &mut[u64], array: &[T], compare: ::comparison_fn<T>) -> enums::Value {
-        unsafe { ffi::gsl_heapsort_index(p.as_mut_ptr(), array.as_ptr() as *const c_void, array.len() as u64, ::std::mem::size_of::<T>() as u64, compare) }
+        unsafe { ffi::gsl_heapsort_index(p.as_mut_ptr(), array.as_ptr() as *const c_void, array.len() as u64,
+            ::std::mem::size_of::<T>() as u64,
+            ::std::mem::transmute(compare)) }
     }
-}*/
+}
 
 /// The following functions will sort the elements of an array or vector, either directly or indirectly. They are defined for all real and
 /// integer types using the normal suffix rules. For example, the float versions of the array functions are gsl_sort_float and gsl_sort_float_index.
@@ -134,7 +135,7 @@ pub mod vectors {
 /// it may be faster to sort all the elements of the dataset directly with an O(N \log N) algorithm and obtain the smallest or largest values that way.
 pub mod select {
     use ffi;
-    use types::{VectorF64, Permutation};
+    use types::VectorF64;
     use enums;
 
     /// This function copies the k smallest elements of the array src, of size n and stride stride, in ascending numerical order into the array dest. The size
