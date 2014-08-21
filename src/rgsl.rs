@@ -80,7 +80,8 @@ pub use types::{
     VectorComplexF32,
     Rng,
     RngType,
-    Permutation
+    Permutation,
+    ChebSeries
 };
 
 pub use enums::{
@@ -137,6 +138,7 @@ pub mod trigonometric;
 pub mod zeta;
 
 pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
+pub type function<T> = fn(x: f64, p: &mut T) -> f64;
 
 #[cfg(target_os = "linux")]
 mod platform {

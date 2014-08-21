@@ -21,7 +21,6 @@ pub enum Mode {
 
 #[deriving(PartialEq, PartialOrd, Show)]
 #[repr(C)]
-/// Used with _e functions
 pub enum Value {
     Success = 0,
     Failure = -1,

@@ -33,3 +33,8 @@ path = "examples/permutation/main.rs"
 
 name = "sorting"
 path = "examples/sorting/main.rs"
+
+[[bin]]
+
+name = "chebyshev_approximation"
+path = "examples/chebyshev_approximation/main.rs"

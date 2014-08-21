@@ -15,6 +15,7 @@ examples: rgsl
 	  rustc -o bin/random_number_distribution -L ./lib examples/random_number_distribution/main.rs
 	  rustc -o bin/permutation -L ./lib examples/permutation/main.rs
 	  rustc -o bin/sorting -L ./lib examples/sorting/main.rs
+	  rustc -o bin/chebyshev_approximation -L ./lib examples/chebyshev_approximation/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
@@ -26,5 +27,6 @@ clean:
 	rm -rf bin/random_number_distribution
 	rm -rf bin/permutation
 	rm -rf bin/sorting
+	rm -rf bin/chebyshev_approximation
 
 re: clean all

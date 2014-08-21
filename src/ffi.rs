@@ -1782,6 +1782,26 @@ extern "C" {
     pub fn gsl_sort_largest_index(p: *mut size_t, k: size_t, src: *const c_double, stride: size_t, n: size_t) -> enums::Value;
     pub fn gsl_sort_vector_smallest_index(p: *mut size_t, k: size_t, v: *const gsl_vector) -> enums::Value;
     pub fn gsl_sort_vector_largest_index(p: *mut size_t, k: size_t, v: *const gsl_vector) -> enums::Value;
+
+    // Chebyshev Approximations
+    // Creation and Calculation of Chebyshev Series
+    pub fn gsl_cheb_alloc(n: size_t) -> *mut gsl_cheb_series;
+    pub fn gsl_cheb_free(cs: *mut gsl_cheb_series);
+    // Auxiliary functions
+    pub fn gsl_cheb_order(cs: *const gsl_cheb_series) -> size_t;
+    pub fn gsl_cheb_size(cs: *const gsl_cheb_series) -> size_t;
+    // Chebyshev Series Evaluation
+    pub fn gsl_cheb_eval(cs: *const gsl_cheb_series, x: c_double) -> c_double;
+    pub fn gsl_cheb_eval_err(cs: *const gsl_cheb_series, x: c_double, result: *mut c_double, abs_err: *mut c_double) -> enums::Value;
+    pub fn gsl_cheb_eval_n(cs: *const gsl_cheb_series, order: size_t, x: c_double) -> c_double;
+    pub fn gsl_cheb_eval_n_err(cs: *const gsl_cheb_series, order: size_t, x: c_double, result: *mut c_double,
+        abs_err: *mut c_double) -> enums::Value;
+    // Derivatives and Integrals
+    pub fn gsl_cheb_calc_deriv(cs: *mut gsl_cheb_series, deriv: *const gsl_cheb_series) -> enums::Value;
+    pub fn gsl_cheb_calc_integ(cs: *mut gsl_cheb_series, integ: *const gsl_cheb_series) -> enums::Value;
+
+    // Error function
+    pub fn gsl_error(reason: *const c_char, file: *const c_char, line: c_int, gsl_errno: c_int);
 }
 
 pub struct gsl_sf_result {
@@ -1964,4 +1984,13 @@ pub struct gsl_ran_discrete_t {
 pub struct gsl_permutation {
     pub size: size_t,
     pub data: *mut size_t
+}
+
+pub struct gsl_cheb_series {
+    pub c: *mut c_double, // coefficients
+    pub order: c_int, // order of expansion
+    pub a: c_double, // lower interval point
+    pub b: c_double, // upper interval point
+    pub order_sp: size_t,
+    pub f: *mut c_double
 }
