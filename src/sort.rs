@@ -79,6 +79,7 @@ pub mod objects {
         }
     }
 
+    #[doc(hidden)]
     fn downheap<T>(array: &mut[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
         let mut k = t_k;
 
@@ -123,6 +124,7 @@ pub mod objects {
         enums::Success
     }
 
+    #[doc(hidden)]
     fn downheap_index<T>(p: &mut[u64], array: &[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
         let pki = p[t_k as uint];
         let mut k = t_k;
