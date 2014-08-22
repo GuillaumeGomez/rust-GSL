@@ -100,7 +100,12 @@ impl ChebSeries {
     }
 
     /// This function returns a pointer to the coefficient array c[] location in memory for the Chebyshev series cs.
-    pub fn coeffs<'r>(&'r mut self) -> &'r mut [f64] {
+    pub fn as_slice<'r>(&'r self) -> &'r [f64] {
+        self.data.as_slice()
+    }
+
+    /// This function returns a pointer to the coefficient array c[] location in memory for the Chebyshev series cs.
+    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [f64] {
         self.data.as_mut_slice()
     }
 

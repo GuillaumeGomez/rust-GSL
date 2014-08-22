@@ -14,9 +14,11 @@ pub use self::mathieu::MathieuWorkspace;
 pub use self::ran_discrete::RanDiscrete;
 pub use self::permutation::Permutation;
 pub use self::chebyshev::ChebSeries;
+pub use self::combination::Combination;
 
 pub mod basis_spline;
 pub mod chebyshev;
+pub mod combination;
 pub mod complex;
 pub mod mathieu;
 pub mod matrix;

@@ -38,3 +38,8 @@ path = "examples/sorting/main.rs"
 
 name = "chebyshev_approximation"
 path = "examples/chebyshev_approximation/main.rs"
+
+[[bin]]
+
+name = "combination_example"
+path = "examples/combination_example/main.rs"

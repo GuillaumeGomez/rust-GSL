@@ -16,6 +16,7 @@ examples: rgsl
 	  rustc -o bin/permutation -L ./lib examples/permutation/main.rs
 	  rustc -o bin/sorting -L ./lib examples/sorting/main.rs
 	  rustc -o bin/chebyshev_approximation -L ./lib examples/chebyshev_approximation/main.rs
+	  rustc -o bin/combination_example -L ./lib examples/combination_example/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
@@ -28,5 +29,6 @@ clean:
 	rm -rf bin/permutation
 	rm -rf bin/sorting
 	rm -rf bin/chebyshev_approximation
+	rm -rf bin/combination_example
 
 re: clean all

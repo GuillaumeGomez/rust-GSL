@@ -81,7 +81,8 @@ pub use types::{
     Rng,
     RngType,
     Permutation,
-    ChebSeries
+    ChebSeries,
+    Combination
 };
 
 pub use enums::{
