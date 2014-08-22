@@ -160,7 +160,6 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
     }
 }
 
-
 impl Show for Combination {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {

@@ -15,6 +15,7 @@ pub use self::ran_discrete::RanDiscrete;
 pub use self::permutation::Permutation;
 pub use self::chebyshev::ChebSeries;
 pub use self::combination::Combination;
+pub use self::polynomial::PolyComplex;
 
 pub mod basis_spline;
 pub mod chebyshev;
@@ -24,6 +25,7 @@ pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
 pub mod permutation;
+pub mod polynomial;
 pub mod ran_discrete;
 pub mod result;
 pub mod rng;

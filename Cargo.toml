@@ -43,3 +43,8 @@ path = "examples/chebyshev_approximation/main.rs"
 
 name = "combination_example"
 path = "examples/combination_example/main.rs"
+
+[[bin]]
+
+name = "roots_of_polynomial"
+path = "examples/roots_of_polynomial/main.rs"

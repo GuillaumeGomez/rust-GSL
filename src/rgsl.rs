@@ -82,7 +82,8 @@ pub use types::{
     RngType,
     Permutation,
     ChebSeries,
-    Combination
+    Combination,
+    PolyComplex
 };
 
 pub use enums::{
@@ -129,6 +130,7 @@ pub mod laguerre;
 pub mod lambert_w;
 pub mod legendre;
 pub mod logarithm;
+pub mod polynomials;
 pub mod pow;
 pub mod power;
 pub mod psi;
@@ -140,6 +142,7 @@ pub mod zeta;
 
 pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
 pub type function<T> = fn(x: f64, p: &mut T) -> f64;
+//pub type ComplexPackedPtr = &mut [f64];
 
 #[cfg(target_os = "linux")]
 mod platform {
