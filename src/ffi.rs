@@ -1898,6 +1898,20 @@ extern "C" {
     pub fn gsl_eigen_genhermv_free(w: *mut gsl_eigen_genhermv_workspace);
     pub fn gsl_eigen_genhermv(A: *mut gsl_matrix_complex, B: *mut gsl_matrix_complex, eval: *mut gsl_vector, evec: *mut gsl_matrix_complex,
         w: *mut gsl_eigen_genhermv_workspace) -> enums::Value;
+    // Real Generalized Nonsymmetric Eigensystems
+    pub fn gsl_eigen_gen_alloc(n: size_t) -> *mut gsl_eigen_gen_workspace;
+    pub fn gsl_eigen_gen_free(w: *mut gsl_eigen_gen_workspace);
+    pub fn gsl_eigen_gen_params(compute_s: c_int, compute_t: c_int, balance: c_int, w: *mut gsl_eigen_gen_workspace);
+    pub fn gsl_eigen_gen(A: *mut gsl_matrix, B: *mut gsl_matrix, alpha: *mut gsl_vector_complex, beta: *mut gsl_vector,
+        w: *mut gsl_eigen_gen_workspace) -> enums::Value;
+    pub fn gsl_eigen_gen_QZ(A: *mut gsl_matrix, B: *mut gsl_matrix, alpha: *mut gsl_vector_complex, beta: *mut gsl_vector,
+        Q: *mut gsl_matrix, Z: *mut gsl_matrix, w: *mut gsl_eigen_gen_workspace) -> enums::Value;
+    pub fn gsl_eigen_genv_alloc(n: size_t) -> *mut gsl_eigen_genv_workspace;
+    pub fn gsl_eigen_genv_free(w: *mut gsl_eigen_genv_workspace);
+    pub fn gsl_eigen_genv(A: *mut gsl_matrix, B: *mut gsl_matrix, alpha: *mut gsl_vector_complex, beta: *mut gsl_vector, evec: *mut gsl_matrix_complex,
+        w: *mut gsl_eigen_genv_workspace) -> enums::Value;
+    pub fn gsl_eigen_genv_QZ(A: *mut gsl_matrix, B: *mut gsl_matrix, alpha: *mut gsl_vector_complex, beta: *mut gsl_vector, evec: *mut gsl_matrix_complex,
+        Q: *mut gsl_matrix, Z: *mut gsl_matrix, w: *mut gsl_eigen_genv_workspace) -> enums::Value;
 }
 
 pub struct gsl_sf_result {
@@ -2180,4 +2194,37 @@ pub struct gsl_eigen_genherm_workspace {
 pub struct gsl_eigen_genhermv_workspace {
     pub size: size_t,
     pub hermv_workspace_p: *mut gsl_eigen_hermv_workspace
+}
+
+pub struct gsl_eigen_gen_workspace {
+    pub size: size_t, // size of matrices
+    pub work: *mut gsl_vector, // scratch workspace
+    pub n_evals: size_t, // number of eigenvalues found
+    pub max_iterations: size_t, // maximum QZ iterations allowed
+    pub n_iter: size_t, // number of iterations since last eigenvalue found
+    pub eshift: c_double, // exceptional shift counter
+    pub need_top: c_int, // need to compute top index?
+    pub atol: c_double, // tolerance for splitting A matrix
+    pub btol: c_double, // tolerance for splitting B matrix
+    pub ascale: c_double, // scaling factor for shifts
+    pub bscale: c_double, // scaling factor for shifts
+    pub H: *mut gsl_matrix, // pointer to hessenberg matrix
+    pub R: *mut gsl_matrix, // pointer to upper triangular matrix
+    pub compute_s: c_int, // compute generalized Schur form S
+    pub compute_t: c_int, // compute generalized Schur form T
+    pub Q: *mut gsl_matrix, // pointer to left Schur vectors
+    pub Z: *mut gsl_matrix // pointer to right Schur vectors
+}
+
+pub struct gsl_eigen_genv_workspace {
+    pub size: size_t, // size of matrices
+    pub work1: *mut gsl_vector, // 1-norm of columns of A
+    pub work2: *mut gsl_vector, // 1-norm of columns of B
+    pub work3: *mut gsl_vector, // real part of eigenvector
+    pub work4: *mut gsl_vector, // imag part of eigenvector
+    pub work5: *mut gsl_vector, // real part of back-transformed eigenvector
+    pub work6: *mut gsl_vector, // imag part of back-transformed eigenvector
+    pub Q: *mut gsl_matrix, // pointer to left Schur vectors
+    pub Z: *mut gsl_matrix, // pointer to right Schur vectors
+    pub gen_workspace_p: *mut gsl_eigen_gen_workspace
 }

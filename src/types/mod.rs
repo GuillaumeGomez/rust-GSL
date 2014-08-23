@@ -19,7 +19,7 @@ pub use self::polynomial::PolyComplex;
 pub use self::discrete_hankel::DiscreteHankel;
 pub use self::eigen_symmetric_workspace::{EigenSymmetricWorkspace, EigenSymmetricVWorkspace, EigenHermitianWorkspace,
 	EigenHermitianVWorkspace, EigenNonSymmWorkspace, EigenNonSymmVWorkspace, EigenGenSymmWorkspace, EigenGenSymmVWorkspace,
-	EigenGenHermWorkspace, EigenGenHermVWorkspace};
+	EigenGenHermWorkspace, EigenGenHermVWorkspace, EigenGenWorkspace, EigenGenVWorkspace};
 
 pub mod basis_spline;
 pub mod chebyshev;

@@ -95,7 +95,9 @@ pub use types::{
     EigenGenSymmWorkspace,
     EigenGenSymmVWorkspace,
     EigenGenHermWorkspace,
-    EigenGenHermVWorkspace
+    EigenGenHermVWorkspace,
+    EigenGenWorkspace,
+    EigenGenVWorkspace
 };
 
 pub use enums::{

@@ -44,6 +44,34 @@ A x = \lambda B x
 where A and B are hermitian matrices, and B is positive-definite. Similarly to the real case, this can be reduced to C y = \lambda y where C = L^{-1} 
 A L^{-H} is hermitian, and y = L^H x. The standard hermitian eigensolver can be applied to the matrix C. The resulting eigenvectors are backtransformed 
 to find the vectors of the original problem. The eigenvalues of the generalized hermitian-definite eigenproblem are always real.
+
+#Real Generalized Nonsymmetric Eigensystems
+
+Given two square matrices (A, B), the generalized nonsymmetric eigenvalue problem is to find eigenvalues \lambda and eigenvectors x such that
+
+A x = \lambda B x
+We may also define the problem as finding eigenvalues \mu and eigenvectors y such that
+
+\mu A y = B y
+Note that these two problems are equivalent (with \lambda = 1/\mu) if neither \lambda nor \mu is zero. If say, \lambda is zero, then it is still 
+a well defined eigenproblem, but its alternate problem involving \mu is not. Therefore, to allow for zero (and infinite) eigenvalues, the problem 
+which is actually solved is
+
+\beta A x = \alpha B x
+The eigensolver routines below will return two values \alpha and \beta and leave it to the user to perform the divisions \lambda = \alpha / \beta 
+and \mu = \beta / \alpha.
+
+If the determinant of the matrix pencil A - \lambda B is zero for all \lambda, the problem is said to be singular; otherwise it is called regular. 
+Singularity normally leads to some \alpha = \beta = 0 which means the eigenproblem is ill-conditioned and generally does not have well defined 
+eigenvalue solutions. The routines below are intended for regular matrix pencils and could yield unpredictable results when applied to singular 
+pencils.
+
+The solution of the real generalized nonsymmetric eigensystem problem for a matrix pair (A, B) involves computing the generalized Schur decomposition
+
+A = Q S Z^T
+B = Q T Z^T
+where Q and Z are orthogonal matrices of left and right Schur vectors respectively, and (S, T) is the generalized Schur form whose diagonal elements 
+give the \alpha and \beta values. The algorithm used is the QZ method due to Moler and Stewart (see references).
 !*/
 
 use ffi;
@@ -553,6 +581,137 @@ impl ffi::FFI<ffi::gsl_eigen_genhermv_workspace> for EigenGenHermVWorkspace {
     }
 
     fn unwrap(t: &EigenGenHermVWorkspace) -> *mut ffi::gsl_eigen_genhermv_workspace {
+        t.w
+    }
+}
+
+pub struct EigenGenWorkspace {
+    w: *mut ffi::gsl_eigen_gen_workspace
+}
+
+impl EigenGenWorkspace {
+    /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized nonsymmetric eigensystems. The size of the
+    /// workspace is O(n).
+    pub fn new(n: u64) -> Option<EigenGenWorkspace> {
+        let tmp = unsafe { ffi::gsl_eigen_gen_alloc(n) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(EigenGenWorkspace {
+                w: tmp,
+            })
+        }
+    }
+
+    /// This function sets some parameters which determine how the eigenvalue problem is solved in subsequent calls to gsl_eigen_gen.
+    /// 
+    /// If compute_s is set to 1, the full Schur form S will be computed by gsl_eigen_gen. If it is set to 0, S will not be computed (this is
+    /// the default setting). S is a quasi upper triangular matrix with 1-by-1 and 2-by-2 blocks on its diagonal. 1-by-1 blocks correspond to
+    /// real eigenvalues, and 2-by-2 blocks correspond to complex eigenvalues.
+    /// 
+    /// If compute_t is set to 1, the full Schur form T will be computed by gsl_eigen_gen. If it is set to 0, T will not be computed (this is
+    /// the default setting). T is an upper triangular matrix with non-negative elements on its diagonal. Any 2-by-2 blocks in S will correspond
+    /// to a 2-by-2 diagonal block in T.
+    /// 
+    /// The balance parameter is currently ignored, since generalized balancing is not yet implemented.
+    pub fn params(&self, compute_s: i32, compute_t: i32, balance: i32) {
+        unsafe { ffi::gsl_eigen_gen_params(compute_s, compute_t, balance, self.w) }
+    }
+
+    /// This function computes the eigenvalues of the real generalized nonsymmetric matrix pair (A, B), and stores them as pairs in (alpha,
+    /// beta), where alpha is complex and beta is real. If \beta_i is non-zero, then \lambda = \alpha_i / \beta_i is an eigenvalue. Likewise,
+    /// if \alpha_i is non-zero, then \mu = \beta_i / \alpha_i is an eigenvalue of the alternate problem \mu A y = B y. The elements of beta
+    /// are normalized to be non-negative.
+    /// 
+    /// If S is desired, it is stored in A on output. If T is desired, it is stored in B on output. The ordering of eigenvalues in (alpha, beta)
+    /// follows the ordering of the diagonal blocks in the Schur forms S and T. In rare cases, this function may fail to find all eigenvalues.
+    /// If this occurs, an error code is returned.
+    pub fn gen(&self, A: &MatrixF64, B: &MatrixF64, alpha: &VectorComplexF64, beta: &VectorF64) -> enums::Value {
+        unsafe { ffi::gsl_eigen_gen(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B), ffi::FFI::unwrap(alpha), ffi::FFI::unwrap(beta), self.w) }
+    }
+
+    /// This function is identical to gsl_eigen_gen except that it also computes the left and right Schur vectors and stores them into Q and
+    /// Z respectively.
+    pub fn gen_QZ(&self, A: &MatrixF64, B: &MatrixF64, alpha: &VectorComplexF64, beta: &VectorF64, Q: &MatrixF64, Z: &MatrixF64) -> enums::Value {
+        unsafe { ffi::gsl_eigen_gen_QZ(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B), ffi::FFI::unwrap(alpha), ffi::FFI::unwrap(beta),
+            ffi::FFI::unwrap(Q), ffi::FFI::unwrap(Z), self.w) }
+    }
+}
+
+impl Drop for EigenGenWorkspace {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_eigen_gen_free(self.w) };
+        self.w = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_eigen_gen_workspace> for EigenGenWorkspace {
+    fn wrap(t: *mut ffi::gsl_eigen_gen_workspace) -> EigenGenWorkspace {
+        EigenGenWorkspace {
+            w: t
+        }
+    }
+
+    fn unwrap(t: &EigenGenWorkspace) -> *mut ffi::gsl_eigen_gen_workspace {
+        t.w
+    }
+}
+
+pub struct EigenGenVWorkspace {
+    w: *mut ffi::gsl_eigen_genv_workspace
+}
+
+impl EigenGenVWorkspace {
+    /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized nonsymmetric eigensystems. The size of the
+    /// workspace is O(n).
+    pub fn new(n: u64) -> Option<EigenGenVWorkspace> {
+        let tmp = unsafe { ffi::gsl_eigen_genv_alloc(n) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(EigenGenVWorkspace {
+                w: tmp,
+            })
+        }
+    }
+
+    /// This function computes eigenvalues and right eigenvectors of the n-by-n real generalized nonsymmetric matrix pair (A, B). The eigenvalues
+    /// are stored in (alpha, beta) and the eigenvectors are stored in evec. It first calls gsl_eigen_gen to compute the eigenvalues, Schur forms,
+    /// and Schur vectors. Then it finds eigenvectors of the Schur forms and backtransforms them using the Schur vectors. The Schur vectors are
+    /// destroyed in the process, but can be saved by using gsl_eigen_genv_QZ. The computed eigenvectors are normalized to have unit magnitude.
+    /// On output, (A, B) contains the generalized Schur form (S, T). If gsl_eigen_gen fails, no eigenvectors are computed, and an error code is
+    /// returned.
+    pub fn genv(&self, A: &MatrixF64, B: &MatrixF64, alpha: &VectorComplexF64, beta: &VectorF64, evec: &MatrixComplexF64) -> enums::Value {
+        unsafe { ffi::gsl_eigen_genv(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B), ffi::FFI::unwrap(alpha), ffi::FFI::unwrap(beta),
+            ffi::FFI::unwrap(evec), self.w) }
+    }
+
+    /// This function is identical to gsl_eigen_genv except that it also computes the left and right Schur vectors and stores them into Q and Z
+    /// respectively.
+    pub fn genv_QZ(&self, A: &MatrixF64, B: &MatrixF64, alpha: &VectorComplexF64, beta: &VectorF64, evec: &MatrixComplexF64, Q: &MatrixF64,
+        Z: &MatrixF64) -> enums::Value {
+        unsafe { ffi::gsl_eigen_genv_QZ(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B), ffi::FFI::unwrap(alpha), ffi::FFI::unwrap(beta),
+            ffi::FFI::unwrap(evec), ffi::FFI::unwrap(Q), ffi::FFI::unwrap(Z), self.w) }
+    }
+}
+
+impl Drop for EigenGenVWorkspace {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_eigen_genv_free(self.w) };
+        self.w = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_eigen_genv_workspace> for EigenGenVWorkspace {
+    fn wrap(t: *mut ffi::gsl_eigen_genv_workspace) -> EigenGenVWorkspace {
+        EigenGenVWorkspace {
+            w: t
+        }
+    }
+
+    fn unwrap(t: &EigenGenVWorkspace) -> *mut ffi::gsl_eigen_genv_workspace {
         t.w
     }
 }
