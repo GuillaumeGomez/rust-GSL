@@ -1855,6 +1855,49 @@ extern "C" {
     pub fn gsl_dht_apply(t: *const gsl_dht, f_in: *mut c_double, f_out: *mut c_double) -> enums::Value;
     pub fn gsl_dht_x_sample(t: *const gsl_dht, n: c_int) -> c_double;
     pub fn gsl_dht_k_sample(t: *const gsl_dht, n: c_int) -> c_double;
+
+    // Real Symmetric Matrices
+    pub fn gsl_eigen_symm_alloc(n: size_t) -> *mut gsl_eigen_symm_workspace;
+    pub fn gsl_eigen_symm_free(w: *mut gsl_eigen_symm_workspace);
+    pub fn gsl_eigen_symm(A: *mut gsl_matrix, eval: *mut gsl_vector, w: *mut gsl_eigen_symm_workspace) -> enums::Value;
+    pub fn gsl_eigen_symmv_alloc(n: size_t) -> *mut gsl_eigen_symmv_workspace;
+    pub fn gsl_eigen_symmv_free(w: *mut gsl_eigen_symmv_workspace);
+    pub fn gsl_eigen_symmv(A: *mut gsl_matrix, eval: *mut gsl_vector, evec: *mut gsl_matrix, w: *mut gsl_eigen_symmv_workspace) -> enums::Value;
+    // Complex Hermitian Matrices
+    pub fn gsl_eigen_herm_alloc(n: size_t) -> *mut gsl_eigen_herm_workspace;
+    pub fn gsl_eigen_herm_free(w: *mut gsl_eigen_herm_workspace);
+    pub fn gsl_eigen_herm(A: *mut gsl_matrix_complex, eval: *mut gsl_vector, w: *mut gsl_eigen_herm_workspace) -> enums::Value;
+    pub fn gsl_eigen_hermv_alloc(n: size_t) -> *mut gsl_eigen_hermv_workspace;
+    pub fn gsl_eigen_hermv_free(w: *mut gsl_eigen_hermv_workspace);
+    pub fn gsl_eigen_hermv(A: *mut gsl_matrix_complex, eval: *mut gsl_vector, evec: *mut gsl_matrix_complex, w: *mut gsl_eigen_hermv_workspace) -> enums::Value;
+    // Real Nonsymmetric Matrices
+    pub fn gsl_eigen_nonsymm_alloc(n: size_t) -> *mut gsl_eigen_nonsymm_workspace;
+    pub fn gsl_eigen_nonsymm_free(w: *mut gsl_eigen_nonsymm_workspace);
+    pub fn gsl_eigen_nonsymm_params(compute_t: c_int, balance: c_int, w: *mut gsl_eigen_nonsymm_workspace);
+    pub fn gsl_eigen_nonsymm(A: *mut gsl_matrix, eval: *mut gsl_vector_complex, w: *mut gsl_eigen_nonsymm_workspace) -> enums::Value;
+    pub fn gsl_eigen_nonsymm_Z(A: *mut gsl_matrix, eval: *mut gsl_vector_complex, z: *mut gsl_matrix, w: *mut gsl_eigen_nonsymm_workspace) -> enums::Value;
+    pub fn gsl_eigen_nonsymmv_alloc(n: size_t) -> *mut gsl_eigen_nonsymmv_workspace;
+    pub fn gsl_eigen_nonsymmv_free(w: *mut gsl_eigen_nonsymmv_workspace);
+    pub fn gsl_eigen_nonsymmv_params(balance: c_int, w: *mut gsl_eigen_nonsymmv_workspace);
+    pub fn gsl_eigen_nonsymmv(A: *mut gsl_matrix, eval: *mut gsl_vector_complex, evec: *mut gsl_matrix_complex, w: *mut gsl_eigen_nonsymmv_workspace) -> enums::Value;
+    pub fn gsl_eigen_nonsymmv_Z(A: *mut gsl_matrix, eval: *mut gsl_vector_complex, evec: *mut gsl_matrix_complex, z: *mut gsl_matrix,
+        w: *mut gsl_eigen_nonsymmv_workspace) -> enums::Value;
+    // Real Generalized Symmetric-Definite Eigensystems
+    pub fn gsl_eigen_gensymm_alloc(n: size_t) -> *mut gsl_eigen_gensymm_workspace;
+    pub fn gsl_eigen_gensymm_free(w: *mut gsl_eigen_gensymm_workspace);
+    pub fn gsl_eigen_gensymm(A: *mut gsl_matrix, B: *mut gsl_matrix, eval: *mut gsl_vector, w: *mut gsl_eigen_gensymm_workspace) -> enums::Value;
+    pub fn gsl_eigen_gensymmv_alloc(n: size_t) -> *mut gsl_eigen_gensymmv_workspace;
+    pub fn gsl_eigen_gensymmv_free(w: *mut gsl_eigen_gensymmv_workspace);
+    pub fn gsl_eigen_gensymmv(A: *mut gsl_matrix, B: *mut gsl_matrix, eval: *mut gsl_vector, evec: *mut gsl_matrix, w: *mut gsl_eigen_gensymmv_workspace) -> enums::Value;
+    // Complex Generalized Hermitian-Definite Eigensystems
+    pub fn gsl_eigen_genherm_alloc(n: size_t) -> *mut gsl_eigen_genherm_workspace;
+    pub fn gsl_eigen_genherm_free(w: *mut gsl_eigen_genherm_workspace);
+    pub fn gsl_eigen_genherm(A: *mut gsl_matrix_complex, B: *mut gsl_matrix_complex, eval: *mut gsl_vector,
+        w: *mut gsl_eigen_genherm_workspace) -> enums::Value;
+    pub fn gsl_eigen_genhermv_alloc(n: size_t) -> *mut gsl_eigen_genhermv_workspace;
+    pub fn gsl_eigen_genhermv_free(w: *mut gsl_eigen_genhermv_workspace);
+    pub fn gsl_eigen_genhermv(A: *mut gsl_matrix_complex, B: *mut gsl_matrix_complex, eval: *mut gsl_vector, evec: *mut gsl_matrix_complex,
+        w: *mut gsl_eigen_genhermv_workspace) -> enums::Value;
 }
 
 pub struct gsl_sf_result {
@@ -2067,4 +2110,74 @@ pub struct gsl_dht {
     pub j: *mut c_double, // array of computed J_nu zeros, j_{nu,s} = j[s]
     pub Jjj: *mut c_double, // transform numerator, J_nu(j_i j_m / j_N)
     pub J2: *mut c_double // transform denominator, J_{nu+1}^2(j_m)
+}
+
+pub struct gsl_eigen_symm_workspace {
+    pub size: size_t,
+    pub d: *mut c_double,
+    pub sd: *mut c_double
+}
+
+pub struct gsl_eigen_herm_workspace {
+    pub size: size_t,
+    pub d: *mut c_double,
+    pub sd: *mut c_double,
+    pub tau: *mut c_double
+}
+
+pub struct gsl_eigen_hermv_workspace {
+    pub size: size_t,
+    pub d: *mut c_double,
+    pub sd: *mut c_double,
+    pub gc: *mut c_double,
+    pub gs: *mut c_double
+}
+
+pub struct gsl_eigen_francis_workspace {
+    pub size: size_t, // matrix size
+    pub max_iterations: size_t, // max iterations since last eigenvalue found
+    pub n_iter: size_t, // number of iterations since last eigenvalue found
+    pub n_evals: size_t, // number of eigenvalues found so far
+    pub compute_t: c_int, // compute Schur form T = Z^t A Z
+    pub H: *mut gsl_matrix, // pointer to Hessenberg matrix
+    pub Z: *mut gsl_matrix // pointer to Schur vector matrix
+}
+
+pub struct gsl_eigen_nonsymm_workspace {
+    pub size: size_t, // size of matrices
+    pub diag: *mut gsl_vector, // diagonal matrix elements from balancing
+    pub tau: *mut gsl_vector, // Householder coefficients
+    pub Z: *mut gsl_matrix, // pointer to Z matrix
+    pub do_balance: c_int, // perform balancing transformation?
+    pub n_evals: size_t, // number of eigenvalues found
+    pub francis_workspace_p: *mut gsl_eigen_francis_workspace
+}
+
+pub struct gsl_eigen_nonsymmv_workspace {
+    pub size: size_t, // size of matrices
+    pub work: *mut gsl_vector, // scratch workspace
+    pub work2: *mut gsl_vector, // scratch workspace
+    pub work3: *mut gsl_vector, // scratch workspace
+    pub Z: *mut gsl_matrix, // pointer to Schur vectors
+    pub nonsymm_workspace_p: *mut gsl_eigen_nonsymm_workspace
+}
+
+pub struct gsl_eigen_gensymm_workspace {
+    pub size: size_t,
+    pub symm_workspace_p: gsl_eigen_symm_workspace
+}
+
+pub struct gsl_eigen_gensymmv_workspace {
+    pub size: size_t,
+    pub symmv_workspace_p: gsl_eigen_symmv_workspace
+}
+
+pub struct gsl_eigen_genherm_workspace {
+    pub size: size_t,
+    pub herm_workspace_p: *mut gsl_eigen_herm_workspace
+}
+
+pub struct gsl_eigen_genhermv_workspace {
+    pub size: size_t,
+    pub hermv_workspace_p: *mut gsl_eigen_hermv_workspace
 }
