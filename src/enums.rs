@@ -2,15 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-/// The maximum x such that gamma(x) is not considered an overflow.
-pub static SF_GAMMA_XMAX : f64 = 171.0;
-/// The maximum n such that gsl_sf_fact(n) does not give an overflow.
-pub static SF_FACT_NMAX : f64 = 170.0;
-/// The maximum n such that gsl_sf_doublefact(n) does not give an overflow.
-pub static SF_DOUBLEFACT_NMAX : f64 = 297.0;
-
-pub static SF_MATHIEU_COEFF : u32 = 100;
-
 #[deriving(PartialEq, PartialOrd, Show)]
 #[repr(C)]
 pub enum Mode {

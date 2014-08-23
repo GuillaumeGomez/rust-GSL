@@ -48,3 +48,8 @@ path = "examples/combination_example/main.rs"
 
 name = "roots_of_polynomial"
 path = "examples/roots_of_polynomial/main.rs"
+
+[[bin]]
+
+name = "numerical_differentiation"
+path = "examples/numerical_differentiation/main.rs"

@@ -18,6 +18,7 @@ examples: rgsl
 	  rustc -o bin/chebyshev_approximation -L ./lib examples/chebyshev_approximation/main.rs
 	  rustc -o bin/combination_example -L ./lib examples/combination_example/main.rs
 	  rustc -o bin/roots_of_polynomial -L ./lib examples/roots_of_polynomial/main.rs
+	  rustc -o bin/numerical_differentiation -L ./lib examples/numerical_differentiation/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
@@ -32,5 +33,6 @@ clean:
 	rm -rf bin/chebyshev_approximation
 	rm -rf bin/combination_example
 	rm -rf bin/roots_of_polynomial
+	rm -rf bin/numerical_differentiation
 
 re: clean all
