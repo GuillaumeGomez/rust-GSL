@@ -83,7 +83,8 @@ pub use types::{
     Permutation,
     ChebSeries,
     Combination,
-    PolyComplex
+    PolyComplex,
+    DiscreteHankel
 };
 
 pub use enums::{

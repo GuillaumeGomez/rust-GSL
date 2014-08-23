@@ -16,11 +16,13 @@ pub use self::permutation::Permutation;
 pub use self::chebyshev::ChebSeries;
 pub use self::combination::Combination;
 pub use self::polynomial::PolyComplex;
+pub use self::discrete_hankel::DiscreteHankel;
 
 pub mod basis_spline;
 pub mod chebyshev;
 pub mod combination;
 pub mod complex;
+pub mod discrete_hankel;
 pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
