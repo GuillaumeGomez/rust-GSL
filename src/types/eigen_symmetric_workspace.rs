@@ -25,14 +25,14 @@ Francis method.
 
 The real generalized symmetric-definite eigenvalue problem is to find eigenvalues \lambda and eigenvectors x such that
 
-A x = \lambda B x
+A x = lambda B x
 where A and B are symmetric matrices, and B is positive-definite. This problem reduces to the standard symmetric eigenvalue problem by applying 
 the Cholesky decomposition to B:
 
-                      A x = \lambda B x
-                      A x = \lambda L L^t x
-( L^{-1} A L^{-t} ) L^t x = \lambda L^t x
-Therefore, the problem becomes C y = \lambda y where C = L^{-1} A L^{-t} is symmetric, and y = L^t x. The standard symmetric eigensolver can be 
+                      A x = lambda B x
+                      A x = lambda L L^t x
+( L^{-1} A L^{-t} ) L^t x = lambda L^t x
+Therefore, the problem becomes C y = lambda y where C = L^{-1} A L^{-t} is symmetric, and y = L^t x. The standard symmetric eigensolver can be 
 applied to the matrix C. The resulting eigenvectors are backtransformed to find the vectors of the original problem. The eigenvalues and eigenvectors 
 of the generalized symmetric-definite eigenproblem are always real.
 
