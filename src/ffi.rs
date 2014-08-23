@@ -1921,17 +1921,20 @@ extern "C" {
     pub fn gsl_eigen_genv_sort(alpha: *mut gsl_vector_complex, beta: *mut gsl_vector, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
 }
 
+#[repr(C)]
 pub struct gsl_sf_result {
     pub val: c_double,
     pub err: c_double
 }
 
+#[repr(C)]
 pub struct gsl_sf_result_e10 {
     pub val: c_double,
     pub err: c_double,
     pub e10: c_int
 }
 
+#[repr(C)]
 pub struct gsl_vector_float {
     pub size: size_t,
     pub stride: size_t,
@@ -1940,11 +1943,13 @@ pub struct gsl_vector_float {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_block_float {
     pub size: size_t,
     pub data: *mut c_float
 }
 
+#[repr(C)]
 pub struct gsl_vector {
     pub size: size_t,
     pub stride: size_t,
@@ -1953,11 +1958,13 @@ pub struct gsl_vector {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_block {
     pub size: size_t,
     pub data: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_vector_complex_float {
     pub size: size_t,
     pub stride: size_t,
@@ -1966,11 +1973,13 @@ pub struct gsl_vector_complex_float {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_block_complex_float {
     pub size: size_t,
     pub data: *mut c_float
 }
 
+#[repr(C)]
 pub struct gsl_vector_complex {
     pub size: size_t,
     pub stride: size_t,
@@ -1979,19 +1988,23 @@ pub struct gsl_vector_complex {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_block_complex {
     pub size: size_t,
     pub data: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_complex {
     pub data: [c_double, ..2]
 }
 
+#[repr(C)]
 pub struct gsl_complex_float {
     pub data: [c_float, ..2]
 }
 
+#[repr(C)]
 pub struct gsl_matrix {
     pub size1: size_t,
     pub size2: size_t,
@@ -2001,6 +2014,7 @@ pub struct gsl_matrix {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_matrix_float {
     pub size1: size_t,
     pub size2: size_t,
@@ -2010,6 +2024,7 @@ pub struct gsl_matrix_float {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_matrix_complex {
     pub size1: size_t,
     pub size2: size_t,
@@ -2019,6 +2034,7 @@ pub struct gsl_matrix_complex {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_matrix_complex_float {
     pub size1: size_t,
     pub size2: size_t,
@@ -2028,6 +2044,7 @@ pub struct gsl_matrix_complex_float {
     pub owner: c_int
 }
 
+#[repr(C)]
 pub struct gsl_sf_mathieu_workspace {
     pub size: size_t,
     pub even_order: size_t,
@@ -2047,6 +2064,7 @@ pub struct gsl_sf_mathieu_workspace {
     pub wmat: *mut gsl_eigen_symmv_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_symmv_workspace {
     pub size: size_t,
     pub d: *mut c_double,
@@ -2055,6 +2073,7 @@ pub struct gsl_eigen_symmv_workspace {
     pub gs: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_bspline_workspace {
     pub k: size_t,      // spline order
     pub km1: size_t,    // k - 1 (polynomial order)
@@ -2067,6 +2086,7 @@ pub struct gsl_bspline_workspace {
     pub B: *mut gsl_vector       // temporary spline results
 }
 
+#[repr(C)]
 pub struct gsl_bspline_deriv_workspace {
     pub k: size_t,          // spline order
     pub A: *mut gsl_matrix, // work matrix
@@ -2077,6 +2097,7 @@ pub type rng_set = Option<extern "C" fn(state: *mut c_void, seed: c_ulong)>;
 pub type rng_get = Option<extern "C" fn(state: *mut c_void) -> c_ulong>;
 pub type rng_get_double = Option<extern "C" fn(state: *mut c_void) -> c_double>;
 
+#[repr(C)]
 pub struct gsl_rng_type {
     pub name: *const c_char,
     pub max: c_ulong,
@@ -2087,22 +2108,26 @@ pub struct gsl_rng_type {
     pub get_double: rng_get_double
 }
 
+#[repr(C)]
 pub struct gsl_rng {
     pub _type: *const gsl_rng_type,
     pub state: *mut c_void
 }
 
+#[repr(C)]
 pub struct gsl_ran_discrete_t {
     pub K: size_t,
     pub A: *mut size_t,
     pub F: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_permutation {
     pub size: size_t,
     pub data: *mut size_t
 }
 
+#[repr(C)]
 pub struct gsl_cheb_series {
     pub c: *mut c_double, // coefficients
     pub order: c_int, // order of expansion
@@ -2112,17 +2137,20 @@ pub struct gsl_cheb_series {
     pub f: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_combination {
     pub n: size_t,
     pub k: size_t,
     pub data: *mut size_t
 }
 
+#[repr(C)]
 pub struct gsl_poly_complex_workspace {
     pub nc: size_t,
     pub matrix: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_dht {
     pub size: size_t, // size of the sample arrays to be transformed
     pub nu: c_double, // Bessel function order
@@ -2133,12 +2161,14 @@ pub struct gsl_dht {
     pub J2: *mut c_double // transform denominator, J_{nu+1}^2(j_m)
 }
 
+#[repr(C)]
 pub struct gsl_eigen_symm_workspace {
     pub size: size_t,
     pub d: *mut c_double,
     pub sd: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_eigen_herm_workspace {
     pub size: size_t,
     pub d: *mut c_double,
@@ -2146,6 +2176,7 @@ pub struct gsl_eigen_herm_workspace {
     pub tau: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_eigen_hermv_workspace {
     pub size: size_t,
     pub d: *mut c_double,
@@ -2154,6 +2185,7 @@ pub struct gsl_eigen_hermv_workspace {
     pub gs: *mut c_double
 }
 
+#[repr(C)]
 pub struct gsl_eigen_francis_workspace {
     pub size: size_t, // matrix size
     pub max_iterations: size_t, // max iterations since last eigenvalue found
@@ -2164,6 +2196,7 @@ pub struct gsl_eigen_francis_workspace {
     pub Z: *mut gsl_matrix // pointer to Schur vector matrix
 }
 
+#[repr(C)]
 pub struct gsl_eigen_nonsymm_workspace {
     pub size: size_t, // size of matrices
     pub diag: *mut gsl_vector, // diagonal matrix elements from balancing
@@ -2174,6 +2207,7 @@ pub struct gsl_eigen_nonsymm_workspace {
     pub francis_workspace_p: *mut gsl_eigen_francis_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_nonsymmv_workspace {
     pub size: size_t, // size of matrices
     pub work: *mut gsl_vector, // scratch workspace
@@ -2183,26 +2217,31 @@ pub struct gsl_eigen_nonsymmv_workspace {
     pub nonsymm_workspace_p: *mut gsl_eigen_nonsymm_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_gensymm_workspace {
     pub size: size_t,
     pub symm_workspace_p: gsl_eigen_symm_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_gensymmv_workspace {
     pub size: size_t,
     pub symmv_workspace_p: gsl_eigen_symmv_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_genherm_workspace {
     pub size: size_t,
     pub herm_workspace_p: *mut gsl_eigen_herm_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_genhermv_workspace {
     pub size: size_t,
     pub hermv_workspace_p: *mut gsl_eigen_hermv_workspace
 }
 
+#[repr(C)]
 pub struct gsl_eigen_gen_workspace {
     pub size: size_t, // size of matrices
     pub work: *mut gsl_vector, // scratch workspace
@@ -2223,6 +2262,7 @@ pub struct gsl_eigen_gen_workspace {
     pub Z: *mut gsl_matrix // pointer to right Schur vectors
 }
 
+#[repr(C)]
 pub struct gsl_eigen_genv_workspace {
     pub size: size_t, // size of matrices
     pub work1: *mut gsl_vector, // 1-norm of columns of A
