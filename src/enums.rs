@@ -82,3 +82,16 @@ pub enum Value {
     /// cannot reach the specified tolerance in gradient
     EOF = 32
 }
+
+#[deriving(PartialEq, PartialOrd, Show)]
+#[repr(C)]
+pub enum EigenSort {
+    /// ascending order in numerical value
+    ValAsc,
+    /// descending order in numerical value
+    VasDesc,
+    /// ascending order in magnitude
+    AbsAsc,
+    /// descending order in magnitude
+    AbsDesc
+}

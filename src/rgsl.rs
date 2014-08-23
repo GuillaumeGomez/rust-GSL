@@ -102,7 +102,8 @@ pub use types::{
 
 pub use enums::{
     Mode,
-    Value
+    Value,
+    EigenSort
 };
 
 pub use elementary::Elementary;
@@ -125,6 +126,7 @@ pub mod coupling_coefficients;
 pub mod dawson;
 pub mod debye;
 pub mod dilogarithm;
+pub mod eigen;
 pub mod elementary;
 pub mod elementary_operations;
 pub mod elliptic;

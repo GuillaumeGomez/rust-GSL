@@ -1912,6 +1912,13 @@ extern "C" {
         w: *mut gsl_eigen_genv_workspace) -> enums::Value;
     pub fn gsl_eigen_genv_QZ(A: *mut gsl_matrix, B: *mut gsl_matrix, alpha: *mut gsl_vector_complex, beta: *mut gsl_vector, evec: *mut gsl_matrix_complex,
         Q: *mut gsl_matrix, Z: *mut gsl_matrix, w: *mut gsl_eigen_genv_workspace) -> enums::Value;
+    // Sorting Eigenvalues and Eigenvectors
+    pub fn gsl_eigen_symmv_sort(eval: *mut gsl_vector, evec: *mut gsl_matrix, sort_type: enums::EigenSort) -> enums::Value;
+    pub fn gsl_eigen_hermv_sort(eval: *mut gsl_vector, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
+    pub fn gsl_eigen_nonsymmv_sort(eval: *mut gsl_vector_complex, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
+    pub fn gsl_eigen_gensymmv_sort(eval: *mut gsl_vector, evec: *mut gsl_matrix, sort_type: enums::EigenSort) -> enums::Value;
+    pub fn gsl_eigen_genhermv_sort(eval: *mut gsl_vector, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
+    pub fn gsl_eigen_genv_sort(alpha: *mut gsl_vector_complex, beta: *mut gsl_vector, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
 }
 
 pub struct gsl_sf_result {
