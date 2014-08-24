@@ -56,5 +56,5 @@ path = "examples/numerical_differentiation/main.rs"
 
 [[bin]]
 
-name = "radix2"
-path = "examples/radix2/main.rs"
+name = "radix"
+path = "examples/radix/main.rs"

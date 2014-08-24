@@ -96,7 +96,9 @@ pub use types::{
     EigenGenHermWorkspace,
     EigenGenHermVWorkspace,
     EigenGenWorkspace,
-    EigenGenVWorkspace
+    EigenGenVWorkspace,
+    FftComplexWaveTable,
+    FftComplexWorkspace
 };
 
 pub use enums::{
@@ -134,6 +136,7 @@ pub mod error;
 pub mod exponential;
 pub mod exponential_integrals;
 pub mod fermi_dirac;
+pub mod fft;
 pub mod fit;
 pub mod gamma_beta;
 pub mod gegenbauer;
@@ -148,7 +151,6 @@ pub mod polynomials;
 pub mod pow;
 pub mod power;
 pub mod psi;
-pub mod radix2_fft;
 pub mod sort;
 pub mod synchrotron;
 pub mod transport;
