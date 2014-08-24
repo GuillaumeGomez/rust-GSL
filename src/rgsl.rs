@@ -102,7 +102,8 @@ pub use types::{
 pub use enums::{
     Mode,
     Value,
-    EigenSort
+    EigenSort,
+    FftDirection
 };
 
 pub use elementary::Elementary;
@@ -147,6 +148,7 @@ pub mod polynomials;
 pub mod pow;
 pub mod power;
 pub mod psi;
+pub mod radix2_fft;
 pub mod sort;
 pub mod synchrotron;
 pub mod transport;

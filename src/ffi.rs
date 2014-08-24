@@ -13,6 +13,7 @@ pub type CBLAS_UPLO_t = cblas::Uplo;
 pub type CBLAS_DIAG_t = cblas::Diag;
 pub type CBLAS_SIDE_t = cblas::Side;
 pub type gsl_complex_packed_ptr = *mut c_double;
+pub type gsl_complex_packed_array = *mut c_double;
 
 pub trait FFI<T> {
     fn wrap(r: *mut T) -> Self;
@@ -1919,6 +1920,16 @@ extern "C" {
     pub fn gsl_eigen_gensymmv_sort(eval: *mut gsl_vector, evec: *mut gsl_matrix, sort_type: enums::EigenSort) -> enums::Value;
     pub fn gsl_eigen_genhermv_sort(eval: *mut gsl_vector, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
     pub fn gsl_eigen_genv_sort(alpha: *mut gsl_vector_complex, beta: *mut gsl_vector, evec: *mut gsl_matrix_complex, sort_type: enums::EigenSort) -> enums::Value;
+
+    // Radix-2 FFT routines for complex data
+    pub fn gsl_fft_complex_radix2_forward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_transform(data: gsl_complex_packed_array, stride: size_t, n: size_t, sign: enums::FftDirection) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_backward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_inverse(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_diff_forward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_diff_transform(data: gsl_complex_packed_array, stride: size_t, n: size_t, sign: enums::FftDirection) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_diff_backward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::Value;
+    pub fn gsl_fft_complex_radix2_diff_inverse(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::Value;
 }
 
 #[repr(C)]

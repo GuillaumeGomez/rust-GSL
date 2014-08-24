@@ -95,3 +95,15 @@ pub enum EigenSort {
     /// descending order in magnitude
     AbsDesc
 }
+
+#[deriving(PartialEq, PartialOrd, Show)]
+#[repr(C)]
+/// this gives the sign in the formula
+/// 
+/// h(f) = \sum x(t) exp(+/- 2 pi i f t)
+///     
+/// where - is the forward transform direction and + the inverse direction
+pub enum FftDirection {
+    Forward = -1,
+    Backward = 1
+}
