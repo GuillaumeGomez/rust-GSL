@@ -98,7 +98,9 @@ pub use types::{
     EigenGenWorkspace,
     EigenGenVWorkspace,
     FftComplexWaveTable,
-    FftComplexWorkspace
+    FftComplexWorkspace,
+    Histogram,
+    HistogramPdf
 };
 
 pub use enums::{

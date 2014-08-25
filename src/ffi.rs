@@ -1950,6 +1950,45 @@ extern "C" {
     pub fn gsl_fft_halfcomplex_radix2_backward(data: *mut c_double, stride: size_t, n: size_t) -> enums::Value;
     pub fn gsl_fft_halfcomplex_radix2_unpack(halfcomplex_coefficient: *mut c_double, complex_coefficient: gsl_complex_packed_array,
         stride: size_t, n: size_t) -> enums::Value;
+
+    // Histograms
+    // Histogram allocation
+    pub fn gsl_histogram_alloc(n: size_t) -> *mut gsl_histogram;
+    pub fn gsl_histogram_set_ranges(h: *mut gsl_histogram, range: *const c_double, size: size_t) -> enums::Value;
+    pub fn gsl_histogram_set_ranges_uniform(h: *mut gsl_histogram, xmin: c_double, xmax: c_double) -> enums::Value;
+    pub fn gsl_histogram_free(h: *mut gsl_histogram);
+    // Copying Histograms
+    pub fn gsl_histogram_memcpy(dest: *mut gsl_histogram, src: *const gsl_histogram) -> enums::Value;
+    pub fn gsl_histogram_clone(src: *const gsl_histogram) -> *mut gsl_histogram;
+    // Updating and accessing histogram elements
+    pub fn gsl_histogram_increment(h: *mut gsl_histogram, x: c_double) -> enums::Value;
+    pub fn gsl_histogram_accumulate(h: *mut gsl_histogram, x: c_double, weigth: c_double) -> enums::Value;
+    pub fn gsl_histogram_get(h: *const gsl_histogram, i: size_t) -> c_double;
+    pub fn gsl_histogram_get_range(h: *const gsl_histogram, i: size_t, lower: *mut c_double, upper: *mut c_double) -> enums::Value;
+    pub fn gsl_histogram_max(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_min(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_bins(h: *const gsl_histogram) -> size_t;
+    pub fn gsl_histogram_reset(h: *mut gsl_histogram);
+    pub fn gsl_histogram_find(h: *const gsl_histogram, x: c_double, i: *mut size_t) -> enums::Value;
+    pub fn gsl_histogram_max_val(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_max_bin(h: *const gsl_histogram) -> size_t;
+    pub fn gsl_histogram_min_val(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_min_bin(h: *const gsl_histogram) -> size_t;
+    pub fn gsl_histogram_mean(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_sigma(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_sum(h: *const gsl_histogram) -> c_double;
+    pub fn gsl_histogram_equal_bins_p(h1: *const gsl_histogram, h2: *const gsl_histogram) -> c_int;
+    pub fn gsl_histogram_add(h1: *mut gsl_histogram, h2: *const gsl_histogram) -> enums::Value;
+    pub fn gsl_histogram_sub(h1: *mut gsl_histogram, h2: *const gsl_histogram) -> enums::Value;
+    pub fn gsl_histogram_mul(h1: *mut gsl_histogram, h2: *const gsl_histogram) -> enums::Value;
+    pub fn gsl_histogram_div(h1: *mut gsl_histogram, h2: *const gsl_histogram) -> enums::Value;
+    pub fn gsl_histogram_scale(h1: *mut gsl_histogram, scale: c_double) -> enums::Value;
+    pub fn gsl_histogram_shift(h1: *mut gsl_histogram, offset: c_double) -> enums::Value;
+    // The histogram probability distribution struct
+    pub fn gsl_histogram_pdf_alloc(n: size_t) -> *mut gsl_histogram_pdf;
+    pub fn gsl_histogram_pdf_init(p: *mut gsl_histogram_pdf, h: *const gsl_histogram) -> enums::Value;
+    pub fn gsl_histogram_pdf_free(p: *mut gsl_histogram_pdf);
+    pub fn gsl_histogram_pdf_sample(p: *const gsl_histogram_pdf, r: c_double) -> c_double;
 }
 
 #[repr(C)]
@@ -2320,4 +2359,30 @@ pub struct gsl_fft_complex_wavetable {
 pub struct gsl_fft_complex_workspace {
     pub n: size_t,
     pub scratch: *mut c_double
+}
+
+#[repr(C)]
+pub struct gsl_histogram {
+    pub n: size_t, // This is the number of histogram bins
+    pub range: *mut c_double, // The ranges of the bins are stored in an array of n+1 elements pointed to by range.
+    pub bin: *mut c_double /* The counts for each bin are stored in an array of n elements pointed to by bin. The bins are floating-point numbers, so you can increment them by non-integer values if necessary.
+
+The range for bin[i] is given by range[i] to range[i+1]. For n bins there are n+1 entries in the array range. Each bin is inclusive at the lower end and exclusive at the upper end. Mathematically this means that the bins are defined by the following inequality,
+
+bin[i] corresponds to range[i] <= x < range[i+1]
+Here is a diagram of the correspondence between ranges and bins on the number-line for x,
+
+     [ bin[0] )[ bin[1] )[ bin[2] )[ bin[3] )[ bin[4] )
+  ---|---------|---------|---------|---------|---------|---  x
+   r[0]      r[1]      r[2]      r[3]      r[4]      r[5]
+
+In this picture the values of the range array are denoted by r. On the left-hand side of each bin the square bracket ‘[’ denotes an inclusive lower bound (r <= x), and the round parentheses ‘)’ on the right-hand side denote an exclusive upper bound (x < r). Thus any samples which fall on the upper end of the histogram are excluded. If you want to include this value for the last bin you will need to add an extra bin to your histogram.
+*/
+}
+
+#[repr(C)]
+pub struct gsl_histogram_pdf {
+    pub n: size_t, // This is the number of bins used to approximate the probability distribution function.
+    pub range: *mut c_double, // The ranges of the bins are stored in an array of n+1 elements pointed to by range.
+    pub sum: *mut c_double // The cumulative probability for the bins is stored in an array of n elements pointed to by sum.
 }

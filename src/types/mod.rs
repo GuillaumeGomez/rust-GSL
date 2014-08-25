@@ -21,6 +21,7 @@ pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
 pub use self::vector::{VectorF32, VectorF64};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
+pub use self::histograms::{Histogram, HistogramPdf};
 
 pub mod basis_spline;
 pub mod chebyshev;
@@ -29,6 +30,7 @@ pub mod complex;
 pub mod discrete_hankel;
 pub mod eigen_symmetric_workspace;
 pub mod fast_fourier_transforms;
+pub mod histograms;
 pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
