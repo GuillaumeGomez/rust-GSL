@@ -100,7 +100,8 @@ pub use types::{
     FftComplexWaveTable,
     FftComplexWorkspace,
     Histogram,
-    HistogramPdf
+    HistogramPdf,
+    Histogram2D
 };
 
 pub use enums::{

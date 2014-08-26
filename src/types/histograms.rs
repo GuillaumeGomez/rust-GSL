@@ -326,3 +326,168 @@ impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
         h.h
     }
 }
+
+/// A two dimensional histogram consists of a set of bins which count the number of events falling in a given area of the (x,y) plane. The simplest
+/// way to use a two dimensional histogram is to record two-dimensional position information, n(x,y). Another possibility is to form a joint
+/// distribution by recording related variables. For example a detector might record both the position of an event (x) and the amount of energy
+/// it deposited E. These could be histogrammed as the joint distribution n(x,E).
+pub struct Histogram2D {
+    h: *mut ffi::gsl_histogram2d
+}
+
+impl Histogram2D {
+    /// This function allocates memory for a two-dimensional histogram with nx bins in the x direction and ny bins in the y direction. The
+    /// function returns a pointer to a newly created gsl_histogram2d struct. If insufficient memory is available a null pointer is returned
+    /// and the error handler is invoked with an error code of Value::NoMem. The bins and ranges must be initialized with one of the
+    /// functions below before the histogram is ready for use.
+    pub fn new(nx: u64, ny: u64) -> Option<Histogram2D> {
+        let tmp = unsafe { ffi::gsl_histogram2d_alloc(nx, ny) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(Histogram2D {
+                h: tmp
+            })
+        }
+    }
+
+    /// This function sets the ranges of the existing histogram h using the arrays xrange and yrange of size xsize and ysize respectively.
+    /// The values of the histogram bins are reset to zero.
+    pub fn set_ranges(&self, xrange: &[f64], yrange: &[f64]) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_set_ranges(self.h, xrange.as_ptr(), xrange.len() as u64, yrange.as_ptr(), yrange.len() as u64) }
+    }
+
+    /// This function sets the ranges of the existing histogram h to cover the ranges xmin to xmax and ymin to ymax uniformly. The values
+    /// of the histogram bins are reset to zero.
+    pub fn set_ranges_uniform(&self, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_set_ranges_uniform(self.h, xmin, xmax, ymin, ymax) }
+    }
+
+    /// This function copies the histogram src into the pre-existing histogram dest, making dest into an exact copy of src. The two histograms
+    /// must be of the same size.
+    pub fn copy(&self, dest: &Histogram2D) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_memcpy(dest.h, self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// his function returns a pointer to a newly created histogram which is an exact copy of the histogram self.
+    pub fn clone(&self) -> Option<Histogram2D> {
+        let tmp = unsafe { ffi::gsl_histogram2d_clone(self.h as *const ffi::gsl_histogram2d) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(Histogram2D {
+                h: tmp
+            })
+        }
+    }
+
+    /// This function updates the histogram h by adding one (1.0) to the bin whose x and y ranges contain the coordinates (x,y).
+    /// 
+    /// If the point (x,y) lies inside the valid ranges of the histogram then the function returns zero to indicate success. If (x,y) lies
+    /// outside the limits of the histogram then the function returns Value::Dom, and none of the bins are modified. The error handler is not
+    /// called, since it is often necessary to compute histograms for a small range of a larger dataset, ignoring any coordinates outside the
+    /// range of interest.
+    pub fn increment(&self, x: f64, y: f64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_increment(self.h, x, y) }
+    }
+
+    /// This function is similar to gsl_histogram2d_increment but increases the value of the appropriate bin in the histogram h by the floating-point
+    /// number weight.
+    pub fn accumulate(&self, x: f64, y: f64, weight: f64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_accumulate(self.h, x, y, weight) }
+    }
+
+    /// This function returns the contents of the (i,j)-th bin of the histogram h. If (i,j) lies outside the valid range of indices for the
+    /// histogram then the error handler is called with an error code of Value::Dom and the function returns 0.
+    pub fn get(&self, i: u64, j: u64) -> f64 {
+        unsafe { ffi::gsl_histogram2d_get(self.h as *const ffi::gsl_histogram2d, i, j) }
+    }
+
+    /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and y directions of the histogram h. The range
+    /// limits are stored in xlower and xupper or ylower and yupper. The lower limits are inclusive (i.e. events with these coordinates are included
+    /// in the bin) and the upper limits are exclusive (i.e. events with the value of the upper limit are not included and fall in the neighboring
+    /// higher bin, if it exists). The functions return 0 to indicate success. If i or j lies outside the valid range of indices for the histogram
+    /// then the error handler is called with an error code of Value::Dom.
+    pub fn get_xrange(&self, i: u64, xlower: &mut f64, xupper: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_get_xrange(self.h as *const ffi::gsl_histogram2d, i, xlower, xupper) }
+    }
+
+    /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and y directions of the histogram h. The range
+    /// limits are stored in xlower and xupper or ylower and yupper. The lower limits are inclusive (i.e. events with these coordinates are included
+    /// in the bin) and the upper limits are exclusive (i.e. events with the value of the upper limit are not included and fall in the neighboring
+    /// higher bin, if it exists). The functions return 0 to indicate success. If i or j lies outside the valid range of indices for the histogram
+    /// then the error handler is called with an error code of Value::Dom.
+    pub fn get_yrange(&self, j: u64, ylower: &mut f64, yupper: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_get_yrange(self.h as *const ffi::gsl_histogram2d, j, ylower, yupper) }
+    }
+
+    /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
+    /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
+    pub fn xmax(&self) -> f64 {
+        unsafe { ffi::gsl_histogram2d_xmax(self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
+    /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
+    pub fn xmin(&self) -> f64 {
+        unsafe { ffi::gsl_histogram2d_xmin(self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
+    /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
+    pub fn nx(&self) -> u64 {
+        unsafe { ffi::gsl_histogram2d_nx(self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
+    /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
+    pub fn ymax(&self) -> f64 {
+        unsafe { ffi::gsl_histogram2d_ymax(self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
+    /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
+    pub fn ymin(&self) -> f64 {
+        unsafe { ffi::gsl_histogram2d_ymin(self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
+    /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
+    pub fn ny(&self) -> u64 {
+        unsafe { ffi::gsl_histogram2d_ny(self.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function resets all the bins of the histogram h to zero.
+    pub fn reset(&self) {
+        unsafe { ffi::gsl_histogram2d_reset(self.h) }
+    }
+
+    /// This function finds and sets the indices i and j to the bin which covers the coordinates (x,y). The bin is located using a binary search.
+    /// The search includes an optimization for histograms with uniform ranges, and will return the correct bin immediately in this case. If
+    /// (x,y) is found then the function sets the indices (i,j) and returns Value::Success. If (x,y) lies outside the valid range of the histogram
+    /// then the function returns Value::Dom and the error handler is invoked.
+    pub fn find(&self, x: f64, y: f64, i: &mut u64, j: &mut u64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_find(self.h as *const ffi::gsl_histogram2d, x, y, i, j) }
+    }
+}
+
+impl Drop for Histogram2D {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_histogram2d_free(self.h) };
+        self.h = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
+    fn wrap(h: *mut ffi::gsl_histogram2d) -> Histogram2D {
+        Histogram2D {
+            h: h
+        }
+    }
+
+    fn unwrap(h: &Histogram2D) -> *mut ffi::gsl_histogram2d {
+        h.h
+    }
+}
