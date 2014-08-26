@@ -2011,6 +2011,24 @@ extern "C" {
     pub fn gsl_histogram2d_ny(h: *const gsl_histogram2d) -> size_t;
     pub fn gsl_histogram2d_reset(h: *mut gsl_histogram2d);
     pub fn gsl_histogram2d_find(h: *const gsl_histogram2d, x: c_double, y: c_double, i: *mut size_t, j: *mut size_t) -> enums::Value;
+    // 2D Histogram Statistics
+    pub fn gsl_histogram2d_max_val(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_max_bin(h: *const gsl_histogram2d, i: *mut size_t, j: *mut size_t);
+    pub fn gsl_histogram2d_min_val(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_min_bin(h: *const gsl_histogram2d, i: *mut size_t, j: *mut size_t);
+    pub fn gsl_histogram2d_xmean(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_ymean(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_xsigma(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_ysigma(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_cov(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_sum(h: *const gsl_histogram2d) -> c_double;
+    pub fn gsl_histogram2d_equal_bins_p(h1: *const gsl_histogram2d, h2: *const gsl_histogram2d) -> c_int;
+    pub fn gsl_histogram2d_add(h1: *mut gsl_histogram2d, h2: *const gsl_histogram2d) -> enums::Value;
+    pub fn gsl_histogram2d_sub(h1: *mut gsl_histogram2d, h2: *const gsl_histogram2d) -> enums::Value;
+    pub fn gsl_histogram2d_mul(h1: *mut gsl_histogram2d, h2: *const gsl_histogram2d) -> enums::Value;
+    pub fn gsl_histogram2d_div(h1: *mut gsl_histogram2d, h2: *const gsl_histogram2d) -> enums::Value;
+    pub fn gsl_histogram2d_scale(h1: *mut gsl_histogram2d, scale: c_double) -> enums::Value;
+    pub fn gsl_histogram2d_shift(h1: *mut gsl_histogram2d, offset: c_double) -> enums::Value;
 }
 
 #[repr(C)]
