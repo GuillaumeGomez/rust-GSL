@@ -590,3 +590,66 @@ impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
         h.h
     }
 }
+
+
+
+/// As in the one-dimensional case, a two-dimensional histogram made by counting events can be regarded as a measurement of a probability distribution.
+/// Allowing for statistical error, the height of each bin represents the probability of an event where (x,y) falls in the range of that bin. For a
+/// two-dimensional histogram the probability distribution takes the form p(x,y) dx dy where,
+/// 
+/// p(x,y) = n_{ij}/ (N A_{ij})
+/// 
+/// In this equation n_{ij} is the number of events in the bin which contains (x,y), A_{ij} is the area of the bin and N is the total number of
+/// events. The distribution of events within each bin is assumed to be uniform.
+pub struct Histogram2DPdf {
+    h: *mut ffi::gsl_histogram2d_pdf
+}
+
+impl Histogram2DPdf {
+    /// This function allocates memory for a two-dimensional probability distribution of size nx-by-ny and returns a pointer to a newly initialized
+    /// gsl_histogram2d_pdf struct. If insufficient memory is available a null pointer is returned and the error handler is invoked with an error
+    /// code of Value::NoMem.
+    pub fn new(nx: u64, ny: u64) -> Option<Histogram2DPdf> {
+        let tmp = unsafe { ffi::gsl_histogram2d_pdf_alloc(nx, ny) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(Histogram2DPdf {
+                h: tmp
+            })
+        }
+    }
+
+    ///This function initializes the two-dimensional probability distribution calculated p from the histogram h. If any of the bins of h are
+    /// negative then the error handler is invoked with an error code of GSL_EDOM because a probability distribution cannot contain negative
+    /// values.
+    pub fn init(&self, h: &Histogram2D) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_pdf_init(self.h, h.h as *const ffi::gsl_histogram2d) }
+    }
+
+    /// This function uses two uniform random numbers between zero and one, r1 and r2, to compute a single random sample from the two-dimensional
+    /// probability distribution p.
+    pub fn sample(&self, r1: f64, r2: f64, x: &mut f64, y: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_histogram2d_pdf_sample(self.h as *const ffi::gsl_histogram2d_pdf, r1, r2, x, y) }
+    }
+}
+
+impl Drop for Histogram2DPdf {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_histogram2d_pdf_free(self.h) };
+        self.h = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_histogram2d_pdf> for Histogram2DPdf {
+    fn wrap(h: *mut ffi::gsl_histogram2d_pdf) -> Histogram2DPdf {
+        Histogram2DPdf {
+            h: h
+        }
+    }
+
+    fn unwrap(h: &Histogram2DPdf) -> *mut ffi::gsl_histogram2d_pdf {
+        h.h
+    }
+}

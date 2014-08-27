@@ -2029,6 +2029,11 @@ extern "C" {
     pub fn gsl_histogram2d_div(h1: *mut gsl_histogram2d, h2: *const gsl_histogram2d) -> enums::Value;
     pub fn gsl_histogram2d_scale(h1: *mut gsl_histogram2d, scale: c_double) -> enums::Value;
     pub fn gsl_histogram2d_shift(h1: *mut gsl_histogram2d, offset: c_double) -> enums::Value;
+    // Resampling from 2D histograms
+    pub fn gsl_histogram2d_pdf_alloc(nx: size_t, ny: size_t) -> *mut gsl_histogram2d_pdf;
+    pub fn gsl_histogram2d_pdf_init(p: *mut gsl_histogram2d_pdf, h: *const gsl_histogram2d) -> enums::Value;
+    pub fn gsl_histogram2d_pdf_free(p: *mut gsl_histogram2d_pdf);
+    pub fn gsl_histogram2d_pdf_sample(p: *const gsl_histogram2d_pdf, r1: c_double, r2: c_double, x: *mut c_double, y: *mut c_double) -> enums::Value;
 }
 
 #[repr(C)]
@@ -2441,4 +2446,13 @@ bin(i,j) corresponds to xrange[i] <= x < xrange[i+1]
                     and yrange[j] <= y < yrange[j+1]
 Note that any samples which fall on the upper sides of the histogram are excluded. If you want to include these values for the side bins you will need to add an extra row or column to your histogram.
 */
+}
+
+#[repr(C)]
+pub struct gsl_histogram2d_pdf {
+    pub nx: size_t, // This is the number of histogram bins used to approximate the probability distribution function in the x direction.
+    pub ny: size_t, // This is the number of histogram bins used to approximate the probability distribution function in the y direction.
+    pub xrange: *mut c_double, // The ranges of the bins in the x-direction are stored in an array of nx + 1 elements pointed to by xrange.
+    pub yrange: *mut c_double, // The ranges of the bins in the y-direction are stored in an array of ny + 1 pointed to by yrange.
+    pub sum: *mut c_double // The cumulative probability for the bins is stored in an array of nx*ny elements pointed to by sum.
 }
