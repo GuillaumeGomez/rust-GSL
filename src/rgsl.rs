@@ -144,6 +144,7 @@ pub mod fit;
 pub mod gamma_beta;
 pub mod gegenbauer;
 pub mod hypergeometric;
+pub mod integration;
 pub mod jacobian_elliptic;
 pub mod laguerre;
 pub mod lambert_w;

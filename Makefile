@@ -20,6 +20,7 @@ examples: rgsl
 	  rustc -o bin/roots_of_polynomial -L ./lib examples/roots_of_polynomial/main.rs
 	  rustc -o bin/numerical_differentiation -L ./lib examples/numerical_differentiation/main.rs
 	  rustc -o bin/radix -L ./lib examples/radix/main.rs
+	  rustc -o bin/integration -L ./lib examples/integration/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
@@ -36,5 +37,6 @@ clean:
 	rm -rf bin/roots_of_polynomial
 	rm -rf bin/numerical_differentiation
 	rm -rf bin/radix
+	rm -rf bin/integration
 
 re: clean all

@@ -58,3 +58,8 @@ path = "examples/numerical_differentiation/main.rs"
 
 name = "radix"
 path = "examples/radix/main.rs"
+
+[[bin]]
+
+name = "integration"
+path = "examples/integration/main.rs"
