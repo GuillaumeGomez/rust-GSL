@@ -18,7 +18,7 @@ fn f(x: f64, p: &mut FParams) -> f64 {
 }
 
 fn main() {
-    let mut params = FParams {a: 1f64, phi: 1f64};
+    let mut params = FParams {a: 1f64, phi: 0f64};
     let mut result = 0f64;
     let mut error = 0f64;
     let mut n_eval = 0u64;

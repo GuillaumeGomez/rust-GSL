@@ -248,8 +248,8 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         let fval2 = f(center - abscissa, arg);
         let fval = fval1 + fval2;
 
-        res21 += w21a[k] * fval;
-        resabs += unsafe { w21a[k] * (fabsf64(fval1) + fabsf64(fval2)) };
+        res21 += w21b[k] * fval;
+        resabs += unsafe { w21b[k] * (fabsf64(fval1) + fabsf64(fval2)) };
         savfun[k + 5] = fval;
         fv3[k] = fval1;
         fv4[k] = fval2;
@@ -264,7 +264,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     }
     resasc *= abs_half_length;
     let mut result_kronrod = res21 * half_length;
-    let mut err = rescale_error ((res21 - res10) * half_length, resabs, resasc);
+    let mut err = rescale_error((res21 - res10) * half_length, resabs, resasc);
 
     // test for convergence.
     if err < eps_abs || err < eps_rel * unsafe { fabsf64(result_kronrod) } {
