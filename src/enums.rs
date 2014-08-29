@@ -107,3 +107,21 @@ pub enum FftDirection {
     Forward = -1,
     Backward = 1
 }
+
+#[deriving(PartialEq, PartialOrd, Show)]
+#[repr(C)]
+/// The low-level integration rules in QUADPACK are identified by small integers (1-6). We'll use symbolic constants to refer to them.
+pub enum GaussKonrodRule {
+    /// 15 point Gauss-Kronrod rule
+    Gauss15 = 1,
+    /// 21 point Gauss-Kronrod rule
+    Gauss21 = 2,
+    /// 31 point Gauss-Kronrod rule
+    Gauss31 = 3,
+    /// 41 point Gauss-Kronrod rule
+    Gauss41 = 4,
+    /// 51 point Gauss-Kronrod rule
+    Gauss51 = 5,
+    /// 61 point Gauss-Kronrod rule
+    Gauss61 = 6,
+}

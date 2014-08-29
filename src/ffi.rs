@@ -2034,6 +2034,10 @@ extern "C" {
     pub fn gsl_histogram2d_pdf_init(p: *mut gsl_histogram2d_pdf, h: *const gsl_histogram2d) -> enums::Value;
     pub fn gsl_histogram2d_pdf_free(p: *mut gsl_histogram2d_pdf);
     pub fn gsl_histogram2d_pdf_sample(p: *const gsl_histogram2d_pdf, r1: c_double, r2: c_double, x: *mut c_double, y: *mut c_double) -> enums::Value;
+
+    // QAG adaptive integration
+    pub fn gsl_integration_workspace_alloc(n: size_t) -> *mut gsl_integration_workspace;
+    pub fn gsl_integration_workspace_free(w: *mut gsl_integration_workspace);
 }
 
 #[repr(C)]
@@ -2455,4 +2459,19 @@ pub struct gsl_histogram2d_pdf {
     pub xrange: *mut c_double, // The ranges of the bins in the x-direction are stored in an array of nx + 1 elements pointed to by xrange.
     pub yrange: *mut c_double, // The ranges of the bins in the y-direction are stored in an array of ny + 1 pointed to by yrange.
     pub sum: *mut c_double // The cumulative probability for the bins is stored in an array of nx*ny elements pointed to by sum.
+}
+
+#[repr(C)]
+pub struct gsl_integration_workspace {
+    pub limit: size_t,
+    pub size: size_t,
+    pub nrmax: size_t,
+    pub i: size_t,
+    pub maximum_level: size_t,
+    pub alist: *mut c_double,
+    pub blist: *mut c_double,
+    pub rlist: *mut c_double,
+    pub elist: *mut c_double,
+    pub order: *mut size_t,
+    pub level: *mut size_t
 }

@@ -101,14 +101,17 @@ pub use types::{
     FftComplexWorkspace,
     Histogram,
     HistogramPdf,
-    Histogram2D
+    Histogram2D,
+    Histogram2DPdf,
+    IntegrationWorkspace
 };
 
 pub use enums::{
     Mode,
     Value,
     EigenSort,
-    FftDirection
+    FftDirection,
+    GaussKonrodRule
 };
 
 pub use elementary::Elementary;
@@ -159,10 +162,12 @@ pub mod sort;
 pub mod synchrotron;
 pub mod transport;
 pub mod trigonometric;
+pub mod util;
 pub mod zeta;
 
 pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
 pub type function<T> = fn(x: f64, p: &mut T) -> f64;
+pub type integration_function<T> = fn(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64);
 //pub type ComplexPackedPtr = &mut [f64];
 
 /// The maximum x such that gamma(x) is not considered an overflow.
