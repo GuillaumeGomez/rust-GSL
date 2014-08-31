@@ -2475,3 +2475,11 @@ pub struct gsl_integration_workspace {
     pub order: *mut size_t,
     pub level: *mut size_t
 }
+
+#[repr(C)]
+pub struct extrapolation_table {
+    pub n: size_t,
+    pub rlist2: [c_double, ..52],
+    pub nres: size_t,
+    pub res3la: [c_double, ..3]
+}
