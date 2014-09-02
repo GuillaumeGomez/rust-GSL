@@ -16,7 +16,7 @@ examples: rgsl
 	  rustc -o bin/permutation -L ./lib examples/permutation/main.rs
 	  rustc -o bin/sorting -L ./lib examples/sorting/main.rs
 	  rustc -o bin/chebyshev_approximation -L ./lib examples/chebyshev_approximation/main.rs
-	  rustc -o bin/combination_example -L ./lib examples/combination_example/main.rs
+	  rustc -o bin/combination_example -L ./lib examples/combination/main.rs
 	  rustc -o bin/roots_of_polynomial -L ./lib examples/roots_of_polynomial/main.rs
 	  rustc -o bin/numerical_differentiation -L ./lib examples/numerical_differentiation/main.rs
 	  rustc -o bin/radix -L ./lib examples/radix/main.rs
@@ -27,16 +27,6 @@ doc:
 
 clean:
 	rm -rf lib
-	rm -rf bin/simple
-	rm -rf bin/rng
-	rm -rf bin/random_number_distribution
-	rm -rf bin/permutation
-	rm -rf bin/sorting
-	rm -rf bin/chebyshev_approximation
-	rm -rf bin/combination_example
-	rm -rf bin/roots_of_polynomial
-	rm -rf bin/numerical_differentiation
-	rm -rf bin/radix
-	rm -rf bin/integration
+	rm -rf bin
 
 re: clean all
