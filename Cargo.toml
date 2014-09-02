@@ -41,8 +41,8 @@ path = "examples/chebyshev_approximation/main.rs"
 
 [[bin]]
 
-name = "combination_example"
-path = "examples/combination_example/main.rs"
+name = "combination"
+path = "examples/combination/main.rs"
 
 [[bin]]
 
