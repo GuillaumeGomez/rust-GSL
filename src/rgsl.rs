@@ -60,8 +60,7 @@ Here is the list of all modules :
 #![feature(macro_rules)]
 
 #![allow(non_camel_case_types)]
-#![allow(non_snake_case_functions)]
-#![allow(uppercase_variables)]
+#![allow(non_snake_case)]
 
 extern crate libc;
 
@@ -120,6 +119,7 @@ pub use trigonometric::Trigonometric;
 pub use types::rng;
 
 mod ffi;
+mod macros;
 pub mod randist;
 pub mod types;
 pub mod enums;

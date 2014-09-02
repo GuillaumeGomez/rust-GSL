@@ -27,7 +27,8 @@ fn main() {
     let xhigh = 10f64;
     let eps_abs = 1e-4f64;
     let eps_rel = 1e-4f64;
-  
+
+    println!("=== integration::qng ===");
     match rgsl::integration::qng(f, &mut params, xlow, xhigh, eps_abs, eps_rel, &mut result, &mut error, &mut n_eval) {
         rgsl::enums::Success => {
             println!("Result {} +/- {} from {} evaluations", result, error, n_eval);
@@ -35,5 +36,17 @@ fn main() {
         e => {
             println!("There was a problem with integration: {}", e);
         }
-    }
+    };
+
+    println!("\n=== IntegrationWorkspace.qag ===");
+    let iw = rgsl::IntegrationWorkspace::new(5).unwrap();
+
+    match iw.qag(f, &mut params, xlow, xhigh, eps_abs, eps_rel, 1, rgsl::enums::Gauss15, &mut result, &mut error) {
+        rgsl::enums::Success => {
+            println!("Result {} +/- {}", result, error);
+        }
+        e => {
+            println!("There was a problem with integration: {}", e);
+        }
+    };
 }
