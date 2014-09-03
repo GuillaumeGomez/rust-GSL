@@ -49,4 +49,14 @@ fn main() {
             println!("There was a problem with integration: {}", e);
         }
     };
+
+    println!("\n=== IntegrationWorkspace.qagi ===");
+    match  iw.qagi(f, &mut params, 1.0e-7f64, 0f64, iw.limit(), &mut result, &mut error) {
+        rgsl::enums::Success => {
+            println!("Result {} +/- {}", result, error);
+        }
+        e => {
+            println!("There was a problem with integration: {}", e);
+        }
+    }
 }

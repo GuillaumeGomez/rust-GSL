@@ -15,6 +15,12 @@ pub struct IntegrationWorkspace {
     w: *mut ffi::gsl_integration_workspace
 }
 
+struct InternParam<'r, T:'r> {
+    func: ::function<T>,
+    param: &'r mut T,
+    p2: f64
+}
+
 impl IntegrationWorkspace {
     /// This function allocates a workspace sufficient to hold n double precision intervals, their integration results and error estimates. One
     /// workspace may be used multiple times as all necessary reinitialization is performed automatically by the integration routines.
@@ -45,6 +51,7 @@ impl IntegrationWorkspace {
     /// GSL_INTEG_GAUSS51  (key = 5)
     /// 
     /// GSL_INTEG_GAUSS61  (key = 6)
+    /// 
     /// corresponding to the 15, 21, 31, 41, 51 and 61 point Gauss-Kronrod rules. The higher-order rules give better accuracy for smooth functions,
     /// while lower-order rules save time when the function contains local difficulties, such as discontinuities.
     /// 
@@ -101,6 +108,45 @@ impl IntegrationWorkspace {
     pub fn qagp<T>(&self, f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: u64, result: &mut f64,
         abserr: &mut f64) -> enums::Value {
         unsafe { intern_qagp(f, arg, pts, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
+    }
+
+    /// This function computes the integral of the function f over the infinite interval (-\infty,+\infty). The integral is mapped onto the
+    /// semi-open interval (0,1] using the transformation x = (1-t)/t,
+    /// 
+    /// \int_{-\infty}^{+\infty} dx f(x) = 
+    ///      \int_0^1 dt (f((1-t)/t) + f((-1+t)/t))/t^2.
+    /// 
+    /// It is then integrated using the QAGS algorithm. The normal 21-point Gauss-Kronrod rule of QAGS is replaced by a 15-point rule, because
+    /// the transformation can generate an integrable singularity at the origin. In this case a lower-order rule is more efficient.
+    pub fn qagi<T>(&self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+        let mut s = InternParam{func: f, param: arg, p2: 0f64};
+
+        unsafe { intern_qags(i_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
+    }
+
+    /// This function computes the integral of the function f over the semi-infinite interval (a,+\infty). The integral is mapped onto the
+    /// semi-open interval (0,1] using the transformation x = a + (1-t)/t,
+    /// 
+    /// \int_{a}^{+\infty} dx f(x) = 
+    ///      \int_0^1 dt f(a + (1-t)/t)/t^2
+    /// 
+    /// and then integrated using the QAGS algorithm.
+    pub fn qagiu<T>(&self, f: ::function<T>, a: f64, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+        let mut s = InternParam{func: f, param: arg, p2: a};
+
+        unsafe { intern_qags(iu_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
+    }
+
+    /// This function computes the integral of the function f over the semi-infinite interval (-\infty,b). The integral is mapped onto the semi-open interval (0,1] using the transformation x = b - (1-t)/t,
+    /// 
+    /// \int_{-\infty}^{b} dx f(x) = 
+    ///      \int_0^1 dt f(b - (1-t)/t)/t^2
+    /// 
+    /// and then integrated using the QAGS algorithm.
+    pub fn qagil<T>(&self, f: ::function<T>, b: f64, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+        let mut s = InternParam{func: f, param: arg, p2: b};
+
+        unsafe { intern_qags(il_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
     }
 
     pub fn sort_results(&self) {
@@ -326,6 +372,10 @@ impl IntegrationWorkspace {
             (*w).maximum_level = 0;
         }
     }
+
+    pub fn limit(&self) -> u64 {
+        unsafe { (*self.w).limit }
+    }
 }
 
 impl Drop for IntegrationWorkspace {
@@ -345,6 +395,32 @@ impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
     fn unwrap(w: &IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
         w.w
     }
+}
+
+fn i_transform<T>(t: f64, params: &mut InternParam<T>) -> f64 {
+    let f = params.func;
+    let x = (1f64 - t) / t;
+    let y = f(x, params.param) + f(-x, params.param);
+  
+    (y / t) / t
+}
+
+fn iu_transform<T>(t: f64, p: &mut InternParam<T>) -> f64 {
+    let a = p.p2;
+    let f = p.func;
+    let x = a + (1f64 - t) / t;
+    let y = f(x, p.param);
+
+    (y / t) / t
+}
+
+fn il_transform<T>(t: f64, p: &mut InternParam<T>) -> f64 {
+    let b = p.p2;
+    let f = p.func;
+    let x = b - (1f64 - t) / t;
+    let y = f(x, p.param);
+
+    (y / t) / t
 }
 
 fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, f_w: &IntegrationWorkspace,
