@@ -4,7 +4,7 @@
 
 use ffi;
 use enums;
-use std::intrinsics::fabsf64;
+use std::intrinsics::{fabsf64, logf64};
 use std::c_vec::CVec;
 
 /// The QAG algorithm is a simple adaptive integration procedure. The integration region is divided into subintervals, and on each iteration
@@ -131,22 +131,191 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(a + (1-t)/t)/t^2
     /// 
     /// and then integrated using the QAGS algorithm.
-    pub fn qagiu<T>(&self, f: ::function<T>, a: f64, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    pub fn qagiu<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
         let mut s = InternParam{func: f, param: arg, p2: a};
 
         unsafe { intern_qags(iu_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
     }
 
-    /// This function computes the integral of the function f over the semi-infinite interval (-\infty,b). The integral is mapped onto the semi-open interval (0,1] using the transformation x = b - (1-t)/t,
+    /// This function computes the integral of the function f over the semi-infinite interval (-\infty,b). The integral is mapped onto the semi-open
+    /// interval (0,1] using the transformation x = b - (1-t)/t,
     /// 
     /// \int_{-\infty}^{b} dx f(x) = 
     ///      \int_0^1 dt f(b - (1-t)/t)/t^2
     /// 
     /// and then integrated using the QAGS algorithm.
-    pub fn qagil<T>(&self, f: ::function<T>, b: f64, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    pub fn qagil<T>(&self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
         let mut s = InternParam{func: f, param: arg, p2: b};
 
         unsafe { intern_qags(il_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
+    }
+
+    /// This function computes the Cauchy principal value of the integral of f over (a,b), with a singularity at c,
+    /// 
+    /// I = \int_a^b dx f(x) / (x - c)
+    /// 
+    /// The adaptive bisection algorithm of QAG is used, with modifications to ensure that subdivisions do not occur at the singular point x = c.
+    /// When a subinterval contains the point x = c or is close to it then a special 25-point modified Clenshaw-Curtis rule is used to control
+    /// the singularity. Further away from the singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
+    #[allow(dead_assignment)]
+    pub fn qawc<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, epsabs: f64, epsrel: f64, limit: u64,
+        result: &mut f64, abserr: &mut f64) -> enums::Value {
+        let mut result0 = 0f64;
+        let mut abserr0 = 0f64;
+        let mut roundoff_type1 = 0i32;
+        let mut roundoff_type2 = 0i32;
+        let mut error_type = 0i32;
+        let mut err_reliable = 0i32;
+        let mut sign = 1f64;
+        let mut lower = 0f64;
+        let mut higher = 0f64;
+
+        /* Initialize results */
+        *result = 0f64;
+        *abserr = 0f64;
+
+        unsafe {
+            if limit > (*self.w).limit {
+                rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+            }
+
+            if b < a {
+                lower = b;
+                higher = a;
+                sign = -1f64;
+            } else {
+                lower = a;
+                higher = b;
+            }
+
+            self.initialise(lower, higher);
+
+            if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+            }
+
+            if c == a || c == b {
+                rgsl_error!("cannot integrate with singularity on endpoint", enums::Inval);
+            }      
+
+            /* perform the first integration */
+            qc25c(f, arg, lower, higher, c, &mut result0, &mut abserr0, &mut err_reliable);
+
+            self.set_initial_result(result0, abserr0);
+
+            /* Test on accuracy, use 0.01 relative error as an extra safety margin on the first iteration (ignored for subsequent iterations) */
+            let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+
+            if abserr0 < tolerance && abserr0 < 0.01f64 * fabsf64(result0) {
+                *result = sign * result0;
+                *abserr = abserr0;
+
+                return enums::Success;
+            } else if limit == 1 {
+                *result = sign * result0;
+                *abserr = abserr0;
+
+                rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+            }
+
+            let mut area = result0;
+            let mut errsum = abserr0;
+
+            let mut iteration = 1;
+
+            loop {
+                let mut a_i = 0f64;
+                let mut b_i = 0f64;
+                let mut r_i = 0f64;
+                let mut e_i = 0f64;
+                let mut area1 = 0f64;
+                let mut area2 = 0f64;
+                let mut error1 = 0f64;
+                let mut error2 = 0f64;
+                let mut err_reliable1 = 0i32;
+                let mut err_reliable2 = 0i32;
+
+                /* Bisect the subinterval with the largest error estimate */
+                self.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
+
+                let a1 = a_i; 
+                let mut b1 = 0.5 * (a_i + b_i);
+                let mut a2 = b1;
+                let b2 = b_i;
+
+                if c > a1 && c <= b1 {
+                    b1 = 0.5f64 * (c + b2);
+                    a2 = b1;
+                } else if c > b1 && c < b2 {
+                    b1 = 0.5f64 * (a1 + c);
+                    a2 = b1;
+                }
+
+                qc25c(f, arg, a1, b1, c, &mut area1, &mut error1, &mut err_reliable1);
+                qc25c(f, arg, a2, b2, c, &mut area2, &mut error2, &mut err_reliable2);
+
+                let area12 = area1 + area2;
+                let error12 = error1 + error2;
+
+                errsum += error12 - e_i;
+                area += area12 - r_i;
+
+                if err_reliable1 != 0 && err_reliable2 != 0 {
+                    let delta = r_i - area12;
+
+                    if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i {
+                        roundoff_type1 += 1;
+                    }
+                    if iteration >= 10 && error12 > e_i {
+                        roundoff_type2 += 1;
+                    }
+                }
+
+                tolerance = epsabs.max(epsrel * fabsf64(area));
+
+                if errsum > tolerance {
+                    if roundoff_type1 >= 6 || roundoff_type2 >= 20 {
+                        /* round off error */
+                        error_type = 2;
+                    }
+
+                    /* set error flag in the case of bad integrand behaviour at a point of the integration range */
+                    if ::util::subinterval_too_small(a1, a2, b2) {
+                        error_type = 3;
+                    }
+                }
+
+                self.update(a1, b1, area1, error1, a2, b2, area2, error2);
+
+                self.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
+
+                iteration += 1;
+
+                if iteration < limit && error_type == 0 && errsum > tolerance {
+                } else {
+                    break;
+                }
+            }
+
+            *result = sign * self.sum_results();
+            *abserr = errsum;
+
+            if errsum <= tolerance {
+              enums::Success
+            } else if error_type == 2 {
+                rgsl_error!("roundoff error prevents tolerance from being achieved", enums::Round);
+                enums::Round
+            } else if error_type == 3 {
+                rgsl_error!("bad integrand behavior found in the integration interval", enums::Sing);
+                enums::Sing
+            } else if iteration == limit {
+                rgsl_error!("maximum number of subdivisions reached", enums::MaxIter);
+                enums::MaxIter
+            } else {
+                rgsl_error!("could not integrate function", enums::Failed);
+                enums::Failed
+            }
+        }
     }
 
     pub fn sort_results(&self) {
@@ -1429,20 +1598,300 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 }
 
 unsafe fn append_interval(w: *mut ffi::gsl_integration_workspace, a1: f64, b1: f64, area1: f64, error1: f64) {
-  let i_new = (*w).size as uint;
-  let mut alist = CVec::new((*w).alist, i_new + 1u);
-  let mut blist = CVec::new((*w).blist, i_new + 1u);
-  let mut rlist = CVec::new((*w).rlist, i_new + 1u);
-  let mut elist = CVec::new((*w).elist, i_new + 1u);
-  let mut order = CVec::new((*w).order, i_new + 1u);
-  let mut level = CVec::new((*w).level, i_new + 1u);
+    let i_new = (*w).size as uint;
+    let mut alist = CVec::new((*w).alist, i_new + 1u);
+    let mut blist = CVec::new((*w).blist, i_new + 1u);
+    let mut rlist = CVec::new((*w).rlist, i_new + 1u);
+    let mut elist = CVec::new((*w).elist, i_new + 1u);
+    let mut order = CVec::new((*w).order, i_new + 1u);
+    let mut level = CVec::new((*w).level, i_new + 1u);
 
-  alist.as_mut_slice()[i_new] = a1;
-  blist.as_mut_slice()[i_new] = b1;
-  rlist.as_mut_slice()[i_new] = area1;
-  elist.as_mut_slice()[i_new] = error1;
-  order.as_mut_slice()[i_new] = i_new as u64;
-  level.as_mut_slice()[i_new] = 0;
+    alist.as_mut_slice()[i_new] = a1;
+    blist.as_mut_slice()[i_new] = b1;
+    rlist.as_mut_slice()[i_new] = area1;
+    elist.as_mut_slice()[i_new] = error1;
+    order.as_mut_slice()[i_new] = i_new as u64;
+    level.as_mut_slice()[i_new] = 0;
 
-  (*w).size += 1;
+    (*w).size += 1;
+}
+
+unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result: &mut f64, abserr: &mut f64, err_reliable: &mut i32) {
+    let cc = (2f64 * c - b - a) / (b - a);
+
+    if fabsf64(cc) > 1.1f64 {
+        let mut resabs = 0f64;
+        let mut resasc = 0f64;
+
+        let mut tmp_arg = InternParam{func: f, param: arg, p2: c};
+
+        ::integration::qk15(fn_cauchy, &mut tmp_arg, a, b, result, abserr, &mut resabs, &mut resasc);
+
+        if *abserr == resasc {
+            *err_reliable = 0;
+        } else  {
+            *err_reliable = 1;
+        }
+    } else {
+        let mut cheb12 : [f64, ..13] = [0f64, ..13];
+        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+        let mut moment : [f64, ..25] = [0f64, ..25];
+        let mut res12 = 0f64;
+        let mut res24 = 0f64;
+
+        gsl_integration_qcheb(f, arg, a, b, cheb12, cheb24);
+        compute_moments(cc, moment);
+
+        for i in range(0, 13) {
+            res12 += cheb12[i] * moment[i];
+        }
+
+        for i in range(0, 25) {
+            res24 += cheb24[i] * moment[i];
+        }
+
+        *result = res24;
+        *abserr = fabsf64(res24 - res12) ;
+        *err_reliable = 0;
+    }
+}
+
+fn fn_cauchy<T>(x: f64, p: &mut InternParam<T>) -> f64 {
+    let c = p.p2;
+    let f = p.func;
+
+    f(x, p.param) / (x - c)
+}
+
+unsafe fn compute_moments(cc: f64, moment: &mut [f64]) {
+    let mut a0 = logf64(fabsf64((1f64 - cc) / (1f64 + cc)));
+    let mut a1 = 2f64 + a0 * cc;
+
+    moment[0] = a0;
+    moment[1] = a1;
+
+    for k in range(2u, 25u) {
+        let a2 = if (k & 1) == 0 {
+            2f64 * cc * a1 - a0
+        } else {
+            let km1 = k as f64 - 1f64;
+
+            2f64 * cc * a1 - a0 - 4.0 / (km1 * km1 - 1f64)
+        };
+
+        moment[k] = a2;
+
+        a0 = a1;
+        a1 = a2;
+    }
+}
+
+// This function computes the 12-th order and 24-th order Chebyshev approximations to f(x) on [a,b]
+fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb12: &mut [f64], cheb24: &mut [f64]) {
+    let mut fval : [f64, ..25] = [0f64, ..25];
+    let mut v : [f64, ..12] = [0f64, ..12];
+
+    /* These are the values of cos(pi*k/24) for k=1..11 needed for the Chebyshev expansion of f(x) */
+    let x : [f64, ..11] = [
+        0.9914448613738104f64,     
+        0.9659258262890683f64,
+        0.9238795325112868f64,     
+        0.8660254037844386f64,
+        0.7933533402912352f64,     
+        0.7071067811865475f64,
+        0.6087614290087206f64,     
+        0.5000000000000000f64,
+        0.3826834323650898f64,     
+        0.2588190451025208f64,
+        0.1305261922200516f64];
+  
+    let center = 0.5f64 * (b + a);
+    let half_length =  0.5f64 * (b - a);
+  
+    fval[0] = 0.5f64 * f(b, arg);
+    fval[12] = f(center, arg);
+    fval[24] = 0.5f64 * f(a, arg);
+
+    for i in range(1u, 12u) {
+        let j = 24u - i;
+        let u = half_length * x[i - 1u];
+
+        fval[i] = f(center + u, arg);
+        fval[j] = f(center - u, arg);
+    }
+
+    for i in range(1u, 12u) {
+        let j = 24u - i;
+
+        v[i] = fval[i] - fval[j];
+        fval[i] = fval[i] + fval[j];
+    }
+
+    {
+        let alam1 = v[0] - v[8];
+        let alam2 = x[5] * (v[2] - v[6] - v[10]);
+
+        cheb12[3] = alam1 + alam2;
+        cheb12[9] = alam1 - alam2;
+    }
+
+    {
+        let alam1 = v[1] - v[7] - v[9];
+        let alam2 = v[3] - v[5] - v[11];
+        {
+            let alam = x[2] * alam1 + x[8] * alam2;
+
+            cheb24[3] = cheb12[3] + alam;
+            cheb24[21] = cheb12[3] - alam;
+        }
+
+        {
+            let alam = x[8] * alam1 - x[2] * alam2;
+            cheb24[9] = cheb12[9] + alam;
+            cheb24[15] = cheb12[9] - alam;
+        }
+    }
+
+    {
+        let part1 = x[3] * v[4];
+        let part2 = x[7] * v[8];
+        let part3 = x[5] * v[6];
+        
+        {
+            let alam1 = v[0] + part1 + part2;
+            let alam2 = x[1] * v[2] + part3 + x[9] * v[10];
+          
+            cheb12[1] = alam1 + alam2;
+            cheb12[11] = alam1 - alam2;
+        }
+        
+        {
+            let alam1 = v[0] - part1 + part2;
+            let alam2 = x[9] * v[2] - part3 + x[1] * v[10];
+
+            cheb12[5] = alam1 + alam2;
+            cheb12[7] = alam1 - alam2;
+        }
+    }
+
+    {
+        let alam = x[0] * v[1] + x[2] * v[3] + x[4] * v[5] + x[6] * v[7] + x[8] * v[9] + x[10] * v[11];
+
+        cheb24[1] = cheb12[1] + alam;
+        cheb24[23] = cheb12[1] - alam;
+    }
+
+    {
+        let alam = x[10] * v[1] - x[8] * v[3] + x[6] * v[5] - x[4] * v[7] + x[2] * v[9] - x[0] * v[11];
+
+        cheb24[11] = cheb12[11] + alam;
+        cheb24[13] = cheb12[11] - alam;
+    }
+
+    {
+        let alam = x[4] * v[1] - x[8] * v[3] - x[0] * v[5] - x[10] * v[7] + x[2] * v[9] + x[6] * v[11];
+
+        cheb24[5] = cheb12[5] + alam;
+        cheb24[19] = cheb12[5] - alam;
+    }
+
+    {
+        let alam = x[6] * v[1] - x[2] * v[3] - x[10] * v[5] + x[0] * v[7] - x[8] * v[9] - x[4] * v[11];
+
+        cheb24[7] = cheb12[7] + alam;
+        cheb24[17] = cheb12[7] - alam;
+    }
+
+    for i in range(0u, 6u) {
+        let j = 12u - i;
+
+        v[i] = fval[i] - fval[j];
+        fval[i] = fval[i] + fval[j];
+    }
+
+    {
+        let alam1 = v[0] + x[7] * v[4];
+        let alam2 = x[3] * v[2];
+
+        cheb12[2] = alam1 + alam2;
+        cheb12[10] = alam1 - alam2;
+    }
+
+    cheb12[6] = v[0] - v[4];
+
+    {
+        let alam = x[1] * v[1] + x[5] * v[3] + x[9] * v[5];
+
+        cheb24[2] = cheb12[2] + alam;
+        cheb24[22] = cheb12[2] - alam;
+    }
+
+    {
+        let alam = x[5] * (v[1] - v[3] - v[5]);
+
+        cheb24[6] = cheb12[6] + alam;
+        cheb24[18] = cheb12[6] - alam;
+    }
+
+    {
+        let alam = x[9] * v[1] - x[5] * v[3] + x[1] * v[5];
+
+        cheb24[10] = cheb12[10] + alam;
+        cheb24[14] = cheb12[10] - alam;
+    }
+
+    for i in range(0u, 3u) {
+        let j = 6 - i;
+
+        v[i] = fval[i] - fval[j];
+        fval[i] = fval[i] + fval[j];
+    }
+
+    cheb12[4] = v[0] + x[7] * v[2];
+    cheb12[8] = fval[0] - x[7] * fval[2];
+
+    {
+        let alam = x[3] * v[1];
+
+        cheb24[4] = cheb12[4] + alam;
+        cheb24[20] = cheb12[4] - alam;
+    }
+
+    {
+        let alam = x[7] * fval[1] - fval[3];
+
+        cheb24[8] = cheb12[8] + alam;
+        cheb24[16] = cheb12[8] - alam;
+    }
+
+    cheb12[0] = fval[0] + fval[2];
+
+    {
+        let alam = fval[1] + fval[3];
+
+        cheb24[0] = cheb12[0] + alam;
+        cheb24[24] = cheb12[0] - alam;
+    }
+
+    cheb12[12] = v[0] - v[2];
+    cheb24[12] = cheb12[12];
+
+    let mut tmp = 1f64 / 6f64;
+
+    for i in range(0u, 12u) {
+        cheb12[i] *= tmp;
+    }
+
+    tmp = 1f64 / 12f64;
+
+    cheb12[0] *= tmp;
+    cheb12[12] *= tmp;
+
+    for i in range(1u, 24u) {
+        cheb24[i] *= tmp;
+    }
+
+    tmp = 1f64 / 24f64;
+    cheb24[0] *= tmp;
+    cheb24[24] *= tmp;
 }
