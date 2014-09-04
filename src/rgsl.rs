@@ -102,7 +102,8 @@ pub use types::{
     HistogramPdf,
     Histogram2D,
     Histogram2DPdf,
-    IntegrationWorkspace
+    IntegrationWorkspace,
+    IntegrationQawsTable
 };
 
 pub use enums::{

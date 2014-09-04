@@ -4,7 +4,7 @@
 
 use ffi;
 use enums;
-use std::intrinsics::{fabsf64, logf64};
+use std::intrinsics::{fabsf64, logf64, powf64};
 use std::c_vec::CVec;
 
 /// The QAG algorithm is a simple adaptive integration procedure. The integration region is divided into subintervals, and on each iteration
@@ -542,6 +542,28 @@ impl IntegrationWorkspace {
         }
     }
 
+    fn append_interval(&self, a1: f64, b1: f64, area1: f64, error1: f64) {
+        unsafe {
+            let w = self.w;
+            let i_new = (*w).size as uint;
+            let mut alist = CVec::new((*w).alist, i_new + 1u);
+            let mut blist = CVec::new((*w).blist, i_new + 1u);
+            let mut rlist = CVec::new((*w).rlist, i_new + 1u);
+            let mut elist = CVec::new((*w).elist, i_new + 1u);
+            let mut order = CVec::new((*w).order, i_new + 1u);
+            let mut level = CVec::new((*w).level, i_new + 1u);
+
+            alist.as_mut_slice()[i_new] = a1;
+            blist.as_mut_slice()[i_new] = b1;
+            rlist.as_mut_slice()[i_new] = area1;
+            elist.as_mut_slice()[i_new] = error1;
+            order.as_mut_slice()[i_new] = i_new as u64;
+            level.as_mut_slice()[i_new] = 0;
+
+            (*w).size += 1;
+        }
+    }
+
     pub fn limit(&self) -> u64 {
         unsafe { (*self.w).limit }
     }
@@ -562,6 +584,240 @@ impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
     }
 
     fn unwrap(w: &IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
+        w.w
+    }
+}
+
+/// The QAWS algorithm is designed for integrands with algebraic-logarithmic singularities at the end-points of an integration region. In order
+/// to work efficiently the algorithm requires a precomputed table of Chebyshev moments.
+pub struct IntegrationQawsTable {
+    w: *mut ffi::gsl_integration_qaws_table
+}
+
+impl IntegrationQawsTable {
+    /// This function allocates space for a gsl_integration_qaws_table struct describing a singular weight function W(x) with the parameters
+    /// (\alpha, \beta, \mu, \nu),
+    /// 
+    /// W(x) = (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x)
+    /// 
+    /// where \alpha > -1, \beta > -1, and \mu = 0, 1, \nu = 0, 1. The weight function can take four different forms depending on the values
+    /// of \mu and \nu,
+    /// 
+    /// W(x) = (x-a)^alpha (b-x)^beta                   (mu = 0, nu = 0)
+    /// W(x) = (x-a)^alpha (b-x)^beta log(x-a)          (mu = 1, nu = 0)
+    /// W(x) = (x-a)^alpha (b-x)^beta log(b-x)          (mu = 0, nu = 1)
+    /// W(x) = (x-a)^alpha (b-x)^beta log(x-a) log(b-x) (mu = 1, nu = 1)
+    /// 
+    /// The singular points (a,b) do not have to be specified until the integral is computed, where they are the endpoints of the integration
+    /// range.
+    /// 
+    /// The function returns a pointer to the newly allocated table gsl_integration_qaws_table if no errors were detected, and 0 in the case
+    /// of error.
+    pub fn new(alpha: f64, beta: f64, mu: i32, nu: i32) -> Option<IntegrationQawsTable> {
+        let tmp = unsafe { ffi::gsl_integration_qaws_table_alloc(alpha, beta, mu, nu) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(IntegrationQawsTable {
+                w: tmp
+            })
+        }
+    }
+
+    /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
+    pub fn set(&self, alpha: f64, beta: f64, mu: i32, nu: i32) -> enums::Value {
+        unsafe { ffi::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu) }
+    }
+
+    /// This function computes the integral of the function f(x) over the interval (a,b) with the singular weight function (x-a)^\alpha
+    /// (b-x)^\beta \log^\mu (x-a) \log^\nu (b-x). The parameters of the weight function (\alpha, \beta, \mu, \nu) are taken from the
+    /// table self. The integral is,
+    /// 
+    /// I = \int_a^b dx f(x) (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x).
+    /// 
+    /// The adaptive bisection algorithm of QAG is used. When a subinterval contains one of the endpoints then a special 25-point modified
+    /// Clenshaw-Curtis rule is used to control the singularities. For subintervals which do not include the endpoints an ordinary 15-point
+    /// Gauss-Kronrod integration rule is used.
+    #[allow(dead_assignment)]
+    pub fn qaws<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, workspace: &IntegrationWorkspace,
+        result: &mut f64, abserr: &mut f64) -> enums::Value {
+        let mut result0 = 0f64;
+        let mut abserr0 = 0f64;
+        let mut roundoff_type1 = 0i32;
+        let mut roundoff_type2 = 0i32;
+        let mut error_type = 0i32;
+
+        /* Initialize results */
+        workspace.initialise(a, b);
+
+        *result = 0f64;
+        *abserr = 0f64;
+
+        unsafe {
+            if limit > (*workspace.w).limit {
+                rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+            }
+
+            if b <= a {
+                rgsl_error!("limits must form an ascending sequence, a < b", enums::Inval);
+            }
+
+            if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+            }
+
+            /* perform the first integration */
+            {
+                let mut area1 = 0f64;
+                let mut area2 = 0f64;
+                let mut error1 = 0f64;
+                let mut error2 = 0f64;
+                let mut err_reliable1 = false;
+                let mut err_reliable2 = false;
+                let a1 = a;
+                let b1 = 0.5f64 * (a + b);
+                let a2 = b1;
+                let b2 = b;
+
+                qc25s(f, arg, a, b, a1, b1, self.w, &mut area1, &mut error1, &mut err_reliable1);
+                qc25s(f, arg, a, b, a2, b2, self.w, &mut area2, &mut error2, &mut err_reliable2);
+
+                if error1 > error2 {
+                    workspace.append_interval(a1, b1, area1, error1);
+                    workspace.append_interval(a2, b2, area2, error2);
+                } else {
+                    workspace.append_interval(a2, b2, area2, error2);
+                    workspace.append_interval(a1, b1, area1, error1);
+                }
+
+                result0 = area1 + area2;
+                abserr0 = error1 + error2;
+            }
+
+            /* Test on accuracy */
+            let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+
+            // Test on accuracy, use 0.01 relative error as an extra safety margin on the first iteration (ignored for subsequent iterations)
+            if abserr0 < tolerance && abserr0 < 0.01 * fabsf64(result0) {
+                *result = result0;
+                *abserr = abserr0;
+
+                return enums::Success;
+            } else if limit == 1 {
+                *result = result0;
+                *abserr = abserr0;
+
+                rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+            }
+
+            let mut area = result0;
+            let mut errsum = abserr0;
+
+            let mut iteration = 2;
+
+            loop {
+                let mut a_i = 0f64;
+                let mut b_i = 0f64;
+                let mut r_i = 0f64;
+                let mut e_i = 0f64;
+                let mut area1 = 0f64;
+                let mut area2 = 0f64;
+                let mut error1 = 0f64;
+                let mut error2 = 0f64;
+                let mut err_reliable1 = false;
+                let mut err_reliable2 = false;
+
+                /* Bisect the subinterval with the largest error estimate */
+                workspace.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
+
+                let a1 = a_i; 
+                let b1 = 0.5f64 * (a_i + b_i);
+                let a2 = b1;
+                let b2 = b_i;
+
+                qc25s(f, arg, a, b, a1, b1, self.w, &mut area1, &mut error1, &mut err_reliable1);
+                qc25s(f, arg, a, b, a2, b2, self.w, &mut area2, &mut error2, &mut err_reliable2);
+
+                let area12 = area1 + area2;
+                let error12 = error1 + error2;
+
+                errsum += error12 - e_i;
+                area += area12 - r_i;
+
+                if err_reliable1 && err_reliable2 {
+                    let delta = r_i - area12;
+
+                    if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99 * e_i {
+                        roundoff_type1 += 1;
+                    }
+                    if iteration >= 10 && error12 > e_i {
+                        roundoff_type2 += 1;
+                    }
+                }
+
+                tolerance = epsabs.max(epsrel * fabsf64(area));
+
+                if errsum > tolerance {
+                    if roundoff_type1 >= 6 || roundoff_type2 >= 20 {
+                        /* round off error */
+                        error_type = 2;
+                    }
+
+                    /* set error flag in the case of bad integrand behaviour at a point of the integration range */
+                    if ::util::subinterval_too_small(a1, a2, b2) {
+                        error_type = 3;
+                    }
+                }
+
+                workspace.update(a1, b1, area1, error1, a2, b2, area2, error2);
+                workspace.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
+
+                iteration += 1;
+
+                if iteration < limit && error_type == 0 && errsum > tolerance {
+                } else {
+                    break;
+                }
+            }
+
+            *result = workspace.sum_results();
+            *abserr = errsum;
+
+            if errsum <= tolerance {
+                enums::Success
+            } else if error_type == 2 {
+                rgsl_error!("roundoff error prevents tolerance from being achieved", enums::Round);
+                enums::Round
+            } else if error_type == 3 {
+                rgsl_error!("bad integrand behavior found in the integration interval", enums::Sing);
+                enums::Sing
+            } else if iteration == limit {
+                rgsl_error!("maximum number of subdivisions reached", enums::MaxIter);
+                enums::MaxIter
+            } else {
+                rgsl_error!("could not integrate function", enums::Failed);
+                enums::Failed
+            }
+        }
+    }
+}
+
+impl Drop for IntegrationQawsTable {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_integration_qaws_table_free(self.w) };
+        self.w = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
+    fn wrap(w: *mut ffi::gsl_integration_qaws_table) -> IntegrationQawsTable {
+        IntegrationQawsTable {
+            w: w
+        }
+    }
+
+    fn unwrap(w: &IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
         w.w
     }
 }
@@ -1325,7 +1581,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         abserr0 = abserr0 + error1;
         resabs0 = resabs0 + resabs1;
 
-        append_interval(w, a1, b1, area1, error1);
+        f_w.append_interval(a1, b1, area1, error1);
 
         if error1 == resasc1 && error1 != 0f64 {
             ndin[i] = 1;
@@ -1595,25 +1851,6 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     }
 
     return_error(error_type)
-}
-
-unsafe fn append_interval(w: *mut ffi::gsl_integration_workspace, a1: f64, b1: f64, area1: f64, error1: f64) {
-    let i_new = (*w).size as uint;
-    let mut alist = CVec::new((*w).alist, i_new + 1u);
-    let mut blist = CVec::new((*w).blist, i_new + 1u);
-    let mut rlist = CVec::new((*w).rlist, i_new + 1u);
-    let mut elist = CVec::new((*w).elist, i_new + 1u);
-    let mut order = CVec::new((*w).order, i_new + 1u);
-    let mut level = CVec::new((*w).level, i_new + 1u);
-
-    alist.as_mut_slice()[i_new] = a1;
-    blist.as_mut_slice()[i_new] = b1;
-    rlist.as_mut_slice()[i_new] = area1;
-    elist.as_mut_slice()[i_new] = error1;
-    order.as_mut_slice()[i_new] = i_new as u64;
-    level.as_mut_slice()[i_new] = 0;
-
-    (*w).size += 1;
 }
 
 unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result: &mut f64, abserr: &mut f64, err_reliable: &mut i32) {
@@ -1894,4 +2131,179 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
     tmp = 1f64 / 24f64;
     cheb24[0] *= tmp;
     cheb24[24] *= tmp;
+}
+
+struct fn_qaws_params<'r, T:'r> {
+    function: ::function<T>,
+    a: f64,
+    b: f64,
+    table: *mut ffi::gsl_integration_qaws_table,
+    arg: &'r mut T
+}
+
+unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f64, t: *mut ffi::gsl_integration_qaws_table, result: &mut f64,
+    abserr: &mut f64, err_reliable: &mut bool)
+{
+    let mut fn_params = fn_qaws_params{function: f, a: a, b: b, table: t, arg: arg};
+
+    if a1 == a && ((*t).alpha != 0f64 || (*t).mu != 0) {
+        let mut cheb12 : [f64, ..13] = [0f64, ..13];
+        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+
+        let factor = powf64(0.5f64 * (b1 - a1), (*t).alpha + 1f64);
+
+        gsl_integration_qcheb(fn_qaws_R, &mut fn_params, a1, b1, cheb12, cheb24);
+
+        if (*t).mu == 0 {
+            let mut res12 = 0f64;
+            let mut res24 = 0f64;
+            let u = factor;
+
+            qc25s_compute_result((*t).ri, cheb12, cheb24, &mut res12, &mut res24);
+
+            *result = u * res24;
+            *abserr = fabsf64(u * (res24 - res12));
+        } else {
+            let mut res12a = 0f64;
+            let mut res24a = 0f64;
+            let mut res12b = 0f64;
+            let mut res24b = 0f64;
+
+            let u = factor * logf64(b1 - a1);
+            let v = factor;
+
+            qc25s_compute_result((*t).ri, cheb12, cheb24, &mut res12a, &mut res24a);
+            qc25s_compute_result((*t).rg, cheb12, cheb24, &mut res12b, &mut res24b);
+
+            *result = u * res24a + v * res24b;
+            *abserr = fabsf64(u * (res24a - res12a)) + fabsf64(v * (res24b - res12b));
+        }
+
+        *err_reliable = false;
+    } else if b1 == b && ((*t).beta != 0.0 || (*t).nu != 0) {
+        let mut cheb12 : [f64, ..13] = [0f64, ..13];
+        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+        let factor = powf64(0.5f64 * (b1 - a1), (*t).beta + 1f64);
+
+        gsl_integration_qcheb(fn_qaws_L, &mut fn_params, a1, b1, cheb12, cheb24);
+
+        if (*t).nu == 0 {
+            let mut res12 = 0f64;
+            let mut res24 = 0f64;
+            let u = factor;
+
+            qc25s_compute_result((*t).rj, cheb12, cheb24, &mut res12, &mut res24);
+
+            *result = u * res24;
+            *abserr = fabsf64(u * (res24 - res12));
+        } else {
+            let mut res12a = 0f64;
+            let mut res24a = 0f64;
+            let mut res12b = 0f64;
+            let mut res24b = 0f64;
+
+            let u = factor * logf64(b1 - a1);
+            let v = factor;
+
+            qc25s_compute_result((*t).rj, cheb12, cheb24, &mut res12a, &mut res24a);
+            qc25s_compute_result((*t).rh, cheb12, cheb24, &mut res12b, &mut res24b);
+
+            *result = u * res24a + v * res24b;
+            *abserr = fabsf64(u * (res24a - res12a)) + fabsf64(v * (res24b - res12b));
+        }
+        *err_reliable = false;
+    }
+    else {
+        let mut resabs = 0f64;
+        let mut resasc = 0f64;
+
+        ::integration::qk15(fn_qaws, &mut fn_params, a1, b1, result, abserr, &mut resabs, &mut resasc);
+
+        if *abserr == resasc {
+            *err_reliable = false;
+        } else {
+            *err_reliable = true;
+        }
+    }
+}
+
+fn fn_qaws<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
+    let f = p.function;
+    let t = p.table;
+
+    let mut factor = 1f64;
+  
+    unsafe {
+        if (*t).alpha != 0f64 {
+            factor *= powf64(x - p.a, (*t).alpha);
+        }
+
+        if (*t).beta != 0f64 {
+            factor *= powf64(p.b - x, (*t).beta);
+        }
+
+        if (*t).mu == 1 {
+            factor *= logf64(x - p.a);
+        }
+
+        if (*t).nu == 1 {
+            factor *= logf64(p.b - x);
+        }
+
+        factor * f(x, p.arg)
+    }
+}
+
+fn fn_qaws_R<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
+    let f = p.function;
+    let t = p.table;
+
+    let mut factor = 1f64;
+  
+    unsafe {
+        if (*t).beta != 0f64 {
+            factor *= powf64(p.b - x, (*t).beta);
+        }
+
+        if (*t).nu == 1 {
+            factor *= logf64(p.b - x);
+        }
+
+        factor * f(x, p.arg)
+    }
+}
+
+fn fn_qaws_L<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
+    let f = p.function;
+    let t = p.table;
+
+    let mut factor = 1f64;
+  
+    unsafe {
+        if (*t).alpha != 0f64 {
+            factor *= powf64(x - p.a, (*t).alpha);
+        }
+
+        if (*t).mu == 1 {
+            factor *= logf64(x - p.a);
+        }
+
+        factor * f(x, p.arg)
+    }
+}
+
+unsafe fn qc25s_compute_result(r: &[f64], cheb12: &[f64], cheb24: &[f64], result12: &mut f64, result24: &mut f64) {
+    let mut res12 = 0f64;
+    let mut res24 = 0f64;
+
+    for i in range(0u, 13u) {
+        res12 += r[i] * cheb12[i];
+    }
+
+    for i in range(0u, 25u) {
+        res24 += r[i] * cheb24[i];
+    }
+
+    *result12 = res12;
+    *result24 = res24;
 }

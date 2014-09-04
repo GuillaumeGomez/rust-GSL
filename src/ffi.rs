@@ -2038,6 +2038,10 @@ extern "C" {
     // QAG adaptive integration
     pub fn gsl_integration_workspace_alloc(n: size_t) -> *mut gsl_integration_workspace;
     pub fn gsl_integration_workspace_free(w: *mut gsl_integration_workspace);
+    // QAWS adaptive integration for singular functions
+    pub fn gsl_integration_qaws_table_alloc(alpha: c_double, beta: c_double, mu: c_int, nu: c_int) -> *mut gsl_integration_qaws_table;
+    pub fn gsl_integration_qaws_table_set(t: *mut gsl_integration_qaws_table, alpha: c_double, beta: c_double, mu: c_int, nu: c_int) -> enums::Value;
+    pub fn gsl_integration_qaws_table_free(t: *mut gsl_integration_qaws_table);
 }
 
 #[repr(C)]
@@ -2482,4 +2486,16 @@ pub struct extrapolation_table {
     pub rlist2: [c_double, ..52],
     pub nres: size_t,
     pub res3la: [c_double, ..3]
+}
+
+#[repr(C)]
+pub struct gsl_integration_qaws_table {
+    pub alpha: c_double,
+    pub beta: c_double,
+    pub mu: c_int,
+    pub nu: c_int,
+    pub ri: [c_double, ..25],
+    pub rj: [c_double, ..25],
+    pub rg: [c_double, ..25],
+    pub rh: [c_double, ..25]
 }
