@@ -354,7 +354,7 @@ impl IntegrationWorkspace {
         let w = self.w;
 
         unsafe {
-            let mut order = CVec::new((*w).order, (*w).nrmax as uint + 1u);
+            let mut order = CVec::new((*w).order, (*w).size as uint + 1u);
             let last = (*w).size - 1;
             let limit = (*w).limit;
 
@@ -369,7 +369,15 @@ impl IntegrationWorkspace {
                 return ;
             }
 
-            let elist = CVec::new((*w).elist, i_maxerr as uint + 1u);
+            // Compute the number of elements in the list to be maintained in descending order. This number depends on the number of
+            // subdivisions still allowed.
+            let top =  if last < (limit / 2 + 2) {
+                last
+            } else {
+                limit - last + 1
+            };
+
+            let elist = CVec::new((*w).elist, top as uint + 1u);
             let errmax = elist.as_slice()[i_maxerr as uint];
 
             // This part of the routine is only executed if, due to a difficult integrand, subdivision increased the error estimate. In the normal
@@ -378,14 +386,6 @@ impl IntegrationWorkspace {
                 order.as_mut_slice()[i_nrmax as uint] = order.as_slice()[i_nrmax as uint - 1u];
                 i_nrmax -= 1;
             }
-
-            // Compute the number of elements in the list to be maintained in descending order. This number depends on the number of
-            // subdivisions still allowed.
-            let top =  if last < (limit / 2 + 2) {
-                last
-            } else {
-                limit - last + 1
-            };
 
             // Insert errmax by traversing the list top-down, starting comparison from the element elist(order(i_nrmax+1)).
             let mut i = i_nrmax + 1;
