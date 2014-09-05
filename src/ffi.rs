@@ -2507,15 +2507,10 @@ pub struct gsl_integration_qaws_table {
 
 #[repr(C)]
 pub struct gsl_integration_qawo_table {
-    pub limit: size_t,
-    pub size: size_t,
-    pub nrmax: size_t,
-    pub i: size_t,
-    pub maximum_level: size_t,
-    pub alist: *mut c_double,
-    pub blist: *mut c_double,
-    pub rlist: *mut c_double,
-    pub elist: *mut c_double,
-    pub order: *mut size_t,
-    pub level: *mut size_t
+    pub n: size_t,
+    pub omega: c_double,
+    pub L: c_double,
+    pub par: c_double,
+    pub sine: enums::IntegrationQawo,
+    pub chebmo: *mut c_double
 }

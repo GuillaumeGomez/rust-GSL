@@ -4,7 +4,7 @@
 
 use ffi;
 use enums;
-use std::intrinsics::{fabsf64, logf64, powf64};
+use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use std::c_vec::CVec;
 
 /// The QAG algorithm is a simple adaptive integration procedure. The integration region is divided into subintervals, and on each iteration
@@ -865,6 +865,353 @@ impl IntegrationQawoTable {
     /// This function allows the length parameter l of the self workspace to be changed.
     pub fn set_length(&self, l: f64) -> enums::Value {
         unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) }
+    }
+
+    /// This function uses an adaptive algorithm to compute the integral of f over (a,b) with the weight function \sin(\omega x) or \cos(\omega x)
+    /// defined by the table wf,
+    /// 
+    /// I = \int_a^b dx f(x) sin(omega x)
+    /// I = \int_a^b dx f(x) cos(omega x)
+    /// 
+    /// The results are extrapolated using the epsilon-algorithm to accelerate the convergence of the integral. The function returns the final
+    /// approximation from the extrapolation, result, and an estimate of the absolute error, abserr. The subintervals and their results are
+    /// stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the allocated
+    /// size of the workspace.
+    /// 
+    /// Those subintervals with “large” widths d where d\omega > 4 are computed using a 25-point Clenshaw-Curtis integration rule, which handles
+    /// the oscillatory behavior. Subintervals with a “small” widths where d\omega < 4 are computed using a 15-point Gauss-Kronrod integration.
+    pub fn qawo<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: u64, workspace: &IntegrationWorkspace,
+        result: &mut f64, abserr: &mut f64) -> enums::Value {
+        let mut result0 = 0f64;
+        let mut abserr0 = 0f64;
+        let mut resabs0 = 0f64;
+        let mut resasc0 = 0f64;
+
+        let mut ertest = 0f64;
+        let mut error_over_large_intervals = 0f64;
+        let mut reseps = 0f64;
+        let mut abseps = 0f64;
+        let mut correc = 0f64;
+        let mut ktmin = 0u64;
+        let mut roundoff_type1 = 0i32;
+        let mut roundoff_type2 = 0i32;
+        let mut roundoff_type3 = 0i32;
+        let mut error_type = 0i32;
+        let mut error_type2 = 0i32;
+
+        let mut extrapolate = false;
+        let mut extall = false;
+        let mut disallow_extrapolation = false;
+
+        unsafe {
+            let mut table : ffi::extrapolation_table = ::std::mem::zeroed();
+
+            let b = a + (*self.w).L ;
+            let abs_omega = fabsf64((*self.w).omega) ;
+
+            /* Initialize results */
+            workspace.initialise(a, b);
+
+            *result = 0f64;
+            *abserr = 0f64;
+
+            if limit > (*workspace.w).limit {
+                rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+            }
+
+            /* Test on accuracy */
+            if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+            }
+
+            /* Perform the first integration */
+            qc25f(f, arg, a, b, self.w, 0, &mut result0, &mut abserr0, &mut resabs0, &mut resasc0);
+
+            workspace.set_initial_result(result0, abserr0);
+
+            let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+
+            if abserr0 <= 100f64 * ::DBL_EPSILON * resabs0 && abserr0 > tolerance {
+                *result = result0;
+                *abserr = abserr0;
+
+                rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::Round);
+            } else if (abserr0 <= tolerance && abserr0 != resasc0) || abserr0 == 0f64 {
+                *result = result0;
+                *abserr = abserr0;
+
+                return enums::Success;
+            } else if limit == 1 {
+                *result = result0;
+                *abserr = abserr0;
+
+                rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+            }
+
+            /* Initialization */
+            initialise_table(&mut table);
+
+            if 0.5f64 * abs_omega * fabsf64(b - a) <= 2f64 {
+                append_table(&mut table, result0);
+                extall = true;
+            }
+
+            let mut area = result0;
+            let mut errsum = abserr0;
+
+            let mut res_ext = result0;
+            let mut err_ext = ::DBL_MAX;
+
+            let positive_integrand = test_positivity(result0, resabs0);
+
+            let mut iteration = 1;
+
+            loop {
+                let mut a_i = 0f64;
+                let mut b_i = 0f64;
+                let mut r_i = 0f64;
+                let mut e_i = 0f64;
+                let mut area1 = 0f64;
+                let mut area2 = 0f64;
+                let mut error1 = 0f64;
+                let mut error2 = 0f64;
+                let mut label70 = false;
+                let mut resasc1 = 0f64;
+                let mut resasc2 = 0f64;
+                let mut resabs1 = 0f64;
+                let mut resabs2 = 0f64;
+
+                /* Bisect the subinterval with the largest error estimate */
+                workspace.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
+
+                let level = CVec::new((*workspace.w).level, (*workspace.w).i as uint + 1);
+
+                let current_level = level.as_slice()[(*workspace.w).i as uint] + 1;
+
+                if current_level >= (*self.w).n {
+                    /* exceeded limit of table */
+                    error_type = -1;
+                    break;
+                }
+
+                let a1 = a_i;
+                let b1 = 0.5f64 * (a_i + b_i);
+                let a2 = b1;
+                let b2 = b_i;
+
+                iteration += 1;
+
+                qc25f(f, arg, a1, b1, self.w, current_level, &mut area1, &mut error1, &mut resabs1, &mut resasc1);
+                qc25f(f, arg, a2, b2, self.w, current_level, &mut area2, &mut error2, &mut resabs2, &mut resasc2);
+
+                let area12 = area1 + area2;
+                let error12 = error1 + error2;
+                let last_e_i = e_i;
+
+                /* Improve previous approximations to the integral and test for accuracy.
+
+                We write these expressions in the same way as the original QUADPACK code so that the rounding errors are the same, which
+                makes testing easier. */
+                errsum = errsum + error12 - e_i;
+                area = area + area12 - r_i;
+
+                tolerance = epsabs.max(epsrel * fabsf64(area));
+
+                if resasc1 != error1 && resasc2 != error2 {
+                    let delta = r_i - area12;
+
+                    if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i {
+                        if !extrapolate {
+                            roundoff_type1 += 1;
+                        } else {
+                            roundoff_type2 += 1;
+                        }
+                    }
+                    if iteration > 10 && error12 > e_i {
+                        roundoff_type3 += 1;
+                    }
+                }
+
+                /* Test for roundoff and eventually set error flag */
+                if roundoff_type1 + roundoff_type2 >= 10 || roundoff_type3 >= 20 {
+                    /* round off error */
+                    error_type = 2;
+                }
+
+                if roundoff_type2 >= 5 {
+                    error_type2 = 1;
+                }
+
+                /* set error flag in the case of bad integrand behaviour at a point of the integration range */
+                if ::util::subinterval_too_small(a1, a2, b2) {
+                    error_type = 4;
+                }
+
+                /* append the newly-created intervals to the list */
+                workspace.update(a1, b1, area1, error1, a2, b2, area2, error2);
+
+                if errsum <= tolerance {
+                    return compute_result(workspace, result, abserr, errsum, error_type);
+                }
+
+                if error_type != 0 {
+                    break;
+                }
+
+                if iteration >= limit - 1 {
+                    error_type = 1;
+                    break;
+                }
+
+                /* set up variables on first iteration */
+                if iteration == 2 && extall {
+                    error_over_large_intervals = errsum;
+                    ertest = tolerance;
+                    append_table(&mut table, area);
+                    continue;
+                }
+
+                if disallow_extrapolation {
+                    continue;
+                }
+
+                if extall {
+                    error_over_large_intervals += -last_e_i;
+
+                    if current_level < (*workspace.w).maximum_level {
+                        error_over_large_intervals += error12;
+                    }
+
+                    if extrapolate {
+                        label70 = true;
+                    }
+                }
+
+                if label70 == false {
+                    if large_interval(workspace.w) {
+                        continue;
+                    }
+
+                    if extall {
+                        extrapolate = true;
+                        (*workspace.w).nrmax = 1;
+                    } else {
+                        /* test whether the interval to be bisected next is the smallest interval. */
+                        let i = (*workspace.w).i as uint;
+                        let blist = CVec::new((*workspace.w).blist, i + 1u);
+                        let alist = CVec::new((*workspace.w).alist, i + 1u);
+                        let width = blist.as_slice()[i] - alist.as_slice()[i];
+
+                        if 0.25f64 * fabsf64(width) * abs_omega > 2f64 {
+                            continue;
+                        }
+
+                        extall = true;
+                        error_over_large_intervals = errsum;
+                        ertest = tolerance;
+                        continue;
+                    }
+                }
+
+                if error_type2 == 0 && error_over_large_intervals > ertest {
+                    if increase_nrmax(workspace.w) {
+                        continue;
+                    }
+                }
+
+                /* Perform extrapolation */
+                append_table(&mut table, area);
+
+                if table.n < 3 {
+                    reset_nrmax(workspace.w);
+                    extrapolate = false;
+                    error_over_large_intervals = errsum;
+                    continue;
+                }
+
+                intern_qelg(&mut table, &mut reseps, &mut abseps);
+
+                ktmin += 1;
+
+                if ktmin > 5 && err_ext < 0.001f64 * errsum {
+                    error_type = 5;
+                }
+
+                if abseps < err_ext {
+                    ktmin = 0;
+                    err_ext = abseps;
+                    res_ext = reseps;
+                    correc = error_over_large_intervals;
+                    ertest = epsabs.max(epsrel * fabsf64(reseps));
+                    if err_ext <= ertest {
+                        break;
+                    }
+                }
+
+                /* Prepare bisection of the smallest interval. */
+                if table.n == 1 {
+                    disallow_extrapolation = true;
+                }
+
+                if error_type == 5 {
+                    break;
+                }
+
+                /* work on interval with largest error */
+                reset_nrmax(workspace.w);
+                extrapolate = false;
+                error_over_large_intervals = errsum;
+
+                if iteration >= limit {
+                    break;
+                }
+            }
+
+            *result = res_ext;
+            *abserr = err_ext;
+
+            if err_ext == ::DBL_MAX {
+                return compute_result(workspace, result, abserr, errsum, error_type);
+            }
+
+            if error_type != 0 || error_type2 != 0 {
+                if error_type2 != 0 {
+                    err_ext += correc;
+                }
+
+                if error_type == 0 {
+                    error_type = 3;
+                }
+
+                if *result != 0f64 && area != 0f64 {
+                    if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
+                        return compute_result(workspace, result, abserr, errsum, error_type);
+                    }
+                } else if err_ext > errsum {
+                    return compute_result(workspace, result, abserr, errsum, error_type);
+                } else if area == 0f64 {
+                    return return_error(error_type);
+                }
+            }
+
+            /*  Test on divergence. */
+            {
+                let max_area = fabsf64(res_ext).max(fabsf64(area));
+
+                if !positive_integrand && max_area < 0.01f64 * resabs0 {
+                    return return_error(error_type);
+                }
+            }
+
+            {
+                let ratio = res_ext / area;
+
+                if ratio < 0.01f64 || ratio > 100f64 || errsum > fabsf64(area) {
+                    error_type = 6;
+                }
+            }
+            return_error(error_type)
+        }
     }
 }
 
@@ -2371,4 +2718,101 @@ unsafe fn qc25s_compute_result(r: &[f64], cheb12: &[f64], cheb24: &[f64], result
 
     *result12 = res12;
     *result24 = res24;
+}
+
+struct fn_fourier_params<'r, T:'r> {
+    omega: f64,
+    function: ::function<T>,
+    arg: &'r mut T
+}
+
+unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::gsl_integration_qawo_table, level: u64, result: &mut f64,
+    abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+    let center = 0.5f64 * (a + b);
+    let half_length = 0.5f64 * (b - a);
+    let omega = (*wf).omega ;
+  
+    let par = omega * half_length;
+
+    if fabsf64(par) < 2f64 {
+        let mut fn_params = fn_fourier_params{omega: omega, function: f, arg: arg};
+
+        ::integration::qk15(if (*wf).sine == enums::Sine {
+                fn_sin
+            } else {
+                fn_cos
+            }, &mut fn_params, a, b, result, abserr, resabs, resasc);
+    } else {
+        let mut cheb12 : [f64, ..13] = [0f64, ..13];
+        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+
+        gsl_integration_qcheb(f, arg, a, b, cheb12, cheb24);
+
+        if level >= (*wf).n {
+            /* table overflow should not happen, check before calling */
+            rgsl_error!("table overflow in internal function", enums::Sanity);
+        }
+
+        /* obtain moments from the table */
+        let t_moment = CVec::new((*wf).chebmo.offset(25i * level as int), 25);
+        let moment = t_moment.as_slice();
+
+        let mut res12_cos = cheb12[12] * moment[12];
+        let mut res12_sin = 0f64;
+
+        for i in range(0u, 6u) {
+            let k = 10u - 2u * i;
+
+            res12_cos += cheb12[k] * moment[k];
+            res12_sin += cheb12[k + 1] * moment[k + 1];
+        }
+
+        let mut res24_cos = cheb24[24] * moment[24];
+        let mut res24_sin = 0f64;
+
+        let mut result_abs = fabsf64(cheb24[24]) ;
+
+        for i in range(0u, 12u) {
+            let k = 22u - 2u * i;
+
+            res24_cos += cheb24[k] * moment[k];
+            res24_sin += cheb24[k + 1] * moment[k + 1];
+            result_abs += fabsf64(cheb24[k]) + fabsf64(cheb24[k + 1]);
+        }
+
+        let est_cos = fabsf64(res24_cos - res12_cos);
+        let est_sin = fabsf64(res24_sin - res12_sin);
+
+        let c = half_length * cosf64(center * omega);
+        let s = half_length * sinf64(center * omega);
+
+        if (*wf).sine == enums::Sine {
+            *result = c * res24_sin + s * res24_cos;
+            *abserr = fabsf64(c * est_sin) + fabsf64(s * est_cos);
+        } else {
+            *result = c * res24_cos - s * res24_sin;
+            *abserr = fabsf64(c * est_cos) + fabsf64(s * est_sin);
+        }
+
+        *resabs = result_abs * half_length;
+        *resasc = ::DBL_MAX;
+    }
+}
+
+fn fn_sin<T>(x: f64, p: &mut fn_fourier_params<T>) -> f64 {
+    let f = p.function;
+    let w = p.omega;
+    let wx = w * x;
+    let sinwx = unsafe { sinf64(wx) };
+
+    f(x, p.arg) * sinwx
+}
+
+fn fn_cos<T>(x: f64, p: &mut fn_fourier_params<T>) -> f64 {
+    let f = p.function;
+    let w = p.omega;
+    let wx = w * x;
+    let coswx = unsafe { cosf64(wx) };
+
+    f(x, p.arg) * coswx
 }
