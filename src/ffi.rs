@@ -2042,6 +2042,11 @@ extern "C" {
     pub fn gsl_integration_qaws_table_alloc(alpha: c_double, beta: c_double, mu: c_int, nu: c_int) -> *mut gsl_integration_qaws_table;
     pub fn gsl_integration_qaws_table_set(t: *mut gsl_integration_qaws_table, alpha: c_double, beta: c_double, mu: c_int, nu: c_int) -> enums::Value;
     pub fn gsl_integration_qaws_table_free(t: *mut gsl_integration_qaws_table);
+    // QAWO adaptive integration for oscillatory functions
+    pub fn gsl_integration_qawo_table_alloc(omega: c_double, l: c_double, sine: enums::IntegrationQawo, n: size_t) -> *mut gsl_integration_qawo_table;
+    pub fn gsl_integration_qawo_table_set(t: *mut gsl_integration_qawo_table, omega: c_double, l: c_double, sine: enums::IntegrationQawo) -> enums::Value;
+    pub fn gsl_integration_qawo_table_set_length(t: *mut gsl_integration_qawo_table, l: c_double) -> enums::Value;
+    pub fn gsl_integration_qawo_table_free(t: *mut gsl_integration_qawo_table);
 }
 
 #[repr(C)]
@@ -2498,4 +2503,19 @@ pub struct gsl_integration_qaws_table {
     pub rj: [c_double, ..25],
     pub rg: [c_double, ..25],
     pub rh: [c_double, ..25]
+}
+
+#[repr(C)]
+pub struct gsl_integration_qawo_table {
+    pub limit: size_t,
+    pub size: size_t,
+    pub nrmax: size_t,
+    pub i: size_t,
+    pub maximum_level: size_t,
+    pub alist: *mut c_double,
+    pub blist: *mut c_double,
+    pub rlist: *mut c_double,
+    pub elist: *mut c_double,
+    pub order: *mut size_t,
+    pub level: *mut size_t
 }

@@ -103,7 +103,8 @@ pub use types::{
     Histogram2D,
     Histogram2DPdf,
     IntegrationWorkspace,
-    IntegrationQawsTable
+    IntegrationQawsTable,
+    IntegrationQawoTable
 };
 
 pub use enums::{
@@ -111,7 +112,8 @@ pub use enums::{
     Value,
     EigenSort,
     FftDirection,
-    GaussKonrodRule
+    GaussKonrodRule,
+    IntegrationQawo
 };
 
 pub use elementary::Elementary;

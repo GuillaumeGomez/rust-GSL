@@ -822,6 +822,71 @@ impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
     }
 }
 
+/// The QAWO algorithm is designed for integrands with an oscillatory factor, \sin(\omega x) or \cos(\omega x). In order to work efficiently
+/// the algorithm requires a table of Chebyshev moments which must be pre-computed with calls to the functions below.
+pub struct IntegrationQawoTable {
+    w: *mut ffi::gsl_integration_qawo_table
+}
+
+impl IntegrationQawoTable {
+    /// This function allocates space for a gsl_integration_qawo_table struct and its associated workspace describing a sine or cosine weight
+    /// function W(x) with the parameters (\omega, L),
+    /// 
+    /// W(x) = sin(omega x)
+    /// W(x) = cos(omega x)
+    /// 
+    /// The parameter L must be the length of the interval over which the function will be integrated L = b - a. The choice of sine or cosine
+    /// is made with the parameter sine which should be chosen from one of the two following symbolic values:
+    /// 
+    /// enums::Cosine
+    /// enums::Sine
+    /// 
+    /// The gsl_integration_qawo_table is a table of the trigonometric coefficients required in the integration process. The parameter n determines
+    /// the number of levels of coefficients that are computed. Each level corresponds to one bisection of the interval L, so that n levels are
+    /// sufficient for subintervals down to the length L/2^n. The integration routine gsl_integration_qawo returns the error enums::Table if the
+    /// number of levels is insufficient for the requested accuracy.
+    pub fn new(omega: f64, l: f64, sine: enums::IntegrationQawo, n: u64) -> Option<IntegrationQawoTable> {
+        let tmp = unsafe { ffi::gsl_integration_qawo_table_alloc(omega, l, sine, n) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(IntegrationQawoTable {
+                w: tmp
+            })
+        }
+    }
+
+    /// This function changes the parameters omega, L and sine of the existing self workspace.
+    pub fn set(&self, omega: f64, l: f64, sine: enums::IntegrationQawo) -> enums::Value {
+        unsafe { ffi::gsl_integration_qawo_table_set(self.w, omega, l, sine) }
+    }
+
+    /// This function allows the length parameter l of the self workspace to be changed.
+    pub fn set_length(&self, l: f64) -> enums::Value {
+        unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) }
+    }
+}
+
+impl Drop for IntegrationQawoTable {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_integration_qawo_table_free(self.w) };
+        self.w = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
+    fn wrap(w: *mut ffi::gsl_integration_qawo_table) -> IntegrationQawoTable {
+        IntegrationQawoTable {
+            w: w
+        }
+    }
+
+    fn unwrap(w: &IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
+        w.w
+    }
+}
+
 fn i_transform<T>(t: f64, params: &mut InternParam<T>) -> f64 {
     let f = params.func;
     let x = (1f64 - t) / t;

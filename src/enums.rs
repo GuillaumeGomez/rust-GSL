@@ -125,3 +125,11 @@ pub enum GaussKonrodRule {
     /// 61 point Gauss-Kronrod rule
     Gauss61 = 6,
 }
+
+#[deriving(PartialEq, PartialOrd, Show)]
+#[repr(C)]
+/// Used by workspace for QAWO integrator
+pub enum IntegrationQawo {
+    Cosine,
+    Sine
+}
