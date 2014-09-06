@@ -4,7 +4,7 @@
 
 extern crate rgsl;
 
-use std::intrinsics::{sinf64, logf64};
+use std::intrinsics::{sinf64, logf64, expf64};
 
 struct FParams {
     // Amplitude
@@ -15,6 +15,11 @@ struct FParams {
 
 fn f(x: f64, p: &mut FParams) -> f64 {
     unsafe { sinf64(p.a * x + p.phi) }
+}
+
+#[allow(unused_variable)]
+fn cqf1(x: f64, p: &mut f64) -> f64 {
+    unsafe { expf64(x) }
 }
 
 /* f458(x) = 1/(1 + log(x)^2)^2 */
@@ -66,7 +71,7 @@ fn main() {
     };
 
     println!("\n=== IntegrationWorkspace.qagi ===");
-    match  iw.qagi(f, &mut params, 1.0e-7f64, 0f64, iw.limit(), &mut result, &mut error) {
+    match iw.qagi(f, &mut params, 1.0e-7f64, 0f64, iw.limit(), &mut result, &mut error) {
         rgsl::enums::Success => {
             println!("Result {} +/- {}", result, error);
         }
@@ -79,9 +84,21 @@ fn main() {
     let t = rgsl::IntegrationQawsTable::new(0f64, 0f64, 1, 0).unwrap();
     let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
 
-    match  t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &w, &mut result, &mut error) {
+    match t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &w, &mut result, &mut error) {
         rgsl::enums::Success => {
             println!("Result {} +/- {}", result, error);
+        }
+        e => {
+            println!("There was a problem with integration: {}", e);
+        }
+    }
+
+    println!("\n=== CquadWorkspace.cquad ===");
+    let t = rgsl::CquadWorkspace::new(200).unwrap();
+
+    match t.cquad(cqf1, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-12f64, &mut result, &mut error, &mut n_eval) {
+        rgsl::enums::Success => {
+            println!("Result {} +/- {} -> {}", result, error, n_eval);
         }
         e => {
             println!("There was a problem with integration: {}", e);

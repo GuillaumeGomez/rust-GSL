@@ -2047,6 +2047,9 @@ extern "C" {
     pub fn gsl_integration_qawo_table_set(t: *mut gsl_integration_qawo_table, omega: c_double, l: c_double, sine: enums::IntegrationQawo) -> enums::Value;
     pub fn gsl_integration_qawo_table_set_length(t: *mut gsl_integration_qawo_table, l: c_double) -> enums::Value;
     pub fn gsl_integration_qawo_table_free(t: *mut gsl_integration_qawo_table);
+    // CQUAD doubly-adaptive integration
+    pub fn gsl_integration_cquad_workspace_alloc(n: size_t) -> *mut gsl_integration_cquad_workspace;
+    pub fn gsl_integration_cquad_workspace_free(w: *mut gsl_integration_cquad_workspace);
 }
 
 #[repr(C)]
@@ -2513,4 +2516,29 @@ pub struct gsl_integration_qawo_table {
     pub par: c_double,
     pub sine: enums::IntegrationQawo,
     pub chebmo: *mut c_double
+}
+
+/* Data of a single interval */
+#[repr(C)]
+pub struct gsl_integration_cquad_ival
+{
+    pub a: c_double,
+    pub b: c_double,
+    pub c: [c_double, ..64],
+    pub fx: [c_double, ..33],
+    pub igral: c_double,
+    pub err: c_double,
+    pub depth: c_int,
+    pub rdepth: c_int,
+    pub ndiv: c_int
+}
+
+
+/* The workspace is just a collection of intervals */
+#[repr(C)]
+pub struct gsl_integration_cquad_workspace
+{
+    pub size: size_t,
+    pub ivals: *mut gsl_integration_cquad_ival,
+    pub heap: *mut size_t
 }

@@ -12,7 +12,7 @@ pub use self::eigen_symmetric_workspace::{EigenSymmetricWorkspace, EigenSymmetri
     EigenGenHermWorkspace, EigenGenHermVWorkspace, EigenGenWorkspace, EigenGenVWorkspace};
 pub use self::fast_fourier_transforms::{FftComplexWaveTable, FftComplexWorkspace};
 pub use self::histograms::{Histogram, HistogramPdf, Histogram2D, Histogram2DPdf};
-pub use self::integration::{IntegrationWorkspace, IntegrationQawsTable, IntegrationQawoTable};
+pub use self::integration::{IntegrationWorkspace, IntegrationQawsTable, IntegrationQawoTable, CquadWorkspace};
 pub use self::mathieu::MathieuWorkspace;
 pub use self::matrix::{MatrixF32, MatrixF64};
 pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};

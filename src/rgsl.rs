@@ -104,7 +104,8 @@ pub use types::{
     Histogram2DPdf,
     IntegrationWorkspace,
     IntegrationQawsTable,
-    IntegrationQawoTable
+    IntegrationQawoTable,
+    CquadWorkspace
 };
 
 pub use enums::{
@@ -203,6 +204,10 @@ pub static ROOT4_DBL_MAX     : f64 = 1.1579208923731620e+77;
 pub static ROOT5_DBL_MAX     : f64 = 4.4765466227572707e+61;
 pub static ROOT6_DBL_MAX     : f64 = 2.3756689782295612e+51;
 pub static LOG_DBL_MAX       : f64 = 7.0978271289338397e+02;
+
+pub static NAN               : f64 = 0f64 / 0f64;
+pub static POSINF            : f64 = 1f64 / 0f64;
+pub static NEGINF            : f64 = -1f64 / 0f64;
 
 #[cfg(target_os = "linux")]
 mod platform {
