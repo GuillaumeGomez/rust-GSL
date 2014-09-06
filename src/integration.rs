@@ -70,7 +70,7 @@ epsilon-algorithm to speed up the integration of many types of integrable singul
 
 use ffi;
 use enums;
-use std::intrinsics::{fabsf64, powf64};
+use std::intrinsics::{fabsf64, powf64, floorf64};
 
 fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
     let mut t_err = unsafe { fabsf64(err) };
@@ -878,4 +878,184 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
     *resabs = result_abs;
     *resasc = result_asc;
     *abserr = rescale_error(err, result_abs, result_asc);
+}
+
+pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, workspace: &::IntegrationWorkspace,
+    cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    let mut total_error = 0f64;
+
+    let mut ktmin = 0u64;
+    let mut iteration = 0u64;
+
+    unsafe {
+        let mut table : ffi::extrapolation_table = ::std::mem::zeroed();
+
+        let omega = (*ffi::FFI::unwrap(wf)).omega;
+
+        let p = 0.9f64;
+        let mut factor = 1f64;
+        let mut error_type = 0i32;
+
+        /* Initialize results */
+        workspace.initialise(a, a);
+
+        *result = 0f64;
+        *abserr = 0f64;
+
+        if limit > (*ffi::FFI::unwrap(workspace)).limit {
+            rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+        }
+
+        /* Test on accuracy */
+        if epsabs <= 0f64 {
+            rgsl_error!("absolute tolerance epsabs must be positive", enums::BadTol);
+        }
+
+        if omega == 0f64 {
+            if (*ffi::FFI::unwrap(wf)).sine == enums::Sine {
+                /* The function sin(w x) f(x) is always zero for w = 0 */
+                *result = 0f64;
+                *abserr = 0f64;
+
+                return enums::Success;
+            }  else {
+                /* The function cos(w x) f(x) is always f(x) for w = 0 */
+                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit, result, abserr);
+            }
+        }
+
+        let mut eps = if epsabs > ::DBL_MIN / (1f64 - p) {
+            epsabs * (1f64 - p)
+        } else {
+            epsabs
+        };
+
+        let initial_eps = eps;
+
+        let mut area = 0f64;
+        let mut errsum = 0f64;
+
+        let mut res_ext = 0f64;
+        let mut err_ext = ::DBL_MAX;
+        let mut correc = 0f64;
+
+        let cycle = (2f64 * floorf64(fabsf64(omega)) + 1f64) * ::std::f64::consts::PI / fabsf64(omega);
+
+        wf.set_length(cycle);
+
+        ::types::integration::initialise_table(&mut table);
+
+        while iteration < limit {
+            let mut area1 = 0f64;
+            let mut error1 = 0f64;
+            let mut reseps = 0f64;
+            let mut erreps = 0f64;
+
+            let a1 = a as f64 + iteration as f64 * cycle;
+            let b1 = a1 + cycle;
+
+            let epsabs1 = eps * factor;
+
+            let status = wf.qawo(f, arg, a1, epsabs1, 0f64, limit, cycle_workspace, &mut area1, &mut error1);
+
+            ::types::integration::append_interval(workspace, a1, b1, area1, error1);
+
+            factor *= p;
+
+            area = area + area1;
+            errsum = errsum + error1;
+
+            /* estimate the truncation error as 50 times the final term */
+            let truncation_error = 50f64 * fabsf64(area1);
+
+            total_error = errsum + truncation_error;
+
+            if total_error < epsabs && iteration > 4 {
+                *result = area;
+                *abserr = total_error;
+                return ::types::integration::return_error(error_type);
+            }
+
+            if error1 > correc {
+                correc = error1;
+            }
+
+            if status != enums::Success {
+                eps = initial_eps.max(correc * (1f64 - p));
+            }
+
+            if status != enums::Success && total_error < 10f64 * correc && iteration > 3 {
+                *result = area;
+                *abserr = total_error;
+                return ::types::integration::return_error(error_type);
+            }
+
+            ::types::integration::append_table(&mut table, area);
+
+            if table.n < 2 {
+                continue;
+            }
+
+            ::types::integration::intern_qelg(&mut table, &mut reseps, &mut erreps);
+
+            ktmin += 1;
+
+            if ktmin >= 15 && err_ext < 0.001f64 * total_error {
+                error_type = 4;
+            }
+
+            if erreps < err_ext {
+                ktmin = 0;
+                err_ext = erreps;
+                res_ext = reseps;
+
+                if err_ext + 10f64 * correc <= epsabs {
+                    break;
+                }
+                if err_ext <= epsabs && 10f64 * correc >= epsabs {
+                    break;
+                }
+            }
+            iteration += 1;
+        }
+
+        if iteration == limit {
+            error_type = 1;
+        }
+
+        if err_ext == ::DBL_MAX {
+            *result = area;
+            *abserr = total_error;
+            return ::types::integration::return_error(error_type);
+        }
+
+        err_ext = err_ext + 10f64 * correc;
+
+        *result = res_ext;
+        *abserr = err_ext;
+
+        if error_type == 0 {
+            return enums::Success;
+        }
+
+        if res_ext != 0f64 && area != 0f64 {
+            if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
+                *result = area;
+                *abserr = total_error;
+                return ::types::integration::return_error(error_type);
+            }
+        } else if err_ext > errsum {
+            *result = area;
+            *abserr = total_error;
+            return ::types::integration::return_error(error_type);
+        } else if area == 0f64 {
+            return ::types::integration::return_error(error_type);
+        }
+
+        /*if error_type == 4 {
+            err_ext = err_ext + truncation_error;
+        }*/
+
+        ::types::integration::return_error(error_type)
+    }
 }

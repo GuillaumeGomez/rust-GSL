@@ -1051,7 +1051,9 @@ impl IntegrationQawoTable {
                 workspace.update(a1, b1, area1, error1, a2, b2, area2, error2);
 
                 if errsum <= tolerance {
-                    return compute_result(workspace, result, abserr, errsum, error_type);
+                    *result = workspace.sum_results();
+                    *abserr = errsum;
+                    return return_error(error_type);
                 }
 
                 if error_type != 0 {
@@ -1171,7 +1173,9 @@ impl IntegrationQawoTable {
             *abserr = err_ext;
 
             if err_ext == ::DBL_MAX {
-                return compute_result(workspace, result, abserr, errsum, error_type);
+                *result = workspace.sum_results();
+                *abserr = errsum;
+                return return_error(error_type);
             }
 
             if error_type != 0 || error_type2 != 0 {
@@ -1185,10 +1189,14 @@ impl IntegrationQawoTable {
 
                 if *result != 0f64 && area != 0f64 {
                     if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
-                        return compute_result(workspace, result, abserr, errsum, error_type);
+                        *result = workspace.sum_results();
+                        *abserr = errsum;
+                        return return_error(error_type);
                     }
                 } else if err_ext > errsum {
-                    return compute_result(workspace, result, abserr, errsum, error_type);
+                    *result = workspace.sum_results();
+                    *abserr = errsum;
+                    return return_error(error_type);
                 } else if area == 0f64 {
                     return return_error(error_type);
                 }
@@ -1399,19 +1407,31 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
     }
 }
 
-unsafe fn initialise_table(table: *mut ffi::extrapolation_table) {
+#[doc(hidden)]
+#[allow(visible_private_types)]
+pub unsafe fn initialise_table(table: *mut ffi::extrapolation_table) {
     (*table).n = 0;
     (*table).nres = 0;
 }
 
-unsafe fn append_table(table: &mut ffi::extrapolation_table, y: f64) {
+#[doc(hidden)]
+#[allow(visible_private_types)]
+pub unsafe fn append_table(table: &mut ffi::extrapolation_table, y: f64) {
   let n = (*table).n as uint;
 
   (*table).rlist2[n] = y;
   (*table).n += 1;
 }
 
-unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64, abserr: &mut f64) {
+#[doc(hidden)]
+#[allow(visible_private_types)]
+pub fn append_interval(w: &IntegrationWorkspace, a: f64, b: f64, area: f64, error: f64) {
+    w.append_interval(a, b, area, error)
+}
+
+#[doc(hidden)]
+#[allow(visible_private_types)]
+pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64, abserr: &mut f64) {
     let mut epstab = (*table).rlist2;//CVec::new((*table).rlist2 as *mut f64, (*table).n as uint + 3);
     let mut res3la = (*table).res3la;//CVec::new((*table).res3la as *mut f64, 3u);
     let n = (*table).n as uint - 1u;
@@ -1595,14 +1615,8 @@ unsafe fn reset_nrmax(workspace: *mut ffi::gsl_integration_workspace) {
     (*workspace).i = *(*workspace).order;
 }
 
-unsafe fn compute_result(w: &IntegrationWorkspace, result: &mut f64, abserr: &mut f64, errsum: f64,
-    error_type: i32) -> enums::Value {
-    *result = w.sum_results();
-    *abserr = errsum;
-    return_error(error_type)
-}
-
-unsafe fn return_error(t_error_type: i32) -> enums::Value {
+#[doc(hidden)]
+pub unsafe fn return_error(t_error_type: i32) -> enums::Value {
     let error_type = if t_error_type > 2 {
         t_error_type - 1
     } else {
@@ -1794,7 +1808,9 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         f_w.update(a1, b1, area1, error1, a2, b2, area2, error2);
 
         if errsum <= tolerance {
-            return compute_result(f_w, result, abserr, errsum, error_type);
+            *result = f_w.sum_results();
+            *abserr = errsum;
+            return return_error(error_type);
         }
 
         if error_type != 0 {
@@ -1886,7 +1902,9 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
     *abserr = err_ext;
 
     if err_ext == ::DBL_MAX {
-        return compute_result(f_w, result, abserr, errsum, error_type);
+        *result = f_w.sum_results();
+        *abserr = errsum;
+        return return_error(error_type);
     }
 
     if error_type != 0 || error_type2 != 0 {
@@ -1900,10 +1918,14 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
 
         if res_ext != 0f64 && area != 0f64 {
             if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
-                return compute_result(f_w, result, abserr, errsum, error_type);
+                *result = f_w.sum_results();
+                *abserr = errsum;
+                return return_error(error_type);
             }
         } else if err_ext > errsum {
-            return compute_result(f_w, result, abserr, errsum, error_type);
+            *result = f_w.sum_results();
+            *abserr = errsum;
+            return return_error(error_type);
         } else if area == 0f64 {
             return return_error(error_type);
         }
@@ -2137,7 +2159,9 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         f_w.update(a1, b1, area1, error1, a2, b2, area2, error2);
 
         if errsum <= tolerance {
-            return compute_result(f_w, result, abserr, errsum, error_type);
+            *result = f_w.sum_results();
+            *abserr = errsum;
+            return return_error(error_type);
         }
 
         if error_type != 0 {
@@ -2222,7 +2246,9 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     *abserr = err_ext;
 
     if err_ext == ::DBL_MAX {
-        return compute_result(f_w, result, abserr, errsum, error_type);
+        *result = f_w.sum_results();
+        *abserr = errsum;
+        return return_error(error_type);
     }
 
     if error_type != 0 || error_type2 != 0 {
@@ -2236,10 +2262,14 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
         if *result != 0f64 && area != 0f64 {
             if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
-                return compute_result(f_w, result, abserr, errsum, error_type);
+                *result = f_w.sum_results();
+                *abserr = errsum;
+                return return_error(error_type);
             }
         } else if err_ext > errsum {
-            return compute_result(f_w, result, abserr, errsum, error_type);
+            *result = f_w.sum_results();
+            *abserr = errsum;
+            return return_error(error_type);
         } else if area == 0f64 {
             return return_error(error_type);
         }
