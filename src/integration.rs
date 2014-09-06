@@ -880,6 +880,41 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
     *abserr = rescale_error(err, result_abs, result_asc);
 }
 
+/// This function attempts to compute a Fourier integral of the function f over the semi-infinite interval [a,+\infty).
+/// 
+/// I = \int_a^{+\infty} dx f(x) sin(omega x)
+/// I = \int_a^{+\infty} dx f(x) cos(omega x)
+/// 
+/// The parameter \omega and choice of \sin or \cos is taken from the table wf (the length L can take any value, since it is overridden by
+/// this function to a value appropriate for the Fourier integration). The integral is computed using the QAWO algorithm over each of the
+/// subintervals,
+/// 
+/// C_1 = [a, a + c]
+/// C_2 = [a + c, a + 2 c]
+/// ... = ...
+/// C_k = [a + (k-1) c, a + k c]
+/// 
+/// where c = (2 floor(|\omega|) + 1) \pi/|\omega|. The width c is chosen to cover an odd number of periods so that the contributions from
+/// the intervals alternate in sign and are monotonically decreasing when f is positive and monotonically decreasing. The sum of this sequence
+/// of contributions is accelerated using the epsilon-algorithm.
+/// 
+/// This function works to an overall absolute tolerance of abserr. The following strategy is used: on each interval C_k the algorithm tries
+/// to achieve the tolerance
+/// 
+/// TOL_k = u_k abserr
+/// 
+/// where u_k = (1 - p)p^{k-1} and p = 9/10. The sum of the geometric series of contributions from each interval gives an overall tolerance
+/// of abserr.
+/// 
+/// If the integration of a subinterval leads to difficulties then the accuracy requirement for subsequent intervals is relaxed,
+/// 
+/// TOL_k = u_k max(abserr, max_{i<k}{E_i})
+/// 
+/// where E_k is the estimated error on the interval C_k.
+/// 
+/// The subintervals and their results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit,
+/// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
+/// as workspace for the QAWO algorithm.
 pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, workspace: &::IntegrationWorkspace,
     cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
     let mut total_error = 0f64;
