@@ -7,7 +7,7 @@ use enums;
 use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use std::c_vec::CVec;
 
-static xi : [f64, ..33] = [
+static XI : [f64, ..33] = [
   -1f64, -0.99518472667219688624f64, -0.98078528040323044912f64,
   -0.95694033573220886493f64, -0.92387953251128675612f64,
   -0.88192126434835502970f64, -0.83146961230254523708f64,
@@ -2653,7 +2653,7 @@ impl CquadWorkspace {
             let mut nnans = 0u;
 
             for i in range(0u, n[3] as uint + 1u) {
-                (*iv).fx[i] = f(m + xi[i] * h, arg);
+                (*iv).fx[i] = f(m + XI[i] * h, arg);
                 neval += 1;
                 if !(*iv).fx[i].is_finite() {
                     nans[nnans] = i as i32;
@@ -2738,7 +2738,7 @@ impl CquadWorkspace {
                     /* Get the new (missing) function values */
                     let mut it = skip[d as uint] as uint;
                     while it < 33 {
-                        (*iv).fx[it] = f(m + xi[it] * h, arg);
+                        (*iv).fx[it] = f(m + XI[it] * h, arg);
                         neval += 1;
                         it += 2 * skip[d as uint] as uint;
                     }
@@ -2795,7 +2795,7 @@ impl CquadWorkspace {
                 };
 
                 /* Should we drop this interval? */
-                if (m + h * xi[0]) >= (m + h * xi[1]) || (m + h * xi[31]) >= (m + h * xi[32])
+                if (m + h * XI[0]) >= (m + h * XI[1]) || (m + h * XI[31]) >= (m + h * XI[32])
                     || (*iv).err < fabsf64((*iv).igral) * ::DBL_EPSILON * 10f64 {
                     /* printf
                        ("cquad: dumping ival %i (of %i) with [%e,%e] int=%e, err=%e, depth=%i\n",
@@ -2850,7 +2850,7 @@ impl CquadWorkspace {
 
                     let mut it = skip[0] as uint;
                     while it < 32u {
-                        (*ivl).fx[it] = f(((*ivl).a + (*ivl).b) / 2f64 + xi[it] * h / 2f64, arg);
+                        (*ivl).fx[it] = f(((*ivl).a + (*ivl).b) / 2f64 + XI[it] * h / 2f64, arg);
                         neval += 1;
                         it += skip[0] as uint;
                     }
@@ -2919,7 +2919,7 @@ impl CquadWorkspace {
 
                     it = skip[0] as uint;
                     while it < 32u {
-                        (*ivr).fx[it] = f(((*ivr).a + (*ivr).b) / 2f64 + xi[it] * h / 2f64, arg);
+                        (*ivr).fx[it] = f(((*ivr).a + (*ivr).b) / 2f64 + XI[it] * h / 2f64, arg);
                         neval += 1;
                         it += skip[0] as uint;
                     }
@@ -3095,6 +3095,89 @@ impl ffi::FFI<ffi::gsl_integration_cquad_workspace> for CquadWorkspace {
     }
 
     fn unwrap(w: &CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
+        w.w
+    }
+}
+
+/// The fixed-order Gauss-Legendre integration routines are provided for fast integration of smooth functions with known polynomial order.
+/// The n-point Gauss-Legendre rule is exact for polynomials of order 2*n-1 or less. For example, these rules are useful when integrating
+/// basis functions to form mass matrices for the Galerkin method. Unlike other numerical integration routines within the library, these
+/// routines do not accept absolute or relative error bounds.
+pub struct GLFixedTable {
+    w: *mut ffi::gsl_integration_glfixed_table
+}
+
+impl GLFixedTable {
+    /// This function determines the Gauss-Legendre abscissae and weights necessary for an n-point fixed order integration scheme. If possible,
+    /// high precision precomputed coefficients are used. If precomputed weights are not available, lower precision coefficients are computed
+    /// on the fly.
+    pub fn new(n: u64) -> Option<GLFixedTable> {
+        let tmp = unsafe { ffi::gsl_integration_glfixed_table_alloc(n) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(GLFixedTable {
+                w: tmp
+            })
+        }
+    }
+
+    /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight wi on the interval [a,b]. The points
+    /// and weights are ordered by increasing point value. A function f may be integrated on [a,b] by summing wi * f(xi) over i.
+    pub fn point(&self, a: f64, b: f64, i: u64, xi: &mut f64, wi: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w as *const ffi::gsl_integration_glfixed_table) }
+    }
+
+    /// This function applies the Gauss-Legendre integration rule contained in table self and returns the result.
+    pub fn glfixed<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64) -> f64 {
+        unsafe {
+            let n = (*self.w).n;
+            let mut s = 0f64;
+
+            let m = (n + 1) >> 1;
+            let t_w = CVec::new((*self.w).w, m as uint + 1u);
+            let w = t_w.as_slice();
+            let t_x = CVec::new((*self.w).x, m as uint + 1u);
+            let x = t_x.as_slice();
+            let A = 0.5 * (b - a);
+            let B = 0.5 * (b + a);
+
+            /* n - odd */
+            if n & 1 != 0 {
+                s = w[0] * f(B, arg);
+
+                for i in range(1u, m as uint) {
+                    let Ax = A * x[i];
+                    s += w[i] * (f(B + Ax, arg) + f(B - Ax, arg));
+                }
+            } else {
+                /* n - even */
+                for i in range(0u, m as uint) {
+                    let Ax = A * x[i];
+                    s += w[i] * (f(B + Ax, arg) + f(B - Ax, arg));
+                }
+            }
+            A * s
+        }
+    }
+}
+
+impl Drop for GLFixedTable {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_integration_glfixed_table_free(self.w) };
+        self.w = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_integration_glfixed_table> for GLFixedTable {
+    fn wrap(w: *mut ffi::gsl_integration_glfixed_table) -> GLFixedTable {
+        GLFixedTable {
+            w: w
+        }
+    }
+
+    fn unwrap(w: &GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
         w.w
     }
 }
@@ -4754,9 +4837,9 @@ fn downdate(c: &mut [f64], t_n: i32, d: i32, nans: &mut [i32], nnans: i32) {
     }
     for i in range(0u, nnans as uint) {
         b_new[n as uint + 1u] = b_new[n as uint + 1u] / Lalpha[n as uint];
-        b_new[n as uint] = (b_new[n as uint] + xi[nans[i] as uint] * b_new[n as uint + 1u]) / Lalpha[n as uint - 1u];
+        b_new[n as uint] = (b_new[n as uint] + XI[nans[i] as uint] * b_new[n as uint + 1u]) / Lalpha[n as uint - 1u];
         for j in range(n - 1, 0) {
-            b_new[j as uint] = (b_new[j as uint] + xi[nans[i] as uint] * b_new[j as uint + 1u] - Lgamma[j as uint + 1u]
+            b_new[j as uint] = (b_new[j as uint] + XI[nans[i] as uint] * b_new[j as uint + 1u] - Lgamma[j as uint + 1u]
                 * b_new[j as uint + 2u]) / Lalpha[j as uint - 1u];
         }
         for j in range(0, n + 1) {

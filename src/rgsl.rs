@@ -105,7 +105,8 @@ pub use types::{
     IntegrationWorkspace,
     IntegrationQawsTable,
     IntegrationQawoTable,
-    CquadWorkspace
+    CquadWorkspace,
+    GLFixedTable
 };
 
 pub use enums::{

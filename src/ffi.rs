@@ -2050,6 +2050,10 @@ extern "C" {
     // CQUAD doubly-adaptive integration
     pub fn gsl_integration_cquad_workspace_alloc(n: size_t) -> *mut gsl_integration_cquad_workspace;
     pub fn gsl_integration_cquad_workspace_free(w: *mut gsl_integration_cquad_workspace);
+    // Gauss-Legendre integration
+    pub fn gsl_integration_glfixed_table_alloc(n: size_t) -> *mut gsl_integration_glfixed_table;
+    pub fn gsl_integration_glfixed_point(a: c_double, b: c_double, i: size_t, xi: *mut c_double, wi: *mut c_double, t: *const gsl_integration_glfixed_table) -> enums::Value;
+    pub fn gsl_integration_glfixed_table_free(t: *mut gsl_integration_glfixed_table);
 }
 
 #[repr(C)]
@@ -2520,8 +2524,7 @@ pub struct gsl_integration_qawo_table {
 
 /* Data of a single interval */
 #[repr(C)]
-pub struct gsl_integration_cquad_ival
-{
+pub struct gsl_integration_cquad_ival {
     pub a: c_double,
     pub b: c_double,
     pub c: [c_double, ..64],
@@ -2536,9 +2539,17 @@ pub struct gsl_integration_cquad_ival
 
 /* The workspace is just a collection of intervals */
 #[repr(C)]
-pub struct gsl_integration_cquad_workspace
-{
+pub struct gsl_integration_cquad_workspace {
     pub size: size_t,
     pub ivals: *mut gsl_integration_cquad_ival,
     pub heap: *mut size_t
+}
+
+/* Workspace for fixed-order Gauss-Legendre integration */
+#[repr(C)]
+pub struct gsl_integration_glfixed_table {
+    pub n: size_t, /* number of points */
+    pub x: *mut c_double, /* Gauss abscissae/points */
+    pub w: *mut c_double, /* Gauss weights for each abscissae */
+    pub precomputed: c_int /* high precision abscissae/weights precomputed? */
 }
