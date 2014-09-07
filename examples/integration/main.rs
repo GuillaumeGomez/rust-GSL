@@ -22,6 +22,10 @@ fn cqf1(x: f64, p: &mut f64) -> f64 {
     unsafe { expf64(x) }
 }
 
+fn qags_fn(x: f64, alpha: &mut f64) -> f64 {
+    unsafe { logf64(*alpha * x) / x.sqrt() }
+}
+
 /* f458(x) = 1/(1 + log(x)^2)^2 */
 /* integ(log(x) f458(x),x,0,1) = (Ci(1) sin(1) + (pi/2 - Si(1)) cos(1))/pi 
                                = -0.1892752 */
@@ -80,16 +84,18 @@ fn main() {
         }
     }
 
-    println!("\n=== IntegrationQawsTable.qaws ===");
-    let t = rgsl::IntegrationQawsTable::new(0f64, 0f64, 1, 0).unwrap();
-    let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
+    {
+        println!("\n=== IntegrationQawsTable.qaws ===");
+        let t = rgsl::IntegrationQawsTable::new(0f64, 0f64, 1, 0).unwrap();
+        let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
 
-    match t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &w, &mut result, &mut error) {
-        rgsl::enums::Success => {
-            println!("Result {} +/- {}", result, error);
-        }
-        e => {
-            println!("There was a problem with integration: {}", e);
+        match t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &w, &mut result, &mut error) {
+            rgsl::enums::Success => {
+                println!("Result {} +/- {}", result, error);
+            }
+            e => {
+                println!("There was a problem with integration: {}", e);
+            }
         }
     }
 
@@ -103,5 +109,21 @@ fn main() {
         e => {
             println!("There was a problem with integration: {}", e);
         }
+    }
+
+    {
+        println!("\n=== IntegrationWorkspace.qags ===");
+        let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
+
+        let expected = -4f64;
+        let mut alpha = 1f64;
+
+        w.qags(qags_fn, &mut alpha, 0f64, 1f64, 0f64, 1e-7f64, 1000, &mut result, &mut error); 
+
+        println!("result          = {:.18}", result);
+        println!("exact result    = {:.18}", expected);
+        println!("estimated error = {:.18}", error);
+        println!("actual error    = {:.18}", result - expected);
+        println!("intervals =  {}", w.size());
     }
 }

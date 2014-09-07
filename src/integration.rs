@@ -819,7 +819,7 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
     let n = fv1.len();
 
     let center = 0.5f64 * (a + b);
-    let half_length = 0.5f64 * (a - b);
+    let half_length = 0.5f64 * (b - a);
     let abs_half_length = unsafe { fabsf64(half_length) };
     let f_center = f(center, arg);
 

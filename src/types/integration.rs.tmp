@@ -3376,11 +3376,17 @@ pub fn append_interval(w: &IntegrationWorkspace, a: f64, b: f64, area: f64, erro
 #[doc(hidden)]
 #[allow(visible_private_types)]
 pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64, abserr: &mut f64) {
-    let epstab = &mut (*table).rlist2;//CVec::new((*table).rlist2 as *mut f64, (*table).n as uint + 3);
-    let res3la = &mut (*table).res3la;//CVec::new((*table).res3la as *mut f64, 3u);
+    let mut epstab = (*table).rlist2;//CVec::new((*table).rlist2 as *mut f64, (*table).n as uint + 3);
+    let mut res3la = (*table).res3la;//CVec::new((*table).res3la as *mut f64, 3u);
     let n = (*table).n as uint - 1u;
 
-    let current = (*epstab)[n];
+    print!("start : ");
+    for tmp in range(0u, n + 1) {
+        print!("{} ", epstab[tmp]);
+    }
+    println!("");
+
+    let current = epstab[n];
 
     let mut absolute = ::DBL_MAX;
     let mut relative = 5f64 * ::DBL_EPSILON * fabsf64(current);
@@ -3403,6 +3409,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     epstab[n + 2] = epstab[n];
     epstab[n] = ::DBL_MAX;
 
+    println!("=========\nnewelm : {}", newelm);
     for i in range(0, newelm) {
         let mut res = epstab[n - 2 * i + 2];
         let e0 = epstab[n - 2 * i - 2];
@@ -3423,6 +3430,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
             absolute = err2 + err3;
             relative = 5f64 * ::DBL_EPSILON * fabsf64(res);
             *abserr = absolute.max(relative);
+            println!("1.a : {}", *abserr);
             return;
         }
 
@@ -3450,13 +3458,16 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
         /* Compute a new element and eventually adjust the value of result. */
 
         res = e1 + 1f64 / ss;
+        println!("... {} + {} / {} = {}", e1, 1f64, ss, res);
         epstab[n - 2 * i] = res;
 
         {
             let error = err2 + fabsf64(res - e2) + err3;
+            println!("//// {} + ({} - {} = {}) + {} = {}", err2, res, e2, fabsf64(res - e2), err3, error);
 
             if error <= *abserr {
                 *abserr = error;
+                println!("1.b : {}", *abserr);
                 *result = res;
             }
         }
@@ -3492,9 +3503,11 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     if nres_orig < 3 {
         res3la.as_mut_slice()[nres_orig as uint] = *result;
         *abserr = ::DBL_MAX;
+        println!("1.c : {}", *abserr);
     } else {
         /* Compute error estimate */
         *abserr = fabsf64(*result - res3la[2]) + fabsf64(*result - res3la[1]) + fabsf64(*result - res3la[0]);
+        println!("1.d : {}", *abserr);
 
         res3la[0] = res3la[1];
         res3la[1] = res3la[2];
@@ -3508,6 +3521,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     (*table).nres = nres_orig + 1;  
 
     *abserr = (*abserr).max(5f64 * ::DBL_EPSILON * fabsf64(*result));
+    println!("1.e : {}", *abserr);
 }
 
 unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
@@ -3637,6 +3651,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
 
     /* Perform the first integration */
     q(f, arg, a, b, &mut result0, &mut abserr0, &mut resabs0, &mut resasc0);
+    println!("result0: {}", result0);
 
     f_w.set_initial_result(result0, abserr0);
 
@@ -3712,8 +3727,12 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         We write these expressions in the same way as the original QUADPACK code so that the rounding errors are the same, which
         makes testing easier. */
 
+        print!("-> {} + {} - {} = ", errsum, error12, e_i);
         errsum = errsum + error12 - e_i;
+        println!("{}", errsum);
+        print!("area : {} + {} - {} = ", area, area12, r_i);
         area = area + area12 - r_i;
+        println!("{}", area);
 
         tolerance = epsabs.max(epsrel * fabsf64(area));
 
@@ -3750,9 +3769,11 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         /* append the newly-created intervals to the list */
         f_w.update(a1, b1, area1, error1, a2, b2, area2, error2);
 
+        println!("errsum : {} / {}", errsum, tolerance);
         if errsum <= tolerance {
             *result = f_w.sum_results();
             *abserr = errsum;
+            println!("here ?");
             return return_error(error_type);
         }
 
@@ -3812,7 +3833,9 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
             error_type = 5;
         }
 
+        println!("==> {} {}", abseps, err_ext);
         if abseps < err_ext {
+            println!("in !");
             ktmin = 0;
             err_ext = abseps;
             res_ext = reseps;
