@@ -66,6 +66,18 @@ The presence of an integrable singularity in the integration region causes an ad
 singularity. As the subintervals decrease in size the successive approximations to the integral converge in a limiting fashion. This 
 approach to the limit can be accelerated using an extrapolation procedure. The QAGS algorithm combines adaptive bisection with the Wynn 
 epsilon-algorithm to speed up the integration of many types of integrable singularities.
+
+##References and Further Reading
+
+The following book is the definitive reference for QUADPACK, and was written by the original authors. It provides descriptions of the 
+algorithms, program listings, test programs and examples. It also includes useful advice on numerical integration and many references 
+to the numerical integration literature used in developing QUADPACK.
+
+R. Piessens, E. de Doncker-Kapenga, C.W. Ueberhuber, D.K. Kahaner. QUADPACK A subroutine package for automatic integration Springer Verlag, 1983.
+The CQUAD integration algorithm is described in the following paper:
+
+P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit Interpolants”, ACM Transactions on Mathematical Software, Volume 37 
+(2010), Issue 3, Article 26.
 !*/
 
 use ffi;

@@ -67,6 +67,13 @@ extern "C" {
 
     pub static gsl_rng_default_seed : c_ulong;
 
+    pub static gsl_interp_linear : *const gsl_interp_type;
+    pub static gsl_interp_polynomial : *const gsl_interp_type;
+    pub static gsl_interp_cspline : *const gsl_interp_type;
+    pub static gsl_interp_cspline_periodic : *const gsl_interp_type;
+    pub static gsl_interp_akima : *const gsl_interp_type;
+    pub static gsl_interp_akima_periodic : *const gsl_interp_type;
+
     // Airy functions
     pub fn gsl_sf_airy_Ai(x: c_double, mode: enums::Mode) -> c_double;
     pub fn gsl_sf_airy_Ai_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
@@ -2054,6 +2061,18 @@ extern "C" {
     pub fn gsl_integration_glfixed_table_alloc(n: size_t) -> *mut gsl_integration_glfixed_table;
     pub fn gsl_integration_glfixed_point(a: c_double, b: c_double, i: size_t, xi: *mut c_double, wi: *mut c_double, t: *const gsl_integration_glfixed_table) -> enums::Value;
     pub fn gsl_integration_glfixed_table_free(t: *mut gsl_integration_glfixed_table);
+
+    // Interpolation Functions
+    pub fn gsl_interp_alloc(t: *const gsl_interp_type, size: size_t) -> *mut gsl_interp;
+    pub fn gsl_interp_init(interp: *mut gsl_interp, xa: *const c_double, ya: *const c_double, size: size_t) -> enums::Value;
+    pub fn gsl_interp_free(interp: *mut gsl_interp);
+    pub fn gsl_interp_min_size(interp: *const gsl_interp) -> c_uint;
+    pub fn gsl_interp_name(interp: *const gsl_interp) -> *const c_char;
+    // Interpolation Types
+    pub fn gsl_interp_type_min_size(t: *const gsl_interp_type) -> c_uint;
+    // Index Look-up and Acceleration
+    pub fn gsl_interp_bsearch(x_array: *const c_double, x: c_double, index_lo: size_t, index_hi: size_t) -> size_t;
+    pub fn gsl_interp_accel_find(a: *mut ::InterpAccel, x_array: *const c_double, size: size_t, x: c_double) -> size_t;
 }
 
 #[repr(C)]
@@ -2552,4 +2571,28 @@ pub struct gsl_integration_glfixed_table {
     pub x: *mut c_double, /* Gauss abscissae/points */
     pub w: *mut c_double, /* Gauss weights for each abscissae */
     pub precomputed: c_int /* high precision abscissae/weights precomputed? */
+}
+
+/* interpolation object type */
+#[repr(C)]
+pub struct gsl_interp_type {
+    pub name: *const c_char,
+    pub min_size: c_uint,
+    pub alloc: Option<extern "C" fn(size_t) -> *mut c_void>,
+    pub init: Option<extern "C" fn(*mut c_void, *const c_double, *const c_double, size_t) -> enums::Value>,
+    pub eval: Option<extern "C" fn(*const c_void, *const c_double, *const c_double, size_t, c_double, *mut ::InterpAccel, *mut c_double) -> enums::Value>,
+    pub eval_deriv: Option<extern "C" fn(*const c_void, *const c_double, *const c_double, size_t, c_double, *mut ::InterpAccel, *mut c_double) -> enums::Value>,
+    pub eval_deriv2: Option<extern "C" fn(*const c_void, *const c_double, *const c_double, size_t, c_double, *mut ::InterpAccel, *mut c_double) -> enums::Value>,
+    pub eval_integ: Option<extern "C" fn(*const c_void, *const c_double, *const c_double, size_t, c_double, *mut ::InterpAccel, c_double, c_double, *mut c_double) -> enums::Value>,
+    pub free: Option<extern "C" fn(*mut c_void)>
+}
+
+/* general interpolation object */
+#[repr(C)]
+pub struct gsl_interp {
+    pub _type: *const gsl_interp_type,
+    pub xmin: c_double,
+    pub xmax: c_double,
+    pub size: size_t,
+    pub state: *mut c_void
 }
