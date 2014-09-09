@@ -109,7 +109,8 @@ pub use types::{
     GLFixedTable,
     InterpAccel,
     Interp,
-    InterpType
+    InterpType,
+    Spline
 };
 
 pub use enums::{
@@ -156,6 +157,7 @@ pub mod gamma_beta;
 pub mod gegenbauer;
 pub mod hypergeometric;
 pub mod integration;
+pub mod interpolation;
 pub mod jacobian_elliptic;
 pub mod laguerre;
 pub mod lambert_w;

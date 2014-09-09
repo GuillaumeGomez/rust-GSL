@@ -63,3 +63,8 @@ path = "examples/radix/main.rs"
 
 name = "integration"
 path = "examples/integration/main.rs"
+
+[[bin]]
+
+name = "interpolation"
+path = "examples/interpolation/main.rs"

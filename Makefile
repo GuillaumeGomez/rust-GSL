@@ -21,6 +21,7 @@ examples: rgsl
 	  rustc -o bin/numerical_differentiation -L ./lib examples/numerical_differentiation/main.rs
 	  rustc -o bin/radix -L ./lib examples/radix/main.rs
 	  rustc -o bin/integration -L ./lib examples/integration/main.rs
+	  rustc -o bin/interpolation -L ./lib examples/interpolation/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs

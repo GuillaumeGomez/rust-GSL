@@ -22,6 +22,19 @@ interpolation used.
 
 The state of searches can be stored in a gsl_interp_accel object, which is a kind of iterator for interpolation lookups. It caches the previous 
 value of an index lookup. When the subsequent interpolation point falls in the same interval its index value can be returned immediately.
+
+##Higher-level Interface
+
+The functions described in the previous sections required the user to supply pointers to the x and y arrays on each call. The following 
+functions are equivalent to the corresponding gsl_interp functions but maintain a copy of this data in the gsl_spline object. This removes 
+the need to pass both xa and ya as arguments on each evaluation.
+
+##References and Further Reading
+
+Descriptions of the interpolation algorithms and further references can be found in the following books:
+
+C.W. Ueberhuber, Numerical Computation (Volume 1), Chapter 9 “Interpolation”, Springer (1997), ISBN 3-540-62058-3.
+D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6.8, Dover (1988), ISBN 0-486-65691-8.
 !*/
 
 use ffi;
@@ -38,12 +51,6 @@ pub struct InterpAccel {
 }
 
 impl InterpAccel {
-    /// This function returns the index i of the array x_array such that x_array[i] <= x < x_array[i+1]. The index is searched for in the
-    /// range [index_lo,index_hi].
-    pub fn bsearch(x_array: &[f64], x: f64, index_lo: u64, index_hi: u64) -> u64 {
-        unsafe { ffi::gsl_interp_bsearch(x_array.as_ptr(), x, index_lo, index_hi) }
-    }
-
     /// This function returns a pointer to an accelerator object, which is a kind of iterator for interpolation lookups. It tracks the state
     /// of lookups, thus allowing for application of various acceleration strategies.
     pub fn new() -> InterpAccel {
@@ -198,5 +205,93 @@ impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
 
     fn unwrap(t: &InterpType) -> *mut ffi::gsl_interp_type {
         t.t as *mut ffi::gsl_interp_type
+    }
+}
+
+/// general interpolation object
+pub struct Spline {
+    spline: *mut ffi::gsl_spline
+}
+
+impl Spline {
+    pub fn new(t: &InterpType, size: u64) -> Option<Spline> {
+        let tmp = unsafe { ffi::gsl_spline_alloc(t.t, size) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(Spline {
+                spline: tmp
+            })
+        }
+    }
+
+    pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
+        unsafe { ffi::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as u64) }
+    }
+
+    pub fn name(&self) -> String {
+        let tmp = unsafe { ffi::gsl_spline_name(self.spline as *const ffi::gsl_spline) };
+
+        if tmp.is_null() {
+            String::new()
+        } else {
+            unsafe { ::std::string::raw::from_buf(tmp as *const u8) }
+        }
+    }
+
+    pub fn min_size(&self) -> u32 {
+        unsafe { ffi::gsl_spline_min_size(self.spline as *const ffi::gsl_spline) }
+    }
+
+    pub fn eval(&self, x: f64, acc: &mut InterpAccel) -> f64 {
+        unsafe { ffi::gsl_spline_eval(self.spline as *const ffi::gsl_spline, x, acc) }
+    }
+
+    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_spline_eval_e(self.spline as *const ffi::gsl_spline, x, acc, y) }
+    }
+
+    pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
+        unsafe { ffi::gsl_spline_eval_deriv(self.spline as *const ffi::gsl_spline, x, acc) }
+    }
+
+    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_spline_eval_deriv_e(self.spline as *const ffi::gsl_spline, x, acc, d) }
+    }
+
+    pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
+        unsafe { ffi::gsl_spline_eval_deriv2(self.spline as *const ffi::gsl_spline, x, acc) }
+    }
+
+    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline as *const ffi::gsl_spline, x, acc, d2) }
+    }
+
+    pub fn eval_integ(&self, a: f64, b: f64, acc: &mut InterpAccel) -> f64 {
+        unsafe { ffi::gsl_spline_eval_integ(self.spline as *const ffi::gsl_spline, a, b, acc) }
+    }
+
+    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> enums::Value {
+        unsafe { ffi::gsl_spline_eval_integ_e(self.spline as *const ffi::gsl_spline, a, b, acc, result) }
+    }
+}
+
+impl Drop for Spline {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_spline_free(self.spline) };
+        self.spline = ::std::ptr::mut_null();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_spline> for Spline {
+    fn wrap(spline: *mut ffi::gsl_spline) -> Spline {
+        Spline {
+            spline: spline
+        }
+    }
+
+    fn unwrap(spline: &Spline) -> *mut ffi::gsl_spline {
+        spline.spline
     }
 }
