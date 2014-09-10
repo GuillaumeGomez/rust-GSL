@@ -2096,6 +2096,26 @@ extern "C" {
     pub fn gsl_spline_eval_deriv2_e(spline: *const gsl_spline, x: c_double, acc: *mut ::InterpAccel, d2: *mut c_double) -> enums::Value;
     pub fn gsl_spline_eval_integ(spline: *const gsl_spline, a: c_double, b: c_double, acc: *mut ::InterpAccel) -> c_double;
     pub fn gsl_spline_eval_integ_e(spline: *const gsl_spline, a: c_double, b: c_double, acc: *mut ::InterpAccel, result: *mut c_double) -> enums::Value;
+
+    // LU Decomposition
+    pub fn gsl_linalg_LU_decomp(a: *mut gsl_matrix, p: *mut gsl_permutation, signum: *mut c_int) -> enums::Value;
+    pub fn gsl_linalg_complex_LU_decomp(a: *mut gsl_matrix_complex, p: *mut gsl_permutation, signum: *mut c_int) -> enums::Value;
+    pub fn gsl_linalg_LU_solve(lu: *const gsl_matrix, p: *const gsl_permutation, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_complex_LU_solve(lu: *const gsl_matrix_complex, p: *const gsl_permutation, b: *const gsl_vector_complex, x: *mut gsl_vector_complex) -> enums::Value;
+    pub fn gsl_linalg_LU_svx(lu: *const gsl_matrix, p: *const gsl_permutation, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_complex_LU_svx(lu: *const gsl_matrix_complex, p: *const gsl_permutation, x: *mut gsl_vector_complex) -> enums::Value;
+    pub fn gsl_linalg_LU_refine(a: *const gsl_matrix, lu: *const gsl_matrix, p: *const gsl_permutation, b: *const gsl_vector, x: *mut gsl_vector,
+        residual: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_complex_LU_refine(a: *const gsl_matrix_complex, lu: *const gsl_matrix_complex, p: *const gsl_permutation, b: *const gsl_vector_complex,
+        x: *mut gsl_vector_complex, residual: *mut gsl_vector_complex) -> enums::Value;
+    pub fn gsl_linalg_LU_invert(lu: *const gsl_matrix, p: *const gsl_permutation, inverse: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_complex_LU_invert(lu: *const gsl_matrix_complex, p: *const gsl_permutation, inverse: *mut gsl_matrix_complex) -> enums::Value;
+    pub fn gsl_linalg_LU_det(lu: *mut gsl_matrix, signum: c_int) -> c_double;
+    pub fn gsl_linalg_complex_LU_det(lu: *mut gsl_matrix_complex, signum: c_int) -> gsl_complex;
+    pub fn gsl_linalg_LU_lndet(lu: *mut gsl_matrix) -> c_double;
+    pub fn gsl_linalg_complex_LU_lndet(lu: *mut gsl_matrix_complex) -> c_double;
+    pub fn gsl_linalg_LU_sgndet(lu: *mut gsl_matrix, signum: c_int) -> c_double;
+    pub fn gsl_linalg_complex_LU_sgndet(lu: *mut gsl_matrix_complex, signum: c_int) -> gsl_complex;
 }
 
 #[repr(C)]

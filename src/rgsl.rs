@@ -162,6 +162,7 @@ pub mod jacobian_elliptic;
 pub mod laguerre;
 pub mod lambert_w;
 pub mod legendre;
+pub mod linear_algebra;
 pub mod logarithm;
 pub mod numerical_differentiation;
 pub mod polynomials;
