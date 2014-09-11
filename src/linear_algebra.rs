@@ -27,6 +27,15 @@ A = Q R
 This decomposition can be used to convert the linear system A x = b into the triangular system R x = Q^T b, which can be solved by back-substitution. 
 Another use of the QR decomposition is to compute an orthonormal basis for a set of vectors. The first N columns of Q form an orthonormal 
 basis for the range of A, ran(A), when A has full column rank.
+
+##QR Decomposition with Column Pivoting
+
+The QR decomposition can be extended to the rank deficient case by introducing a column permutation P,
+
+A P = Q R
+The first r columns of Q form an orthonormal basis for the range of A for a matrix with column rank r. This decomposition can also be used 
+to convert the linear system A x = b into the triangular system R y = Q^T b, x = P y, which can be solved by back-substitution and permutation. 
+We denote the QR decomposition with column pivoting by QRP^T since A = Q R P^T.
 !*/
 
 use ffi;
@@ -267,4 +276,66 @@ pub fn R_solve(r: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::Valu
 /// the solution on output.
 pub fn R_svx(r: &::MatrixF64, x: &::VectorF64) -> enums::Value {
     unsafe { ffi::gsl_linalg_R_svx(ffi::FFI::unwrap(r) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
+}
+
+/// This function factorizes the M-by-N matrix A into the QRP^T decomposition A = Q R P^T. On output the diagonal and upper triangular part
+/// of the input matrix contain the matrix R. The permutation matrix P is stored in the permutation p. The sign of the permutation is given
+/// by signum. It has the value (-1)^n, where n is the number of interchanges in the permutation. The vector tau and the columns of the lower
+/// triangular part of the matrix A contain the Householder coefficients and vectors which encode the orthogonal matrix Q. The vector tau must
+/// be of length k=\min(M,N). The matrix Q is related to these components by, Q = Q_k ... Q_2 Q_1 where Q_i = I - \tau_i v_i v_i^T and v_i is
+/// the Householder vector v_i = (0,...,1,A(i+1,i),A(i+2,i),...,A(m,i)). This is the same storage scheme as used by LAPACK. The vector norm is
+/// a workspace of length N used for column pivoting.
+/// 
+/// The algorithm used to perform the decomposition is Householder QR with column pivoting (Golub & Van Loan, Matrix Computations, Algorithm 5.4.1).
+pub fn QRPT_decomp(a: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, signum: &mut i32, norm: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau), ffi::FFI::unwrap(p), signum,
+        ffi::FFI::unwrap(norm)) }
+}
+
+/// This function factorizes the matrix A into the decomposition A = Q R P^T without modifying A itself and storing the output in the separate
+/// matrices q and r.
+pub fn QRPT_decomp2(a: &::MatrixF64, q: &::MatrixF64, r: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, signum: &mut i32, norm: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_decomp2(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(q), ffi::FFI::unwrap(r),
+        ffi::FFI::unwrap(tau), ffi::FFI::unwrap(p), signum, ffi::FFI::unwrap(norm)) }
+}
+
+/// This function solves the square system A x = b using the QRP^T decomposition of A held in (QR, tau, p) which must have been computed previously
+/// by QRPT_decomp.
+pub fn QRPT_solve(qr: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_solve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the square system A x = b in-place using the QRP^T decomposition of A held in (QR,tau,p). On input x should contain the
+/// right-hand side b, which is replaced by the solution on output.
+pub fn QRPT_svx(qr: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_svx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the square system R P^T x = Q^T b for x. It can be used when the QR decomposition of a matrix is available in unpacked
+/// form as (Q, R).
+pub fn QRPT_QRsolve(q: &::MatrixF64, r: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_QRsolve(ffi::FFI::unwrap(q) as *const ffi::gsl_matrix, ffi::FFI::unwrap(r) as *const ffi::gsl_matrix,
+        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+}
+
+/// This function performs a rank-1 update w v^T of the QRP^T decomposition (Q, R, p). The update is given by Q'R' = Q (R + w v^T P) where the
+/// output matrices Q' and R' are also orthogonal and right triangular. Note that w is destroyed by the update. The permutation p is not changed.
+pub fn QRPT_update(q: &::MatrixF64, r: &::MatrixF64, p: &::Permutation, w: &::VectorF64, v: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_update(ffi::FFI::unwrap(q) as *const ffi::gsl_matrix, ffi::FFI::unwrap(r) as *const ffi::gsl_matrix,
+        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(w), ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+}
+
+/// This function solves the triangular system R P^T x = b for the N-by-N matrix R contained in QR.
+pub fn QRPT_Rsolve(qr: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_Rsolve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the triangular system R P^T x = b in-place for the N-by-N matrix R contained in QR. On input x should contain the
+/// right-hand side b, which is replaced by the solution on output.
+pub fn QRPT_Rsvx(qr: &::MatrixF64, p: &::Permutation, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QRPT_Rsvx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+        ffi::FFI::unwrap(x)) }
 }

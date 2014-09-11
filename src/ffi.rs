@@ -2133,6 +2133,20 @@ extern "C" {
     pub fn gsl_linalg_QR_update(q: *mut gsl_matrix, r: *mut gsl_matrix, w: *mut gsl_vector, v: *const gsl_vector) -> enums::Value;
     pub fn gsl_linalg_R_solve(r: *const gsl_matrix, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
     pub fn gsl_linalg_R_svx(r: *const gsl_matrix, x: *mut gsl_vector) -> enums::Value;
+    // QR Decomposition with Column Pivoting
+    pub fn gsl_linalg_QRPT_decomp(a: *mut gsl_matrix, tau: *mut gsl_vector, p: *mut gsl_permutation, signum: *mut c_int,
+        norm: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_decomp2(a: *const gsl_matrix, q: *mut gsl_matrix, r: *mut gsl_matrix, tau: *mut gsl_vector, p: *mut gsl_permutation,
+        signum: *mut c_int, norm: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_solve(qr: *const gsl_matrix, tau: *const gsl_vector, p: *const gsl_permutation, b: *const gsl_vector,
+        x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_svx(qr: *const gsl_matrix, tau: *const gsl_vector, p: *const gsl_permutation, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_QRsolve(q: *const gsl_matrix, r: *const gsl_matrix, p: *const gsl_permutation, b: *const gsl_vector,
+        x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_update(q: *const gsl_matrix, r: *const gsl_matrix, p: *const gsl_permutation, w: *mut gsl_vector,
+        v: *const gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_Rsolve(qr: *const gsl_matrix, p: *const gsl_permutation, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QRPT_Rsvx(qr: *const gsl_matrix, p: *const gsl_permutation, x: *mut gsl_vector) -> enums::Value;
 }
 
 #[repr(C)]
