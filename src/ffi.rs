@@ -2097,6 +2097,7 @@ extern "C" {
     pub fn gsl_spline_eval_integ(spline: *const gsl_spline, a: c_double, b: c_double, acc: *mut ::InterpAccel) -> c_double;
     pub fn gsl_spline_eval_integ_e(spline: *const gsl_spline, a: c_double, b: c_double, acc: *mut ::InterpAccel, result: *mut c_double) -> enums::Value;
 
+    // linear algebra
     // LU Decomposition
     pub fn gsl_linalg_LU_decomp(a: *mut gsl_matrix, p: *mut gsl_permutation, signum: *mut c_int) -> enums::Value;
     pub fn gsl_linalg_complex_LU_decomp(a: *mut gsl_matrix_complex, p: *mut gsl_permutation, signum: *mut c_int) -> enums::Value;
@@ -2116,6 +2117,22 @@ extern "C" {
     pub fn gsl_linalg_complex_LU_lndet(lu: *mut gsl_matrix_complex) -> c_double;
     pub fn gsl_linalg_LU_sgndet(lu: *mut gsl_matrix, signum: c_int) -> c_double;
     pub fn gsl_linalg_complex_LU_sgndet(lu: *mut gsl_matrix_complex, signum: c_int) -> gsl_complex;
+    // QR Decomposition
+    pub fn gsl_linalg_QR_decomp(a: *mut gsl_matrix, tau: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_solve(qr: *const gsl_matrix, tau: *const gsl_vector, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_svx(qr: *const gsl_matrix, tau: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_lssolve(qr: *const gsl_matrix, tau: *const gsl_vector, b: *const gsl_vector, x: *mut gsl_vector,
+        residual: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_QTvec(qr: *const gsl_matrix, tau: *const gsl_vector, v: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_Qvec(qr: *const gsl_matrix, tau: *const gsl_vector, v: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_QTmat(qr: *const gsl_matrix, tau: *const gsl_vector, v: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_QR_Rsolve(qr: *const gsl_matrix, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_Rsvx(qr: *const gsl_matrix, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_unpack(qr: *const gsl_matrix, tau: *const gsl_vector, q: *mut gsl_matrix, r: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_QR_QRsolve(q: *mut gsl_matrix, r: *mut gsl_matrix, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_QR_update(q: *mut gsl_matrix, r: *mut gsl_matrix, w: *mut gsl_vector, v: *const gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_R_solve(r: *const gsl_matrix, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_R_svx(r: *const gsl_matrix, x: *mut gsl_vector) -> enums::Value;
 }
 
 #[repr(C)]

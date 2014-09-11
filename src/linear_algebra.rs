@@ -17,6 +17,16 @@ P A = L U
 where P is a permutation matrix, L is unit lower triangular matrix and U is upper triangular matrix. For square matrices this decomposition 
 can be used to convert the linear system A x = b into a pair of triangular systems (L y = P b, U x = y), which can be solved by forward and 
 back-substitution. Note that the LU decomposition is valid for singular matrices.
+
+##QR Decomposition
+
+A general rectangular M-by-N matrix A has a QR decomposition into the product of an orthogonal M-by-M square matrix Q (where Q^T Q = I) and 
+an M-by-N right-triangular matrix R,
+
+A = Q R
+This decomposition can be used to convert the linear system A x = b into the triangular system R x = Q^T b, which can be solved by back-substitution. 
+Another use of the QR decomposition is to compute an orthonormal basis for a set of vectors. The first N columns of Q form an orthonormal 
+basis for the range of A, ran(A), when A has full column rank.
 !*/
 
 use ffi;
@@ -157,4 +167,104 @@ pub fn complex_LU_sgndet(lu: &::MatrixComplexF64, signum: i32) -> ::ComplexF64 {
     ::ComplexF64 {
         data: unsafe { ffi::gsl_linalg_complex_LU_sgndet(ffi::FFI::unwrap(lu), signum).data }
     }
+}
+
+/// This function factorizes the M-by-N matrix A into the QR decomposition A = Q R. On output the diagonal and upper triangular part of the
+/// input matrix contain the matrix R. The vector tau and the columns of the lower triangular part of the matrix A contain the Householder
+/// coefficients and Householder vectors which encode the orthogonal matrix Q. The vector tau must be of length k=\min(M,N). The matrix Q
+/// is related to these components by, Q = Q_k ... Q_2 Q_1 where Q_i = I - \tau_i v_i v_i^T and v_i is the Householder vector v_i =
+/// (0,...,1,A(i+1,i),A(i+2,i),...,A(m,i)). This is the same storage scheme as used by LAPACK.
+/// 
+/// The algorithm used to perform the decomposition is Householder QR (Golub & Van Loan, Matrix Computations, Algorithm 5.2.1).
+pub fn QR_decomp(a: &::MatrixF64, tau: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau)) }
+}
+
+/// This function solves the square system A x = b using the QR decomposition of A held in (QR, tau) which must have been computed previously
+/// with gsl_linalg_QR_decomp. The least-squares solution for rectangular systems can be found using QR_lssolve.
+pub fn QR_solve(qr: &::MatrixF64, tau: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_solve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the square system A x = b in-place using the QR decomposition of A held in (QR,tau) which must have been computed
+/// previously by gsl_linalg_QR_decomp. On input x should contain the right-hand side b, which is replaced by the solution on output.
+pub fn QR_svx(qr: &::MatrixF64, tau: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_svx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function finds the least squares solution to the overdetermined system A x = b where the matrix A has more rows than columns. The
+/// least squares solution minimizes the Euclidean norm of the residual, ||Ax - b||.The routine requires as input the QR decomposition of
+/// A into (QR, tau) given by gsl_linalg_QR_decomp. The solution is returned in x. The residual is computed as a by-product and stored in
+/// residual.
+pub fn QR_lssolve(qr: &::MatrixF64, tau: &::VectorF64, b: &::VectorF64, x: &::VectorF64, residual: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_lssolve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x), ffi::FFI::unwrap(residual)) }
+}
+
+/// This function applies the matrix Q^T encoded in the decomposition (QR,tau) to the vector v, storing the result Q^T v in v. The matrix
+/// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q^T.
+pub fn QR_QTvec(qr: &::MatrixF64, tau: &::VectorF64, v: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_QTvec(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(v)) }
+}
+
+/// This function applies the matrix Q encoded in the decomposition (QR,tau) to the vector v, storing the result Q v in v. The matrix
+/// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q.
+pub fn QR_Qvec(qr: &::MatrixF64, tau: &::VectorF64, v: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_Qvec(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(v)) }
+}
+
+/// This function applies the matrix Q^T encoded in the decomposition (QR,tau) to the matrix A, storing the result Q^T A in A. The matrix
+/// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q^T.
+pub fn QR_QTmat(qr: &::MatrixF64, tau: &::VectorF64, v: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_QTmat(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(v)) }
+}
+
+/// This function solves the triangular system R x = b for x. It may be useful if the product b' = Q^T b has already been computed using
+/// gsl_linalg_QR_QTvec.
+pub fn QR_Rsolve(qr: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_Rsolve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the triangular system R x = b for x in-place. On input x should contain the right-hand side b and is replaced by
+/// the solution on output. This function may be useful if the product b' = Q^T b has already been computed using gsl_linalg_QR_QTvec.
+pub fn QR_Rsvx(qr: &::MatrixF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_Rsvx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
+}
+
+/// This function unpacks the encoded QR decomposition (QR,tau) into the matrices Q and R, where Q is M-by-M and R is M-by-N.
+pub fn QR_unpack(qr: &::MatrixF64, tau: &::VectorF64, q: &::MatrixF64, r: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_unpack(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(q), ffi::FFI::unwrap(r)) }
+}
+
+/// This function solves the system R x = Q^T b for x. It can be used when the QR decomposition of a matrix is available in unpacked
+/// form as (Q, R).
+pub fn QR_QRsolve(q: &::MatrixF64, r: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_QRsolve(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r), ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function performs a rank-1 update w v^T of the QR decomposition (Q, R). The update is given by Q'R' = Q (R + w v^T) where the
+/// output matrices Q' and R' are also orthogonal and right triangular. Note that w is destroyed by the update.
+pub fn QR_update(q: &::MatrixF64, r: &::MatrixF64, w: &::VectorF64, v: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_QR_update(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r), ffi::FFI::unwrap(w),
+        ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+}
+
+/// This function solves the triangular system R x = b for the N-by-N matrix R.
+pub fn R_solve(r: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_R_solve(ffi::FFI::unwrap(r) as *const ffi::gsl_matrix, ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the triangular system R x = b in-place. On input x should contain the right-hand side b, which is replaced by
+/// the solution on output.
+pub fn R_svx(r: &::MatrixF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_R_svx(ffi::FFI::unwrap(r) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
 }
