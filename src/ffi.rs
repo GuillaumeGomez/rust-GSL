@@ -2164,6 +2164,11 @@ extern "C" {
     pub fn gsl_linalg_complex_cholesky_svx(cholesky: *const gsl_matrix_complex, x: *mut gsl_vector_complex) -> enums::Value;
     pub fn gsl_linalg_cholesky_invert(cholesky: *mut gsl_matrix) -> enums::Value;
     pub fn gsl_linalg_complex_cholesky_invert(cholesky: *mut gsl_matrix_complex) -> enums::Value;
+    // Tridiagonal Decomposition of Real Symmetric Matrices
+    pub fn gsl_linalg_symmtd_decomp(a: *mut gsl_matrix, tau: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_symmtd_unpack(a: *const gsl_matrix, tau: *const gsl_vector, q: *mut gsl_matrix, diag: *mut gsl_vector,
+        subdiag: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_symmtd_unpack_T(a: *const gsl_matrix, diag: *mut gsl_vector, subdiag: *mut gsl_vector) -> enums::Value;
 }
 
 #[repr(C)]

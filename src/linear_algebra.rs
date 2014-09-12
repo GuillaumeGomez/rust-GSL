@@ -64,9 +64,18 @@ diagonal matrix (with additional rows of zeros).
 A symmetric, positive definite square matrix A has a Cholesky decomposition into a product of a lower triangular matrix L and its transpose L^T,
 
 A = L L^T
+
 This is sometimes referred to as taking the square-root of a matrix. The Cholesky decomposition can only be carried out when all the eigenvalues 
 of the matrix are positive. This decomposition can be used to convert the linear system A x = b into a pair of triangular systems (L y = b, 
 L^T x = y), which can be solved by forward and back-substitution.
+
+##Tridiagonal Decomposition of Real Symmetric Matrices
+
+A symmetric matrix A can be factorized by similarity transformations into the form,
+
+A = Q T Q^T
+
+where Q is an orthogonal matrix and T is a symmetric tridiagonal matrix.
 !*/
 
 use ffi;
@@ -474,4 +483,25 @@ pub fn cholesky_invert(cholesky: &::MatrixF64) -> enums::Value {
 /// gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On output, the inverse is stored in-place in cholesky.
 pub fn complex_cholesky_invert(cholesky: &::MatrixComplexF64) -> enums::Value {
     unsafe { ffi::gsl_linalg_complex_cholesky_invert(ffi::FFI::unwrap(cholesky)) }
+}
+
+/// This function factorizes the symmetric square matrix A into the symmetric tridiagonal decomposition Q T Q^T. On output the diagonal and
+/// subdiagonal part of the input matrix A contain the tridiagonal matrix T. The remaining lower triangular part of the input matrix contains
+/// the Householder vectors which, together with the Householder coefficients tau, encode the orthogonal matrix Q. This storage scheme is
+/// the same as used by LAPACK. The upper triangular part of A is not referenced.
+pub fn symmtd_decomp(a: &::MatrixF64, tau: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_symmtd_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau)) }
+}
+
+/// This function unpacks the encoded symmetric tridiagonal decomposition (A, tau) obtained from gsl_linalg_symmtd_decomp into the orthogonal
+/// matrix Q, the vector of diagonal elements diag and the vector of subdiagonal elements subdiag.
+pub fn symmtd_unpack(a: &::MatrixF64, tau: &::VectorF64, q: &::MatrixF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_symmtd_unpack(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(q), ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
+}
+
+/// This function unpacks the diagonal and subdiagonal of the encoded symmetric tridiagonal decomposition (A, tau) obtained from
+/// gsl_linalg_symmtd_decomp into the vectors diag and subdiag.
+pub fn symmtd_unpack_T(a: &::MatrixF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_symmtd_unpack_T(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
 }
