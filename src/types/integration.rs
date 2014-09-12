@@ -3148,7 +3148,7 @@ impl GLFixedTable {
             let B = 0.5 * (b + a);
 
             /* n - odd */
-            if n & 1 != 0 {
+            if n % 2 != 0 {
                 s = w[0] * f(B, arg);
 
                 for i in range(1u, m as uint) {
@@ -3471,7 +3471,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
         }
     }
 
-    if n_orig & 1 == 1 {
+    if n_orig % 2 == 1 {
         for i in range(0, newelm + 1) {
           epstab[1 + i * 2] = epstab[i * 2 + 3];
         }
@@ -4293,7 +4293,7 @@ unsafe fn compute_moments(cc: f64, moment: &mut [f64]) {
     moment[1] = a1;
 
     for k in range(2u, 25u) {
-        let a2 = if (k & 1) == 0 {
+        let a2 = if (k % 2) == 0 {
             2f64 * cc * a1 - a0
         } else {
             let km1 = k as f64 - 1f64;
