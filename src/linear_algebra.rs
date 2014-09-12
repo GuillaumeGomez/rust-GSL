@@ -76,6 +76,33 @@ A symmetric matrix A can be factorized by similarity transformations into the fo
 A = Q T Q^T
 
 where Q is an orthogonal matrix and T is a symmetric tridiagonal matrix.
+
+##Tridiagonal Decomposition of Hermitian Matrices
+
+A hermitian matrix A can be factorized by similarity transformations into the form,
+
+A = U T U^T
+
+where U is a unitary matrix and T is a real symmetric tridiagonal matrix.
+
+##Hessenberg Decomposition of Real Matrices
+
+A general real matrix A can be decomposed by orthogonal similarity transformations into the form
+
+A = U H U^T
+
+where U is orthogonal and H is an upper Hessenberg matrix, meaning that it has zeros below the first subdiagonal. The Hessenberg reduction 
+is the first step in the Schur decomposition for the nonsymmetric eigenvalue problem, but has applications in other areas as well.
+
+##Hessenberg-Triangular Decomposition of Real Matrices
+
+A general real matrix pair (A, B) can be decomposed by orthogonal similarity transformations into the form
+
+A = U H V^T
+B = U R V^T
+
+where U and V are orthogonal, H is an upper Hessenberg matrix, and R is upper triangular. The Hessenberg-Triangular reduction is the first 
+step in the generalized Schur decomposition for the generalized eigenvalue problem.
 !*/
 
 use ffi;
@@ -504,4 +531,62 @@ pub fn symmtd_unpack(a: &::MatrixF64, tau: &::VectorF64, q: &::MatrixF64, diag: 
 /// gsl_linalg_symmtd_decomp into the vectors diag and subdiag.
 pub fn symmtd_unpack_T(a: &::MatrixF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::Value {
     unsafe { ffi::gsl_linalg_symmtd_unpack_T(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
+}
+
+/// This function factorizes the hermitian matrix A into the symmetric tridiagonal decomposition U T U^T. On output the real parts of the
+/// diagonal and subdiagonal part of the input matrix A contain the tridiagonal matrix T. The remaining lower triangular part of the input
+/// matrix contains the Householder vectors which, together with the Householder coefficients tau, encode the unitary matrix U. This storage
+/// scheme is the same as used by LAPACK. The upper triangular part of A and imaginary parts of the diagonal are not referenced.
+pub fn hermtd_decomp(a: &::MatrixComplexF64, tau: &::VectorComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hermtd_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau)) }
+}
+
+/// This function unpacks the encoded tridiagonal decomposition (A, tau) obtained from gsl_linalg_hermtd_decomp into the unitary matrix U,
+/// the real vector of diagonal elements diag and the real vector of subdiagonal elements subdiag.
+pub fn hermtd_unpack(a: &::MatrixComplexF64, tau: &::VectorComplexF64, u: &::MatrixComplexF64, diag: &::VectorF64,
+    subdiag: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hermtd_unpack(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix_complex,
+        ffi::FFI::unwrap(tau) as *const ffi::gsl_vector_complex,
+        ffi::FFI::unwrap(u), ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
+}
+
+/// This function unpacks the diagonal and subdiagonal of the encoded tridiagonal decomposition (A, tau) obtained from the
+/// gsl_linalg_hermtd_decomp into the real vectors diag and subdiag.
+pub fn hermtd_unpack_T(a: &::MatrixComplexF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hermtd_unpack_T(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(subdiag)) }
+}
+
+/// This function computes the Hessenberg decomposition of the matrix A by applying the similarity transformation H = U^T A U. On output, H
+/// is stored in the upper portion of A. The information required to construct the matrix U is stored in the lower triangular portion of A.
+/// U is a product of N - 2 Householder matrices. The Householder vectors are stored in the lower portion of A (below the subdiagonal) and
+/// the Householder coefficients are stored in the vector tau. tau must be of length N.
+pub fn hessenberg_decomp(a: &::MatrixF64, tau: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hessenberg_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau)) }
+}
+
+/// This function constructs the orthogonal matrix U from the information stored in the Hessenberg matrix H along with the vector tau. H and
+/// tau are outputs from gsl_linalg_hessenberg_decomp.
+pub fn hessenberg_unpack(h: &::MatrixF64, tau: &::VectorF64, u: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hessenberg_unpack(ffi::FFI::unwrap(h), ffi::FFI::unwrap(tau), ffi::FFI::unwrap(u)) }
+}
+
+/// This function is similar to gsl_linalg_hessenberg_unpack, except it accumulates the matrix U into V, so that V' = VU. The matrix V must
+/// be initialized prior to calling this function. Setting V to the identity matrix provides the same result as gsl_linalg_hessenberg_unpack.
+/// If H is order N, then V must have N columns but may have any number of rows.
+pub fn hessenberg_unpack_accum(h: &::MatrixF64, tau: &::VectorF64, v: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hessenberg_unpack_accum(ffi::FFI::unwrap(h), ffi::FFI::unwrap(tau), ffi::FFI::unwrap(v)) }
+}
+
+/// This function sets the lower triangular portion of H, below the subdiagonal, to zero. It is useful for clearing out the Householder
+/// vectors after calling gsl_linalg_hessenberg_decomp.
+pub fn hessenberg_set_zero(h: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hessenberg_set_zero(ffi::FFI::unwrap(h)) }
+}
+
+/// This function computes the Hessenberg-Triangular decomposition of the matrix pair (A, B). On output, H is stored in A, and R is stored
+/// in B. If U and V are provided (they may be null), the similarity transformations are stored in them. Additional workspace of length N is needed in work.
+pub fn hesstri_decomp(a: &::MatrixF64, b: &::MatrixF64, u: &::MatrixF64, v: &::MatrixF64, work: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_hesstri_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(b), ffi::FFI::unwrap(u),
+        ffi::FFI::unwrap(v), ffi::FFI::unwrap(work)) }
 }

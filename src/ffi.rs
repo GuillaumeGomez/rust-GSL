@@ -2169,6 +2169,19 @@ extern "C" {
     pub fn gsl_linalg_symmtd_unpack(a: *const gsl_matrix, tau: *const gsl_vector, q: *mut gsl_matrix, diag: *mut gsl_vector,
         subdiag: *mut gsl_vector) -> enums::Value;
     pub fn gsl_linalg_symmtd_unpack_T(a: *const gsl_matrix, diag: *mut gsl_vector, subdiag: *mut gsl_vector) -> enums::Value;
+    // Tridiagonal Decomposition of Hermitian Matrices
+    pub fn gsl_linalg_hermtd_decomp(a: *mut gsl_matrix_complex, tau: *mut gsl_vector_complex) -> enums::Value;
+    pub fn gsl_linalg_hermtd_unpack(a: *const gsl_matrix_complex, tau: *const gsl_vector_complex, u: *mut gsl_matrix_complex, diag: *mut gsl_vector,
+        subdiag: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_hermtd_unpack_T(a: *const gsl_matrix_complex, diag: *mut gsl_vector, subdiag: *mut gsl_vector) -> enums::Value;
+    // Hessenberg Decomposition of Real Matrices
+    pub fn gsl_linalg_hessenberg_decomp(a: *mut gsl_matrix, tau: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_hessenberg_unpack(h: *mut gsl_matrix, tau: *mut gsl_vector, u: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_hessenberg_unpack_accum(h: *mut gsl_matrix, tau: *mut gsl_vector, v: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_hessenberg_set_zero(a: *mut gsl_matrix) -> enums::Value;
+    // Hessenberg-Triangular Decomposition of Real Matrices
+    pub fn gsl_linalg_hesstri_decomp(a: *mut gsl_matrix, b: *mut gsl_matrix, u: *mut gsl_matrix, v: *mut gsl_matrix,
+        work: *mut gsl_vector) -> enums::Value;
 }
 
 #[repr(C)]
