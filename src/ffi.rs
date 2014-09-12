@@ -2147,6 +2147,13 @@ extern "C" {
         v: *const gsl_vector) -> enums::Value;
     pub fn gsl_linalg_QRPT_Rsolve(qr: *const gsl_matrix, p: *const gsl_permutation, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
     pub fn gsl_linalg_QRPT_Rsvx(qr: *const gsl_matrix, p: *const gsl_permutation, x: *mut gsl_vector) -> enums::Value;
+    // Singular Value Decomposition
+    pub fn gsl_linalg_SV_decomp(a: *mut gsl_matrix, v: *mut gsl_matrix, s: *mut gsl_vector, work: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_SV_decomp_mod(a: *mut gsl_matrix, x: *mut gsl_matrix, v: *mut gsl_matrix, s: *mut gsl_vector, work: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_SV_decomp_jacobi(a: *mut gsl_matrix, v: *mut gsl_matrix, s: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_SV_solve(u: *const gsl_matrix, v: *const gsl_matrix, s: *const gsl_vector, b: *const gsl_vector,
+        x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_SV_leverage(u: *const gsl_matrix, h: *mut gsl_vector) -> enums::Value;
 }
 
 #[repr(C)]

@@ -36,6 +36,28 @@ A P = Q R
 The first r columns of Q form an orthonormal basis for the range of A for a matrix with column rank r. This decomposition can also be used 
 to convert the linear system A x = b into the triangular system R y = Q^T b, x = P y, which can be solved by back-substitution and permutation. 
 We denote the QR decomposition with column pivoting by QRP^T since A = Q R P^T.
+
+##Singular Value Decomposition
+
+A general rectangular M-by-N matrix A has a singular value decomposition (SVD) into the product of an M-by-N orthogonal matrix U, an N-by-N 
+diagonal matrix of singular values S and the transpose of an N-by-N orthogonal square matrix V,
+
+A = U S V^T
+
+The singular values \sigma_i = S_{ii} are all non-negative and are generally chosen to form a non-increasing sequence \sigma_1 >= \sigma_2 >= 
+... >= \sigma_N >= 0.
+
+The singular value decomposition of a matrix has many practical uses. The condition number of the matrix is given by the ratio of the largest 
+singular value to the smallest singular value. The presence of a zero singular value indicates that the matrix is singular. The number of 
+non-zero singular values indicates the rank of the matrix. In practice singular value decomposition of a rank-deficient matrix will not produce 
+exact zeroes for singular values, due to finite numerical precision. Small singular values should be edited by choosing a suitable tolerance.
+
+For a rank-deficient matrix, the null space of A is given by the columns of V corresponding to the zero singular values. Similarly, the range 
+of A is given by columns of U corresponding to the non-zero singular values.
+
+Note that the routines here compute the “thin” version of the SVD with U as M-by-N orthogonal matrix. This allows in-place computation and is 
+the most commonly-used form in practice. Mathematically, the “full” SVD is defined with U as an M-by-M orthogonal matrix and S as an M-by-N 
+diagonal matrix (with additional rows of zeros).
 !*/
 
 use ffi;
@@ -338,4 +360,47 @@ pub fn QRPT_Rsolve(qr: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::V
 pub fn QRPT_Rsvx(qr: &::MatrixF64, p: &::Permutation, x: &::VectorF64) -> enums::Value {
     unsafe { ffi::gsl_linalg_QRPT_Rsvx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
         ffi::FFI::unwrap(x)) }
+}
+
+/// This function factorizes the M-by-N matrix A into the singular value decomposition A = U S V^T for M >= N. On output the matrix A is replaced
+/// by U. The diagonal elements of the singular value matrix S are stored in the vector S. The singular values are non-negative and form a
+/// non-increasing sequence from S_1 to S_N. The matrix V contains the elements of V in untransposed form. To form the product U S V^T it is
+/// necessary to take the transpose of V. A workspace of length N is required in work.
+/// 
+/// This routine uses the Golub-Reinsch SVD algorithm.
+pub fn SV_decomp(a: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64, work: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_SV_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(v), ffi::FFI::unwrap(s), ffi::FFI::unwrap(work)) }
+}
+
+/// This function computes the SVD using the modified Golub-Reinsch algorithm, which is faster for M>>N. It requires the vector work of length
+/// N and the N-by-N matrix X as additional working space.
+pub fn SV_decomp_mod(a: &::MatrixF64, x: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64, work: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_SV_decomp_mod(ffi::FFI::unwrap(a), ffi::FFI::unwrap(x), ffi::FFI::unwrap(v), ffi::FFI::unwrap(s),
+        ffi::FFI::unwrap(work)) }
+}
+
+/// This function computes the SVD of the M-by-N matrix A using one-sided Jacobi orthogonalization for M >= N. The Jacobi method can compute
+/// singular values to higher relative accuracy than Golub-Reinsch algorithms (see references for details).
+pub fn SV_decomp_jacobi(a: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_SV_decomp_jacobi(ffi::FFI::unwrap(a), ffi::FFI::unwrap(v), ffi::FFI::unwrap(s)) }
+}
+
+/// This function solves the system A x = b using the singular value decomposition (U, S, V) of A which must have been computed previously
+/// with gsl_linalg_SV_decomp.
+/// 
+/// Only non-zero singular values are used in computing the solution. The parts of the solution corresponding to singular values of zero are
+/// ignored. Other singular values can be edited out by setting them to zero before calling this function.
+/// 
+/// In the over-determined case where A has more rows than columns the system is solved in the least squares sense, returning the solution
+/// x which minimizes ||A x - b||_2.
+pub fn SV_solve(u: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_SV_solve(ffi::FFI::unwrap(u) as *const ffi::gsl_matrix, ffi::FFI::unwrap(v) as *const ffi::gsl_matrix,
+        ffi::FFI::unwrap(s) as *const ffi::gsl_vector, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+}
+
+/// This function computes the statistical leverage values h_i of a matrix A using its singular value decomposition (U, S, V) previously computed
+/// with gsl_linalg_SV_decomp. h_i are the diagonal values of the matrix A (A^T A)^{-1} A^T and depend only on the matrix U which is the input to
+/// this function.
+pub fn SV_leverage(u: &::MatrixF64, h: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_SV_leverage(ffi::FFI::unwrap(u) as *const ffi::gsl_matrix, ffi::FFI::unwrap(h)) }
 }
