@@ -2154,6 +2154,16 @@ extern "C" {
     pub fn gsl_linalg_SV_solve(u: *const gsl_matrix, v: *const gsl_matrix, s: *const gsl_vector, b: *const gsl_vector,
         x: *mut gsl_vector) -> enums::Value;
     pub fn gsl_linalg_SV_leverage(u: *const gsl_matrix, h: *mut gsl_vector) -> enums::Value;
+    // Cholesky Decomposition
+    pub fn gsl_linalg_cholesky_decomp(a: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_complex_cholesky_decomp(a: *mut gsl_matrix_complex) -> enums::Value;
+    pub fn gsl_linalg_cholesky_solve(cholesky: *const gsl_matrix, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_complex_cholesky_solve(cholesky: *const gsl_matrix_complex, b: *const gsl_vector_complex,
+        x: *mut gsl_vector_complex) -> enums::Value;
+    pub fn gsl_linalg_cholesky_svx(cholesky: *const gsl_matrix, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_complex_cholesky_svx(cholesky: *const gsl_matrix_complex, x: *mut gsl_vector_complex) -> enums::Value;
+    pub fn gsl_linalg_cholesky_invert(cholesky: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_complex_cholesky_invert(cholesky: *mut gsl_matrix_complex) -> enums::Value;
 }
 
 #[repr(C)]

@@ -58,6 +58,15 @@ of A is given by columns of U corresponding to the non-zero singular values.
 Note that the routines here compute the “thin” version of the SVD with U as M-by-N orthogonal matrix. This allows in-place computation and is 
 the most commonly-used form in practice. Mathematically, the “full” SVD is defined with U as an M-by-M orthogonal matrix and S as an M-by-N 
 diagonal matrix (with additional rows of zeros).
+
+##Cholesky Decomposition
+
+A symmetric, positive definite square matrix A has a Cholesky decomposition into a product of a lower triangular matrix L and its transpose L^T,
+
+A = L L^T
+This is sometimes referred to as taking the square-root of a matrix. The Cholesky decomposition can only be carried out when all the eigenvalues 
+of the matrix are positive. This decomposition can be used to convert the linear system A x = b into a pair of triangular systems (L y = b, 
+L^T x = y), which can be solved by forward and back-substitution.
 !*/
 
 use ffi;
@@ -403,4 +412,66 @@ pub fn SV_solve(u: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64, b: &::VectorF
 /// this function.
 pub fn SV_leverage(u: &::MatrixF64, h: &::VectorF64) -> enums::Value {
     unsafe { ffi::gsl_linalg_SV_leverage(ffi::FFI::unwrap(u) as *const ffi::gsl_matrix, ffi::FFI::unwrap(h)) }
+}
+
+/// This function factorizes the symmetric, positive-definite square matrix A into the Cholesky decomposition A = L L^T (or A = L L^H for
+/// the complex case). On input, the values from the diagonal and lower-triangular part of the matrix A are used (the upper triangular part
+/// is ignored). On output the diagonal and lower triangular part of the input matrix A contain the matrix L, while the upper triangular part
+/// of the input matrix is overwritten with L^T (the diagonal terms being identical for both L and L^T). If the matrix is not positive-definite
+/// then the decomposition will fail, returning the error code enums::Dom.
+/// 
+/// When testing whether a matrix is positive-definite, disable the error handler first to avoid triggering an error.
+pub fn cholesky_decomp(a: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_cholesky_decomp(ffi::FFI::unwrap(a)) }
+}
+
+/// This function factorizes the symmetric, positive-definite square matrix A into the Cholesky decomposition A = L L^T (or A = L L^H for
+/// the complex case). On input, the values from the diagonal and lower-triangular part of the matrix A are used (the upper triangular part
+/// is ignored). On output the diagonal and lower triangular part of the input matrix A contain the matrix L, while the upper triangular part
+/// of the input matrix is overwritten with L^T (the diagonal terms being identical for both L and L^T). If the matrix is not positive-definite
+/// then the decomposition will fail, returning the error code enums::Dom.
+/// 
+/// When testing whether a matrix is positive-definite, disable the error handler first to avoid triggering an error.
+pub fn complex_cholesky_decomp(a: &::MatrixComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_cholesky_decomp(ffi::FFI::unwrap(a)) }
+}
+
+/// This function solves the system A x = b using the Cholesky decomposition of A held in the matrix cholesky which must have been previously
+/// computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp.
+pub fn cholesky_solve(cholesky: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_cholesky_solve(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix, ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the system A x = b using the Cholesky decomposition of A held in the matrix cholesky which must have been previously
+/// computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp.
+pub fn complex_cholesky_solve(cholesky: &::MatrixComplexF64, b: &::VectorComplexF64, x: &::VectorComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_cholesky_solve(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix_complex,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector_complex, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the system A x = b in-place using the Cholesky decomposition of A held in the matrix cholesky which must have been
+/// previously computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On input x should contain the right-hand side
+/// b, which is replaced by the solution on output.
+pub fn cholesky_svx(cholesky: &::MatrixF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_cholesky_svx(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the system A x = b in-place using the Cholesky decomposition of A held in the matrix cholesky which must have been
+/// previously computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On input x should contain the right-hand side
+/// b, which is replaced by the solution on output.
+pub fn complex_cholesky_svx(cholesky: &::MatrixComplexF64, x: &::VectorComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_cholesky_svx(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(x)) }
+}
+
+/// This function computes the inverse of a matrix from its Cholesky decomposition cholesky, which must have been previously computed by
+/// gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On output, the inverse is stored in-place in cholesky.
+pub fn cholesky_invert(cholesky: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_cholesky_invert(ffi::FFI::unwrap(cholesky)) }
+}
+
+/// This function computes the inverse of a matrix from its Cholesky decomposition cholesky, which must have been previously computed by
+/// gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On output, the inverse is stored in-place in cholesky.
+pub fn complex_cholesky_invert(cholesky: &::MatrixComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_cholesky_invert(ffi::FFI::unwrap(cholesky)) }
 }
