@@ -103,6 +103,62 @@ B = U R V^T
 
 where U and V are orthogonal, H is an upper Hessenberg matrix, and R is upper triangular. The Hessenberg-Triangular reduction is the first 
 step in the generalized Schur decomposition for the generalized eigenvalue problem.
+
+##Bidiagonalization
+
+A general matrix A can be factorized by similarity transformations into the form,
+
+A = U B V^T
+where U and V are orthogonal matrices and B is a N-by-N bidiagonal matrix with non-zero entries only on the diagonal and superdiagonal. The 
+size of U is M-by-N and the size of V is N-by-N.
+
+##Householder Transformations
+
+A Householder transformation is a rank-1 modification of the identity matrix which can be used to zero out selected elements of a vector. 
+A Householder matrix P takes the form,
+
+P = I - \tau v v^T
+
+where v is a vector (called the Householder vector) and \tau = 2/(v^T v). The functions described in this section use the rank-1 structure 
+of the Householder matrix to create and apply Householder transformations efficiently.
+
+##Tridiagonal Systems
+
+The functions described in this section efficiently solve symmetric, non-symmetric and cyclic tridiagonal systems with minimal storage. Note 
+that the current implementations of these functions use a variant of Cholesky decomposition, so the tridiagonal matrix must be positive definite. 
+For non-positive definite matrices, the functions return the error code enums::Sing.
+
+##Balancing
+
+The process of balancing a matrix applies similarity transformations to make the rows and columns have comparable norms. This is useful, for 
+example, to reduce roundoff errors in the solution of eigenvalue problems. Balancing a matrix A consists of replacing A with a similar matrix
+
+A' = D^(-1) A D
+
+where D is a diagonal matrix whose entries are powers of the floating point radix.
+
+##14.16 References and Further Reading
+
+Further information on the algorithms described in this section can be found in the following book,
+
+G. H. Golub, C. F. Van Loan, Matrix Computations (3rd Ed, 1996), Johns Hopkins University Press, ISBN 0-8018-5414-8.
+The LAPACK library is described in the following manual,
+
+LAPACK Users’ Guide (Third Edition, 1999), Published by SIAM, ISBN 0-89871-447-8.
+http://www.netlib.org/lapack
+
+The LAPACK source code can be found at the website above, along with an online copy of the users guide.
+
+The Modified Golub-Reinsch algorithm is described in the following paper,
+
+T.F. Chan, “An Improved Algorithm for Computing the Singular Value Decomposition”, ACM Transactions on Mathematical Software, 8 (1982), pp 72–83.
+The Jacobi algorithm for singular value decomposition is described in the following papers,
+
+J.C. Nash, “A one-sided transformation method for the singular value decomposition and algebraic eigenproblem”, Computer Journal, Volume 18, Number 
+1 (1975), p 74–76
+J.C. Nash and S. Shlien “Simple algorithms for the partial singular value decomposition”, Computer Journal, Volume 30 (1987), p 268–275.
+James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR”, Lapack Working Note 15 (LAWN-15), October 1989. Available from netlib, 
+http://www.netlib.org/lapack/ in the lawns or lawnspdf directories.
 !*/
 
 use ffi;
@@ -585,8 +641,168 @@ pub fn hessenberg_set_zero(h: &::MatrixF64) -> enums::Value {
 }
 
 /// This function computes the Hessenberg-Triangular decomposition of the matrix pair (A, B). On output, H is stored in A, and R is stored
-/// in B. If U and V are provided (they may be null), the similarity transformations are stored in them. Additional workspace of length N is needed in work.
+/// in B. If U and V are provided (they may be null), the similarity transformations are stored in them. Additional workspace of length N
+/// is needed in work.
 pub fn hesstri_decomp(a: &::MatrixF64, b: &::MatrixF64, u: &::MatrixF64, v: &::MatrixF64, work: &::VectorF64) -> enums::Value {
     unsafe { ffi::gsl_linalg_hesstri_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(b), ffi::FFI::unwrap(u),
         ffi::FFI::unwrap(v), ffi::FFI::unwrap(work)) }
+}
+
+/// This function factorizes the M-by-N matrix A into bidiagonal form U B V^T. The diagonal and superdiagonal of the matrix B are stored in
+/// the diagonal and superdiagonal of A. The orthogonal matrices U and V are stored as compressed Householder vectors in the remaining elements
+/// of A. The Householder coefficients are stored in the vectors tau_U and tau_V. The length of tau_U must equal the number of elements in
+/// the diagonal of A and the length of tau_V should be one element shorter.
+pub fn bidiag_decomp(a: &::MatrixF64, tau_u: &::VectorF64, tau_v: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_bidiag_decomp(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau_u), ffi::FFI::unwrap(tau_v)) }
+}
+
+/// This function unpacks the bidiagonal decomposition of A produced by gsl_linalg_bidiag_decomp, (A, tau_U, tau_V) into the separate orthogonal
+/// matrices U, V and the diagonal vector diag and superdiagonal superdiag. Note that U is stored as a compact M-by-N orthogonal matrix satisfying
+/// U^T U = I for efficiency.
+pub fn bidiag_unpack(a: &::MatrixF64, tau_u: &::VectorF64, u: &::MatrixF64, tau_v: &::VectorF64, v: &::MatrixF64,
+    diag: &::VectorF64, superdiag: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_bidiag_unpack(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau_u) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(u), ffi::FFI::unwrap(tau_v) as *const ffi::gsl_vector, ffi::FFI::unwrap(v), ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(superdiag)) }
+}
+
+/// This function unpacks the bidiagonal decomposition of A produced by gsl_linalg_bidiag_decomp, (A, tau_U, tau_V) into the separate orthogonal
+/// matrices U, V and the diagonal vector diag and superdiagonal superdiag. The matrix U is stored in-place in A.
+pub fn bidiag_unpack2(a: &::MatrixF64, tau_u: &::VectorF64, tau_v: &::VectorF64, v: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_bidiag_unpack2(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau_u), ffi::FFI::unwrap(tau_v),
+        ffi::FFI::unwrap(v)) }
+}
+
+/// This function unpacks the diagonal and superdiagonal of the bidiagonal decomposition of A from gsl_linalg_bidiag_decomp, into the diagonal
+/// vector diag and superdiagonal vector superdiag.
+pub fn bidiag_unpack_B(a: &::MatrixF64, diag: &::VectorF64, superdiag: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_bidiag_unpack_B(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(superdiag)) }
+}
+
+/// This function prepares a Householder transformation P = I - \tau v v^T which can be used to zero all the elements of the input vector except
+/// the first. On output the transformation is stored in the vector v and the scalar \tau is returned.
+pub fn householder_transform(v: &::VectorF64) -> f64 {
+    unsafe { ffi::gsl_linalg_householder_transform(ffi::FFI::unwrap(v)) }
+}
+
+/// This function prepares a Householder transformation P = I - \tau v v^T which can be used to zero all the elements of the input vector except
+/// the first. On output the transformation is stored in the vector v and the scalar \tau is returned.
+pub fn complex_householder_transform(v: &::VectorComplexF64) -> ::ComplexF64 {
+    unsafe { ::std::mem::transmute(ffi::gsl_linalg_complex_householder_transform(ffi::FFI::unwrap(v))) }
+}
+
+/// This function applies the Householder matrix P defined by the scalar tau and the vector v to the left-hand side of the matrix A. On output
+/// the result P A is stored in A.
+pub fn householder_hm(tau: f64, v: &::VectorF64, a: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_householder_hm(tau, ffi::FFI::unwrap(v) as *const ffi::gsl_vector, ffi::FFI::unwrap(a)) }
+}
+
+/// This function applies the Householder matrix P defined by the scalar tau and the vector v to the left-hand side of the matrix A. On output
+/// the result P A is stored in A.
+pub fn complex_householder_hm(tau: &::ComplexF64, v: &::VectorComplexF64, a: &::MatrixComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_householder_hm(::std::mem::transmute(*tau), ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex,
+        ffi::FFI::unwrap(a)) }
+}
+
+/// This function applies the Householder matrix P defined by the scalar tau and the vector v to the right-hand side of the matrix A. On output
+/// the result A P is stored in A.
+pub fn householder_mh(tau: f64, v: &::VectorF64, a: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_householder_mh(tau, ffi::FFI::unwrap(v) as *const ffi::gsl_vector, ffi::FFI::unwrap(a)) }
+}
+
+/// This function applies the Householder matrix P defined by the scalar tau and the vector v to the right-hand side of the matrix A. On output
+/// the result A P is stored in A.
+pub fn complex_householder_mh(tau: &::ComplexF64, v: &::VectorComplexF64, a: &::MatrixComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_householder_mh(::std::mem::transmute(*tau), ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex,
+        ffi::FFI::unwrap(a)) }
+}
+
+/// This function applies the Householder transformation P defined by the scalar tau and the vector v to the vector w. On output the result P
+/// w is stored in w.
+pub fn householder_hv(tau: f64, v: &::VectorF64, w: &::MatrixF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_householder_hv(tau, ffi::FFI::unwrap(v) as *const ffi::gsl_vector, ffi::FFI::unwrap(w)) }
+}
+
+/// This function applies the Householder transformation P defined by the scalar tau and the vector v to the vector w. On output the result P
+/// w is stored in w.
+pub fn complex_householder_hv(tau: &::ComplexF64, v: &::VectorComplexF64, w: &::MatrixComplexF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_complex_householder_hv(::std::mem::transmute(*tau), ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex,
+        ffi::FFI::unwrap(w)) }
+}
+
+/// This function solves the system A x = b directly using Householder transformations. On output the solution is stored in x and b is not
+/// modified. The matrix A is destroyed by the Householder transformations.
+pub fn HH_solve(a: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_HH_solve(ffi::FFI::unwrap(a), ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the system A x = b in-place using Householder transformations. On input x should contain the right-hand side b,
+/// which is replaced by the solution on output. The matrix A is destroyed by the Householder transformations.
+pub fn HH_svx(a: &::MatrixF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_HH_svx(ffi::FFI::unwrap(a), ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the general N-by-N system A x = b where A is tridiagonal (N >= 2). The super-diagonal and sub-diagonal vectors
+/// e and f must be one element shorter than the diagonal vector diag. The form of A for the 4-by-4 case is shown below,
+/// 
+/// A = ( d_0 e_0  0   0  )
+///     ( f_0 d_1 e_1  0  )
+///     (  0  f_1 d_2 e_2 )
+///     (  0   0  f_2 d_3 )
+pub fn solve_tridiag(diag: &::VectorF64, e: &::VectorF64, f: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_solve_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(f) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the general N-by-N system A x = b where A is symmetric tridiagonal (N >= 2). The off-diagonal vector e must be one
+/// element shorter than the diagonal vector diag. The form of A for the 4-by-4 case is shown below,
+/// 
+/// A = ( d_0 e_0  0   0  )
+///     ( e_0 d_1 e_1  0  )
+///     (  0  e_1 d_2 e_2 )
+///     (  0   0  e_2 d_3 )
+pub fn solve_symm_tridiag(diag: &::VectorF64, e: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_solve_symm_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the general N-by-N system A x = b where A is cyclic tridiagonal (N >= 3). The cyclic super-diagonal and sub-diagonal
+/// vectors e and f must have the same number of elements as the diagonal vector diag. The form of A for the 4-by-4 case is shown below,
+/// 
+/// A = ( d_0 e_0  0  f_3 )
+///     ( f_0 d_1 e_1  0  )
+///     (  0  f_1 d_2 e_2 )
+///     ( e_3  0  f_2 d_3 )
+pub fn solve_cyc_tridiag(diag: &::VectorF64, e: &::VectorF64, f: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_solve_cyc_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(f) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function solves the general N-by-N system A x = b where A is symmetric cyclic tridiagonal (N >= 3). The cyclic off-diagonal vector
+/// e must have the same number of elements as the diagonal vector diag. The form of A for the 4-by-4 case is shown below,
+/// 
+/// A = ( d_0 e_0  0  e_3 )
+///     ( e_0 d_1 e_1  0  )
+///     (  0  e_1 d_2 e_2 )
+///     ( e_3  0  e_2 d_3 )
+pub fn solve_symm_cyc_tridiag(diag: &::VectorF64, e: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_solve_symm_cyc_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+        ffi::FFI::unwrap(x)) }
+}
+
+/// This function replaces the matrix A with its balanced counterpart and stores the diagonal elements of the similarity transformation into
+/// the vector D.
+pub fn balance_matrix(a: &::MatrixF64, d: &::VectorF64) -> enums::Value {
+    unsafe { ffi::gsl_linalg_balance_matrix(ffi::FFI::unwrap(a), ffi::FFI::unwrap(d)) }
 }

@@ -942,6 +942,14 @@ extern "C" {
     pub fn gsl_vector_isnonneg(vector: *const gsl_vector) -> c_int;
     pub fn gsl_vector_equal(u: *const gsl_vector, v: *const gsl_vector) -> c_int;
 
+    // Vector views
+    pub fn gsl_vector_subvector(v: *mut gsl_vector, offset: size_t, n: size_t) -> gsl_vector_view;
+    pub fn gsl_vector_subvector_with_stride(v: *mut gsl_vector, offset: size_t, stride: size_t, n: size_t) -> gsl_vector_view;
+    //pub fn gsl_vector_complex_real(v: *mut gsl_vector_complex) -> gsl_vector_view;
+    //pub fn gsl_vector_complex_imag(v: *mut gsl_vector_complex) -> gsl_vector_view;
+    pub fn gsl_vector_view_array(base: *mut c_double, n: size_t) -> gsl_vector_view;
+    pub fn gsl_vector_view_array_with_stride(base: *mut c_double, stride: size_t, n: size_t) -> gsl_vector_view;
+
     // VectorComplex functions
     pub fn gsl_vector_complex_alloc(size: size_t) -> *mut gsl_vector_complex;
     pub fn gsl_vector_complex_calloc(size: size_t) -> *mut gsl_vector_complex;
@@ -1060,6 +1068,13 @@ extern "C" {
     pub fn gsl_matrix_isneg(m: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_isnonneg(m: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_equal(u: *const gsl_matrix, v: *const gsl_matrix) -> c_int;
+
+    // Matrix views
+    pub fn gsl_matrix_submatrix(m: *mut gsl_matrix, k1: size_t, k2: size_t, n1: size_t, n2: size_t) -> gsl_matrix_view;
+    pub fn gsl_matrix_view_array(base: *mut c_double, n1: size_t, n2: size_t) -> gsl_matrix_view;
+    pub fn gsl_matrix_view_array_with_tda(base: *mut c_double, n1: size_t, n2: size_t, tda: size_t) -> gsl_matrix_view;
+    pub fn gsl_matrix_view_vector(v: *mut gsl_vector, n1: size_t, n2: size_t) -> gsl_matrix_view;
+    pub fn gsl_matrix_view_vector_with_tda(v: *mut gsl_vector, n1: size_t, n2: size_t, tda: size_t) -> gsl_matrix_view;
 
     // MatrixFloat functions
     pub fn gsl_matrix_float_alloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_float;
@@ -2182,6 +2197,33 @@ extern "C" {
     // Hessenberg-Triangular Decomposition of Real Matrices
     pub fn gsl_linalg_hesstri_decomp(a: *mut gsl_matrix, b: *mut gsl_matrix, u: *mut gsl_matrix, v: *mut gsl_matrix,
         work: *mut gsl_vector) -> enums::Value;
+    // Bidiagonalization
+    pub fn gsl_linalg_bidiag_decomp(a: *mut gsl_matrix, tau_u: *mut gsl_vector, tau_v: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_bidiag_unpack(a: *const gsl_matrix, tau_u: *const gsl_vector, u: *mut gsl_matrix, tau_v: *const gsl_vector,
+        v: *mut gsl_matrix, diag: *mut gsl_vector, superdiag: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_bidiag_unpack2(a: *mut gsl_matrix, tau_u: *mut gsl_vector, tau_v: *mut gsl_vector, v: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_bidiag_unpack_B(a: *const gsl_matrix, diag: *mut gsl_vector, superdiag: *mut gsl_vector) -> enums::Value;
+    // Householder Transformations
+    pub fn gsl_linalg_householder_transform(v: *mut gsl_vector) -> c_double;
+    pub fn gsl_linalg_complex_householder_transform(v: *mut gsl_vector_complex) -> gsl_complex;
+    pub fn gsl_linalg_householder_hm(tau: c_double, v: *const gsl_vector, a: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_complex_householder_hm(tau: gsl_complex, v: *const gsl_vector_complex, a: *mut gsl_matrix_complex) -> enums::Value;
+    pub fn gsl_linalg_householder_mh(tau: c_double, v: *const gsl_vector, a: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_complex_householder_mh(tau: gsl_complex, v: *const gsl_vector_complex, a: *mut gsl_matrix_complex) -> enums::Value;
+    pub fn gsl_linalg_householder_hv(tau: c_double, v: *const gsl_vector, w: *mut gsl_matrix) -> enums::Value;
+    pub fn gsl_linalg_complex_householder_hv(tau: gsl_complex, v: *const gsl_vector_complex, w: *mut gsl_matrix_complex) -> enums::Value;
+    // Householder solver for linear systems
+    pub fn gsl_linalg_HH_solve(a: *mut gsl_matrix, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_HH_svx(a: *mut gsl_matrix, x: *mut gsl_vector) -> enums::Value;
+    // Tridiagonal Systems
+    pub fn gsl_linalg_solve_tridiag(diag: *const gsl_vector, e: *const gsl_vector, f: *const gsl_vector, b: *const gsl_vector,
+        x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_solve_symm_tridiag(diag: *const gsl_vector, e: *const gsl_vector, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_solve_cyc_tridiag(diag: *const gsl_vector, e: *const gsl_vector, f: *const gsl_vector, b: *const gsl_vector,
+        x: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_linalg_solve_symm_cyc_tridiag(diag: *const gsl_vector, e: *const gsl_vector, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
+    // Balancing
+    pub fn gsl_linalg_balance_matrix(a: *mut gsl_matrix, d: *mut gsl_vector) -> enums::Value;
 }
 
 #[repr(C)]
@@ -2219,6 +2261,12 @@ pub struct gsl_vector {
     pub data: *mut c_double,
     pub block: *mut gsl_block,
     pub owner: c_int
+}
+
+
+#[repr(C)]
+pub struct gsl_vector_view {
+    pub vector: gsl_vector
 }
 
 #[repr(C)]
@@ -2275,6 +2323,11 @@ pub struct gsl_matrix {
     pub data: *mut c_double,
     pub block: *mut gsl_block,
     pub owner: c_int
+}
+
+#[repr(C)]
+pub struct gsl_matrix_view {
+    pub mat: gsl_matrix
 }
 
 #[repr(C)]

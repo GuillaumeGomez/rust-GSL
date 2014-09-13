@@ -22,6 +22,7 @@ examples: rgsl
 	  rustc -o bin/radix -L ./lib examples/radix/main.rs
 	  rustc -o bin/integration -L ./lib examples/integration/main.rs
 	  rustc -o bin/interpolation -L ./lib examples/interpolation/main.rs
+	  rustc -o bin/linear_algebra -L ./lib examples/linear_algebra/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs

@@ -8,6 +8,7 @@ use std::fmt::{Formatter,Show};
 use std::fmt;
 use std::default::Default;
 
+#[repr(C)]
 pub struct ComplexF64 {
     pub data: [f64, ..2]
 }
@@ -352,6 +353,7 @@ impl Default for ComplexF64 {
     }
 }
 
+#[repr(C)]
 pub struct ComplexF32 {
     pub data: [f32, ..2]
 }

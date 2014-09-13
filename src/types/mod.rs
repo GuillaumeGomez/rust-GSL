@@ -15,14 +15,14 @@ pub use self::histograms::{Histogram, HistogramPdf, Histogram2D, Histogram2DPdf}
 pub use self::integration::{IntegrationWorkspace, IntegrationQawsTable, IntegrationQawoTable, CquadWorkspace, GLFixedTable};
 pub use self::interpolation::{InterpAccel, Interp, InterpType, Spline};
 pub use self::mathieu::MathieuWorkspace;
-pub use self::matrix::{MatrixF32, MatrixF64};
+pub use self::matrix::{MatrixF32, MatrixF64, MatrixView};
 pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};
 pub use self::permutation::Permutation;
 pub use self::polynomial::PolyComplex;
 pub use self::ran_discrete::RanDiscrete;
 pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
-pub use self::vector::{VectorF32, VectorF64};
+pub use self::vector::{VectorF32, VectorF64, VectorView};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
 
 pub mod basis_spline;

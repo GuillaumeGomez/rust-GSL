@@ -8,8 +8,133 @@ use types::{VectorF64, VectorF32};
 use ffi;
 use enums;
 
+pub struct MatrixView {
+    mat: ffi::gsl_matrix
+}
+
+impl MatrixView {
+    /// These functions return a matrix view of a submatrix of the matrix m. The upper-left element of the submatrix is the element (k1,k2)
+    /// of the original matrix. The submatrix has n1 rows and n2 columns. The physical number of columns in memory given by tda is unchanged.
+    /// Mathematically, the (i,j)-th element of the new matrix is given by,
+    /// 
+    /// m'(i,j) = m->data[(k1*m->tda + k2) + i*m->tda + j]
+    /// 
+    /// where the index i runs from 0 to n1-1 and the index j runs from 0 to n2-1.
+    /// 
+    /// The data pointer of the returned matrix struct is set to null if the combined parameters (i,j,n1,n2,tda) overrun the ends of the original
+    /// matrix.
+    /// 
+    /// The new matrix view is only a view of the block underlying the existing matrix, m. The block containing the elements of m is not
+    /// owned by the new matrix view. When the view goes out of scope the original matrix m and its block will continue to exist. The original
+    /// memory can only be deallocated by freeing the original matrix. Of course, the original matrix should not be deallocated while the view
+    /// is still in use.
+    /// 
+    /// The function gsl_matrix_const_submatrix is equivalent to gsl_matrix_submatrix but can be used for matrices which are declared const.
+    pub fn from_matrix(m: &MatrixF64, k1: u64, k2: u64, n1: u64, n2: u64) -> MatrixView {
+        unsafe {
+            MatrixView {
+                mat: ffi::gsl_matrix_submatrix(m.mat, k1, k2, n1, n2).mat
+            }
+        }
+    }
+
+    /// These functions return a matrix view of the array base. The matrix has n1 rows and n2 columns. The physical number of columns in memory
+    /// is also given by n2. Mathematically, the (i,j)-th element of the new matrix is given by,
+    /// 
+    /// m'(i,j) = base[i*n2 + j]
+    /// 
+    /// where the index i runs from 0 to n1-1 and the index j runs from 0 to n2-1.
+    /// 
+    /// The new matrix is only a view of the array base. When the view goes out of scope the original array base will continue to exist. The
+    /// original memory can only be deallocated by freeing the original array. Of course, the original array should not be deallocated while
+    /// the view is still in use.
+    /// 
+    /// The function gsl_matrix_const_view_array is equivalent to gsl_matrix_view_array but can be used for matrices which are declared const.
+    pub fn from_array(base: &mut [f64], n1: u64, n2: u64) -> MatrixView {
+        unsafe {
+            MatrixView {
+                mat: ffi::gsl_matrix_view_array(base.as_mut_ptr(), n1, n2).mat
+            }
+        }
+    }
+
+    /// These functions return a matrix view of the array base with a physical number of columns tda which may differ from the corresponding
+    /// dimension of the matrix. The matrix has n1 rows and n2 columns, and the physical number of columns in memory is given by tda.
+    /// Mathematically, the (i,j)-th element of the new matrix is given by,
+    /// 
+    /// m'(i,j) = base[i*tda + j]
+    ///
+    /// where the index i runs from 0 to n1-1 and the index j runs from 0 to n2-1.
+    /// 
+    /// The new matrix is only a view of the array base. When the view goes out of scope the original array base will continue to exist. The
+    /// original memory can only be deallocated by freeing the original array. Of course, the original array should not be deallocated while
+    /// the view is still in use.
+    /// 
+    /// The function gsl_matrix_const_view_array_with_tda is equivalent to gsl_matrix_view_array_with_tda but can be used for matrices which
+    /// are declared const.
+    pub fn from_array_with_tda(base: &mut [f64], n1: u64, n2: u64, tda: u64) -> MatrixView {
+        unsafe {
+            MatrixView {
+                mat: ffi::gsl_matrix_view_array_with_tda(base.as_mut_ptr(), n1, n2, tda).mat
+            }
+        }
+    }
+
+    /// These functions return a matrix view of the vector v. The matrix has n1 rows and n2 columns. The vector must have unit stride. The
+    /// physical number of columns in memory is also given by n2. Mathematically, the (i,j)-th element of the new matrix is given by,
+    /// 
+    /// m'(i,j) = v->data[i*n2 + j]
+    /// 
+    /// where the index i runs from 0 to n1-1 and the index j runs from 0 to n2-1.
+    /// 
+    /// The new matrix is only a view of the vector v. When the view goes out of scope the original vector v will continue to exist. The original
+    /// memory can only be deallocated by freeing the original vector. Of course, the original vector should not be deallocated while the view
+    /// is still in use.
+    /// 
+    /// The function gsl_matrix_const_view_vector is equivalent to gsl_matrix_view_vector but can be used for matrices which are declared const.
+    pub fn from_vector(v: &VectorF64, n1: u64, n2: u64) -> MatrixView {
+        unsafe {
+            MatrixView {
+                mat: ffi::gsl_matrix_view_vector(ffi::FFI::unwrap(v), n1, n2).mat
+            }
+        }
+    }
+
+    /// These functions return a matrix view of the vector v with a physical number of columns tda which may differ from the corresponding
+    /// matrix dimension. The vector must have unit stride. The matrix has n1 rows and n2 columns, and the physical number of columns in
+    /// memory is given by tda. Mathematically, the (i,j)-th element of the new matrix is given by,
+    /// 
+    /// m'(i,j) = v->data[i*tda + j]
+    /// 
+    /// where the index i runs from 0 to n1-1 and the index j runs from 0 to n2-1.
+    /// 
+    /// The new matrix is only a view of the vector v. When the view goes out of scope the original vector v will continue to exist. The original
+    /// memory can only be deallocated by freeing the original vector. Of course, the original vector should not be deallocated while the view
+    /// is still in use.
+    /// 
+    /// The function gsl_matrix_const_view_vector_with_tda is equivalent to gsl_matrix_view_vector_with_tda but can be used for matrices which
+    /// are declared const.
+    pub fn from_vector_with_tda(v: &VectorF64, n1: u64, n2: u64, tda: u64) -> MatrixView {
+        unsafe {
+            MatrixView {
+                mat: ffi::gsl_matrix_view_vector_with_tda(ffi::FFI::unwrap(v), n1, n2, tda).mat
+            }
+        }
+    }
+
+    pub fn matrix(&mut self) -> MatrixF64 {
+        unsafe {
+            MatrixF64 {
+                mat: ::std::mem::transmute(&mut self.mat),
+                can_free: false
+            }
+        }
+    }
+}
+
 pub struct MatrixF64 {
-    mat: *mut ffi::gsl_matrix
+    mat: *mut ffi::gsl_matrix,
+    can_free: bool
 }
 
 impl MatrixF64 {
@@ -27,7 +152,8 @@ impl MatrixF64 {
             None
         } else {
             Some(MatrixF64 {
-                mat: tmp
+                mat: tmp,
+                can_free: true
             })
         }
     }
@@ -143,7 +269,7 @@ impl MatrixF64 {
         } else {
             let ret = unsafe { ffi::gsl_matrix_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix) };
 
-            Some((MatrixF64 {mat: dest}, ret))
+            Some((MatrixF64 {mat: dest, can_free: true}, ret))
         }
     }
 
@@ -293,8 +419,10 @@ impl MatrixF64 {
 
 impl Drop for MatrixF64 {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_matrix_free(self.mat) };
-        self.mat = ::std::ptr::mut_null();
+        if self.can_free {
+            unsafe { ffi::gsl_matrix_free(self.mat) };
+            self.mat = ::std::ptr::mut_null();
+        }
     }
 }
 
@@ -323,7 +451,8 @@ impl Show for MatrixF64 {
 impl ffi::FFI<ffi::gsl_matrix> for MatrixF64 {
     fn wrap(r: *mut ffi::gsl_matrix) -> MatrixF64 {
         MatrixF64 {
-            mat: r
+            mat: r,
+            can_free: true
         }
     }
 
@@ -333,7 +462,8 @@ impl ffi::FFI<ffi::gsl_matrix> for MatrixF64 {
 }
 
 pub struct MatrixF32 {
-    mat: *mut ffi::gsl_matrix_float
+    mat: *mut ffi::gsl_matrix_float,
+    can_free: bool
 }
 
 impl MatrixF32 {
@@ -351,7 +481,8 @@ impl MatrixF32 {
             None
         } else {
             Some(MatrixF32 {
-                mat: tmp
+                mat: tmp,
+                can_free: true
             })
         }
     }
@@ -466,7 +597,10 @@ impl MatrixF32 {
         } else {
             let ret = unsafe { ffi::gsl_matrix_float_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_float) };
 
-            Some((MatrixF32{mat: dest}, ret))
+            Some((MatrixF32{
+                    mat: dest,
+                    can_free: true
+                }, ret))
         }
     }
 
@@ -616,8 +750,10 @@ impl MatrixF32 {
 
 impl Drop for MatrixF32 {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_matrix_float_free(self.mat) };
-        self.mat = ::std::ptr::mut_null();
+        if self.can_free {
+            unsafe { ffi::gsl_matrix_float_free(self.mat) };
+            self.mat = ::std::ptr::mut_null();
+        }
     }
 }
 
@@ -646,7 +782,8 @@ impl Show for MatrixF32 {
 impl ffi::FFI<ffi::gsl_matrix_float> for MatrixF32 {
     fn wrap(r: *mut ffi::gsl_matrix_float) -> MatrixF32 {
         MatrixF32 {
-            mat: r
+            mat: r,
+            can_free: true
         }
     }
 

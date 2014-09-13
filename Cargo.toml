@@ -68,3 +68,8 @@ path = "examples/integration/main.rs"
 
 name = "interpolation"
 path = "examples/interpolation/main.rs"
+
+[[bin]]
+
+name = "linear_algebra"
+path = "examples/linear_algebra/main.rs"
