@@ -3514,6 +3514,7 @@ unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
     (fabsf64(result) >= (1f64 - 50f64 * ::DBL_EPSILON) * resabs)
 }
 
+#[allow(unused_variable)]
 unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool {
     let id = (*workspace).nrmax;
 
