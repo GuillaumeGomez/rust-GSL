@@ -2224,6 +2224,16 @@ extern "C" {
     pub fn gsl_linalg_solve_symm_cyc_tridiag(diag: *const gsl_vector, e: *const gsl_vector, b: *const gsl_vector, x: *mut gsl_vector) -> enums::Value;
     // Balancing
     pub fn gsl_linalg_balance_matrix(a: *mut gsl_matrix, d: *mut gsl_vector) -> enums::Value;
+
+    // Initializing the Minimizer
+    /*pub fn gsl_min_fminimizer_alloc(t: *const gsl_min_fminimizer_type) -> *mut gsl_min_fminimizer;
+    pub fn gsl_min_fminimizer_set(s: *mut gsl_min_fminimizer, f: *mut gsl_function, x_minimum: c_double, x_lower: c_double,
+        x_upper: c_double) -> enums::Value;
+    pub fn gsl_min_fminimizer_set_with_values(s: *mut gsl_min_fminimizer, f: *mut gsl_function, x_minimum: c_double, f_minimum: c_double,
+        x_lower: c_double, f_lower: c_double, x_upper: c_double, f_upper: c_double) -> enums::Value;
+    pub fn gsl_min_fminimizer_free(s: *mut gsl_min_fminimizer);
+    pub fn gsl_min_fminimizer_name(s: *const gsl_min_fminimizer) -> *const c_char;*/
+    pub fn gsl_min_test_interval(x_lower: c_double, x_upper: c_double, epsabs: c_double, epsrel: c_double) -> enums::Value;
 }
 
 #[repr(C)]
@@ -2767,3 +2777,32 @@ pub struct gsl_spline {
     pub y: *mut c_double,
     pub size: size_t
 }
+
+/*#[repr(C)]
+pub struct gsl_min_fminimizer_type {
+    pub name: *const c_char,
+    pub size: size_t,
+    pub set: Option<extern "C" fn(state: *mut c_void, f: *mut gsl_function, x_minimum: c_double, f_minimum: c_double, x_lower: c_double,
+        f_lower: c_double, x_upper: c_double, f_upper: c_double) -> enums::Value>,
+    pub iterate: Option<extern "C" fn(state: *mut c_void, f: *mut gsl_function, x_minimum: *mut c_double, f_minimum: *mut c_double,
+        x_lower: *mut c_double, f_lower: *mut c_double, x_upper: *mut c_double, f_upper: *mut c_double) -> enums::Value>
+}
+
+#[repr(C)]
+pub struct gsl_min_fminimizer {
+    pub type_: *const gsl_min_fminimizer_type,
+    pub function: *mut gsl_function,
+    pub x_minimum: c_double,
+    pub x_lower: c_double,
+    pub x_upper: c_double,
+    pub f_minimum: c_double,
+    pub f_lower: c_double,
+    pub f_upper: c_double,
+    pub state: *mut c_void
+}
+
+#[repr(C)]
+pub struct gsl_function {
+    pub function: Option<extern "C" fn(x: c_double, params: *mut c_void) -> c_double>,
+    pub params: *mut c_void
+}*/

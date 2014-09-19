@@ -209,7 +209,7 @@ impl Clone for Rng {
 impl Drop for Rng {
     fn drop(&mut self) {
         unsafe { ffi::gsl_rng_free(self.r as *const ffi::gsl_rng) };
-        self.r = ::std::ptr::mut_null();
+        self.r = ::std::ptr::null_mut();
     }
 }
 

@@ -127,7 +127,7 @@ impl MathieuWorkspace {
 impl Drop for MathieuWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_sf_mathieu_free(self.work) };
-        self.work = ::std::ptr::mut_null();
+        self.work = ::std::ptr::null_mut();
     }
 }
 

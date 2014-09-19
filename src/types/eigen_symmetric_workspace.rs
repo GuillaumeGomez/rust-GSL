@@ -107,7 +107,7 @@ impl EigenSymmetricWorkspace {
 impl Drop for EigenSymmetricWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_symm_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -154,7 +154,7 @@ impl EigenSymmetricVWorkspace {
 impl Drop for EigenSymmetricVWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_symmv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -200,7 +200,7 @@ impl EigenHermitianWorkspace {
 impl Drop for EigenHermitianWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_herm_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -249,7 +249,7 @@ impl EigenHermitianVWorkspace {
 impl Drop for EigenHermitianVWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_hermv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -328,7 +328,7 @@ impl EigenNonSymmWorkspace {
 impl Drop for EigenNonSymmWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_nonsymm_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -388,7 +388,7 @@ impl EigenNonSymmVWorkspace {
 impl Drop for EigenNonSymmVWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_nonsymmv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -433,7 +433,7 @@ impl EigenGenSymmWorkspace {
 impl Drop for EigenGenSymmWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_gensymm_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -479,7 +479,7 @@ impl EigenGenSymmVWorkspace {
 impl Drop for EigenGenSymmVWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_gensymmv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -524,7 +524,7 @@ impl EigenGenHermWorkspace {
 impl Drop for EigenGenHermWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_genherm_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -569,7 +569,7 @@ impl EigenGenHermVWorkspace {
 impl Drop for EigenGenHermVWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_genhermv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -642,7 +642,7 @@ impl EigenGenWorkspace {
 impl Drop for EigenGenWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_gen_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -700,7 +700,7 @@ impl EigenGenVWorkspace {
 impl Drop for EigenGenVWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_eigen_genv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 

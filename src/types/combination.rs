@@ -141,7 +141,7 @@ impl Combination {
 impl Drop for Combination {
     fn drop(&mut self) {
         unsafe { ffi::gsl_combination_free(self.c) };
-        self.c = ::std::ptr::mut_null();
+        self.c = ::std::ptr::null_mut();
     }
 }
 

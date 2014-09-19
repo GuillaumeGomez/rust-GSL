@@ -250,7 +250,7 @@ impl Histogram {
 impl Drop for Histogram {
     fn drop(&mut self) {
         unsafe { ffi::gsl_histogram_free(self.h) };
-        self.h = ::std::ptr::mut_null();
+        self.h = ::std::ptr::null_mut();
     }
 }
 
@@ -311,7 +311,7 @@ impl HistogramPdf {
 impl Drop for HistogramPdf {
     fn drop(&mut self) {
         unsafe { ffi::gsl_histogram_pdf_free(self.h) };
-        self.h = ::std::ptr::mut_null();
+        self.h = ::std::ptr::null_mut();
     }
 }
 
@@ -575,7 +575,7 @@ impl Histogram2D {
 impl Drop for Histogram2D {
     fn drop(&mut self) {
         unsafe { ffi::gsl_histogram2d_free(self.h) };
-        self.h = ::std::ptr::mut_null();
+        self.h = ::std::ptr::null_mut();
     }
 }
 
@@ -638,7 +638,7 @@ impl Histogram2DPdf {
 impl Drop for Histogram2DPdf {
     fn drop(&mut self) {
         unsafe { ffi::gsl_histogram2d_pdf_free(self.h) };
-        self.h = ::std::ptr::mut_null();
+        self.h = ::std::ptr::null_mut();
     }
 }
 

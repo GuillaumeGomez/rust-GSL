@@ -6,7 +6,7 @@
 
 macro_rules! rgsl_error(
     ($msg:expr, $err_value:expr) => (
-        fn __fn() {
+        fn _rgsl_error() {
             unsafe {
                 let file = file!();
 

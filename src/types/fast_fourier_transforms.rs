@@ -42,7 +42,7 @@ impl FftComplexWaveTable {
 impl Drop for FftComplexWaveTable {
     fn drop(&mut self) {
         unsafe { ffi::gsl_fft_complex_wavetable_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -83,7 +83,7 @@ impl FftComplexWorkspace {
 impl Drop for FftComplexWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_fft_complex_workspace_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 

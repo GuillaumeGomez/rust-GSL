@@ -73,3 +73,8 @@ path = "examples/interpolation/main.rs"
 
 name = "linear_algebra"
 path = "examples/linear_algebra/main.rs"
+
+[[bin]]
+
+name = "minimization"
+path = "examples/minimization/main.rs"
