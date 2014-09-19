@@ -112,7 +112,9 @@ pub use types::{
     InterpAccel,
     Interp,
     InterpType,
-    Spline
+    Spline,
+    Minimizer,
+    MinimizerType
 };
 
 pub use enums::{
