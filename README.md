@@ -5,7 +5,7 @@ A __Rust__ binding for the [GSL library](http://www.gnu.org/software/gsl/) (the 
 
 ##Installation
 
-This binding requires the __GSL__ library to be installed.
+This binding requires the [GSL library](http://www.gnu.org/software/gsl/) library to be installed.
 
 To build it, please use :
 
