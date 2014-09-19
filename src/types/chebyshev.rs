@@ -142,7 +142,7 @@ impl ChebSeries {
 impl Drop for ChebSeries {
     fn drop(&mut self) {
         unsafe { ffi::gsl_cheb_free(self.c) };
-        self.c = ::std::ptr::mut_null();
+        self.c = ::std::ptr::null_mut();
     }
 }
 

@@ -58,6 +58,7 @@ Here is the list of all modules :
 
 #![feature(globs)]
 #![feature(macro_rules)]
+#![feature(unsafe_destructor)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -168,6 +169,7 @@ pub mod lambert_w;
 pub mod legendre;
 pub mod linear_algebra;
 pub mod logarithm;
+pub mod minimizer;
 pub mod numerical_differentiation;
 pub mod polynomials;
 pub mod pow;

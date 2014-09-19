@@ -57,7 +57,7 @@ impl RanDiscrete {
 impl Drop for RanDiscrete {
     fn drop(&mut self) {
         unsafe { ffi::gsl_ran_discrete_free(self.ran) };
-        self.ran = ::std::ptr::mut_null();
+        self.ran = ::std::ptr::null_mut();
     }
 }
 

@@ -51,7 +51,7 @@ impl PolyComplex {
 impl Drop for PolyComplex {
     fn drop(&mut self) {
         unsafe { ffi::gsl_poly_complex_workspace_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 

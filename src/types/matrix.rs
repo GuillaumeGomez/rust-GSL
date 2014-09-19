@@ -421,7 +421,7 @@ impl Drop for MatrixF64 {
     fn drop(&mut self) {
         if self.can_free {
             unsafe { ffi::gsl_matrix_free(self.mat) };
-            self.mat = ::std::ptr::mut_null();
+            self.mat = ::std::ptr::null_mut();
         }
     }
 }
@@ -752,7 +752,7 @@ impl Drop for MatrixF32 {
     fn drop(&mut self) {
         if self.can_free {
             unsafe { ffi::gsl_matrix_float_free(self.mat) };
-            self.mat = ::std::ptr::mut_null();
+            self.mat = ::std::ptr::null_mut();
         }
     }
 }

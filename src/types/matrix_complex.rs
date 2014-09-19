@@ -247,7 +247,7 @@ impl MatrixComplexF64 {
 impl Drop for MatrixComplexF64 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_matrix_complex_free(self.mat) };
-        self.mat = ::std::ptr::mut_null();
+        self.mat = ::std::ptr::null_mut();
     }
 }
 
@@ -524,7 +524,7 @@ impl MatrixComplexF32 {
 impl Drop for MatrixComplexF32 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_matrix_complex_float_free(self.mat) };
-        self.mat = ::std::ptr::mut_null();
+        self.mat = ::std::ptr::null_mut();
     }
 }
 

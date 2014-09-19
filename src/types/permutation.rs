@@ -197,7 +197,7 @@ impl Permutation {
 impl Drop for Permutation {
     fn drop(&mut self) {
         unsafe { ffi::gsl_permutation_free(self.p) };
-        self.p = ::std::ptr::mut_null();
+        self.p = ::std::ptr::null_mut();
     }
 }
 

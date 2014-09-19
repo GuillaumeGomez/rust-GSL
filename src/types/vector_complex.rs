@@ -221,7 +221,7 @@ impl VectorComplexF64 {
 impl Drop for VectorComplexF64 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_vector_complex_free(self.vec) };
-        self.vec = ::std::ptr::mut_null();
+        self.vec = ::std::ptr::null_mut();
     }
 }
 
@@ -468,7 +468,7 @@ impl VectorComplexF32 {
 impl Drop for VectorComplexF32 {
     fn drop(&mut self) {
         unsafe { ffi::gsl_vector_complex_float_free(self.vec) };
-        self.vec = ::std::ptr::mut_null();
+        self.vec = ::std::ptr::null_mut();
     }
 }
 

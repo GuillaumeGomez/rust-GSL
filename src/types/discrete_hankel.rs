@@ -107,7 +107,7 @@ impl DiscreteHankel {
 impl Drop for DiscreteHankel {
     fn drop(&mut self) {
         unsafe { ffi::gsl_dht_free(self.t) };
-        self.t = ::std::ptr::mut_null();
+        self.t = ::std::ptr::null_mut();
     }
 }
 

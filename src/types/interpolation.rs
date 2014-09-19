@@ -132,7 +132,7 @@ impl Interp {
 impl Drop for Interp {
     fn drop(&mut self) {
         unsafe { ffi::gsl_interp_free(self.interp) };
-        self.interp = ::std::ptr::mut_null();
+        self.interp = ::std::ptr::null_mut();
     }
 }
 
@@ -280,7 +280,7 @@ impl Spline {
 impl Drop for Spline {
     fn drop(&mut self) {
         unsafe { ffi::gsl_spline_free(self.spline) };
-        self.spline = ::std::ptr::mut_null();
+        self.spline = ::std::ptr::null_mut();
     }
 }
 

@@ -368,7 +368,7 @@ impl Drop for VectorF32 {
     fn drop(&mut self) {
         if self.can_free {
             unsafe { ffi::gsl_vector_float_free(self.vec) };
-            self.vec = ::std::ptr::mut_null();
+            self.vec = ::std::ptr::null_mut();
         }
     }
 }
@@ -651,7 +651,7 @@ impl Drop for VectorF64 {
     fn drop(&mut self) {
         if self.can_free {
             unsafe { ffi::gsl_vector_free(self.vec) };
-            self.vec = ::std::ptr::mut_null();
+            self.vec = ::std::ptr::null_mut();
         }
     }
 }

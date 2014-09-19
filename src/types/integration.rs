@@ -1908,7 +1908,7 @@ impl IntegrationWorkspace {
 impl Drop for IntegrationWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_integration_workspace_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -2142,7 +2142,7 @@ impl IntegrationQawsTable {
 impl Drop for IntegrationQawsTable {
     fn drop(&mut self) {
         unsafe { ffi::gsl_integration_qaws_table_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -2562,7 +2562,7 @@ impl IntegrationQawoTable {
 impl Drop for IntegrationQawoTable {
     fn drop(&mut self) {
         unsafe { ffi::gsl_integration_qawo_table_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -3087,7 +3087,7 @@ impl CquadWorkspace {
 impl Drop for CquadWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_integration_cquad_workspace_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -3170,7 +3170,7 @@ impl GLFixedTable {
 impl Drop for GLFixedTable {
     fn drop(&mut self) {
         unsafe { ffi::gsl_integration_glfixed_table_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 

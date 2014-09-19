@@ -102,7 +102,7 @@ impl BSpLineWorkspace {
 impl Drop for BSpLineWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_bspline_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
@@ -157,7 +157,7 @@ impl BSpLineDerivWorkspace {
 impl Drop for BSpLineDerivWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_bspline_deriv_free(self.w) };
-        self.w = ::std::ptr::mut_null();
+        self.w = ::std::ptr::null_mut();
     }
 }
 
