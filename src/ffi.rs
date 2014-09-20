@@ -2234,6 +2234,12 @@ extern "C" {
     pub fn gsl_min_fminimizer_free(s: *mut gsl_min_fminimizer);
     pub fn gsl_min_fminimizer_name(s: *const gsl_min_fminimizer) -> *const c_char;*/
     pub fn gsl_min_test_interval(x_lower: c_double, x_upper: c_double, epsabs: c_double, epsrel: c_double) -> enums::Value;
+
+    // Monte Carlo
+    // PLAIN Monte Carlo
+    pub fn gsl_monte_plain_alloc(dim: size_t) -> *mut gsl_monte_plain_state;
+    pub fn gsl_monte_plain_init(s: *mut gsl_monte_plain_state) -> enums::Value;
+    pub fn gsl_monte_plain_free(s: *mut gsl_monte_plain_state);
 }
 
 #[repr(C)]
@@ -2806,3 +2812,9 @@ pub struct gsl_function {
     pub function: Option<extern "C" fn(x: c_double, params: *mut c_void) -> c_double>,
     pub params: *mut c_void
 }*/
+
+#[repr(C)]
+pub struct gsl_monte_plain_state {
+    pub dim: size_t,
+    pub x: *mut c_double
+}
