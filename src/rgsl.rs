@@ -115,7 +115,8 @@ pub use types::{
     InterpType,
     Spline,
     Minimizer,
-    MinimizerType
+    MinimizerType,
+    MiserMonteCarlo
 };
 
 pub use enums::{

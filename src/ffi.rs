@@ -2240,6 +2240,10 @@ extern "C" {
     pub fn gsl_monte_plain_alloc(dim: size_t) -> *mut gsl_monte_plain_state;
     pub fn gsl_monte_plain_init(s: *mut gsl_monte_plain_state) -> enums::Value;
     pub fn gsl_monte_plain_free(s: *mut gsl_monte_plain_state);
+    // MISER
+    pub fn gsl_monte_miser_alloc(dim: size_t) -> *mut gsl_monte_miser_state;
+    pub fn gsl_monte_miser_init(s: *mut gsl_monte_miser_state) -> enums::Value;
+    pub fn gsl_monte_miser_free(s: *mut gsl_monte_miser_state);
 }
 
 #[repr(C)]
@@ -2817,4 +2821,31 @@ pub struct gsl_function {
 pub struct gsl_monte_plain_state {
     pub dim: size_t,
     pub x: *mut c_double
+}
+
+#[repr(C)]
+pub struct gsl_monte_miser_state {
+    pub min_calls: size_t,
+    pub min_calls_per_bisection: size_t,
+    pub dither: c_double,
+    pub estimate_frac: c_double,
+    pub alpha: c_double,
+    pub dim: size_t,
+    pub estimate_style: c_int,
+    pub depth: c_int,
+    pub verbose: c_int,
+    pub x: *mut c_double,
+    pub xmid: *mut c_double,
+    pub sigma_l: *mut c_double,
+    pub sigma_r: *mut c_double,
+    pub fmax_l: *mut c_double,
+    pub fmax_r: *mut c_double,
+    pub fmin_l: *mut c_double,
+    pub fmin_r: *mut c_double,
+    pub fsum_l: *mut c_double,
+    pub fsum_r: *mut c_double,
+    pub fsum2_l: *mut c_double,
+    pub fsum2_r: *mut c_double,
+    pub hits_l: *mut size_t,
+    pub hits_r: *mut size_t
 }
