@@ -133,3 +133,12 @@ pub enum IntegrationQawo {
     Cosine,
     Sine
 }
+
+#[deriving(PartialEq, PartialOrd, Show)]
+#[repr(C)]
+/// Used by VegasMonteCarlo struct
+pub enum VegasMode {
+    Importance = 1, 
+    ImportanceOnly = 0, 
+    Stratified = -1
+}

@@ -14,6 +14,7 @@ pub type CBLAS_DIAG_t = cblas::Diag;
 pub type CBLAS_SIDE_t = cblas::Side;
 pub type gsl_complex_packed_ptr = *mut c_double;
 pub type gsl_complex_packed_array = *mut c_double;
+pub type coord = c_int;
 
 pub trait FFI<T> {
     fn wrap(r: *mut T) -> Self;
@@ -2244,6 +2245,14 @@ extern "C" {
     pub fn gsl_monte_miser_alloc(dim: size_t) -> *mut gsl_monte_miser_state;
     pub fn gsl_monte_miser_init(s: *mut gsl_monte_miser_state) -> enums::Value;
     pub fn gsl_monte_miser_free(s: *mut gsl_monte_miser_state);
+    // VEGAS
+    pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
+    pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> enums::Value;
+    pub fn gsl_monte_vegas_free(s: *mut gsl_monte_vegas_state);
+    pub fn gsl_monte_vegas_chisq(s: *const gsl_monte_vegas_state) -> c_double;
+    pub fn gsl_monte_vegas_runval(s: *const gsl_monte_vegas_state, result: *mut c_double, sigma: *mut c_double);
+    pub fn gsl_monte_vegas_params_get(s: *const gsl_monte_vegas_state, params: *mut ::VegasParams);
+    pub fn gsl_monte_vegas_params_set(s: *mut gsl_monte_vegas_state, params: *const ::VegasParams);
 }
 
 #[repr(C)]
@@ -2849,3 +2858,58 @@ pub struct gsl_monte_miser_state {
     pub hits_l: *mut size_t,
     pub hits_r: *mut size_t
 }
+
+#[repr(C)]
+pub struct gsl_monte_vegas_state {
+    /* grid */
+    pub dim: size_t,
+    pub bins_max: size_t,
+    pub bins: c_uint,
+    pub boxes: c_uint, /* these are both counted along the axes */
+    pub xi: *mut c_double,
+    pub xin: *mut c_double,
+    pub delx: *mut c_double,
+    pub weight: *mut c_double,
+    pub vol: c_double,
+
+    pub x: *mut c_double,
+    pub bin: *mut c_int,
+    pub box_: *mut c_int,
+
+    /* distribution */
+    pub d: *mut c_double,
+
+    /* control variables */
+    pub alpha: c_double,
+    pub mode: enums::VegasMode,
+    pub verbose: c_int,
+    pub iterations: c_uint,
+    pub stage: c_int,
+
+    /* scratch variables preserved between calls to vegas1/2/3  */
+    pub jac: c_double,
+    pub wtd_int_sum: c_double,
+    pub sum_wgts: c_double,
+    pub chi_sum: c_double,
+    pub chisq: c_double,
+
+    pub result: c_double,
+    pub sigma: c_double,
+
+    pub it_start: c_uint,
+    pub it_num: c_uint,
+    pub samples: c_uint,
+    pub calls_per_box: c_uint,
+
+    pub ostream: *mut c_void // is supposed to be a FILE*
+}
+
+/*#[repr(C)]
+pub struct gsl_monte_vegas_params {
+    pub alpha: c_double,
+    pub iterations: size_t,
+    pub stage: c_int,
+    pub mode: enums::VegasMode,
+    pub verbose: c_int,
+    pub ostream: *mut c_void // is supposed to be a FILE*
+}*/

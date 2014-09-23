@@ -63,13 +63,61 @@ procedure is then repeated recursively for each of the two half-spaces from the 
 the sub-regions using the formula for N_a and N_b. This recursive allocation of integration points continues down to a user-specified depth 
 where each sub-region is integrated using a plain Monte Carlo estimate. These individual values and their error estimates are then combined 
 upwards to give an overall result and an estimate of its error.
+
+##VEGAS
+
+The VEGAS algorithm of Lepage is based on importance sampling. It samples points from the probability distribution described by the function 
+|f|, so that the points are concentrated in the regions that make the largest contribution to the integral.
+
+In general, if the Monte Carlo integral of f is sampled with points distributed according to a probability distribution described by the function 
+g, we obtain an estimate E_g(f; N),
+
+E_g(f; N) = E(f/g; N)
+with a corresponding variance,
+
+\Var_g(f; N) = \Var(f/g; N).
+If the probability distribution is chosen as g = |f|/I(|f|) then it can be shown that the variance V_g(f; N) vanishes, and the error in the 
+estimate will be zero. In practice it is not possible to sample from the exact distribution g for an arbitrary function, so importance sampling 
+algorithms aim to produce efficient approximations to the desired distribution.
+
+The VEGAS algorithm approximates the exact distribution by making a number of passes over the integration region while histogramming the 
+function f. Each histogram is used to define a sampling distribution for the next pass. Asymptotically this procedure converges to the desired 
+distribution. In order to avoid the number of histogram bins growing like K^d the probability distribution is approximated by a separable 
+function: g(x_1, x_2, ...) = g_1(x_1) g_2(x_2) ... so that the number of bins required is only Kd. This is equivalent to locating the 
+peaks of the function from the projections of the integrand onto the coordinate axes. The efficiency of VEGAS depends on the validity of 
+this assumption. It is most efficient when the peaks of the integrand are well-localized. If an integrand can be rewritten in a form which 
+is approximately separable this will increase the efficiency of integration with VEGAS.
+
+VEGAS incorporates a number of additional features, and combines both stratified sampling and importance sampling. The integration region 
+is divided into a number of “boxes”, with each box getting a fixed number of points (the goal is 2). Each box can then have a fractional 
+number of bins, but if the ratio of bins-per-box is less than two, Vegas switches to a kind variance reduction (rather than importance 
+sampling).
+
+The VEGAS algorithm computes a number of independent estimates of the integral internally, according to the iterations parameter described 
+below, and returns their weighted average. Random sampling of the integrand can occasionally produce an estimate where the error is zero, 
+particularly if the function is constant in some regions. An estimate with zero error causes the weighted average to break down and must 
+be handled separately. In the original Fortran implementations of VEGAS the error estimate is made non-zero by substituting a small value 
+(typically 1e-30). The implementation in GSL differs from this and avoids the use of an arbitrary constant—it either assigns the value a 
+weight which is the average weight of the preceding estimates or discards it according to the following procedure,
+
+current estimate has zero error, weighted average has finite error
+The current estimate is assigned a weight which is the average weight of the preceding estimates.
+
+current estimate has finite error, previous estimates had zero error
+The previous estimates are discarded and the weighted averaging procedure begins with the current estimate.
+
+current estimate has zero error, previous estimates had zero error
+The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
 use ffi;
 use enums;
 use std::f64::INFINITY;
-use std::intrinsics::{sqrtf64, powf64, fabsf64};
+use std::intrinsics::{sqrtf64, powf64, fabsf64, floorf64, logf64};
 use std::c_vec::CVec;
+use std::default::Default;
+use libc::c_void;
+use std::num;
 
 pub struct PlainMonteCarlo {
     s: *mut ffi::gsl_monte_plain_state,
@@ -559,4 +607,700 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
 
         enums::Success
     }
+}
+
+#[repr(C)]
+pub struct VegasParams {
+    /// The parameter alpha controls the stiffness of the rebinning algorithm. It is typically set between one and two. A value of zero prevents
+    /// rebinning of the grid. The default value is 1.5.
+    pub alpha: f64,
+    /// The number of iterations to perform for each call to the routine. The default value is 5 iterations.
+    pub iterations: u64,
+    /// Setting this determines the stage of the calculation. Normally, stage = 0 which begins with a new uniform grid and empty weighted average.
+    /// Calling VEGAS with stage = 1 retains the grid from the previous run but discards the weighted average, so that one can “tune” the grid
+    /// using a relatively small number of points and then do a large run with stage = 1 on the optimized grid. Setting stage = 2 keeps the grid
+    /// and the weighted average from the previous run, but may increase (or decrease) the number of histogram bins in the grid depending on the
+    /// number of calls available. Choosing stage = 3 enters at the main loop, so that nothing is changed, and is equivalent to performing
+    /// additional iterations in a previous call.
+    pub stage: i32,
+    /// The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_STRATIFIED, GSL_VEGAS_MODE_IMPORTANCE_ONLY. This determines whether
+    /// VEGAS will use importance sampling or stratified sampling, or whether it can pick on its own. In low dimensions VEGAS uses strict
+    /// stratified sampling (more precisely, stratified sampling is chosen if there are fewer than 2 bins per box).
+    pub mode: enums::VegasMode,
+    /// These parameters set the level of information printed by VEGAS. All information is written to the stream ostream. The default setting
+    /// of verbose is -1, which turns off all output. A verbose value of 0 prints summary information about the weighted average and final
+    /// result, while a value of 1 also displays the grid coordinates. A value of 2 prints information from the rebinning procedure for each
+    /// iteration.
+    pub verbose: i32,
+    ostream: *mut c_void
+}
+
+impl Default for VegasParams {
+    fn default() -> VegasParams {
+        VegasParams {
+            alpha: 1.5f64,
+            iterations: 5u64,
+            stage: 0i32,
+            mode: enums::Importance,
+            verbose: 0i32,
+            ostream: ::std::ptr::null_mut()
+        }
+    }
+}
+
+pub struct VegasMonteCarlo {
+    s: *mut ffi::gsl_monte_vegas_state
+}
+
+impl VegasMonteCarlo {
+    /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
+    /// the state of the integration.
+    pub fn new(dim: u64) -> Option<VegasMonteCarlo> {
+        let tmp_pointer = unsafe { ffi::gsl_monte_vegas_alloc(dim) };
+
+        if tmp_pointer.is_null() {
+            None
+        } else {
+            Some(VegasMonteCarlo {
+                s: tmp_pointer
+            })
+        }
+    }
+
+    /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
+    pub fn init(&self) -> enums::Value {
+        unsafe { ffi::gsl_monte_vegas_init(self.s) }
+    }
+
+    /// This routines uses the VEGAS Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined by
+    /// the lower and upper limits in the arrays xl and xu, each of size dim. The integration uses a fixed number of function calls calls, and
+    /// obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied. The result of
+    /// the integration is returned in result, with an estimated absolute error abserr. The result and its error estimate are based on a weighted
+    /// average of independent samples. The chi-squared per degree of freedom for the weighted average is returned via the state struct
+    /// component, s->chisq, and must be consistent with 1 for the weighted average to be reliable.
+    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: u64, r: &::Rng, result: &mut f64,
+        abserr: &mut f64) -> enums::Value {
+        unsafe {
+            let mut calls = t_calls;
+            let dim = (*self.s).dim as uint;
+
+            if xl.len() != dim || xu.len() != dim {
+                rgsl_error!("number of dimensions must match allocated size", enums::Inval);
+            }
+
+            for i in range(0u, dim) {
+                if xu[i] <= xl[i] {
+                    rgsl_error!("xu must be greater than xl", enums::Inval);
+                }
+
+                if xu[i] - xl[i] > ::DBL_MAX {
+                    rgsl_error!("Range of integration is too large, please rescale", enums::Inval);
+                }
+            }
+
+            if (*self.s).stage == 0 {
+                init_grid(self.s, xl, xu);
+
+                // FIXME : allow verbose mode
+                /*if (*self.s).verbose >= 0 {
+                    print_lim(self.s, xl, xu, dim);
+                }*/
+            }
+
+            if (*self.s).stage <= 1 {
+                (*self.s).wtd_int_sum = 0f64;
+                (*self.s).sum_wgts = 0f64;
+                (*self.s).chi_sum = 0f64;
+                (*self.s).it_num = 1;
+                (*self.s).samples = 0;
+                (*self.s).chisq = 0f64;
+            }
+
+            if (*self.s).stage <= 2 {
+                let mut bins = (*self.s).bins_max;
+                let mut boxes = 1u64;
+
+                if (*self.s).mode != enums::ImportanceOnly {
+                    /* shooting for 2 calls/box */
+                    boxes = floorf64(powf64(calls as f64 / 2f64, 1f64 / dim as f64)) as u64;
+                    (*self.s).mode = enums::Importance;
+
+                    if 2 * boxes >= (*self.s).bins_max {
+                        /* if bins/box < 2 */
+                        let tmp = boxes / (*self.s).bins_max;
+                        let box_per_bin = if tmp > 1 { tmp } else { 1 };
+
+                        let tmp2 = boxes / box_per_bin;
+                        bins = if tmp2 < (*self.s).bins_max { tmp2 } else { (*self.s).bins_max };
+                        boxes = box_per_bin * bins;
+
+                        (*self.s).mode = enums::Stratified;
+                    }
+                }
+
+                {
+                    let tot_boxes = num::pow(boxes, dim);
+                    let tmp = calls / tot_boxes;
+                    
+                    (*self.s).calls_per_box = if tmp > 2 { tmp as u32 } else { 2 };
+                    calls = ((*self.s).calls_per_box * tot_boxes as u32) as u64;
+                }
+
+                /* total volume of x-space/(avg num of calls/bin) */
+                (*self.s).jac = (*self.s).vol * powf64(bins as f64, dim as f64) / calls as f64;
+
+                (*self.s).boxes = boxes as u32;
+
+                /* If the number of bins changes from the previous invocation, bins
+                 are expanded or contracted accordingly, while preserving bin density */
+
+                if bins != (*self.s).bins as u64 {
+                    resize_grid(self.s, bins as uint);
+
+                    // FIXME: allow verbose mode
+                    /*if (*self.s).verbose > 1 {
+                        print_grid(self.s, dim);
+                    }*/
+                }
+
+                // FIXME: allow verbose mode
+                /*if (*self.s).verbose >= 0 {
+                    print_head(self.s, dim, calls, (*self.s).it_num, (*self.s).bins, (*self.s).boxes);
+                }*/
+            }
+
+            (*self.s).it_start = (*self.s).it_num;
+
+            let mut cum_int = 0f64;
+            let mut cum_sig = 0f64;
+
+            for it in range(0u, (*self.s).iterations as uint) {
+                let mut intgrl = 0f64;
+                let mut tss = 0f64;
+                let calls_per_box = (*self.s).calls_per_box;
+                let jacbin = (*self.s).jac;
+
+                let mut x = CVec::new((*self.s).x, dim);
+                let mut bin = CVec::new((*self.s).bin, dim);
+
+                (*self.s).it_num = (*self.s).it_start + it as u32;
+
+                reset_grid_values(self.s);
+                let mut t_box = CVec::new((*self.s).box_, dim);
+                init_box_coord(self.s, t_box.as_mut_slice());
+              
+                loop {
+                    let mut m = 0f64;
+                    let mut q = 0f64;
+
+                    for k in range(0u, calls_per_box as uint) {
+                        let mut bin_vol = 0f64;
+
+                        random_point(x.as_mut_slice(), bin.as_mut_slice(), &mut bin_vol, t_box.as_mut_slice(), xl, xu, self.s, r);
+
+                        let fval = jacbin * bin_vol * f(x.as_mut_slice(), arg);
+
+                        /* recurrence for mean and variance (sum of squares) */
+                        {
+                            let d = fval - m;
+
+                            m += d / (k + 1u) as f64;
+                            q += d * d * (k / (k + 1u)) as f64;
+                        }
+
+                        if (*self.s).mode != enums::Stratified {
+                            let f_sq = fval * fval;
+
+                            accumulate_distribution(self.s, bin.as_mut_slice(), f_sq);
+                        }
+                    }
+
+                    intgrl += m * calls_per_box as f64;
+
+                    let f_sq_sum = q * calls_per_box as f64;
+
+                    tss += f_sq_sum;
+
+                    if (*self.s).mode == enums::Stratified {
+                        accumulate_distribution(self.s, bin.as_mut_slice(), f_sq_sum);
+                    }
+                    if !change_box_coord(self.s, t_box.as_mut_slice()) {
+                        break;
+                    }
+                }
+
+                /* Compute final results for this iteration   */
+                let var = tss / (calls_per_box - 1u32) as f64;
+
+                let wgt = if var > 0f64 {
+                    1f64 / var
+                } else if (*self.s).sum_wgts > 0f64 {
+                    (*self.s).sum_wgts / (*self.s).samples as f64
+                } else {
+                    0f64
+                };
+                
+                let intgrl_sq = intgrl * intgrl;
+
+                let sig = sqrtf64(var);
+
+                (*self.s).result = intgrl;
+                (*self.s).sigma  = sig;
+
+                if wgt > 0f64 {
+                    let sum_wgts = (*self.s).sum_wgts;
+                    let wtd_int_sum = (*self.s).wtd_int_sum;
+                    let m = if sum_wgts > 0f64 {
+                        wtd_int_sum / sum_wgts
+                    } else {
+                        0f64
+                    };
+                    let q = intgrl - m;
+
+                    (*self.s).samples += 1;
+                    (*self.s).sum_wgts += wgt;
+                    (*self.s).wtd_int_sum += intgrl * wgt;
+                    (*self.s).chi_sum += intgrl_sq * wgt;
+
+                    cum_int = (*self.s).wtd_int_sum / (*self.s).sum_wgts;
+                    cum_sig = sqrtf64(1f64 / (*self.s).sum_wgts);
+
+            /*#if USE_ORIGINAL_CHISQ_FORMULA
+            // This is the chisq formula from the original Lepage paper.  It
+            // computes the variance from <x^2> - <x>^2 and can suffer from
+            // catastrophic cancellations, e.g. returning negative chisq.
+                 if (state->samples > 1)
+                   {
+                     state->chisq = (state->chi_sum - state->wtd_int_sum * cum_int) /
+                       (state->samples - 1.0);
+                   }
+            #else*/
+            // The new formula below computes exactly the same quantity as above but using a stable recurrence
+                    if (*self.s).samples == 1 {
+                        (*self.s).chisq = 0f64;
+                    } else {
+                        (*self.s).chisq *= (*self.s).samples as f64 - 2f64;
+                        (*self.s).chisq += (wgt / (1f64 + (wgt / sum_wgts))) * q * q;
+                        (*self.s).chisq /= (*self.s).samples as f64 - 1f64;
+                    }
+            //#endif
+                } else {
+                    cum_int += (intgrl - cum_int) / (it as f64 + 1f64);
+                    cum_sig = 0f64;
+                }         
+
+
+                // FIXME: allow verbose mode
+                /*if (*self.s).verbose >= 0 {
+                    print_res(self.s, (*self.s).it_num, intgrl, sig, cum_int, cum_sig, (*self.s).chisq);
+                    if it + 1 == (*self.s).iterations && (*self.s).verbose > 0 {
+                        print_grid(self.s, dim);
+                    }
+                }*/
+
+                // FIXME: allow verbose mode
+                /*if (*self.s).verbose > 1 {
+                    print_dist(self.s, dim);
+                }*/
+
+                refine_grid(self.s);
+
+                // FIXME: allow verbose mode
+                /*if (*self.s).verbose > 1 {
+                    print_grid(self.s, dim);
+                }*/
+            }
+
+            /* By setting stage to 1 further calls will generate independent
+             estimates based on the same grid, although it may be rebinned. */
+
+            (*self.s).stage = 1;  
+
+            *result = cum_int;
+            *abserr = cum_sig;
+
+            enums::Success
+        }
+    }
+
+    /// This function returns the chi-squared per degree of freedom for the weighted estimate of the integral. The returned value should be
+    /// close to 1. A value which differs significantly from 1 indicates that the values from different iterations are inconsistent. In this
+    /// case the weighted error will be under-estimated, and further iterations of the algorithm are needed to obtain reliable results.
+    pub fn chisq(&self) -> f64 {
+        unsafe { ffi::gsl_monte_vegas_chisq(self.s as *const ffi::gsl_monte_vegas_state) }
+    }
+
+    /// This function returns the raw (unaveraged) values of the integral result and its error sigma from the most recent iteration of the
+    /// algorithm.
+    pub fn runval(&self, result: &mut f64, sigma: &mut f64) {
+        unsafe { ffi::gsl_monte_vegas_runval(self.s as *const ffi::gsl_monte_vegas_state, result, sigma) }
+    }
+
+    /// This function copies the parameters of the integrator state into the returned params structure.
+    pub fn params_get(&self) -> VegasParams {
+        let mut tmp : VegasParams = Default::default();
+
+        unsafe { ffi::gsl_monte_vegas_params_get(self.s as *const ffi::gsl_monte_vegas_state, &mut tmp) };
+        tmp
+    }
+
+    /// This function sets the integrator parameters based on values provided in the params structure.
+    pub fn params_set(&self, params: &VegasParams) {
+        unsafe { ffi::gsl_monte_vegas_params_set(self.s, params as *const VegasParams) }
+    }
+}
+
+impl Drop for VegasMonteCarlo {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_monte_vegas_free(self.s) };
+        self.s = ::std::ptr::null_mut();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
+    fn wrap(s: *mut ffi::gsl_monte_vegas_state) -> VegasMonteCarlo {
+        VegasMonteCarlo {
+            s: s
+        }
+    }
+
+    fn unwrap(s: &VegasMonteCarlo) -> *mut ffi::gsl_monte_vegas_state {
+        s.s
+    }
+}
+
+unsafe fn init_grid(s: *mut ffi::gsl_monte_vegas_state, xl: &[f64], xu: &[f64]) {
+    let mut vol = 1f64;
+    let mut t_delx = CVec::new((*s).delx, xl.len());
+    let delx = t_delx.as_mut_slice();
+    let mut t_xi = CVec::new((*s).xi, xl.len());
+    let xi = t_xi.as_mut_slice();
+
+    (*s).bins = 1;
+
+    for j in range(0u, xl.len()) {
+        let dx = xu[j] - xl[j];
+        
+        delx[j] = dx;
+        vol *= dx;
+
+        xi[j] = 0f64;
+        xi[(*s).dim as uint + j] = 1f64;
+    }
+
+    (*s).vol = vol;
+}
+
+unsafe fn reset_grid_values(s: *mut ffi::gsl_monte_vegas_state) {
+    let dim = (*s).dim as uint;
+    let bins = (*s).bins as uint;
+    let mut t_d = CVec::new((*s).d, dim);
+    let d = t_d.as_mut_slice();
+
+    for i in range(0u, bins) {
+        for j in range(0u, dim) {
+            d[i * dim + j] = 0f64;
+        }
+    }
+}
+
+unsafe fn accumulate_distribution(s: *mut ffi::gsl_monte_vegas_state, bin: &[i32], y: f64) {
+    let dim = (*s).dim as uint;
+    let mut t_d = CVec::new((*s).d, dim);
+    let d = t_d.as_mut_slice();
+
+    for j in range(0u, dim) {
+        let i = bin[j] as uint;
+
+        d[i * dim + j] += y;
+    }
+}
+
+#[allow(unused_variable)]
+unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: &[i32], xl: &[f64], xu: &[f64], s: *mut ffi::gsl_monte_vegas_state,
+    r: &::Rng) {
+    /* Use the random number generator r to return a random position x
+       in a given box.  The value of bin gives the bin location of the
+       random position (there may be several bins within a given box) */
+
+    let mut vol = 1f64;
+
+    let dim = (*s).dim as uint;
+    let bins = (*s).bins as uint;
+    let boxes = (*s).boxes as uint;
+    let mut t_xi = CVec::new((*s).xi, dim);
+    let xi = t_xi.as_mut_slice();
+    let mut t_delx = CVec::new((*s).delx, xl.len());
+    let delx = t_delx.as_mut_slice();
+
+    for j in range(0u, dim) {
+        /* box[j] + ran gives the position in the box units, while z
+           is the position in bin units.  */
+
+        let z = ((box_[j] as uint + r.uniform_pos() as uint) / boxes) * bins;
+        let k = z;
+
+        let mut y = 0f64;
+        let mut bin_width = 0f64;
+
+        bin[j] = k as i32;
+
+        if k == 0 {
+            bin_width = xi[dim + j];
+            y = z as f64 * bin_width;
+        } else {
+            bin_width = xi[(k + 1) * dim + j] - xi[k * dim + j];
+            y = xi[k * dim + j] as f64 + (z - k) as f64 * bin_width;
+        }
+
+        x[j] = xl[j] + y * delx[j];
+
+        vol *= bin_width;
+    }
+
+    *bin_vol = vol;
+}
+
+unsafe fn resize_grid(s: *mut ffi::gsl_monte_vegas_state, bins: uint) {
+    let dim = (*s).dim as uint;
+    let mut t_xi = CVec::new((*s).xi, dim);
+    let xi = t_xi.as_mut_slice();
+
+    /* weight is ratio of bin sizes */
+    let pts_per_bin = (*s).bins as f64 / bins as f64;
+
+    for j in range(0u, dim) {
+        let mut xnew = 0f64;
+        let mut dw = 0f64;
+        let mut i = 1u;
+
+        for k in range(1u, (*s).bins as uint) {
+            dw += 1f64;
+            let xold = xnew;
+            xnew = xi[k * dim + j];
+
+            while dw > pts_per_bin {
+                dw -= pts_per_bin;
+                *(*s).xin.offset(i as int) = xnew - (xnew - xold) * dw;
+                i += 1;
+            }
+        }
+
+        for k in range(1u, bins) {
+            xi[k * dim + j] = *(*s).xin.offset(i as int);
+        }
+
+        xi[bins * dim + j] = 1f64;
+    }
+
+    (*s).bins = bins as u32;
+}
+
+unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
+    let dim = (*s).dim as uint;
+    let bins = (*s).bins as uint;
+    let mut t_d = CVec::new((*s).d, dim * bins);
+    let d = t_d.as_mut_slice();
+    let mut t_xi = CVec::new((*s).xi, dim * bins);
+    let xi = t_xi.as_mut_slice();
+
+    for j in range(0u, dim) {
+        let mut t_weight = CVec::new((*s).weight, bins);
+        let weight = t_weight.as_mut_slice();
+
+        let mut oldg = d[j];
+        let mut newg = d[dim + j];
+
+        d[j] = (oldg + newg) / 2f64;
+        let mut grid_tot_j = d[j];
+
+        /* This implements gs[i][j] = (gs[i-1][j]+gs[i][j]+gs[i+1][j])/3 */
+
+        for i in range(1u, bins - 1u) {
+            let rc = oldg + newg;
+
+            oldg = newg;
+            newg = d[(i + 1) * dim + j];
+            d[i * dim + j] = (rc + newg) / 3f64;
+            grid_tot_j += d[i * dim + j];
+        }
+        d[(bins - 1u) * dim + j] = (newg + oldg) / 2f64;
+
+        grid_tot_j += d[(bins - 1u) * dim + j];
+
+        let mut tot_weight = 0f64;
+
+        for i in range(0u, bins) {
+            weight[i] = 0f64;
+
+            if d[i * dim + j] > 0f64 {
+                oldg = grid_tot_j / d[i * dim + j];
+                /* damped change */
+                weight[i] = powf64(((oldg - 1f64) / oldg / logf64(oldg)), (*s).alpha);
+            }
+
+          tot_weight += weight[i];
+
+/*#ifdef DEBUG
+          printf("weight[%d] = %g\n", i, weight[i]);
+#endif*/
+        }
+
+        {
+            let pts_per_bin = tot_weight / bins as f64;
+
+            let mut xold = 0f64;
+            let mut xnew = 0f64;
+            let mut dw = 0f64;
+            let mut i = 1u;
+
+            for k in range(0u, bins) {
+                dw += weight[k];
+                xold = xnew;
+                xnew = xi[(k + 1u) * dim + j];
+
+                while dw > pts_per_bin {
+                    dw -= pts_per_bin;
+                    *(*s).xin.offset(i as int) = xnew - (xnew - xold) * dw / weight[k];
+                    i += 1;
+                }
+            }
+
+            for k in range(1u, bins) {
+                xi[k * dim + j] = *(*s).xin.offset(k as int);
+            }
+
+            xi[bins * dim + j] = 1f64;
+        }
+    }
+}
+
+/*unsafe fn print_lim(state: *mut ffi::gsl_monte_vegas_state, xl: &[f64], xu : &[f64]) {
+    if *(state).ostream.is_null() {
+        return;
+    }
+    let t_output_stream : Option<Writer> = ::std::mem::transmute((*state).ostream);
+    let output_stream = t_output_stream.unwrap();
+
+    write!(output_stream, "The limits of integration are:\n");
+    for j in range(0u, xl.len()) {
+        write!(output_stream, "\nxl[{}]={}    xu[{}]={}", j, xl[j], j, xu[j]);
+    }
+    write!(output_stream, "\n");
+    output_stream.flush();
+}
+
+unsafe fn print_head(state: *mut ffi::gsl_monte_vegas_state, num_dim: u32, calls: u32, it_num: u32, bins: u32, boxes: u32) {
+    let t_output_stream : Option<File> = ::std::mem::transmute((*state).ostream);
+    let output_stream = match t_output_stream {
+        Some(os) => os,
+        None => return,
+    };
+
+    write!(output_stream, "\nnum_dim={}, calls={}, it_num={}, max_it_num={} ", num_dim, calls, it_num, (*state).iterations);
+    write!(output_stream, "verb={}, alph={:.2},\nmode={}, bins={}, boxes={}\n", (*state).verbose, (*state).alpha, (*state).mode,
+        bins, boxes);
+    write!(output_stream, "\n       single.......iteration                   ");
+    write!(output_stream, "accumulated......results   \n");
+
+    write!(output_stream, "iteration     integral    sigma             integral   ");
+    write!(output_stream, "      sigma     chi-sq/it\n\n");
+    output_stream.flush();
+}
+
+unsafe fn print_res(state: *mut ffi::gsl_monte_vegas_state, itr: u32, res: f64, err: f64, cum_res: f64, cum_err: f64, chi_sq: f64) {
+    let t_output_stream : Option<File> = ::std::mem::transmute((*state).ostream);
+    let output_stream = match t_output_stream {
+        Some(os) => os,
+        None => return,
+    };
+
+    write!(output_stream, "{:4}        {:6.4}e {:10.2}e          {:6.4}e      {:8.2}e  {:10.2}e\n",
+        itr, res, err, cum_res, cum_err, chi_sq);
+    output_stream.flush();
+}
+
+unsafe fn print_dist(state: *mut ffi::gsl_monte_vegas_state, dim: u32) {
+    let t_output_stream : Option<File> = ::std::mem::transmute((*state).ostream);
+    let output_stream = match t_output_stream {
+        Some(os) => os,
+        None => return,
+    };
+    let p = (*state).verbose;
+    
+    if p < 1 {
+        return;
+    }
+
+    for j in range(0i, dim as int) {
+        write!(output_stream, "\n axis {} \n", j);
+        write!(output_stream, "      x   g\n");
+
+        for i in range(0i, (*state).bins as int) {
+            write!(output_stream, "weight [{:11.2}e , {:11.2}e] = ",
+                *(*state).xi.offset(i * (*state).dim as int + j),
+                *(*state).xi.offset((i + 1i) * (*state).dim as int + j));
+            write!(output_stream, " {:11.2}e\n", *(*state).d.offset(i * (*state).dim as int + j));
+        }
+        write!(output_stream, "\n");
+    }
+    write!(output_stream, "\n");
+    output_stream.flush();
+}
+
+unsafe fn print_grid(state: *mut ffi::gsl_monte_vegas_state, dim: u32) {
+    let t_output_stream : Option<File> = ::std::mem::transmute((*state).ostream);
+    let output_stream = match t_output_stream {
+        Some(os) => os,
+        None => return,
+    };
+    let p = (*state).verbose;
+
+    if p < 1 {
+        return;
+    }
+
+    for j in range(0u, dim as uint) {
+        write!(output_stream, "\n axis {} \n", j);
+        write!(output_stream, "      x   \n");
+
+        for i in range(0u, (*state).bins as uint) {
+            write!(output_stream, "{:11.2}e", *(*state).xi.offset(i as int * (*state).dim as int + j as int));
+            
+            if i % 5u == 4u {
+                write!(output_stream, "\n");
+            }
+        }
+        write!(output_stream, "\n");
+    }
+    write!(output_stream, "\n");
+    output_stream.flush();
+}*/
+
+unsafe fn init_box_coord(s: *mut ffi::gsl_monte_vegas_state, box_: &mut [ffi::coord]) {
+    let dim = (*s).dim as uint;
+
+    for i in range(0u, dim) {
+        box_[i] = 0;
+    }
+}
+
+/* change_box_coord steps through the box coord like
+   {0,0}, {0, 1}, {0, 2}, {0, 3}, {1, 0}, {1, 1}, {1, 2}, ...
+*/
+unsafe fn change_box_coord(s: *mut ffi::gsl_monte_vegas_state, box_: &mut [ffi::coord]) -> bool {
+    let mut j = (*s).dim as int - 1;
+    let ng = (*s).boxes;
+
+    while j >= 0 {
+        box_[j as uint] = (box_[j as uint] + 1) % ng as i32;
+
+        if box_[j as uint] != 0 {
+            return true;
+        }
+
+        j -= 1;
+    }
+
+    false
 }

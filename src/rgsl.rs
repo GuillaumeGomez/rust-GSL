@@ -116,7 +116,9 @@ pub use types::{
     Spline,
     Minimizer,
     MinimizerType,
-    MiserMonteCarlo
+    MiserMonteCarlo,
+    VegasMonteCarlo,
+    VegasParams
 };
 
 pub use enums::{
@@ -125,7 +127,8 @@ pub use enums::{
     EigenSort,
     FftDirection,
     GaussKonrodRule,
-    IntegrationQawo
+    IntegrationQawo,
+    VegasMode
 };
 
 pub use elementary::Elementary;

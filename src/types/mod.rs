@@ -18,7 +18,7 @@ pub use self::mathieu::MathieuWorkspace;
 pub use self::matrix::{MatrixF32, MatrixF64, MatrixView};
 pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};
 pub use self::minimizer::{Minimizer, MinimizerType};
-pub use self::monte_carlo::{PlainMonteCarlo, MiserMonteCarlo};
+pub use self::monte_carlo::{PlainMonteCarlo, MiserMonteCarlo, VegasMonteCarlo, VegasParams};
 pub use self::permutation::Permutation;
 pub use self::polynomial::PolyComplex;
 pub use self::ran_discrete::RanDiscrete;
