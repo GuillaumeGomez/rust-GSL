@@ -116,6 +116,7 @@ pub use types::{
     Spline,
     Minimizer,
     MinimizerType,
+    PlainMonteCarlo,
     MiserMonteCarlo,
     VegasMonteCarlo,
     VegasParams

@@ -78,3 +78,8 @@ path = "examples/linear_algebra/main.rs"
 
 name = "minimization"
 path = "examples/minimization/main.rs"
+
+[[bin]]
+
+name = "monte_carlo"
+path = "examples/monte_carlo/main.rs"

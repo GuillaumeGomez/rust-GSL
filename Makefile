@@ -24,6 +24,7 @@ examples: rgsl
 	  rustc -o bin/interpolation -L ./lib examples/interpolation/main.rs
 	  rustc -o bin/linear_algebra -L ./lib examples/linear_algebra/main.rs
 	  rustc -o bin/minimization -L ./lib examples/minimization/main.rs
+	  rustc -o bin/monte_carlo -L ./lib examples/monte_carlo/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
