@@ -787,7 +787,8 @@ impl VegasMonteCarlo {
                 reset_grid_values(self.s);
                 let mut t_box = CVec::new((*self.s).box_, dim);
                 init_box_coord(self.s, t_box.as_mut_slice());
-              
+
+                let mut c = 0u;
                 loop {
                     let mut m = 0f64;
                     let mut q = 0f64;
@@ -797,14 +798,15 @@ impl VegasMonteCarlo {
 
                         random_point(x.as_mut_slice(), bin.as_mut_slice(), &mut bin_vol, t_box.as_mut_slice(), xl, xu, self.s, r);
 
-                        let fval = jacbin * bin_vol * f(x.as_mut_slice(), arg);
+                        let ret = f(x.as_mut_slice(), arg);
+                        let fval = jacbin * bin_vol * ret;
 
                         /* recurrence for mean and variance (sum of squares) */
                         {
                             let d = fval - m;
 
-                            m += d / (k + 1u) as f64;
-                            q += d * d * (k / (k + 1u)) as f64;
+                            m += d / (k as f64 + 1f64);
+                            q += d * d * (k as f64 / (k as f64 + 1f64));
                         }
 
                         if (*self.s).mode != enums::Stratified {
@@ -826,10 +828,11 @@ impl VegasMonteCarlo {
                     if !change_box_coord(self.s, t_box.as_mut_slice()) {
                         break;
                     }
+                    c += 1;
                 }
 
                 /* Compute final results for this iteration   */
-                let var = tss / (calls_per_box - 1u32) as f64;
+                let var = tss / (calls_per_box as f64 - 1f64);
 
                 let wgt = if var > 0f64 {
                     1f64 / var
@@ -1001,13 +1004,11 @@ unsafe fn reset_grid_values(s: *mut ffi::gsl_monte_vegas_state) {
 
 unsafe fn accumulate_distribution(s: *mut ffi::gsl_monte_vegas_state, bin: &[i32], y: f64) {
     let dim = (*s).dim as uint;
-    let mut t_d = CVec::new((*s).d, dim);
-    let d = t_d.as_mut_slice();
 
-    for j in range(0u, dim) {
-        let i = bin[j] as uint;
+    for j in range(0i, dim as int) {
+        let i = bin[j as uint] as int;
 
-        d[i * dim + j] += y;
+        *(*s).d.offset(i * dim as int + j) += y;
     }
 }
 
@@ -1032,8 +1033,8 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
         /* box[j] + ran gives the position in the box units, while z
            is the position in bin units.  */
 
-        let z = ((box_[j] as uint + r.uniform_pos() as uint) / boxes) * bins;
-        let k = z;
+        let z = ((box_[j] as f64 + r.uniform_pos()) / boxes as f64) * bins as f64;
+        let k = z as int;
 
         let mut y = 0f64;
         let mut bin_width = 0f64;
@@ -1042,10 +1043,10 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
 
         if k == 0 {
             bin_width = *(*s).xi.offset(dim as int + j as int);
-            y = z as f64 * bin_width;
+            y = z * bin_width;
         } else {
             bin_width = *(*s).xi.offset((k as int + 1) * dim as int + j as int) - *(*s).xi.offset(k as int * dim as int + j as int);
-            y = *(*s).xi.offset(k as int * dim as int + j as int) as f64 + (z - k) as f64 * bin_width;
+            y = *(*s).xi.offset(k as int * dim as int + j as int) as f64 + (z - k as f64) * bin_width;
         }
 
         x[j] = xl[j] + y * delx[j];
@@ -1067,7 +1068,7 @@ unsafe fn resize_grid(s: *mut ffi::gsl_monte_vegas_state, bins: uint) {
         let mut dw = 0f64;
         let mut i = 1u;
 
-        for k in range(1u, (*s).bins as uint) {
+        for k in range(1u, (*s).bins as uint + 1u) {
             dw += 1f64;
             let xold = xnew;
             xnew = *(*s).xi.offset(k as int * dim as int + j as int);
@@ -1080,7 +1081,7 @@ unsafe fn resize_grid(s: *mut ffi::gsl_monte_vegas_state, bins: uint) {
         }
 
         for k in range(1u, bins) {
-            *(*s).xi.offset(k as int * dim as int + j as int) = *(*s).xin.offset(i as int);
+            *(*s).xi.offset(k as int * dim as int + j as int) = *(*s).xin.offset(k as int);
         }
 
         *(*s).xi.offset(bins as int * dim as int + j as int) = 1f64;

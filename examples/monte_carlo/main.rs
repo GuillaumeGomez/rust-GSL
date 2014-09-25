@@ -90,7 +90,7 @@ fn main() {
         println!("converging...");
 
         loop {
-            s.integrate (g, &mut 0f64, xl, xu, calls / 5, &r, &mut res, &mut err);
+            s.integrate(g, &mut 0f64, xl, xu, calls / 5, &r, &mut res, &mut err);
             println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
             if unsafe { fabsf64(s.chisq() - 1f64) } <= 0.5f64 {
                 break;
