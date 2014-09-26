@@ -746,7 +746,7 @@ impl VegasMonteCarlo {
                 }
 
                 /* total volume of x-space/(avg num of calls/bin) */
-                (*self.s).jac = (*self.s).vol * powf64(bins as f64, dim as f64) / calls as f64;
+                (*self.s).jac = (*self.s).vol * powf64(bins as f64, dim as f64) / (calls as f64);
 
                 (*self.s).boxes = boxes as u32;
 
@@ -788,7 +788,6 @@ impl VegasMonteCarlo {
                 let mut t_box = CVec::new((*self.s).box_, dim);
                 init_box_coord(self.s, t_box.as_mut_slice());
 
-                let mut c = 0u;
                 loop {
                     let mut m = 0f64;
                     let mut q = 0f64;
@@ -798,8 +797,7 @@ impl VegasMonteCarlo {
 
                         random_point(x.as_mut_slice(), bin.as_mut_slice(), &mut bin_vol, t_box.as_mut_slice(), xl, xu, self.s, r);
 
-                        let ret = f(x.as_mut_slice(), arg);
-                        let fval = jacbin * bin_vol * ret;
+                        let fval = jacbin * bin_vol * f(x.as_mut_slice(), arg);
 
                         /* recurrence for mean and variance (sum of squares) */
                         {
@@ -828,7 +826,6 @@ impl VegasMonteCarlo {
                     if !change_box_coord(self.s, t_box.as_mut_slice()) {
                         break;
                     }
-                    c += 1;
                 }
 
                 /* Compute final results for this iteration   */
@@ -1024,8 +1021,6 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
     let dim = (*s).dim as uint;
     let bins = (*s).bins as uint;
     let boxes = (*s).boxes as uint;
-    let mut t_xi = CVec::new((*s).xi, dim);
-    let xi = t_xi.as_mut_slice();
     let mut t_delx = CVec::new((*s).delx, xl.len());
     let delx = t_delx.as_mut_slice();
 
@@ -1045,7 +1040,7 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
             bin_width = *(*s).xi.offset(dim as int + j as int);
             y = z * bin_width;
         } else {
-            bin_width = *(*s).xi.offset((k as int + 1) * dim as int + j as int) - *(*s).xi.offset(k as int * dim as int + j as int);
+            bin_width = *(*s).xi.offset((k + 1) * dim as int + j as int) - *(*s).xi.offset(k * dim as int + j as int);
             y = *(*s).xi.offset(k as int * dim as int + j as int) as f64 + (z - k as f64) * bin_width;
         }
 

@@ -14,7 +14,6 @@ pub struct VectorComplexF64 {
 
 impl VectorComplexF64 {
     #[doc(hidden)]
-    #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_vector_complex {
         self.vec
     }
@@ -260,7 +259,6 @@ pub struct VectorComplexF32 {
 
 impl VectorComplexF32 {
     #[doc(hidden)]
-    #[allow(visible_private_types)]
     pub fn get_ffi(&self) -> *mut ffi::gsl_vector_complex_float {
         self.vec
     }

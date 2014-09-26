@@ -3352,14 +3352,12 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
 }
 
 #[doc(hidden)]
-#[allow(visible_private_types)]
 pub unsafe fn initialise_table(table: *mut ffi::extrapolation_table) {
     (*table).n = 0;
     (*table).nres = 0;
 }
 
 #[doc(hidden)]
-#[allow(visible_private_types)]
 pub unsafe fn append_table(table: &mut ffi::extrapolation_table, y: f64) {
     let n = (*table).n as uint;
 
@@ -3368,13 +3366,11 @@ pub unsafe fn append_table(table: &mut ffi::extrapolation_table, y: f64) {
 }
 
 #[doc(hidden)]
-#[allow(visible_private_types)]
 pub fn append_interval(w: &IntegrationWorkspace, a: f64, b: f64, area: f64, error: f64) {
     w.append_interval(a, b, area, error)
 }
 
 #[doc(hidden)]
-#[allow(visible_private_types)]
 pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64, abserr: &mut f64) {
     let epstab = &mut (*table).rlist2;//CVec::new((*table).rlist2 as *mut f64, (*table).n as uint + 3);
     let res3la = &mut (*table).res3la;//CVec::new((*table).res3la as *mut f64, 3u);
