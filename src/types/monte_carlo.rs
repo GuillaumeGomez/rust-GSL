@@ -740,7 +740,7 @@ impl VegasMonteCarlo {
                 {
                     let tot_boxes = num::pow(boxes, dim);
                     let tmp = calls / tot_boxes;
-                    
+
                     (*self.s).calls_per_box = if tmp > 2 { tmp as u32 } else { 2 };
                     calls = ((*self.s).calls_per_box * tot_boxes as u32) as u64;
                 }
@@ -788,6 +788,7 @@ impl VegasMonteCarlo {
                 let mut t_box = CVec::new((*self.s).box_, dim);
                 init_box_coord(self.s, t_box.as_mut_slice());
 
+                //let mut c = 0u;
                 loop {
                     let mut m = 0f64;
                     let mut q = 0f64;
@@ -795,7 +796,7 @@ impl VegasMonteCarlo {
                     for k in range(0u, calls_per_box as uint) {
                         let mut bin_vol = 0f64;
 
-                        random_point(x.as_mut_slice(), bin.as_mut_slice(), &mut bin_vol, t_box.as_mut_slice(), xl, xu, self.s, r);
+                        random_point(x.as_mut_slice(), bin.as_mut_slice(), &mut bin_vol, t_box.as_mut_slice(), xl, xu, self.s, r/*, c == 4640*/);
 
                         let fval = jacbin * bin_vol * f(x.as_mut_slice(), arg);
 
@@ -812,12 +813,14 @@ impl VegasMonteCarlo {
 
                             accumulate_distribution(self.s, bin.as_mut_slice(), f_sq);
                         }
+
                     }
 
                     intgrl += m * calls_per_box as f64;
 
                     let f_sq_sum = q * calls_per_box as f64;
 
+                    //c += 1;
                     tss += f_sq_sum;
 
                     if (*self.s).mode == enums::Stratified {
@@ -1040,8 +1043,9 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
             bin_width = *(*s).xi.offset(dim as int + j as int);
             y = z * bin_width;
         } else {
-            bin_width = *(*s).xi.offset((k + 1) * dim as int + j as int) - *(*s).xi.offset(k * dim as int + j as int);
-            y = *(*s).xi.offset(k as int * dim as int + j as int) as f64 + (z - k as f64) * bin_width;
+            // FIXME: problem is here -> xi hasn't the good values, when c == 4640 on second turn
+            bin_width = *(*s).xi.offset((k + 1) * (*s).dim as int + j as int) - *(*s).xi.offset(k * (*s).dim as int + j as int);
+            y = *(*s).xi.offset(k as int * (*s).dim as int + j as int) + (z - k as f64) * bin_width;
         }
 
         x[j] = xl[j] + y * delx[j];
