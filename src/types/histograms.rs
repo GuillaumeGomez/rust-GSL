@@ -245,6 +245,24 @@ impl Histogram {
     pub fn shift(&self, offset: f64) -> enums::Value {
         unsafe { ffi::gsl_histogram_shift(self.h, offset) }
     }
+
+    #[allow(unused_must_use)]
+    pub fn print(&self, stream: &mut Writer/*, range_format: &str, bin_format: &str*/) -> enums::Value {
+        unsafe {
+            let n = (*self.h).n as int;
+
+            for i in range(0i, n) {
+                write!(stream, "{}", *(*self.h).range.offset(i));
+                write!(stream, " ");
+                write!(stream, "{}", *(*self.h).range.offset(i + 1));
+                write!(stream, " ");
+                write!(stream, "{}", *(*self.h).range.offset(i));
+                write!(stream, "\n");
+            }
+
+            enums::Success
+        }
+    }
 }
 
 impl Drop for Histogram {

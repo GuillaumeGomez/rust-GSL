@@ -3,6 +3,7 @@
 //
 
 use libc::{c_double, c_int, c_uint, c_float, c_void, size_t, c_ulong, c_char};
+use libc::types::common::c95::FILE;
 use enums;
 use cblas;
 
@@ -2253,6 +2254,19 @@ extern "C" {
     pub fn gsl_monte_vegas_runval(s: *const gsl_monte_vegas_state, result: *mut c_double, sigma: *mut c_double);
     pub fn gsl_monte_vegas_params_get(s: *const gsl_monte_vegas_state, params: *mut ::VegasParams);
     pub fn gsl_monte_vegas_params_set(s: *mut gsl_monte_vegas_state, params: *const ::VegasParams);
+
+    // N-tuples
+    // Creating ntuples
+    pub fn gsl_ntuple_create(filename: *mut c_char, ntuple_data: *mut c_void, size: size_t) -> *mut gsl_ntuple;
+    // Opening an existing ntuple file
+    pub fn gsl_ntuple_open(filename: *mut c_char, ntuple_data: *mut c_void, size: size_t) -> *mut gsl_ntuple;
+    // Writing ntuples
+    pub fn gsl_ntuple_write(ntuple: *mut gsl_ntuple) -> enums::Value;
+    pub fn gsl_ntuple_bookdata(ntuple: *mut gsl_ntuple) -> enums::Value;
+    // Reading ntuples
+    pub fn gsl_ntuple_read(ntuple: *mut gsl_ntuple) -> enums::Value;
+    // Closing an ntuple file
+    pub fn gsl_ntuple_close(ntuple: *mut gsl_ntuple) -> enums::Value;
 }
 
 #[repr(C)]
@@ -2913,3 +2927,10 @@ pub struct gsl_monte_vegas_params {
     pub verbose: c_int,
     pub ostream: *mut c_void // is supposed to be a FILE*
 }*/
+
+#[repr(C)]
+pub struct gsl_ntuple {
+    pub file: *mut FILE,
+    pub ntuple_data: *mut c_void,
+    pub size: size_t,
+}

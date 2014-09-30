@@ -119,7 +119,8 @@ pub use types::{
     PlainMonteCarlo,
     MiserMonteCarlo,
     VegasMonteCarlo,
-    VegasParams
+    VegasParams,
+    NTuples
 };
 
 pub use enums::{
@@ -191,6 +192,8 @@ pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
 pub type function<T> = fn(x: f64, p: &mut T) -> f64;
 pub type integration_function<T> = fn(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64);
 pub type monte_function<T> = fn(x: &mut [f64], params: &mut T) -> f64;
+pub type select_function<T, U> = fn(ntuple_data: &mut T, params: &mut U) -> bool;
+pub type value_function<T, U> = fn(ntuple_data: &mut T, params: &mut U) -> f64;
 //pub type ComplexPackedPtr = &mut [f64];
 
 /// The maximum x such that gamma(x) is not considered an overflow.

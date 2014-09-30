@@ -83,3 +83,8 @@ path = "examples/minimization/main.rs"
 
 name = "monte_carlo"
 path = "examples/monte_carlo/main.rs"
+
+[[bin]]
+
+name = "n_tuples"
+path = "examples/n_tuples/main.rs"
