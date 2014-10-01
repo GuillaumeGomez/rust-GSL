@@ -685,3 +685,10 @@ impl ffi::FFI<ffi::gsl_vector> for VectorF64 {
         v.vec
     }
 }
+
+pub fn wrap(v: *mut ffi::gsl_vector) -> VectorF64 {
+    VectorF64 {
+        vec: v,
+        can_free: false
+    }
+}

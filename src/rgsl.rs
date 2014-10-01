@@ -120,7 +120,8 @@ pub use types::{
     MiserMonteCarlo,
     VegasMonteCarlo,
     VegasParams,
-    NTuples
+    NTuples,
+    MultiSet
 };
 
 pub use enums::{

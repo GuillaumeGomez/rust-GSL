@@ -88,3 +88,8 @@ path = "examples/monte_carlo/main.rs"
 
 name = "n_tuples"
 path = "examples/n_tuples/main.rs"
+
+[[bin]]
+
+name = "multisets"
+path = "examples/multisets/main.rs"

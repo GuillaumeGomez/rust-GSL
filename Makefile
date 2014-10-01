@@ -26,6 +26,7 @@ examples: rgsl
 	  rustc -o bin/minimization -L ./lib examples/minimization/main.rs
 	  rustc -o bin/monte_carlo -L ./lib examples/monte_carlo/main.rs
 	  rustc -o bin/n_tuples -L ./lib examples/n_tuples/main.rs
+	  rustc -o bin/multisets -L ./lib examples/multisets/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
