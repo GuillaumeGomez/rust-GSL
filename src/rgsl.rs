@@ -121,7 +121,13 @@ pub use types::{
     VegasMonteCarlo,
     VegasParams,
     NTuples,
-    MultiSet
+    MultiSet,
+    ODEiv2System,
+    ODEiv2Step,
+    ODEiv2StepType,
+    ODEiv2Control,
+    ODEiv2Evolve,
+    ODEiv2Driver
 };
 
 pub use enums::{
@@ -131,7 +137,8 @@ pub use enums::{
     FftDirection,
     GaussKonrodRule,
     IntegrationQawo,
-    VegasMode
+    VegasMode,
+    ODEiv
 };
 
 pub use elementary::Elementary;

@@ -142,3 +142,15 @@ pub enum VegasMode {
     ImportanceOnly = 0, 
     Stratified = -1
 }
+
+#[deriving(PartialEq, PartialOrd, Show)]
+#[repr(C)]
+/// Possible return values for an hadjust() evolution method for ordinary differential equations
+pub enum ODEiv {
+    /// step was increased
+    Inc = 1,
+    /// step unchanged
+    Nil = 0,
+    /// step decreased
+    Dec = -1
+}

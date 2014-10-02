@@ -93,3 +93,8 @@ path = "examples/n_tuples/main.rs"
 
 name = "multisets"
 path = "examples/multisets/main.rs"
+
+[[bin]]
+
+name = "ordinary_differential_equations"
+path = "examples/ordinary_differential_equations/main.rs"
