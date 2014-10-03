@@ -28,6 +28,7 @@ pub use self::qrng::{QRng, QRngType};
 pub use self::ran_discrete::RanDiscrete;
 pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
+pub use self::series_acceleration::{LevinUWorkspace, LevinUTruncWorkspace};
 pub use self::vector::{VectorF32, VectorF64, VectorView};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
 
@@ -54,6 +55,7 @@ pub mod polynomial;
 pub mod qrng;
 pub mod ran_discrete;
 pub mod result;
+pub mod series_acceleration;
 pub mod rng;
 pub mod vector;
 pub mod vector_complex;

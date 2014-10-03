@@ -2440,6 +2440,18 @@ extern "C" {
     // Median and Percentiles
     pub fn gsl_stats_median_from_sorted_data(data: *const c_double, stride: size_t, n: size_t) -> c_double;
     pub fn gsl_stats_quantile_from_sorted_data(data: *const c_double, stride: size_t, n: size_t, f: c_double) -> c_double;
+
+    // Series Acceleration
+    // Acceleration functions
+    pub fn gsl_sum_levin_u_alloc(n: size_t) -> *mut gsl_sum_levin_u_workspace;
+    pub fn gsl_sum_levin_u_free(w: *mut gsl_sum_levin_u_workspace);
+    pub fn gsl_sum_levin_u_accel(array: *const c_double, array_size: size_t, w: *mut gsl_sum_levin_u_workspace, sum_accel: *mut c_double,
+        abserr: *mut c_double) -> enums::Value;
+    // Acceleration functions without error estimation
+    pub fn gsl_sum_levin_utrunc_alloc(n: size_t) -> *mut gsl_sum_levin_utrunc_workspace;
+    pub fn gsl_sum_levin_utrunc_free(w: *mut gsl_sum_levin_utrunc_workspace);
+    pub fn gsl_sum_levin_utrunc_accel(array: *const c_double, array_size: size_t, w: *mut gsl_sum_levin_utrunc_workspace,
+        sum_accel: *mut c_double, abserr_trunc: *mut c_double) -> enums::Value;
 }
 
 #[repr(C)]
@@ -3206,4 +3218,41 @@ pub struct gsl_qrng_type {
     pub state_size: Option<extern "C" fn(dimension: c_uint) -> size_t>,
     pub init_state: Option<extern "C" fn(state: *mut c_void, dimension: c_uint) -> enums::Value>,
     pub get: Option<extern "C" fn(state: *mut c_void, dimension: c_uint, x: *mut c_double) -> enums::Value>
+}
+
+/*
+ * size        = number of terms the workspace can handle
+ * sum_plain   = simple sum of series
+ * q_num       = backward diagonal of numerator; length = size
+ * q_den       = backward diagonal of denominator; length = size
+ * dq_num      = table of numerator derivatives; length = size**2
+ * dq_den      = table of denominator derivatives; length = size**2
+ * dsum        = derivative of sum wrt term i; length = size
+*/
+#[repr(C)]
+pub struct gsl_sum_levin_u_workspace {
+    pub size: size_t,
+    // position in array
+    pub i: size_t,
+    // number of calls
+    pub terms_used: size_t,
+    pub sum_plain: c_double,
+    pub q_num: *mut c_double,
+    pub q_den: *mut c_double,
+    pub dq_num: *mut c_double,
+    pub dq_den: *mut c_double,
+    pub dsum: *mut c_double
+}
+
+#[repr(C)]
+pub struct gsl_sum_levin_utrunc_workspace {
+    pub size: size_t,
+    // position in array
+    pub i: size_t,
+    // number of calls
+    pub terms_used: size_t,
+    pub sum_plain: c_double,
+    pub q_num: *mut c_double,
+    pub q_den: *mut c_double,
+    pub dsum: *mut c_double
 }

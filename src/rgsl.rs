@@ -129,7 +129,9 @@ pub use types::{
     ODEiv2Evolve,
     ODEiv2Driver,
     QRng,
-    QRngType
+    QRngType,
+    LevinUWorkspace,
+    LevinUTruncWorkspace
 };
 
 pub use enums::{

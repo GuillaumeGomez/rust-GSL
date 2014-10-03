@@ -30,6 +30,7 @@ examples: rgsl
 	  rustc -o bin/ordinary_differential_equations -L ./lib examples/ordinary_differential_equations/main.rs
 	  rustc -o bin/qrng -L ./lib examples/qrng/main.rs
 	  rustc -o bin/statistics -L ./lib examples/statistics/main.rs
+	  rustc -o bin/series_acceleration -L ./lib examples/series_acceleration/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs

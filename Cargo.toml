@@ -108,3 +108,8 @@ path = "examples/qrng/main.rs"
 
 name = "statistics"
 path = "examples/statistics/main.rs"
+
+[[bin]]
+
+name = "series_acceleration"
+path = "examples/series_acceleration/main.rs"
