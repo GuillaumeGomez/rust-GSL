@@ -91,6 +91,11 @@ extern "C" {
     pub static gsl_odeiv2_control_scaled : *const gsl_odeiv2_control_type;
     pub static gsl_odeiv2_control_standard : *const gsl_odeiv2_control_type;
 
+    pub static gsl_qrng_niederreiter_2 : *const gsl_qrng_type;
+    pub static gsl_qrng_sobol : *const gsl_qrng_type;
+    pub static gsl_qrng_halton : *const gsl_qrng_type;
+    pub static gsl_qrng_reversehalton : *const gsl_qrng_type;
+
     // Airy functions
     pub fn gsl_sf_airy_Ai(x: c_double, mode: enums::Mode) -> c_double;
     pub fn gsl_sf_airy_Ai_e(x: c_double, mode: enums::Mode, result: *mut gsl_sf_result) -> enums::Value;
@@ -1549,7 +1554,7 @@ extern "C" {
     // Random Number Generation
     pub fn gsl_rng_alloc(T: *const gsl_rng_type) -> *mut gsl_rng;
     pub fn gsl_rng_set(r: *const gsl_rng, s: c_ulong);
-    pub fn gsl_rng_free(r: *const gsl_rng);
+    pub fn gsl_rng_free(r: *mut gsl_rng);
     pub fn gsl_rng_get(r: *const gsl_rng) -> c_ulong;
     pub fn gsl_rng_uniform(r: *const gsl_rng) -> c_double;
     pub fn gsl_rng_uniform_pos(r: *const gsl_rng) -> c_double;
@@ -2355,6 +2360,21 @@ extern "C" {
     pub fn gsl_odeiv2_driver_reset(d: *mut gsl_odeiv2_driver) -> enums::Value;
     pub fn gsl_odeiv2_driver_reset_hstart(d: *mut gsl_odeiv2_driver, hstart: c_double) -> enums::Value;
     pub fn gsl_odeiv2_driver_free(d: *mut gsl_odeiv2_driver);
+
+    // Quasi-Random Sequences
+    // Quasi-random number generator initialization
+    pub fn gsl_qrng_alloc(t: *const gsl_qrng_type, d: c_uint) -> *mut gsl_qrng;
+    pub fn gsl_qrng_free(q: *mut gsl_qrng);
+    pub fn gsl_qrng_init(q: *mut gsl_qrng);
+    // Sampling from a quasi-random number generator
+    pub fn gsl_qrng_get(q: *const gsl_qrng, x: *mut c_double) -> enums::Value;
+    // Auxiliary quasi-random number generator functions
+    pub fn gsl_qrng_name(q: *const gsl_qrng) -> *const c_char;
+    pub fn gsl_qrng_size(q: *const gsl_qrng) -> size_t;
+    pub fn gsl_qrng_state(q: *const gsl_qrng) -> *mut c_void;
+    // Saving and resorting quasi-random number generator state
+    pub fn gsl_qrng_memcpy(dest: *mut gsl_qrng, src: *const gsl_qrng) -> enums::Value;
+    pub fn gsl_qrng_clone(q: *const gsl_qrng) -> *mut gsl_qrng;
 }
 
 #[repr(C)]
@@ -3102,4 +3122,23 @@ pub struct gsl_odeiv2_step_type {
     pub reset: fn(state: *mut c_void, dim: size_t) -> enums::Value,
     pub order: fn(state: *mut c_void) -> c_uint,
     pub free: fn(state: *mut c_void)
+}
+
+// Structure describing a generator instance of a specified type, with generator-specific state info and dimension-specific info.
+#[repr(C)]
+pub struct gsl_qrng {
+    pub type_: *const gsl_qrng_type,
+    pub dimension: c_uint,
+    pub state_size: size_t,
+    pub state: *mut c_void
+}
+
+// Structure describing a type of generator.
+#[repr(C)]
+pub struct gsl_qrng_type {
+    pub name: *const c_char,
+    pub max_dimension: c_uint,
+    pub state_size: Option<extern "C" fn(dimension: c_uint) -> size_t>,
+    pub init_state: Option<extern "C" fn(state: *mut c_void, dimension: c_uint) -> enums::Value>,
+    pub get: Option<extern "C" fn(state: *mut c_void, dimension: c_uint, x: *mut c_double) -> enums::Value>
 }

@@ -98,3 +98,8 @@ path = "examples/multisets/main.rs"
 
 name = "ordinary_differential_equations"
 path = "examples/ordinary_differential_equations/main.rs"
+
+[[bin]]
+
+name = "qrng"
+path = "examples/qrng/main.rs"

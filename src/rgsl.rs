@@ -127,7 +127,9 @@ pub use types::{
     ODEiv2StepType,
     ODEiv2Control,
     ODEiv2Evolve,
-    ODEiv2Driver
+    ODEiv2Driver,
+    QRng,
+    QRngType
 };
 
 pub use enums::{

@@ -28,6 +28,7 @@ examples: rgsl
 	  rustc -o bin/n_tuples -L ./lib examples/n_tuples/main.rs
 	  rustc -o bin/multisets -L ./lib examples/multisets/main.rs
 	  rustc -o bin/ordinary_differential_equations -L ./lib examples/ordinary_differential_equations/main.rs
+	  rustc -o bin/qrng -L ./lib examples/qrng/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
