@@ -103,3 +103,8 @@ path = "examples/ordinary_differential_equations/main.rs"
 
 name = "qrng"
 path = "examples/qrng/main.rs"
+
+[[bin]]
+
+name = "statistics"
+path = "examples/statistics/main.rs"

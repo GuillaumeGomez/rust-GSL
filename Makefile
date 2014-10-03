@@ -29,6 +29,7 @@ examples: rgsl
 	  rustc -o bin/multisets -L ./lib examples/multisets/main.rs
 	  rustc -o bin/ordinary_differential_equations -L ./lib examples/ordinary_differential_equations/main.rs
 	  rustc -o bin/qrng -L ./lib examples/qrng/main.rs
+	  rustc -o bin/statistics -L ./lib examples/statistics/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
