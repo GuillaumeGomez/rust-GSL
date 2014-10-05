@@ -16,7 +16,7 @@ pub fn dawson(x: f64) -> f64 {
 }
 
 /// This routine computes the value of Dawson’s integral for x.
-pub fn dawson_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn dawson_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_dawson_e(x, &mut result) };
 

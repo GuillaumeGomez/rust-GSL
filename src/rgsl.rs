@@ -131,7 +131,10 @@ pub use types::{
     QRng,
     QRngType,
     LevinUWorkspace,
-    LevinUTruncWorkspace
+    LevinUTruncWorkspace,
+    Wavelet,
+    WaveletType,
+    WaveletWorkspace
 };
 
 pub use enums::{
@@ -142,7 +145,20 @@ pub use enums::{
     GaussKonrodRule,
     IntegrationQawo,
     VegasMode,
-    ODEiv
+    ODEiv,
+    WaveletDirection
+};
+
+pub use enums::{
+    mode,
+    value,
+    eigen_sort,
+    fft_direction,
+    gauss_konrod_rule,
+    integration_qawo,
+    vegas_mode,
+    odeiv,
+    wavelet_direction
 };
 
 pub use elementary::Elementary;
@@ -199,6 +215,7 @@ pub mod synchrotron;
 pub mod transport;
 pub mod trigonometric;
 pub mod util;
+pub mod wavelet_transforms;
 pub mod zeta;
 
 pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;

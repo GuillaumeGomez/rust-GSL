@@ -19,7 +19,7 @@ pub fn _1(x: f64) -> f64 {
 }
 
 /// This routine computes the first-order Debye function D_1(x) = (1/x) \int_0^x dt (t/(e^t - 1)).
-pub fn _1_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn _1_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_debye_1_e(x, &mut result) };
 
@@ -32,7 +32,7 @@ pub fn _2(x: f64) -> f64 {
 }
 
 /// This routine computes the second-order Debye function D_2(x) = (2/x^2) \int_0^x dt (t^2/(e^t - 1)).
-pub fn _2_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn _2_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_debye_2_e(x, &mut result) };
 
@@ -45,7 +45,7 @@ pub fn _3(x: f64) -> f64 {
 }
 
 /// This routine computes the third-order Debye function D_3(x) = (3/x^3) \int_0^x dt (t^3/(e^t - 1)).
-pub fn _3_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn _3_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_debye_3_e(x, &mut result) };
 
@@ -58,7 +58,7 @@ pub fn _4(x: f64) -> f64 {
 }
 
 /// This routine computes the fourth-order Debye function D_4(x) = (4/x^4) \int_0^x dt (t^4/(e^t - 1)).
-pub fn _4_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn _4_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_debye_4_e(x, &mut result) };
 
@@ -71,7 +71,7 @@ pub fn _5(x: f64) -> f64 {
 }
 
 /// This routine computes the fifth-order Debye function D_5(x) = (5/x^5) \int_0^x dt (t^5/(e^t - 1)).
-pub fn _5_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn _5_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_debye_5_e(x, &mut result) };
 
@@ -84,7 +84,7 @@ pub fn _6(x: f64) -> f64 {
 }
 
 /// This routine computes the sixth-order Debye function D_6(x) = (6/x^6) \int_0^x dt (t^6/(e^t - 1)).
-pub fn _6_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn _6_e(x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_debye_6_e(x, &mut result) };
 

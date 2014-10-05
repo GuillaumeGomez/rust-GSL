@@ -52,7 +52,7 @@ pub mod evaluation {
 
     /// This function evaluates a polynomial and its derivatives storing the results in the array res of size lenres. The output array contains
     /// the values of d^k P/d x^k for the specified value of x starting with k = 0.
-    pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> enums::Value {
+    pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_poly_eval_derivs(c.as_ptr(), c.len() as u64, x, res.as_mut_ptr(), res.len() as u64) }
     }
 }
@@ -80,7 +80,7 @@ pub mod divided_difference_representation {
     /// This function computes a divided-difference representation of the interpolating polynomial for the points (x, y) stored in the arrays
     /// xa and ya of length size. On output the divided-differences of (xa,ya) are stored in the array dd, also of length size. Using the
     /// notation above, dd[k] = [x_0,x_1,...,x_k].
-    pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> enums::Value {
+    pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> enums::value::Value {
         unsafe { ffi::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as u64) }
     }
 
@@ -92,7 +92,7 @@ pub mod divided_difference_representation {
     /// This function converts the divided-difference representation of a polynomial to a Taylor expansion. The divided-difference representation
     /// is supplied in the arrays dd and xa of length size. On output the Taylor coefficients of the polynomial expanded about the point xp are
     /// stored in the array c also of length size. A workspace of length size must be provided in the array w.
-    pub fn poly_dd_taylor(c: &mut [f64], xp: f64, dd: &[f64], xa: &[f64], w: &mut [f64]) -> enums::Value {
+    pub fn poly_dd_taylor(c: &mut [f64], xp: f64, dd: &[f64], xa: &[f64], w: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_poly_dd_taylor(c.as_mut_ptr(), xp, dd.as_ptr(), xa.as_ptr(), dd.len() as u64, w.as_mut_ptr()) }
     }
 
@@ -102,7 +102,7 @@ pub mod divided_difference_representation {
     /// new dataset z = \{x_0,x_0,x_1,x_1,...\}, which is stored in the array za of length 2*size on output. On output the divided-differences
     /// of the Hermite representation are stored in the array dd, also of length 2*size. Using the notation above, dd[k] = [z_0,z_1,...,z_k].
     /// The resulting Hermite polynomial can be evaluated by calling gsl_poly_dd_eval and using za for the input argument xa.
-    pub fn poly_dd_hermite_init(dd: &mut [f64], za: &mut [f64], xa: &[f64], ya: &[f64], dya: &[f64]) -> enums::Value {
+    pub fn poly_dd_hermite_init(dd: &mut [f64], za: &mut [f64], xa: &[f64], ya: &[f64], dya: &[f64]) -> enums::value::Value {
         unsafe { ffi::gsl_poly_dd_hermite_init(dd.as_mut_ptr(), za.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dya.as_ptr(), dd.len() as u64) }
     }
 }

@@ -80,7 +80,7 @@ impl DiscreteHankel {
     }
 
     /// This function initializes the transform self for the given values of nu and xmax.
-    pub fn init(&self, nu: f64, xmax: f64) -> enums::Value {
+    pub fn init(&self, nu: f64, xmax: f64) -> enums::value::Value {
         unsafe { ffi::gsl_dht_init(self.t, nu, xmax) }
     }
 
@@ -88,7 +88,7 @@ impl DiscreteHankel {
     /// f_out which must be of the same length.
     /// 
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2, up to numerical errors.
-    pub fn apply(&self, f_in: &mut [f64], f_out: &mut [f64]) -> enums::Value {
+    pub fn apply(&self, f_in: &mut [f64], f_out: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_dht_apply(self.t as *const ffi::gsl_dht, f_in.as_mut_ptr(), f_out.as_mut_ptr()) }
     }
 

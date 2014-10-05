@@ -88,7 +88,7 @@ impl Combination {
     }
 
     /// This function copies the elements of the combination self into the combination dest. The two combinations must have the same size.
-    pub fn copy(&self, dest: &Combination) -> enums::Value {
+    pub fn copy(&self, dest: &Combination) -> enums::value::Value {
         unsafe { ffi::gsl_combination_memcpy(dest.c, self.c as *const ffi::gsl_combination) }
     }
 
@@ -120,20 +120,20 @@ impl Combination {
 
     /// This function checks that the combination self is valid. The k elements should lie in the range 0 to n-1, with each value occurring
     /// once at most and in increasing order.
-    pub fn is_valid(&self) -> enums::Value {
+    pub fn is_valid(&self) -> enums::value::Value {
         unsafe { ffi::gsl_combination_valid(self.c) }
     }
 
     /// This function advances the combination self to the next combination in lexicographic order and returns Success. If no further combinations
     /// are available it returns Failure and leaves self unmodified. Starting with the first combination and repeatedly applying this function will
     /// iterate through all possible combinations of a given order.
-    pub fn next(&self) -> enums::Value {
+    pub fn next(&self) -> enums::value::Value {
         unsafe { ffi::gsl_combination_next(self.c) }
     }
 
     /// This function steps backwards from the combination self to the previous combination in lexicographic order, returning Success. If no
     /// previous combination is available it returns Failure and leaves self unmodified.
-    pub fn prev(&self) -> enums::Value {
+    pub fn prev(&self) -> enums::value::Value {
         unsafe { ffi::gsl_combination_prev(self.c) }
     }
 }

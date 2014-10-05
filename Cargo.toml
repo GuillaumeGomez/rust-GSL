@@ -113,3 +113,8 @@ path = "examples/statistics/main.rs"
 
 name = "series_acceleration"
 path = "examples/series_acceleration/main.rs"
+
+[[bin]]
+
+name = "wavelet_transforms"
+path = "examples/wavelet_transforms/main.rs"

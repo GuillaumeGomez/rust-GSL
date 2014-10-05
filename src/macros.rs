@@ -3,7 +3,6 @@
 //
 
 #![macro_escape]
-
 macro_rules! rgsl_error(
     ($msg:expr, $err_value:expr) => (
         fn _rgsl_error() {

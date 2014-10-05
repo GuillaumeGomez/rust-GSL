@@ -24,7 +24,7 @@ fn main() {
     let m_expected = PI;
     let mut a = 0f64;
     let mut b = 6f64;
-    let mut status = enums::Success;
+    let mut status = enums::value::Success;
 
     let t : rgsl::MinimizerType<f64> = rgsl::MinimizerType::brent();
     let mut s : rgsl::Minimizer<f64> = rgsl::Minimizer::new(&t).unwrap();
@@ -47,12 +47,12 @@ fn main() {
 
         status = rgsl::minimizer::test_interval(a, b, 0.001f64, 0f64);
 
-        if status == enums::Success {
+        if status == enums::value::Success {
             println!("Converged:");
         }
 
         println!("{:5} [{:.7}, {:.7}] {:.7} {:+.7} {:.7}", iter, a, b, m, m - m_expected, b - a);
-        if status != enums::Continue || iter >= max_iter {
+        if status != enums::value::Continue || iter >= max_iter {
             break;
         }
     }

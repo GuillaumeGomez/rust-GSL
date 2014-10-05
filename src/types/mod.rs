@@ -31,6 +31,7 @@ pub use self::rng::{Rng, RngType};
 pub use self::series_acceleration::{LevinUWorkspace, LevinUTruncWorkspace};
 pub use self::vector::{VectorF32, VectorF64, VectorView};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
+pub use self::wavelet_transforms::{Wavelet, WaveletType, WaveletWorkspace};
 
 pub mod basis_spline;
 pub mod chebyshev;
@@ -59,3 +60,4 @@ pub mod series_acceleration;
 pub mod rng;
 pub mod vector;
 pub mod vector_complex;
+pub mod wavelet_transforms;

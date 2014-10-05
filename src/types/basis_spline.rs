@@ -59,27 +59,27 @@ impl BSpLineWorkspace {
     }
 
     /// This function computes the knots associated with the given breakpoints and stores them internally in w->knots.
-    pub fn knots(&self, breakpts: &VectorF64) -> enums::Value {
+    pub fn knots(&self, breakpts: &VectorF64) -> enums::value::Value {
         unsafe { ffi::gsl_bspline_knots(ffi::FFI::unwrap(breakpts), self.w) }
     }
 
     /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding knot vector using the previously specified nbreak parameter.
     /// The knots are stored in w->knots.
-    pub fn knots_uniform(&self, a: f64, b: f64) -> enums::Value {
+    pub fn knots_uniform(&self, a: f64, b: f64) -> enums::value::Value {
         unsafe { ffi::gsl_bspline_knots_uniform(a, b, self.w) }
     }
 
     /// This function evaluates all B-spline basis functions at the position x and stores them in the vector B, so that the i-th element is B_i(x).
     /// The vector B must be of length n = nbreak + k - 2. This value may also be obtained by calling gsl_bspline_ncoeffs.
     /// Computing all the basis functions at once is more efficient than computing them individually, due to the nature of the defining recurrence relation.
-    pub fn eval(&self, x: f64, B: &VectorF64) -> enums::Value {
+    pub fn eval(&self, x: f64, B: &VectorF64) -> enums::value::Value {
         unsafe { ffi::gsl_bspline_eval(x, ffi::FFI::unwrap(B), self.w) }
     }
 
     /// This function evaluates all potentially nonzero B-spline basis functions at the position x and stores them in the vector Bk, so that the i-th element is B_(istart+i)(x).
     /// The last element of Bk is B_(iend)(x). The vector Bk must be of length k.
     /// By returning only the nonzero basis functions, this function allows quantities involving linear combinations of the B_i(x) to be computed without unnecessary terms (such linear combinations occur, for example, when evaluating an interpolated function).
-    pub fn eval_non_zero(&self, x: f64, Bk: &VectorF64, istart: &mut u64, iend: &mut u64) -> enums::Value {
+    pub fn eval_non_zero(&self, x: f64, Bk: &VectorF64, istart: &mut u64, iend: &mut u64) -> enums::value::Value {
         unsafe { ffi::gsl_bspline_eval_nonzero(x, ffi::FFI::unwrap(Bk), istart, iend, self.w) }
     }
 
@@ -141,7 +141,7 @@ impl BSpLineDerivWorkspace {
     /// The (i,j)-th element of dB is d^jB_i(x)/dx^j. The matrix dB must be of size n = nbreak + k - 2 by nderiv + 1.
     /// The value n may also be obtained by calling gsl_bspline_ncoeffs. Note that function evaluations are included as the zeroth order derivatives in dB.
     /// Computing all the basis function derivatives at once is more efficient than computing them individually, due to the nature of the defining recurrence relation.
-    pub fn eval(&self, x: f64, nderiv: u64, dB: &MatrixF64, w: &BSpLineWorkspace) -> enums::Value {
+    pub fn eval(&self, x: f64, nderiv: u64, dB: &MatrixF64, w: &BSpLineWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_bspline_deriv_eval(x, nderiv, ffi::FFI::unwrap(dB), ffi::FFI::unwrap(w), self.w) }
     }
 
@@ -149,7 +149,7 @@ impl BSpLineDerivWorkspace {
     /// The (i,j)-th element of dB is d^j/dx^j B_(istart+i)(x). The last row of dB contains d^j/dx^j B_(iend)(x).
     /// The matrix dB must be of size k by at least nderiv + 1. Note that function evaluations are included as the zeroth order derivatives in dB.
     /// By returning only the nonzero basis functions, this function allows quantities involving linear combinations of the B_i(x) and their derivatives to be computed without unnecessary terms.
-    pub fn eval_non_zero(&self, x: f64, nderiv: u64, dB: &MatrixF64, istart: &mut u64, iend: &mut u64, w: &BSpLineWorkspace) -> enums::Value {
+    pub fn eval_non_zero(&self, x: f64, nderiv: u64, dB: &MatrixF64, istart: &mut u64, iend: &mut u64, w: &BSpLineWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_bspline_deriv_eval_nonzero(x, nderiv, ffi::FFI::unwrap(dB), istart, iend, ffi::FFI::unwrap(w), self.w) }
     }
 }

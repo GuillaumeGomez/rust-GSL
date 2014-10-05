@@ -19,7 +19,7 @@ fn main() {
             write!(stdio, "{{");
             c.print(stdio);
             write!(stdio, " }}\n");
-            if c.next() != rgsl::enums::Success {
+            if c.next() != rgsl::enums::value::Success {
                 break;
             }
         }

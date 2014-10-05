@@ -1390,20 +1390,20 @@ impl IntegrationWorkspace {
     /// On each iteration the adaptive integration strategy bisects the interval with the largest error estimate. The subintervals and their
     /// results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the
     /// allocated size of the workspace.
-    pub fn qag<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, key: ::GaussKonrodRule,
-        result: &mut f64, abserr: &mut f64) -> enums::Value {
+    pub fn qag<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, key: enums::gauss_konrod_rule::GaussKonrodRule,
+        result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let integration_rule = match key {
-            enums::Gauss15 => ::integration::qk15,
-            enums::Gauss21 => ::integration::qk21,
-            enums::Gauss31 => ::integration::qk31,
-            enums::Gauss41 => ::integration::qk41,
-            enums::Gauss51 => ::integration::qk51,
-            enums::Gauss61 => ::integration::qk61,
+            enums::gauss_konrod_rule::Gauss15 => ::integration::qk15,
+            enums::gauss_konrod_rule::Gauss21 => ::integration::qk21,
+            enums::gauss_konrod_rule::Gauss31 => ::integration::qk31,
+            enums::gauss_konrod_rule::Gauss41 => ::integration::qk41,
+            enums::gauss_konrod_rule::Gauss51 => ::integration::qk51,
+            enums::gauss_konrod_rule::Gauss61 => ::integration::qk61,
             /*_ => {
                 let file = file!();
                 "value of key does specify a known integration rule".with_c_str(|c_str|{
                     file.with_c_str(|c_file|{
-                        unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, enums::Inval as i32) }
+                        unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, enums::value::Inval as i32) }
                     });
                 });
                 // this line is not used but just for compilation...
@@ -1420,7 +1420,7 @@ impl IntegrationWorkspace {
     /// stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the allocated size
     /// of the workspace.
     pub fn qags<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64,
-        abserr: &mut f64) -> enums::Value {
+        abserr: &mut f64) -> enums::value::Value {
         unsafe { intern_qags(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
     }
 
@@ -1438,7 +1438,7 @@ impl IntegrationWorkspace {
     /// 
     /// If you know the locations of the singular points in the integration region then this routine will be faster than QAGS.
     pub fn qagp<T>(&self, f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: u64, result: &mut f64,
-        abserr: &mut f64) -> enums::Value {
+        abserr: &mut f64) -> enums::value::Value {
         unsafe { intern_qagp(f, arg, pts, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
     }
 
@@ -1450,7 +1450,7 @@ impl IntegrationWorkspace {
     /// 
     /// It is then integrated using the QAGS algorithm. The normal 21-point Gauss-Kronrod rule of QAGS is replaced by a 15-point rule, because
     /// the transformation can generate an integrable singularity at the origin. In this case a lower-order rule is more efficient.
-    pub fn qagi<T>(&self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    pub fn qagi<T>(&self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut s = InternParam{func: f, param: arg, p2: 0f64};
 
         unsafe { intern_qags(i_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
@@ -1463,7 +1463,7 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(a + (1-t)/t)/t^2
     /// 
     /// and then integrated using the QAGS algorithm.
-    pub fn qagiu<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    pub fn qagiu<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut s = InternParam{func: f, param: arg, p2: a};
 
         unsafe { intern_qags(iu_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
@@ -1476,7 +1476,7 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(b - (1-t)/t)/t^2
     /// 
     /// and then integrated using the QAGS algorithm.
-    pub fn qagil<T>(&self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    pub fn qagil<T>(&self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: u64, result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut s = InternParam{func: f, param: arg, p2: b};
 
         unsafe { intern_qags(il_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
@@ -1491,7 +1491,7 @@ impl IntegrationWorkspace {
     /// the singularity. Further away from the singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
     #[allow(dead_assignment)]
     pub fn qawc<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, epsabs: f64, epsrel: f64, limit: u64,
-        result: &mut f64, abserr: &mut f64) -> enums::Value {
+        result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
         let mut roundoff_type1 = 0i32;
@@ -1508,7 +1508,7 @@ impl IntegrationWorkspace {
 
         unsafe {
             if limit > (*self.w).limit {
-                rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+                rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
             }
 
             if b < a {
@@ -1523,11 +1523,11 @@ impl IntegrationWorkspace {
             self.initialise(lower, higher);
 
             if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::value::BadTol);
             }
 
             if c == a || c == b {
-                rgsl_error!("cannot integrate with singularity on endpoint", enums::Inval);
+                rgsl_error!("cannot integrate with singularity on endpoint", enums::value::Inval);
             }      
 
             /* perform the first integration */
@@ -1542,12 +1542,12 @@ impl IntegrationWorkspace {
                 *result = sign * result0;
                 *abserr = abserr0;
 
-                return enums::Success;
+                return enums::value::Success;
             } else if limit == 1 {
                 *result = sign * result0;
                 *abserr = abserr0;
 
-                rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+                rgsl_error!("a maximum of one iteration was insufficient", enums::value::MaxIter);
             }
 
             let mut area = result0;
@@ -1633,19 +1633,19 @@ impl IntegrationWorkspace {
             *abserr = errsum;
 
             if errsum <= tolerance {
-              enums::Success
+              enums::value::Success
             } else if error_type == 2 {
-                rgsl_error!("roundoff error prevents tolerance from being achieved", enums::Round);
-                enums::Round
+                rgsl_error!("roundoff error prevents tolerance from being achieved", enums::value::Round);
+                enums::value::Round
             } else if error_type == 3 {
-                rgsl_error!("bad integrand behavior found in the integration interval", enums::Sing);
-                enums::Sing
+                rgsl_error!("bad integrand behavior found in the integration interval", enums::value::Sing);
+                enums::value::Sing
             } else if iteration == limit {
-                rgsl_error!("maximum number of subdivisions reached", enums::MaxIter);
-                enums::MaxIter
+                rgsl_error!("maximum number of subdivisions reached", enums::value::MaxIter);
+                enums::value::MaxIter
             } else {
-                rgsl_error!("could not integrate function", enums::Failed);
-                enums::Failed
+                rgsl_error!("could not integrate function", enums::value::Failed);
+                enums::value::Failed
             }
         }
     }
@@ -1962,7 +1962,7 @@ impl IntegrationQawsTable {
     }
 
     /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
-    pub fn set(&self, alpha: f64, beta: f64, mu: i32, nu: i32) -> enums::Value {
+    pub fn set(&self, alpha: f64, beta: f64, mu: i32, nu: i32) -> enums::value::Value {
         unsafe { ffi::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu) }
     }
 
@@ -1977,7 +1977,7 @@ impl IntegrationQawsTable {
     /// Gauss-Kronrod integration rule is used.
     #[allow(dead_assignment)]
     pub fn qaws<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, workspace: &IntegrationWorkspace,
-        result: &mut f64, abserr: &mut f64) -> enums::Value {
+        result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
         let mut roundoff_type1 = 0i32;
@@ -1992,15 +1992,15 @@ impl IntegrationQawsTable {
 
         unsafe {
             if limit > (*workspace.w).limit {
-                rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+                rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
             }
 
             if b <= a {
-                rgsl_error!("limits must form an ascending sequence, a < b", enums::Inval);
+                rgsl_error!("limits must form an ascending sequence, a < b", enums::value::Inval);
             }
 
             if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::value::BadTol);
             }
 
             /* perform the first integration */
@@ -2039,12 +2039,12 @@ impl IntegrationQawsTable {
                 *result = result0;
                 *abserr = abserr0;
 
-                return enums::Success;
+                return enums::value::Success;
             } else if limit == 1 {
                 *result = result0;
                 *abserr = abserr0;
 
-                rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+                rgsl_error!("a maximum of one iteration was insufficient", enums::value::MaxIter);
             }
 
             let mut area = result0;
@@ -2121,19 +2121,19 @@ impl IntegrationQawsTable {
             *abserr = errsum;
 
             if errsum <= tolerance {
-                enums::Success
+                enums::value::Success
             } else if error_type == 2 {
-                rgsl_error!("roundoff error prevents tolerance from being achieved", enums::Round);
-                enums::Round
+                rgsl_error!("roundoff error prevents tolerance from being achieved", enums::value::Round);
+                enums::value::Round
             } else if error_type == 3 {
-                rgsl_error!("bad integrand behavior found in the integration interval", enums::Sing);
-                enums::Sing
+                rgsl_error!("bad integrand behavior found in the integration interval", enums::value::Sing);
+                enums::value::Sing
             } else if iteration == limit {
-                rgsl_error!("maximum number of subdivisions reached", enums::MaxIter);
-                enums::MaxIter
+                rgsl_error!("maximum number of subdivisions reached", enums::value::MaxIter);
+                enums::value::MaxIter
             } else {
-                rgsl_error!("could not integrate function", enums::Failed);
-                enums::Failed
+                rgsl_error!("could not integrate function", enums::value::Failed);
+                enums::value::Failed
             }
         }
     }
@@ -2174,14 +2174,14 @@ impl IntegrationQawoTable {
     /// The parameter L must be the length of the interval over which the function will be integrated L = b - a. The choice of sine or cosine
     /// is made with the parameter sine which should be chosen from one of the two following symbolic values:
     /// 
-    /// enums::Cosine
-    /// enums::Sine
+    /// ::Cosine
+    /// enums::integration_qawo::Sine
     /// 
     /// The gsl_integration_qawo_table is a table of the trigonometric coefficients required in the integration process. The parameter n determines
     /// the number of levels of coefficients that are computed. Each level corresponds to one bisection of the interval L, so that n levels are
-    /// sufficient for subintervals down to the length L/2^n. The integration routine gsl_integration_qawo returns the error enums::Table if the
+    /// sufficient for subintervals down to the length L/2^n. The integration routine gsl_integration_qawo returns the error ::Table if the
     /// number of levels is insufficient for the requested accuracy.
-    pub fn new(omega: f64, l: f64, sine: enums::IntegrationQawo, n: u64) -> Option<IntegrationQawoTable> {
+    pub fn new(omega: f64, l: f64, sine: ::IntegrationQawo, n: u64) -> Option<IntegrationQawoTable> {
         let tmp = unsafe { ffi::gsl_integration_qawo_table_alloc(omega, l, sine, n) };
 
         if tmp.is_null() {
@@ -2194,12 +2194,12 @@ impl IntegrationQawoTable {
     }
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
-    pub fn set(&self, omega: f64, l: f64, sine: enums::IntegrationQawo) -> enums::Value {
+    pub fn set(&self, omega: f64, l: f64, sine: ::IntegrationQawo) -> enums::value::Value {
         unsafe { ffi::gsl_integration_qawo_table_set(self.w, omega, l, sine) }
     }
 
     /// This function allows the length parameter l of the self workspace to be changed.
-    pub fn set_length(&self, l: f64) -> enums::Value {
+    pub fn set_length(&self, l: f64) -> enums::value::Value {
         unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) }
     }
 
@@ -2217,7 +2217,7 @@ impl IntegrationQawoTable {
     /// Those subintervals with “large” widths d where d\omega > 4 are computed using a 25-point Clenshaw-Curtis integration rule, which handles
     /// the oscillatory behavior. Subintervals with a “small” widths where d\omega < 4 are computed using a 15-point Gauss-Kronrod integration.
     pub fn qawo<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: u64, workspace: &IntegrationWorkspace,
-        result: &mut f64, abserr: &mut f64) -> enums::Value {
+        result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
         let mut resabs0 = 0f64;
@@ -2252,12 +2252,12 @@ impl IntegrationQawoTable {
             *abserr = 0f64;
 
             if limit > (*workspace.w).limit {
-                rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+                rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
             }
 
             /* Test on accuracy */
             if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::value::BadTol);
             }
 
             /* Perform the first integration */
@@ -2271,17 +2271,17 @@ impl IntegrationQawoTable {
                 *result = result0;
                 *abserr = abserr0;
 
-                rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::Round);
+                rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::value::Round);
             } else if (abserr0 <= tolerance && abserr0 != resasc0) || abserr0 == 0f64 {
                 *result = result0;
                 *abserr = abserr0;
 
-                return enums::Success;
+                return enums::value::Success;
             } else if limit == 1 {
                 *result = result0;
                 *abserr = abserr0;
 
-                rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+                rgsl_error!("a maximum of one iteration was insufficient", enums::value::MaxIter);
             }
 
             /* Initialization */
@@ -2620,7 +2620,7 @@ impl CquadWorkspace {
     /// evaluations is not needed, the pointers abserr and nevals can be set to NULL (not in rgsl).
     #[allow(dead_assignment)]
     pub fn cquad<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, result: &mut f64, abserr: &mut f64,
-        nevals: &mut u64) -> enums::Value {
+        nevals: &mut u64) -> enums::value::Value {
         /* Some constants that we will need. */
         static n : [i32, ..4] = [4i32, 8i32, 16i32, 32i32];
         static skip : [i32, ..4] = [8i32, 4i32, 2i32, 1i32];
@@ -2644,10 +2644,10 @@ impl CquadWorkspace {
         unsafe {
             /* Check for unreasonable accuracy demands */
             if epsabs < 0f64 || epsrel < 0f64 {
-                rgsl_error!("tolerances may not be negative", enums::BadTol);
+                rgsl_error!("tolerances may not be negative", enums::value::BadTol);
             }
             if epsabs <= 0f64 && epsrel < ::DBL_EPSILON {
-                rgsl_error!("unreasonable accuracy requirement", enums::BadTol);
+                rgsl_error!("unreasonable accuracy requirement", enums::value::BadTol);
             }
 
             /* Create the first interval. */
@@ -2904,7 +2904,7 @@ impl CquadWorkspace {
                             ::NEGINF
                         };
                         *nevals = neval as u64;
-                        return enums::Diverge;
+                        return enums::value::Diverge;
                     }
 
                     /* Compute the local integral. */
@@ -2975,7 +2975,7 @@ impl CquadWorkspace {
                         };
                         //if (nevals != NULL)
                         *nevals = neval as u64;
-                        return enums::Diverge;
+                        return enums::value::Diverge;
                     }
 
                     /* Compute the local integral. */
@@ -3079,7 +3079,7 @@ impl CquadWorkspace {
             *nevals = neval as u64;
 
             /* All is well that ends well. */
-            enums::Success
+            enums::value::Success
         }
     }
 }
@@ -3129,7 +3129,7 @@ impl GLFixedTable {
 
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight wi on the interval [a,b]. The points
     /// and weights are ordered by increasing point value. A function f may be integrated on [a,b] by summing wi * f(xi) over i.
-    pub fn point(&self, a: f64, b: f64, i: u64, xi: &mut f64, wi: &mut f64) -> enums::Value {
+    pub fn point(&self, a: f64, b: f64, i: u64, xi: &mut f64, wi: &mut f64) -> enums::value::Value {
         unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w as *const ffi::gsl_integration_glfixed_table) }
     }
 
@@ -3213,7 +3213,7 @@ fn il_transform<T>(t: f64, p: &mut InternParam<T>) -> f64 {
 }
 
 fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, f_w: &IntegrationWorkspace,
-    result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> enums::Value {
+    result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> enums::value::Value {
     let w = f_w.w;
     let mut roundoff_type1 = 0i32;
     let mut roundoff_type2 = 0i32;
@@ -3226,10 +3226,10 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
     f_w.initialise(a, b);
 
     if unsafe { limit > (*w).limit } {
-        rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+        rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
     }
     if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-        rgsl_error!("tolerance cannot be achieved with given epsabs and epsrel", enums::BadTol);
+        rgsl_error!("tolerance cannot be achieved with given epsabs and epsrel", enums::value::BadTol);
     }
 
     // perform the first integration
@@ -3251,17 +3251,17 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::Round);
+        rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::value::Round);
     } else if (abserr0 <= tolerance && abserr0 != resasc0) || abserr0 == 0f64 {
         *result = result0;
         *abserr = abserr0;
 
-        return enums::Success;
+        return enums::value::Success;
     } else if limit == 1 {
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+        rgsl_error!("a maximum of one iteration was insufficient", enums::value::MaxIter);
     }
 
     let mut area = result0;
@@ -3335,19 +3335,19 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
     *abserr = errsum;
 
     if errsum <= tolerance {
-        enums::Success
+        enums::value::Success
     } else if error_type == 2 {
-        rgsl_error!("roundoff error prevents tolerance from being achieved", enums::Round);
-        enums::Round
+        rgsl_error!("roundoff error prevents tolerance from being achieved", enums::value::Round);
+        enums::value::Round
     } else if error_type == 3 {
-        rgsl_error!("bad integrand behavior found in the integration interval", enums::Sing);
-        enums::Sing
+        rgsl_error!("bad integrand behavior found in the integration interval", enums::value::Sing);
+        enums::value::Sing
     } else if iteration == limit {
-        rgsl_error!("maximum number of subdivisions reached", enums::MaxIter);
-        enums::MaxIter
+        rgsl_error!("maximum number of subdivisions reached", enums::value::MaxIter);
+        enums::value::MaxIter
     } else {
-        rgsl_error!("could not integrate function", enums::Failed);
-        enums::Failed
+        rgsl_error!("could not integrate function", enums::value::Failed);
+        enums::value::Failed
     }
 }
 
@@ -3557,7 +3557,7 @@ unsafe fn reset_nrmax(workspace: *mut ffi::gsl_integration_workspace) {
 }
 
 #[doc(hidden)]
-pub unsafe fn return_error(t_error_type: i32) -> enums::Value {
+pub unsafe fn return_error(t_error_type: i32) -> enums::value::Value {
     let error_type = if t_error_type > 2 {
         t_error_type - 1
     } else {
@@ -3565,36 +3565,36 @@ pub unsafe fn return_error(t_error_type: i32) -> enums::Value {
     };
 
     match error_type {
-        0 => enums::Success,
+        0 => enums::value::Success,
         1 => {
-            rgsl_error!("number of iterations was insufficient", enums::MaxIter);
-            enums::MaxIter
+            rgsl_error!("number of iterations was insufficient", enums::value::MaxIter);
+            enums::value::MaxIter
         }
         2 => {
-            rgsl_error!("cannot reach tolerance because of roundoff error", enums::Round);
-            enums::Round
+            rgsl_error!("cannot reach tolerance because of roundoff error", enums::value::Round);
+            enums::value::Round
         }
         3 => {
-            rgsl_error!("bad integrand behavior found in the integration interval", enums::Sing);
-            enums::Sing
+            rgsl_error!("bad integrand behavior found in the integration interval", enums::value::Sing);
+            enums::value::Sing
         }
         4 => {
-            rgsl_error!("roundoff error detected in the extrapolation table", enums::Round);
-            enums::Round
+            rgsl_error!("roundoff error detected in the extrapolation table", enums::value::Round);
+            enums::value::Round
         }
         5 => {
-            rgsl_error!("integral is divergent, or slowly convergent", enums::Round);
-            enums::Round
+            rgsl_error!("integral is divergent, or slowly convergent", enums::value::Round);
+            enums::value::Round
         }
         _ => {
-            rgsl_error!("could not integrate function", enums::Failed);
-            enums::Failed
+            rgsl_error!("could not integrate function", enums::value::Failed);
+            enums::value::Failed
         }
     }
 }
 
 unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, f_w: &IntegrationWorkspace,
-    result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> enums::Value {
+    result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> enums::value::Value {
     let w = f_w.w;
     let mut ertest = 0f64;
     let mut error_over_large_intervals = 0f64;
@@ -3624,12 +3624,12 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
     *abserr = 0f64;
 
     if limit > (*w).limit {
-        rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+        rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
     }
 
     /* Test on accuracy */
     if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::value::BadTol);
     }
 
     /* Perform the first integration */
@@ -3643,17 +3643,17 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::Round);
+        rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::value::Round);
     } else if (abserr0 <= tolerance && abserr0 != resasc0) || abserr0 == 0f64 {
         *result = result0;
         *abserr = abserr0;
 
-        return enums::Success;
+        return enums::value::Success;
     } else if limit == 1 {
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+        rgsl_error!("a maximum of one iteration was insufficient", enums::value::MaxIter);
     }
 
     /* Initialization */
@@ -3886,7 +3886,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
 }
 
 unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: u64, f_w: &IntegrationWorkspace,
-    result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> enums::Value {
+    result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> enums::value::Value {
     let w = f_w.w;
     let mut reseps = 0f64;
     let mut abseps = 0f64;
@@ -3916,21 +3916,21 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     /* Test on validity of parameters */
     if limit > (*w).limit {
-        rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+        rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
     }
 
     if pts.len() as u64 > (*w).limit {
-        rgsl_error!("pts length exceeds size of workspace", enums::Inval);
+        rgsl_error!("pts length exceeds size of workspace", enums::value::Inval);
     }
 
     if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::BadTol);
+        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", enums::value::BadTol);
     }
 
     /* Check that the integration range and break points are an ascending sequence */
     for i in range(0u, nint as uint) {
         if pts[i + 1] < pts[i] {
-            rgsl_error!("points are not in an ascending sequence", enums::Inval);
+            rgsl_error!("points are not in an ascending sequence", enums::value::Inval);
         }
     }
 
@@ -3992,17 +3992,17 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::Round);
+        rgsl_error!("cannot reach tolerance because of roundoff error on first attempt", enums::value::Round);
     } else if abserr0 <= tolerance {
         *result = result0;
         *abserr = abserr0;
 
-        return enums::Success;
+        return enums::value::Success;
     } else if limit == 1 {
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("a maximum of one iteration was insufficient", enums::MaxIter);
+        rgsl_error!("a maximum of one iteration was insufficient", enums::value::MaxIter);
     }
 
     /* Initialization */
@@ -4707,7 +4707,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
     if fabsf64(par) < 2f64 {
         let mut fn_params = fn_fourier_params{omega: omega, function: f, arg: arg};
 
-        ::integration::qk15(if (*wf).sine == enums::Sine {
+        ::integration::qk15(if (*wf).sine == enums::integration_qawo::Sine {
                 fn_sin
             } else {
                 fn_cos
@@ -4720,7 +4720,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
 
         if level >= (*wf).n {
             /* table overflow should not happen, check before calling */
-            rgsl_error!("table overflow in internal function", enums::Sanity);
+            rgsl_error!("table overflow in internal function", enums::value::Sanity);
         }
 
         /* obtain moments from the table */
@@ -4756,7 +4756,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
         let c = half_length * cosf64(center * omega);
         let s = half_length * sinf64(center * omega);
 
-        if (*wf).sine == enums::Sine {
+        if (*wf).sine == enums::integration_qawo::Sine {
             *result = c * res24_sin + s * res24_cos;
             *abserr = fabsf64(c * est_sin) + fabsf64(s * est_cos);
         } else {

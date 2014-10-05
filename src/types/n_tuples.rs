@@ -76,22 +76,22 @@ impl<T> NTuples<T> {
     }
 
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the corresponding file.
-    pub fn write(&self) -> enums::Value {
+    pub fn write(&self) -> enums::value::Value {
         unsafe { ffi::gsl_ntuple_write(self.n) }
     }
 
     /// This function is a synonym for NTuples::write.
-    pub fn bookdata(&self) -> enums::Value {
+    pub fn bookdata(&self) -> enums::value::Value {
         unsafe { ffi::gsl_ntuple_bookdata(self.n) }
     }
 
     /// This function reads the current row of the ntuple file for ntuple and stores the values in ntuple->data.
-    pub fn read(&self) -> enums::Value {
+    pub fn read(&self) -> enums::value::Value {
         unsafe { ffi::gsl_ntuple_read(self.n) }
     }
 
     pub fn project<U, V>(&self, h: &::Histogram, value_func: ::value_function<T, U>, value_arg: &mut U,
-        select_func: ::select_function<T, V>, select_arg: &mut V) -> enums::Value {
+        select_func: ::select_function<T, V>, select_arg: &mut V) -> enums::value::Value {
         unsafe {
             loop {
                 let nread = fread((*self.n).ntuple_data, (*self.n).size, 1, (*self.n).file);
@@ -101,7 +101,7 @@ impl<T> NTuples<T> {
                 }
               
                 if nread != 1 {
-                    rgsl_error!("failed to read ntuple for projection", enums::Failed);
+                    rgsl_error!("failed to read ntuple for projection", enums::value::Failed);
                 }
 
                 if select_func(::std::mem::transmute((*self.n).ntuple_data), select_arg) {
@@ -109,7 +109,7 @@ impl<T> NTuples<T> {
                 }
             }
 
-            enums::Success
+            enums::value::Success
         }
     }
 }

@@ -178,7 +178,7 @@ impl Rng {
     }
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
-    pub fn copy(&self, other: &Rng) -> enums::Value {
+    pub fn copy(&self, other: &Rng) -> enums::value::Value {
         unsafe { ffi::gsl_rng_memcpy(other.r, self.r as *const ffi::gsl_rng) }
     }
 

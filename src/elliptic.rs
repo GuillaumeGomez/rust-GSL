@@ -23,13 +23,13 @@ pub mod legendre {
 
         /// This routine computes the complete elliptic integral K(k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_Kcomp(k: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_Kcomp(k: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_Kcomp(k, mode) }
         }
 
         /// This routine computes the complete elliptic integral K(k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_Kcomp_e(k: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_Kcomp_e(k: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_Kcomp_e(k, mode, &mut result) };
 
@@ -38,13 +38,13 @@ pub mod legendre {
 
         /// This routine computes the complete elliptic integral E(k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_Ecomp(k: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_Ecomp(k: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_Ecomp(k, mode) }
         }
 
         /// This routine computes the complete elliptic integral E(k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_Ecomp_e(k: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_Ecomp_e(k: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_Ecomp_e(k, mode, &mut result) };
 
@@ -53,13 +53,13 @@ pub mod legendre {
 
         /// This routine computes the complete elliptic integral \Pi(k,n) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
-        pub fn ellint_Pcomp(k: f64, n: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_Pcomp(k: f64, n: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_Pcomp(k, n, mode) }
         }
 
         /// This routine computes the complete elliptic integral \Pi(k,n) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
-        pub fn ellint_Pcomp_e(k: f64, n: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_Pcomp_e(k: f64, n: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_Pcomp_e(k, n, mode, &mut result) };
 
@@ -74,13 +74,13 @@ pub mod legendre {
 
         /// This routine computes the incomplete elliptic integral F(\phi,k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_F(phi: f64, k: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_F(phi: f64, k: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_F(phi, k, mode) }
         }
 
         /// This routine computes the incomplete elliptic integral F(\phi,k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_F_e(phi: f64, k: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_F_e(phi: f64, k: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_F_e(phi, k, mode, &mut result) };
 
@@ -89,13 +89,13 @@ pub mod legendre {
 
         /// This routine computes the incomplete elliptic integral E(\phi,k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_E(phi: f64, k: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_E(phi: f64, k: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_E(phi, k, mode) }
         }
 
         /// This routine computes the incomplete elliptic integral E(\phi,k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
-        pub fn ellint_E_e(phi: f64, k: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_E_e(phi: f64, k: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_E_e(phi, k, mode, &mut result) };
 
@@ -104,13 +104,13 @@ pub mod legendre {
 
         /// This routine computes the incomplete elliptic integral \Pi(\phi,k,n) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
-        pub fn ellint_P(phi: f64, k: f64, n: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_P(phi: f64, k: f64, n: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_P(phi, k, n, mode) }
         }
 
         /// This routine computes the incomplete elliptic integral \Pi(\phi,k,n) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
-        pub fn ellint_P_e(phi: f64, k: f64, n: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_P_e(phi: f64, k: f64, n: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_P_e(phi, k, n, mode, &mut result) };
 
@@ -122,7 +122,7 @@ pub mod legendre {
         /// D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
         /// 
         /// The argument n is not used and will be removed in a future release.
-        pub fn ellint_D(phi: f64, k: f64, n: f64, mode: enums::Mode) -> f64 {
+        pub fn ellint_D(phi: f64, k: f64, n: f64, mode: ::Mode) -> f64 {
             unsafe { ffi::gsl_sf_ellint_D(phi, k, n, mode) }
         }
 
@@ -131,7 +131,7 @@ pub mod legendre {
         /// D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
         /// 
         /// The argument n is not used and will be removed in a future release.
-        pub fn ellint_D_e(phi: f64, k: f64, n: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+        pub fn ellint_D_e(phi: f64, k: f64, n: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_D_e(phi, k, n, mode, &mut result) };
 
@@ -156,12 +156,12 @@ pub mod carlson {
     use std::mem::zeroed;
 
     /// This routine computes the incomplete elliptic integral RC(x,y) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RC(x: f64, y: f64, mode: enums::Mode) -> f64 {
+    pub fn ellint_RC(x: f64, y: f64, mode: ::Mode) -> f64 {
         unsafe { ffi::gsl_sf_ellint_RC(x, y, mode) }
     }
 
     /// This routine computes the incomplete elliptic integral RC(x,y) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RC_e(x: f64, y: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+    pub fn ellint_RC_e(x: f64, y: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RC_e(x, y, mode, &mut result) };
 
@@ -169,12 +169,12 @@ pub mod carlson {
     }
 
     /// This routine computes the incomplete elliptic integral RD(x,y,z) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RD(x: f64, y: f64, z: f64, mode: enums::Mode) -> f64 {
+    pub fn ellint_RD(x: f64, y: f64, z: f64, mode: ::Mode) -> f64 {
         unsafe { ffi::gsl_sf_ellint_RD(x, y, z, mode) }
     }
 
     /// This routine computes the incomplete elliptic integral RD(x,y,z) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RD_e(x: f64, y: f64, z: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+    pub fn ellint_RD_e(x: f64, y: f64, z: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RD_e(x, y, z, mode, &mut result) };
 
@@ -182,12 +182,12 @@ pub mod carlson {
     }
 
     /// This routine computes the incomplete elliptic integral RF(x,y,z) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RF(x: f64, y: f64, z: f64, mode: enums::Mode) -> f64 {
+    pub fn ellint_RF(x: f64, y: f64, z: f64, mode: ::Mode) -> f64 {
         unsafe { ffi::gsl_sf_ellint_RF(x, y, z, mode) }
     }
 
     /// This routine computes the incomplete elliptic integral RF(x,y,z) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RF_e(x: f64, y: f64, z: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+    pub fn ellint_RF_e(x: f64, y: f64, z: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RF_e(x, y, z, mode, &mut result) };
 
@@ -195,12 +195,12 @@ pub mod carlson {
     }
 
     /// This routine computes the incomplete elliptic integral RJ(x,y,z,p) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RJ(x: f64, y: f64, z: f64, p: f64, mode: enums::Mode) -> f64 {
+    pub fn ellint_RJ(x: f64, y: f64, z: f64, p: f64, mode: ::Mode) -> f64 {
         unsafe { ffi::gsl_sf_ellint_RJ(x, y, z, p, mode) }
     }
 
     /// This routine computes the incomplete elliptic integral RJ(x,y,z,p) to the accuracy specified by the mode variable mode.
-    pub fn ellint_RJ_e(x: f64, y: f64, z: f64, p: f64, mode: enums::Mode) -> (enums::Value, ::types::Result) {
+    pub fn ellint_RJ_e(x: f64, y: f64, z: f64, p: f64, mode: ::Mode) -> (enums::value::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RJ_e(x, y, z, p, mode, &mut result) };
 

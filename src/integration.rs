@@ -113,7 +113,7 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
 /// are designed in such a way that each rule uses all the results of its predecessors, in order to minimize the total number of function
 /// evaluations.
 pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_rel: f64, result: &mut f64, abs_err: &mut f64,
-    n_eval: &mut u64) -> enums::Value {
+    n_eval: &mut u64) -> enums::value::Value {
     let half_length = 0.5f64 * (b - a);
     let abs_half_length = unsafe { fabsf64(half_length) };
     let center = 0.5f64 * (b + a);
@@ -123,13 +123,8 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = 0f64;
         *abs_err = 0f64;
         *n_eval = 0u64;
-        let file = file!();
-        "tolerance cannot be achieved with given eps_abs and eps_rel".with_c_str(|c_str|{
-            file.with_c_str(|c_file|{
-                unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, enums::BadTol as i32) }
-            });
-        });
-        return enums::BadTol;
+        rgsl_error!("tolerance cannot be achieved with given eps_abs and eps_rel", enums::value::BadTol);
+        return enums::value::BadTol;
     }
 
     // w21b, weights of the 21-point formula for abscissae x2
@@ -344,7 +339,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 21;
-        return enums::Success;
+        return enums::value::Success;
     }
 
     // compute the integral using the 43-point formula.
@@ -370,7 +365,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 43;
-        return enums::Success;
+        return enums::value::Success;
     }
 
     // compute the integral using the 87-point formula.
@@ -393,20 +388,15 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 87;
-        return enums::Success;
+        return enums::value::Success;
     }
 
     // failed to converge
     *result = result_kronrod;
     *abs_err = err;
     *n_eval = 87;
-    let file = file!();
-    "failed to reach tolerance with highest-order rule".with_c_str(|c_str|{
-        file.with_c_str(|c_file|{
-            unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, enums::Tol as i32) }
-        });
-    });
-    enums::Tol
+    rgsl_error!("failed to reach tolerance with highest-order rule", enums::value::Tol);
+    enums::value::Tol
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80 decimal digit arithmetic by L. W.
@@ -928,7 +918,7 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 /// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.
 pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, workspace: &::IntegrationWorkspace,
-    cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
+    cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::value::Value {
     let mut total_error = 0f64;
 
     let mut ktmin = 0u64;
@@ -950,21 +940,21 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         *abserr = 0f64;
 
         if limit > (*ffi::FFI::unwrap(workspace)).limit {
-            rgsl_error!("iteration limit exceeds available workspace", enums::Inval);
+            rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
         }
 
         /* Test on accuracy */
         if epsabs <= 0f64 {
-            rgsl_error!("absolute tolerance epsabs must be positive", enums::BadTol);
+            rgsl_error!("absolute tolerance epsabs must be positive", enums::value::BadTol);
         }
 
         if omega == 0f64 {
-            if (*ffi::FFI::unwrap(wf)).sine == enums::Sine {
+            if (*ffi::FFI::unwrap(wf)).sine == enums::integration_qawo::Sine {
                 /* The function sin(w x) f(x) is always zero for w = 0 */
                 *result = 0f64;
                 *abserr = 0f64;
 
-                return enums::Success;
+                return enums::value::Success;
             }  else {
                 /* The function cos(w x) f(x) is always f(x) for w = 0 */
                 return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit, result, abserr);
@@ -1027,11 +1017,11 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
                 correc = error1;
             }
 
-            if status != enums::Success {
+            if status != enums::value::Success {
                 eps = initial_eps.max(correc * (1f64 - p));
             }
 
-            if status != enums::Success && total_error < 10f64 * correc && iteration > 3 {
+            if status != enums::value::Success && total_error < 10f64 * correc && iteration > 3 {
                 *result = area;
                 *abserr = total_error;
                 return ::types::integration::return_error(error_type);
@@ -1082,7 +1072,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         *abserr = err_ext;
 
         if error_type == 0 {
-            return enums::Success;
+            return enums::value::Success;
         }
 
         if res_ext != 0f64 && area != 0f64 {

@@ -42,12 +42,12 @@ These routines provide a high level wrapper that combine the iteration and conve
 /*use ffi;
 use enums;
 
-fn intern_fit_function(x: *const gsl_vector, params: *mut c_void, f: *mut gsl_vector) -> enums::Value {
+fn intern_fit_function(x: *const gsl_vector, params: *mut c_void, f: *mut gsl_vector) -> enums::value::Value {
 
 }
 
 pub struct MultiFitFunction<'r, T> {
-    pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> enums::Value,
+    pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> enums::value::Value,
     /// number of functions
     pub n: u64,
     /// number of independent variables
@@ -58,7 +58,7 @@ pub struct MultiFitFunction<'r, T> {
 pub struct MultiFitFdfSolver<T> {
     s: *mut ffi::gsl_multifit_fdfsolver,
     params: *mut c_void,
-    f: Option<fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> enums::Value>,
+    f: Option<fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> enums::value::Value>,
     c: ffi::gsl_multifit_function_fdf
 }
 
@@ -67,7 +67,7 @@ impl<T> MultiFitFdfSolver {
     /// of observations n must be greater than or equal to parameters p.
     /// 
     /// If there is insufficient memory to create the solver then the function returns a null pointer and the error handler is invoked with
-    /// an error code of enums::NoMem.
+    /// an error code of ::NoMem.
     pub fn new(t: &MultiFitFdfSolverType, n: u64, p: u64) -> Option<MultiFitFdfSolver<T>> {
         let tmp = unsafe { ffi::gsl_multifit_fdfsolver_alloc(ffi::FFI::unwrap(t) as *const ffi::gsl_multifit_fdfsolver_type, n, p) };
 
@@ -89,7 +89,7 @@ impl<T> MultiFitFdfSolver {
     }
 
     /// This function initializes, or reinitializes, an existing solver s to use the function f and the initial guess x.
-    pub fn set<U>(&mut self, f: &'r MultiFitFunction<U>, x: &::VectorF64) -> enums::Value {
+    pub fn set<U>(&mut self, f: &'r MultiFitFunction<U>, x: &::VectorF64) -> enums::value::Value {
         self.params = Some(::std::mem::transmute(f.params));
         self.f = Some(f.f);
         self.c.n = f.n;
@@ -116,7 +116,7 @@ impl<T> MultiFitFdfSolver {
 
     /// This function performs a single iteration of the solver s. If the iteration encounters an unexpected problem then an error code
     /// will be returned. The solver maintains a current estimate of the best-fit parameters at all times.
-    pub fn iterate(&self) -> enums::Value {
+    pub fn iterate(&self) -> enums::value::Value {
         unsafe { ffi::gsl_multifit_fdfsolver_iterate(self.s) }
     }
 
@@ -129,7 +129,7 @@ impl<T> MultiFitFdfSolver {
 
     /// These functions iterate the solver s for a maximum of maxiter iterations. After each iteration, the system is tested for convergence
     /// using gsl_multifit_test_delta with the error tolerances epsabs and epsrel.
-    pub fn driver(&self, max_iter: u64, epsabs: f64, epsrel: f64) -> enums::Value {
+    pub fn driver(&self, max_iter: u64, epsabs: f64, epsrel: f64) -> enums::value::Value {
         unsafe { ffi::gsl_multifit_fdfsolver_driver(self.s, max_iter, epsabs, epsrel) }
     }
 }

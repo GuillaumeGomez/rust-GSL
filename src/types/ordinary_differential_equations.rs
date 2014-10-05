@@ -75,8 +75,8 @@ use libc::c_void;
 // FIXME : remove all C types !
 #[repr(C)]
 pub struct ODEiv2System {
-    pub function: fn(t: f64, *const f64, *mut f64, *mut c_void) -> enums::Value,
-    pub jacobian: fn(t: f64, *const f64, *mut f64, *mut f64, *mut c_void) -> enums::Value,
+    pub function: fn(t: f64, *const f64, *mut f64, *mut c_void) -> enums::value::Value,
+    pub jacobian: fn(t: f64, *const f64, *mut f64, *mut f64, *mut c_void) -> enums::value::Value,
     pub dimension: u64,
     pub params: *mut c_void
 }
@@ -103,7 +103,7 @@ impl ODEiv2Step {
 
     /// This function resets the stepping function s. It should be used whenever the next use of s will not be a continuation of a previous
     /// step.
-    pub fn reset(&self) -> enums::Value {
+    pub fn reset(&self) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_step_reset(self.s) }
     }
 
@@ -132,7 +132,7 @@ impl ODEiv2Step {
     /// This function sets a pointer of the driver object d for stepper s, to allow the stepper to access control (and evolve) object through
     /// the driver object. This is a requirement for some steppers, to get the desired error level for internal iteration of stepper.
     /// Allocation of a driver object calls this function automatically.
-    pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::Value {
+    pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_step_set_driver(self.s, d.d as *const ffi::gsl_odeiv2_driver) }
     }
 
@@ -143,16 +143,16 @@ impl ODEiv2Step {
     /// the reuse of existing derivative information. On output the new derivatives of the system at time t+h will be stored in dydt_out
     /// if it is not null.
     /// 
-    /// The stepping function returns enums::Failure if it is unable to compute the requested step. Also, if the user-supplied functions defined
-    /// in the system sys return a status other than enums::Success the step will be aborted. In that case, the elements of y will be restored
+    /// The stepping function returns enums::value::Failure if it is unable to compute the requested step. Also, if the user-supplied functions defined
+    /// in the system sys return a status other than enums::value::Success the step will be aborted. In that case, the elements of y will be restored
     /// to their pre-step values and the error code from the user-supplied function will be returned. Failure may be due to a singularity in
     /// the system or too large step-size h. In that case the step should be attempted again with a smaller step-size, e.g. h/2.
     /// 
     /// If the driver object is not appropriately set via gsl_odeiv2_step_set_driver for those steppers that need it, the stepping function
-    /// returns enums::Fault. If the user-supplied functions defined in the system sys returns enums::BadFunc, the function returns
+    /// returns ::Fault. If the user-supplied functions defined in the system sys returns enums::value::BadFunc, the function returns
     /// immediately with the same return code. In this case the user must call gsl_odeiv2_step_reset before calling this function again.
     pub fn apply(&self, t: f64, h: f64, y: &mut [f64], yerr: &mut [f64], dydt_in: &[f64], dydt_out: &mut [f64],
-        sys: &ODEiv2System) -> enums::Value {
+        sys: &ODEiv2System) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_step_apply(self.s, t, h, y.as_mut_ptr(), yerr.as_mut_ptr(), dydt_in.as_ptr(), dydt_out.as_mut_ptr(),
             sys) }
     }
@@ -382,7 +382,7 @@ impl ODEiv2Control {
 
     /// This function initializes the control function c with the parameters eps_abs (absolute error), eps_rel (relative error), a_y
     /// (scaling factor for y) and a_dydt (scaling factor for derivatives).
-    pub fn init(&self, eps_abs: f64, eps_rel: f64, a_y: f64, a_dydt: f64) -> enums::Value {
+    pub fn init(&self, eps_abs: f64, eps_rel: f64, a_y: f64, a_dydt: f64) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_control_init(self.c, eps_abs, eps_rel, a_y, a_dydt) }
     }
 
@@ -391,7 +391,7 @@ impl ODEiv2Control {
     /// h is reduced and the function returns ODEiv::Dec. If the error is sufficiently small then h may be increased and
     /// ODEiv::Inc is returned. The function returns ODEiv::Nil if the step-size is unchanged. The goal of the function is to estimate
     /// the largest step-size which satisfies the user-specified accuracy requirements for the current point.
-    pub fn hadjust(&self, s: &ODEiv2Step, y: &[f64], yerr: &[f64], dydt: &[f64], h: &mut f64) -> enums::ODEiv {
+    pub fn hadjust(&self, s: &ODEiv2Step, y: &[f64], yerr: &[f64], dydt: &[f64], h: &mut f64) -> ::ODEiv {
         unsafe { ffi::gsl_odeiv2_control_hadjust(self.c, s.s, y.as_ptr(), yerr.as_ptr(), dydt.as_ptr(), h) }
     }
 
@@ -413,12 +413,12 @@ impl ODEiv2Control {
 
     /// This function calculates the desired error level of the ind-th component to errlev. It requires the value (y) and value of the derivative
     /// (dydt) of the component, and the current step size h.
-    pub fn errlevel(&self, y: f64, dydt: f64, h: f64, ind: u64, errlev: &mut f64) -> enums::Value {
+    pub fn errlevel(&self, y: f64, dydt: f64, h: f64, ind: u64, errlev: &mut f64) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_control_errlevel(self.c, y, dydt, h, ind, errlev) }
     }
 
     /// This function sets a pointer of the driver object d for control object c.
-    pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::Value {
+    pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_control_set_driver(self.c, d.d as *const ffi::gsl_odeiv2_driver) }
     }
 }
@@ -498,32 +498,32 @@ impl ODEiv2Evolve {
     /// with a decreased step-size. This process is continued until an acceptable step-size is found. An estimate of the local error for
     /// the step can be obtained from the components of the array e->yerr[].
     /// 
-    /// If the user-supplied functions defined in the system sys returns enums::BadFunc, the function returns immediately with the same
+    /// If the user-supplied functions defined in the system sys returns enums::value::BadFunc, the function returns immediately with the same
     /// return code. In this case the user must call gsl_odeiv2_step_reset and gsl_odeiv2_evolve_reset before calling this function again.
     /// 
     /// Otherwise, if the user-supplied functions defined in the system sys or the stepping function step return a status other than
-    /// enums::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
-    /// enums::Failuer is returned if the user functions returned enums::Success. Otherwise the value returned by user function is returned.
+    /// enums::value::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
+    /// ::Failuer is returned if the user functions returned enums::value::Success. Otherwise the value returned by user function is returned.
     /// If no acceptable step can be made, t and y will be restored to their pre-step values and h contains the final attempted step-size.
     /// 
     /// If the step is successful the function returns a suggested step-size for the next step in h. The maximum time t1 is guaranteed not
     /// to be exceeded by the time-step. On the final time-step the value of t will be set to t1 exactly.
     pub fn apply(&self, c: &ODEiv2Control, s: &ODEiv2Step, sys: &ODEiv2System, t: &mut f64, t1: f64, h: &mut f64,
-        y: &mut [f64]) -> enums::Value {
+        y: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_evolve_apply(self.e, c.c, s.s, sys, t, t1, h, y.as_mut_ptr()) }
     }
 
     /// This function advances the ODE-system (e, sys, con) from time t and position y using the stepping function step by a specified step
     /// size h. If the local error estimated by the stepping function exceeds the desired error level, the step is not taken and the function
-    /// returns enums::Failure. Otherwise the value returned by user function is returned.
+    /// returns enums::value::Failure. Otherwise the value returned by user function is returned.
     pub fn apply_fixed_step(&self, c: &ODEiv2Control, s: &ODEiv2Step, sys: &ODEiv2System, t: &mut f64, h: f64,
-        y: &mut [f64]) -> enums::Value {
+        y: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_evolve_apply_fixed_step(self.e, c.c, s.s, sys, t, h, y.as_mut_ptr()) }
     }
 
     /// This function resets the evolution function e. It should be used whenever the next use of e will not be a continuation of a previous
     /// step.
-    pub fn reset(&self) -> enums::Value {
+    pub fn reset(&self) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_evolve_reset(self.e) }
     }
 
@@ -532,7 +532,7 @@ impl ODEiv2Evolve {
     /// If a system has discontinuous changes in the derivatives at known points, it is advisable to evolve the system between each discontinuity
     /// in sequence. For example, if a step-change in an external driving force occurs at times t_a, t_b and t_c then evolution should be carried
     /// out over the ranges (t_0,t_a), (t_a,t_b), (t_b,t_c), and (t_c,t_1) separately and not directly over the range (t_0,t_1).
-    pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::Value {
+    pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_evolve_set_driver(self.e, d.d as *const ffi::gsl_odeiv2_driver) }
     }
 }
@@ -625,17 +625,17 @@ impl ODEiv2Driver {
     }
 
     /// The function sets a minimum for allowed step size hmin for driver self. Default value is 0.
-    pub fn set_hmin(&self, hmin: f64) -> enums::Value {
+    pub fn set_hmin(&self, hmin: f64) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_set_hmin(self.d, hmin) }
     }
 
     /// The function sets a maximum for allowed step size hmax for driver self. Default value is ::DBL_MAX.
-    pub fn set_hmax(&self, hmax: f64) -> enums::Value {
+    pub fn set_hmax(&self, hmax: f64) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_set_hmax(self.d, hmax) }
     }
 
     /// The function sets a maximum for allowed number of steps nmax for driver self. Default value of 0 sets no limit for steps.
-    pub fn set_nmax(&self, nmax: u64) -> enums::Value {
+    pub fn set_nmax(&self, nmax: u64) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_set_nmax(self.d, nmax) }
     }
 
@@ -643,28 +643,28 @@ impl ODEiv2Driver {
     /// point t. If the function is unable to complete the calculation, an error code from gsl_odeiv2_evolve_apply is returned, and t and
     /// y contain the values from last successful step.
     /// 
-    /// If maximum number of steps is reached, a value of enums::MaxIter is returned. If the step size drops below minimum value, the
-    /// function returns with enums::NoProg. If the user-supplied functions defined in the system sys returns enums::BadFunc, the function
+    /// If maximum number of steps is reached, a value of enums::value::MaxIter is returned. If the step size drops below minimum value, the
+    /// function returns with ::NoProg. If the user-supplied functions defined in the system sys returns enums::value::BadFunc, the function
     /// returns immediately with the same return code. In this case the user must call gsl_odeiv2_driver_reset before calling this
     /// function again.
-    pub fn apply(&self, t: &mut f64, t1: f64, y: &mut [f64]) -> enums::Value {
+    pub fn apply(&self, t: &mut f64, t1: f64, y: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_apply(self.d, t, t1, y.as_mut_ptr()) }
     }
 
     /// This function evolves the driver system d from t with n steps of size h. If the function is unable to complete the calculation, an
     /// error code from gsl_odeiv2_evolve_apply_fixed_step is returned, and t and y contain the values from last successful step.
-    pub fn apply_fixed_step(&self, t: &mut f64, h: f64, n: u64, y: &mut [f64]) -> enums::Value {
+    pub fn apply_fixed_step(&self, t: &mut f64, h: f64, n: u64, y: &mut [f64]) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_apply_fixed_step(self.d, t, h, n, y.as_mut_ptr()) }
     }
 
     /// This function resets the evolution and stepper objects.
-    pub fn reset(&self) -> enums::Value {
+    pub fn reset(&self) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_reset(self.d) }
     }
 
     /// The routine resets the evolution and stepper objects and sets new initial step size to hstart. This function can be used e.g. to
     /// change the direction of integration.
-    pub fn reset_hstart(&self, hstart: f64) -> enums::Value {
+    pub fn reset_hstart(&self, hstart: f64) -> enums::value::Value {
         unsafe { ffi::gsl_odeiv2_driver_reset_hstart(self.d, hstart) }
     }
 }

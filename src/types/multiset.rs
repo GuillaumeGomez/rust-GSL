@@ -84,7 +84,7 @@ impl MultiSet {
     }
 
     /// This function copies the elements of the multiset self into the multiset dest. The two multisets must have the same size.
-    pub fn copy(&self, dest: &MultiSet) -> enums::Value {
+    pub fn copy(&self, dest: &MultiSet) -> enums::value::Value {
         unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c as *const ffi::gsl_multiset) }
     }
 
@@ -111,20 +111,20 @@ impl MultiSet {
 
     /// This function checks that the multiset self is valid. The k elements should lie in the range 0 to n-1, with each value occurring in
     /// nondecreasing order.
-    pub fn valid(&self) -> enums::Value {
+    pub fn valid(&self) -> enums::value::Value {
         unsafe { ffi::gsl_multiset_valid(self.c) }
     }
 
-    /// This function advances the multiset self to the next multiset element in lexicographic order and returns enums::Success. If no
-    /// further multisets elements are available it returns enums::Failure and leaves self unmodified. Starting with the first multiset and
+    /// This function advances the multiset self to the next multiset element in lexicographic order and returns enums::value::Success. If no
+    /// further multisets elements are available it returns enums::value::Failure and leaves self unmodified. Starting with the first multiset and
     /// repeatedly applying this function will iterate through all possible multisets of a given order.
-    pub fn next(&self) -> enums::Value {
+    pub fn next(&self) -> enums::value::Value {
         unsafe { ffi::gsl_multiset_next(self.c) }
     }
 
-    /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning enums::Success.
-    /// If no previous multiset is available it returns enums::Failure and leaves self unmodified.
-    pub fn prev(&self) -> enums::Value {
+    /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning enums::value::Success.
+    /// If no previous multiset is available it returns enums::value::Failure and leaves self unmodified.
+    pub fn prev(&self) -> enums::value::Value {
         unsafe { ffi::gsl_multiset_prev(self.c) }
     }
 
