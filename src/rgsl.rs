@@ -205,6 +205,7 @@ pub mod linear_algebra;
 pub mod logarithm;
 pub mod minimizer;
 pub mod numerical_differentiation;
+pub mod physical_constant;
 pub mod polynomials;
 pub mod pow;
 pub mod power;

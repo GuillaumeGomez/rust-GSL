@@ -118,3 +118,8 @@ path = "examples/series_acceleration/main.rs"
 
 name = "wavelet_transforms"
 path = "examples/wavelet_transforms/main.rs"
+
+[[bin]]
+
+name = "physical_constant"
+path = "examples/physical_constant/main.rs"
