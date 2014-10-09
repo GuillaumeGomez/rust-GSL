@@ -2,6 +2,54 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+/*!
+#Matrices
+
+Matrices are defined by a gsl_matrix structure which describes a generalized slice of a block. Like a vector it represents a set of 
+elements in an area of memory, but uses two indices instead of one.
+
+The gsl_matrix structure contains six components, the two dimensions of the matrix, a physical dimension, a pointer to the memory where 
+the elements of the matrix are stored, data, a pointer to the block owned by the matrix block, if any, and an ownership flag, owner. The 
+physical dimension determines the memory layout and can differ from the matrix dimension to allow the use of submatrices. The gsl_matrix 
+structure is very simple and looks like this,
+
+```C
+typedef struct
+{
+  size_t size1;
+  size_t size2;
+  size_t tda;
+  double * data;
+  gsl_block * block;
+  int owner;
+} gsl_matrix;
+```
+
+Matrices are stored in row-major order, meaning that each row of elements forms a contiguous block in memory. This is the standard 
+“C-language ordering” of two-dimensional arrays. Note that FORTRAN stores arrays in column-major order. The number of rows is size1. The 
+range of valid row indices runs from 0 to size1-1. Similarly size2 is the number of columns. The range of valid column indices runs from 
+0 to size2-1. The physical row dimension tda, or trailing dimension, specifies the size of a row of the matrix as laid out in memory.
+
+For example, in the following matrix size1 is 3, size2 is 4, and tda is 8. The physical memory layout of the matrix begins in the top 
+left hand-corner and proceeds from left to right along each row in turn.
+
+00 01 02 03 XX XX XX XX
+10 11 12 13 XX XX XX XX
+20 21 22 23 XX XX XX XX
+
+Each unused memory location is represented by “XX”. The pointer data gives the location of the first element of the matrix in memory. The 
+pointer block stores the location of the memory block in which the elements of the matrix are located (if any). If the matrix owns this 
+block then the owner field is set to one and the block will be deallocated when the matrix is freed. If the matrix is only a slice of a 
+block owned by another object then the owner field is zero and any underlying block will not be freed.
+
+##References and Further Reading
+
+The block, vector and matrix objects in GSL follow the valarray model of C++. A description of this model can be found in the following 
+reference,
+
+B. Stroustrup, The C++ Programming Language (3rd Ed), Section 22.4 Vector Arithmetic. Addison-Wesley 1997, ISBN 0-201-88954-4.
+!*/
+
 use std::fmt;
 use std::fmt::{Formatter, Show};
 use types::{VectorF64, VectorF32};

@@ -2,6 +2,34 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+/*!
+#Vectors
+
+Vectors are defined by a gsl_vector structure which describes a slice of a block. Different vectors can be created which point to the 
+same block. A vector slice is a set of equally-spaced elements of an area of memory.
+
+The gsl_vector structure contains five components, the size, the stride, a pointer to the memory where the elements are stored, data, a 
+pointer to the block owned by the vector, block, if any, and an ownership flag, owner. The structure is very simple and looks like this,
+
+```C
+typedef struct
+{
+  size_t size;
+  size_t stride;
+  double * data;
+  gsl_block * block;
+  int owner;
+} gsl_vector;
+```
+
+The size is simply the number of vector elements. The range of valid indices runs from 0 to size-1. The stride is the step-size from one 
+element to the next in physical memory, measured in units of the appropriate datatype. The pointer data gives the location of the first 
+element of the vector in memory. The pointer block stores the location of the memory block in which the vector elements are located (if 
+any). If the vector owns this block then the owner field is set to one and the block will be deallocated when the vector is freed. If the 
+vector points to a block owned by another object then the owner field is zero and any underlying block will not be deallocated with the 
+vector.
+!*/
+
 use std::fmt;
 use std::fmt::{Formatter,Show};
 use ffi;

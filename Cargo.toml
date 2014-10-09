@@ -123,3 +123,8 @@ path = "examples/wavelet_transforms/main.rs"
 
 name = "physical_constant"
 path = "examples/physical_constant/main.rs"
+
+[[bin]]
+
+name = "vectors_and_matrices"
+path = "examples/vectors_and_matrices/main.rs"
