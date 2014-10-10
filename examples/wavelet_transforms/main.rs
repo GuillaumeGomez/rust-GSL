@@ -16,9 +16,9 @@ pub static nc : uint = 20;
 
 #[allow(unused_must_use)]
 fn main() {
-    let mut data : [f64, ..n] = [0f64, ..n];
-    let mut abscoeff : [f64, ..n] = [0f64, ..n];
-    let mut p : [u64, ..n] = [0u64, ..n];
+    let mut data : [f64, ..256] = [0f64, ..256];
+    let mut abscoeff : [f64, ..256] = [0f64, ..256];
+    let mut p : [u64, ..256] = [0u64, ..256];
     let args = os::args();
     let tmp = args.tail();
 

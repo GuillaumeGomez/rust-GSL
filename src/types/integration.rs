@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#![allow(non_uppercase_statics)]
+
 use ffi;
 use enums;
 use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
