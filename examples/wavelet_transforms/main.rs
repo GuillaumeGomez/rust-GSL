@@ -11,8 +11,8 @@ use std::io::{File, Open, Read};
 use rgsl::{wavelet_transforms, sort};
 use std::os;
 
-pub static n : uint = 256;
-pub static nc : uint = 20;
+pub const N : uint = 256;
+pub const NC : uint = 20;
 
 #[allow(unused_must_use)]
 fn main() {
@@ -32,7 +32,7 @@ fn main() {
             Ok(f) => f,
             Err(e) => fail!("file error: {}", e),
         };
-        for i in range(0u, n) {
+        for i in range(0u, N) {
             match f.read_be_f64() {
                 Ok(v) => {
                     data[i] = v;
@@ -43,25 +43,25 @@ fn main() {
     }
 
     let w = rgsl::Wavelet::new(&rgsl::WaveletType::daubechies(), 4u64).unwrap();
-    let work = rgsl::WaveletWorkspace::new(n as u64).unwrap();
+    let work = rgsl::WaveletWorkspace::new(N as u64).unwrap();
 
-    wavelet_transforms::one_dimension::transform_forward(&w, data, 1, n as u64, &work);
+    wavelet_transforms::one_dimension::transform_forward(&w, data, 1, N as u64, &work);
 
-     for i in range(0u, n) {
+     for i in range(0u, N) {
         abscoeff[i] = data[i].abs();
     }
 
-    sort::vectors::sort_index(p, abscoeff, 1, n as u64);
+    sort::vectors::sort_index(p, abscoeff, 1, N as u64);
 
     let mut i = 0u;
-    while i + nc < n {
+    while i + NC < N {
         data[p[i] as uint] = 0f64;
         i += 1;
     }
 
-    wavelet_transforms::one_dimension::transform_inverse(&w, data, 1, n as u64, &work);
+    wavelet_transforms::one_dimension::transform_inverse(&w, data, 1, N as u64, &work);
 
-    for it in range(0u, n) {
+    for it in range(0u, N) {
         println!("{}", data[it]);
     }
 }

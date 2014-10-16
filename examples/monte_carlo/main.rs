@@ -36,7 +36,7 @@ use std::f64::consts::PI;
 /* For simplicity we compute the integral over the region 
    (0,0,0) -> (pi,pi,pi) and multiply by 8 */
 
-static exact : f64 = 1.3932039296856768591842462603255f64;
+const EXACT : f64 = 1.3932039296856768591842462603255f64;
 
 #[allow(unused_variable)]
 fn g(k: &mut [f64], params: &mut f64) -> f64 {
@@ -49,8 +49,8 @@ fn display_results(title: &str, result: f64, error: f64) {
     println!("{} ==================", title);
     println!("result = {:.6}", result);
     println!("sigma  = {:.6}", error);
-    println!("exact  = {:.6}", exact);
-    println!("error  = {:.6} = {:.2} sigma", result - exact, unsafe { fabsf64(result - exact) } / error);
+    println!("exact  = {:.6}", EXACT);
+    println!("error  = {:.6} = {:.2} sigma", result - EXACT, unsafe { fabsf64(result - EXACT) } / error);
 }
 
 #[allow(dead_assignment)]

@@ -1013,6 +1013,7 @@ unsafe fn accumulate_distribution(s: *mut ffi::gsl_monte_vegas_state, bin: &[i32
 }
 
 #[allow(unused_variable)]
+#[allow(dead_assignment)]
 unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: &[i32], xl: &[f64], xu: &[f64], s: *mut ffi::gsl_monte_vegas_state,
     r: &::Rng) {
     /* Use the random number generator r to return a random position x
@@ -1138,14 +1139,13 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
         {
             let pts_per_bin = tot_weight / bins as f64;
 
-            let mut xold = 0f64;
             let mut xnew = 0f64;
             let mut dw = 0f64;
             let mut i = 1u;
 
             for k in range(0u, bins) {
                 dw += weight[k];
-                xold = xnew;
+                let xold = xnew;
                 xnew = *(*s).xi.offset((k as int + 1i) * dim as int + j as int);
 
                 while dw > pts_per_bin {
