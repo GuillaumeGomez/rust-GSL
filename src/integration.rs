@@ -123,7 +123,17 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = 0f64;
         *abs_err = 0f64;
         *n_eval = 0u64;
-        rgsl_error!("tolerance cannot be achieved with given eps_abs and eps_rel", enums::value::BadTol);
+
+        //to avoid the dead_code warning on gsl_error
+        unsafe {
+            let file = file!();
+
+            "tolerance cannot be achieved with given eps_abs and eps_rel".with_c_str(|c_str|{
+                file.with_c_str(|c_file|{
+                    ffi::gsl_error(c_str, c_file, line!() as i32, enums::value::BadTol as i32)
+                });
+            });
+        }
         return enums::value::BadTol;
     }
 
