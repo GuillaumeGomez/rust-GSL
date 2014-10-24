@@ -448,6 +448,22 @@ impl MatrixF64 {
         }
     }
 
+    pub fn size1(&self) -> u64 {
+        if self.mat.is_null() {
+            0u64
+        } else {
+            unsafe { (*self.mat).size1 }
+        }
+    }
+
+    pub fn size2(&self) -> u64 {
+        if self.mat.is_null() {
+            0u64
+        } else {
+            unsafe { (*self.mat).size2 }
+        }
+    }
+
     pub fn clone(&self) -> Option<MatrixF64> {
         unsafe {
             if self.mat.is_null() {
