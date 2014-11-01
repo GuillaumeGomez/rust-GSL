@@ -11,12 +11,12 @@ use rgsl::enums;
 use std::intrinsics::{cosf64};
 use std::f64::consts::PI;
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn fn1(x: f64, params: &mut f64) -> f64 {
     unsafe { cosf64(x) + 1f64 }
 }
 
-#[allow(dead_assignment)]
+#[allow(unused_assignments)]
 fn main() {
     let mut iter = 0u;
     let max_iter = 100u;

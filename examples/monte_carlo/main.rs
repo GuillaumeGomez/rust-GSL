@@ -38,7 +38,7 @@ use std::f64::consts::PI;
 
 const EXACT : f64 = 1.3932039296856768591842462603255f64;
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn g(k: &mut [f64], params: &mut f64) -> f64 {
     let a = 1f64 / (PI * PI * PI);
     
@@ -53,7 +53,7 @@ fn display_results(title: &str, result: f64, error: f64) {
     println!("error  = {:.6} = {:.2} sigma", result - EXACT, unsafe { fabsf64(result - EXACT) } / error);
 }
 
-#[allow(dead_assignment)]
+#[allow(unused_assignments)]
 fn main() {
     let mut res = 0f64;
     let mut err = 0f64;

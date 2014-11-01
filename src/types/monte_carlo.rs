@@ -253,7 +253,7 @@ impl MiserMonteCarlo {
     /// the lower and upper limits in the arrays xl and xu, each of size dim. The integration uses a fixed number of function calls calls,
     /// and obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied. The result
     /// of the integration is returned in result, with an estimated absolute error abserr.
-    #[allow(dead_assignment)]
+    #[allow(unused_assignments)]
     pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: u64, r: &::Rng, result: &mut f64,
         abserr: &mut f64) -> enums::value::Value {
         unsafe {
@@ -444,7 +444,7 @@ impl MiserMonteCarlo {
                     xu_tmp.push(*it);
                 }
 
-                *xu_tmp.get_mut(i_bisect) = xbi_m;
+                xu_tmp[i_bisect] = xbi_m;
 
                 let status = self.integrate(f, arg, xl.as_slice(), xu_tmp.as_slice(), calls_l, r, &mut res_l, &mut err_l);
 
@@ -467,7 +467,7 @@ impl MiserMonteCarlo {
                     xl_tmp.push(*it);
                 }
 
-                *xl_tmp.get_mut(i_bisect) = xbi_m;
+                xl_tmp[i_bisect] = xbi_m;
 
                 let status = self.integrate(f, arg, xl_tmp.as_slice(), xu, calls_r, r, &mut res_r, &mut err_r);
 
@@ -1012,8 +1012,8 @@ unsafe fn accumulate_distribution(s: *mut ffi::gsl_monte_vegas_state, bin: &[i32
     }
 }
 
-#[allow(unused_variable)]
-#[allow(dead_assignment)]
+#[allow(unused_variables)]
+#[allow(unused_assignments)]
 unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: &[i32], xl: &[f64], xu: &[f64], s: *mut ffi::gsl_monte_vegas_state,
     r: &::Rng) {
     /* Use the random number generator r to return a random position x

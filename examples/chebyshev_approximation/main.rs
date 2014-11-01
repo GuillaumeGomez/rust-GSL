@@ -10,7 +10,7 @@ extern crate rgsl;
 
 use rgsl::ChebSeries;
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn f(x: f64, param: &mut i32) -> f64 {
     if x < 0.5 {
         0.25

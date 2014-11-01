@@ -9,7 +9,7 @@ extern crate rgsl;
 
 use std::intrinsics::{powf64, sqrtf64};
 
- #[allow(unused_variable)]
+ #[allow(unused_variables)]
 fn f(x: f64, param: &mut i32) -> f64 {
     unsafe { powf64(x, 1.5f64) }
 }

@@ -27,7 +27,7 @@ fn sel_func(data: &mut Data, scale: &mut f64) -> bool {
     e2 > *scale
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn val_func(data: &mut Data, params: &mut i32) -> f64 {
     let x = data.x;
     let y = data.y;

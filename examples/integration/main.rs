@@ -17,7 +17,7 @@ fn f(x: f64, p: &mut FParams) -> f64 {
     unsafe { sinf64(p.a * x + p.phi) }
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn cqf1(x: f64, p: &mut f64) -> f64 {
     unsafe { expf64(x) }
 }
@@ -29,7 +29,7 @@ fn qags_fn(x: f64, alpha: &mut f64) -> f64 {
 /* f458(x) = 1/(1 + log(x)^2)^2 */
 /* integ(log(x) f458(x),x,0,1) = (Ci(1) sin(1) + (pi/2 - Si(1)) cos(1))/pi 
                                = -0.1892752 */
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn f458<T>(x: f64, params: &mut T) -> f64 {
     if x == 0f64 {
         0f64

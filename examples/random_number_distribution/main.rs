@@ -6,7 +6,7 @@ extern crate rgsl;
 
 use rgsl::Rng;
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn main() {
     rgsl::RngType::env_setup();
 

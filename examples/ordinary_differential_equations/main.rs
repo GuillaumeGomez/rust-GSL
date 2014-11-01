@@ -8,7 +8,7 @@ extern crate libc;
 use libc::c_void;
 use std::c_vec::CVec;
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::enums::value::Value {
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);
@@ -21,7 +21,7 @@ fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::en
     }
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut c_void) -> rgsl::enums::value::Value {
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);

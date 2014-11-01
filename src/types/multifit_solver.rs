@@ -78,7 +78,7 @@ impl<T> MultiFitFdfSolver {
                     f: intern_fit_function,
                     n: 0,
                     p: 0,
-                    params: *mut ::std::ptr::mut_null()
+                    params: ::std::ptr::mut_null()
                 }
             })
         }
@@ -146,7 +146,7 @@ impl ffi::FFI<ffi::gsl_multifit_fdfsolver> for MultiFitFdfSolver {
 
 pub struct MultiFitFdfSolverType {
     name: &'static str,
-    size: u64,
+    //size: u64,
     alloc: fn(state: &mut LmderStateT, n: u64, p: u64) -> enums::value::Value,
     set: fn(state: &mut LmderStateT, fdf: MultiFitFunctionFdf, x: &mut VectorF64, f: &mut VectorF64, j: MatrixF64,
         dx: &mut VectorF64) -> enums::value::Value,
@@ -155,10 +155,32 @@ pub struct MultiFitFdfSolverType {
     free: fn(state: &mut LmderStateT)
 }
 
+impl MultiFitFdfSolverType {
+    pub fn lmder_type() -> MultiFitFdfSolverType {
+        MultiFitFdfSolverType {
+            name: "lmder",
+            alloc: lmder_alloc,
+            set: lmder_set,
+            iterate: lmder_iterate,
+            free: lmder_free
+        }
+    }
+
+    pub fn lmsder_type() -> MultiFitFdfSolverType {
+        MultiFitFdfSolverType {
+            name: "lmsder",
+            alloc: lmder_alloc,
+            set: lmsder_set,
+            iterate: lmdser_iterate,
+            free: lmder_free
+        }
+    }
+}
+
 struct MultiFitFunctionFdf<T> {
-    f: Option<fn<T>(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> enums::value::Value>,
-    df: Option<fn<T>(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> enums::value::Value>,
-    fdf: Option<fn<T>(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> enums::value::Value>,
+    f: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> enums::value::Value>,
+    df: Option<fn(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> enums::value::Value>,
+    fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> enums::value::Value>,
     n: u64,
     p: u64,
     params: &'r mut T
@@ -186,7 +208,7 @@ struct LmderStateT {
     perm: ::Permutation
 }
 
-fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Value {
+fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> enums::value::Value {
     state.r = match ::MatrixF64::new(n, p) {
         Some(m) => m,
         None => {
@@ -202,7 +224,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.diag = match ::VectorF64;:new(p) {
+    state.diag = match ::VectorF64::new(p) {
         Some(d) => d,
         None => {
             ::std::mem::drop(state.r);
@@ -257,7 +279,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.f_trial = ::VectorF64::new(n) {
+    state.f_trial = match ::VectorF64::new(n) {
         Some(f) => f,
         None => {
             ::std::mem::drop(state.r);
@@ -271,7 +293,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.df = ::VectorF64::new(n) {
+    state.df = match ::VectorF64::new(n) {
         Some(d) => d,
         None => {
             ::std::mem::drop(state.r);
@@ -286,7 +308,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.sdiag = ::VectorF64::new(p) {
+    state.sdiag = match ::VectorF64::new(p) {
         Some(s) => s,
         None => {
             ::std::mem::drop(state.r);
@@ -302,7 +324,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.rptdx = ::VectorF64::new(n) {
+    state.rptdx = match ::VectorF64::new(n) {
         Some(s) => s,
         None => {
             ::std::mem::drop(state.r);
@@ -319,7 +341,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.w = ::VectorF64::new(n) {
+    state.w = match ::VectorF64::new(n) {
         Some(w) => w,
         None => {
             ::std::mem::drop(state.r);
@@ -337,7 +359,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.work1 = ::VectorF64::new(p) {
+    state.work1 = match ::VectorF64::new(p) {
         Some(w) => w,
         None => {
             ::std::mem::drop(state.r);
@@ -356,7 +378,7 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
         }
     };
 
-    state.perm = ::Permutation::new(p) {
+    state.perm = match ::Permutation::new(p) {
         Some(p) => p,
         None => {
             ::std::mem::drop(state.r);
@@ -374,9 +396,26 @@ fn lmder_alloc(state: &mut LmderStateT, size_t n, size_t p) -> enums::value::Val
             ::std::mem::drop(state.work1);
             rgsl_error!("failed to allocate space for perm", enums::value::NoMem)
         }
-    }
+    };
 
-    return enums::value::Success;
+    enums::value::Success
+}
+
+fn lmder_free(state: &mut LmderStateT) {
+    ::std::mem::drop(state.perm);
+    ::std::mem::drop(state.work1);
+    ::std::mem::drop(state.w);
+    ::std::mem::drop(state.rptdx);
+    ::std::mem::drop(state.sdiag);
+    ::std::mem::drop(state.df);
+    ::std::mem::drop(state.f_trial);
+    ::std::mem::drop(state.x_trial);
+    ::std::mem::drop(state.gradient);
+    ::std::mem::drop(state.newton);
+    ::std::mem::drop(state.qtf);
+    ::std::mem::drop(state.diag);
+    ::std::mem::drop(state.tau);
+    ::std::mem::drop(state.r);
 }
 
 fn lmder_set(vstate: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut VectorF64, f: &mut VectorF64, J: &mut MatrixF64,
@@ -472,15 +511,15 @@ fn set(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF6
     /* return immediately if evaluation raised error */
     {
         let status = if fdf.fdf.is_some() {
-            status = GSL_MULTIFIT_FN_EVAL_F_DF (fdf, x, f, J)
-        }
-        else {
+            fdf.fdf(x, fdf.params, f, j)
+        } else {
             /* finite difference approximation */
-            status = gsl_multifit_fdfsolver_dif_fdf(x, fdf, f, J)
-        }
+            gsl_multifit_fdfsolver_dif_fdf(x, fdf, f, J)
+        };
 
-        if status != enums::value::Success
+        if status != enums::value::Success {
             return status;
+        }
     }
 
     state.par = 0;
@@ -580,6 +619,22 @@ fn compute_actual_reduction(fnorm: f64, fnorm1: f64) -> f64 {
     }
 }
 
+fn compute_rptdx(r: &::MatrixF64, p: &::Permutation, dx: &::VectorF64, rptdx: &mut ::VectorF64) {
+    let n = dx.size;
+
+    for i in range(0, n) {
+        let mut sum = 0f64;
+
+        for j in range(i, n) {
+            let pj = p.get(j);
+
+            sum += r.get(i, j) * dx.get(pj);
+        }
+
+        rptdx.set(i, sum);
+    }
+}
+
 fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut VectorF64, f: &mut VectorF64, J: &mut MatrixF64,
     dx: &mut VectorF64, scale: i32) -> enums::value::Value {
     let mut prered = 0f64;
@@ -587,8 +642,7 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
     let mut pnorm = 0f64;
     let mut fnorm1 = 0f64;
     let mut fnorm1p = 0f64;
-    let mut gnorm = 0f64;;
-    let mut ratio = 0f64;
+    let mut gnorm = 0f64;
     let mut dirder = 0f64;
 
     let mut iter = 0i32;
@@ -613,187 +667,176 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
     compute_gradient_direction(r, perm, qtf, diag, gradient);
 
     { 
-        size_t iamax = ::blas::level1::idamax(gradient);
+        let iamax = ::blas::level1::idamax(gradient);
 
         gnorm = unsafe { fabsf64(gradient.get(iamax) / state.fnorm) };
     }
 
     /* Determine the Levenberg-Marquardt parameter */
 
-lm_iteration:
+    loop {
+        iter += 1;
 
-    iter += 1;
-
-    {
-        let status = lmpar(r, perm, qtf, diag, state.delta, &mut (state.par), newton, gradient, sdiag, dx, w);
-
-        if status != enums::value::Success {
-            return status;
-        }
-    }
-
-    /* Take a trial step */
-
-    dx.scale(-1f64); /* reverse the step to go downhill */
-
-    compute_trial_step(x, dx, state.x_trial);
-
-    pnorm = scaled_enorm(diag, dx);
-
-    if state.iter == 1 {
-        if pnorm < state.delta {
-    /*#ifdef DEBUG
-          printf("set delta = pnorm = %g\n" , pnorm);
-    #endif*/
-            state.delta = pnorm;
-        }
-    }
-
-    /* Evaluate function at x + p */
-    /* return immediately if evaluation raised error */
-    {
-        let status = GSL_MULTIFIT_FN_EVAL_F(fdf, x_trial, f_trial);
-        
-        if status != enums::value::Success {
-            return status;
-        }
-    }
-
-    fnorm1 = enorm(f_trial);
-
-    /* Compute the scaled actual reduction */
-
-    actred = compute_actual_reduction (state->fnorm, fnorm1);
-
-    /*#ifdef DEBUG
-        printf("lmiterate: fnorm = %g fnorm1 = %g  actred = %g\n", state->fnorm, fnorm1, actred);
-        printf("r = "); gsl_matrix_fprintf(stdout, r, "%g");
-        printf("perm = "); gsl_permutation_fprintf(stdout, perm, "%d");
-        printf("dx = "); gsl_vector_fprintf(stdout, dx, "%g");
-    #endif*/
-
-    /* Compute rptdx = R P^T dx, noting that |J dx| = |R P^T dx| */
-
-    compute_rptdx(r, perm, dx, rptdx);
-
-    /*#ifdef DEBUG
-    printf("rptdx = "); gsl_vector_fprintf(stdout, rptdx, "%g");
-    #endif*/
-
-    fnorm1p = enorm(rptdx);
-
-    /* Compute the scaled predicted reduction = |J dx|^2 + 2 par |D dx|^2 */
-
-    { 
-        let t1 = fnorm1p / state.fnorm;
-        let t2 = (state.par.sqrt() * pnorm) / state.fnorm;
-
-        prered = t1 * t1 + t2 * t2 / p5;
-        dirder = -(t1 * t1 + t2 * t2);
-    }
-
-    /* compute the ratio of the actual to predicted reduction */
-
-    ratio = if prered > 0f64 {
-        actred / prered
-    } else {
-        0f64
-    };
-
-    /*#ifdef DEBUG
-    printf("lmiterate: prered = %g dirder = %g ratio = %g\n", prered, dirder,ratio);
-    #endif*/
-
-    /* update the step bound */
-    if ratio > p25 {
-/*#ifdef DEBUG
-      printf("ratio > p25\n");
-#endif*/
-        if state.par == 0f64 || ratio >= p75 {
-            state->delta = pnorm / p5;
-            state->par *= p5;
-/*#ifdef DEBUG
-          printf("updated step bounds: delta = %g, par = %g\n", state->delta, state->par);
-#endif*/
-        }
-    } else {
-        let temp = if actred >= 0f64 {p5} else {p5 * dirder / (dirder + p5 * actred)};
-
-/*#ifdef DEBUG
-      printf("ratio < p25\n");
-#endif*/
-
-        if p1 * fnorm1 >= state->fnorm || temp < p1 {
-            temp = p1;
-        }
-
-        state.delta = temp * state.delta.min(pnorm / p1);
-
-        state.par /= temp;
-/*#ifdef DEBUG
-      printf("updated step bounds: delta = %g, par = %g\n", state->delta, state->par);
-#endif*/
-    }
-
-
-  /* test for successful iteration, termination and stringent tolerances */
-
-  if (ratio >= p0001)
-    {
-      gsl_vector_memcpy (x, x_trial);
-      gsl_vector_memcpy (f, f_trial);
-
-      /* return immediately if evaluation raised error */
-      {
-        int status;
-        
-        if (fdf->df)
-          status = GSL_MULTIFIT_FN_EVAL_DF (fdf, x_trial, J);
-        else
-          status = gsl_multifit_fdfsolver_dif_df(x_trial, fdf, f_trial, J);
-
-        if (status)
-          return status;
-      }
-
-      /* wa2_j  = diag_j * x_j */
-      state->xnorm = scaled_enorm(diag, x);
-      state->fnorm = fnorm1;
-      state->iter++;
-
-      /* Rescale if necessary */
-
-      if (scale)
         {
-          update_diag (J, diag);
+            let status = lmpar(r, perm, qtf, diag, state.delta, &mut (state.par), newton, gradient, sdiag, dx, w);
+
+            if status != enums::value::Success {
+                return status;
+            }
         }
 
-      {
-        int signum;
-        gsl_matrix_memcpy (r, J);
-        gsl_linalg_QRPT_decomp (r, tau, perm, &signum, work1);
-      }
-      
-      return GSL_SUCCESS;
-    }
-  else if (fabs(actred) <= GSL_DBL_EPSILON  && prered <= GSL_DBL_EPSILON 
-           && p5 * ratio <= 1.0)
-    {
-      return GSL_ETOLF ;
-    }
-  else if (state->delta <= GSL_DBL_EPSILON * state->xnorm)
-    {
-      return GSL_ETOLX;
-    }
-  else if (gnorm <= GSL_DBL_EPSILON)
-    {
-      return GSL_ETOLG;
-    }
-  else if (iter < 10)
-    {
-      /* Repeat inner loop if unsuccessful */
-      goto lm_iteration;
+        /* Take a trial step */
+
+        dx.scale(-1f64); /* reverse the step to go downhill */
+
+        compute_trial_step(x, dx, state.x_trial);
+
+        pnorm = scaled_enorm(diag, dx);
+
+        if state.iter == 1 {
+            if pnorm < state.delta {
+        /*#ifdef DEBUG
+              printf("set delta = pnorm = %g\n" , pnorm);
+        #endif*/
+                state.delta = pnorm;
+            }
+        }
+
+        /* Evaluate function at x + p */
+        /* return immediately if evaluation raised error */
+        {
+            let status = fdf.f(x_trial, f.params, f_trial);
+            
+            if status != enums::value::Success {
+                return status;
+            }
+        }
+
+        fnorm1 = enorm(f_trial);
+
+        /* Compute the scaled actual reduction */
+
+        actred = compute_actual_reduction(state.fnorm, fnorm1);
+
+        /*#ifdef DEBUG
+            printf("lmiterate: fnorm = %g fnorm1 = %g  actred = %g\n", state->fnorm, fnorm1, actred);
+            printf("r = "); gsl_matrix_fprintf(stdout, r, "%g");
+            printf("perm = "); gsl_permutation_fprintf(stdout, perm, "%d");
+            printf("dx = "); gsl_vector_fprintf(stdout, dx, "%g");
+        #endif*/
+
+        /* Compute rptdx = R P^T dx, noting that |J dx| = |R P^T dx| */
+
+        compute_rptdx(r, perm, dx, rptdx);
+
+        /*#ifdef DEBUG
+        printf("rptdx = "); gsl_vector_fprintf(stdout, rptdx, "%g");
+        #endif*/
+
+        fnorm1p = enorm(rptdx);
+
+        /* Compute the scaled predicted reduction = |J dx|^2 + 2 par |D dx|^2 */
+
+        { 
+            let t1 = fnorm1p / state.fnorm;
+            let t2 = (state.par.sqrt() * pnorm) / state.fnorm;
+
+            prered = t1 * t1 + t2 * t2 / p5;
+            dirder = -(t1 * t1 + t2 * t2);
+        }
+
+        /* compute the ratio of the actual to predicted reduction */
+
+        let ratio = if prered > 0f64 {
+            actred / prered
+        } else {
+            0f64
+        };
+
+        /*#ifdef DEBUG
+        printf("lmiterate: prered = %g dirder = %g ratio = %g\n", prered, dirder,ratio);
+        #endif*/
+
+        /* update the step bound */
+        if ratio > p25 {
+    /*#ifdef DEBUG
+          printf("ratio > p25\n");
+    #endif*/
+            if state.par == 0f64 || ratio >= p75 {
+                state.delta = pnorm / p5;
+                state.par *= p5;
+    /*#ifdef DEBUG
+              printf("updated step bounds: delta = %g, par = %g\n", state->delta, state->par);
+    #endif*/
+            }
+        } else {
+            let temp = if actred >= 0f64 {p5} else {p5 * dirder / (dirder + p5 * actred)};
+
+    /*#ifdef DEBUG
+          printf("ratio < p25\n");
+    #endif*/
+
+            if p1 * fnorm1 >= state.fnorm || temp < p1 {
+                temp = p1;
+            }
+
+            state.delta = temp * state.delta.min(pnorm / p1);
+
+            state.par /= temp;
+    /*#ifdef DEBUG
+          printf("updated step bounds: delta = %g, par = %g\n", state->delta, state->par);
+    #endif*/
+        }
+
+
+        /* test for successful iteration, termination and stringent tolerances */
+
+        if ratio >= p0001 {
+            x.copy_from(x_trial);
+            f.copy_from(f_trial);
+
+            /* return immediately if evaluation raised error */
+            {
+                let status = if fdf.df {
+                    fdf.df(x_trial, fdf.params, j)
+                } else {
+                    gsl_multifit_fdfsolver_dif_df(x_trial, fdf, f_trial, j)
+                };
+
+                if status != enums::value::Success {
+                    return status;
+                }
+            }
+
+            /* wa2_j  = diag_j * x_j */
+            state.xnorm = scaled_enorm(diag, x);
+            state.fnorm = fnorm1;
+            state.iter += 1;
+
+            /* Rescale if necessary */
+            if scale != 0 {
+                update_diag(j, diag);
+            }
+
+            {
+                let mut signum = 0;
+
+                r.copy_from(j);
+                ::linear_algebra::QRPT_decomp(r, tau, perm, &mut signum, work1);
+            }
+
+            return enums::value::Success;
+        } else if actred.fabs() <= ::DBL_EPSILON  && prered <= ::DBL_EPSILON  && p5 * ratio <= 1f64 {
+            return enums::value::TolF;
+        } else if state.delta <= ::DBL_EPSILON * state.xnorm {
+            return enums::value::TolX;
+        } else if gnorm <= ::DBL_EPSILON {
+            return enums::value::TolG;
+        } else if iter >= 10 {
+            /* stop inner loop if successful */
+            break;
+        }
     }
 
-  return GSL_ENOPROG;
+    return enums::value::NoProg;
 }

@@ -344,7 +344,7 @@ struct goldensection_state_t {
     dummy: f64
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn goldensection_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64,
     x_upper: f64, f_upper: f64) -> enums::value::Value {
     let state : &mut goldensection_state_t = unsafe { ::std::mem::transmute(vstate) };
@@ -353,7 +353,7 @@ fn goldensection_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_m
     enums::value::Success
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn goldensection_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
     f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value {
     let x_center = *x_minimum;
@@ -400,7 +400,7 @@ struct brent_state_t {
     f_w: f64
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
     f_upper: f64) -> enums::value::Value {
     let state : &mut brent_state_t = unsafe { ::std::mem::transmute(vstate) };
@@ -424,7 +424,7 @@ fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: 
     enums::value::Success
 }
 
-#[allow(dead_assignment)]
+#[allow(unused_assignments)]
 fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
     f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value {
     unsafe {
@@ -558,7 +558,7 @@ struct quad_golden_state_t {
     num_iter: i32
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
     f_upper: f64) -> enums::value::Value {
     let state : &mut quad_golden_state_t = unsafe { ::std::mem::transmute(vstate) };
@@ -581,7 +581,7 @@ fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_min
     enums::value::Success
 }
 
-#[allow(dead_assignment)]
+#[allow(unused_assignments)]
 fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
     f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value {
     unsafe {

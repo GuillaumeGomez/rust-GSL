@@ -62,6 +62,7 @@ Here is the list of all modules :
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
+#![allow(unused_unsafe)]
 
 extern crate libc;
 
@@ -134,7 +135,10 @@ pub use types::{
     LevinUTruncWorkspace,
     Wavelet,
     WaveletType,
-    WaveletWorkspace
+    WaveletWorkspace,
+    //MultiFitFdfSolver,
+    //MultiFitFunction,
+    //MultiFitFdfSolverType
 };
 
 pub use enums::{

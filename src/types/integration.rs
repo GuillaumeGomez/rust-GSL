@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![allow(non_uppercase_statics)]
+#![allow(non_upper_case_globals)]
 
 use ffi;
 use enums;
@@ -1491,7 +1491,7 @@ impl IntegrationWorkspace {
     /// The adaptive bisection algorithm of QAG is used, with modifications to ensure that subdivisions do not occur at the singular point x = c.
     /// When a subinterval contains the point x = c or is close to it then a special 25-point modified Clenshaw-Curtis rule is used to control
     /// the singularity. Further away from the singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
-    #[allow(dead_assignment)]
+    #[allow(unused_assignments)]
     pub fn qawc<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, epsabs: f64, epsrel: f64, limit: u64,
         result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut result0 = 0f64;
@@ -1977,7 +1977,7 @@ impl IntegrationQawsTable {
     /// The adaptive bisection algorithm of QAG is used. When a subinterval contains one of the endpoints then a special 25-point modified
     /// Clenshaw-Curtis rule is used to control the singularities. For subintervals which do not include the endpoints an ordinary 15-point
     /// Gauss-Kronrod integration rule is used.
-    #[allow(dead_assignment)]
+    #[allow(unused_assignments)]
     pub fn qaws<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, workspace: &IntegrationWorkspace,
         result: &mut f64, abserr: &mut f64) -> enums::value::Value {
         let mut result0 = 0f64;
@@ -2620,7 +2620,7 @@ impl CquadWorkspace {
     /// 
     /// The subintervals and their results are stored in the memory provided by workspace. If the error estimate or the number of function
     /// evaluations is not needed, the pointers abserr and nevals can be set to NULL (not in rgsl).
-    #[allow(dead_assignment)]
+    #[allow(unused_assignments)]
     pub fn cquad<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, result: &mut f64, abserr: &mut f64,
         nevals: &mut u64) -> enums::value::Value {
         /* Some constants that we will need. */
@@ -3512,7 +3512,7 @@ unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
     (fabsf64(result) >= (1f64 - 50f64 * ::DBL_EPSILON) * resabs)
 }
 
-#[allow(unused_variable)]
+#[allow(unused_variables)]
 unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool {
     let id = (*workspace).nrmax;
 

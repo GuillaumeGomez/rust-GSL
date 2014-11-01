@@ -23,21 +23,21 @@ fn main() {
     let tmp = args.tail();
 
     if tmp.len() < 1 {
-        fail!("USAGE: ./wavelet_transforms [file]");
+        panic!("USAGE: ./wavelet_transforms [file]");
     }
 
     {
         let p = Path::new(tmp[0].as_slice());
         let mut f = match File::open_mode(&p, Open, Read) {
             Ok(f) => f,
-            Err(e) => fail!("file error: {}", e),
+            Err(e) => panic!("file error: {}", e),
         };
         for i in range(0u, N) {
             match f.read_be_f64() {
                 Ok(v) => {
                     data[i] = v;
                 }
-                Err(e) => fail!("Read error : {}", e),
+                Err(e) => panic!("Read error : {}", e),
             }
         }
     }
