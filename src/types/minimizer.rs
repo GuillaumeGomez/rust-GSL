@@ -103,7 +103,7 @@ fn compute_f_values<T>(f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum:
     safe_func_call(f, arg, x_upper, f_upper);
     safe_func_call(f, arg, x_minimum, f_minimum);
 
-    enums::value::Success
+    ::Value::Success
 }
 
 pub struct Minimizer<T> {
@@ -164,7 +164,7 @@ impl<T> Minimizer<T> {
 
         let status = compute_f_values(f, arg, x_minimum, &mut f_minimum, x_lower, &mut f_lower, x_upper, &mut f_upper);
 
-        if status != enums::value::Success {
+        if status != ::Value::Success {
             status
         } else {
             self.set_with_values(f, arg, x_minimum, f_minimum, x_lower, f_lower, x_upper, f_upper)
@@ -350,7 +350,7 @@ fn goldensection_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_m
     let state : &mut goldensection_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     state.dummy = 0f64;
-    enums::value::Success
+    ::Value::Success
 }
 
 #[allow(unused_variables)]
@@ -377,15 +377,15 @@ fn goldensection_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, 
     if f_new < f_min {
         *x_minimum = x_new;
         *f_minimum = f_new;
-        enums::value::Success
+        ::Value::Success
     } else if x_new < x_center && f_new > f_min {
         *x_lower = x_new;
         *f_lower = f_new;
-        enums::value::Success
+        ::Value::Success
     } else if x_new > x_center && f_new > f_min {
         *x_upper = x_new;
         *f_upper = f_new;
-        enums::value::Success
+        ::Value::Success
     } else {
         enums::value::Failure
     }
@@ -421,7 +421,7 @@ fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: 
     state.f_v = f_vw;
     state.f_w = f_vw;
 
-    enums::value::Success
+    ::Value::Success
 }
 
 #[allow(unused_assignments)]
@@ -518,7 +518,7 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
             *x_minimum = u;
             *f_minimum = f_u;
 
-            enums::value::Success
+            ::Value::Success
         } else {
             if u < z {
                 *x_lower = u;
@@ -534,14 +534,14 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
                 state.w = u;
                 state.f_w = f_u;
 
-                enums::value::Success
+                ::Value::Success
             } else if f_u <= f_v || v == z || v == w {
                 state.v = u;
                 state.f_v = f_u;
 
-                enums::value::Success
+                ::Value::Success
             } else {
-                enums::value::Success
+                ::Value::Success
             }
         }
     }
@@ -578,7 +578,7 @@ fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_min
     state.prev_stored_step = 0f64;
     state.num_iter = 0;
 
-    enums::value::Success
+    ::Value::Success
 }
 
 #[allow(unused_assignments)]
@@ -769,6 +769,6 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
         // This line is supposed to do nothing
         //DEBUG_PRINTF(("[%d] Final State: %g  %g  %g\n", state->num_iter, x_l, x_m, x_u));
 
-        enums::value::Success
+        ::Value::Success
     }
 }

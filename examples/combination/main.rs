@@ -17,7 +17,7 @@ fn main() {
         println!("size {}:", i);
         while tmp {
             println!("{}", c);
-            tmp = c.next() == rgsl::enums::value::Success;
+            tmp = c.next() == rgsl::Value::Success;
         }
     }
 }

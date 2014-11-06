@@ -27,8 +27,6 @@ Robert Sedgewick, Algorithms in C, Addison-Wesley, ISBN 0201514257.
 /// 
 /// The functions described in this section are defined in the header file gsl_heapsort.h.
 pub mod objects {
-    use enums;
-
     /// This function sorts the count elements of the array array, each of size size, into ascending order using the comparison function compare.
     /// The type of the comparison function is defined by,
     /// 
@@ -102,9 +100,9 @@ pub mod objects {
     /// function compare. The resulting permutation is stored in p, an array of length n. The elements of p give the index of the array element
     /// which would have been stored in that position if the array had been sorted in place. The first element of p gives the index of the
     /// least element in array, and the last element of p gives the index of the greatest element in array. The array itself is not changed.
-    pub fn heapsort_index<T>(p: &mut[u64], array: &[T], compare: ::comparison_fn<T>) -> enums::Value {
+    pub fn heapsort_index<T>(p: &mut[u64], array: &[T], compare: ::comparison_fn<T>) -> ::Value {
         if array.len() == 0 {
-            return enums::value::Success;
+            return ::Value::Success;
         }
         for tmp in range(0u64, array.len() as u64) {
             p[tmp as uint] = tmp;
@@ -121,7 +119,7 @@ pub mod objects {
             n -= 1;
             downheap_index(p, array, n, 0, compare);
         }
-        enums::value::Success
+        ::Value::Success
     }
 
     #[doc(hidden)]

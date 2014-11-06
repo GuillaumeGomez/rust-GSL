@@ -39,7 +39,7 @@ fn main() {
     println!("sqrt : {}", tmp_complex.sqrt());
 
     println!("\n=== Modules tests ===");
-    println!("Simple Airy::Ai test : {}", rgsl::airy::Ai(0.5f64, rgsl::enums::mode::PrecDouble));
+    println!("Simple Airy::Ai test : {}", rgsl::airy::Ai(0.5f64, rgsl::Mode::PrecDouble));
     println!("Simple Bessel::I0 test : {}", rgsl::bessel::I0(0.5f64));
     println!("Simple Legendre::conical test : {}", rgsl::legendre::conical::half(0.37f64, 1.2f64));
     println!("Simple Legendre::conical test : {}", rgsl::legendre::conical::half(0.37f64, 1.2f64));

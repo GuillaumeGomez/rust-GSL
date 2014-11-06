@@ -78,7 +78,7 @@ pub fn deriv_central<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result:
     }
     *result = r_0;
     *abs_err = error;
-    enums::value::Success
+    ::Value::Success
 }
 
 fn forward_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mut f64, abs_err_round: &mut f64, abs_err_trunc: &mut f64) {
@@ -131,7 +131,7 @@ pub fn deriv_forward<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result:
     }
     *result = r_0;
     *abs_err = error;
-    enums::value::Success
+    ::Value::Success
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an adaptive backward difference algorithm with a

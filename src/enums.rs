@@ -2,18 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-pub use self::mode::Mode;
-pub use self::value::Value;
-pub use self::eigen_sort::EigenSort;
-pub use self::fft_direction::FftDirection;
-pub use self::gauss_konrod_rule::GaussKonrodRule;
-pub use self::integration_qawo::IntegrationQawo;
-pub use self::vegas_mode::VegasMode;
-pub use self::odeiv::ODEiv;
-pub use self::wavelet_direction::WaveletDirection;
-
 pub mod mode {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     pub enum Mode {
         PrecDouble,
@@ -23,7 +13,7 @@ pub mod mode {
 }
 
 pub mod value {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     pub enum Value {
         Success = 0,
@@ -98,7 +88,7 @@ pub mod value {
 }
 
 pub mod eigen_sort {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     pub enum EigenSort {
         /// ascending order in numerical value
@@ -113,7 +103,7 @@ pub mod eigen_sort {
 }
 
 pub mod fft_direction {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     /// this gives the sign in the formula
     /// 
@@ -127,7 +117,7 @@ pub mod fft_direction {
 }
 
 pub mod gauss_konrod_rule {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     /// The low-level integration rules in QUADPACK are identified by small integers (1-6). We'll use symbolic constants to refer to them.
     pub enum GaussKonrodRule {
@@ -147,7 +137,7 @@ pub mod gauss_konrod_rule {
 }
 
 pub mod integration_qawo {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     /// Used by workspace for QAWO integrator
     pub enum IntegrationQawo {
@@ -157,7 +147,7 @@ pub mod integration_qawo {
 }
 
 pub mod vegas_mode {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     /// Used by VegasMonteCarlo struct
     pub enum VegasMode {
@@ -168,7 +158,7 @@ pub mod vegas_mode {
 }
 
 pub mod odeiv {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     /// Possible return values for an hadjust() evolution method for ordinary differential equations
     pub enum ODEiv {
@@ -182,7 +172,7 @@ pub mod odeiv {
 }
 
 pub mod wavelet_direction {
-    #[deriving(PartialEq, PartialOrd, Show)]
+    #[deriving(Clone, PartialEq, PartialOrd, Show)]
     #[repr(C)]
     pub enum WaveletDirection {
         Forward = 1,

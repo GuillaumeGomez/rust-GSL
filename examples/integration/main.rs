@@ -54,7 +54,7 @@ fn main() {
 
     println!("=== integration::qng ===");
     match rgsl::integration::qng(f, &mut params, xlow, xhigh, eps_abs, eps_rel, &mut result, &mut error, &mut n_eval) {
-        rgsl::enums::value::Success => {
+        rgsl::Value::Success => {
             println!("Result {} +/- {} from {} evaluations", result, error, n_eval);
         }
         e => {
@@ -65,8 +65,8 @@ fn main() {
     println!("\n=== IntegrationWorkspace.qag ===");
     let iw = rgsl::IntegrationWorkspace::new(5).unwrap();
 
-    match iw.qag(f, &mut params, xlow, xhigh, eps_abs, eps_rel, 1, rgsl::enums::gauss_konrod_rule::Gauss15, &mut result, &mut error) {
-        rgsl::enums::value::Success => {
+    match iw.qag(f, &mut params, xlow, xhigh, eps_abs, eps_rel, 1, rgsl::GaussKonrodRule::Gauss15, &mut result, &mut error) {
+        rgsl::Value::Success => {
             println!("Result {} +/- {}", result, error);
         }
         e => {
@@ -76,7 +76,7 @@ fn main() {
 
     println!("\n=== IntegrationWorkspace.qagi ===");
     match iw.qagi(f, &mut params, 1.0e-7f64, 0f64, iw.limit(), &mut result, &mut error) {
-        rgsl::enums::value::Success => {
+        rgsl::Value::Success => {
             println!("Result {} +/- {}", result, error);
         }
         e => {
@@ -90,7 +90,7 @@ fn main() {
         let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
 
         match t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &w, &mut result, &mut error) {
-            rgsl::enums::value::Success => {
+            rgsl::Value::Success => {
                 println!("Result {} +/- {}", result, error);
             }
             e => {
@@ -103,7 +103,7 @@ fn main() {
     let t = rgsl::CquadWorkspace::new(200).unwrap();
 
     match t.cquad(cqf1, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-12f64, &mut result, &mut error, &mut n_eval) {
-        rgsl::enums::value::Success => {
+        rgsl::Value::Success => {
             println!("Result {} +/- {} -> {}", result, error, n_eval);
         }
         e => {

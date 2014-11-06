@@ -80,7 +80,7 @@ impl ChebSeries {
                     self.data.as_mut_slice()[j as uint] = fac * sum;
                 }
             }
-            enums::value::Success
+            ::Value::Success
         }
     }
 

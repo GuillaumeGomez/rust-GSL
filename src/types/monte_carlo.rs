@@ -201,7 +201,7 @@ impl PlainMonteCarlo {
                 vol * sqrtf64(q / (calls as f64 * (calls as f64 - 1f64)))
             };
 
-            enums::value::Success
+            ::Value::Success
         }
     }
 }
@@ -337,7 +337,7 @@ impl MiserMonteCarlo {
 
                 *abserr = vol * sqrtf64(q / (calls as f64 * (calls as f64 - 1f64)));
 
-                return enums::value::Success;
+                return ::Value::Success;
             }
 
             let tmp = calls as f64 * (*self.s).estimate_frac;
@@ -448,7 +448,7 @@ impl MiserMonteCarlo {
 
                 let status = self.integrate(f, arg, xl.as_slice(), xu_tmp.as_slice(), calls_l, r, &mut res_l, &mut err_l);
 
-                if status != enums::value::Success {
+                if status != ::Value::Success {
                     return status;
                 }
             }
@@ -471,7 +471,7 @@ impl MiserMonteCarlo {
 
                 let status = self.integrate(f, arg, xl_tmp.as_slice(), xu, calls_r, r, &mut res_r, &mut err_r);
 
-                if status != enums::value::Success {
+                if status != ::Value::Success {
                     return status;
                 }
             }
@@ -479,7 +479,7 @@ impl MiserMonteCarlo {
             *result = res_l + res_r;
             *abserr = sqrtf64(err_l * err_l + err_r * err_r);
 
-            enums::value::Success
+            ::Value::Success
         }
     }
 }
@@ -604,7 +604,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
             *abserr = vol * sqrtf64(q / (calls as f64 * (calls as f64 - 1f64)));
         }
 
-        enums::value::Success
+        ::Value::Success
     }
 }
 
@@ -921,7 +921,7 @@ impl VegasMonteCarlo {
             *result = cum_int;
             *abserr = cum_sig;
 
-            enums::value::Success
+            ::Value::Success
         }
     }
 

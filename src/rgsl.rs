@@ -141,40 +141,28 @@ pub use types::{
     //MultiFitFdfSolverType
 };
 
-pub use enums::{
-    Mode,
-    Value,
-    EigenSort,
-    FftDirection,
-    GaussKonrodRule,
-    IntegrationQawo,
-    VegasMode,
-    ODEiv,
-    WaveletDirection
-};
-
-pub use enums::{
-    mode,
-    value,
-    eigen_sort,
-    fft_direction,
-    gauss_konrod_rule,
-    integration_qawo,
-    vegas_mode,
-    odeiv,
-    wavelet_direction
-};
-
 pub use elementary::Elementary;
 pub use pow::Pow;
 pub use trigonometric::Trigonometric;
 pub use types::rng;
 
+// enums part
+pub use self::enums::mode::Mode;
+pub use self::enums::value::Value;
+pub use self::enums::eigen_sort::EigenSort;
+pub use self::enums::fft_direction::FftDirection;
+pub use self::enums::gauss_konrod_rule::GaussKonrodRule;
+pub use self::enums::integration_qawo::IntegrationQawo;
+pub use self::enums::vegas_mode::VegasMode;
+pub use self::enums::odeiv::ODEiv;
+pub use self::enums::wavelet_direction::WaveletDirection;
+
 mod ffi;
 mod macros;
+mod enums;
+
 pub mod randist;
 pub mod types;
-pub mod enums;
 
 pub mod airy;
 pub mod bessel;

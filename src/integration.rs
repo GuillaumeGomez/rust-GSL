@@ -349,7 +349,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 21;
-        return enums::value::Success;
+        return ::Value::Success;
     }
 
     // compute the integral using the 43-point formula.
@@ -375,7 +375,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 43;
-        return enums::value::Success;
+        return ::Value::Success;
     }
 
     // compute the integral using the 87-point formula.
@@ -398,7 +398,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 87;
-        return enums::value::Success;
+        return ::Value::Success;
     }
 
     // failed to converge
@@ -964,7 +964,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
                 *result = 0f64;
                 *abserr = 0f64;
 
-                return enums::value::Success;
+                return ::Value::Success;
             }  else {
                 /* The function cos(w x) f(x) is always f(x) for w = 0 */
                 return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit, result, abserr);
@@ -1027,11 +1027,11 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
                 correc = error1;
             }
 
-            if status != enums::value::Success {
+            if status != ::Value::Success {
                 eps = initial_eps.max(correc * (1f64 - p));
             }
 
-            if status != enums::value::Success && total_error < 10f64 * correc && iteration > 3 {
+            if status != ::Value::Success && total_error < 10f64 * correc && iteration > 3 {
                 *result = area;
                 *abserr = total_error;
                 return ::types::integration::return_error(error_type);
@@ -1082,7 +1082,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         *abserr = err_ext;
 
         if error_type == 0 {
-            return enums::value::Success;
+            return ::Value::Success;
         }
 
         if res_ext != 0f64 && area != 0f64 {

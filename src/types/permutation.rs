@@ -109,7 +109,7 @@ impl Permutation {
     /// This function checks that the permutation p is valid. The n elements should contain each of the numbers 0 to n-1 once and only once.
     pub fn is_valid(&self) -> bool {
         match unsafe { ffi::gsl_permutation_valid(self.p as *const ffi::gsl_permutation) } {
-            enums::value::Success => true,
+            ::Value::Success => true,
             _ => false
         }
     }

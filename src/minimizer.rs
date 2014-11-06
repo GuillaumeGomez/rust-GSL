@@ -6,7 +6,7 @@ use ffi;
 use enums;
 
 /// This function tests for the convergence of the interval [x_lower, x_upper] with absolute error epsabs and relative error epsrel. The 
-/// test returns enums::value::Success if the following condition is achieved,
+/// test returns ::Value::Success if the following condition is achieved,
 /// 
 /// |a - b| < epsabs + epsrel min(|a|,|b|) 
 /// when the interval x = [a,b] does not include the origin. If the interval includes the origin then \min(|a|,|b|) is replaced by zero (

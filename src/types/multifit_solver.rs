@@ -398,7 +398,7 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> enums::value::Value {
         }
     };
 
-    enums::value::Success
+    ::Value::Success
 }
 
 fn lmder_free(state: &mut LmderStateT) {
@@ -517,7 +517,7 @@ fn set(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF6
             gsl_multifit_fdfsolver_dif_fdf(x, fdf, f, J)
         };
 
-        if status != enums::value::Success {
+        if status != ::Value::Success {
             return status;
         }
     }
@@ -556,7 +556,7 @@ fn set(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF6
     printf("tau = "); gsl_vector_fprintf(stdout, tau, "%g");
     #endif*/
 
-    enums::value::Success
+    ::Value::Success
 }
 
 fn free() {
@@ -654,7 +654,7 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
     let mut p0001 = 0.0001f64;
 
     if state.fnorm == 0f64 {
-        return enums::value::Success;
+        return ::Value::Success;
     }
 
     /* Compute qtf = Q^T f */
@@ -680,7 +680,7 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
         {
             let status = lmpar(r, perm, qtf, diag, state.delta, &mut (state.par), newton, gradient, sdiag, dx, w);
 
-            if status != enums::value::Success {
+            if status != ::Value::Success {
                 return status;
             }
         }
@@ -707,7 +707,7 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
         {
             let status = fdf.f(x_trial, f.params, f_trial);
             
-            if status != enums::value::Success {
+            if status != ::Value::Success {
                 return status;
             }
         }
@@ -803,7 +803,7 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
                     gsl_multifit_fdfsolver_dif_df(x_trial, fdf, f_trial, j)
                 };
 
-                if status != enums::value::Success {
+                if status != ::Value::Success {
                     return status;
                 }
             }
@@ -825,7 +825,7 @@ fn iterate(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut Vector
                 ::linear_algebra::QRPT_decomp(r, tau, perm, &mut signum, work1);
             }
 
-            return enums::value::Success;
+            return ::Value::Success;
         } else if actred.fabs() <= ::DBL_EPSILON  && prered <= ::DBL_EPSILON  && p5 * ratio <= 1f64 {
             return enums::value::TolF;
         } else if state.delta <= ::DBL_EPSILON * state.xnorm {

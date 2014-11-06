@@ -23,7 +23,7 @@ level of the transform.
 /// where the first element is the smoothing coefficient s_{-1,0}, followed by the detail coefficients d_{j,k} for each level j. The
 /// backward transform inverts these coefficients to obtain the original data.
 /// 
-/// These functions return a status of enums::value::Success upon successful completion. ::Inval is returned if n is not an integer power of
+/// These functions return a status of ::Value::Success upon successful completion. ::Inval is returned if n is not an integer power of
 /// 2 or if insufficient workspace is provided.
 pub mod one_dimension {
     use ffi;
@@ -68,7 +68,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     /// 
-    /// The functions return a status of enums::value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
+    /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     pub fn transform(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, dir: ::WaveletDirection,
         work: &::WaveletWorkspace) -> enums::value::Value {
@@ -82,7 +82,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     /// 
-    /// The functions return a status of enums::value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
+    /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     pub fn transform_forward(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_transform_forward(ffi::FFI::unwrap(w) as *const ffi::gsl_wavelet, data.as_mut_ptr(), tda, size1, size2,
@@ -95,7 +95,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     /// 
-    /// The functions return a status of enums::value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
+    /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     pub fn transform_inverse(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_transform_inverse(ffi::FFI::unwrap(w) as *const ffi::gsl_wavelet, data.as_mut_ptr(), tda, size1, size2,

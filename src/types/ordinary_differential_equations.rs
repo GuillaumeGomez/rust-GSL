@@ -144,7 +144,7 @@ impl ODEiv2Step {
     /// if it is not null.
     /// 
     /// The stepping function returns enums::value::Failure if it is unable to compute the requested step. Also, if the user-supplied functions defined
-    /// in the system sys return a status other than enums::value::Success the step will be aborted. In that case, the elements of y will be restored
+    /// in the system sys return a status other than ::Value::Success the step will be aborted. In that case, the elements of y will be restored
     /// to their pre-step values and the error code from the user-supplied function will be returned. Failure may be due to a singularity in
     /// the system or too large step-size h. In that case the step should be attempted again with a smaller step-size, e.g. h/2.
     /// 
@@ -502,8 +502,8 @@ impl ODEiv2Evolve {
     /// return code. In this case the user must call gsl_odeiv2_step_reset and gsl_odeiv2_evolve_reset before calling this function again.
     /// 
     /// Otherwise, if the user-supplied functions defined in the system sys or the stepping function step return a status other than
-    /// enums::value::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
-    /// ::Failuer is returned if the user functions returned enums::value::Success. Otherwise the value returned by user function is returned.
+    /// ::Value::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
+    /// ::Failuer is returned if the user functions returned ::Value::Success. Otherwise the value returned by user function is returned.
     /// If no acceptable step can be made, t and y will be restored to their pre-step values and h contains the final attempted step-size.
     /// 
     /// If the step is successful the function returns a suggested step-size for the next step in h. The maximum time t1 is guaranteed not

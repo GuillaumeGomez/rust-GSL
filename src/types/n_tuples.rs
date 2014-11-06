@@ -109,7 +109,7 @@ impl<T> NTuples<T> {
                 }
             }
 
-            enums::value::Success
+            ::Value::Success
         }
     }
 }

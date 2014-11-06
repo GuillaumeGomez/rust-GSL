@@ -9,7 +9,7 @@ use libc::c_void;
 use std::c_vec::CVec;
 
 #[allow(unused_variables)]
-fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::enums::value::Value {
+fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::Value {
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);
         let mut f = CVec::new(t_f, 2);
@@ -17,12 +17,12 @@ fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::en
         
         f.as_mut_slice()[0] = y.as_slice()[1];
         f.as_mut_slice()[1] = -y.as_slice()[0] - *mu * y.as_slice()[1] * (y.as_slice()[0] *y.as_slice()[0] - 1f64);
-        rgsl::enums::value::Success
+        rgsl::Value::Success
     }
 }
 
 #[allow(unused_variables)]
-fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut c_void) -> rgsl::enums::value::Value {
+fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut c_void) -> rgsl::Value {
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);
         let mut dfdy = CVec::new(t_dfdy, 4);
@@ -37,7 +37,7 @@ fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut
         m.set(1, 1, -*mu * (y.as_slice()[0] * y.as_slice()[0] - 1f64));
         dfdt.as_mut_slice()[0] = 0f64;
         dfdt.as_mut_slice()[1] = 0f64;
-        rgsl::enums::value::Success
+        rgsl::Value::Success
     }
 }
 
@@ -59,7 +59,7 @@ fn main() {
         let ti = i as f64 * t1 / 100f64;
 
         match d.apply(&mut t, ti, y) {
-            rgsl::enums::value::Success => {}
+            rgsl::Value::Success => {}
             e => {
                 println!("error, return value={}", e);
                 break

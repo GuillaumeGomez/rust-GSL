@@ -1544,7 +1544,7 @@ impl IntegrationWorkspace {
                 *result = sign * result0;
                 *abserr = abserr0;
 
-                return enums::value::Success;
+                return ::Value::Success;
             } else if limit == 1 {
                 *result = sign * result0;
                 *abserr = abserr0;
@@ -1635,7 +1635,7 @@ impl IntegrationWorkspace {
             *abserr = errsum;
 
             if errsum <= tolerance {
-              enums::value::Success
+              ::Value::Success
             } else if error_type == 2 {
                 rgsl_error!("roundoff error prevents tolerance from being achieved", enums::value::Round);
                 enums::value::Round
@@ -2041,7 +2041,7 @@ impl IntegrationQawsTable {
                 *result = result0;
                 *abserr = abserr0;
 
-                return enums::value::Success;
+                return ::Value::Success;
             } else if limit == 1 {
                 *result = result0;
                 *abserr = abserr0;
@@ -2123,7 +2123,7 @@ impl IntegrationQawsTable {
             *abserr = errsum;
 
             if errsum <= tolerance {
-                enums::value::Success
+                ::Value::Success
             } else if error_type == 2 {
                 rgsl_error!("roundoff error prevents tolerance from being achieved", enums::value::Round);
                 enums::value::Round
@@ -2278,7 +2278,7 @@ impl IntegrationQawoTable {
                 *result = result0;
                 *abserr = abserr0;
 
-                return enums::value::Success;
+                return ::Value::Success;
             } else if limit == 1 {
                 *result = result0;
                 *abserr = abserr0;
@@ -3081,7 +3081,7 @@ impl CquadWorkspace {
             *nevals = neval as u64;
 
             /* All is well that ends well. */
-            enums::value::Success
+            ::Value::Success
         }
     }
 }
@@ -3258,7 +3258,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
         *result = result0;
         *abserr = abserr0;
 
-        return enums::value::Success;
+        return ::Value::Success;
     } else if limit == 1 {
         *result = result0;
         *abserr = abserr0;
@@ -3337,7 +3337,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
     *abserr = errsum;
 
     if errsum <= tolerance {
-        enums::value::Success
+        ::Value::Success
     } else if error_type == 2 {
         rgsl_error!("roundoff error prevents tolerance from being achieved", enums::value::Round);
         enums::value::Round
@@ -3567,7 +3567,7 @@ pub unsafe fn return_error(t_error_type: i32) -> enums::value::Value {
     };
 
     match error_type {
-        0 => enums::value::Success,
+        0 => ::Value::Success,
         1 => {
             rgsl_error!("number of iterations was insufficient", enums::value::MaxIter);
             enums::value::MaxIter
@@ -3650,7 +3650,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         *result = result0;
         *abserr = abserr0;
 
-        return enums::value::Success;
+        return ::Value::Success;
     } else if limit == 1 {
         *result = result0;
         *abserr = abserr0;
@@ -3999,7 +3999,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         *result = result0;
         *abserr = abserr0;
 
-        return enums::value::Success;
+        return ::Value::Success;
     } else if limit == 1 {
         *result = result0;
         *abserr = abserr0;

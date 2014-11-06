@@ -115,14 +115,14 @@ impl MultiSet {
         unsafe { ffi::gsl_multiset_valid(self.c) }
     }
 
-    /// This function advances the multiset self to the next multiset element in lexicographic order and returns enums::value::Success. If no
+    /// This function advances the multiset self to the next multiset element in lexicographic order and returns ::Value::Success. If no
     /// further multisets elements are available it returns enums::value::Failure and leaves self unmodified. Starting with the first multiset and
     /// repeatedly applying this function will iterate through all possible multisets of a given order.
     pub fn next(&self) -> enums::value::Value {
         unsafe { ffi::gsl_multiset_next(self.c) }
     }
 
-    /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning enums::value::Success.
+    /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning ::Value::Success.
     /// If no previous multiset is available it returns enums::value::Failure and leaves self unmodified.
     pub fn prev(&self) -> enums::value::Value {
         unsafe { ffi::gsl_multiset_prev(self.c) }
