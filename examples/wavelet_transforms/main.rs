@@ -10,6 +10,7 @@ extern crate rgsl;
 use std::io::{File, Open, Read};
 use rgsl::{wavelet_transforms, sort};
 use std::os;
+use std::num::Float;
 
 pub const N : uint = 256;
 pub const NC : uint = 20;

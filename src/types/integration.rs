@@ -8,6 +8,8 @@ use ffi;
 use enums;
 use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use std::c_vec::CVec;
+use std::num::FloatMath;
+use std::num::Float;
 
 static XI : [f64, ..33] = [
   -1f64, -0.99518472667219688624f64, -0.98078528040323044912f64,

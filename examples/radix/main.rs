@@ -9,6 +9,8 @@
 
 extern crate rgsl;
 
+use std::num::Float;
+
 fn main() {
     /* Part 1 */
     println!("=== PART 1 ===");

@@ -83,6 +83,7 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 use ffi;
 use enums;
 use std::intrinsics::{fabsf64, powf64, floorf64};
+use std::num::FloatMath;
 
 fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
     let mut t_err = unsafe { fabsf64(err) };

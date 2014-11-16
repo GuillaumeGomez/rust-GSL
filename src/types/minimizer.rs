@@ -82,6 +82,7 @@ use ffi;
 use libc::{c_void, malloc, free};
 use enums;
 use std::intrinsics::{fabsf64, sqrtf64};
+use std::num::Float;
 
 static REL_ERR_VAL    : f64 = 1.0e-06f64;
 static ABS_ERR_VAL    : f64 = 1.0e-10f64;

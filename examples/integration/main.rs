@@ -5,6 +5,7 @@
 extern crate rgsl;
 
 use std::intrinsics::{sinf64, logf64, expf64};
+use std::num::Float;
 
 struct FParams {
     // Amplitude

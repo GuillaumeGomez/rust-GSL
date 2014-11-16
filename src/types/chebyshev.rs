@@ -28,6 +28,7 @@ use ffi;
 use enums;
 use std::c_vec::CVec;
 use std::f64::consts::PI;
+use std::num::FloatMath;
 
 pub struct ChebSeries {
     c: *mut ffi::gsl_cheb_series,
