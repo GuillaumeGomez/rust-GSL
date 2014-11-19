@@ -114,7 +114,7 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
 /// are designed in such a way that each rule uses all the results of its predecessors, in order to minimize the total number of function
 /// evaluations.
 pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_rel: f64, result: &mut f64, abs_err: &mut f64,
-    n_eval: &mut u64) -> enums::value::Value {
+    n_eval: &mut u64) -> ::Value {
     let half_length = 0.5f64 * (b - a);
     let abs_half_length = unsafe { fabsf64(half_length) };
     let center = 0.5f64 * (b + a);
@@ -131,11 +131,11 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
 
             "tolerance cannot be achieved with given eps_abs and eps_rel".with_c_str(|c_str|{
                 file.with_c_str(|c_file|{
-                    ffi::gsl_error(c_str, c_file, line!() as i32, enums::value::BadTol as i32)
+                    ffi::gsl_error(c_str, c_file, line!() as i32, ::Value::BadTol as i32)
                 });
             });
         }
-        return enums::value::BadTol;
+        return ::Value::BadTol;
     }
 
     // w21b, weights of the 21-point formula for abscissae x2
@@ -406,8 +406,8 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     *result = result_kronrod;
     *abs_err = err;
     *n_eval = 87;
-    rgsl_error!("failed to reach tolerance with highest-order rule", enums::value::Tol);
-    enums::value::Tol
+    rgsl_error!("failed to reach tolerance with highest-order rule", ::Value::Tol);
+    ::Value::Tol
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80 decimal digit arithmetic by L. W.
@@ -951,16 +951,16 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         *abserr = 0f64;
 
         if limit > (*ffi::FFI::unwrap(workspace)).limit {
-            rgsl_error!("iteration limit exceeds available workspace", enums::value::Inval);
+            rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
         }
 
         /* Test on accuracy */
         if epsabs <= 0f64 {
-            rgsl_error!("absolute tolerance epsabs must be positive", enums::value::BadTol);
+            rgsl_error!("absolute tolerance epsabs must be positive", ::Value::BadTol);
         }
 
         if omega == 0f64 {
-            if (*ffi::FFI::unwrap(wf)).sine == enums::integration_qawo::Sine {
+            if (*ffi::FFI::unwrap(wf)).sine == ::IntegrationQawo::Sine {
                 /* The function sin(w x) f(x) is always zero for w = 0 */
                 *result = 0f64;
                 *abserr = 0f64;

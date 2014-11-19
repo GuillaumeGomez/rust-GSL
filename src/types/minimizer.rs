@@ -80,7 +80,6 @@ somewhere in the interval. If a valid initial interval is used then these algori
 
 use ffi;
 use libc::{c_void, malloc, free};
-use enums;
 use std::intrinsics::{fabsf64, sqrtf64};
 use std::num::Float;
 
@@ -94,12 +93,12 @@ static GOLDEN_MEAN    : f64 = 0.3819660112501052f64;
 fn safe_func_call<T>(f: ::function<T>, arg: &mut T, x: f64, yp: &mut f64) {
     *yp = f(x, arg);
     if !yp.is_finite() {
-        rgsl_error!("computed function value is infinite or NaN", enums::value::BadFunc);
+        rgsl_error!("computed function value is infinite or NaN", ::Value::BadFunc);
     }
 }
 
 fn compute_f_values<T>(f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: &mut f64, x_lower: f64, f_lower: &mut f64,
-    x_upper: f64, f_upper: &mut f64) -> enums::value::Value {
+    x_upper: f64, f_upper: &mut f64) -> ::Value {
     safe_func_call(f, arg, x_lower, f_lower);
     safe_func_call(f, arg, x_upper, f_upper);
     safe_func_call(f, arg, x_minimum, f_minimum);
@@ -157,8 +156,8 @@ impl<T> Minimizer<T> {
     /// This function sets, or resets, an existing minimizer s to use the function f and the initial search interval [x_lower, x_upper], with
     /// a guess for the location of the minimum x_minimum.
     /// 
-    /// If the interval given does not contain a minimum, then the function returns an error code of enums::value::Inval.
-    pub fn set(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, x_lower: f64, x_upper: f64) -> enums::value::Value {
+    /// If the interval given does not contain a minimum, then the function returns an error code of ::Value::Inval.
+    pub fn set(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, x_lower: f64, x_upper: f64) -> ::Value {
         let mut f_minimum = 0f64;
         let mut f_lower = 0f64;
         let mut f_upper = 0f64;
@@ -175,7 +174,7 @@ impl<T> Minimizer<T> {
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower and f_upper instead of computing
     /// f(x_minimum), f(x_lower) and f(x_upper).
     pub fn set_with_values(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64,
-        x_upper: f64, f_upper: f64) -> enums::value::Value {
+        x_upper: f64, f_upper: f64) -> ::Value {
         self.function = Some(f);
         self.arg = unsafe { Some(::std::mem::transmute(arg)) };
         self.x_minimum = x_minimum;
@@ -183,11 +182,11 @@ impl<T> Minimizer<T> {
         self.x_upper = x_upper;
 
         if x_lower > x_upper {
-            rgsl_error!("invalid interval (lower > upper)", enums::value::Inval);
+            rgsl_error!("invalid interval (lower > upper)", ::Value::Inval);
         }
 
         if x_minimum >= x_upper || x_minimum <= x_lower {
-            rgsl_error!("x_minimum must lie inside interval (lower < x < upper)", enums::value::Inval);
+            rgsl_error!("x_minimum must lie inside interval (lower < x < upper)", ::Value::Inval);
         }
 
         self.f_upper = f_upper;
@@ -195,7 +194,7 @@ impl<T> Minimizer<T> {
         self.f_lower = f_lower;
 
         if f_minimum >= f_lower || f_minimum >= f_upper {
-            rgsl_error!("endpoints do not enclose a minimum", enums::value::Inval);
+            rgsl_error!("endpoints do not enclose a minimum", ::Value::Inval);
         }
 
         unsafe {
@@ -251,15 +250,15 @@ impl<T> Minimizer<T> {
     /// This function performs a single iteration of the minimizer s. If the iteration encounters an unexpected problem then an error code
     /// will be returned,
     /// 
-    /// enums::value::BadFunc
+    /// ::Value::BadFunc
     /// the iteration encountered a singular point where the function evaluated to Inf or NaN.
     /// 
-    /// enums::value::Failure
+    /// ::Value::Failure
     /// the algorithm could not improve the current best approximation or bounding interval.
     /// 
     /// The minimizer maintains a current best estimate of the position of the minimum at all times, and the current interval bounding the
     /// minimum. This information can be accessed with the following auxiliary functions,
-    pub fn iterate(&mut self) -> enums::value::Value {
+    pub fn iterate(&mut self) -> ::Value {
         unsafe {
             (self.type_.iterate)(self.state, self.function.unwrap(), ::std::mem::transmute(self.arg.unwrap()), &mut self.x_minimum,
                 &mut self.f_minimum, &mut self.x_lower, &mut self.f_lower, &mut self.x_upper, &mut self.f_upper)
@@ -279,9 +278,9 @@ pub struct MinimizerType<T> {
     pub name: String,
     size: u64,
     set: fn(state: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
-        f_upper: f64) -> enums::value::Value,
+        f_upper: f64) -> ::Value,
     iterate: fn(state: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-        f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value
+        f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value
 }
 
 impl<T> MinimizerType<T> {
@@ -347,7 +346,7 @@ struct goldensection_state_t {
 
 #[allow(unused_variables)]
 fn goldensection_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64,
-    x_upper: f64, f_upper: f64) -> enums::value::Value {
+    x_upper: f64, f_upper: f64) -> ::Value {
     let state : &mut goldensection_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     state.dummy = 0f64;
@@ -356,7 +355,7 @@ fn goldensection_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_m
 
 #[allow(unused_variables)]
 fn goldensection_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value {
+    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value {
     let x_center = *x_minimum;
     let x_left = *x_lower;
     let x_right = *x_upper;
@@ -388,7 +387,7 @@ fn goldensection_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, 
         *f_upper = f_new;
         ::Value::Success
     } else {
-        enums::value::Failure
+        ::Value::Failure
     }
 }
 
@@ -403,7 +402,7 @@ struct brent_state_t {
 
 #[allow(unused_variables)]
 fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
-    f_upper: f64) -> enums::value::Value {
+    f_upper: f64) -> ::Value {
     let state : &mut brent_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     /* golden = (3 - sqrt(5))/2 */
@@ -427,7 +426,7 @@ fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: 
 
 #[allow(unused_assignments)]
 fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value {
+    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value {
     unsafe {
         let state : &mut brent_state_t = ::std::mem::transmute(vstate);
 
@@ -561,7 +560,7 @@ struct quad_golden_state_t {
 
 #[allow(unused_variables)]
 fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
-    f_upper: f64) -> enums::value::Value {
+    f_upper: f64) -> ::Value {
     let state : &mut quad_golden_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     /* For the original behavior, the first value for x_minimum_minimum
@@ -584,7 +583,7 @@ fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_min
 
 #[allow(unused_assignments)]
 fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> enums::value::Value {
+    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value {
     unsafe {
         let state : &mut quad_golden_state_t = ::std::mem::transmute(vstate);
 

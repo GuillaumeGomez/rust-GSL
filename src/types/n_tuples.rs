@@ -101,7 +101,7 @@ impl<T> NTuples<T> {
                 }
               
                 if nread != 1 {
-                    rgsl_error!("failed to read ntuple for projection", enums::value::Failed);
+                    rgsl_error!("failed to read ntuple for projection", ::Value::Failed);
                 }
 
                 if select_func(::std::mem::transmute((*self.n).ntuple_data), select_arg) {

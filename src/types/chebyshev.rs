@@ -55,8 +55,8 @@ impl ChebSeries {
     /// computation of the Chebyshev approximation is an O(n^2) process, and requires n function evaluations.
     pub fn init<T>(&mut self, func: ::function<T>, a: f64, b: f64, param: &mut T) -> enums::value::Value {
         if a >= b {
-            rgsl_error!("null function interval [a,b]", enums::value::Dom);
-            enums::value::Failure
+            rgsl_error!("null function interval [a,b]", ::Value::Dom);
+            ::Value::Failure
         } else {
             unsafe {
                 (*self.c).a = a;

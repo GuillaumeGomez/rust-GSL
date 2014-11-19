@@ -111,7 +111,6 @@ The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
 use ffi;
-use enums;
 use std::f64::INFINITY;
 use std::intrinsics::{sqrtf64, powf64, fabsf64, floorf64, logf64};
 use std::c_vec::CVec;
@@ -139,7 +138,7 @@ impl PlainMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
-    pub fn init(&self) -> enums::value::Value {
+    pub fn init(&self) -> ::Value {
         unsafe { ffi::gsl_monte_plain_init(self.s) }
     }
 
@@ -148,7 +147,7 @@ impl PlainMonteCarlo {
     /// calls, and obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied.
     /// The result of the integration is returned in result, with an estimated absolute error abserr.
     pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], calls: u64, r: &::Rng, result: &mut f64,
-        abserr: &mut f64) -> enums::value::Value {
+        abserr: &mut f64) -> ::Value {
         unsafe {
             let mut m = 0f64;
             let mut q = 0f64;
@@ -157,16 +156,16 @@ impl PlainMonteCarlo {
             let x = t_x.as_mut_slice();
 
             if xl.len() != dim || xu.len() != dim {
-                rgsl_error!("number of dimensions must match allocated size", enums::value::Inval);
+                rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
             for i in range(0u, dim as uint) {
                 if xu[i] <= xl[i] {
-                    rgsl_error!("xu must be greater than xl", enums::value::Inval);
+                    rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
 
                 if xu[i] - xl[i] > ::DBL_MAX {
-                    rgsl_error!("Range of integration is too large, please rescale", enums::value::Inval);
+                    rgsl_error!("Range of integration is too large, please rescale", ::Value::Inval);
                 }
             }
 
@@ -245,7 +244,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
-    pub fn init(&self) -> enums::value::Value {
+    pub fn init(&self) -> ::Value {
         unsafe { ffi::gsl_monte_miser_init(self.s) }
     }
 
@@ -255,7 +254,7 @@ impl MiserMonteCarlo {
     /// of the integration is returned in result, with an estimated absolute error abserr.
     #[allow(unused_assignments)]
     pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: u64, r: &::Rng, result: &mut f64,
-        abserr: &mut f64) -> enums::value::Value {
+        abserr: &mut f64) -> ::Value {
         unsafe {
             let mut calls = t_calls;
             let mut calls_l = 0u64;
@@ -285,21 +284,21 @@ impl MiserMonteCarlo {
             let sigma_r = t_sigma_r.as_mut_slice();
 
             if dim != xl.len() || dim != xu.len() {
-                rgsl_error!("number of dimensions must match allocated size", enums::value::Inval);
+                rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
             for i in range(0u, dim) {
                 if xu[i] <= xl[i] {
-                    rgsl_error!("xu must be greater than xl", enums::value::Inval);
+                    rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
 
                 if xu[i] - xl[i] > ::DBL_MAX {
-                    rgsl_error!("Range of integration is too large, please rescale", enums::value::Inval);
+                    rgsl_error!("Range of integration is too large, please rescale", ::Value::Inval);
                 }
             }
 
             if (*self.s).alpha < 0f64 {
-                rgsl_error!("alpha must be non-negative", enums::value::Inval);
+                rgsl_error!("alpha must be non-negative", ::Value::Inval);
             }
 
             /* Compute volume */
@@ -314,7 +313,7 @@ impl MiserMonteCarlo {
                 let mut q = 0f64;
 
                 if calls < 2 {
-                    rgsl_error!("insufficient calls for subvolume", enums::value::Failed);
+                    rgsl_error!("insufficient calls for subvolume", ::Value::Failed);
                 }
 
                 for n in range(0u, calls as uint) {
@@ -348,7 +347,7 @@ impl MiserMonteCarlo {
             };
 
             if estimate_calls < dim as u64 * 4u64 {
-                rgsl_error!("insufficient calls to sample all halfspaces", enums::value::Sanity);
+                rgsl_error!("insufficient calls to sample all halfspaces", ::Value::Sanity);
             }
 
             /* Flip coins to bisect the integration region with some fuzz */
@@ -396,10 +395,10 @@ impl MiserMonteCarlo {
                         }
                     } else {
                         if sigma_l[i] < 0f64 {
-                            rgsl_error!("no points in left-half space!", enums::value::Sanity);
+                            rgsl_error!("no points in left-half space!", ::Value::Sanity);
                         }
                         if sigma_r[i] < 0f64 {
-                            rgsl_error!("no points in right-half space!", enums::value::Sanity);
+                            rgsl_error!("no points in right-half space!", ::Value::Sanity);
                         }
                     }
                 }
@@ -504,7 +503,7 @@ impl ffi::FFI<ffi::gsl_monte_miser_state> for MiserMonteCarlo {
 }
 
 fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], calls: u64, r: &::Rng, state: &MiserMonteCarlo,
-    result: &mut f64, abserr: &mut f64, xmid: &[f64], sigma_l: &mut [f64], sigma_r: &mut [f64]) -> enums::value::Value {
+    result: &mut f64, abserr: &mut f64, xmid: &[f64], sigma_l: &mut [f64], sigma_r: &mut [f64]) -> ::Value {
     unsafe {
         let dim = (*state.s).dim as uint;
         let mut t_x = CVec::new((*state.s).x, dim);
@@ -640,7 +639,7 @@ impl Default for VegasParams {
             alpha: 1.5f64,
             iterations: 5u64,
             stage: 0i32,
-            mode: enums::vegas_mode::Importance,
+            mode: ::VegasMode::Importance,
             verbose: 0i32,
             ostream: ::std::ptr::null_mut()
         }
@@ -667,7 +666,7 @@ impl VegasMonteCarlo {
     }
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
-    pub fn init(&self) -> enums::value::Value {
+    pub fn init(&self) -> ::Value {
         unsafe { ffi::gsl_monte_vegas_init(self.s) }
     }
 
@@ -678,22 +677,22 @@ impl VegasMonteCarlo {
     /// average of independent samples. The chi-squared per degree of freedom for the weighted average is returned via the state struct
     /// component, s->chisq, and must be consistent with 1 for the weighted average to be reliable.
     pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: u64, r: &::Rng, result: &mut f64,
-        abserr: &mut f64) -> enums::value::Value {
+        abserr: &mut f64) -> ::Value {
         unsafe {
             let mut calls = t_calls;
             let dim = (*self.s).dim as uint;
 
             if xl.len() != dim || xu.len() != dim {
-                rgsl_error!("number of dimensions must match allocated size", enums::value::Inval);
+                rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
             for i in range(0u, dim) {
                 if xu[i] <= xl[i] {
-                    rgsl_error!("xu must be greater than xl", enums::value::Inval);
+                    rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
 
                 if xu[i] - xl[i] > ::DBL_MAX {
-                    rgsl_error!("Range of integration is too large, please rescale", enums::value::Inval);
+                    rgsl_error!("Range of integration is too large, please rescale", ::Value::Inval);
                 }
             }
 
@@ -719,10 +718,10 @@ impl VegasMonteCarlo {
                 let mut bins = (*self.s).bins_max;
                 let mut boxes = 1u64;
 
-                if (*self.s).mode != enums::vegas_mode::ImportanceOnly {
+                if (*self.s).mode != ::VegasMode::ImportanceOnly {
                     /* shooting for 2 calls/box */
                     boxes = floorf64(powf64(calls as f64 / 2f64, 1f64 / dim as f64)) as u64;
-                    (*self.s).mode = enums::vegas_mode::Importance;
+                    (*self.s).mode = ::VegasMode::Importance;
 
                     if 2 * boxes >= (*self.s).bins_max {
                         /* if bins/box < 2 */
@@ -733,7 +732,7 @@ impl VegasMonteCarlo {
                         bins = if tmp2 < (*self.s).bins_max { tmp2 } else { (*self.s).bins_max };
                         boxes = box_per_bin * bins;
 
-                        (*self.s).mode = enums::vegas_mode::Stratified;
+                        (*self.s).mode = ::VegasMode::Stratified;
                     }
                 }
 
@@ -808,7 +807,7 @@ impl VegasMonteCarlo {
                             q += d * d * (k as f64 / (k as f64 + 1f64));
                         }
 
-                        if (*self.s).mode != enums::vegas_mode::Stratified {
+                        if (*self.s).mode != ::VegasMode::Stratified {
                             let f_sq = fval * fval;
 
                             accumulate_distribution(self.s, bin.as_mut_slice(), f_sq);
@@ -823,7 +822,7 @@ impl VegasMonteCarlo {
                     //c += 1;
                     tss += f_sq_sum;
 
-                    if (*self.s).mode == enums::vegas_mode::Stratified {
+                    if (*self.s).mode == ::VegasMode::Stratified {
                         accumulate_distribution(self.s, bin.as_mut_slice(), f_sq_sum);
                     }
                     if !change_box_coord(self.s, t_box.as_mut_slice()) {
