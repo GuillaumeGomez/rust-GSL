@@ -46,13 +46,13 @@ fn main() {
     let w = rgsl::Wavelet::new(&rgsl::WaveletType::daubechies(), 4u64).unwrap();
     let work = rgsl::WaveletWorkspace::new(N as u64).unwrap();
 
-    wavelet_transforms::one_dimension::transform_forward(&w, data, 1, N as u64, &work);
+    wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N as u64, &work);
 
      for i in range(0u, N) {
         abscoeff[i] = data[i].abs();
     }
 
-    sort::vectors::sort_index(p, abscoeff, 1, N as u64);
+    sort::vectors::sort_index(&mut p, &abscoeff, 1, N as u64);
 
     let mut i = 0u;
     while i + NC < N {
@@ -60,7 +60,7 @@ fn main() {
         i += 1;
     }
 
-    wavelet_transforms::one_dimension::transform_inverse(&w, data, 1, N as u64, &work);
+    wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N as u64, &work);
 
     for it in range(0u, N) {
         println!("{}", data[it]);

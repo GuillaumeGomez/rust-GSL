@@ -116,7 +116,7 @@ use std::intrinsics::{sqrtf64, powf64, fabsf64, floorf64, logf64};
 use std::c_vec::CVec;
 use std::default::Default;
 use libc::c_void;
-use std::num;
+use std::num::Int;
 
 pub struct PlainMonteCarlo {
     s: *mut ffi::gsl_monte_plain_state,
@@ -737,7 +737,7 @@ impl VegasMonteCarlo {
                 }
 
                 {
-                    let tot_boxes = num::pow(boxes, dim);
+                    let tot_boxes = boxes.pow(dim);
                     let tmp = calls / tot_boxes;
 
                     (*self.s).calls_per_box = if tmp > 2 { tmp as u32 } else { 2 };

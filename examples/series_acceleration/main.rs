@@ -31,7 +31,7 @@ fn main() {
         sum += t[n];
     }
 
-    w.accel(t, &mut sum_accel, &mut err);
+    w.accel(&t, &mut sum_accel, &mut err);
 
     println!("term-by-term sum = {:.16} using {} terms", sum, N);
 

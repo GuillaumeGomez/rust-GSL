@@ -12,8 +12,8 @@ fn main() {
          0.51, 0.13, 0.19, 0.85];
     let mut b_data : [f64, ..4] = [1.0, 2.0, 3.0, 4.0];
 
-    let mut m = rgsl::MatrixView::from_array(a_data, 4, 4);
-    let mut b = rgsl::VectorView::from_array(b_data);
+    let mut m = rgsl::MatrixView::from_array(&mut a_data, 4, 4);
+    let mut b = rgsl::VectorView::from_array(&mut b_data);
     let x = rgsl::VectorF64::new(4).unwrap();
     let mut s = 0i32;
     let p = rgsl::Permutation::new(4).unwrap();

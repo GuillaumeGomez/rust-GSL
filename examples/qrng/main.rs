@@ -12,7 +12,7 @@ fn main() {
     for i in range(0u, 1024u) {
         let mut v : [f64, ..2] = [0f64, 0f64];
 
-        q.get(v);
+        q.get(&mut v);
         println!("{}: {:.5} {:.5}", i, v[0], v[1]);
     }
 }

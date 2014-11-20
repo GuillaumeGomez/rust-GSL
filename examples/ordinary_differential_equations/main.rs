@@ -58,7 +58,7 @@ fn main() {
     for i in range(1u, 101u) {
         let ti = i as f64 * t1 / 100f64;
 
-        match d.apply(&mut t, ti, y) {
+        match d.apply(&mut t, ti, &mut y) {
             rgsl::Value::Success => {}
             e => {
                 println!("error, return value={}", e);

@@ -9,8 +9,8 @@ use rgsl::{Pow, Elementary, Trigonometric};
 
 fn main() {
     println!("=== VectorFloat tests ===");
-    let mut tmp_vec = rgsl::VectorF32::from_slice([1f32, 0f32, 3f32, 2f32]).unwrap();
-    let mut tmp_vec2 = rgsl::VectorF32::from_slice([14f32, 6f32, -3f32, 1.2f32]).unwrap();
+    let mut tmp_vec = rgsl::VectorF32::from_slice(&[1f32, 0f32, 3f32, 2f32]).unwrap();
+    let mut tmp_vec2 = rgsl::VectorF32::from_slice(&[14f32, 6f32, -3f32, 1.2f32]).unwrap();
     println!("min value : {}\nmin value index : {}", tmp_vec.min(), tmp_vec.min_index());
     println!("max value : {}\nmax value index : {}", tmp_vec.max(), tmp_vec.max_index());
     println!("{}", tmp_vec);
@@ -51,9 +51,9 @@ fn main() {
     tmp_mat.set(1, 2, 3f32);
     tmp_mat.set(1, 3, 0.5f32);
     println!("\n=> Simple BLAS level2 test before :\n{}", tmp_mat);
-    rgsl::blas::level2::sger(1.7f32, &tmp_vec, &rgsl::VectorF32::from_slice([0.4f32, 14f32, 3f32, 2f32]).unwrap(), &mut tmp_mat);
+    rgsl::blas::level2::sger(1.7f32, &tmp_vec, &rgsl::VectorF32::from_slice(&[0.4f32, 14f32, 3f32, 2f32]).unwrap(), &mut tmp_mat);
     println!("=> Simple BLAS level2 test after :\n{}", tmp_mat);
-    println!("\nSimple CBLAS level1 test : {}", rgsl::cblas::level1::sdsdot(1i32, 0.6f32, [1.1f32], 1i32, [2.07f32], 1i32));
+    println!("\nSimple CBLAS level1 test : {}", rgsl::cblas::level1::sdsdot(1i32, 0.6f32, &[1.1f32], 1i32, &[2.07f32], 1i32));
     println!("Simple Elementary test (acosh(1.0)) : {}", 1f64.acosh());
     println!("Simple Elementary test (asinh(1.0)) : {}", 1f64.asinh());
     println!("Simple Elementary test (atanh(1.0)) : {}", 1f64.atanh());
@@ -72,7 +72,7 @@ fn main() {
     let mut cov11 = 0f64;
     let mut chisq = 0f64;
 
-    rgsl::fit::wlinear(x, 1, w, 1, y, 1, x.len() as u64, &mut c0, &mut c1, &mut cov00, &mut cov01, &mut cov11, &mut chisq);
+    rgsl::fit::wlinear(&x, 1, &w, 1, &y, 1, x.len() as u64, &mut c0, &mut c1, &mut cov00, &mut cov01, &mut cov11, &mut chisq);
     println!("=> wlinear test :");
     println!("best fit: Y = {} + {} X", c0, c1);
     println!("covariance matrix:");
@@ -83,7 +83,7 @@ fn main() {
     let dfx = [10f64, 12f64, 15f64, 8f64, 16f64];
     let mut sumsq = 0f64;
 
-    rgsl::fit::mul(dx, 1, dfx, 1, dx.len() as u64, &mut c1, &mut cov11, &mut sumsq);
+    rgsl::fit::mul(&dx, 1, &dfx, 1, dx.len() as u64, &mut c1, &mut cov11, &mut sumsq);
     println!("=> mul test :");
     for i in range(0, dx.len()) {
         println!("dfx[{}]/dx[{}] = {} / {} = {}", i, i, dfx[i], dx[i], dfx[i] / dx[i]);

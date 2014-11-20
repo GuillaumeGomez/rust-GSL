@@ -451,7 +451,7 @@ pub fn qk15<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
     let mut fv1 : [f64, ..8] = [0f64, ..8];
     let mut fv2 : [f64, ..8] = [0f64, ..8];
 
-    qk(xgk, wg, wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
 }
 
 pub fn qk21<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
@@ -500,7 +500,7 @@ pub fn qk21<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
     let mut fv1 : [f64, ..11] = [0f64, ..11];
     let mut fv2 : [f64, ..11] = [0f64, ..11];
 
-    qk(xgk, wg, wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
 }
 
 pub fn qk31<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
@@ -562,7 +562,7 @@ pub fn qk31<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
     let mut fv1 : [f64, ..16] = [0f64, ..16];
     let mut fv2 : [f64, ..16] = [0f64, ..16];
 
-    qk(xgk, wg, wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
 }
 
 pub fn qk41<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
@@ -637,7 +637,7 @@ pub fn qk41<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
     let mut fv1 : [f64, ..21] = [0f64, ..21];
     let mut fv2 : [f64, ..21] = [0f64, ..21];
 
-    qk(xgk, wg, wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
 }
 
 pub fn qk51<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
@@ -724,7 +724,7 @@ pub fn qk51<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
     let mut fv1 : [f64, ..26] = [0f64, ..26];
     let mut fv2 : [f64, ..26] = [0f64, ..26];
 
-    qk(xgk, wg, wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
 }
 
 
@@ -824,7 +824,7 @@ pub fn qk61<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
     let mut fv1 : [f64, ..31] = [0f64, ..31];
     let mut fv2 : [f64, ..31] = [0f64, ..31];
 
-    qk(xgk, wg, wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
 }
 
 pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f64], f: ::function<T>, arg: &mut T, a: f64, b: f64,

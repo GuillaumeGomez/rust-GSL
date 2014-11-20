@@ -71,27 +71,27 @@ fn main() {
     {
         let s = rgsl::PlainMonteCarlo::new(3).unwrap();
         
-        s.integrate(g, &mut 0f64, xl, xu, calls, &r, &mut res, &mut err);
+        s.integrate(g, &mut 0f64, &xl, &xu, calls, &r, &mut res, &mut err);
         display_results("plain", res, err);
     }
 
     {
         let s = rgsl::MiserMonteCarlo::new(3).unwrap();
         
-        s.integrate(g, &mut 0f64, xl, xu, calls, &r, &mut res, &mut err);
+        s.integrate(g, &mut 0f64, &xl, &xu, calls, &r, &mut res, &mut err);
         display_results("miser", res, err);
     }
 
     {
         let s = rgsl::VegasMonteCarlo::new(3).unwrap();
 
-        s.integrate(g, &mut 0f64, xl, xu, 10000, &r, &mut res, &mut err);
+        s.integrate(g, &mut 0f64, &xl, &xu, 10000, &r, &mut res, &mut err);
         display_results("vegas warm-up", res, err);
 
         println!("converging...");
 
         loop {
-            s.integrate(g, &mut 0f64, xl, xu, calls / 5, &r, &mut res, &mut err);
+            s.integrate(g, &mut 0f64, &xl, &xu, calls / 5, &r, &mut res, &mut err);
             println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
             if unsafe { fabsf64(s.chisq() - 1f64) } <= 0.5f64 {
                 break;

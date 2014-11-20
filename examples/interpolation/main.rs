@@ -24,7 +24,7 @@ fn main() {
         let mut acc = rgsl::InterpAccel::new();
         let spline = rgsl::Spline::new(&rgsl::InterpType::cspline(), 10).unwrap();
 
-        spline.init(x, y);
+        spline.init(&x, &y);
 
         let mut xi = x[0];
         while xi < x[9] {

@@ -16,7 +16,7 @@ fn main() {
     let mut z : [f64, ..10] = [0f64, ..10];
     let w = PolyComplex::new(6).unwrap();
 
-    w.solve(a, z);
+    w.solve(&a, &mut z);
     for i in range(0, 5) {
         println!("z{} = {} {}", i, z[2 * i], z[2 * i + 1]);
     }

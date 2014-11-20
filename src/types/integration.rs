@@ -2669,11 +2669,11 @@ impl CquadWorkspace {
                     (*iv).fx[i] = 0.0;
                 }
             }
-            Vinvfx((*iv).fx, &mut ((*iv).c), 0);
+            Vinvfx(&(*iv).fx, &mut ((*iv).c), 0);
             let mut tmp_c = CVec::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(3), (*iv).c.len() - 3);
-            Vinvfx((*iv).fx, tmp_c.as_mut_slice(), 3);
+            Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), 3);
             let mut tmp_c = CVec::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(2), (*iv).c.len() - 2);
-            Vinvfx((*iv).fx, tmp_c.as_mut_slice(), 2);
+            Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), 2);
 
             for i in range(0u, nnans as uint) {
                 (*iv).fx[nans[i] as uint] = ::NAN;
@@ -2764,11 +2764,11 @@ impl CquadWorkspace {
                     /* Compute the new coefficients. */
                     let size = idx[d as uint] as uint;
                     let mut tmp_c = CVec::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(size as int), (*iv).c.len() - size);
-                    Vinvfx((*iv).fx, tmp_c.as_mut_slice(), d);
+                    Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), d);
 
                     /* Downdate any NaNs. */
                     if nnans > 0 {
-                        downdate(tmp_c.as_mut_slice(), n[d as uint], d, nans, nnans as i32);
+                        downdate(tmp_c.as_mut_slice(), n[d as uint], d, &mut nans, nnans as i32);
                         for i in range(0u, nnans) {
                             (*iv).fx[nans[i] as uint] = ::NAN;
                         }
@@ -2873,9 +2873,9 @@ impl CquadWorkspace {
                         }
                         it += skip[0] as uint;
                     }
-                    Vinvfx((*ivl).fx, (*ivl).c, 0);
+                    Vinvfx(&(*ivl).fx, &mut (*ivl).c, 0);
                     if nnans > 0 {
-                        downdate((*ivl).c, n[0], 0, nans, nnans as i32);
+                        downdate(&mut (*ivl).c, n[0], 0, &mut nans, nnans as i32);
                         for i in range(0u, nnans as uint) {
                             (*ivl).fx[nans[i] as uint] = ::NAN;
                         }
@@ -2941,9 +2941,9 @@ impl CquadWorkspace {
                         }
                         it += skip[0] as uint;
                     }
-                    Vinvfx((*ivr).fx, (*ivr).c, 0);
+                    Vinvfx(&(*ivr).fx, &mut (*ivr).c, 0);
                     if nnans > 0 {
-                        downdate((*ivr).c, n[0], 0, nans, nnans as i32);
+                        downdate(&mut (*ivr).c, n[0], 0, &mut nans, nnans as i32);
                         for i in range(0u, nnans) {
                             (*ivr).fx[nans[i] as uint] = ::NAN;
                         }
@@ -4262,8 +4262,8 @@ unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result
         let mut res12 = 0f64;
         let mut res24 = 0f64;
 
-        gsl_integration_qcheb(f, arg, a, b, cheb12, cheb24);
-        compute_moments(cc, moment);
+        gsl_integration_qcheb(f, arg, a, b, &mut cheb12, &mut cheb24);
+        compute_moments(cc, &mut moment);
 
         for i in range(0, 13) {
             res12 += cheb12[i] * moment[i];
@@ -4538,14 +4538,14 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
 
         let factor = powf64(0.5f64 * (b1 - a1), (*t).alpha + 1f64);
 
-        gsl_integration_qcheb(fn_qaws_R, &mut fn_params, a1, b1, cheb12, cheb24);
+        gsl_integration_qcheb(fn_qaws_R, &mut fn_params, a1, b1, &mut cheb12, &mut cheb24);
 
         if (*t).mu == 0 {
             let mut res12 = 0f64;
             let mut res24 = 0f64;
             let u = factor;
 
-            qc25s_compute_result((*t).ri, cheb12, cheb24, &mut res12, &mut res24);
+            qc25s_compute_result(&(*t).ri, &cheb12, &cheb24, &mut res12, &mut res24);
 
             *result = u * res24;
             *abserr = fabsf64(u * (res24 - res12));
@@ -4558,8 +4558,8 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
             let u = factor * logf64(b1 - a1);
             let v = factor;
 
-            qc25s_compute_result((*t).ri, cheb12, cheb24, &mut res12a, &mut res24a);
-            qc25s_compute_result((*t).rg, cheb12, cheb24, &mut res12b, &mut res24b);
+            qc25s_compute_result(&(*t).ri, &cheb12, &cheb24, &mut res12a, &mut res24a);
+            qc25s_compute_result(&(*t).rg, &cheb12, &cheb24, &mut res12b, &mut res24b);
 
             *result = u * res24a + v * res24b;
             *abserr = fabsf64(u * (res24a - res12a)) + fabsf64(v * (res24b - res12b));
@@ -4571,14 +4571,14 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
         let mut cheb24 : [f64, ..25] = [0f64, ..25];
         let factor = powf64(0.5f64 * (b1 - a1), (*t).beta + 1f64);
 
-        gsl_integration_qcheb(fn_qaws_L, &mut fn_params, a1, b1, cheb12, cheb24);
+        gsl_integration_qcheb(fn_qaws_L, &mut fn_params, a1, b1, &mut cheb12, &mut cheb24);
 
         if (*t).nu == 0 {
             let mut res12 = 0f64;
             let mut res24 = 0f64;
             let u = factor;
 
-            qc25s_compute_result((*t).rj, cheb12, cheb24, &mut res12, &mut res24);
+            qc25s_compute_result(&(*t).rj, &cheb12, &cheb24, &mut res12, &mut res24);
 
             *result = u * res24;
             *abserr = fabsf64(u * (res24 - res12));
@@ -4591,8 +4591,8 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
             let u = factor * logf64(b1 - a1);
             let v = factor;
 
-            qc25s_compute_result((*t).rj, cheb12, cheb24, &mut res12a, &mut res24a);
-            qc25s_compute_result((*t).rh, cheb12, cheb24, &mut res12b, &mut res24b);
+            qc25s_compute_result(&(*t).rj, &cheb12, &cheb24, &mut res12a, &mut res24a);
+            qc25s_compute_result(&(*t).rh, &cheb12, &cheb24, &mut res12b, &mut res24b);
 
             *result = u * res24a + v * res24b;
             *abserr = fabsf64(u * (res24a - res12a)) + fabsf64(v * (res24b - res12b));
@@ -4720,7 +4720,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
         let mut cheb12 : [f64, ..13] = [0f64, ..13];
         let mut cheb24 : [f64, ..25] = [0f64, ..25];
 
-        gsl_integration_qcheb(f, arg, a, b, cheb12, cheb24);
+        gsl_integration_qcheb(f, arg, a, b, &mut cheb12, &mut cheb24);
 
         if level >= (*wf).n {
             /* table overflow should not happen, check before calling */

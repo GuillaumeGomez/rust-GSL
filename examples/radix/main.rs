@@ -25,7 +25,7 @@ fn main() {
         println!("{} {:.6} {:.6}", i, data[2 * i], data[2 * i + 1]);
     }
     println!("");
-    rgsl::fft::radix2::forward(data, 1, 128);
+    rgsl::fft::radix2::forward(&mut data, 1, 128);
     for i in range(0u, 128u) {
         println!("{} {:.6} {:.6}", i, data[2 * i] / 128f64.sqrt(), data[2 * i + 1] / 128f64.sqrt());
     }
@@ -49,7 +49,7 @@ fn main() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);
     }
 
-    rgsl::fft::mixed_radix::forward(data2, 1, n, &wavetable, &workspace);
+    rgsl::fft::mixed_radix::forward(&mut data2, 1, n, &wavetable, &workspace);
 
     println!("");
     for i in range(0u, n as uint) {
