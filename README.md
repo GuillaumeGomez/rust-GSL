@@ -43,4 +43,4 @@ file:///{rgsl_location}/doc/rgsl/index.html
 You can also access the latest build of the documentation via the internet [here](http://rust-ci.org/GuillaumeGomez/rust-GSL/doc/rgsl/).
 
 ## License
-__rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL licencs](http://www.gnu.org/copyleft/gpl.html).
+__rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL license](http://www.gnu.org/copyleft/gpl.html).
