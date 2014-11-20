@@ -4,6 +4,13 @@ name = "rust-GSL"
 version = "0.4.9"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
+description = "A rust binding for the GSL (the GNU scientific library)"
+repository = "https://github.com/GuillaumeGomez/rust-GSL"
+documentation = "http://rust-ci.org/GuillaumeGomez/rust-GSL/doc/rgsl/"
+readme = "README.md"
+keywords = ["mathematics", "library", "GSL"]
+license = "GPL"
+
 [lib]
 
 name = "rgsl"
