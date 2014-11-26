@@ -118,7 +118,7 @@ impl Interp {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { ::std::string::raw::from_buf(tmp as *const u8) }
+            unsafe { String::from_raw_buf(tmp as *const u8) }
         }
     }
 
@@ -236,7 +236,7 @@ impl Spline {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { ::std::string::raw::from_buf(tmp as *const u8) }
+            unsafe { String::from_raw_buf(tmp as *const u8) }
         }
     }
 

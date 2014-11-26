@@ -9,7 +9,7 @@ extern crate rgsl;
 
 #[allow(unused_must_use)]
 fn main() {
-    let stdio = &mut ::std::io::stdio::stdout().unwrap();
+    let stdio = &mut ::std::io::stdio::stdout().into_inner();
 
     println!("All multisets of {{0,1,2,3}} by size:");
     for i in range(0u64, 5u64) {

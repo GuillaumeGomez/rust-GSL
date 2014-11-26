@@ -60,7 +60,7 @@ fn second_part() {
 
     ntuple.project(&h, val_func, &mut 0i32, sel_func, &mut lower);
     //gsl_histogram_fprintf(stdout, h, "%f", "%f");
-    h.print(&mut ::std::io::stdio::stdout().unwrap());
+    h.print(&mut ::std::io::stdio::stdout().into_inner());
 }
 
 fn main() {

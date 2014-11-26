@@ -119,7 +119,7 @@ impl ODEiv2Step {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(::std::string::raw::from_buf(tmp as *const u8)) }
+            unsafe { Some(String::from_raw_buf(tmp as *const u8)) }
         }
     }
 
@@ -407,7 +407,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(::std::string::raw::from_buf(tmp as *const u8)) }
+            unsafe { Some(String::from_raw_buf(tmp as *const u8)) }
         }
     }
 
