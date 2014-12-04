@@ -40,10 +40,9 @@ These routines provide a high level wrapper that combine the iteration and conve
 !*/
 
 use ffi;
-use enums;
-use libc::c_void;
+use std::num::{Float, FloatMath};
 
-pub struct MultiFitFunction<'r, T> {
+pub struct MultiFitFunction<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,
     /// number of functions
     pub n: u64,
@@ -52,30 +51,30 @@ pub struct MultiFitFunction<'r, T> {
     pub params: &'r mut T
 }
 
-pub struct MultiFitFdfSolver<T> {
-    _type: MultiFitFdfSolverType,
-    fdf: *mut c_void,//MultiFitFunctionFdf<T>,
+pub struct MultiFitFdfSolver<'r, T:'r> {
+    _type: MultiFitFdfSolverType<T>,
+    fdf: MultiFitFunctionFdf<'r, T>,
     x: ::VectorF64,
     f: ::VectorF64,
     j: ::MatrixF64,
     dx: ::VectorF64,
-    state: *mut c_void
+    state: LmderStateT
 }
 
-impl<T> MultiFitFdfSolver {
+impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T for n observations and p parameters. The number
     /// of observations n must be greater than or equal to parameters p.
-    pub fn new(_type: &MultiFitFdfSolverType, n: u64, p: u64) -> Option<MultiFitFdfSolver<T>> {
-        let r = MultiFitFdfSolver {
+    pub fn new(_type: &MultiFitFdfSolverType<T>, f: MultiFitFunctionFdf<'r, T>, n: u64, p: u64) -> Option<MultiFitFdfSolver<'r, T>> {
+        let mut r = MultiFitFdfSolver {
             _type: *_type,
-            fdf: ::std::ptr::null_mut(),
+            fdf: f,
             x: ::VectorF64::new(p).unwrap(),
             f: ::VectorF64::new(n).unwrap(),
             j: ::MatrixF64::new(n, p).unwrap(),
             dx: ::VectorF64::new(p).unwrap(),
-            state: ::std::ptr::null_mut()
+            state: LmderStateT::new()
         };
-        if _type.alloc(r.state, n, p) == ::Value::Success {
+        if ((*_type).alloc)(&mut r.state, n, p) == ::Value::Success {
             Some(r)
         } else {
             None
@@ -83,7 +82,7 @@ impl<T> MultiFitFdfSolver {
     }
 
     /// This function initializes, or reinitializes, an existing solver s to use the function f and the initial guess x.
-    pub fn set<U>(&mut self, f: &MultiFitFunction<U>, x: &::VectorF64) -> ::Value {
+    pub fn set(&mut self, f: MultiFitFunctionFdf<'r, T>, x: &::VectorF64) -> ::Value {
         if self.f.len() != f.n {
             rgsl_error!("function size does not match solver", ::Value::BadLen);
             return ::Value::BadLen;
@@ -94,30 +93,31 @@ impl<T> MultiFitFdfSolver {
             return ::Value::BadLen;
         }  
 
-        self.fdf = *f;
+        self.fdf = f;
         self.x.copy_from(x);
 
-        self._type.set(self.state, self.fdf, self.x, self.f, self.j, self.dx)
+        (self._type.set)(&mut self.state, &mut self.fdf, &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
     }
 
-    pub fn name(&self) -> String {
+    pub fn name(&self) -> &'static str {
         self._type.name
     }
 
     /// This function performs a single iteration of the solver s. If the iteration encounters an unexpected problem then an error code
     /// will be returned. The solver maintains a current estimate of the best-fit parameters at all times.
-    pub fn iterate(&self) -> ::Value {
-        self._type.iterate(self.state, self.fdf, self.x, self.f, self.j, self.dx)
+    pub fn iterate(&mut self) -> ::Value {
+        (self._type.iterate)(&mut self.state, &mut self.fdf, &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
     pub fn position<'r>(&'r self) -> &'r ::VectorF64 {
-        self.x
+        &self.x
     }
 
     /// These functions iterate the solver s for a maximum of maxiter iterations. After each iteration, the system is tested for convergence
     /// using gsl_multifit_test_delta with the error tolerances epsabs and epsrel.
-    pub fn driver(&self, max_iter: u64, epsabs: f64, epsrel: f64) -> ::Value {
+    #[allow(unused_assignments)]
+    pub fn driver(&mut self, max_iter: u64, epsabs: f64, epsrel: f64) -> ::Value {
         let mut status = ::Value::Success;
         let mut iter = 0u64;
 
@@ -129,7 +129,7 @@ impl<T> MultiFitFdfSolver {
             }
 
             /* test for convergence */
-            status = gsl_multifit_test_delta(self.dx, self.x, epsabs, epsrel);
+            status = gsl_multifit_test_delta(&self.dx, &self.x, epsabs, epsrel);
             iter += 1;
             if status != ::Value::Continue || iter >= max_iter {
                 break;
@@ -140,25 +140,27 @@ impl<T> MultiFitFdfSolver {
     }
 }
 
-impl<T> Drop for MultiFitFdfSolver<T> {
+#[unsafe_destructor]
+impl<'r, T> Drop for MultiFitFdfSolver<'r, T> {
     fn drop(&mut self) {
         //self.s = ::std::ptr::null_mut();
     }
 }
 
-pub struct MultiFitFdfSolverType {
+#[allow(dead_code)]
+pub struct MultiFitFdfSolverType<T> {
     name: &'static str,
     //size: u64,
     alloc: fn(state: &mut LmderStateT, n: u64, p: u64) -> ::Value,
-    set: fn(state: &mut LmderStateT, fdf: MultiFitFunctionFdf, x: &mut ::VectorF64, f: &mut ::VectorF64, j: ::MatrixF64,
+    set: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, j: &mut ::MatrixF64,
         dx: &mut ::VectorF64) -> ::Value,
-    iterate: fn(state: &mut LmderStateT, fdf: MultiFitFunctionFdf, x: &mut ::VectorF64, f: ::VectorF64, j: &mut ::MatrixF64,
-        dx: &mut ::VectorF64) -> ::Value,
+    iterate: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64,
+        j: &mut ::MatrixF64, dx: &mut ::VectorF64) -> ::Value,
     free: fn(state: &mut LmderStateT)
 }
 
-impl MultiFitFdfSolverType {
-    pub fn lmder_type() -> MultiFitFdfSolverType {
+impl<T> MultiFitFdfSolverType<T> {
+    pub fn lmder_type() -> MultiFitFdfSolverType<T> {
         MultiFitFdfSolverType {
             name: "lmder",
             alloc: lmder_alloc,
@@ -168,7 +170,7 @@ impl MultiFitFdfSolverType {
         }
     }
 
-    pub fn lmsder_type() -> MultiFitFdfSolverType {
+    pub fn lmsder_type() -> MultiFitFdfSolverType<T> {
         MultiFitFdfSolverType {
             name: "lmsder",
             alloc: lmder_alloc,
@@ -179,8 +181,8 @@ impl MultiFitFdfSolverType {
     }
 }
 
-struct MultiFitFunctionFdf<T> {
-    f: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value>,
+pub struct MultiFitFunctionFdf<'r, T:'r> {
+    f: fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value,
     df: Option<fn(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> ::Value>,
     fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> ::Value>,
     n: u64,
@@ -210,110 +212,145 @@ struct LmderStateT {
     perm: ::Permutation
 }
 
+impl LmderStateT {
+    fn new() -> LmderStateT {
+        LmderStateT {
+            iter: 0u64,
+            xnorm: 0f64,
+            fnorm: 0f64,
+            delta: 0f64,
+            par: 0f64,
+            r: ::MatrixF64::new(0, 0).unwrap(),
+            tau: ::VectorF64::new(0).unwrap(),
+            diag: ::VectorF64::new(0).unwrap(),
+            qtf: ::VectorF64::new(0).unwrap(),
+            newton: ::VectorF64::new(0).unwrap(),
+            gradient: ::VectorF64::new(0).unwrap(),
+            x_trial: ::VectorF64::new(0).unwrap(),
+            f_trial: ::VectorF64::new(0).unwrap(),
+            df: ::VectorF64::new(0).unwrap(),
+            sdiag: ::VectorF64::new(0).unwrap(),
+            rptdx: ::VectorF64::new(0).unwrap(),
+            w: ::VectorF64::new(0).unwrap(),
+            work1: ::VectorF64::new(0).unwrap(),
+            perm: ::Permutation::new(0).unwrap()
+        }
+    }
+}
+
 fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.r = match ::MatrixF64::new(n, p) {
         Some(m) => m,
         None => {
-            rgsl_error!("failed to allocate space for r", ::Value::NoMem)
+            rgsl_error!("failed to allocate space for r", ::Value::NoMem);
+            ::MatrixF64::new(0, 0).unwrap() // to allow compilation
         }
     };
 
-    state.tau = match ::VectorF64::new(n.min(p)) {
+    state.tau = match ::VectorF64::new(if n < p {n} else {p}) {
         Some(t) => t,
         None => {
-            ::std::mem::drop(state.r);
-            rgsl_error!("failed to allocate space for tau", ::Value::NoMem)
+            //::std::mem::drop(state.r);
+            rgsl_error!("failed to allocate space for tau", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.diag = match ::VectorF64::new(p) {
         Some(d) => d,
         None => {
-            ::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            rgsl_error!("failed to allocate space for diag", ::Value::NoMem)
+            /*::std::mem::drop(state.r);
+            ::std::mem::drop(state.tau);*/
+            rgsl_error!("failed to allocate space for diag", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.qtf = match ::VectorF64::new(n) {
         Some(q) => q,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            rgsl_error!("failed to allocate space for qtf", ::Value::NoMem)
+            ::std::mem::drop(state.diag);*/
+            rgsl_error!("failed to allocate space for qtf", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.newton = match ::VectorF64::new(p) {
         Some(n) => n,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            rgsl_error!("failed to allocate space for newton", ::Value::NoMem)
+            ::std::mem::drop(state.qtf);*/
+            rgsl_error!("failed to allocate space for newton", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.gradient = match ::VectorF64::new(p) {
         Some(g) => g,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            rgsl_error!("failed to allocate space for gradient", ::Value::NoMem)
+            ::std::mem::drop(state.newton);*/
+            rgsl_error!("failed to allocate space for gradient", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.x_trial = match ::VectorF64::new(p) {
         Some(x) => x,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
             ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            rgsl_error!("failed to allocate space for x_trial", ::Value::NoMem)
+            ::std::mem::drop(state.gradient);*/
+            rgsl_error!("failed to allocate space for x_trial", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.f_trial = match ::VectorF64::new(n) {
         Some(f) => f,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
             ::std::mem::drop(state.newton);
             ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            rgsl_error!("failed to allocate space for f_trial", ::Value::NoMem)
+            ::std::mem::drop(state.x_trial);*/
+            rgsl_error!("failed to allocate space for f_trial", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.df = match ::VectorF64::new(n) {
         Some(d) => d,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
             ::std::mem::drop(state.newton);
             ::std::mem::drop(state.gradient);
             ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);
-            rgsl_error!("failed to allocate space for df", ::Value::NoMem)
+            ::std::mem::drop(state.f_trial);*/
+            rgsl_error!("failed to allocate space for df", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.sdiag = match ::VectorF64::new(p) {
         Some(s) => s,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
@@ -321,15 +358,16 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
             ::std::mem::drop(state.gradient);
             ::std::mem::drop(state.x_trial);
             ::std::mem::drop(state.f_trial);
-            ::std::mem::drop(state.df);
-            rgsl_error!("failed to allocate space for sdiag", ::Value::NoMem)
+            ::std::mem::drop(state.df);*/
+            rgsl_error!("failed to allocate space for sdiag", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.rptdx = match ::VectorF64::new(n) {
         Some(s) => s,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
@@ -338,15 +376,16 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
             ::std::mem::drop(state.x_trial);
             ::std::mem::drop(state.f_trial);
             ::std::mem::drop(state.df);
-            ::std::mem::drop(state.sdiag);
-            rgsl_error!("failed to allocate space for rptdx", ::Value::NoMem)
+            ::std::mem::drop(state.sdiag);*/
+            rgsl_error!("failed to allocate space for rptdx", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.w = match ::VectorF64::new(n) {
         Some(w) => w,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
@@ -356,15 +395,16 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
             ::std::mem::drop(state.f_trial);
             ::std::mem::drop(state.df);
             ::std::mem::drop(state.sdiag);
-            ::std::mem::drop(state.rptdx);
-            rgsl_error!("failed to allocate space for w", ::Value::NoMem)
+            ::std::mem::drop(state.rptdx);*/
+            rgsl_error!("failed to allocate space for w", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.work1 = match ::VectorF64::new(p) {
         Some(w) => w,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
@@ -375,15 +415,16 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
             ::std::mem::drop(state.df);
             ::std::mem::drop(state.sdiag);
             ::std::mem::drop(state.rptdx);
-            ::std::mem::drop(state.w);
-            rgsl_error!("failed to allocate space for work1", ::Value::NoMem)
+            ::std::mem::drop(state.w);*/
+            rgsl_error!("failed to allocate space for work1", ::Value::NoMem);
+            ::VectorF64::new(0).unwrap() // to allow compilation
         }
     };
 
     state.perm = match ::Permutation::new(p) {
         Some(p) => p,
         None => {
-            ::std::mem::drop(state.r);
+            /*::std::mem::drop(state.r);
             ::std::mem::drop(state.tau);
             ::std::mem::drop(state.diag);
             ::std::mem::drop(state.qtf);
@@ -395,16 +436,18 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
             ::std::mem::drop(state.sdiag);
             ::std::mem::drop(state.rptdx);
             ::std::mem::drop(state.w);
-            ::std::mem::drop(state.work1);
-            rgsl_error!("failed to allocate space for perm", ::Value::NoMem)
+            ::std::mem::drop(state.work1);*/
+            rgsl_error!("failed to allocate space for perm", ::Value::NoMem);
+            ::Permutation::new(0).unwrap() // to allow compilation
         }
     };
 
     ::Value::Success
 }
 
+#[allow(unused_variables)]
 fn lmder_free(state: &mut LmderStateT) {
-    ::std::mem::drop(state.perm);
+    /*::std::mem::drop(state.perm);
     ::std::mem::drop(state.work1);
     ::std::mem::drop(state.w);
     ::std::mem::drop(state.rptdx);
@@ -417,38 +460,39 @@ fn lmder_free(state: &mut LmderStateT) {
     ::std::mem::drop(state.qtf);
     ::std::mem::drop(state.diag);
     ::std::mem::drop(state.tau);
-    ::std::mem::drop(state.r);
+    ::std::mem::drop(state.r);*/
 }
 
-fn lmder_set<T>(vstate: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
+fn lmder_set<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
     dx: &mut ::VectorF64) -> ::Value {
     set(vstate, fdf, x, f, J, dx, 0)
 }
 
-fn lmsder_set<T>(vstate: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
+fn lmsder_set<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
     dx: &mut ::VectorF64) -> ::Value {
     set(vstate, fdf, x, f, J, dx, 1)
 }
 
-fn lmder_iterate<T>(vstate: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
+fn lmder_iterate<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
     dx: &mut ::VectorF64) -> ::Value {
     iterate(vstate, fdf, x, f, J, dx, 0)
 }
 
-fn lmsder_iterate<T>(vstate: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
+#[allow(dead_code)]
+fn lmsder_iterate<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
     dx: &mut ::VectorF64) -> ::Value {
     iterate(vstate, fdf, x, f, J, dx, 1)
 }
 
-fn compute_diag(j: &::MatrixF64, diag: &mut ::VectorF64) {
-    let n = j.size1();
-    let p = j.size2();
+fn compute_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
+    let n = J.size1();
+    let p = J.size2();
 
     for j in range(0, p) {
         let mut sum = 0f64;
 
         for i in range(0, n) {
-            let jij = j.get(i, j);
+            let jij = J.get(i, j);
 
             sum += jij * jij;
         }
@@ -460,14 +504,14 @@ fn compute_diag(j: &::MatrixF64, diag: &mut ::VectorF64) {
     }
 }
 
-fn update_diag(j: &::MatrixF64, diag: &mut ::VectorF64) {
-    let n = diag.size();
+fn update_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
+    let n = diag.len();
 
     for j in range(0, n) {
         let mut sum = 0f64;
 
         for i in range(0, n) {
-          let jij = j.get(i, j);
+          let jij = J.get(i, j);
           
           sum += jij * jij;
         }
@@ -486,7 +530,7 @@ fn update_diag(j: &::MatrixF64, diag: &mut ::VectorF64) {
 
 fn scaled_enorm(d: &::VectorF64, f: &::VectorF64) -> f64 {
     let mut e2 = 0f64;
-    let n = f.size();
+    let n = f.len();
 
     for i in range(0, n) {
         let fi = f.get(i);
@@ -502,21 +546,28 @@ fn compute_delta(diag: &mut ::VectorF64, x: &mut ::VectorF64) -> f64 {
     let Dx = scaled_enorm(diag, x);
     let factor = 100f64;  /* generally recommended value from MINPACK */
 
-    if Dx > 0 {factor * Dx} else {factor}
+    if Dx > 0f64 {
+        factor * Dx
+    } else {
+        factor
+    }
 }
 
-fn set<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, j: &mut ::MatrixF64,
+fn set<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, j: &mut ::MatrixF64,
     dx: &mut ::VectorF64, scale: i32) -> ::Value {
     let mut signum = 0i32;
 
     /* Evaluate function at x */
     /* return immediately if evaluation raised error */
     {
-        let status = if fdf.fdf.is_some() {
-            fdf.fdf(x, fdf.params, f, j)
-        } else {
-            /* finite difference approximation */
-            gsl_multifit_fdfsolver_dif_fdf(x, fdf, f, j)
+        let status = match fdf.fdf {
+            Some(func) => {
+                func(x, fdf.params, f, j)
+            }
+            None => {
+                /* finite difference approximation */
+                gsl_multifit_fdfsolver_dif_fdf(x, fdf, f, j)
+            }
         };
 
         if status != ::Value::Success {
@@ -524,7 +575,7 @@ fn set<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::Vecto
         }
     }
 
-    state.par = 0;
+    state.par = 0f64;
     state.iter = 1;
     state.fnorm = enorm(f);
 
@@ -532,25 +583,25 @@ fn set<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::Vecto
 
     /* store column norms in diag */
     if scale != 0 {
-        compute_diag(j, state.diag);
+        compute_diag(j, &mut state.diag);
     } else {
         state.diag.set_all(1f64);
     }
 
     /* set delta to 100 |D x| or to 100 if |D x| is zero */
-    state.xnorm = scaled_enorm(state.diag, x);
-    state.delta = compute_delta(state.diag, x);
+    state.xnorm = scaled_enorm(&state.diag, x);
+    state.delta = compute_delta(&mut state.diag, x);
 
     /* Factorize J into QR decomposition */
     state.r.copy_from(j);
-    ::linear_algebra::QRPT_decomp(state.r, state.tau, state.perm, &mut signum, state.work1);
+    ::linear_algebra::QRPT_decomp(&state.r, &state.tau, &state.perm, &mut signum, &state.work1);
 
     state.rptdx.set_zero();
     state.w.set_zero();
 
     /* Zero the trial vector, as in the alloc function */
 
-    state.f_trials.set_zero();
+    state.f_trial.set_zero();
 
     /*#ifdef DEBUG
     printf("r = "); gsl_matrix_fprintf(stdout, r, "%g");
@@ -585,7 +636,7 @@ fn compute_gradient_direction(r: &::MatrixF64, p: &::Permutation, qtf: &::Vector
 }
 
 fn compute_trial_step(x: &mut ::VectorF64, dx: &mut ::VectorF64, x_trial: &mut ::VectorF64) {
-    let n = x.size();
+    let n = x.len();
 
     for i in range(0, n) {
         let pi = dx.get(i);
@@ -606,7 +657,7 @@ fn compute_actual_reduction(fnorm: f64, fnorm1: f64) -> f64 {
 }
 
 fn compute_rptdx(r: &::MatrixF64, p: &::Permutation, dx: &::VectorF64, rptdx: &mut ::VectorF64) {
-    let n = dx.size;
+    let n = dx.len();
 
     for i in range(0, n) {
         let mut sum = 0f64;
@@ -621,7 +672,8 @@ fn compute_rptdx(r: &::MatrixF64, p: &::Permutation, dx: &::VectorF64, rptdx: &m
     }
 }
 
-fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
+#[allow(unused_assignments)]
+fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
     dx: &mut ::VectorF64, scale: i32) -> ::Value {
     let mut prered = 0f64;
     let mut actred = 0f64;
@@ -633,11 +685,11 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
 
     let mut iter = 0i32;
 
-    let mut p1 = 0.1f64;
-    let mut p25 = 0.25f64;
-    let mut p5 = 0.5f64;
-    let mut p75 = 0.75f64;
-    let mut p0001 = 0.0001f64;
+    let p1 = 0.1f64;
+    let p25 = 0.25f64;
+    let p5 = 0.5f64;
+    let p75 = 0.75f64;
+    let p0001 = 0.0001f64;
 
     if state.fnorm == 0f64 {
         return ::Value::Success;
@@ -646,16 +698,16 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
     /* Compute qtf = Q^T f */
 
     state.qtf.copy_from(f);
-    ::linear_algebra::QR_QTvec(state.r, state.tau, state.qtf);
+    ::linear_algebra::QR_QTvec(&state.r, &state.tau, &state.qtf);
 
     /* Compute norm of scaled gradient */
 
-    compute_gradient_direction(state.r, state.perm, state.qtf, state.diag, state.gradient);
+    compute_gradient_direction(&state.r, &state.perm, &state.qtf, &state.diag, &mut state.gradient);
 
     { 
-        let iamax = ::blas::level1::idamax(state.gradient);
+        let iamax = ::blas::level1::idamax(&state.gradient);
 
-        gnorm = unsafe { (state.gradient.get(iamax) / state.fnorm).fabs() };
+        gnorm = unsafe { (state.gradient.get(iamax as u64) / state.fnorm).abs() };
     }
 
     /* Determine the Levenberg-Marquardt parameter */
@@ -664,8 +716,8 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
         iter += 1;
 
         {
-            let status = lmpar(state.r, state.perm, state.qtf, state.diag, state.delta, &mut (state.par), state.newton,
-                state.gradient, state.sdiag, dx, state.w);
+            let status = lmpar(&mut state.r, &state.perm, &state.qtf, &state.diag, state.delta, &mut (state.par), &mut state.newton,
+                &mut state.gradient, &mut state.sdiag, dx, &mut state.w);
 
             if status != ::Value::Success {
                 return status;
@@ -676,9 +728,9 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
 
         dx.scale(-1f64); /* reverse the step to go downhill */
 
-        compute_trial_step(x, dx, state.x_trial);
+        compute_trial_step(x, dx, &mut state.x_trial);
 
-        pnorm = scaled_enorm(state.diag, dx);
+        pnorm = scaled_enorm(&state.diag, dx);
 
         if state.iter == 1 {
             if pnorm < state.delta {
@@ -692,14 +744,14 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
         /* Evaluate function at x + p */
         /* return immediately if evaluation raised error */
         {
-            let status = fdf.f(state.x_trial, f.params, state.f_trial);
+            let status = ((*fdf).f)(&state.x_trial, fdf.params, &mut state.f_trial); //GSL_MULTIFIT_FN_EVAL_F (fdf, x_trial, f_trial);
             
             if status != ::Value::Success {
                 return status;
             }
         }
 
-        fnorm1 = enorm(state.f_trial);
+        fnorm1 = enorm(&state.f_trial);
 
         /* Compute the scaled actual reduction */
 
@@ -714,13 +766,13 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
 
         /* Compute rptdx = R P^T dx, noting that |J dx| = |R P^T dx| */
 
-        compute_rptdx(state.r, state.perm, dx, state.rptdx);
+        compute_rptdx(&state.r, &state.perm, dx, &mut state.rptdx);
 
         /*#ifdef DEBUG
         printf("rptdx = "); gsl_vector_fprintf(stdout, rptdx, "%g");
         #endif*/
 
-        fnorm1p = enorm(state.rptdx);
+        fnorm1p = enorm(&state.rptdx);
 
         /* Compute the scaled predicted reduction = |J dx|^2 + 2 par |D dx|^2 */
 
@@ -757,7 +809,7 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
     #endif*/
             }
         } else {
-            let temp = if actred >= 0f64 {p5} else {p5 * dirder / (dirder + p5 * actred)};
+            let mut temp = if actred >= 0f64 {p5} else {p5 * dirder / (dirder + p5 * actred)};
 
     /*#ifdef DEBUG
           printf("ratio < p25\n");
@@ -779,15 +831,18 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
         /* test for successful iteration, termination and stringent tolerances */
 
         if ratio >= p0001 {
-            x.copy_from(state.x_trial);
-            f.copy_from(state.f_trial);
+            x.copy_from(&state.x_trial);
+            f.copy_from(&state.f_trial);
 
             /* return immediately if evaluation raised error */
             {
-                let status = if fdf.df {
-                    fdf.df(state.x_trial, fdf.params, J)
-                } else {
-                    gsl_multifit_fdfsolver_dif_df(state.x_trial, fdf, state.f_trial, J)
+                let status = match fdf.df {
+                    Some(func) => {
+                        func(&state.x_trial, fdf.params, J)
+                    }
+                    None => {
+                        gsl_multifit_fdfsolver_dif_df(&mut state.x_trial, fdf, &mut state.f_trial, J)
+                    }
                 };
 
                 if status != ::Value::Success {
@@ -796,24 +851,24 @@ fn iterate<T>(state: &LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::V
             }
 
             /* wa2_j  = diag_j * x_j */
-            state.xnorm = scaled_enorm(state.diag, x);
+            state.xnorm = scaled_enorm(&state.diag, x);
             state.fnorm = fnorm1;
             state.iter += 1;
 
             /* Rescale if necessary */
             if scale != 0 {
-                update_diag(J, state.diag);
+                update_diag(J, &mut state.diag);
             }
 
             {
                 let mut signum = 0;
 
                 state.r.copy_from(J);
-                ::linear_algebra::QRPT_decomp(state.r, state.tau, state.perm, &mut signum, state.work1);
+                ::linear_algebra::QRPT_decomp(&state.r, &state.tau, &state.perm, &mut signum, &state.work1);
             }
 
             return ::Value::Success;
-        } else if actred.fabs() <= ::DBL_EPSILON  && prered <= ::DBL_EPSILON  && p5 * ratio <= 1f64 {
+        } else if actred.abs() <= ::DBL_EPSILON  && prered <= ::DBL_EPSILON  && p5 * ratio <= 1f64 {
             return ::Value::TolF;
         } else if state.delta <= ::DBL_EPSILON * state.xnorm {
             return ::Value::TolX;
@@ -836,13 +891,13 @@ fn gsl_multifit_test_delta(dx: &::VectorF64, x: &::VectorF64, epsabs: f64, epsre
         return ::Value::BadTol;
     }
 
-    for i in range(0, x.size) {
+    for i in range(0, x.len()) {
         let xi = x.get(i);
         let dxi = dx.get(i);
-        let tolerance = epsabs + epsrel * xi.fabs();
+        let tolerance = epsabs + epsrel * xi.abs();
 
-        if dxi.fabs() < tolerance {
-            ok = 1;
+        if dxi.abs() < tolerance {
+            ok = true;
         } else {
             ok = false;
             break;
@@ -867,11 +922,9 @@ Inputs: x      - parameter vector
 Return: success or error
 */
 
-fn gsl_multifit_fdfsolver_dif_fdf<T>(x: &::VectorF64, fdf: &MultiFitFunctionFdf<T>, f: &mut ::VectorF64,
+fn gsl_multifit_fdfsolver_dif_fdf<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &mut ::VectorF64,
     j: &mut ::MatrixF64) -> ::Value {
-    let mut status = ::Value::Success;
-
-    status = fdf.f(x, fdf.params, f); // GSL_MULTIFIT_FN_EVAL_F(fdf, x, f);
+    let mut status = ((*fdf).f)(x, fdf.params, f); // GSL_MULTIFIT_FN_EVAL_F(fdf, x, f);
     if status != ::Value::Success {
         return status;
     }
@@ -894,18 +947,18 @@ Inputs: x   - parameter vector
 Return: success or error
 */
 
-fn fdjac<T>(x: &mut ::VectorF64, fdf: &MultiFitFunctionFdf<T>, f: &::VectorF64, jm: &mut ::MatrixF64) -> ::Value {
+fn fdjac<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF64, jm: &mut ::MatrixF64) -> ::Value {
     let mut status = ::Value::Success;
     let epsfcn = 0f64;
-    let eps = (epsfcn.max(::DBL_EPSILON)).sqrtf();
+    let eps = (epsfcn.max(::DBL_EPSILON)).sqrt();
 
     for j in range (0, fdf.p) {
         let xj = x.get(j);
 
         /* use column j of J as temporary storage for f(x + dx) */
-        let v = jm.column(j);
+        let (mut v, _) = jm.get_col(j).unwrap();
 
-        let mut h = eps * xj.fabs();
+        let mut h = eps * xj.abs();
         if h == 0f64 {
             h = eps;
         }
@@ -913,7 +966,7 @@ fn fdjac<T>(x: &mut ::VectorF64, fdf: &MultiFitFunctionFdf<T>, f: &::VectorF64, 
         /* perturb x_j to compute forward difference */
         x.set(j, xj + h);
 
-        status += fdf.f(x, fdf.params, &v.vector); //GSL_MULTIFIT_FN_EVAL_F (fdf, x, &v.vector);
+        status = ((*fdf).f)(x, fdf.params, &mut v); //GSL_MULTIFIT_FN_EVAL_F (fdf, x, &v.vector);
         if status != ::Value::Success {
             return status;
         }
@@ -923,7 +976,7 @@ fn fdjac<T>(x: &mut ::VectorF64, fdf: &MultiFitFunctionFdf<T>, f: &::VectorF64, 
 
         h = 1f64 / h;
         for i in range(0, fdf.n) {
-            let fnext = v.vector.get(i);
+            let fnext = v.get(i);
             let fi = f.get(i);
 
             jm.set(i, j, (fnext - fi) * h);
@@ -943,24 +996,32 @@ Inputs: x   - parameter vector
 Return: success or error
 */
 
-fn gsl_multifit_fdfsolver_dif_df<T>(x: &::VectorF64, fdf: &MultiFitFunctionFdf<T>, f: &::VectorF64, J: &::MatrixF64) -> ::Value {
+fn gsl_multifit_fdfsolver_dif_df<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF64,
+    J: &mut ::MatrixF64) -> ::Value {
     fdjac(x, fdf, f, J)
 }
 
+#[allow(unused_assignments)]
 fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::VectorF64, delta: f64, par_inout: &mut f64,
     newton: &mut ::VectorF64, gradient: &mut ::VectorF64, sdiag: &mut ::VectorF64, x: &mut ::VectorF64,
     w: &mut ::VectorF64) -> ::Value {
-    double dxnorm, gnorm, fp, fp_old, par_lower, par_upper, par_c;
+    let mut dxnorm = 0f64;
+    let mut gnorm = 0f64;
+    let mut fp = 0f64;
+    let mut fp_old = 0f64;
+    let mut par_lower = 0f64;
+    let mut par_upper = 0f64;
+    let mut par_c = 0f64;
 
     let mut par = *par_inout;
-    size_t iter = 0;
+    let mut iter = 0u64;
 
     /*#ifdef DEBUG
     printf("ENTERING lmpar\n");
     #endif*/
 
 
-    compute_newton_direction (r, perm, qtf, newton);
+    compute_newton_direction(r, perm, qtf, newton);
 
     /*#ifdef DEBUG
     printf ("newton = ");
@@ -984,12 +1045,12 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
     #endif*/
 
     if fp <= 0.1 * delta {
-        gsl_vector_memcpy (x, newton);
+        x.copy_from(newton);
         /*#ifdef DEBUG
           printf ("took newton (fp = %g, delta = %g)\n", fp, delta);
         #endif*/
 
-        *par_inout = 0;
+        *par_inout = 0f64;
 
         return ::Value::Success;
     }
@@ -1006,7 +1067,7 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
     printf ("dxnorm = %g\n", dxnorm);
     #endif*/
 
-    compute_newton_bound (r, newton, dxnorm, perm, diag, w);
+    compute_newton_bound(r, newton, dxnorm, perm, diag, w);
 
     /*#ifdef DEBUG
     printf("perm = "); gsl_permutation_fprintf(stdout, perm, "%d");
@@ -1022,17 +1083,17 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
 
 
     {
-        double wnorm = enorm (w);
-        double phider = wnorm * wnorm;
+        let wnorm = enorm(w);
+        let phider = wnorm * wnorm;
 
         /* w == zero if r rank-deficient, 
            then set lower bound to zero form MINPACK, lmder.f 
            Hans E. Plesser 2002-02-25 (hans.plesser@itf.nlh.no) */
-        if wnorm > 0 {
-            par_lower = fp / (delta * phider);
+        par_lower = if wnorm > 0f64 {
+            fp / (delta * phider)
         } else {
-            par_lower = 0.0;
-        }
+            0f64
+        };
     }
 
     /*#ifdef DEBUG
@@ -1051,8 +1112,8 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
 
     par_upper =  gnorm / delta;
 
-    if par_upper == 0 {
-        par_upper = ::DBL_MIN / GSL_MIN_DBL(delta, 0.1);
+    if par_upper == 0f64 {
+        par_upper = ::DBL_MIN / delta.min(0.1f64);
     }
 
     /*#ifdef DEBUG
@@ -1073,7 +1134,7 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
         par = par_lower;
     }
 
-    if par == 0 {
+    if par == 0f64 {
         par = gnorm / dxnorm;
         /*#ifdef DEBUG
         printf("set par to gnorm/dxnorm = %g\n", par);
@@ -1081,130 +1142,127 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
     }
 
     /* Beginning of iteration */
+    loop {
+        iter += 1;
 
-iteration:
-
-    iter++;
-
-    /*#ifdef DEBUG
-    printf("lmpar iteration = %d\n", iter);
-    #endif*/
-
-    //#ifdef BRIANSFIX
-    /* Seems like this is described in the paper but not in the MINPACK code */
-
-    // I keep the BRIANSFIX for the moment
-    if par < par_lower || par > par_upper {
-        par = (par_lower * par_upper).sqrtf().max(0.001f64 * par_upper);
-    }
-    //#endif
-
-    /* Evaluate the function at the current value of par */
-
-    if par == 0 {
-        par = (0.001f64 * par_upper).max(::DBL_MIN);
         /*#ifdef DEBUG
-          printf("par = 0, set par to  = %g\n", par);
+        printf("lmpar iteration = %d\n", iter);
         #endif*/
-    }
 
-    /* Compute the least squares solution of [ R P x - Q^T f, sqrt(par) D x]
-     for A = Q R P^T */
+        //#ifdef BRIANSFIX
+        /* Seems like this is described in the paper but not in the MINPACK code */
 
-    /*#ifdef DEBUG
-    printf ("calling qrsolv with par = %g\n", par);
-    #endif*/
+        // I keep the BRIANSFIX for the moment
+        if par < par_lower || par > par_upper {
+            par = (par_lower * par_upper).sqrt().max(0.001f64 * par_upper);
+        }
+        //#endif
 
-    {
-        let sqrt_par = sqrt(par);
+        /* Evaluate the function at the current value of par */
 
-        qrsolv(r, perm, sqrt_par, diag, qtf, x, sdiag, w);
-    }
-
-    dxnorm = scaled_enorm (diag, x);
-
-    fp_old = fp;
-
-    fp = dxnorm - delta;
-
-    /*#ifdef DEBUG
-    printf ("After qrsolv dxnorm = %g, delta = %g, fp = %g\n", dxnorm, delta, fp);
-    printf ("sdiag = ") ; gsl_vector_fprintf(stdout, sdiag, "%g"); printf("\n");
-    printf ("x = ") ; gsl_vector_fprintf(stdout, x, "%g"); printf("\n");
-    printf ("r = ") ; gsl_matrix_fprintf(stdout, r, "%g"); printf("\nXXX\n");
-    #endif*/
-
-    /* If the function is small enough, accept the current value of par */
-
-    if fp.fabs() <= 0.1f64 * delta {
-        goto line220;
-    }
-
-    if par_lower == 0 && fp <= fp_old && fp_old < 0 {
-        goto line220;
-    }
-
-    /* Check for maximum number of iterations */
-
-    if iter == 10 {
-        goto line220;
-    }
-
-    /* Compute the Newton correction */
-
-    compute_newton_correction(r, sdiag, perm, x, dxnorm, diag, w);
-
-    /*#ifdef DEBUG
-    printf ("newton_correction = ");
-    gsl_vector_fprintf(stdout, w, "%g"); printf("\n");
-    #endif*/
-
-    {
-        let wnorm = enorm(w);
-        par_c = fp / (delta * wnorm * wnorm);
-    }
-
-    /*#ifdef DEBUG
-    printf("fp = %g\n", fp);
-    printf("par_lower = %g\n", par_lower);
-    printf("par_upper = %g\n", par_upper);
-    printf("par_c = %g\n", par_c);
-    #endif*/
-
-
-    /* Depending on the sign of the function, update par_lower or par_upper */
-
-    if fp > 0 {
-        if par > par_lower {
-            par_lower = par;
+        if par == 0f64 {
+            par = (0.001f64 * par_upper).max(::DBL_MIN);
             /*#ifdef DEBUG
-              printf("fp > 0: set par_lower = par = %g\n", par);
+              printf("par = 0, set par to  = %g\n", par);
             #endif*/
         }
-    } else if fp < 0 {
-        if par < par_upper {
-            /*#ifdef DEBUG
-              printf("fp < 0: set par_upper = par = %g\n", par);
-            #endif*/
-            par_upper = par;
+
+        /* Compute the least squares solution of [ R P x - Q^T f, sqrt(par) D x]
+         for A = Q R P^T */
+
+        /*#ifdef DEBUG
+        printf ("calling qrsolv with par = %g\n", par);
+        #endif*/
+
+        {
+            let sqrt_par = par.sqrt();
+
+            qrsolv(r, perm, sqrt_par, diag, qtf, x, sdiag, w);
         }
+
+        dxnorm = scaled_enorm(diag, x);
+
+        fp_old = fp;
+
+        fp = dxnorm - delta;
+
+        /*#ifdef DEBUG
+        printf ("After qrsolv dxnorm = %g, delta = %g, fp = %g\n", dxnorm, delta, fp);
+        printf ("sdiag = ") ; gsl_vector_fprintf(stdout, sdiag, "%g"); printf("\n");
+        printf ("x = ") ; gsl_vector_fprintf(stdout, x, "%g"); printf("\n");
+        printf ("r = ") ; gsl_matrix_fprintf(stdout, r, "%g"); printf("\nXXX\n");
+        #endif*/
+
+        /* If the function is small enough, accept the current value of par */
+
+        if fp.abs() <= 0.1f64 * delta {
+            break;
+        }
+
+        if par_lower == 0f64 && fp <= fp_old && fp_old < 0f64 {
+            break;
+        }
+
+        /* Check for maximum number of iterations */
+
+        if iter == 10 {
+            break;
+        }
+
+        /* Compute the Newton correction */
+
+        compute_newton_correction(r, sdiag, perm, x, dxnorm, diag, w);
+
+        /*#ifdef DEBUG
+        printf ("newton_correction = ");
+        gsl_vector_fprintf(stdout, w, "%g"); printf("\n");
+        #endif*/
+
+        {
+            let wnorm = enorm(w);
+
+            par_c = fp / (delta * wnorm * wnorm);
+        }
+
+        /*#ifdef DEBUG
+        printf("fp = %g\n", fp);
+        printf("par_lower = %g\n", par_lower);
+        printf("par_upper = %g\n", par_upper);
+        printf("par_c = %g\n", par_c);
+        #endif*/
+
+
+        /* Depending on the sign of the function, update par_lower or par_upper */
+
+        if fp > 0f64 {
+            if par > par_lower {
+                par_lower = par;
+                /*#ifdef DEBUG
+                  printf("fp > 0: set par_lower = par = %g\n", par);
+                #endif*/
+            }
+        } else if fp < 0f64 {
+            if par < par_upper {
+                /*#ifdef DEBUG
+                  printf("fp < 0: set par_upper = par = %g\n", par);
+                #endif*/
+                par_upper = par;
+            }
+        }
+
+        /* Compute an improved estimate for par */
+
+        /*#ifdef DEBUG
+          printf("improved estimate par = MAX(%g, %g) \n", par_lower, par+par_c);
+        #endif*/
+
+        par = par_lower.max(par + par_c);
+
+        /*#ifdef DEBUG
+          printf("improved estimate par = %g \n", par);
+        #endif*/
+
     }
-
-    /* Compute an improved estimate for par */
-
-    /*#ifdef DEBUG
-      printf("improved estimate par = MAX(%g, %g) \n", par_lower, par+par_c);
-    #endif*/
-
-    par = par_lower.max(par + par_c);
-
-    /*#ifdef DEBUG
-      printf("improved estimate par = %g \n", par);
-    #endif*/
-
-    goto iteration;
-
-    line220:
 
     /*#ifdef DEBUG
     printf("LEAVING lmpar, par = %g\n", par);
@@ -1213,4 +1271,345 @@ iteration:
     *par_inout = par;
 
     ::Value::Success
+}
+
+fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, x: &mut ::VectorF64) {
+    /* Compute and store in x the Gauss-Newton direction. If the
+     Jacobian is rank-deficient then obtain a least squares
+     solution. */
+
+    let n = r.size2();
+
+    for i in range(0, n) {
+        let qtfi = qtf.get(i);
+
+        x.set(i, qtfi);
+    }
+
+    let nsing = count_nsing(r);
+
+    /*#ifdef DEBUG
+    printf("nsing = %d\n", nsing);
+    printf("r = "); gsl_matrix_fprintf(stdout, r, "%g"); printf("\n");
+    printf("qtf = "); gsl_vector_fprintf(stdout, x, "%g"); printf("\n");
+    #endif*/
+
+    if nsing < n {
+        for i in range(nsing, n) {
+            x.set(i, 0f64);
+        }
+    }
+
+    if nsing > 0u64 {
+        for j in range(nsing, 0) {
+            let rjj = r.get(j, j);
+            let temp = x.get(j) / rjj;
+          
+            x.set(j, temp);
+              
+            for i in range(0, j) {
+                let rij = r.get(i, j);
+                let xi = x.get(i);
+              
+                x.set(i, xi - rij * temp);
+            }
+        }
+    }
+
+    perm.permute_vector_inverse(x);
+}
+
+fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::Permutation, diag: &::VectorF64,
+    w: &mut ::VectorF64) {
+    /* If the jacobian is not rank-deficient then the Newton step
+     provides a lower bound for the zero of the function. Otherwise
+     set this bound to zero. */
+
+    let n = r.size2();
+
+    let nsing = count_nsing(r);
+
+    if nsing < n {
+        w.set_zero();
+        return;
+    }
+
+    for i in range(0, n) {
+        let pi = perm.get(i);
+
+        let dpi = diag.get(pi);
+        let xpi = x.get(pi);
+
+        w.set(i, dpi * (dpi * xpi / dxnorm));
+    }
+
+    for j in range(0, n) {
+        let mut sum = 0f64;
+
+        for i in range(0, j) {
+            sum += r.get(i, j) * w.get(i);
+        }
+
+        {
+            let rjj = r.get(j, j);
+            let wj = w.get(j);
+
+            w.set(j, (wj - sum) / rjj);
+        }
+    }
+}
+
+/* This function computes the solution to the least squares system
+   phi = [ A x =  b , lambda D x = 0 ]^2
+    
+   where A is an M by N matrix, D is an N by N diagonal matrix, lambda
+   is a scalar parameter and b is a vector of length M.
+   The function requires the factorization of A into A = Q R P^T,
+   where Q is an orthogonal matrix, R is an upper triangular matrix
+   with diagonal elements of non-increasing magnitude and P is a
+   permuation matrix. The system above is then equivalent to
+   [ R z = Q^T b, P^T (lambda D) P z = 0 ]
+   where x = P z. If this system does not have full rank then a least
+   squares solution is obtained.  On output the function also provides
+   an upper triangular matrix S such that
+   P^T (A^T A + lambda^2 D^T D) P = S^T S
+   Parameters,
+   
+   r: On input, contains the full upper triangle of R. On output the
+   strict lower triangle contains the transpose of the strict upper
+   triangle of S, and the diagonal of S is stored in sdiag.  The full
+   upper triangle of R is not modified.
+   p: the encoded form of the permutation matrix P. column j of P is
+   column p[j] of the identity matrix.
+   lambda, diag: contains the scalar lambda and the diagonal elements
+   of the matrix D
+   qtb: contains the product Q^T b
+   x: on output contains the least squares solution of the system
+   wa: is a workspace of length N
+   */
+fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF64, qtb: &::VectorF64, 
+    x: &mut ::VectorF64, sdiag: &mut ::VectorF64, wa: &mut ::VectorF64) -> ::Value {
+    let n = r.size2();
+
+    /* Copy r and qtb to preserve input and initialise s. In particular,
+     save the diagonal elements of r in x */
+
+    let mut j = 0;
+    while j < n {
+        let rjj = r.get(j, j);
+        let qtbj = qtb.get(j);
+
+        let mut i = j + 1;
+        while i < n {
+            let rji = r.get(j, i);
+
+            r.set(i, j, rji);
+            i += 1;
+        }
+
+        x.set(j, rjj);
+        wa.set(j, qtbj);
+        j += 1;
+    }
+
+    /* Eliminate the diagonal matrix d using a Givens rotation */
+    j = 0;
+    while j < n {
+        let pj = p.get(j);
+
+        let diagpj = lambda * diag.get(pj);
+
+        if diagpj == 0f64 {
+            continue;
+        }
+
+        sdiag.set(j, diagpj);
+
+        let mut k = j + 1;
+        while k < n {
+            sdiag.set(k, 0f64);
+            k += 1;
+        }
+
+        /* The transformations to eliminate the row of d modify only a
+           single element of qtb beyond the first n, which is initially
+           zero */
+
+        let mut qtbpj = 0f64;
+        k = j;
+        while k < n {
+            /* Determine a Givens rotation which eliminates the
+               appropriate element in the current row of d */
+
+            let wak = wa.get(k);
+            let rkk = r.get(k, k);
+            let sdiagk = sdiag.get(k);
+
+            if sdiagk == 0f64 {
+                continue;
+            }
+
+            let (sine, cosine) = if rkk.abs() < sdiagk.abs() {
+                let cotangent = rkk / sdiagk;
+                let t_sine = 0.5f64 / (0.25f64 + 0.25f64 * cotangent * cotangent).sqrt();
+
+                (t_sine, t_sine * cotangent)
+            } else {
+                let tangent = sdiagk / rkk;
+                let t_cos = 0.5f64 / (0.25f64 + 0.25f64 * tangent * tangent).sqrt();
+
+                (t_cos * tangent, t_cos)
+            };
+
+            /* Compute the modified diagonal element of r and the
+               modified element of [qtb,0] */
+
+            {
+                let new_rkk = cosine * rkk + sine * sdiagk;
+                let new_wak = cosine * wak + sine * qtbpj;
+                
+                qtbpj = -sine * wak + cosine * qtbpj;
+
+                r.set(k, k, new_rkk);
+                wa.set(k, new_wak);
+            }
+
+            /* Accumulate the transformation in the row of s */
+            let mut i = k + 1;
+            while i < n {
+                let rik = r.get(i, k);
+                let sdiagi = sdiag.get(i);
+              
+                let new_rik = cosine * rik + sine * sdiagi;
+                let new_sdiagi = -sine * rik + cosine * sdiagi;
+              
+                r.set(i, k, new_rik);
+                sdiag.set(i, new_sdiagi);
+                i += 1;
+            }
+            k += 1;
+        }
+
+        /* Store the corresponding diagonal element of s and restore the
+           corresponding diagonal element of r */
+
+        {
+            let rjj = r.get(j, j);
+            let xj = x.get(j);
+            
+            sdiag.set(j, rjj);
+            r.set(j, j, xj);
+        }
+        j += 1;
+
+    }
+
+    /* Solve the triangular system for z. If the system is singular then
+       obtain a least squares solution */
+
+    let mut nsing = n;
+    j = 0;
+    while j < n {
+        let sdiagj = sdiag.get(j);
+
+        if sdiagj == 0f64 {
+            nsing = j;
+            break;
+        }
+        j += 1;
+    }
+
+    j = nsing;
+    while j < n {
+        wa.set(j, 0f64);
+        j += 1;
+    }
+
+    let mut k = 0;
+    while k < nsing {
+        let mut sum = 0f64;
+
+        j = (nsing - 1) - k;
+
+        let mut i = j + 1;
+        while i < nsing {
+            sum += r.get(i, j) * wa.get(i);
+            i += 1;
+        }
+
+        {
+            let waj = wa.get(j);
+            let sdiagj = sdiag.get(j);
+
+            wa.set(j, (waj - sum) / sdiagj);
+        }
+        k += 1;
+    }
+
+    /* Permute the components of z back to the components of x */
+    j = 0;
+    while j < n {
+        let pj = p.get(j);
+        let waj = wa.get(j);
+
+        x.set(pj, waj);
+        j += 1;
+    }
+
+    ::Value::Success
+}
+
+fn compute_newton_correction(r: &::MatrixF64, sdiag: &::VectorF64, p: &::Permutation, x: &mut ::VectorF64, dxnorm: f64,
+    diag: &::VectorF64, w: &mut ::VectorF64) {
+    let n = r.size2();
+
+    let mut i = 0;
+    while i < n {
+      let pi = p.get(i);
+
+      let dpi = diag.get(pi);
+      let xpi = x.get(pi);
+
+      w.set(i, dpi * (dpi * xpi) / dxnorm);
+      i += 1;
+    }
+
+    let mut j = 0;
+    while j < n {
+        let sj = sdiag.get(j);
+        let wj = w.get(j);
+
+        let tj = wj / sj;
+
+        w.set(j, tj);
+
+        let mut i = j + 1;
+        while i < n {
+            let rij = r.get (i, j);
+            let wi = w.get (i);
+
+            w.set (i, wi - rij * tj);
+            i += 1;
+        }
+        j += 1;
+    }
+}
+
+fn count_nsing(r: &::MatrixF64) -> u64 {
+    /* Count the number of nonsingular entries. Returns the index of the
+       first entry which is singular. */
+
+    let n = r.size2();
+    let mut i = 0u64;
+
+    while i < n {
+        let rii = r.get(i, i);
+
+        if rii == 0f64 {
+            break;
+        }
+        i += 1;
+    }
+
+    i
 }

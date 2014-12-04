@@ -52,7 +52,7 @@ Here is the list of all modules :
 !*/
 
 #![crate_name = "rgsl"]
-#![desc = "Rust binding for GSL"]
+//#![desc = "Rust binding for GSL"]
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
 
@@ -136,9 +136,9 @@ pub use types::{
     Wavelet,
     WaveletType,
     WaveletWorkspace,
-    //MultiFitFdfSolver,
-    //MultiFitFunction,
-    //MultiFitFdfSolverType
+    MultiFitFdfSolver,
+    MultiFitFunction,
+    MultiFitFdfSolverType
 };
 
 pub use elementary::Elementary;
