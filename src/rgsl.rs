@@ -196,6 +196,7 @@ pub mod legendre;
 pub mod linear_algebra;
 pub mod logarithm;
 pub mod minimizer;
+pub mod multifit;
 pub mod numerical_differentiation;
 pub mod physical_constant;
 pub mod polynomials;
