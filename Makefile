@@ -34,6 +34,7 @@ examples: rgsl
 	  rustc -o bin/wavelet_transforms -L ./lib examples/wavelet_transforms/main.rs
 	  rustc -o bin/physical_constant -L ./lib examples/physical_constant/main.rs
 	  rustc -o bin/vectors_and_matrices -L ./lib examples/vectors_and_matrices/main.rs
+	  # rustc -o bin/multifit_solver -L ./lib examples/multifit_solver/main.rs
 
 doc:
 	rustdoc -o doc src/rgsl.rs
