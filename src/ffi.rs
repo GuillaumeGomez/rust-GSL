@@ -2497,7 +2497,10 @@ extern "C" {
     pub fn gsl_wavelet2d_nstransform_matrix_forward(w: *const gsl_wavelet, m: *mut gsl_matrix, work: *mut gsl_wavelet_workspace) -> enums::value::Value;
     pub fn gsl_wavelet2d_nstransform_matrix_inverse(w: *const gsl_wavelet, m: *mut gsl_matrix, work: *mut gsl_wavelet_workspace) -> enums::value::Value;
 
+    // multifit
     pub fn gsl_multifit_covar(j: *const gsl_matrix, epsrel: c_double, covar: *mut gsl_matrix) -> enums::value::Value;
+    pub fn gsl_multifit_test_delta(dx: *const gsl_vector, x: *const gsl_vector, epsabs: c_double, epsrel: c_double) -> enums::value::Value;
+    pub fn gsl_multifit_gradient(j: *const gsl_matrix, f: *const gsl_vector, g: *mut gsl_vector) -> enums::value::Value;
 }
 
 #[repr(C)]
