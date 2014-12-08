@@ -19,7 +19,7 @@ pub use self::matrix::{MatrixF32, MatrixF64, MatrixView};
 pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};
 pub use self::minimizer::{Minimizer, MinimizerType};
 pub use self::monte_carlo::{PlainMonteCarlo, MiserMonteCarlo, VegasMonteCarlo, VegasParams};
-pub use self::multifit_solver::{MultiFitFdfSolver, MultiFitFunction, MultiFitFdfSolverType};
+pub use self::multifit_solver::{MultiFitFdfSolver, MultiFitFunction, MultiFitFdfSolverType, MultiFitFunctionFdf};
 pub use self::multiset::MultiSet;
 pub use self::n_tuples::NTuples;
 pub use self::ordinary_differential_equations::{ODEiv2System, ODEiv2Step, ODEiv2StepType, ODEiv2Control, ODEiv2Evolve, ODEiv2Driver};

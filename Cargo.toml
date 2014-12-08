@@ -135,3 +135,8 @@ path = "examples/physical_constant/main.rs"
 
 name = "vectors_and_matrices"
 path = "examples/vectors_and_matrices/main.rs"
+
+[[bin]]
+
+name = "multifit_solver"
+path = "examples/multifit_solver/main.rs"

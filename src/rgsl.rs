@@ -138,7 +138,8 @@ pub use types::{
     WaveletWorkspace,
     MultiFitFdfSolver,
     MultiFitFunction,
-    MultiFitFdfSolverType
+    MultiFitFdfSolverType,
+    MultiFitFunctionFdf
 };
 
 pub use elementary::Elementary;

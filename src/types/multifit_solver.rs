@@ -41,6 +41,7 @@ These routines provide a high level wrapper that combine the iteration and conve
 
 use ffi;
 use std::num::{Float, FloatMath};
+use libc::c_void;
 
 pub struct MultiFitFunction<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,
@@ -53,21 +54,21 @@ pub struct MultiFitFunction<'r, T:'r> {
 
 pub struct MultiFitFdfSolver<'r, T:'r> {
     _type: MultiFitFdfSolverType<T>,
-    fdf: MultiFitFunctionFdf<'r, T>,
-    x: ::VectorF64,
-    f: ::VectorF64,
-    j: ::MatrixF64,
-    dx: ::VectorF64,
+    fdf: *mut c_void, //MultiFitFunctionFdf<'r, T>,
+    pub x: ::VectorF64,
+    pub f: ::VectorF64,
+    pub j: ::MatrixF64,
+    pub dx: ::VectorF64,
     state: LmderStateT
 }
 
 impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T for n observations and p parameters. The number
     /// of observations n must be greater than or equal to parameters p.
-    pub fn new(_type: &MultiFitFdfSolverType<T>, f: MultiFitFunctionFdf<'r, T>, n: u64, p: u64) -> Option<MultiFitFdfSolver<'r, T>> {
+    pub fn new(_type: &MultiFitFdfSolverType<T>, n: u64, p: u64) -> Option<MultiFitFdfSolver<'r, T>> {
         let mut r = MultiFitFdfSolver {
             _type: *_type,
-            fdf: f,
+            fdf: ::std::ptr::null_mut(),
             x: ::VectorF64::new(p).unwrap(),
             f: ::VectorF64::new(n).unwrap(),
             j: ::MatrixF64::new(n, p).unwrap(),
@@ -82,7 +83,7 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
     }
 
     /// This function initializes, or reinitializes, an existing solver s to use the function f and the initial guess x.
-    pub fn set(&mut self, f: MultiFitFunctionFdf<'r, T>, x: &::VectorF64) -> ::Value {
+    pub fn set(&mut self, f: &mut MultiFitFunctionFdf<'r, T>, x: &::VectorF64) -> ::Value {
         if self.f.len() != f.n {
             rgsl_error!("function size does not match solver", ::Value::BadLen);
             return ::Value::BadLen;
@@ -93,10 +94,12 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
             return ::Value::BadLen;
         }  
 
-        self.fdf = f;
+        self.fdf = unsafe { ::std::mem::transmute(f) };
         self.x.copy_from(x);
 
-        (self._type.set)(&mut self.state, &mut self.fdf, &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
+        unsafe {
+            (self._type.set)(&mut self.state, ::std::mem::transmute(self.fdf), &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
+        }
     }
 
     pub fn name(&self) -> &'static str {
@@ -106,7 +109,9 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// This function performs a single iteration of the solver s. If the iteration encounters an unexpected problem then an error code
     /// will be returned. The solver maintains a current estimate of the best-fit parameters at all times.
     pub fn iterate(&mut self) -> ::Value {
-        (self._type.iterate)(&mut self.state, &mut self.fdf, &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
+        unsafe {
+            (self._type.iterate)(&mut self.state, ::std::mem::transmute(self.fdf), &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
+        }
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
@@ -160,7 +165,7 @@ pub struct MultiFitFdfSolverType<T> {
 }
 
 impl<T> MultiFitFdfSolverType<T> {
-    pub fn lmder_type() -> MultiFitFdfSolverType<T> {
+    pub fn lmder() -> MultiFitFdfSolverType<T> {
         MultiFitFdfSolverType {
             name: "lmder",
             alloc: lmder_alloc,
@@ -170,7 +175,7 @@ impl<T> MultiFitFdfSolverType<T> {
         }
     }
 
-    pub fn lmsder_type() -> MultiFitFdfSolverType<T> {
+    pub fn lmsder() -> MultiFitFdfSolverType<T> {
         MultiFitFdfSolverType {
             name: "lmsder",
             alloc: lmder_alloc,
@@ -182,12 +187,12 @@ impl<T> MultiFitFdfSolverType<T> {
 }
 
 pub struct MultiFitFunctionFdf<'r, T:'r> {
-    f: fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value,
-    df: Option<fn(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> ::Value>,
-    fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> ::Value>,
-    n: u64,
-    p: u64,
-    params: &'r mut T
+    pub f: fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value,
+    pub df: Option<fn(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> ::Value>,
+    pub fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> ::Value>,
+    pub n: u64,
+    pub p: u64,
+    pub params: &'r mut T
 }
 
 struct LmderStateT {
