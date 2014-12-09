@@ -85,8 +85,8 @@ fn main() {
     let mut covar = rgsl::MatrixF64::new(p as u64, p as u64).unwrap();
     let mut d = Data {
         n: n as u64,
-        y: Vec::with_capacity(N),
-        sigma: Vec::with_capacity(N)
+        y: Vec::from_elem(N, 0f64),
+        sigma: Vec::from_elem(N, 0f64)
     };
     let mut x_init : [f64, ..3] = [1f64, 0f64, 0f64];
     let mut x = rgsl::VectorView::from_array(&mut x_init);
@@ -112,7 +112,7 @@ fn main() {
 
         f.params.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp() + rgsl::randist::gaussian::gaussian(&r, 0.1f64);
         f.params.sigma[i] = 0.1f64;
-        println!("data: {} {} {}", i, f.params.y[i], f.params.sigma[i]);
+        println!("data: {:2} {:.5} {:.5}", i, f.params.y[i], f.params.sigma[i]);
     }
 
     let T = rgsl::MultiFitFdfSolverType::lmsder();

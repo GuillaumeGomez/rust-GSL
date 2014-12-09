@@ -73,7 +73,7 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
             f: ::VectorF64::new(n).unwrap(),
             j: ::MatrixF64::new(n, p).unwrap(),
             dx: ::VectorF64::new(p).unwrap(),
-            state: LmderStateT::new()
+            state: LmderStateT::new(n, p)
         };
         if ((*_type).alloc)(&mut r.state, n, p) == ::Value::Success {
             Some(r)
@@ -195,6 +195,7 @@ pub struct MultiFitFunctionFdf<'r, T:'r> {
     pub params: &'r mut T
 }
 
+#[allow(dead_code)]
 struct LmderStateT {
     iter: u64,
     xnorm: f64,
@@ -218,33 +219,35 @@ struct LmderStateT {
 }
 
 impl LmderStateT {
-    fn new() -> LmderStateT {
+    fn new(n: u64, p: u64) -> LmderStateT {
         LmderStateT {
             iter: 0u64,
             xnorm: 0f64,
             fnorm: 0f64,
             delta: 0f64,
             par: 0f64,
-            r: ::MatrixF64::new(0, 0).unwrap(),
-            tau: ::VectorF64::new(0).unwrap(),
-            diag: ::VectorF64::new(0).unwrap(),
-            qtf: ::VectorF64::new(0).unwrap(),
-            newton: ::VectorF64::new(0).unwrap(),
-            gradient: ::VectorF64::new(0).unwrap(),
-            x_trial: ::VectorF64::new(0).unwrap(),
-            f_trial: ::VectorF64::new(0).unwrap(),
-            df: ::VectorF64::new(0).unwrap(),
-            sdiag: ::VectorF64::new(0).unwrap(),
-            rptdx: ::VectorF64::new(0).unwrap(),
-            w: ::VectorF64::new(0).unwrap(),
-            work1: ::VectorF64::new(0).unwrap(),
-            perm: ::Permutation::new(0).unwrap()
+            r: ::MatrixF64::new(n, p).unwrap(),
+            tau: ::VectorF64::new(if p < n {p} else {n}).unwrap(),
+            diag: ::VectorF64::new(p).unwrap(),
+            qtf: ::VectorF64::new(n).unwrap(),
+            newton: ::VectorF64::new(p).unwrap(),
+            gradient: ::VectorF64::new(p).unwrap(),
+            x_trial: ::VectorF64::new(p).unwrap(),
+            f_trial: ::VectorF64::new(n).unwrap(),
+            df: ::VectorF64::new(n).unwrap(),
+            sdiag: ::VectorF64::new(p).unwrap(),
+            rptdx: ::VectorF64::new(n).unwrap(),
+            w: ::VectorF64::new(n).unwrap(),
+            work1: ::VectorF64::new(p).unwrap(),
+            perm: ::Permutation::new(p).unwrap()
         }
     }
 }
 
+#[allow(unused_variables)]
+// I'm not sure if I'll keep this function or not...
 fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
-    state.r = match ::MatrixF64::new(n, p) {
+    /*state.r = match ::MatrixF64::new(n, p) {
         Some(m) => m,
         None => {
             rgsl_error!("failed to allocate space for r", ::Value::NoMem);
@@ -255,7 +258,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.tau = match ::VectorF64::new(if n < p {n} else {p}) {
         Some(t) => t,
         None => {
-            //::std::mem::drop(state.r);
             rgsl_error!("failed to allocate space for tau", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -264,8 +266,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.diag = match ::VectorF64::new(p) {
         Some(d) => d,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);*/
             rgsl_error!("failed to allocate space for diag", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -274,9 +274,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.qtf = match ::VectorF64::new(n) {
         Some(q) => q,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);*/
             rgsl_error!("failed to allocate space for qtf", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -285,10 +282,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.newton = match ::VectorF64::new(p) {
         Some(n) => n,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);*/
             rgsl_error!("failed to allocate space for newton", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -297,11 +290,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.gradient = match ::VectorF64::new(p) {
         Some(g) => g,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);*/
             rgsl_error!("failed to allocate space for gradient", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -310,12 +298,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.x_trial = match ::VectorF64::new(p) {
         Some(x) => x,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);*/
             rgsl_error!("failed to allocate space for x_trial", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -324,13 +306,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.f_trial = match ::VectorF64::new(n) {
         Some(f) => f,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);*/
             rgsl_error!("failed to allocate space for f_trial", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -339,14 +314,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.df = match ::VectorF64::new(n) {
         Some(d) => d,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);*/
             rgsl_error!("failed to allocate space for df", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -355,15 +322,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.sdiag = match ::VectorF64::new(p) {
         Some(s) => s,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);
-            ::std::mem::drop(state.df);*/
             rgsl_error!("failed to allocate space for sdiag", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -372,16 +330,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.rptdx = match ::VectorF64::new(n) {
         Some(s) => s,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);
-            ::std::mem::drop(state.df);
-            ::std::mem::drop(state.sdiag);*/
             rgsl_error!("failed to allocate space for rptdx", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -390,17 +338,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.w = match ::VectorF64::new(n) {
         Some(w) => w,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);
-            ::std::mem::drop(state.df);
-            ::std::mem::drop(state.sdiag);
-            ::std::mem::drop(state.rptdx);*/
             rgsl_error!("failed to allocate space for w", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -409,18 +346,6 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.work1 = match ::VectorF64::new(p) {
         Some(w) => w,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);
-            ::std::mem::drop(state.df);
-            ::std::mem::drop(state.sdiag);
-            ::std::mem::drop(state.rptdx);
-            ::std::mem::drop(state.w);*/
             rgsl_error!("failed to allocate space for work1", ::Value::NoMem);
             ::VectorF64::new(0).unwrap() // to allow compilation
         }
@@ -429,23 +354,10 @@ fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
     state.perm = match ::Permutation::new(p) {
         Some(p) => p,
         None => {
-            /*::std::mem::drop(state.r);
-            ::std::mem::drop(state.tau);
-            ::std::mem::drop(state.diag);
-            ::std::mem::drop(state.qtf);
-            ::std::mem::drop(state.newton);
-            ::std::mem::drop(state.gradient);
-            ::std::mem::drop(state.x_trial);
-            ::std::mem::drop(state.f_trial);
-            ::std::mem::drop(state.df);
-            ::std::mem::drop(state.sdiag);
-            ::std::mem::drop(state.rptdx);
-            ::std::mem::drop(state.w);
-            ::std::mem::drop(state.work1);*/
             rgsl_error!("failed to allocate space for perm", ::Value::NoMem);
             ::Permutation::new(0).unwrap() // to allow compilation
         }
-    };
+    };*/
 
     ::Value::Success
 }

@@ -55,6 +55,7 @@ use std::fmt::{Formatter, Show};
 use types::{VectorF64, VectorF32};
 use ffi;
 use enums;
+use libc::size_t;
 
 pub struct MatrixView {
     mat: ffi::gsl_matrix
@@ -194,7 +195,7 @@ impl MatrixF64 {
     /// 
     /// XX XX XX
     pub fn new(n1: u64, n2: u64) -> Option<MatrixF64> {
-        let tmp = unsafe { ffi::gsl_matrix_calloc(n1, n2) };
+        let tmp = unsafe { ffi::gsl_matrix_calloc(n1 as size_t, n2 as size_t) };
 
         if tmp.is_null() {
             None
