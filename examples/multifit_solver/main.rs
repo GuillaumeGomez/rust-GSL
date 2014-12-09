@@ -15,6 +15,38 @@
 // 
 // expfit.c -- model functions for exponential + background */
 
+/*
+The iteration terminates when the change in x is smaller than 0.0001, as both an absolute and relative change. Here are the results of
+running the program:
+
+iter: 0 x=1.00000000 0.00000000 0.00000000 |f(x)|=117.349
+status=success
+iter: 1 x=1.64659312 0.01814772 0.64659312 |f(x)|=76.4578
+status=success
+iter: 2 x=2.85876037 0.08092095 1.44796363 |f(x)|=37.6838
+status=success
+iter: 3 x=4.94899512 0.11942928 1.09457665 |f(x)|=9.58079
+status=success
+iter: 4 x=5.02175572 0.10287787 1.03388354 |f(x)|=5.63049
+status=success
+iter: 5 x=5.04520433 0.10405523 1.01941607 |f(x)|=5.44398
+status=success
+iter: 6 x=5.04535782 0.10404906 1.01924871 |f(x)|=5.44397
+chisq/dof = 0.800996
+A      = 5.04536 +/- 0.06028
+lambda = 0.10405 +/- 0.00316
+b      = 1.01925 +/- 0.03782
+status = success
+The approximate values of the parameters are found correctly, and the chi-squared value indicates a good fit (the chi-squared per degree
+of freedom is approximately 1). In this case the errors on the parameters can be estimated from the square roots of the diagonal elements
+of the covariance matrix.
+
+If the chi-squared value shows a poor fit (i.e. chi^2/dof >> 1) then the error estimates obtained from the covariance matrix will be too
+small. In the example program the error estimates are multiplied by \sqrt{\chi^2/dof} in this case, a common way of increasing the errors
+for a poor fit. Note that a poor fit will result from the use an inappropriate model, and the scaled error estimates may then be outside
+the range of validity for Gaussian errors.
+*/
+
 #![allow(non_snake_case)]
 
 extern crate rgsl;
@@ -126,8 +158,7 @@ fn main() {
         iter += 1;
         status = s.iterate();
 
-        // this function is missing -> ??
-        //println!("status = {}", gsl_strerror(status));
+        println!("status = {}", rgsl::error::str_error(status));
 
         print_state(iter as u64, &mut s);
 
@@ -155,39 +186,9 @@ fn main() {
         println!("b      = {:.5} +/- {:.5}", s.x.get(2), c * covar.get(2, 2).sqrt());
     }
 
-    //println!("status = {}", gsl_strerror (status));
+    println!("status = {}", rgsl::error::str_error(status));
 }
 
 fn print_state<T>(iter: u64, s: &mut rgsl::MultiFitFdfSolver<T>) {
     println!("iter: {:3} x = {:.8} {:.8} {:.8} |f(x)| = {}", iter, s.x.get(0), s.x.get(1), s.x.get(2), rgsl::blas::level1::dnrm2(&s.f));
 }
-
-/*The iteration terminates when the change in x is smaller than 0.0001, as both an absolute and relative change. Here are the results of
-running the program:
-
-iter: 0 x=1.00000000 0.00000000 0.00000000 |f(x)|=117.349
-status=success
-iter: 1 x=1.64659312 0.01814772 0.64659312 |f(x)|=76.4578
-status=success
-iter: 2 x=2.85876037 0.08092095 1.44796363 |f(x)|=37.6838
-status=success
-iter: 3 x=4.94899512 0.11942928 1.09457665 |f(x)|=9.58079
-status=success
-iter: 4 x=5.02175572 0.10287787 1.03388354 |f(x)|=5.63049
-status=success
-iter: 5 x=5.04520433 0.10405523 1.01941607 |f(x)|=5.44398
-status=success
-iter: 6 x=5.04535782 0.10404906 1.01924871 |f(x)|=5.44397
-chisq/dof = 0.800996
-A      = 5.04536 +/- 0.06028
-lambda = 0.10405 +/- 0.00316
-b      = 1.01925 +/- 0.03782
-status = success
-The approximate values of the parameters are found correctly, and the chi-squared value indicates a good fit (the chi-squared per degree
-of freedom is approximately 1). In this case the errors on the parameters can be estimated from the square roots of the diagonal elements
-of the covariance matrix.
-
-If the chi-squared value shows a poor fit (i.e. chi^2/dof >> 1) then the error estimates obtained from the covariance matrix will be too
-small. In the example program the error estimates are multiplied by \sqrt{\chi^2/dof} in this case, a common way of increasing the errors
-for a poor fit. Note that a poor fit will result from the use an inappropriate model, and the scaled error estimates may then be outside
-the range of validity for Gaussian errors.*/
