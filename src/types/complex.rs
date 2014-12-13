@@ -9,6 +9,7 @@ use std::fmt;
 use std::default::Default;
 
 #[repr(C)]
+#[deriving(Copy)]
 pub struct ComplexF64 {
     pub data: [f64, ..2]
 }
@@ -354,6 +355,7 @@ impl Default for ComplexF64 {
 }
 
 #[repr(C)]
+#[deriving(Copy)]
 pub struct ComplexF32 {
     pub data: [f32, ..2]
 }

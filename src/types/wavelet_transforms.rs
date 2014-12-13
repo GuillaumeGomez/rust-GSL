@@ -107,6 +107,7 @@ impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
 
 /// The centered forms of the wavelets align the coefficients of the various sub-bands on edges. Thus the resulting visualization of the
 /// coefficients of the wavelet transform in the phase plane is easier to understand.
+#[deriving(Copy)]
 pub struct WaveletType {
     t: *const ffi::gsl_wavelet_type
 }

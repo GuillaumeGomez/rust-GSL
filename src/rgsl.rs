@@ -63,6 +63,7 @@ Here is the list of all modules :
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
+#![allow(raw_pointer_deriving)]
 
 extern crate libc;
 

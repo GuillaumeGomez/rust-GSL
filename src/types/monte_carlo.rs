@@ -608,6 +608,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
 }
 
 #[repr(C)]
+#[deriving(Copy)]
 pub struct VegasParams {
     /// The parameter alpha controls the stiffness of the rebinning algorithm. It is typically set between one and two. A value of zero prevents
     /// rebinning of the grid. The default value is 1.5.
