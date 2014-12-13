@@ -6,6 +6,7 @@ use std::default::Default;
 
 /// The error handling form of the special functions always calculate an error estimate along with the value of the result.
 /// Therefore, structures are provided for amalgamating a value and error estimate.
+#[deriving(Copy)]
 pub struct Result {
     /// Contains the value.
     pub val: f64,
@@ -30,6 +31,7 @@ impl Result {
 
 /// In some cases, an overflow or underflow can be detected and handled by a function.
 /// In this case, it may be possible to return a scaling exponent as well as an error/value pair in order to save the result from exceeding the dynamic range of the built-in types.
+#[deriving(Copy)]
 pub struct ResultE10 {
     /// Contains the value.
     pub val: f64,

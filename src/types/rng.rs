@@ -224,6 +224,7 @@ impl ffi::FFI<ffi::gsl_rng> for Rng {
     }
 }
 
+#[deriving(Copy)]
 pub struct RngType {
     ptr: *mut ffi::gsl_rng_type
 }

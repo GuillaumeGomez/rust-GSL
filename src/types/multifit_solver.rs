@@ -53,7 +53,7 @@ pub struct MultiFitFunction<'r, T:'r> {
 }
 
 pub struct MultiFitFdfSolver<'r, T:'r> {
-    _type: MultiFitFdfSolverType<T>,
+    _type: &'r MultiFitFdfSolverType<T>,
     fdf: *mut c_void, //MultiFitFunctionFdf<'r, T>,
     pub x: ::VectorF64,
     pub f: ::VectorF64,
@@ -65,9 +65,9 @@ pub struct MultiFitFdfSolver<'r, T:'r> {
 impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T for n observations and p parameters. The number
     /// of observations n must be greater than or equal to parameters p.
-    pub fn new(_type: &MultiFitFdfSolverType<T>, n: u64, p: u64) -> Option<MultiFitFdfSolver<'r, T>> {
+    pub fn new(_type: &'r MultiFitFdfSolverType<T>, n: u64, p: u64) -> Option<MultiFitFdfSolver<'r, T>> {
         let mut r = MultiFitFdfSolver {
-            _type: *_type,
+            _type: _type,
             fdf: ::std::ptr::null_mut(),
             x: ::VectorF64::new(p).unwrap(),
             f: ::VectorF64::new(n).unwrap(),
