@@ -115,7 +115,7 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
-    pub fn position<'r>(&'r self) -> &'r ::VectorF64 {
+    pub fn position(&'r self) -> &'r ::VectorF64 {
         &self.x
     }
 

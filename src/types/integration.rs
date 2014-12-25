@@ -1396,13 +1396,31 @@ impl IntegrationWorkspace {
     /// allocated size of the workspace.
     pub fn qag<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: u64, key: enums::gauss_konrod_rule::GaussKonrodRule,
         result: &mut f64, abserr: &mut f64) -> ::Value {
-        let integration_rule = match key {
-            ::GaussKonrodRule::Gauss15 => ::integration::qk15,
-            ::GaussKonrodRule::Gauss21 => ::integration::qk21,
-            ::GaussKonrodRule::Gauss31 => ::integration::qk31,
-            ::GaussKonrodRule::Gauss41 => ::integration::qk41,
-            ::GaussKonrodRule::Gauss51 => ::integration::qk51,
-            ::GaussKonrodRule::Gauss61 => ::integration::qk61,
+        match key {
+            ::GaussKonrodRule::Gauss15 => {
+                intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
+                    ::integration::qk15)
+            }
+            ::GaussKonrodRule::Gauss21 => {
+                intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
+                    ::integration::qk21)
+            }
+            ::GaussKonrodRule::Gauss31 => {
+                intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
+                    ::integration::qk31)
+            }
+            ::GaussKonrodRule::Gauss41 => {
+                intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
+                    ::integration::qk41)
+            }
+            ::GaussKonrodRule::Gauss51 => {
+                intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
+                    ::integration::qk51)
+            }
+            ::GaussKonrodRule::Gauss61 => {
+                intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
+                    ::integration::qk61)
+            }
             /*_ => {
                 let file = file!();
                 "value of key does specify a known integration rule".with_c_str(|c_str|{
@@ -1413,8 +1431,7 @@ impl IntegrationWorkspace {
                 // this line is not used but just for compilation...
                 ::integration::qk15
             }*/
-        };
-        intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr, integration_rule)
+        }
     }
 
     /// This function applies the Gauss-Kronrod 21-point integration rule adaptively until an estimate of the integral of f over (a,b) is achieved

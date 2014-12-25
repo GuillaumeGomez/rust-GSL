@@ -17,4 +17,4 @@ macro_rules! rgsl_error(
             }
         }
     );
-)
+);

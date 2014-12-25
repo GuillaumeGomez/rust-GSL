@@ -129,8 +129,8 @@ fn main() {
 
     let mut f = rgsl::MultiFitFunctionFdf {
         f: expb_f,
-        df: Some(expb_df),
-        fdf: Some(expb_fdf),
+        df: Some(expb_df as fn(&_, &mut _, &mut _) -> _),
+        fdf: Some(expb_fdf as fn(&_, &mut _, &mut _, &mut _) -> _),
         n: n as u64,
         p: p as u64,
         params: &mut d
