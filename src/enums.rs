@@ -3,7 +3,7 @@
 //
 
 pub mod mode {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     pub enum Mode {
         PrecDouble,
@@ -13,7 +13,7 @@ pub mod mode {
 }
 
 pub mod value {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     pub enum Value {
         Success = 0,
@@ -88,7 +88,7 @@ pub mod value {
 }
 
 pub mod eigen_sort {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     pub enum EigenSort {
         /// ascending order in numerical value
@@ -103,7 +103,7 @@ pub mod eigen_sort {
 }
 
 pub mod fft_direction {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     /// this gives the sign in the formula
     /// 
@@ -117,7 +117,7 @@ pub mod fft_direction {
 }
 
 pub mod gauss_konrod_rule {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     /// The low-level integration rules in QUADPACK are identified by small integers (1-6). We'll use symbolic constants to refer to them.
     pub enum GaussKonrodRule {
@@ -137,7 +137,7 @@ pub mod gauss_konrod_rule {
 }
 
 pub mod integration_qawo {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     /// Used by workspace for QAWO integrator
     pub enum IntegrationQawo {
@@ -147,7 +147,7 @@ pub mod integration_qawo {
 }
 
 pub mod vegas_mode {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     /// Used by VegasMonteCarlo struct
     pub enum VegasMode {
@@ -158,7 +158,7 @@ pub mod vegas_mode {
 }
 
 pub mod odeiv {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     /// Possible return values for an hadjust() evolution method for ordinary differential equations
     pub enum ODEiv {
@@ -172,7 +172,7 @@ pub mod odeiv {
 }
 
 pub mod wavelet_direction {
-    #[deriving(Clone, PartialEq, PartialOrd, Show, Copy)]
+    #[derive(Clone, PartialEq, PartialOrd, Show, Copy)]
     #[repr(C)]
     pub enum WaveletDirection {
         Forward = 1,

@@ -14,7 +14,7 @@ extern crate rgsl;
 pub static N : uint = 20u;
 
 fn main() {
-    let mut t : [f64, ..20] = [0f64, ..20];
+    let mut t : [f64; 20] = [0f64; 20];
     let mut sum_accel = 0f64;
     let mut err = 0f64;
     let mut sum = 0f64;

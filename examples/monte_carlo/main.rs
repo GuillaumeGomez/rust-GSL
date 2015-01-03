@@ -59,8 +59,8 @@ fn main() {
     let mut res = 0f64;
     let mut err = 0f64;
 
-    let xl : [f64, ..3] = [0f64, ..3];
-    let xu : [f64, ..3] = [PI, PI, PI];
+    let xl : [f64; 3] = [0f64; 3];
+    let xu : [f64; 3] = [PI, PI, PI];
 
     let calls = 500000;
 

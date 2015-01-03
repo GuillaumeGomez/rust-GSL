@@ -14,7 +14,7 @@ use std::num::Float;
 fn main() {
     /* Part 1 */
     println!("=== PART 1 ===");
-    let mut data : [f64, ..256] = [0f64, ..256];
+    let mut data : [f64; 256] = [0f64; 256];
 
     data[0] = 1f64;
     for i in range(1u, 11u) {
@@ -32,7 +32,7 @@ fn main() {
 
     /* Part 2 */
     println!("\n=== PART 2 ===");
-    let mut data2 : [f64, ..1260] = [0f64, ..1260];
+    let mut data2 : [f64; 1260] = [0f64; 1260];
     let n = 630u64;
 
     for i in range(1u, 11u) {

@@ -17,9 +17,9 @@ pub const NC : uint = 20;
 
 #[allow(unused_must_use)]
 fn main() {
-    let mut data : [f64, ..256] = [0f64, ..256];
-    let mut abscoeff : [f64, ..256] = [0f64, ..256];
-    let mut p : [u64, ..256] = [0u64, ..256];
+    let mut data : [f64; 256] = [0f64; 256];
+    let mut abscoeff : [f64; 256] = [0f64; 256];
+    let mut p : [u64; 256] = [0u64; 256];
     let args = os::args();
     let tmp = args.tail();
 

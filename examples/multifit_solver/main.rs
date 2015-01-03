@@ -117,10 +117,10 @@ fn main() {
     let mut covar = rgsl::MatrixF64::new(p as u64, p as u64).unwrap();
     let mut d = Data {
         n: n as u64,
-        y: Vec::from_elem(N, 0f64),
-        sigma: Vec::from_elem(N, 0f64)
+        y: ::std::iter::repeat(0f64).take(N).collect(),
+        sigma: ::std::iter::repeat(0f64).take(N).collect()
     };
-    let mut x_init : [f64, ..3] = [1f64, 0f64, 0f64];
+    let mut x_init : [f64; 3] = [1f64, 0f64, 0f64];
     let mut x = rgsl::VectorView::from_array(&mut x_init);
 
     rgsl::RngType::env_setup();

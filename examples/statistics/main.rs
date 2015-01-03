@@ -5,7 +5,7 @@
 extern crate rgsl;
 
 fn main() {
-    let data : [f64, ..5] = [17.2, 18.1, 16.5, 18.3, 12.6];
+    let data : [f64; 5] = [17.2, 18.1, 16.5, 18.3, 12.6];
 
     let mean     = rgsl::statistics::mean(&data, 1, 5);
     let variance = rgsl::statistics::variance(&data, 1, 5);

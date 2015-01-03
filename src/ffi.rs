@@ -2584,12 +2584,12 @@ pub struct gsl_block_complex {
 
 #[repr(C)]
 pub struct gsl_complex {
-    pub data: [c_double, ..2]
+    pub data: [c_double; 2]
 }
 
 #[repr(C)]
 pub struct gsl_complex_float {
-    pub data: [c_float, ..2]
+    pub data: [c_float; 2]
 }
 
 #[repr(C)]
@@ -2873,8 +2873,8 @@ pub struct gsl_eigen_genv_workspace {
 pub struct gsl_fft_complex_wavetable {
     pub n: size_t,
     pub nf: size_t,
-    pub factor: [size_t, ..64],
-    pub twiddle: [*mut gsl_complex, ..64],
+    pub factor: [size_t; 64],
+    pub twiddle: [*mut gsl_complex; 64],
     pub trig: *mut gsl_complex
 }
 
@@ -2953,9 +2953,9 @@ pub struct gsl_integration_workspace {
 #[repr(C)]
 pub struct extrapolation_table {
     pub n: size_t,
-    pub rlist2: [c_double, ..52],
+    pub rlist2: [c_double; 52],
     pub nres: size_t,
-    pub res3la: [c_double, ..3]
+    pub res3la: [c_double; 3]
 }
 
 #[repr(C)]
@@ -2964,10 +2964,10 @@ pub struct gsl_integration_qaws_table {
     pub beta: c_double,
     pub mu: c_int,
     pub nu: c_int,
-    pub ri: [c_double, ..25],
-    pub rj: [c_double, ..25],
-    pub rg: [c_double, ..25],
-    pub rh: [c_double, ..25]
+    pub ri: [c_double; 25],
+    pub rj: [c_double; 25],
+    pub rg: [c_double; 25],
+    pub rh: [c_double; 25]
 }
 
 #[repr(C)]
@@ -2985,8 +2985,8 @@ pub struct gsl_integration_qawo_table {
 pub struct gsl_integration_cquad_ival {
     pub a: c_double,
     pub b: c_double,
-    pub c: [c_double, ..64],
-    pub fx: [c_double, ..33],
+    pub c: [c_double; 64],
+    pub fx: [c_double; 33],
     pub igral: c_double,
     pub err: c_double,
     pub depth: c_int,

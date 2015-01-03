@@ -7,8 +7,8 @@ extern crate rgsl;
 use std::intrinsics::{sinf64, cosf64};
 
 fn main() {
-    let mut x : [f64, ..10] = [0f64, ..10];
-    let mut y : [f64, ..10] = [0f64, ..10];
+    let mut x : [f64; 10] = [0f64; 10];
+    let mut y : [f64; 10] = [0f64; 10];
 
     println!("#m=0,S=2");
 

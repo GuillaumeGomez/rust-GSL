@@ -9,9 +9,9 @@ use std::fmt;
 use std::default::Default;
 
 #[repr(C)]
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct ComplexF64 {
-    pub data: [f64, ..2]
+    pub data: [f64; 2]
 }
 
 impl ComplexF64 {
@@ -355,9 +355,9 @@ impl Default for ComplexF64 {
 }
 
 #[repr(C)]
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct ComplexF32 {
-    pub data: [f32, ..2]
+    pub data: [f32; 2]
 }
 
 // I'll implement it in Rust directly

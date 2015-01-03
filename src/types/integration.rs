@@ -10,8 +10,9 @@ use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use std::c_vec::CVec;
 use std::num::FloatMath;
 use std::num::Float;
+use std::c_str::ToCStr;
 
-static XI : [f64, ..33] = [
+static XI : [f64; 33] = [
   -1f64, -0.99518472667219688624f64, -0.98078528040323044912f64,
   -0.95694033573220886493f64, -0.92387953251128675612f64,
   -0.88192126434835502970f64, -0.83146961230254523708f64,
@@ -27,7 +28,7 @@ static XI : [f64, ..33] = [
   0.98078528040323044912f64, 0.99518472667219688624f64, 1f64
 ];
 
-static bee : [f64, ..68] = [
+static bee : [f64; 68] = [
   0.00000000000000e+00f64, 2.28868854108532e-01f64, 0.00000000000000e+00f64,
   -8.15740215243451e-01f64, 0.00000000000000e+00f64, 5.31212715259731e-01f64,
   0.00000000000000e+00f64, 1.38538036812454e-02f64, 0.00000000000000e+00f64,
@@ -53,7 +54,7 @@ static bee : [f64, ..68] = [
   0.00000000000000e+00f64, 5.40679930965238e-01f64
 ];
 
-static Lalpha : [f64, ..33] = [
+static Lalpha : [f64; 33] = [
   5.77350269189626e-01f64, 5.16397779494322e-01f64, 5.07092552837110e-01f64,
   5.03952630678970e-01f64, 5.02518907629606e-01f64, 5.01745206004255e-01f64,
   5.01280411827603e-01f64, 5.00979432868120e-01f64, 5.00773395667191e-01f64,
@@ -67,7 +68,7 @@ static Lalpha : [f64, ..33] = [
   5.00065049112355e-01f64, 5.00061046334395e-01f64, 5.00057401986298e-01f64
 ];
 
-static Lgamma : [f64, ..33] = [
+static Lgamma : [f64; 33] = [
   0f64, 0f64, 5.16397779494322e-01f64, 5.07092552837110e-01f64, 5.03952630678970e-01f64,
   5.02518907629606e-01f64, 5.01745206004255e-01f64, 5.01280411827603e-01f64,
   5.00979432868120e-01f64, 5.00773395667191e-01f64, 5.00626174321759e-01f64,
@@ -81,7 +82,7 @@ static Lgamma : [f64, ..33] = [
   5.00061046334395e-01f64
 ];
 
-static V1inv : [f64, ..25] = [
+static V1inv : [f64; 25] = [
  0.47140452079103168293e-1f64, 0.37712361663282534635f64, 0.56568542494923801952f64,
  0.37712361663282534635f64,0.47140452079103168293e-1f64,
   -0.81649658092772603273e-1f64, -0.46188021535170061160f64, 0f64,
@@ -93,7 +94,7 @@ static V1inv : [f64, ..25] = [
  0.10774960475223581324f64
 ];
 
-static V2inv : [f64, ..81] = [
+static V2inv : [f64; 81] = [
  0.11223917161691230546e-1f64,0.10339219839658349826f64,0.19754094204576565761f64,
  0.25577315077753587922f64,0.27835314560994251755f64,0.25577315077753587922f64,
  0.19754094204576565761f64,0.10339219839658349826f64,0.11223917161691230546e-1f64,
@@ -127,7 +128,7 @@ static V2inv : [f64, ..81] = [
  0.10916211417928767644f64, -0.10916211417928767644f64,0.54581057089643838221e-1f64
 ];
 
-static V3inv : [f64, ..289] = [
+static V3inv : [f64; 289] = [
  0.27729677693590098996e-2f64,0.26423663180333065153e-1f64,
  0.53374068493933898312e-1f64,0.77007854739523195947e-1f64,
  0.98257061072911596869e-1f64,0.11538049741786835604f64,0.12832134344120884559f64,
@@ -264,7 +265,7 @@ static V3inv : [f64, ..289] = [
   -0.54971216929497681146e-1f64,0.27485608464748840573e-1f64
 ];
 
-static V4inv : [f64, ..1089] = [
+static V4inv : [f64; 1089] = [
  0.69120897476690862600e-3f64,0.66419939766331555194e-2f64,
  0.13600665164323186111e-1f64,0.20122785860913684493e-1f64,
  0.26583214101668429944e-1f64,0.32712713318999268739e-1f64,
@@ -840,7 +841,7 @@ static V4inv : [f64, ..1089] = [
   -0.27588282524939131481e-1f64,0.13794141262469565740e-1f64
 ];
 
-static Tleft : [f64, ..1089] = [
+static Tleft : [f64; 1089] = [
   1f64, -0.86602540378443864678f64, 0f64,0.33071891388307382381f64, 0f64,
   -0.20728904939721249057f64, 0f64,0.15128841196122722208f64, 0f64,
   -0.11918864298744029244f64, 0f64,0.98352013661686631224e-1f64, 0f64,
@@ -1094,7 +1095,7 @@ static Tleft : [f64, ..1089] = [
   0f64, 0f64,0.23283064365386962891e-9f64
 ];
 
-static Tright : [f64, ..1089] = [
+static Tright : [f64; 1089] = [
   1f64,0.86602540378443864678f64, 0f64, -0.33071891388307382381f64, 0f64,
    0.20728904939721249057f64, 0f64, -0.15128841196122722208f64, 0f64,
    0.11918864298744029244f64, 0f64, -0.98352013661686631224e-1f64, 0f64,
@@ -2643,16 +2644,16 @@ impl CquadWorkspace {
     pub fn cquad<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, result: &mut f64, abserr: &mut f64,
         nevals: &mut u64) -> ::Value {
         /* Some constants that we will need. */
-        static n : [i32, ..4] = [4i32, 8i32, 16i32, 32i32];
-        static skip : [i32, ..4] = [8i32, 4i32, 2i32, 1i32];
-        static idx : [i32, ..4] = [0i32, 5i32, 14i32, 31i32];
+        static n : [i32; 4] = [4i32, 8i32, 16i32, 32i32];
+        static skip : [i32; 4] = [8i32, 4i32, 2i32, 1i32];
+        static idx : [i32; 4] = [0i32, 5i32, 14i32, 31i32];
         let w = ::std::f64::consts::SQRT2 / 2f64;
         let ndiv_max = 20i32;
 
         /* Actual variables (as opposed to constants above). */
         let mut temp = 0f64;
         let mut neval = 0i32;
-        let mut nans : [i32, ..32] = [0i32, ..32];
+        let mut nans : [i32; 32] = [0i32; 32];
 
         /* Check the input arguments. */
         /*if (f == NULL)
@@ -4273,9 +4274,9 @@ unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result
             *err_reliable = 1;
         }
     } else {
-        let mut cheb12 : [f64, ..13] = [0f64, ..13];
-        let mut cheb24 : [f64, ..25] = [0f64, ..25];
-        let mut moment : [f64, ..25] = [0f64, ..25];
+        let mut cheb12 : [f64; 13] = [0f64; 13];
+        let mut cheb24 : [f64; 25] = [0f64; 25];
+        let mut moment : [f64; 25] = [0f64; 25];
         let mut res12 = 0f64;
         let mut res24 = 0f64;
 
@@ -4328,11 +4329,11 @@ unsafe fn compute_moments(cc: f64, moment: &mut [f64]) {
 
 // This function computes the 12-th order and 24-th order Chebyshev approximations to f(x) on [a,b]
 fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb12: &mut [f64], cheb24: &mut [f64]) {
-    let mut fval : [f64, ..25] = [0f64, ..25];
-    let mut v : [f64, ..12] = [0f64, ..12];
+    let mut fval : [f64; 25] = [0f64; 25];
+    let mut v : [f64; 12] = [0f64; 12];
 
     /* These are the values of cos(pi*k/24) for k=1..11 needed for the Chebyshev expansion of f(x) */
-    let x : [f64, ..11] = [
+    let x : [f64; 11] = [
         0.9914448613738104f64,     
         0.9659258262890683f64,
         0.9238795325112868f64,     
@@ -4550,8 +4551,8 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
     let mut fn_params = fn_qaws_params{function: f, a: a, b: b, table: t, arg: arg};
 
     if a1 == a && ((*t).alpha != 0f64 || (*t).mu != 0) {
-        let mut cheb12 : [f64, ..13] = [0f64, ..13];
-        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+        let mut cheb12 : [f64; 13] = [0f64; 13];
+        let mut cheb24 : [f64; 25] = [0f64; 25];
 
         let factor = powf64(0.5f64 * (b1 - a1), (*t).alpha + 1f64);
 
@@ -4584,8 +4585,8 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
 
         *err_reliable = false;
     } else if b1 == b && ((*t).beta != 0.0 || (*t).nu != 0) {
-        let mut cheb12 : [f64, ..13] = [0f64, ..13];
-        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+        let mut cheb12 : [f64; 13] = [0f64; 13];
+        let mut cheb24 : [f64; 25] = [0f64; 25];
         let factor = powf64(0.5f64 * (b1 - a1), (*t).beta + 1f64);
 
         gsl_integration_qcheb(fn_qaws_L, &mut fn_params, a1, b1, &mut cheb12, &mut cheb24);
@@ -4734,8 +4735,8 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
                 fn_cos
             }, &mut fn_params, a, b, result, abserr, resabs, resasc);
     } else {
-        let mut cheb12 : [f64, ..13] = [0f64, ..13];
-        let mut cheb24 : [f64, ..25] = [0f64, ..25];
+        let mut cheb12 : [f64; 13] = [0f64; 13];
+        let mut cheb24 : [f64; 25] = [0f64; 25];
 
         gsl_integration_qcheb(f, arg, a, b, &mut cheb12, &mut cheb24);
 
@@ -4849,8 +4850,8 @@ fn Vinvfx(fx: &[f64], c: &mut [f64], d: i32) {
 
 /* Downdate the interpolation given by the n coefficients c by removing the nodes with indices in nans. */
 fn downdate(c: &mut [f64], t_n: i32, d: i32, nans: &mut [i32], nnans: i32) {
-    static bidx : [i32, ..4] = [0i32, 6i32, 16i32, 34i32];
-    let mut b_new : [f64, ..34] = [0f64, ..34];
+    static bidx : [i32; 4] = [0i32, 6i32, 16i32, 34i32];
+    let mut b_new : [f64; 34] = [0f64; 34];
     let mut n = t_n;
 
     for i in range(0, n + 2) {

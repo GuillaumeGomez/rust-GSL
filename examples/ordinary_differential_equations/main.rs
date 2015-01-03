@@ -53,7 +53,7 @@ fn main() {
     let d = rgsl::ODEiv2Driver::alloc_y_new(&sys, &rgsl::ODEiv2StepType::rk8pd(), 1e-6f64, 1e-6f64, 0f64).unwrap();
     let mut t = 0f64;
     let t1 = 100f64;
-    let mut y : [f64, ..2] = [1f64, 0f64];
+    let mut y : [f64; 2] = [1f64, 0f64];
 
     for i in range(1u, 101u) {
         let ti = i as f64 * t1 / 100f64;

@@ -38,7 +38,7 @@ impl Combination {
             None
         } else {
             unsafe {
-                if (*tmp).data.is_not_null() {
+                if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
                         data: CVec::new((*tmp).data, (*tmp).k as uint)
@@ -62,7 +62,7 @@ impl Combination {
             None
         } else {
             unsafe {
-                if (*tmp).data.is_not_null() {
+                if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
                         data: CVec::new((*tmp).data, (*tmp).k as uint)

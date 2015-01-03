@@ -31,6 +31,7 @@ Further information on the use of ntuples can be found in the documentation for 
 use ffi;
 use enums;
 use libc::funcs::c95::stdio::{feof, fread};
+use std::c_str::ToCStr;
 
 pub struct NTuples<T> {
     n: *mut ffi::gsl_ntuple

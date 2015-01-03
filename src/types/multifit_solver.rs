@@ -42,6 +42,7 @@ These routines provide a high level wrapper that combine the iteration and conve
 use ffi;
 use std::num::{Float, FloatMath};
 use libc::c_void;
+use std::c_str::ToCStr;
 
 pub struct MultiFitFunction<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,

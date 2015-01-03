@@ -23,9 +23,9 @@ fn main() {
     let r = rgsl::Rng::new(&t).unwrap();
     let k = 5;
     let n = 100000;
-    let mut x : [f64, ..100000] = [0f64, ..100000];
-    let mut small : [f64, ..5] = [0f64, ..5];
-    let mut p : [u64, ..5] = [0u64, ..5];
+    let mut x : [f64; 100000] = [0f64; 100000];
+    let mut small : [f64; 5] = [0f64; 5];
+    let mut p : [u64; 5] = [0u64; 5];
 
     for tmp in range(0, n) {
         x[tmp] = r.uniform();

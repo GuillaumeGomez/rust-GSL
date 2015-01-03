@@ -224,7 +224,7 @@ impl ffi::FFI<ffi::gsl_rng> for Rng {
     }
 }
 
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct RngType {
     ptr: *mut ffi::gsl_rng_type
 }
@@ -281,7 +281,7 @@ impl RngType {
         let ptr = unsafe { ffi::gsl_rng_types_setup() };
         let mut ret = Vec::new();
 
-        if ptr.is_not_null() {
+        if !ptr.is_null() {
             unsafe {
                 let mut it = 0;
                 loop {

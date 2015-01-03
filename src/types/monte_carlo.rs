@@ -117,6 +117,7 @@ use std::c_vec::CVec;
 use std::default::Default;
 use libc::c_void;
 use std::num::Int;
+use std::c_str::ToCStr;
 
 pub struct PlainMonteCarlo {
     s: *mut ffi::gsl_monte_plain_state,
@@ -608,7 +609,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
 }
 
 #[repr(C)]
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct VegasParams {
     /// The parameter alpha controls the stiffness of the rebinning algorithm. It is typically set between one and two. A value of zero prevents
     /// rebinning of the grid. The default value is 1.5.

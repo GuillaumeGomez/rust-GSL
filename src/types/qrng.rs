@@ -76,7 +76,7 @@ impl QRng {
     pub fn state<'r>(&'r mut self) -> &'r mut [i8] {
         let tmp = unsafe { ffi::gsl_qrng_state(self.q as *const ffi::gsl_qrng) };
 
-        if tmp.is_not_null() {
+        if !tmp.is_null() {
             self.data = unsafe { CVec::new(tmp as *mut i8, self.size() as uint) };
         }
         self.data.as_mut_slice()
@@ -116,7 +116,7 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
     }
 }
 
-#[deriving(Copy)]
+#[derive(Copy)]
 pub struct QRngType {
     t: *const ffi::gsl_qrng_type
 }

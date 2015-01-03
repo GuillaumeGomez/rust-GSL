@@ -5,12 +5,12 @@
 extern crate rgsl;
 
 fn main() {
-    let mut a_data : [f64, ..16] =
+    let mut a_data : [f64; 16] =
         [0.18, 0.60, 0.57, 0.96,
          0.41, 0.24, 0.99, 0.58,
          0.14, 0.30, 0.97, 0.66,
          0.51, 0.13, 0.19, 0.85];
-    let mut b_data : [f64, ..4] = [1.0, 2.0, 3.0, 4.0];
+    let mut b_data : [f64; 4] = [1.0, 2.0, 3.0, 4.0];
 
     let mut m = rgsl::MatrixView::from_array(&mut a_data, 4, 4);
     let mut b = rgsl::VectorView::from_array(&mut b_data);
