@@ -26,14 +26,13 @@ R. Broucke, “Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Al
 
 use ffi;
 use enums;
-use std::c_vec::CVec;
 use std::f64::consts::PI;
-use std::num::FloatMath;
-use std::c_str::ToCStr;
+use std::num::Float;
+use c_str::ToCStr;
 
 pub struct ChebSeries {
     c: *mut ffi::gsl_cheb_series,
-    data: CVec<f64>
+    data: Vec<f64>
 }
 
 impl ChebSeries {
@@ -46,7 +45,7 @@ impl ChebSeries {
             unsafe {
                 Some(ChebSeries {
                     c: tmp,
-                    data: CVec::new((*tmp).c, (*tmp).order as uint + 1)
+                    data: Vec::from_raw_buf((*tmp).c, (*tmp).order as uint + 1)
                 })
             }
         }
@@ -67,7 +66,7 @@ impl ChebSeries {
                 let bpa = 0.5 * (b + a);
                 let fac = 2.0 / ((*self.c).order as f64 + 1.0);
 
-                let mut tmp_vec = CVec::new((*self.c).f, (*self.c).order_sp as uint + 1);
+                let mut tmp_vec = Vec::from_raw_buf((*self.c).f, (*self.c).order_sp as uint + 1);
                 for k in range(0, (*self.c).order + 1) {
                     let y = (PI * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
                     tmp_vec.as_mut_slice()[k as uint] = func(y * bma + bpa, param);
@@ -153,7 +152,7 @@ impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
         unsafe {
             ChebSeries {
                 c: c,
-                data: CVec::new((*c).c, (*c).order as uint + 1)
+                data: Vec::from_raw_buf((*c).c, (*c).order as uint + 1)
             }
         }
     }

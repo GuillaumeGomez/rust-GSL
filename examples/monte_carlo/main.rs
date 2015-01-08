@@ -21,7 +21,7 @@ extern crate rgsl;
 
 use std::intrinsics::{fabsf64};
 use std::f64::consts::PI;
-use std::num::FloatMath;
+use std::num::Float;
 
 /* Computation of the integral,
 

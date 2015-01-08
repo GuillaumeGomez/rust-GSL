@@ -20,11 +20,11 @@ Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–
 
 use ffi;
 use enums;
-use std::c_vec::CVec;
+use c_str::FromCStr;
 
 pub struct QRng {
     q: *mut ffi::gsl_qrng,
-    data: CVec<i8>
+    data: Vec<i8>
 }
 
 impl QRng {
@@ -39,7 +39,7 @@ impl QRng {
         } else {
             Some(QRng {
                 q: tmp,
-                data: unsafe { CVec::new(tmp as *mut i8, 0) }
+                data: unsafe { Vec::from_raw_buf(tmp as *mut i8, 0) }
             })
         }
     }
@@ -63,7 +63,7 @@ impl QRng {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(String::from_raw_buf(tmp as *const u8)) }
+            unsafe { Some(FromCStr::from_c_str(tmp)) }
         }
     }
 
@@ -77,7 +77,7 @@ impl QRng {
         let tmp = unsafe { ffi::gsl_qrng_state(self.q as *const ffi::gsl_qrng) };
 
         if !tmp.is_null() {
-            self.data = unsafe { CVec::new(tmp as *mut i8, self.size() as uint) };
+            self.data = unsafe { Vec::from_raw_buf(tmp as *mut i8, self.size() as uint) };
         }
         self.data.as_mut_slice()
     }
@@ -107,7 +107,7 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
     fn wrap(q: *mut ffi::gsl_qrng) -> QRng {
         QRng {
             q: q,
-            data: unsafe { CVec::new(q as *mut i8, 0) }
+            data: unsafe { Vec::from_raw_buf(q as *mut i8, 0) }
         }
     }
 

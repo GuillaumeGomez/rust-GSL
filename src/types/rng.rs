@@ -72,6 +72,7 @@ Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the
 
 use ffi;
 use enums;
+use c_str::FromCStr;
 
 pub struct Rng {
     r: *mut ffi::gsl_rng
@@ -151,7 +152,7 @@ impl Rng {
     /// 
     /// would print something like "r is a 'taus' generator".
     pub fn get_name(&self) -> String {
-        unsafe { String::from_raw_buf(ffi::gsl_rng_name(self.r as *const ffi::gsl_rng) as *const u8) }
+        unsafe { FromCStr::from_c_str(ffi::gsl_rng_name(self.r as *const ffi::gsl_rng)) }
     }
 
     /// This function returns the largest value that the get function can return.
@@ -235,7 +236,7 @@ impl RngType {
         if self.ptr.is_null() {
             String::new()
         } else {
-            unsafe { String::from_raw_buf((*self.ptr).name as *const u8) }
+            unsafe { FromCStr::from_c_str((*self.ptr).name) }
         }
     }
 

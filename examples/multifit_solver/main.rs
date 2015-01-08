@@ -51,7 +51,7 @@ the range of validity for Gaussian errors.
 
 extern crate rgsl;
 
-use std::num::{Float, FloatMath};
+use std::num::Float;
 
 struct Data {
     n: u64,

@@ -56,16 +56,15 @@ Here is the list of all modules :
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
 
-#![feature(globs)]
-#![feature(macro_rules)]
 #![feature(unsafe_destructor)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
-#![allow(raw_pointer_deriving)]
+#![allow(raw_pointer_derive)]
 
 extern crate libc;
+extern crate c_str;
 
 pub use types::{
     ComplexF32,

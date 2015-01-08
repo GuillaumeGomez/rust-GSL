@@ -18,13 +18,12 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 
 use ffi;
 use enums;
-use std::c_vec::CVec;
 use std::fmt;
 use std::fmt::{Formatter, Show};
 
 pub struct Combination {
     c: *mut ffi::gsl_combination,
-    data: CVec<u64>
+    data: Vec<u64>
 }
 
 impl Combination {
@@ -41,12 +40,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as uint)
+                        data: Vec::from_raw_buf((*tmp).data, (*tmp).k as uint)
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new(tmp as *mut u64, 0u)
+                        data: Vec::from_raw_buf(tmp as *mut u64, 0u)
                     })
                 }
             }
@@ -65,12 +64,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as uint)
+                        data: Vec::from_raw_buf((*tmp).data, (*tmp).k as uint)
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new(tmp as *mut u64, 0u)
+                        data: Vec::from_raw_buf(tmp as *mut u64, 0u)
                     })
                 }
             }
@@ -150,7 +149,7 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
         unsafe {
             Combination {
                 c: c,
-                data: CVec::new((*c).data, (*c).k as uint)
+                data: Vec::from_raw_buf((*c).data, (*c).k as uint)
             }
         }
     }

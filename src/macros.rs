@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![macro_escape]
+#![macro_use]
 
 macro_rules! rgsl_error(
     ($msg:expr, $err_value:expr) => (
