@@ -117,6 +117,7 @@ use std::default::Default;
 use libc::c_void;
 use std::num::Int;
 use c_str::ToCStr;
+use c_vec::CVec;
 
 pub struct PlainMonteCarlo {
     s: *mut ffi::gsl_monte_plain_state,
@@ -152,7 +153,7 @@ impl PlainMonteCarlo {
             let mut m = 0f64;
             let mut q = 0f64;
             let dim = (*self.s).dim as uint;
-            let mut t_x = Vec::from_raw_buf((*self.s).x, dim);
+            let mut t_x = CVec::new((*self.s).x, dim);
             let x = t_x.as_mut_slice();
 
             if xl.len() != dim || xu.len() != dim {
@@ -274,13 +275,13 @@ impl MiserMonteCarlo {
             let mut weight_l = 0f64;
             let mut weight_r = 0f64;
 
-            let mut t_x = Vec::from_raw_buf((*self.s).x, dim);
+            let mut t_x = CVec::new((*self.s).x, dim);
             let x = t_x.as_mut_slice();
-            let mut t_xmid = Vec::from_raw_buf((*self.s).xmid, dim);
+            let mut t_xmid = CVec::new((*self.s).xmid, dim);
             let xmid = t_xmid.as_mut_slice();
-            let mut t_sigma_l = Vec::from_raw_buf((*self.s).sigma_l, dim);
+            let mut t_sigma_l = CVec::new((*self.s).sigma_l, dim);
             let sigma_l = t_sigma_l.as_mut_slice();
-            let mut t_sigma_r = Vec::from_raw_buf((*self.s).sigma_r, dim);
+            let mut t_sigma_r = CVec::new((*self.s).sigma_r, dim);
             let sigma_r = t_sigma_r.as_mut_slice();
 
             if dim != xl.len() || dim != xu.len() {
@@ -506,19 +507,19 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
     result: &mut f64, abserr: &mut f64, xmid: &[f64], sigma_l: &mut [f64], sigma_r: &mut [f64]) -> ::Value {
     unsafe {
         let dim = (*state.s).dim as uint;
-        let mut t_x = Vec::from_raw_buf((*state.s).x, dim);
+        let mut t_x = CVec::new((*state.s).x, dim);
         let x = t_x.as_mut_slice();
-        let mut t_fsum_l = Vec::from_raw_buf((*state.s).fsum_l, dim);
+        let mut t_fsum_l = CVec::new((*state.s).fsum_l, dim);
         let fsum_l = t_fsum_l.as_mut_slice();
-        let mut t_fsum_r = Vec::from_raw_buf((*state.s).fsum_r, dim);
+        let mut t_fsum_r = CVec::new((*state.s).fsum_r, dim);
         let fsum_r = t_fsum_r.as_mut_slice();
-        let mut t_fsum2_l = Vec::from_raw_buf((*state.s).fsum2_l, dim);
+        let mut t_fsum2_l = CVec::new((*state.s).fsum2_l, dim);
         let fsum2_l = t_fsum2_l.as_mut_slice();
-        let mut t_fsum2_r = Vec::from_raw_buf((*state.s).fsum2_r, dim);
+        let mut t_fsum2_r = CVec::new((*state.s).fsum2_r, dim);
         let fsum2_r = t_fsum2_r.as_mut_slice();
-        let mut t_hits_l = Vec::from_raw_buf((*state.s).hits_l, dim);
+        let mut t_hits_l = CVec::new((*state.s).hits_l, dim);
         let hits_l = t_hits_l.as_mut_slice();
-        let mut t_hits_r = Vec::from_raw_buf((*state.s).hits_r, dim);
+        let mut t_hits_r = CVec::new((*state.s).hits_r, dim);
         let hits_r = t_hits_r.as_mut_slice();
 
         let mut m = 0f64;
@@ -779,13 +780,13 @@ impl VegasMonteCarlo {
                 let calls_per_box = (*self.s).calls_per_box;
                 let jacbin = (*self.s).jac;
 
-                let mut x = Vec::from_raw_buf((*self.s).x, dim);
-                let mut bin = Vec::from_raw_buf((*self.s).bin, dim);
+                let mut x = CVec::new((*self.s).x, dim);
+                let mut bin = CVec::new((*self.s).bin, dim);
 
                 (*self.s).it_num = (*self.s).it_start + it as u32;
 
                 reset_grid_values(self.s);
-                let mut t_box = Vec::from_raw_buf((*self.s).box_, dim);
+                let mut t_box = CVec::new((*self.s).box_, dim);
                 init_box_coord(self.s, t_box.as_mut_slice());
 
                 //let mut c = 0u;
@@ -973,7 +974,7 @@ impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
 
 unsafe fn init_grid(s: *mut ffi::gsl_monte_vegas_state, xl: &[f64], xu: &[f64]) {
     let mut vol = 1f64;
-    let mut t_delx = Vec::from_raw_buf((*s).delx, xl.len());
+    let mut t_delx = CVec::new((*s).delx, xl.len());
     let delx = t_delx.as_mut_slice();
 
     (*s).bins = 1;
@@ -1025,7 +1026,7 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
     let dim = (*s).dim as uint;
     let bins = (*s).bins as uint;
     let boxes = (*s).boxes as uint;
-    let mut t_delx = Vec::from_raw_buf((*s).delx, xl.len());
+    let mut t_delx = CVec::new((*s).delx, xl.len());
     let delx = t_delx.as_mut_slice();
 
     for j in range(0u, dim) {
@@ -1095,7 +1096,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
     let bins = (*s).bins as uint;
 
     for j in range(0u, dim) {
-        let mut t_weight = Vec::from_raw_buf((*s).weight, bins);
+        let mut t_weight = CVec::new((*s).weight, bins);
         let weight = t_weight.as_mut_slice();
 
         let mut oldg = *(*s).d.offset(j as int);

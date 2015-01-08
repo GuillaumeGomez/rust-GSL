@@ -7,10 +7,11 @@ use ffi;
 use enums;
 use std::fmt;
 use std::fmt::{Formatter, Show};
+use c_vec::CVec;
 
 pub struct Permutation {
     p: *mut ffi::gsl_permutation,
-    d: Vec<u64>
+    d: CVec<u64>
 }
 
 ///##Permutations in cyclic form
@@ -51,7 +52,7 @@ impl Permutation {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: Vec::from_raw_buf((*tmp).data, (*tmp).size as uint)
+                    d: CVec::new((*tmp).data, (*tmp).size as uint)
                 })
             }
         }
@@ -68,7 +69,7 @@ impl Permutation {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: Vec::from_raw_buf((*tmp).data, (*tmp).size as uint)
+                    d: CVec::new((*tmp).data, (*tmp).size as uint)
                 })
             }
         }
@@ -205,7 +206,7 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
         unsafe {
             Permutation {
                 p: p,
-                d: Vec::from_raw_buf((*p).data, (*p).size as uint)
+                d: CVec::new((*p).data, (*p).size as uint)
             }
         }
     }

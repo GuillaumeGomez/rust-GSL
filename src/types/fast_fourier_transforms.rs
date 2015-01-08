@@ -3,10 +3,11 @@
 //
 
 use ffi;
+use c_vec::CVec;
 
 pub struct FftComplexWaveTable {
     w: *mut ffi::gsl_fft_complex_wavetable,
-    f: Vec<u64>
+    f: CVec<u64>
 }
 
 impl FftComplexWaveTable {
@@ -27,7 +28,7 @@ impl FftComplexWaveTable {
             unsafe {
                 Some(FftComplexWaveTable {
                     w: tmp,
-                    f: Vec::from_raw_buf((*tmp).factor.as_mut_ptr(), 64u)
+                    f: CVec::new((*tmp).factor.as_mut_ptr(), 64u)
                 })
             }
         }
@@ -50,7 +51,7 @@ impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
         unsafe {
             FftComplexWaveTable {
                 w: w,
-                f: Vec::from_raw_buf((*w).factor.as_mut_ptr(), 64u)
+                f: CVec::new((*w).factor.as_mut_ptr(), 64u)
             }
         }
     }

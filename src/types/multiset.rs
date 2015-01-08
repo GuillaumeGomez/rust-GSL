@@ -14,10 +14,11 @@ Multisets are useful, for example, when iterating over the indices of a k-th ord
 use ffi;
 use enums;
 use std::io::IoResult;
+use c_vec::CVec;
 
 pub struct MultiSet {
     c: *mut ffi::gsl_multiset,
-    data: Vec<u64>
+    data: CVec<u64>
 }
 
 impl MultiSet {
@@ -35,12 +36,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: Vec::from_raw_buf(tmp as *mut u64, 0u)
+                        data: CVec::new(tmp as *mut u64, 0u)
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: Vec::from_raw_buf((*tmp).data, (*tmp).k as uint)
+                        data: CVec::new((*tmp).data, (*tmp).k as uint)
                     })
                 }
             }
@@ -60,12 +61,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: Vec::from_raw_buf(tmp as *mut u64, 0u)
+                        data: CVec::new(tmp as *mut u64, 0u)
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: Vec::from_raw_buf((*tmp).data, (*tmp).k as uint)
+                        data: CVec::new((*tmp).data, (*tmp).k as uint)
                     })
                 }
             }
@@ -152,12 +153,12 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
                 MultiSet {
                     c: c,
                     // dirty trick to avoid a failure
-                    data: Vec::from_raw_buf(c as *mut u64, 0u)
+                    data: CVec::new(c as *mut u64, 0u)
                 }
             } else {
                 MultiSet {
                     c: c,
-                    data: Vec::from_raw_buf((*c).data, (*c).k as uint)
+                    data: CVec::new((*c).data, (*c).k as uint)
                 }
             }
         }

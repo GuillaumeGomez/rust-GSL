@@ -65,6 +65,7 @@ Here is the list of all modules :
 
 extern crate libc;
 extern crate c_str;
+extern crate c_vec;
 
 pub use types::{
     ComplexF32,
