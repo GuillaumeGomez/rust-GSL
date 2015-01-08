@@ -11,8 +11,8 @@ readme = "README.md"
 keywords = ["mathematics", "library", "GSL"]
 license = "GPL-3.0+"
 
-[dependencies.c_str]
-git = "https://github.com/GuillaumeGomez/c_str-rs.git"
+[dependencies]
+c_str = "^1.0.0"
 
 [lib]
 
