@@ -40,7 +40,7 @@ fn first_part(r: &rgsl::Rng) {
     let mut ntuple_row = Data { x: 0f64, y: 0f64, z: 0f64};
     let ntuple = rgsl::NTuples::create("test.dat", &mut ntuple_row).unwrap();
 
-    for _ in range(0u, 10000u) {
+    for _ in range(0us, 10000us) {
         ntuple_row.x = rgsl::randist::gaussian::ugaussian(r);
         ntuple_row.y = rgsl::randist::gaussian::ugaussian(r);
         ntuple_row.z = rgsl::randist::gaussian::ugaussian(r);

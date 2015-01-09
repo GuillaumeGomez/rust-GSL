@@ -249,9 +249,9 @@ impl Histogram {
     #[allow(unused_must_use)]
     pub fn print(&self, stream: &mut Writer/*, range_format: &str, bin_format: &str*/) -> enums::value::Value {
         unsafe {
-            let n = (*self.h).n as int;
+            let n = (*self.h).n as isize;
 
-            for i in range(0i, n) {
+            for i in range(0is, n) {
                 write!(stream, "{}", *(*self.h).range.offset(i));
                 write!(stream, " ");
                 write!(stream, "{}", *(*self.h).range.offset(i + 1));

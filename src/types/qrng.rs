@@ -78,7 +78,7 @@ impl QRng {
         let tmp = unsafe { ffi::gsl_qrng_state(self.q as *const ffi::gsl_qrng) };
 
         if !tmp.is_null() {
-            self.data = unsafe { CVec::new(tmp as *mut i8, self.size() as uint) };
+            self.data = unsafe { CVec::new(tmp as *mut i8, self.size() as usize) };
         }
         self.data.as_mut_slice()
     }

@@ -368,7 +368,7 @@ impl VectorF32 {
 
                 tmp.as_slice()
             } else {
-                let tmp : CVec<f32> = CVec::new((*self.vec).data, (*self.vec).size as uint);
+                let tmp : CVec<f32> = CVec::new((*self.vec).data, (*self.vec).size as usize);
 
                 tmp.as_slice()
             }
@@ -651,7 +651,7 @@ impl VectorF64 {
 
                 tmp.as_slice()
             } else {
-                let tmp : CVec<f64> = CVec::new((*self.vec).data, (*self.vec).size as uint);
+                let tmp : CVec<f64> = CVec::new((*self.vec).data, (*self.vec).size as usize);
 
                 tmp.as_slice()
             }

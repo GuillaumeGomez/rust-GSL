@@ -56,7 +56,7 @@ fn main() {
     let t1 = 100f64;
     let mut y : [f64; 2] = [1f64, 0f64];
 
-    for i in range(1u, 101u) {
+    for i in range(1us, 101us) {
         let ti = i as f64 * t1 / 100f64;
 
         match d.apply(&mut t, ti, &mut y) {

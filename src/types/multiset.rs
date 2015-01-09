@@ -36,12 +36,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CVec::new(tmp as *mut u64, 0u)
+                        data: CVec::new(tmp as *mut u64, 0us)
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as uint)
+                        data: CVec::new((*tmp).data, (*tmp).k as usize)
                     })
                 }
             }
@@ -61,12 +61,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CVec::new(tmp as *mut u64, 0u)
+                        data: CVec::new(tmp as *mut u64, 0us)
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as uint)
+                        data: CVec::new((*tmp).data, (*tmp).k as usize)
                     })
                 }
             }
@@ -153,12 +153,12 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
                 MultiSet {
                     c: c,
                     // dirty trick to avoid a failure
-                    data: CVec::new(c as *mut u64, 0u)
+                    data: CVec::new(c as *mut u64, 0us)
                 }
             } else {
                 MultiSet {
                     c: c,
-                    data: CVec::new((*c).data, (*c).k as uint)
+                    data: CVec::new((*c).data, (*c).k as usize)
                 }
             }
         }

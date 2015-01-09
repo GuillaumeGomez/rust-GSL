@@ -17,16 +17,16 @@ fn main() {
     let mut data : [f64; 256] = [0f64; 256];
 
     data[0] = 1f64;
-    for i in range(1u, 11u) {
+    for i in range(1us, 11uss) {
         data[2 * i] = 1f64;
         data[(128 - i) * 2] = 1f64;
     }
-    for i in range(0u, 128u) {
+    for i in range(0us, 128u) {
         println!("{} {:.6} {:.6}", i, data[2 * i], data[2 * i + 1]);
     }
     println!("");
     rgsl::fft::radix2::forward(&mut data, 1, 128);
-    for i in range(0u, 128u) {
+    for i in range(0us, 128u) {
         println!("{} {:.6} {:.6}", i, data[2 * i] / 128f64.sqrt(), data[2 * i + 1] / 128f64.sqrt());
     }
 
@@ -35,11 +35,11 @@ fn main() {
     let mut data2 : [f64; 1260] = [0f64; 1260];
     let n = 630u64;
 
-    for i in range(1u, 11u) {
+    for i in range(1us, 11uss) {
         data2[2 * i] = 1f64;
         data2[(128 - i) * 2] = 1f64;
     }
-    for i in range(0u, n as uint) {
+    for i in range(0us, n as usize) {
         println!("{} {:.6} {:.6}", i, data2[2 * i], data2[2 * i + 1]);
     }
     let mut wavetable = rgsl::FftComplexWaveTable::new(n).unwrap();
@@ -52,7 +52,7 @@ fn main() {
     rgsl::fft::mixed_radix::forward(&mut data2, 1, n, &wavetable, &workspace);
 
     println!("");
-    for i in range(0u, n as uint) {
+    for i in range(0us, n as usize) {
         println!("{}: {:.6} {:.6}", i, data2[2 * i], data2[2 * i + 1]);
     }
 }

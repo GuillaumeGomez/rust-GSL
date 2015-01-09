@@ -46,7 +46,7 @@ impl ChebSeries {
             unsafe {
                 Some(ChebSeries {
                     c: tmp,
-                    data: CVec::new((*tmp).c, (*tmp).order as uint + 1)
+                    data: CVec::new((*tmp).c, (*tmp).order as usize + 1)
                 })
             }
         }
@@ -67,19 +67,19 @@ impl ChebSeries {
                 let bpa = 0.5 * (b + a);
                 let fac = 2.0 / ((*self.c).order as f64 + 1.0);
 
-                let mut tmp_vec = CVec::new((*self.c).f, (*self.c).order_sp as uint + 1);
+                let mut tmp_vec = CVec::new((*self.c).f, (*self.c).order_sp as usize + 1);
                 for k in range(0, (*self.c).order + 1) {
                     let y = (PI * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
-                    tmp_vec.as_mut_slice()[k as uint] = func(y * bma + bpa, param);
+                    tmp_vec.as_mut_slice()[k as usize] = func(y * bma + bpa, param);
                 }
 
                 for j in range(0, (*self.c).order + 1) {
                     let mut sum = 0f64;
 
                     for k in range(0, (*self.c).order + 1) {
-                        sum += tmp_vec.as_slice()[k as uint] * (PI * j as f64 * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
+                        sum += tmp_vec.as_slice()[k as usize] * (PI * j as f64 * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
                     }
-                    self.data.as_mut_slice()[j as uint] = fac * sum;
+                    self.data.as_mut_slice()[j as usize] = fac * sum;
                 }
             }
             ::Value::Success
@@ -153,7 +153,7 @@ impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
         unsafe {
             ChebSeries {
                 c: c,
-                data: CVec::new((*c).c, (*c).order as uint + 1)
+                data: CVec::new((*c).c, (*c).order as usize + 1)
             }
         }
     }

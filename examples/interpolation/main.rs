@@ -12,7 +12,7 @@ fn main() {
 
     println!("#m=0,S=2");
 
-    for i in range(0u, 10u) {
+    for i in range(0us, 10us) {
         x[i] = unsafe { i as f64 + 0.5f64 * sinf64(i as f64) };
         y[i] = unsafe { i as f64 + cosf64((i * i) as f64) };
         println!("{} {}", x[i], y[i]);

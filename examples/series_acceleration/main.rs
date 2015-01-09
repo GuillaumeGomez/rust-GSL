@@ -11,7 +11,7 @@ After N terms the error in the sum is O(1/N), making direct summation of the ser
 
 extern crate rgsl;
 
-pub static N : uint = 20u;
+pub static N : usize = 20u;
 
 fn main() {
     let mut t : [f64; 20] = [0f64; 20];
@@ -25,7 +25,7 @@ fn main() {
 
     /* terms for zeta(2) = \sum_{n=1}^{\infty} 1/n^2 */
 
-    for n in range(0u, N) {
+    for n in range(0us, N) {
         let np1 = n as f64 + 1f64;
         t[n] = 1f64 / (np1 * np1);
         sum += t[n];

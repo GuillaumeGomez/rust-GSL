@@ -52,7 +52,7 @@ impl Permutation {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: CVec::new((*tmp).data, (*tmp).size as uint)
+                    d: CVec::new((*tmp).data, (*tmp).size as usize)
                 })
             }
         }
@@ -69,7 +69,7 @@ impl Permutation {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: CVec::new((*tmp).data, (*tmp).size as uint)
+                    d: CVec::new((*tmp).data, (*tmp).size as usize)
                 })
             }
         }
@@ -206,7 +206,7 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
         unsafe {
             Permutation {
                 p: p,
-                d: CVec::new((*p).data, (*p).size as uint)
+                d: CVec::new((*p).data, (*p).size as usize)
             }
         }
     }
@@ -222,7 +222,7 @@ impl Show for Permutation {
         write!(f, "[");
         unsafe {
             for x in range(0u64, (*self.p).size) {
-                let tmp = (*self.p).data.offset(x as int);
+                let tmp = (*self.p).data.offset(x as isize);
 
                 write!(f, " {}", *tmp);
             }

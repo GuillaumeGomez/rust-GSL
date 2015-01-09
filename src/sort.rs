@@ -71,7 +71,7 @@ pub mod objects {
             downheap(array, n, k, compare);
         }
         while n > 0 {
-            array.swap(0u, n as uint);
+            array.swap(0us, n as usize);
             n -= 1;
             downheap(array, n, 0, compare);
         }
@@ -84,11 +84,11 @@ pub mod objects {
         while k <= n / 2 {
             let mut j = 2 * k;
 
-            if j < n && compare(&array[j as uint], &array[j as uint + 1]) < 0 {
+            if j < n && compare(&array[j as usize], &array[j as usize + 1]) < 0 {
                 j += 1;
             }
-            if compare(&array[k as uint], &array[j as uint]) < 0 {
-                array.swap(j as uint, k as uint);
+            if compare(&array[k as usize], &array[j as usize]) < 0 {
+                array.swap(j as usize, k as usize);
             } else {
                 break;
             }
@@ -105,7 +105,7 @@ pub mod objects {
             return ::Value::Success;
         }
         for tmp in range(0u64, array.len() as u64) {
-            p[tmp as uint] = tmp;
+            p[tmp as usize] = tmp;
         }
         let mut n = array.len() as u64 - 1;
         let mut k = n / 2;
@@ -115,7 +115,7 @@ pub mod objects {
             downheap_index(p, array, n, k, compare);
         }
         while n > 0 {
-            p.swap(0u, n as uint);
+            p.swap(0us, n as usize);
             n -= 1;
             downheap_index(p, array, n, 0, compare);
         }
@@ -124,22 +124,22 @@ pub mod objects {
 
     #[doc(hidden)]
     fn downheap_index<T>(p: &mut[u64], array: &[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
-        let pki = p[t_k as uint];
+        let pki = p[t_k as usize];
         let mut k = t_k;
 
         while k <= n / 2 {
             let mut j = 2 * k;
 
-            if j < n && compare(&array[p[j as uint] as uint], &array[p[j as uint + 1] as uint]) < 0 {
+            if j < n && compare(&array[p[j as usize] as usize], &array[p[j as usize + 1] as usize]) < 0 {
                 j += 1;
             }
-            if compare(&array[pki as uint], &array[p[j as uint] as uint]) >= 0 {
+            if compare(&array[pki as usize], &array[p[j as usize] as usize]) >= 0 {
                 break;
             }
-            p[k as uint] = p[j as uint];
+            p[k as usize] = p[j as usize];
             k = j;
         }
-        p[k as uint] = pki;
+        p[k as usize] = pki;
     }
 }
 

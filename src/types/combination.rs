@@ -41,12 +41,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as uint)
+                        data: CVec::new((*tmp).data, (*tmp).k as usize)
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new(tmp as *mut u64, 0u)
+                        data: CVec::new(tmp as *mut u64, 0us)
                     })
                 }
             }
@@ -65,12 +65,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as uint)
+                        data: CVec::new((*tmp).data, (*tmp).k as usize)
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new(tmp as *mut u64, 0u)
+                        data: CVec::new(tmp as *mut u64, 0us)
                     })
                 }
             }
@@ -150,7 +150,7 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
         unsafe {
             Combination {
                 c: c,
-                data: CVec::new((*c).data, (*c).k as uint)
+                data: CVec::new((*c).data, (*c).k as usize)
             }
         }
     }

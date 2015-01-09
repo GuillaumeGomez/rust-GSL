@@ -69,7 +69,7 @@ fn expb_f(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64) -> rgsl
         let t = i as f64;
         let Yi = A * (-lambda * t).exp() + b;
 
-        f.set(i, (Yi - data.y[i as uint]) / data.sigma[i as uint]);
+        f.set(i, (Yi - data.y[i as usize]) / data.sigma[i as usize]);
     }
 
     rgsl::Value::Success
@@ -85,7 +85,7 @@ fn expb_df(x: &rgsl::VectorF64, data: &mut Data, J: &mut rgsl::MatrixF64) -> rgs
         /*       Yi = A * exp(-lambda * i) + b  */
         /* and the xj are the parameters (A,lambda,b) */
         let t = i as f64;
-        let s = data.sigma[i as uint];
+        let s = data.sigma[i as usize];
         let e = (-lambda * t).exp();
       
         J.set(i, 0, e / s); 
@@ -106,7 +106,7 @@ fn expb_fdf(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64, J: &m
 // (1.0,5.0,0.1) combined with Gaussian noise (standard deviation = 0.1) over a range of 40 timesteps. The initial guess for the
 // parameters is chosen as (0.0, 1.0, 0.0).
 
-static N : uint = 40u;
+static N : usize = 40u;
 
 #[allow(unused_assignments)]
 fn main() {

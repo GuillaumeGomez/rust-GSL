@@ -12,8 +12,8 @@ use rgsl::{wavelet_transforms, sort};
 use std::os;
 use std::num::Float;
 
-pub const N : uint = 256;
-pub const NC : uint = 20;
+pub const N : usize = 256;
+pub const NC : usize = 20;
 
 #[allow(unused_must_use)]
 fn main() {
@@ -33,7 +33,7 @@ fn main() {
             Ok(f) => f,
             Err(e) => panic!("file error: {}", e),
         };
-        for i in range(0u, N) {
+        for i in range(0us, N) {
             match f.read_be_f64() {
                 Ok(v) => {
                     data[i] = v;
@@ -48,7 +48,7 @@ fn main() {
 
     wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N as u64, &work);
 
-     for i in range(0u, N) {
+     for i in range(0us, N) {
         abscoeff[i] = data[i].abs();
     }
 
@@ -56,13 +56,13 @@ fn main() {
 
     let mut i = 0u;
     while i + NC < N {
-        data[p[i] as uint] = 0f64;
+        data[p[i] as usize] = 0f64;
         i += 1;
     }
 
     wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N as u64, &work);
 
-    for it in range(0u, N) {
+    for it in range(0us, N) {
         println!("{}", data[it]);
     }
 }
