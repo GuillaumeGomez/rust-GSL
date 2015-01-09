@@ -4,6 +4,8 @@
 
 // The example program below prints all subsets of the set {0,1,2,3} ordered by size. Subsets of the same size are ordered lexicographically.
 
+#![allow(unstable)]
+
 extern crate rgsl;
 
 use rgsl::Combination;
@@ -16,7 +18,7 @@ fn main() {
 
         println!("size {}:", i);
         while tmp {
-            println!("{}", c);
+            println!("{:?}", c);
             tmp = c.next() == rgsl::Value::Success;
         }
     }

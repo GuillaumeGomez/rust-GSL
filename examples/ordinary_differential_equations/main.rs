@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#![allow(unstable)]
+
 extern crate rgsl;
 extern crate libc;
 extern crate c_vec;
@@ -62,7 +64,7 @@ fn main() {
         match d.apply(&mut t, ti, &mut y) {
             rgsl::Value::Success => {}
             e => {
-                println!("error, return value={}", e);
+                println!("error, return value={:?}", e);
                 break
             }
         }

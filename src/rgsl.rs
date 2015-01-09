@@ -62,6 +62,7 @@ Here is the list of all modules :
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
 #![allow(raw_pointer_derive)]
+#![allow(unstable)]
 
 extern crate libc;
 extern crate c_str;

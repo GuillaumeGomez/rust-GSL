@@ -5,6 +5,8 @@
 // The example program below prints all multisets elements containing the values {0,1,2,3} ordered by size. Multiset elements of the same
 // size are ordered lexicographically.
 
+#![allow(unstable)]
+
 extern crate rgsl;
 
 use std::io::{File, Open, Read};
@@ -54,7 +56,7 @@ fn main() {
 
     sort::vectors::sort_index(&mut p, &abscoeff, 1, N as u64);
 
-    let mut i = 0u;
+    let mut i = 0us;
     while i + NC < N {
         data[p[i] as usize] = 0f64;
         i += 1;

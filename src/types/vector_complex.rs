@@ -231,9 +231,9 @@ impl Show for VectorComplexF64 {
             write!(f, "[");
             for x in range(0u64, (*self.vec).size) {
                 if x < (*self.vec).size - 1 {
-                    write!(f, "{}, ", self.get(x));
+                    write!(f, "{:?}, ", self.get(x));
                 } else {
-                    write!(f, "{}", self.get(x));
+                    write!(f, "{:?}", self.get(x));
                 }
             }
         }
@@ -477,9 +477,9 @@ impl Show for VectorComplexF32 {
             write!(f, "[");
             for x in range(0u64, (*self.vec).size) {
                 if x < (*self.vec).size - 1 {
-                    write!(f, "{}, ", self.get(x));
+                    write!(f, "{:?}, ", self.get(x));
                 } else {
-                    write!(f, "{}", self.get(x));
+                    write!(f, "{:?}", self.get(x));
                 }
             }
         }

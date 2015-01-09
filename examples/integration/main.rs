@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#![allow(unstable)]
+
 extern crate rgsl;
 
 use std::intrinsics::{sinf64, logf64, expf64};
@@ -59,7 +61,7 @@ fn main() {
             println!("Result {} +/- {} from {} evaluations", result, error, n_eval);
         }
         e => {
-            println!("There was a problem with integration: {}", e);
+            println!("There was a problem with integration: {:?}", e);
         }
     };
 
@@ -71,7 +73,7 @@ fn main() {
             println!("Result {} +/- {}", result, error);
         }
         e => {
-            println!("There was a problem with integration: {}", e);
+            println!("There was a problem with integration: {:?}", e);
         }
     };
 
@@ -81,7 +83,7 @@ fn main() {
             println!("Result {} +/- {}", result, error);
         }
         e => {
-            println!("There was a problem with integration: {}", e);
+            println!("There was a problem with integration: {:?}", e);
         }
     }
 
@@ -95,7 +97,7 @@ fn main() {
                 println!("Result {} +/- {}", result, error);
             }
             e => {
-                println!("There was a problem with integration: {}", e);
+                println!("There was a problem with integration: {:?}", e);
             }
         }
     }
@@ -108,7 +110,7 @@ fn main() {
             println!("Result {} +/- {} -> {}", result, error, n_eval);
         }
         e => {
-            println!("There was a problem with integration: {}", e);
+            println!("There was a problem with integration: {:?}", e);
         }
     }
 

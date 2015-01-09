@@ -17,6 +17,8 @@
 // and (\pi,\pi,0). The Monte Carlo routines only select points which are strictly within the integration region and so no special measures
 // are needed to avoid these singularities.
 
+#![allow(unstable)]
+
 extern crate rgsl;
 
 use std::intrinsics::{fabsf64};

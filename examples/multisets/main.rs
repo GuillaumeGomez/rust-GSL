@@ -5,6 +5,8 @@
 // The example program below prints all multisets elements containing the values {0,1,2,3} ordered by size. Multiset elements of the same
 // size are ordered lexicographically.
 
+#![allow(unstable)]
+
 extern crate rgsl;
 
 #[allow(unused_must_use)]

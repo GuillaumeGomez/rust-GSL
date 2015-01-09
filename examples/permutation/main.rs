@@ -16,13 +16,13 @@ fn main() {
 
     println!("initial permutation :");
     p.init();
-    println!("{}\n", p);
+    println!("{:?}\n", p);
 
     println!("random permutation :");
     rgsl::randist::shuffling_sampling::shuffle(&r, p.data());
-    println!("{}\n", p);
+    println!("{:?}\n", p);
 
     println!("inverse permutation :");
     p.inverse(&q);
-    println!("{}\n", q);
+    println!("{:?}\n", q);
 }

@@ -259,9 +259,9 @@ impl Show for MatrixComplexF64 {
                 write!(f, "[");
                 for x in range(0u64, (*self.mat).size2) {
                     if x < (*self.mat).size2 - 1 {
-                        write!(f, "{}, ", self.get(y, x));
+                        write!(f, "{:?}, ", self.get(y, x));
                     } else {
-                        write!(f, "{}", self.get(y, x));
+                        write!(f, "{:?}", self.get(y, x));
                     }
                 }
                 if y < (*self.mat).size1 - 1 {
@@ -536,9 +536,9 @@ impl Show for MatrixComplexF32 {
                 write!(f, "[");
                 for x in range(0u64, (*self.mat).size2) {
                     if x < (*self.mat).size2 - 1 {
-                        write!(f, "{}, ", self.get(y, x));
+                        write!(f, "{:?}, ", self.get(y, x));
                     } else {
-                        write!(f, "{}", self.get(y, x));
+                        write!(f, "{:?}", self.get(y, x));
                     }
                 }
                 if y < (*self.mat).size1 - 1 {

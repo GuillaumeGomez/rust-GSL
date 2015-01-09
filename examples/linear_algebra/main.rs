@@ -21,5 +21,5 @@ fn main() {
     rgsl::linear_algebra::LU_decomp(&m.matrix(), &p, &mut s);
     rgsl::linear_algebra::LU_solve(&m.matrix(), &p, &b.vector(), &x);
 
-    println!("x = \n{}", x);
+    println!("x = \n{:?}", x);
 }

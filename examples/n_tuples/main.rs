@@ -9,6 +9,8 @@
 // The second part analyses the ntuple data in the file test.dat. The analysis procedure is to compute the squared-magnitude of each
 // event, E^2=x^2+y^2+z^2, and select only those which exceed a lower limit of 1.5. The selected events are then histogrammed using their E^2 values.
 
+#![allow(unstable)]
+
 extern crate rgsl;
 
 struct Data {

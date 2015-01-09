@@ -6,10 +6,11 @@
 
 extern crate rgsl;
 
+#[allow(unstable)]
 fn main() {
     let q = rgsl::QRng::new(&rgsl::QRngType::sobol(), 2).unwrap();
 
-    for i in range(0us, 1024u) {
+    for i in range(0us, 1024us) {
         let mut v : [f64; 2] = [0f64, 0f64];
 
         q.get(&mut v);
