@@ -13,7 +13,7 @@ To build it, please use :
 > make
 ```
 
-This command build __rgsl__, the examples and the documentation.
+This command builds __rgsl__, the examples and the documentation.
 
 You can build them separatly too.
 
