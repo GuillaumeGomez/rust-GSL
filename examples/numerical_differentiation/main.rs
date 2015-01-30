@@ -5,7 +5,7 @@
 // The following code estimates the derivative of the function f(x) = x^{3/2} at x=2 and at x=0. The function f(x) is undefined for x<0 so
 // the derivative at x=0 is computed using gsl_deriv_forward.
 
-#![allow(unstable)]
+#![feature(core)]
 
 extern crate rgsl;
 

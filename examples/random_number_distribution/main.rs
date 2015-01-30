@@ -2,12 +2,13 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#![feature(core)]
+
 extern crate rgsl;
 
 use rgsl::Rng;
 
 #[allow(unused_variables)]
-#[allow(unstable)]
 fn main() {
     rgsl::RngType::env_setup();
 

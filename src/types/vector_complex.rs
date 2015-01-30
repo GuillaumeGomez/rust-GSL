@@ -3,7 +3,7 @@
 //
 
 use std::fmt;
-use std::fmt::{Formatter,Show};
+use std::fmt::{Formatter, Debug};
 use types::{ComplexF32, ComplexF64};
 use ffi;
 use enums;
@@ -224,7 +224,7 @@ impl Drop for VectorComplexF64 {
     }
 }
 
-impl Show for VectorComplexF64 {
+impl Debug for VectorComplexF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -470,7 +470,7 @@ impl Drop for VectorComplexF32 {
     }
 }
 
-impl Show for VectorComplexF32 {
+impl Debug for VectorComplexF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {

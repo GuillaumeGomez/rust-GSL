@@ -7,7 +7,7 @@
 //
 // The second part is Here is an example which computes the FFT of a short pulse in a sample of length 630 (=2*3*3*5*7) using the mixed-radix algorithm.
 
-#![allow(unstable)]
+#![feature(core)]
 
 extern crate rgsl;
 

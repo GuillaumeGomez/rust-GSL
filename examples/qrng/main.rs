@@ -2,11 +2,12 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-/// The following program prints the first 1024 points of the 2-dimensional Sobol sequence.
+// The following program prints the first 1024 points of the 2-dimensional Sobol sequence.
+
+#![feature(core)]
 
 extern crate rgsl;
 
-#[allow(unstable)]
 fn main() {
     let q = rgsl::QRng::new(&rgsl::QRngType::sobol(), 2).unwrap();
 

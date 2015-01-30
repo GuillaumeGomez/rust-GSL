@@ -3,7 +3,7 @@
 //
 
 use std::fmt;
-use std::fmt::{Formatter,Show};
+use std::fmt::{Formatter, Debug};
 use types::{ComplexF32, ComplexF64};
 use types::{VectorComplexF64, VectorComplexF32};
 use ffi;
@@ -251,7 +251,7 @@ impl Drop for MatrixComplexF64 {
     }
 }
 
-impl Show for MatrixComplexF64 {
+impl Debug for MatrixComplexF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -528,7 +528,7 @@ impl Drop for MatrixComplexF32 {
     }
 }
 
-impl Show for MatrixComplexF32 {
+impl Debug for MatrixComplexF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {

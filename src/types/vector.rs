@@ -31,7 +31,7 @@ vector.
 !*/
 
 use std::fmt;
-use std::fmt::{Formatter,Show};
+use std::fmt::{Formatter, Debug};
 use ffi;
 use enums;
 
@@ -401,7 +401,7 @@ impl Drop for VectorF32 {
     }
 }
 
-impl Show for VectorF32 {
+impl Debug for VectorF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -684,7 +684,7 @@ impl Drop for VectorF64 {
     }
 }
 
-impl Show for VectorF64 {
+impl Debug for VectorF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {

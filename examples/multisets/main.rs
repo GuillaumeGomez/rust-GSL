@@ -5,13 +5,14 @@
 // The example program below prints all multisets elements containing the values {0,1,2,3} ordered by size. Multiset elements of the same
 // size are ordered lexicographically.
 
-#![allow(unstable)]
+#![feature(core)]
+#![feature(io)]
 
 extern crate rgsl;
 
 #[allow(unused_must_use)]
 fn main() {
-    let stdio = &mut ::std::io::stdio::stdout().into_inner();
+    let stdio = &mut ::std::old_io::stdio::stdout().into_inner();
 
     println!("All multisets of {{0,1,2,3}} by size:");
     for i in range(0u64, 5u64) {

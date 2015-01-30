@@ -2,7 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![allow(unstable)]
+#![feature(core)]
+#![feature(libc)]
+#![feature(collections)]
 
 extern crate rgsl;
 extern crate libc;

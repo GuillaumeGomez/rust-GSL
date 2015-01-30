@@ -9,7 +9,8 @@
 // The second part analyses the ntuple data in the file test.dat. The analysis procedure is to compute the squared-magnitude of each
 // event, E^2=x^2+y^2+z^2, and select only those which exceed a lower limit of 1.5. The selected events are then histogrammed using their E^2 values.
 
-#![allow(unstable)]
+#![feature(core)]
+#![feature(io)]
 
 extern crate rgsl;
 
@@ -62,7 +63,7 @@ fn second_part() {
 
     ntuple.project(&h, val_func, &mut 0i32, sel_func, &mut lower);
     //gsl_histogram_fprintf(stdout, h, "%f", "%f");
-    h.print(&mut ::std::io::stdio::stdout().into_inner());
+    h.print(&mut ::std::old_io::stdio::stdout().into_inner());
 }
 
 fn main() {

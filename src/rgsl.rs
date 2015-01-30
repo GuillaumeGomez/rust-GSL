@@ -52,17 +52,20 @@ Here is the list of all modules :
 !*/
 
 #![crate_name = "rgsl"]
-//#![desc = "Rust binding for GSL"]
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
 
 #![feature(unsafe_destructor)]
+#![feature(core)]
+#![feature(libc)]
+#![feature(io)]
+#![feature(collections)]
+#![feature(std_misc)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
 #![allow(raw_pointer_derive)]
-#![allow(unstable)]
 
 extern crate libc;
 extern crate c_str;

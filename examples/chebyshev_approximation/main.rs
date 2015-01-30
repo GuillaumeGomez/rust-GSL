@@ -6,7 +6,7 @@
 // due to the discontinuity, and was chosen as an example where approximation error is visible. For smooth functions the Chebyshev
 // approximation converges extremely rapidly and errors would not be visible.
 
-#![allow(unstable)]
+#![feature(core)]
 
 extern crate rgsl;
 

@@ -4,7 +4,7 @@
 
 // TODO : port to Rust type : http://doc.rust-lang.org/num/complex/struct.Complex.html
 
-use std::fmt::{Formatter,Show};
+use std::fmt::{Formatter, Debug};
 use std::fmt;
 use std::default::Default;
 
@@ -332,7 +332,7 @@ impl ComplexF64 {
     }
 }
 
-impl Show for ComplexF64 {
+impl Debug for ComplexF64 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[{}, {}]", self.data[0], self.data[1])
     }
@@ -669,7 +669,7 @@ pub struct ComplexF32 {
     }
 }*/
 
-impl Show for ComplexF32 {
+impl Debug for ComplexF32 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[{}, {}]", self.data[0], self.data[1])
     }

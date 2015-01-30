@@ -6,7 +6,7 @@ use types::{VectorF64};
 use ffi;
 use enums;
 use std::fmt;
-use std::fmt::{Formatter, Show};
+use std::fmt::{Formatter, Debug};
 use c_vec::CVec;
 
 pub struct Permutation {
@@ -216,7 +216,7 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
     }
 }
 
-impl Show for Permutation {
+impl Debug for Permutation {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");

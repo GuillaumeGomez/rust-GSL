@@ -5,11 +5,15 @@
 // The example program below prints all multisets elements containing the values {0,1,2,3} ordered by size. Multiset elements of the same
 // size are ordered lexicographically.
 
-#![allow(unstable)]
+#![feature(core)]
+#![feature(io)]
+#![feature(os)]
+#![feature(collections)]
+#![feature(path)]
 
 extern crate rgsl;
 
-use std::io::{File, Open, Read};
+use std::old_io::{File, Open, Read};
 use rgsl::{wavelet_transforms, sort};
 use std::os;
 use std::num::Float;

@@ -13,7 +13,7 @@ Multisets are useful, for example, when iterating over the indices of a k-th ord
 
 use ffi;
 use enums;
-use std::io::IoResult;
+use std::old_io::IoResult;
 use c_vec::CVec;
 
 pub struct MultiSet {

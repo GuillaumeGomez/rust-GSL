@@ -19,7 +19,7 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 use ffi;
 use enums;
 use std::fmt;
-use std::fmt::{Formatter, Show};
+use std::fmt::{Formatter, Debug};
 use c_vec::CVec;
 
 pub struct Combination {
@@ -160,7 +160,7 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
     }
 }
 
-impl Show for Combination {
+impl Debug for Combination {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");

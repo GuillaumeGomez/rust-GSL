@@ -17,7 +17,7 @@
 // and (\pi,\pi,0). The Monte Carlo routines only select points which are strictly within the integration region and so no special measures
 // are needed to avoid these singularities.
 
-#![allow(unstable)]
+#![feature(core)]
 
 extern crate rgsl;
 

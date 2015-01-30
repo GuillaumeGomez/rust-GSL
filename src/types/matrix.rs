@@ -51,7 +51,7 @@ B. Stroustrup, The C++ Programming Language (3rd Ed), Section 22.4 Vector Arithm
 !*/
 
 use std::fmt;
-use std::fmt::{Formatter, Show};
+use std::fmt::{Formatter, Debug};
 use types::{VectorF64, VectorF32};
 use ffi;
 use enums;
@@ -491,7 +491,7 @@ impl Drop for MatrixF64 {
     }
 }
 
-impl Show for MatrixF64 {
+impl Debug for MatrixF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
@@ -822,7 +822,7 @@ impl Drop for MatrixF32 {
     }
 }
 
-impl Show for MatrixF32 {
+impl Debug for MatrixF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {

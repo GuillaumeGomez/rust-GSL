@@ -4,7 +4,7 @@
 
 // This program shows how to use matrices and vectors.
 
-#![allow(unstable)]
+#![feature(core)]
 
 extern crate rgsl;
 

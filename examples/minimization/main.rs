@@ -5,7 +5,7 @@
 // The following program uses the Brent algorithm to find the minimum of the function f(x) = \cos(x) + 1, which occurs at x = \pi. The 
 // starting interval is (0,6), with an initial guess for the minimum of 2.
 
-#![allow(unstable)]
+#![feature(core)]
 
 extern crate rgsl;
 
