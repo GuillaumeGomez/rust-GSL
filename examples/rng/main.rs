@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#![feature(core)]
+
 /// Running the program without any environment variables uses the initial defaults, an mt19937 generator with a seed of 0,
 /// 
 /// ```Shell
