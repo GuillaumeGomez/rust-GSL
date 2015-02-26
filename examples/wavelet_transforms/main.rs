@@ -6,16 +6,15 @@
 // size are ordered lexicographically.
 
 #![feature(core)]
-#![feature(io)]
-#![feature(os)]
+#![feature(old_io)]
 #![feature(collections)]
-#![feature(path)]
+#![feature(env)]
+#![feature(old_path)]
 
 extern crate rgsl;
 
 use std::old_io::{File, Open, Read};
 use rgsl::{wavelet_transforms, sort};
-use std::os;
 use std::num::Float;
 
 pub const N : usize = 256;
@@ -26,7 +25,11 @@ fn main() {
     let mut data : [f64; 256] = [0f64; 256];
     let mut abscoeff : [f64; 256] = [0f64; 256];
     let mut p : [u64; 256] = [0u64; 256];
-    let args = os::args();
+    let mut args = Vec::new();
+
+    for entry in std::env::args() {
+        args.push(entry);
+    }
     let tmp = args.tail();
 
     if tmp.len() < 1 {
@@ -39,7 +42,7 @@ fn main() {
             Ok(f) => f,
             Err(e) => panic!("file error: {}", e),
         };
-        for i in range(0us, N) {
+        for i in range(0usize, N) {
             match f.read_be_f64() {
                 Ok(v) => {
                     data[i] = v;
@@ -54,13 +57,13 @@ fn main() {
 
     wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N as u64, &work);
 
-     for i in range(0us, N) {
+     for i in range(0usize, N) {
         abscoeff[i] = data[i].abs();
     }
 
     sort::vectors::sort_index(&mut p, &abscoeff, 1, N as u64);
 
-    let mut i = 0us;
+    let mut i = 0usize;
     while i + NC < N {
         data[p[i] as usize] = 0f64;
         i += 1;
@@ -68,7 +71,7 @@ fn main() {
 
     wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N as u64, &work);
 
-    for it in range(0us, N) {
+    for it in range(0usize, N) {
         println!("{}", data[it]);
     }
 }

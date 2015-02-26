@@ -20,19 +20,18 @@ Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–
 
 use ffi;
 use enums;
-use c_str::FromCStr;
 use c_vec::CVec;
 
-pub struct QRng {
+pub struct QRng<'a> {
     q: *mut ffi::gsl_qrng,
-    data: CVec<i8>
+    data: CVec<'a, i8>
 }
 
-impl QRng {
+impl<'a> QRng<'a> {
     /// This function returns a pointer to a newly-created instance of a quasi-random sequence generator of type T and dimension d. If
     /// there is insufficient memory to create the generator then the function returns a null pointer and the error handler is invoked
     /// with an error code of ::NoMem.
-    pub fn new(t: &QRngType, d: u32) -> Option<QRng> {
+    pub fn new(t: &QRngType, d: u32) -> Option<QRng<'a>> {
         let tmp = unsafe { ffi::gsl_qrng_alloc(t.t, d) };
 
         if tmp.is_null() {
@@ -64,7 +63,7 @@ impl QRng {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(FromCStr::from_c_str(tmp)) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
         }
     }
 
@@ -90,22 +89,23 @@ impl QRng {
     }
 }
 
-impl Clone for QRng {
+impl<'a> Clone for QRng<'a> {
     /// This function returns a pointer to a newly created generator which is an exact copy of the generator self.
-    fn clone(&self) -> QRng {
+    fn clone(&self) -> QRng<'a> {
         unsafe { ffi::FFI::wrap(ffi::gsl_qrng_clone(self.q as *const ffi::gsl_qrng)) }
     }
 }
 
-impl Drop for QRng {
+#[unsafe_destructor]
+impl<'a> Drop for QRng<'a> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_qrng_free(self.q) };
         self.q = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_qrng> for QRng {
-    fn wrap(q: *mut ffi::gsl_qrng) -> QRng {
+impl<'a> ffi::FFI<ffi::gsl_qrng> for QRng<'a> {
+    fn wrap(q: *mut ffi::gsl_qrng) -> QRng<'a> {
         QRng {
             q: q,
             data: unsafe { CVec::new(q as *mut i8, 0) }

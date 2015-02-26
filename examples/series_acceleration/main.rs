@@ -13,7 +13,7 @@ After N terms the error in the sum is O(1/N), making direct summation of the ser
 
 extern crate rgsl;
 
-pub static N : usize = 20us;
+pub static N : usize = 20usize;
 
 fn main() {
     let mut t : [f64; 20] = [0f64; 20];

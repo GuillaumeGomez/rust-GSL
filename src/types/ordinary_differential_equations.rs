@@ -61,7 +61,6 @@ Differential/Algebraic Equation Solvers.‚Äù, ACM Trans. Math. Software 31, 363‚Ä
 use ffi;
 use enums;
 use libc::c_void;
-use c_str::FromCStr;
 
 /// Description of a system of ODEs.
 /// 
@@ -121,7 +120,7 @@ impl ODEiv2Step {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(FromCStr::from_c_str(tmp)) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
         }
     }
 
@@ -410,7 +409,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(FromCStr::from_c_str(tmp)) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
         }
     }
 

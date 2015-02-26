@@ -31,10 +31,12 @@ Further information on the use of ntuples can be found in the documentation for 
 use ffi;
 use enums;
 use libc::funcs::c95::stdio::{feof, fread};
-use c_str::ToCStr;
+use std::marker::PhantomData;
+use std::ffi::CString;
 
 pub struct NTuples<T> {
-    n: *mut ffi::gsl_ntuple
+    n: *mut ffi::gsl_ntuple,
+    p: PhantomData<T>
 }
 
 impl<T> NTuples<T> {
@@ -43,16 +45,17 @@ impl<T> NTuples<T> {
     /// row ntuple_data must be supplied—this is used to copy ntuples in and out of the file.
     pub fn create(filename: &str, data: &mut T) -> Option<NTuples<T>> {
         let t_data = unsafe { ::std::mem::transmute(data) };
-        let tmp = unsafe { filename.with_c_str(|c_str| {
-                ffi::gsl_ntuple_create(c_str as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
-            })
+        let c_str = CString::from_slice(filename.as_bytes());
+        let tmp = unsafe {
+            ffi::gsl_ntuple_create(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
         };
 
         if tmp.is_null() {
             None
         } else {
             Some(NTuples {
-                n: tmp
+                n: tmp,
+                p: PhantomData
             })
         }
     }
@@ -62,16 +65,17 @@ impl<T> NTuples<T> {
     /// ntuples in and out of the file.
     pub fn open(filename: &str, data: &mut T) -> Option<NTuples<T>> {
         let t_data = unsafe { ::std::mem::transmute(data) };
-        let tmp = unsafe { filename.with_c_str(|c_str| {
-                ffi::gsl_ntuple_open(c_str as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
-            })
+        let c_str = CString::from_slice(filename.as_bytes());
+        let tmp = unsafe {
+            ffi::gsl_ntuple_open(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
         };
 
         if tmp.is_null() {
             None
         } else {
             Some(NTuples {
-                n: tmp
+                n: tmp,
+                p: PhantomData
             })
         }
     }
@@ -126,7 +130,8 @@ impl<T> Drop for NTuples<T> {
 impl<T> ffi::FFI<ffi::gsl_ntuple> for NTuples<T> {
     fn wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
         NTuples {
-            n: n
+            n: n,
+            p: PhantomData
         }
     }
 

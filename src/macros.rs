@@ -10,11 +10,10 @@ macro_rules! rgsl_error(
             let file = file!();
 
             unsafe {
-                $msg.with_c_str(|c_str|{
-                    file.with_c_str(|c_file|{
-                        ffi::gsl_error(c_str, c_file, line!() as i32, $err_value as i32)
-                    });
-                });
+                let c_msg = ::std::ffi::CString::from_slice($msg.as_bytes());
+                let c_file = ::std::ffi::CString::from_slice(file.as_bytes());
+
+                ffi::gsl_error(c_msg.as_ptr(), c_file.as_ptr(), line!() as i32, $err_value as i32)
             }
         }
     );

@@ -19,8 +19,8 @@ fn fn1(x: f64, params: &mut f64) -> f64 {
 
 #[allow(unused_assignments)]
 fn main() {
-    let mut iter = 0us;
-    let max_iter = 100us;
+    let mut iter = 0usize;
+    let max_iter = 100usize;
     let mut m = 2f64;
     let m_expected = PI;
     let mut a = 0f64;

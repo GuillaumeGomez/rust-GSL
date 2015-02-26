@@ -84,7 +84,7 @@ use ffi;
 use enums;
 use std::intrinsics::{fabsf64, powf64, floorf64};
 use std::num::Float;
-use c_str::ToCStr;
+use std::ffi::CString;
 
 fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
     let mut t_err = unsafe { fabsf64(err) };
@@ -129,12 +129,12 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         //to avoid the dead_code warning on gsl_error
         unsafe {
             let file = file!();
+            let c_str = CString::from_slice("tolerance cannot be achieved with given eps_abs and eps_rel".as_bytes());
+            let c_file = CString::from_slice(file.as_bytes());
 
-            "tolerance cannot be achieved with given eps_abs and eps_rel".with_c_str(|c_str|{
-                file.with_c_str(|c_file|{
-                    ffi::gsl_error(c_str, c_file, line!() as i32, ::Value::BadTol as i32)
-                });
-            });
+            unsafe {
+                ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTol as i32);
+            }
         }
         return ::Value::BadTol;
     }

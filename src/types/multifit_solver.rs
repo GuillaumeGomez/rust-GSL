@@ -42,7 +42,6 @@ These routines provide a high level wrapper that combine the iteration and conve
 use ffi;
 use std::num::Float;
 use libc::c_void;
-use c_str::ToCStr;
 
 pub struct MultiFitFunction<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,
@@ -60,7 +59,7 @@ pub struct MultiFitFdfSolver<'r, T:'r> {
     pub f: ::VectorF64,
     pub j: ::MatrixF64,
     pub dx: ::VectorF64,
-    state: LmderStateT
+    state: LmderStateT<'r>
 }
 
 impl<'r, T> MultiFitFdfSolver<'r, T> {
@@ -197,7 +196,7 @@ pub struct MultiFitFunctionFdf<'r, T:'r> {
 }
 
 #[allow(dead_code)]
-struct LmderStateT {
+struct LmderStateT<'a> {
     iter: u64,
     xnorm: f64,
     fnorm: f64,
@@ -216,11 +215,11 @@ struct LmderStateT {
     rptdx: ::VectorF64,
     w: ::VectorF64,
     work1: ::VectorF64,
-    perm: ::Permutation
+    perm: ::Permutation<'a>
 }
 
-impl LmderStateT {
-    fn new(n: u64, p: u64) -> LmderStateT {
+impl<'a> LmderStateT<'a> {
+    fn new(n: u64, p: u64) -> LmderStateT<'a> {
         LmderStateT {
             iter: 0u64,
             xnorm: 0f64,

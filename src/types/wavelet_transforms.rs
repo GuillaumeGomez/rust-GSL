@@ -53,7 +53,6 @@ Circulation 101(23):e215-e220 2000.
 !*/
 
 use ffi;
-use c_str::FromCStr;
 
 /// The Wavelet structure contains the filter coefficients defining the wavelet and any associated offset parameters.
 pub struct Wavelet {
@@ -82,7 +81,7 @@ impl Wavelet {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(FromCStr::from_c_str(tmp)) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
         }
     }
 }

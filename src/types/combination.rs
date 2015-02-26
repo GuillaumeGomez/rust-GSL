@@ -22,16 +22,16 @@ use std::fmt;
 use std::fmt::{Formatter, Debug};
 use c_vec::CVec;
 
-pub struct Combination {
+pub struct Combination<'a> {
     c: *mut ffi::gsl_combination,
-    data: CVec<u64>
+    data: CVec<'a, u64>
 }
 
-impl Combination {
+impl<'a> Combination<'a> {
     /// This function allocates memory for a new combination with parameters n, k. The combination is not initialized and its elements are
     /// undefined. Use the function Combination::new_init_first if you want to create a combination which is initialized to the lexicographically
     /// first combination. A null pointer is returned if insufficient memory is available to create the combination.
-    pub fn new(n: u64, k: u64) -> Option<Combination> {
+    pub fn new(n: u64, k: u64) -> Option<Combination<'a>> {
         let tmp = unsafe { ffi::gsl_combination_alloc(n, k) };
 
         if tmp.is_null() {
@@ -55,7 +55,7 @@ impl Combination {
 
     /// This function allocates memory for a new combination with parameters n, k and initializes it to the lexicographically first combination.
     /// A null pointer is returned if insufficient memory is available to create the combination.
-    pub fn new_init_first(n: u64, k: u64) -> Option<Combination> {
+    pub fn new_init_first(n: u64, k: u64) -> Option<Combination<'a>> {
         let tmp = unsafe { ffi::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {
@@ -138,15 +138,16 @@ impl Combination {
     }
 }
 
-impl Drop for Combination {
+#[unsafe_destructor]
+impl<'a> Drop for Combination<'a> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_combination_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_combination> for Combination {
-    fn wrap(c: *mut ffi::gsl_combination) -> Combination {
+impl<'a> ffi::FFI<ffi::gsl_combination> for Combination<'a> {
+    fn wrap(c: *mut ffi::gsl_combination) -> Combination<'a> {
         unsafe {
             Combination {
                 c: c,
@@ -160,7 +161,7 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
     }
 }
 
-impl Debug for Combination {
+impl<'a> Debug for Combination<'a> {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");

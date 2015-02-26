@@ -39,7 +39,6 @@ D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6
 
 use ffi;
 use enums;
-use c_str::FromCStr;
 
 /// evaluation accelerator
 #[repr(C)]
@@ -120,7 +119,7 @@ impl Interp {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { FromCStr::from_c_str(tmp) }
+            unsafe { String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string() }
         }
     }
 
@@ -239,7 +238,7 @@ impl Spline {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { FromCStr::from_c_str(tmp) }
+            unsafe { String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string() }
         }
     }
 

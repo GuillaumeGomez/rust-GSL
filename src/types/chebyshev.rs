@@ -28,16 +28,15 @@ use ffi;
 use enums;
 use std::f64::consts::PI;
 use std::num::Float;
-use c_str::ToCStr;
 use c_vec::CVec;
 
-pub struct ChebSeries {
+pub struct ChebSeries<'a> {
     c: *mut ffi::gsl_cheb_series,
-    data: CVec<f64>
+    data: CVec<'a, f64>
 }
 
-impl ChebSeries {
-    pub fn new(n: u64) -> Option<ChebSeries> {
+impl<'a> ChebSeries<'a> {
+    pub fn new(n: u64) -> Option<ChebSeries<'a>> {
         let tmp = unsafe { ffi::gsl_cheb_alloc(n) };
 
         if tmp.is_null() {
@@ -141,15 +140,16 @@ impl ChebSeries {
     }
 }
 
-impl Drop for ChebSeries {
+#[unsafe_destructor]
+impl<'a> Drop for ChebSeries<'a> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_cheb_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
-    fn wrap(c: *mut ffi::gsl_cheb_series) -> ChebSeries {
+impl<'a> ffi::FFI<ffi::gsl_cheb_series> for ChebSeries<'a> {
+    fn wrap(c: *mut ffi::gsl_cheb_series) -> ChebSeries<'a> {
         unsafe {
             ChebSeries {
                 c: c,

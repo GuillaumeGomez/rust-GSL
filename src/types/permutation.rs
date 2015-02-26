@@ -9,9 +9,9 @@ use std::fmt;
 use std::fmt::{Formatter, Debug};
 use c_vec::CVec;
 
-pub struct Permutation {
+pub struct Permutation<'a> {
     p: *mut ffi::gsl_permutation,
-    d: CVec<u64>
+    d: CVec<'a, u64>
 }
 
 ///##Permutations in cyclic form
@@ -39,11 +39,11 @@ pub struct Permutation {
 /// The important property of the canonical form is that it can be reconstructed from the contents of each cycle without the brackets. In addition,
 /// by removing the brackets it can be considered as a linear representation of a different permutation. In the example given above the permutation
 /// (2 4 3 0 1) would become (1 4 0 2 3). This mapping has many applications in the theory of permutations.
-impl Permutation {
+impl<'a> Permutation<'a> {
     /// This function allocates memory for a new permutation of size n. The permutation is not initialized and its elements are undefined.
     /// Use the function gsl_permutation_calloc if you want to create a permutation which is initialized to the identity. A null pointer is
     /// returned if insufficient memory is available to create the permutation.
-    pub fn new(n: u64) -> Option<Permutation> {
+    pub fn new(n: u64) -> Option<Permutation<'a>> {
         let tmp = unsafe { ffi::gsl_permutation_alloc(n) };
 
         if tmp.is_null() {
@@ -60,7 +60,7 @@ impl Permutation {
 
     /// This function allocates memory for a new permutation of size n and initializes it to the identity. A null pointer is returned if
     /// insufficient memory is available to create the permutation.
-    pub fn new_with_init(n: u64) -> Option<Permutation> {
+    pub fn new_with_init(n: u64) -> Option<Permutation<'a>> {
         let tmp = unsafe { ffi::gsl_permutation_calloc(n) };
 
         if tmp.is_null() {
@@ -194,15 +194,16 @@ impl Permutation {
     }
 }
 
-impl Drop for Permutation {
+#[unsafe_destructor]
+impl<'a> Drop for Permutation<'a> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_permutation_free(self.p) };
         self.p = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_permutation> for Permutation {
-    fn wrap(p: *mut ffi::gsl_permutation) -> Permutation {
+impl<'a> ffi::FFI<ffi::gsl_permutation> for Permutation<'a> {
+    fn wrap(p: *mut ffi::gsl_permutation) -> Permutation<'a> {
         unsafe {
             Permutation {
                 p: p,
@@ -216,7 +217,7 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
     }
 }
 
-impl Debug for Permutation {
+impl<'a> Debug for Permutation<'a> {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");

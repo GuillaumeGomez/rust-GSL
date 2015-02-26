@@ -16,16 +16,16 @@ use enums;
 use std::old_io::IoResult;
 use c_vec::CVec;
 
-pub struct MultiSet {
+pub struct MultiSet<'a> {
     c: *mut ffi::gsl_multiset,
-    data: CVec<u64>
+    data: CVec<'a, u64>
 }
 
-impl MultiSet {
+impl<'a> MultiSet<'a> {
     /// This function allocates memory for a new multiset with parameters n, k. The multiset is not initialized and its elements are 
     /// undefined. Use the function gsl_multiset_calloc if you want to create a multiset which is initialized to the lexicographically 
     /// first multiset element. A null pointer is returned if insufficient memory is available to create the multiset.
-    pub fn new(n: u64, k: u64) -> Option<MultiSet> {
+    pub fn new(n: u64, k: u64) -> Option<MultiSet<'a>> {
         let tmp = unsafe { ffi::gsl_multiset_alloc(n, k) };
 
         if tmp.is_null() {
@@ -50,7 +50,7 @@ impl MultiSet {
 
     /// This function allocates memory for a new multiset with parameters n, k and initializes it to the lexicographically first multiset
     /// element. A null pointer is returned if insufficient memory is available to create the multiset.
-    pub fn new_init(n: u64, k: u64) -> Option<MultiSet> {
+    pub fn new_init(n: u64, k: u64) -> Option<MultiSet<'a>> {
         let tmp = unsafe { ffi::gsl_multiset_calloc(n, k) };
 
         if tmp.is_null() {
@@ -139,15 +139,16 @@ impl MultiSet {
     }
 }
 
-impl Drop for MultiSet {
+#[unsafe_destructor]
+impl<'a> Drop for MultiSet<'a> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_multiset_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
-    fn wrap(c: *mut ffi::gsl_multiset) -> MultiSet {
+impl<'a> ffi::FFI<ffi::gsl_multiset> for MultiSet<'a> {
+    fn wrap(c: *mut ffi::gsl_multiset) -> MultiSet<'a> {
         unsafe {
             if (*c).data.is_null() {
                 MultiSet {

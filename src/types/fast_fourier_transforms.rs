@@ -5,12 +5,12 @@
 use ffi;
 use c_vec::CVec;
 
-pub struct FftComplexWaveTable {
+pub struct FftComplexWaveTable<'a> {
     w: *mut ffi::gsl_fft_complex_wavetable,
-    f: CVec<u64>
+    f: CVec<'a, u64>
 }
 
-impl FftComplexWaveTable {
+impl<'a> FftComplexWaveTable<'a> {
     /// This function prepares a trigonometric lookup table for a complex FFT of length n. The function returns a pointer to the newly allocated
     /// gsl_fft_complex_wavetable if no errors were detected, and a null pointer in the case of error. The length n is factorized into a product
     /// of subtransforms, and the factors and their trigonometric coefficients are stored in the wavetable. The trigonometric coefficients are
@@ -19,7 +19,7 @@ impl FftComplexWaveTable {
     /// 
     /// The wavetable structure can be used repeatedly for any transform of the same length. The table is not modified by calls to any of the other
     /// FFT functions. The same wavetable can be used for both forward and backward (or inverse) transforms of a given length.
-    pub fn new(n: u64) -> Option<FftComplexWaveTable> {
+    pub fn new(n: u64) -> Option<FftComplexWaveTable<'a>> {
         let tmp = unsafe { ffi::gsl_fft_complex_wavetable_alloc(n) };
 
         if tmp.is_null() {
@@ -39,15 +39,16 @@ impl FftComplexWaveTable {
     }
 }
 
-impl Drop for FftComplexWaveTable {
+#[unsafe_destructor]
+impl<'a> Drop for FftComplexWaveTable<'a> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_fft_complex_wavetable_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
-    fn wrap(w: *mut ffi::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
+impl<'a> ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable<'a> {
+    fn wrap(w: *mut ffi::gsl_fft_complex_wavetable) -> FftComplexWaveTable<'a> {
         unsafe {
             FftComplexWaveTable {
                 w: w,

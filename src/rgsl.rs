@@ -61,6 +61,7 @@ Here is the list of all modules :
 #![feature(io)]
 #![feature(collections)]
 #![feature(std_misc)]
+#![feature(int_uint)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -68,7 +69,6 @@ Here is the list of all modules :
 #![allow(raw_pointer_derive)]
 
 extern crate libc;
-extern crate c_str;
 extern crate c_vec;
 
 pub use types::{

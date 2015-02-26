@@ -108,13 +108,13 @@ fn expb_fdf(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64, J: &m
 // (1.0,5.0,0.1) combined with Gaussian noise (standard deviation = 0.1) over a range of 40 timesteps. The initial guess for the
 // parameters is chosen as (0.0, 1.0, 0.0).
 
-static N : usize = 40us;
+static N : usize = 40usize;
 
 #[allow(unused_assignments)]
 fn main() {
     let mut status = rgsl::Value::Success;
     let n = N;
-    let p = 3us;
+    let p = 3u32;
 
     let mut covar = rgsl::MatrixF64::new(p as u64, p as u64).unwrap();
     let mut d = Data {
@@ -140,7 +140,7 @@ fn main() {
     };
 
     /* This is the data to be fitted */
-    let mut iter = 0us;
+    let mut iter = 0u32;
 
     for i in range(0, n) {
         let t = i as f64;

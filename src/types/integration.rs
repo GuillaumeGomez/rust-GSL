@@ -8,7 +8,6 @@ use ffi;
 use enums;
 use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use std::num::Float;
-use c_str::ToCStr;
 use c_vec::CVec;
 
 static XI : [f64; 33] = [
@@ -2675,7 +2674,7 @@ impl CquadWorkspace {
             let mut iv = (*self.w).ivals;
             let mut m = (a + b) / 2f64;
             let mut h = (b - a) / 2f64;
-            let mut nnans = 0us;
+            let mut nnans = 0usize;
 
             for i in range(0us, n[3] as usize + 1us) {
                 (*iv).fx[i] = f(m + XI[i] * h, arg);
@@ -2881,7 +2880,7 @@ impl CquadWorkspace {
                     }
 
                     nnans = 0;
-                    it = 0us;
+                    it = 0usize;
                     while it < 33 {
                         if !(*ivl).fx[it].is_finite() {
                             nans[nnans] = it as i32;
@@ -2949,7 +2948,7 @@ impl CquadWorkspace {
                         it += skip[0] as usize;
                     }
                     nnans = 0;
-                    it = 0us;
+                    it = 0usize;
                     while it < 33us {
                         if !(*ivr).fx[it].is_finite() {
                           nans[nnans] = it as i32;
@@ -3042,7 +3041,7 @@ impl CquadWorkspace {
                     }
                 } else {
                     /* Otherwise, just fix-up the heap. */
-                    let mut it = 0us;
+                    let mut it = 0usize;
                     while 2 * it + 1 < nivals {
                         let mut j = 2 * it + 1;
                         if j + 1 < nivals && ivals[heap[j + 1] as usize].err >= ivals[heap[j] as usize].err {
@@ -3395,14 +3394,14 @@ pub fn append_interval(w: &IntegrationWorkspace, a: f64, b: f64, area: f64, erro
 pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64, abserr: &mut f64) {
     let epstab = &mut (*table).rlist2;//Vec::from_raw_buf((*table).rlist2 as *mut f64, (*table).n as usize + 3);
     let res3la = &mut (*table).res3la;//Vec::from_raw_buf((*table).res3la as *mut f64, 3u);
-    let n = (*table).n as usize - 1us;
+    let n = (*table).n as usize - 1usize;
 
     let current = (*epstab)[n];
 
     let mut absolute = ::DBL_MAX;
     let mut relative = 5f64 * ::DBL_EPSILON * fabsf64(current);
 
-    let newelm = n / 2us;
+    let newelm = n / 2usize;
     let n_orig = n;
     let mut n_final = n;
 

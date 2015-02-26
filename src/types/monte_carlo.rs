@@ -116,7 +116,6 @@ use std::intrinsics::{sqrtf64, powf64, fabsf64, floorf64, logf64};
 use std::default::Default;
 use libc::c_void;
 use std::num::Int;
-use c_str::ToCStr;
 use c_vec::CVec;
 
 pub struct PlainMonteCarlo {
@@ -261,7 +260,7 @@ impl MiserMonteCarlo {
             let mut calls_l = 0u64;
             let mut calls_r = 0u64;
             let min_calls = (*self.s).min_calls;
-            let mut i_bisect = 0us;
+            let mut i_bisect = 0usize;
             let dim = (*self.s).dim as usize;
             let mut found_best = false;
 
@@ -540,7 +539,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
 
         for n in range(0us, calls as usize) {
             let j = (n / 2us) % dim;
-            let side = n % 2us;
+            let side = n % 2usize;
 
             for i in range(0us, dim) {
                 let z = r.uniform_pos();
@@ -1067,7 +1066,7 @@ unsafe fn resize_grid(s: *mut ffi::gsl_monte_vegas_state, bins: usize) {
     for j in range(0us, dim) {
         let mut xnew = 0f64;
         let mut dw = 0f64;
-        let mut i = 1us;
+        let mut i = 1usize;
 
         for k in range(1us, (*s).bins as usize + 1us) {
             dw += 1f64;
@@ -1142,7 +1141,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
 
             let mut xnew = 0f64;
             let mut dw = 0f64;
-            let mut i = 1us;
+            let mut i = 1usize;
 
             for k in range(0us, bins) {
                 dw += weight[k];
