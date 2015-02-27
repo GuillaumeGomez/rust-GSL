@@ -1,9 +1,10 @@
+language: rust
+sudo: true
 env:
   global:
     - secure: UbBFC1c7nxMQCJ+AIsU2PYFnNvh33UPeeobGWE89fIyV4HQ7k3IMX7zZKKCiRuHC5AZzVa3t2jEq/yQlBpk1Opy0rAU4S/F+RcygVlsfOXGDtZkdWpBekVhjAsxSDLzCWjLhlajje3jzFLu/5UomJweubmmZ0xtX0gx8zU0nPhU=
     - LD_LIBRARY_PATH=/usr/local/lib
 install:
-  - curl https://static.rust-lang.org/rustup.sh | sudo sh -
   - sudo apt-get install libgsl0-dev
 script:
   - rustc --version
