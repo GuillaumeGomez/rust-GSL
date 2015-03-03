@@ -8,7 +8,7 @@ use ffi;
 use enums;
 use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use std::num::Float;
-use c_vec::CVec;
+use c_vec::CSlice;
 
 static XI : [f64; 33] = [
   -1f64, -0.99518472667219688624f64, -0.98078528040323044912f64,
@@ -1673,8 +1673,8 @@ impl IntegrationWorkspace {
     pub fn sort_results(&self) {
         unsafe {
             let nint = (*self.w).size as usize;
-            let mut t_elist = CVec::new((*self.w).elist, nint);
-            let mut t_order = CVec::new((*self.w).order, nint);
+            let mut t_elist = CSlice::new((*self.w).elist, nint);
+            let mut t_order = CSlice::new((*self.w).order, nint);
             let elist = t_elist.as_mut_slice();
             let order = t_order.as_mut_slice();
 
@@ -1706,7 +1706,7 @@ impl IntegrationWorkspace {
         let w = self.w;
 
         unsafe {
-            let mut order = CVec::new((*w).order, (*w).size as usize + 1us);
+            let mut order = CSlice::new((*w).order, (*w).size as usize + 1us);
             let last = (*w).size - 1;
             let limit = (*w).limit;
 
@@ -1729,7 +1729,7 @@ impl IntegrationWorkspace {
                 limit - last + 1
             };
 
-            let elist = CVec::new((*w).elist, top as usize + 1us);
+            let elist = CSlice::new((*w).elist, top as usize + 1us);
             let errmax = elist.as_slice()[i_maxerr as usize];
 
             // This part of the routine is only executed if, due to a difficult integrand, subdivision increased the error estimate. In the normal
@@ -1773,7 +1773,7 @@ impl IntegrationWorkspace {
         unsafe {
             let f_w = self.w;
             let mut result_sum = 0f64;
-            let v_rlist = CVec::new((*f_w).rlist, (*f_w).size as usize);
+            let v_rlist = CSlice::new((*f_w).rlist, (*f_w).size as usize);
             let rlist = v_rlist.as_slice();
 
             for k in range(0us, (*f_w).size as usize) {
@@ -1787,10 +1787,10 @@ impl IntegrationWorkspace {
     pub fn retrieve(&self, a: &mut f64, b: &mut f64, r: &mut f64, e: &mut f64) {
         unsafe {
             let w = self.w;
-            let alist = CVec::new((*w).alist, (*w).i as usize + 1us);
-            let blist = CVec::new((*w).blist, (*w).i as usize + 1us);
-            let rlist = CVec::new((*w).rlist, (*w).i as usize + 1us);
-            let elist = CVec::new((*w).elist, (*w).i as usize + 1us);
+            let alist = CSlice::new((*w).alist, (*w).i as usize + 1us);
+            let blist = CSlice::new((*w).blist, (*w).i as usize + 1us);
+            let rlist = CSlice::new((*w).rlist, (*w).i as usize + 1us);
+            let elist = CSlice::new((*w).elist, (*w).i as usize + 1us);
 
             let i = (*w).i as usize;
 
@@ -1812,11 +1812,11 @@ impl IntegrationWorkspace {
             } else {
                 i_new + 1us
             };
-            let mut alist = CVec::new((*w).alist, tmp);
-            let mut blist = CVec::new((*w).blist, tmp);
-            let mut rlist = CVec::new((*w).rlist, tmp);
-            let mut elist = CVec::new((*w).elist, tmp);
-            let mut level = CVec::new((*w).level, tmp);
+            let mut alist = CSlice::new((*w).alist, tmp);
+            let mut blist = CSlice::new((*w).blist, tmp);
+            let mut rlist = CSlice::new((*w).rlist, tmp);
+            let mut elist = CSlice::new((*w).elist, tmp);
+            let mut level = CSlice::new((*w).level, tmp);
 
             let new_level = level.as_slice()[i_max] + 1;
 
@@ -1860,8 +1860,8 @@ impl IntegrationWorkspace {
 
     pub fn set_initial_result(&self, result: f64, error: f64) {
         unsafe {
-            let mut rlist = CVec::new((*self.w).rlist, 1);
-            let mut elist = CVec::new((*self.w).elist, 1);
+            let mut rlist = CSlice::new((*self.w).rlist, 1);
+            let mut elist = CSlice::new((*self.w).elist, 1);
 
             (*self.w).size = 1;
             rlist.as_mut_slice()[0] = result;
@@ -1873,12 +1873,12 @@ impl IntegrationWorkspace {
         let w = self.w;
 
         unsafe {
-            let mut alist = CVec::new((*w).alist, 1);
-            let mut blist = CVec::new((*w).blist, 1);
-            let mut rlist = CVec::new((*w).rlist, 1);
-            let mut elist = CVec::new((*w).elist, 1);
-            let mut order = CVec::new((*w).order, 1);
-            let mut level = CVec::new((*w).level, 1);
+            let mut alist = CSlice::new((*w).alist, 1);
+            let mut blist = CSlice::new((*w).blist, 1);
+            let mut rlist = CSlice::new((*w).rlist, 1);
+            let mut elist = CSlice::new((*w).elist, 1);
+            let mut order = CSlice::new((*w).order, 1);
+            let mut level = CSlice::new((*w).level, 1);
 
             (*w).size = 0;
             (*w).nrmax = 0;
@@ -1898,12 +1898,12 @@ impl IntegrationWorkspace {
         unsafe {
             let w = self.w;
             let i_new = (*w).size as usize;
-            let mut alist = CVec::new((*w).alist, i_new + 1us);
-            let mut blist = CVec::new((*w).blist, i_new + 1us);
-            let mut rlist = CVec::new((*w).rlist, i_new + 1us);
-            let mut elist = CVec::new((*w).elist, i_new + 1us);
-            let mut order = CVec::new((*w).order, i_new + 1us);
-            let mut level = CVec::new((*w).level, i_new + 1us);
+            let mut alist = CSlice::new((*w).alist, i_new + 1us);
+            let mut blist = CSlice::new((*w).blist, i_new + 1us);
+            let mut rlist = CSlice::new((*w).rlist, i_new + 1us);
+            let mut elist = CSlice::new((*w).elist, i_new + 1us);
+            let mut order = CSlice::new((*w).order, i_new + 1us);
+            let mut level = CSlice::new((*w).level, i_new + 1us);
 
             alist.as_mut_slice()[i_new] = a1;
             blist.as_mut_slice()[i_new] = b1;
@@ -2340,7 +2340,7 @@ impl IntegrationQawoTable {
                 /* Bisect the subinterval with the largest error estimate */
                 workspace.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
-                let level = CVec::new((*workspace.w).level, (*workspace.w).i as usize + 1);
+                let level = CSlice::new((*workspace.w).level, (*workspace.w).i as usize + 1);
 
                 let current_level = level.as_slice()[(*workspace.w).i as usize] + 1;
 
@@ -2456,8 +2456,8 @@ impl IntegrationQawoTable {
                     } else {
                         /* test whether the interval to be bisected next is the smallest interval. */
                         let i = (*workspace.w).i as usize;
-                        let blist = CVec::new((*workspace.w).blist, i + 1us);
-                        let alist = CVec::new((*workspace.w).alist, i + 1us);
+                        let blist = CSlice::new((*workspace.w).blist, i + 1us);
+                        let alist = CSlice::new((*workspace.w).alist, i + 1us);
                         let width = blist.as_slice()[i] - alist.as_slice()[i];
 
                         if 0.25f64 * fabsf64(width) * abs_omega > 2f64 {
@@ -2686,9 +2686,9 @@ impl CquadWorkspace {
                 }
             }
             Vinvfx(&(*iv).fx, &mut ((*iv).c), 0);
-            let mut tmp_c = CVec::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(3), (*iv).c.len() - 3);
+            let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(3), (*iv).c.len() - 3);
             Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), 3);
-            let mut tmp_c = CVec::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(2), (*iv).c.len() - 2);
+            let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(2), (*iv).c.len() - 2);
             Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), 2);
 
             for i in range(0us, nnans as usize) {
@@ -2779,7 +2779,7 @@ impl CquadWorkspace {
 
                     /* Compute the new coefficients. */
                     let size = idx[d as usize] as usize;
-                    let mut tmp_c = CVec::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(size as isize), (*iv).c.len() - size);
+                    let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(size as isize), (*iv).c.len() - size);
                     Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), d);
 
                     /* Downdate any NaNs. */
@@ -3160,9 +3160,9 @@ impl GLFixedTable {
             let mut s = 0f64;
 
             let m = (n + 1) >> 1;
-            let t_w = CVec::new((*self.w).w, m as usize + 1us);
+            let t_w = CSlice::new((*self.w).w, m as usize + 1us);
             let w = t_w.as_slice();
-            let t_x = CVec::new((*self.w).x, m as usize + 1us);
+            let t_x = CSlice::new((*self.w).x, m as usize + 1us);
             let x = t_x.as_slice();
             let A = 0.5 * (b - a);
             let B = 0.5 * (b + a);
@@ -3534,9 +3534,9 @@ unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
 unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool {
     let id = (*workspace).nrmax;
 
-    let t_order = CVec::new((*workspace).order, (*workspace).nrmax as usize + 1us);
+    let t_order = CSlice::new((*workspace).order, (*workspace).nrmax as usize + 1us);
     let order = t_order.as_slice();
-    let t_level = CVec::new((*workspace).level, order[(*workspace).nrmax as usize] as usize + 1us);
+    let t_level = CSlice::new((*workspace).level, order[(*workspace).nrmax as usize] as usize + 1us);
     let level = t_level.as_slice();
 
     let limit = (*workspace).limit;
@@ -3562,7 +3562,7 @@ unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool
 
 unsafe fn large_interval(workspace: *mut ffi::gsl_integration_workspace) -> bool {
     let i = (*workspace).i ;
-    let level = CVec::new((*workspace).level, i as usize + 1us);
+    let level = CSlice::new((*workspace).level, i as usize + 1us);
   
     if level.as_slice()[i as usize] < (*workspace).maximum_level {
         true
@@ -3707,7 +3707,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         /* Bisect the subinterval with the largest error estimate */
         f_w.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
-        let t_level = CVec::new((*w).level, (*w).i as usize + 1);
+        let t_level = CSlice::new((*w).level, (*w).i as usize + 1);
         let current_level = t_level.as_slice()[(*w).i as usize] + 1;
 
         let a1 = a_i;
@@ -3986,9 +3986,9 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     /* Compute the initial error estimate */
     let mut errsum = 0f64;
-    let mut t_elist = CVec::new((*w).elist, nint as usize);
+    let mut t_elist = CSlice::new((*w).elist, nint as usize);
     let elist = t_elist.as_mut_slice();
-    let mut t_level = CVec::new((*w).level, nint as usize);
+    let mut t_level = CSlice::new((*w).level, nint as usize);
     let level = t_level.as_mut_slice();
 
     for i in range(0us, nint as usize) {
@@ -4744,7 +4744,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
         }
 
         /* obtain moments from the table */
-        let t_moment = CVec::new((*wf).chebmo.offset(25is * level as isize), 25);
+        let t_moment = CSlice::new((*wf).chebmo.offset(25is * level as isize), 25);
         let moment = t_moment.as_slice();
 
         let mut res12_cos = cheb12[12] * moment[12];

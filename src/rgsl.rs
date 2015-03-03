@@ -58,7 +58,7 @@ Here is the list of all modules :
 #![feature(unsafe_destructor)]
 #![feature(core)]
 #![feature(libc)]
-#![feature(io)]
+#![feature(old_io)]
 #![feature(collections)]
 #![feature(std_misc)]
 #![feature(int_uint)]
@@ -249,7 +249,7 @@ pub static ROOT4_DBL_MIN     : f64 = 1.2213386697554620e-77;
 pub static ROOT5_DBL_MIN     : f64 = 2.9476022969691763e-62;
 pub static ROOT6_DBL_MIN     : f64 = 5.3034368905798218e-52;
 
-pub static DBL_MAX           : f64 = ::std::f64::MAX_VALUE;//1.7976931348623156e+308;
+pub static DBL_MAX           : f64 = ::std::f64::MAX;//1.7976931348623156e+308;
 pub static SQRT_DBL_MAX      : f64 = 1.3407807929942596e+154;
 pub static ROOT3_DBL_MAX     : f64 = 5.6438030941222897e+102;
 pub static ROOT4_DBL_MAX     : f64 = 1.1579208923731620e+77;

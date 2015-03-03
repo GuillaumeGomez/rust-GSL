@@ -20,18 +20,18 @@ use ffi;
 use enums;
 use std::fmt;
 use std::fmt::{Formatter, Debug};
-use c_vec::CVec;
+use c_vec::CSlice;
 
-pub struct Combination<'a> {
+pub struct Combination {
     c: *mut ffi::gsl_combination,
-    data: CVec<'a, u64>
+    data: CSlice<u64>
 }
 
-impl<'a> Combination<'a> {
+impl Combination {
     /// This function allocates memory for a new combination with parameters n, k. The combination is not initialized and its elements are
     /// undefined. Use the function Combination::new_init_first if you want to create a combination which is initialized to the lexicographically
     /// first combination. A null pointer is returned if insufficient memory is available to create the combination.
-    pub fn new(n: u64, k: u64) -> Option<Combination<'a>> {
+    pub fn new(n: u64, k: u64) -> Option<Combination> {
         let tmp = unsafe { ffi::gsl_combination_alloc(n, k) };
 
         if tmp.is_null() {
@@ -41,12 +41,12 @@ impl<'a> Combination<'a> {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0us)
                     })
                 }
             }
@@ -55,7 +55,7 @@ impl<'a> Combination<'a> {
 
     /// This function allocates memory for a new combination with parameters n, k and initializes it to the lexicographically first combination.
     /// A null pointer is returned if insufficient memory is available to create the combination.
-    pub fn new_init_first(n: u64, k: u64) -> Option<Combination<'a>> {
+    pub fn new_init_first(n: u64, k: u64) -> Option<Combination> {
         let tmp = unsafe { ffi::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {
@@ -65,12 +65,12 @@ impl<'a> Combination<'a> {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CVec::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0us)
                     })
                 }
             }
@@ -138,20 +138,19 @@ impl<'a> Combination<'a> {
     }
 }
 
-#[unsafe_destructor]
-impl<'a> Drop for Combination<'a> {
+impl Drop for Combination {
     fn drop(&mut self) {
         unsafe { ffi::gsl_combination_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl<'a> ffi::FFI<ffi::gsl_combination> for Combination<'a> {
-    fn wrap(c: *mut ffi::gsl_combination) -> Combination<'a> {
+impl ffi::FFI<ffi::gsl_combination> for Combination {
+    fn wrap(c: *mut ffi::gsl_combination) -> Combination {
         unsafe {
             Combination {
                 c: c,
-                data: CVec::new((*c).data, (*c).k as usize)
+                data: CSlice::new((*c).data, (*c).k as usize)
             }
         }
     }
@@ -161,7 +160,7 @@ impl<'a> ffi::FFI<ffi::gsl_combination> for Combination<'a> {
     }
 }
 
-impl<'a> Debug for Combination<'a> {
+impl Debug for Combination {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");

@@ -10,7 +10,7 @@
 // event, E^2=x^2+y^2+z^2, and select only those which exceed a lower limit of 1.5. The selected events are then histogrammed using their E^2 values.
 
 #![feature(core)]
-#![feature(io)]
+#![feature(old_io)]
 
 extern crate rgsl;
 
@@ -43,7 +43,7 @@ fn first_part(r: &rgsl::Rng) {
     let mut ntuple_row = Data { x: 0f64, y: 0f64, z: 0f64};
     let ntuple = rgsl::NTuples::create("test.dat", &mut ntuple_row).unwrap();
 
-    for _ in range(0us, 10000us) {
+    for _ in range(0usize, 10000usize) {
         ntuple_row.x = rgsl::randist::gaussian::ugaussian(r);
         ntuple_row.y = rgsl::randist::gaussian::ugaussian(r);
         ntuple_row.z = rgsl::randist::gaussian::ugaussian(r);

@@ -6,7 +6,7 @@
 // size are ordered lexicographically.
 
 #![feature(core)]
-#![feature(io)]
+#![feature(old_io)]
 
 extern crate rgsl;
 

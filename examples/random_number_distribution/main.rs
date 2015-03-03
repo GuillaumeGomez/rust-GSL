@@ -8,7 +8,6 @@ extern crate rgsl;
 
 use rgsl::Rng;
 
-#[allow(unused_variables)]
 fn main() {
     rgsl::RngType::env_setup();
 
@@ -17,7 +16,7 @@ fn main() {
     let r = Rng::new(&t).unwrap();
 
     // print n random variates chosen from the poisson distribution with mean parameter mu
-    for tmp in range(0is, 10is) {
+    for _ in range(0u8, 10u8) {
         print!("{} ", rgsl::randist::poisson::poisson(&r, mu));
     }
     println!("");

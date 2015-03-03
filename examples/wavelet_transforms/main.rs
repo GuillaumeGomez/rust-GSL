@@ -8,7 +8,6 @@
 #![feature(core)]
 #![feature(old_io)]
 #![feature(collections)]
-#![feature(env)]
 #![feature(old_path)]
 
 extern crate rgsl;

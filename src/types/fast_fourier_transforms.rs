@@ -3,14 +3,14 @@
 //
 
 use ffi;
-use c_vec::CVec;
+use c_vec::CSlice;
 
-pub struct FftComplexWaveTable<'a> {
+pub struct FftComplexWaveTable {
     w: *mut ffi::gsl_fft_complex_wavetable,
-    f: CVec<'a, u64>
+    f: CSlice<u64>
 }
 
-impl<'a> FftComplexWaveTable<'a> {
+impl FftComplexWaveTable {
     /// This function prepares a trigonometric lookup table for a complex FFT of length n. The function returns a pointer to the newly allocated
     /// gsl_fft_complex_wavetable if no errors were detected, and a null pointer in the case of error. The length n is factorized into a product
     /// of subtransforms, and the factors and their trigonometric coefficients are stored in the wavetable. The trigonometric coefficients are
@@ -19,7 +19,7 @@ impl<'a> FftComplexWaveTable<'a> {
     /// 
     /// The wavetable structure can be used repeatedly for any transform of the same length. The table is not modified by calls to any of the other
     /// FFT functions. The same wavetable can be used for both forward and backward (or inverse) transforms of a given length.
-    pub fn new(n: u64) -> Option<FftComplexWaveTable<'a>> {
+    pub fn new(n: u64) -> Option<FftComplexWaveTable> {
         let tmp = unsafe { ffi::gsl_fft_complex_wavetable_alloc(n) };
 
         if tmp.is_null() {
@@ -28,7 +28,7 @@ impl<'a> FftComplexWaveTable<'a> {
             unsafe {
                 Some(FftComplexWaveTable {
                     w: tmp,
-                    f: CVec::new((*tmp).factor.as_mut_ptr(), 64us)
+                    f: CSlice::new((*tmp).factor.as_mut_ptr(), 64us)
                 })
             }
         }
@@ -40,19 +40,19 @@ impl<'a> FftComplexWaveTable<'a> {
 }
 
 #[unsafe_destructor]
-impl<'a> Drop for FftComplexWaveTable<'a> {
+impl Drop for FftComplexWaveTable {
     fn drop(&mut self) {
         unsafe { ffi::gsl_fft_complex_wavetable_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl<'a> ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable<'a> {
-    fn wrap(w: *mut ffi::gsl_fft_complex_wavetable) -> FftComplexWaveTable<'a> {
+impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
+    fn wrap(w: *mut ffi::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
         unsafe {
             FftComplexWaveTable {
                 w: w,
-                f: CVec::new((*w).factor.as_mut_ptr(), 64us)
+                f: CSlice::new((*w).factor.as_mut_ptr(), 64us)
             }
         }
     }

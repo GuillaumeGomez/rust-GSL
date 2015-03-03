@@ -20,18 +20,18 @@ Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–
 
 use ffi;
 use enums;
-use c_vec::CVec;
+use c_vec::CSlice;
 
-pub struct QRng<'a> {
+pub struct QRng {
     q: *mut ffi::gsl_qrng,
-    data: CVec<'a, i8>
+    data: CSlice<i8>
 }
 
-impl<'a> QRng<'a> {
+impl QRng {
     /// This function returns a pointer to a newly-created instance of a quasi-random sequence generator of type T and dimension d. If
     /// there is insufficient memory to create the generator then the function returns a null pointer and the error handler is invoked
     /// with an error code of ::NoMem.
-    pub fn new(t: &QRngType, d: u32) -> Option<QRng<'a>> {
+    pub fn new(t: &QRngType, d: u32) -> Option<QRng> {
         let tmp = unsafe { ffi::gsl_qrng_alloc(t.t, d) };
 
         if tmp.is_null() {
@@ -39,7 +39,7 @@ impl<'a> QRng<'a> {
         } else {
             Some(QRng {
                 q: tmp,
-                data: unsafe { CVec::new(tmp as *mut i8, 0) }
+                data: unsafe { CSlice::new(tmp as *mut i8, 0) }
             })
         }
     }
@@ -63,7 +63,7 @@ impl<'a> QRng<'a> {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()) }
         }
     }
 
@@ -77,7 +77,7 @@ impl<'a> QRng<'a> {
         let tmp = unsafe { ffi::gsl_qrng_state(self.q as *const ffi::gsl_qrng) };
 
         if !tmp.is_null() {
-            self.data = unsafe { CVec::new(tmp as *mut i8, self.size() as usize) };
+            self.data = unsafe { CSlice::new(tmp as *mut i8, self.size() as usize) };
         }
         self.data.as_mut_slice()
     }
@@ -89,26 +89,25 @@ impl<'a> QRng<'a> {
     }
 }
 
-impl<'a> Clone for QRng<'a> {
+impl Clone for QRng {
     /// This function returns a pointer to a newly created generator which is an exact copy of the generator self.
-    fn clone(&self) -> QRng<'a> {
+    fn clone(&self) -> QRng {
         unsafe { ffi::FFI::wrap(ffi::gsl_qrng_clone(self.q as *const ffi::gsl_qrng)) }
     }
 }
 
-#[unsafe_destructor]
-impl<'a> Drop for QRng<'a> {
+impl Drop for QRng {
     fn drop(&mut self) {
         unsafe { ffi::gsl_qrng_free(self.q) };
         self.q = ::std::ptr::null_mut();
     }
 }
 
-impl<'a> ffi::FFI<ffi::gsl_qrng> for QRng<'a> {
-    fn wrap(q: *mut ffi::gsl_qrng) -> QRng<'a> {
+impl ffi::FFI<ffi::gsl_qrng> for QRng {
+    fn wrap(q: *mut ffi::gsl_qrng) -> QRng {
         QRng {
             q: q,
-            data: unsafe { CVec::new(q as *mut i8, 0) }
+            data: unsafe { CSlice::new(q as *mut i8, 0) }
         }
     }
 

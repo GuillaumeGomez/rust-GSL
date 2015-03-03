@@ -193,7 +193,7 @@ impl VectorComplexF64 {
 
                 tmp.as_slice()
             } else {
-                let tmp : CVec<f64> = CVec::new((*self.vec).data, (*self.vec).size as usize);
+                let tmp : CSlice<f64> = CSlice::new((*self.vec).data, (*self.vec).size as usize);
 
                 tmp.as_slice()
             }
@@ -439,7 +439,7 @@ impl VectorComplexF32 {
 
                 tmp.as_slice()
             } else {
-                let tmp : CVec<f32> = CVec::new((*self.vec).data, (*self.vec).size as usize);
+                let tmp : CSlice<f32> = CSlice::new((*self.vec).data, (*self.vec).size as usize);
 
                 tmp.as_slice()
             }

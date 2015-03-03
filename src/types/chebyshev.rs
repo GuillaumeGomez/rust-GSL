@@ -28,15 +28,15 @@ use ffi;
 use enums;
 use std::f64::consts::PI;
 use std::num::Float;
-use c_vec::CVec;
+use c_vec::CSlice;
 
-pub struct ChebSeries<'a> {
+pub struct ChebSeries {
     c: *mut ffi::gsl_cheb_series,
-    data: CVec<'a, f64>
+    data: CSlice<f64>
 }
 
-impl<'a> ChebSeries<'a> {
-    pub fn new(n: u64) -> Option<ChebSeries<'a>> {
+impl ChebSeries {
+    pub fn new(n: u64) -> Option<ChebSeries> {
         let tmp = unsafe { ffi::gsl_cheb_alloc(n) };
 
         if tmp.is_null() {
@@ -45,7 +45,7 @@ impl<'a> ChebSeries<'a> {
             unsafe {
                 Some(ChebSeries {
                     c: tmp,
-                    data: CVec::new((*tmp).c, (*tmp).order as usize + 1)
+                    data: CSlice::new((*tmp).c, (*tmp).order as usize + 1)
                 })
             }
         }
@@ -66,7 +66,7 @@ impl<'a> ChebSeries<'a> {
                 let bpa = 0.5 * (b + a);
                 let fac = 2.0 / ((*self.c).order as f64 + 1.0);
 
-                let mut tmp_vec = CVec::new((*self.c).f, (*self.c).order_sp as usize + 1);
+                let mut tmp_vec = CSlice::new((*self.c).f, (*self.c).order_sp as usize + 1);
                 for k in range(0, (*self.c).order + 1) {
                     let y = (PI * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
                     tmp_vec.as_mut_slice()[k as usize] = func(y * bma + bpa, param);
@@ -140,20 +140,19 @@ impl<'a> ChebSeries<'a> {
     }
 }
 
-#[unsafe_destructor]
-impl<'a> Drop for ChebSeries<'a> {
+impl Drop for ChebSeries {
     fn drop(&mut self) {
         unsafe { ffi::gsl_cheb_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl<'a> ffi::FFI<ffi::gsl_cheb_series> for ChebSeries<'a> {
-    fn wrap(c: *mut ffi::gsl_cheb_series) -> ChebSeries<'a> {
+impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
+    fn wrap(c: *mut ffi::gsl_cheb_series) -> ChebSeries {
         unsafe {
             ChebSeries {
                 c: c,
-                data: CVec::new((*c).c, (*c).order as usize + 1)
+                data: CSlice::new((*c).c, (*c).order as usize + 1)
             }
         }
     }

@@ -45,7 +45,7 @@ impl<T> NTuples<T> {
     /// row ntuple_data must be supplied—this is used to copy ntuples in and out of the file.
     pub fn create(filename: &str, data: &mut T) -> Option<NTuples<T>> {
         let t_data = unsafe { ::std::mem::transmute(data) };
-        let c_str = CString::from_slice(filename.as_bytes());
+        let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
             ffi::gsl_ntuple_create(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
         };
@@ -65,7 +65,7 @@ impl<T> NTuples<T> {
     /// ntuples in and out of the file.
     pub fn open(filename: &str, data: &mut T) -> Option<NTuples<T>> {
         let t_data = unsafe { ::std::mem::transmute(data) };
-        let c_str = CString::from_slice(filename.as_bytes());
+        let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
             ffi::gsl_ntuple_open(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
         };

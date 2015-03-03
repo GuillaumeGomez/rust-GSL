@@ -14,18 +14,18 @@ Multisets are useful, for example, when iterating over the indices of a k-th ord
 use ffi;
 use enums;
 use std::old_io::IoResult;
-use c_vec::CVec;
+use c_vec::CSlice;
 
-pub struct MultiSet<'a> {
+pub struct MultiSet {
     c: *mut ffi::gsl_multiset,
-    data: CVec<'a, u64>
+    data: CSlice<u64>
 }
 
-impl<'a> MultiSet<'a> {
+impl MultiSet {
     /// This function allocates memory for a new multiset with parameters n, k. The multiset is not initialized and its elements are 
     /// undefined. Use the function gsl_multiset_calloc if you want to create a multiset which is initialized to the lexicographically 
     /// first multiset element. A null pointer is returned if insufficient memory is available to create the multiset.
-    pub fn new(n: u64, k: u64) -> Option<MultiSet<'a>> {
+    pub fn new(n: u64, k: u64) -> Option<MultiSet> {
         let tmp = unsafe { ffi::gsl_multiset_alloc(n, k) };
 
         if tmp.is_null() {
@@ -36,12 +36,12 @@ impl<'a> MultiSet<'a> {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CVec::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0us)
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
                     })
                 }
             }
@@ -50,7 +50,7 @@ impl<'a> MultiSet<'a> {
 
     /// This function allocates memory for a new multiset with parameters n, k and initializes it to the lexicographically first multiset
     /// element. A null pointer is returned if insufficient memory is available to create the multiset.
-    pub fn new_init(n: u64, k: u64) -> Option<MultiSet<'a>> {
+    pub fn new_init(n: u64, k: u64) -> Option<MultiSet> {
         let tmp = unsafe { ffi::gsl_multiset_calloc(n, k) };
 
         if tmp.is_null() {
@@ -61,12 +61,12 @@ impl<'a> MultiSet<'a> {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CVec::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0us)
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CVec::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
                     })
                 }
             }
@@ -139,27 +139,26 @@ impl<'a> MultiSet<'a> {
     }
 }
 
-#[unsafe_destructor]
-impl<'a> Drop for MultiSet<'a> {
+impl Drop for MultiSet {
     fn drop(&mut self) {
         unsafe { ffi::gsl_multiset_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl<'a> ffi::FFI<ffi::gsl_multiset> for MultiSet<'a> {
-    fn wrap(c: *mut ffi::gsl_multiset) -> MultiSet<'a> {
+impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
+    fn wrap(c: *mut ffi::gsl_multiset) -> MultiSet {
         unsafe {
             if (*c).data.is_null() {
                 MultiSet {
                     c: c,
                     // dirty trick to avoid a failure
-                    data: CVec::new(c as *mut u64, 0us)
+                    data: CSlice::new(c as *mut u64, 0us)
                 }
             } else {
                 MultiSet {
                     c: c,
-                    data: CVec::new((*c).data, (*c).k as usize)
+                    data: CSlice::new((*c).data, (*c).k as usize)
                 }
             }
         }

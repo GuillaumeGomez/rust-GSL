@@ -7,11 +7,11 @@ use ffi;
 use enums;
 use std::fmt;
 use std::fmt::{Formatter, Debug};
-use c_vec::CVec;
+use c_vec::CSlice;
 
-pub struct Permutation<'a> {
+pub struct Permutation {
     p: *mut ffi::gsl_permutation,
-    d: CVec<'a, u64>
+    d: CSlice<u64>
 }
 
 ///##Permutations in cyclic form
@@ -39,11 +39,11 @@ pub struct Permutation<'a> {
 /// The important property of the canonical form is that it can be reconstructed from the contents of each cycle without the brackets. In addition,
 /// by removing the brackets it can be considered as a linear representation of a different permutation. In the example given above the permutation
 /// (2 4 3 0 1) would become (1 4 0 2 3). This mapping has many applications in the theory of permutations.
-impl<'a> Permutation<'a> {
+impl Permutation {
     /// This function allocates memory for a new permutation of size n. The permutation is not initialized and its elements are undefined.
     /// Use the function gsl_permutation_calloc if you want to create a permutation which is initialized to the identity. A null pointer is
     /// returned if insufficient memory is available to create the permutation.
-    pub fn new(n: u64) -> Option<Permutation<'a>> {
+    pub fn new(n: u64) -> Option<Permutation> {
         let tmp = unsafe { ffi::gsl_permutation_alloc(n) };
 
         if tmp.is_null() {
@@ -52,7 +52,7 @@ impl<'a> Permutation<'a> {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: CVec::new((*tmp).data, (*tmp).size as usize)
+                    d: CSlice::new((*tmp).data, (*tmp).size as usize)
                 })
             }
         }
@@ -60,7 +60,7 @@ impl<'a> Permutation<'a> {
 
     /// This function allocates memory for a new permutation of size n and initializes it to the identity. A null pointer is returned if
     /// insufficient memory is available to create the permutation.
-    pub fn new_with_init(n: u64) -> Option<Permutation<'a>> {
+    pub fn new_with_init(n: u64) -> Option<Permutation> {
         let tmp = unsafe { ffi::gsl_permutation_calloc(n) };
 
         if tmp.is_null() {
@@ -69,7 +69,7 @@ impl<'a> Permutation<'a> {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: CVec::new((*tmp).data, (*tmp).size as usize)
+                    d: CSlice::new((*tmp).data, (*tmp).size as usize)
                 })
             }
         }
@@ -194,20 +194,19 @@ impl<'a> Permutation<'a> {
     }
 }
 
-#[unsafe_destructor]
-impl<'a> Drop for Permutation<'a> {
+impl Drop for Permutation {
     fn drop(&mut self) {
         unsafe { ffi::gsl_permutation_free(self.p) };
         self.p = ::std::ptr::null_mut();
     }
 }
 
-impl<'a> ffi::FFI<ffi::gsl_permutation> for Permutation<'a> {
-    fn wrap(p: *mut ffi::gsl_permutation) -> Permutation<'a> {
+impl ffi::FFI<ffi::gsl_permutation> for Permutation {
+    fn wrap(p: *mut ffi::gsl_permutation) -> Permutation {
         unsafe {
             Permutation {
                 p: p,
-                d: CVec::new((*p).data, (*p).size as usize)
+                d: CSlice::new((*p).data, (*p).size as usize)
             }
         }
     }
@@ -217,7 +216,7 @@ impl<'a> ffi::FFI<ffi::gsl_permutation> for Permutation<'a> {
     }
 }
 
-impl<'a> Debug for Permutation<'a> {
+impl Debug for Permutation {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");

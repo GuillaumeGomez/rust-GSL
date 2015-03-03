@@ -154,7 +154,7 @@ impl Rng {
         unsafe {
             let tmp = ffi::gsl_rng_name(self.r as *const ffi::gsl_rng);
 
-            String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()
+            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
     }
 
@@ -239,7 +239,7 @@ impl RngType {
         if self.ptr.is_null() {
             String::new()
         } else {
-            unsafe { String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&(*self.ptr).name)).to_string() }
+            unsafe { String::from_utf8_lossy(::std::ffi::CStr::from_ptr((*self.ptr).name).to_bytes()).to_string() }
         }
     }
 

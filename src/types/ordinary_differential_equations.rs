@@ -120,7 +120,7 @@ impl ODEiv2Step {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()) }
         }
     }
 
@@ -409,7 +409,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string()) }
+            unsafe { Some(String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()) }
         }
     }
 

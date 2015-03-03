@@ -119,7 +119,7 @@ impl Interp {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string() }
+            unsafe { String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string() }
         }
     }
 
@@ -238,7 +238,7 @@ impl Spline {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { String::from_utf8_lossy(::std::ffi::c_str_to_bytes(&tmp)).to_string() }
+            unsafe { String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string() }
         }
     }
 

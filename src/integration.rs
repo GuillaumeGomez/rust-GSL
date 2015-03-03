@@ -129,8 +129,8 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         //to avoid the dead_code warning on gsl_error
         unsafe {
             let file = file!();
-            let c_str = CString::from_slice("tolerance cannot be achieved with given eps_abs and eps_rel".as_bytes());
-            let c_file = CString::from_slice(file.as_bytes());
+            let c_str = CString::new("tolerance cannot be achieved with given eps_abs and eps_rel".as_bytes()).unwrap();
+            let c_file = CString::new(file.as_bytes()).unwrap();
 
             unsafe {
                 ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTol as i32);

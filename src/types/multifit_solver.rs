@@ -59,7 +59,7 @@ pub struct MultiFitFdfSolver<'r, T:'r> {
     pub f: ::VectorF64,
     pub j: ::MatrixF64,
     pub dx: ::VectorF64,
-    state: LmderStateT<'r>
+    state: LmderStateT
 }
 
 impl<'r, T> MultiFitFdfSolver<'r, T> {
@@ -195,8 +195,7 @@ pub struct MultiFitFunctionFdf<'r, T:'r> {
     pub params: &'r mut T
 }
 
-#[allow(dead_code)]
-struct LmderStateT<'a> {
+struct LmderStateT {
     iter: u64,
     xnorm: f64,
     fnorm: f64,
@@ -215,11 +214,11 @@ struct LmderStateT<'a> {
     rptdx: ::VectorF64,
     w: ::VectorF64,
     work1: ::VectorF64,
-    perm: ::Permutation<'a>
+    perm: ::Permutation
 }
 
-impl<'a> LmderStateT<'a> {
-    fn new(n: u64, p: u64) -> LmderStateT<'a> {
+impl LmderStateT {
+    fn new(n: u64, p: u64) -> LmderStateT {
         LmderStateT {
             iter: 0u64,
             xnorm: 0f64,

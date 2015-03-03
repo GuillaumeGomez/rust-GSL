@@ -11,13 +11,13 @@ extern crate libc;
 extern crate c_vec;
 
 use libc::c_void;
-use c_vec::CVec;
+use c_vec::CSlice;
 
 #[allow(unused_variables)]
 fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::Value {
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);
-        let mut f = CVec::new(t_f, 2);
+        let mut f = CSlice::new(t_f, 2);
         let y = Vec::from_raw_buf(t_y as *mut f64, 2);
         
         f.as_mut_slice()[0] = y.as_slice()[1];
@@ -30,10 +30,10 @@ fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::Va
 fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut c_void) -> rgsl::Value {
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);
-        let mut dfdy = CVec::new(t_dfdy, 4);
+        let mut dfdy = CSlice::new(t_dfdy, 4);
         let mut dfdy_mat = rgsl::MatrixView::from_array(dfdy.as_mut_slice(), 2, 2);
         let m = dfdy_mat.matrix();
-        let mut dfdt = CVec::new(t_dfdt, 2);
+        let mut dfdt = CSlice::new(t_dfdt, 2);
         let y = Vec::from_raw_buf(t_y as *mut f64, 2);
 
         m.set(0, 0, 0f64);
@@ -60,7 +60,7 @@ fn main() {
     let t1 = 100f64;
     let mut y : [f64; 2] = [1f64, 0f64];
 
-    for i in range(1us, 101us) {
+    for i in range(1usize, 101usize) {
         let ti = i as f64 * t1 / 100f64;
 
         match d.apply(&mut t, ti, &mut y) {
