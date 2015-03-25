@@ -26,7 +26,7 @@ fn main() {
     let mut cs = ChebSeries::new(40).unwrap();
 
     cs.init(f, 0f64, 1f64, &mut 1i32);
-    for i in range(0, n) {
+    for i in 0..n {
         let x = i as f64 / n as f64;
         let r10 = cs.eval_n(10, x);
         let r40 = cs.eval(x);

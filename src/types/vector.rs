@@ -366,11 +366,11 @@ impl VectorF32 {
             if self.vec.is_null() {
                 let tmp : Vec<f32> = Vec::new();
 
-                tmp.as_slice()
+                tmp.as_ref()
             } else {
                 let tmp : CSlice<f32> = CSlice::new((*self.vec).data, (*self.vec).size as usize);
 
-                tmp.as_slice()
+                tmp.as_ref()
             }
         }
     }*/
@@ -406,7 +406,7 @@ impl Debug for VectorF32 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
             write!(f, "[");
-            for x in range(0u64, (*self.vec).size) {
+            for x in 0u64..(*self.vec).size {
                 if x < (*self.vec).size - 1 {
                     write!(f, "{}, ", self.get(x));
                 } else {
@@ -649,11 +649,11 @@ impl VectorF64 {
             if self.vec.is_null() {
                 let tmp : Vec<f64> = Vec::new();
 
-                tmp.as_slice()
+                tmp.as_ref()
             } else {
                 let tmp : CSlice<f64> = CSlice::new((*self.vec).data, (*self.vec).size as usize);
 
-                tmp.as_slice()
+                tmp.as_ref()
             }
         }
     }*/
@@ -689,7 +689,7 @@ impl Debug for VectorF64 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
             write!(f, "[");
-            for x in range(0u64, (*self.vec).size) {
+            for x in 0u64..(*self.vec).size {
                 if x < (*self.vec).size - 1 {
                     write!(f, "{}, ", self.get(x));
                 } else {

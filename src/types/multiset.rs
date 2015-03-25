@@ -15,6 +15,7 @@ use ffi;
 use enums;
 use std::old_io::IoResult;
 use c_vec::CSlice;
+use std::old_io::Writer;
 
 pub struct MultiSet {
     c: *mut ffi::gsl_multiset,
@@ -106,7 +107,7 @@ impl MultiSet {
 
     /// This function returns a pointer to the array of elements in the multiset self.
     pub fn data<'r>(&'r mut self) -> &'r mut [u64] {
-        self.data.as_mut_slice()
+        self.data.as_mut()
     }
 
     /// This function checks that the multiset self is valid. The k elements should lie in the range 0 to n-1, with each value occurring in
@@ -129,7 +130,7 @@ impl MultiSet {
     }
 
     pub fn print(&self, writer: &mut Writer) -> IoResult<()> {
-        for value in self.data.as_slice().iter() {
+        for value in self.data.as_ref().iter() {
             match write!(writer, " {}", *value) {
                 Ok(_) => {},
                 Err(e) => return Err(e),

@@ -66,7 +66,7 @@ fn expb_f(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64) -> rgsl
     let lambda = x.get(1);
     let b = x.get(2);
 
-    for i in range(0, data.n) {
+    for i in 0..data.n {
         /* Model Yi = A * exp(-lambda * i) + b */
         let t = i as f64;
         let Yi = A * (-lambda * t).exp() + b;
@@ -81,7 +81,7 @@ fn expb_df(x: &rgsl::VectorF64, data: &mut Data, J: &mut rgsl::MatrixF64) -> rgs
     let A = x.get(0);
     let lambda = x.get(1);
 
-    for i in range(0, data.n) {
+    for i in 0..data.n {
         /* Jacobian matrix J(i,j) = dfi / dxj, */
         /* where fi = (Yi - yi)/sigma[i],      */
         /*       Yi = A * exp(-lambda * i) + b  */
@@ -142,7 +142,7 @@ fn main() {
     /* This is the data to be fitted */
     let mut iter = 0u32;
 
-    for i in range(0, n) {
+    for i in 0..n {
         let t = i as f64;
 
         f.params.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp() + rgsl::randist::gaussian::gaussian(&r, 0.1f64);

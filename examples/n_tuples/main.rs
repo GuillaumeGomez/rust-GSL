@@ -14,6 +14,8 @@
 
 extern crate rgsl;
 
+use std::old_io::Writer;
+
 struct Data {
     x: f64,
     y: f64,
@@ -43,7 +45,7 @@ fn first_part(r: &rgsl::Rng) {
     let mut ntuple_row = Data { x: 0f64, y: 0f64, z: 0f64};
     let ntuple = rgsl::NTuples::create("test.dat", &mut ntuple_row).unwrap();
 
-    for _ in range(0usize, 10000usize) {
+    for _ in 0usize..10000usize {
         ntuple_row.x = rgsl::randist::gaussian::ugaussian(r);
         ntuple_row.y = rgsl::randist::gaussian::ugaussian(r);
         ntuple_row.z = rgsl::randist::gaussian::ugaussian(r);

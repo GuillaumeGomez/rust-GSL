@@ -255,9 +255,9 @@ impl Debug for MatrixComplexF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
-            for y in range(0u64, (*self.mat).size1) {
+            for y in 0u64..(*self.mat).size1 {
                 write!(f, "[");
-                for x in range(0u64, (*self.mat).size2) {
+                for x in 0u64..(*self.mat).size2 {
                     if x < (*self.mat).size2 - 1 {
                         write!(f, "{:?}, ", self.get(y, x));
                     } else {
@@ -532,9 +532,9 @@ impl Debug for MatrixComplexF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
-            for y in range(0u64, (*self.mat).size1) {
+            for y in 0u64..(*self.mat).size1 {
                 write!(f, "[");
-                for x in range(0u64, (*self.mat).size2) {
+                for x in 0u64..(*self.mat).size2 {
                     if x < (*self.mat).size2 - 1 {
                         write!(f, "{:?}, ", self.get(y, x));
                     } else {

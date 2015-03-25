@@ -67,18 +67,18 @@ impl ChebSeries {
                 let fac = 2.0 / ((*self.c).order as f64 + 1.0);
 
                 let mut tmp_vec = CSlice::new((*self.c).f, (*self.c).order_sp as usize + 1);
-                for k in range(0, (*self.c).order + 1) {
+                for k in 0..((*self.c).order + 1) {
                     let y = (PI * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
-                    tmp_vec.as_mut_slice()[k as usize] = func(y * bma + bpa, param);
+                    tmp_vec.as_mut()[k as usize] = func(y * bma + bpa, param);
                 }
 
-                for j in range(0, (*self.c).order + 1) {
+                for j in 0..((*self.c).order + 1) {
                     let mut sum = 0f64;
 
-                    for k in range(0, (*self.c).order + 1) {
-                        sum += tmp_vec.as_slice()[k as usize] * (PI * j as f64 * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
+                    for k in 0..((*self.c).order + 1) {
+                        sum += tmp_vec.as_ref()[k as usize] * (PI * j as f64 * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
                     }
-                    self.data.as_mut_slice()[j as usize] = fac * sum;
+                    self.data.as_mut()[j as usize] = fac * sum;
                 }
             }
             ::Value::Success
@@ -97,12 +97,12 @@ impl ChebSeries {
 
     /// This function returns a pointer to the coefficient array c[] location in memory for the Chebyshev series cs.
     pub fn as_slice<'r>(&'r self) -> &'r [f64] {
-        self.data.as_slice()
+        self.data.as_ref()
     }
 
     /// This function returns a pointer to the coefficient array c[] location in memory for the Chebyshev series cs.
     pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [f64] {
-        self.data.as_mut_slice()
+        self.data.as_mut()
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x.

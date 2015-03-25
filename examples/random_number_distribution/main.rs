@@ -16,7 +16,7 @@ fn main() {
     let r = Rng::new(&t).unwrap();
 
     // print n random variates chosen from the poisson distribution with mean parameter mu
-    for _ in range(0u8, 10u8) {
+    for _ in 0u8..10u8 {
         print!("{} ", rgsl::randist::poisson::poisson(&r, mu));
     }
     println!("");

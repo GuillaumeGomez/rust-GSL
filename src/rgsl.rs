@@ -62,6 +62,7 @@ Here is the list of all modules :
 #![feature(collections)]
 #![feature(std_misc)]
 #![feature(int_uint)]
+#![feature(convert)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]

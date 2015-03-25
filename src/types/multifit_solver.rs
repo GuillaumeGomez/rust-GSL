@@ -404,10 +404,10 @@ fn compute_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
     let n = J.size1();
     let p = J.size2();
 
-    for j in range(0, p) {
+    for j in 0..p {
         let mut sum = 0f64;
 
-        for i in range(0, n) {
+        for i in 0..n {
             let jij = J.get(i, j);
 
             sum += jij * jij;
@@ -423,10 +423,10 @@ fn compute_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
 fn update_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
     let n = diag.len();
 
-    for j in range(0, n) {
+    for j in 0..n {
         let mut sum = 0f64;
 
-        for i in range(0, n) {
+        for i in 0..n {
           let jij = J.get(i, j);
           
           sum += jij * jij;
@@ -448,7 +448,7 @@ fn scaled_enorm(d: &::VectorF64, f: &::VectorF64) -> f64 {
     let mut e2 = 0f64;
     let n = f.len();
 
-    for i in range(0, n) {
+    for i in 0..n {
         let fi = f.get(i);
         let di = d.get(i);
         let u = di * fi;
@@ -535,10 +535,10 @@ fn enorm(f: &::VectorF64) -> f64 {
 fn compute_gradient_direction(r: &::MatrixF64, p: &::Permutation, qtf: &::VectorF64, diag: &::VectorF64, g: &mut ::VectorF64) {
     let n = r.size2();
 
-    for j in range(0, n) {
+    for j in 0..n {
         let mut sum = 0f64;
 
-        for i in range(0, j + 1) {
+        for i in 0..(j + 1) {
             sum += r.get(i, j) * qtf.get(i);
         }
 
@@ -554,7 +554,7 @@ fn compute_gradient_direction(r: &::MatrixF64, p: &::Permutation, qtf: &::Vector
 fn compute_trial_step(x: &mut ::VectorF64, dx: &mut ::VectorF64, x_trial: &mut ::VectorF64) {
     let n = x.len();
 
-    for i in range(0, n) {
+    for i in 0..n {
         let pi = dx.get(i);
         let xi = x.get(i);
 
@@ -575,10 +575,10 @@ fn compute_actual_reduction(fnorm: f64, fnorm1: f64) -> f64 {
 fn compute_rptdx(r: &::MatrixF64, p: &::Permutation, dx: &::VectorF64, rptdx: &mut ::VectorF64) {
     let n = dx.len();
 
-    for i in range(0, n) {
+    for i in 0..n {
         let mut sum = 0f64;
 
-        for j in range(i, n) {
+        for j in i..n {
             let pj = p.get(j);
 
             sum += r.get(i, j) * dx.get(pj);
@@ -807,7 +807,7 @@ fn gsl_multifit_test_delta(dx: &::VectorF64, x: &::VectorF64, epsabs: f64, epsre
         return ::Value::BadTol;
     }
 
-    for i in range(0, x.len()) {
+    for i in 0..x.len() {
         let xi = x.get(i);
         let dxi = dx.get(i);
         let tolerance = epsabs + epsrel * xi.abs();
@@ -868,7 +868,7 @@ fn fdjac<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF
     let epsfcn = 0f64;
     let eps = (epsfcn.max(::DBL_EPSILON)).sqrt();
 
-    for j in range (0, fdf.p) {
+    for j in 0..fdf.p {
         let xj = x.get(j);
 
         /* use column j of J as temporary storage for f(x + dx) */
@@ -891,7 +891,7 @@ fn fdjac<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF
         x.set(j, xj);
 
         h = 1f64 / h;
-        for i in range(0, fdf.n) {
+        for i in 0..fdf.n {
             let fnext = v.get(i);
             let fi = f.get(i);
 
@@ -1196,7 +1196,7 @@ fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::Vecto
 
     let n = r.size2();
 
-    for i in range(0, n) {
+    for i in 0..n {
         let qtfi = qtf.get(i);
 
         x.set(i, qtfi);
@@ -1211,19 +1211,19 @@ fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::Vecto
     #endif*/
 
     if nsing < n {
-        for i in range(nsing, n) {
+        for i in nsing..n {
             x.set(i, 0f64);
         }
     }
 
     if nsing > 0u64 {
-        for j in range(nsing, 0) {
+        for j in nsing..0 {
             let rjj = r.get(j, j);
             let temp = x.get(j) / rjj;
           
             x.set(j, temp);
               
-            for i in range(0, j) {
+            for i in 0..j {
                 let rij = r.get(i, j);
                 let xi = x.get(i);
               
@@ -1250,7 +1250,7 @@ fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::
         return;
     }
 
-    for i in range(0, n) {
+    for i in 0..n {
         let pi = perm.get(i);
 
         let dpi = diag.get(pi);
@@ -1259,10 +1259,10 @@ fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::
         w.set(i, dpi * (dpi * xpi / dxnorm));
     }
 
-    for j in range(0, n) {
+    for j in 0..n {
         let mut sum = 0f64;
 
-        for i in range(0, j) {
+        for i in 0..j {
             sum += r.get(i, j) * w.get(i);
         }
 

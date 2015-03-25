@@ -87,7 +87,7 @@ fn main() {
 
     rgsl::fit::mul(&dx, 1, &dfx, 1, dx.len() as u64, &mut c1, &mut cov11, &mut sumsq);
     println!("=> mul test :");
-    for i in range(0, dx.len()) {
+    for i in 0..dx.len() {
         println!("dfx[{}]/dx[{}] = {} / {} = {}", i, i, dfx[i], dx[i], dfx[i] / dx[i]);
     }
     println!("---------------------------");

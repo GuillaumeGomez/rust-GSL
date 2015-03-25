@@ -104,7 +104,7 @@ pub mod objects {
         if array.len() == 0 {
             return ::Value::Success;
         }
-        for tmp in range(0u64, array.len() as u64) {
+        for tmp in 0u64..array.len() as u64 {
             p[tmp as usize] = tmp;
         }
         let mut n = array.len() as u64 - 1;

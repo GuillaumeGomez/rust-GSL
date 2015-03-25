@@ -1675,15 +1675,15 @@ impl IntegrationWorkspace {
             let nint = (*self.w).size as usize;
             let mut t_elist = CSlice::new((*self.w).elist, nint);
             let mut t_order = CSlice::new((*self.w).order, nint);
-            let elist = t_elist.as_mut_slice();
-            let order = t_order.as_mut_slice();
+            let elist = t_elist.as_mut();
+            let order = t_order.as_mut();
 
-            for i in range(0us, nint) {
+            for i in 0us..nint {
                 let i1 = order[i] as usize;
                 let mut e1 = elist[i1];
                 let mut i_max = i1;
 
-                for j in range(i + 1, nint) {
+                for j in (i + 1)..nint {
                     let i2 = order[j] as usize;
                     let e2 = elist[i2];
 
@@ -1711,12 +1711,12 @@ impl IntegrationWorkspace {
             let limit = (*w).limit;
 
             let mut i_nrmax = (*w).nrmax;
-            let mut i_maxerr = order.as_slice()[i_nrmax as usize];
+            let mut i_maxerr = order.as_ref()[i_nrmax as usize];
 
             // Check whether the list contains more than two error estimates
             if last < 2 {
-                order.as_mut_slice()[0us] = 0;
-                order.as_mut_slice()[1us] = 1;
+                order.as_mut()[0us] = 0;
+                order.as_mut()[1us] = 1;
                 (*w).i = i_maxerr;
                 return ;
             }
@@ -1730,12 +1730,12 @@ impl IntegrationWorkspace {
             };
 
             let elist = CSlice::new((*w).elist, top as usize + 1us);
-            let errmax = elist.as_slice()[i_maxerr as usize];
+            let errmax = elist.as_ref()[i_maxerr as usize];
 
             // This part of the routine is only executed if, due to a difficult integrand, subdivision increased the error estimate. In the normal
             // case the insert procedure should start after the nrmax-th largest error estimate.
-            while i_nrmax > 0 && errmax > elist.as_slice()[order.as_slice()[i_nrmax as usize - 1us] as usize] {
-                order.as_mut_slice()[i_nrmax as usize] = order.as_slice()[i_nrmax as usize - 1us];
+            while i_nrmax > 0 && errmax > elist.as_ref()[order.as_ref()[i_nrmax as usize - 1us] as usize] {
+                order.as_mut()[i_nrmax as usize] = order.as_ref()[i_nrmax as usize - 1us];
                 i_nrmax -= 1;
             }
 
@@ -1743,26 +1743,26 @@ impl IntegrationWorkspace {
             let mut i = i_nrmax + 1;
 
             // The order of the tests in the following line is important to prevent a segmentation fault
-            while i < top && errmax < elist.as_slice()[order.as_slice()[i as usize] as usize] {
-                order.as_mut_slice()[i as usize - 1us] = order.as_slice()[i as usize];
+            while i < top && errmax < elist.as_ref()[order.as_ref()[i as usize] as usize] {
+                order.as_mut()[i as usize - 1us] = order.as_ref()[i as usize];
                 i += 1;
             }
 
-            order.as_mut_slice()[i as usize - 1us] = i_maxerr;
+            order.as_mut()[i as usize - 1us] = i_maxerr;
 
             // Insert errmin by traversing the list bottom-up
-            let errmin = elist.as_slice()[last as usize];
+            let errmin = elist.as_ref()[last as usize];
 
             let mut k = top - 1;
-            while k > i - 2 && errmin >= elist.as_slice()[order.as_slice()[k as usize] as usize] {
-                order.as_mut_slice()[k as usize + 1us] = order.as_slice()[k as usize];
+            while k > i - 2 && errmin >= elist.as_ref()[order.as_ref()[k as usize] as usize] {
+                order.as_mut()[k as usize + 1us] = order.as_ref()[k as usize];
                 k -= 1;
             }
       
-            order.as_mut_slice()[k as usize + 1us] = last;
+            order.as_mut()[k as usize + 1us] = last;
 
             // Set i_max and e_max
-            i_maxerr = order.as_slice()[i_nrmax as usize] ;
+            i_maxerr = order.as_ref()[i_nrmax as usize] ;
 
             (*w).i = i_maxerr ;
             (*w).nrmax = i_nrmax ;
@@ -1774,9 +1774,9 @@ impl IntegrationWorkspace {
             let f_w = self.w;
             let mut result_sum = 0f64;
             let v_rlist = CSlice::new((*f_w).rlist, (*f_w).size as usize);
-            let rlist = v_rlist.as_slice();
+            let rlist = v_rlist.as_ref();
 
-            for k in range(0us, (*f_w).size as usize) {
+            for k in 0us..((*f_w).size as usize) {
                 result_sum += rlist[k];
             }
 
@@ -1794,10 +1794,10 @@ impl IntegrationWorkspace {
 
             let i = (*w).i as usize;
 
-            *a = alist.as_slice()[i];
-            *b = blist.as_slice()[i];
-            *r = rlist.as_slice()[i];
-            *e = elist.as_slice()[i];
+            *a = alist.as_ref()[i];
+            *b = blist.as_ref()[i];
+            *r = rlist.as_ref()[i];
+            *e = elist.as_ref()[i];
         }
     }
 
@@ -1818,34 +1818,34 @@ impl IntegrationWorkspace {
             let mut elist = CSlice::new((*w).elist, tmp);
             let mut level = CSlice::new((*w).level, tmp);
 
-            let new_level = level.as_slice()[i_max] + 1;
+            let new_level = level.as_ref()[i_max] + 1;
 
             /* append the newly-created intervals to the list */
 
             if error2 > error1 {
                 // blist[maxerr] is already == b2
-                alist.as_mut_slice()[i_max] = a2;
-                rlist.as_mut_slice()[i_max] = area2;
-                elist.as_mut_slice()[i_max] = error2;
-                level.as_mut_slice()[i_max] = new_level;
+                alist.as_mut()[i_max] = a2;
+                rlist.as_mut()[i_max] = area2;
+                elist.as_mut()[i_max] = error2;
+                level.as_mut()[i_max] = new_level;
 
-                alist.as_mut_slice()[i_new] = a1;
-                blist.as_mut_slice()[i_new] = b1;
-                rlist.as_mut_slice()[i_new] = area1;
-                elist.as_mut_slice()[i_new] = error1;
-                level.as_mut_slice()[i_new] = new_level;
+                alist.as_mut()[i_new] = a1;
+                blist.as_mut()[i_new] = b1;
+                rlist.as_mut()[i_new] = area1;
+                elist.as_mut()[i_new] = error1;
+                level.as_mut()[i_new] = new_level;
             } else {
                 // alist[maxerr] is already == a1
-                blist.as_mut_slice()[i_max] = b1;
-                rlist.as_mut_slice()[i_max] = area1;
-                elist.as_mut_slice()[i_max] = error1;
-                level.as_mut_slice()[i_max] = new_level;
+                blist.as_mut()[i_max] = b1;
+                rlist.as_mut()[i_max] = area1;
+                elist.as_mut()[i_max] = error1;
+                level.as_mut()[i_max] = new_level;
 
-                alist.as_mut_slice()[i_new] = a2;
-                blist.as_mut_slice()[i_new] = b2;
-                rlist.as_mut_slice()[i_new] = area2;
-                elist.as_mut_slice()[i_new] = error2;
-                level.as_mut_slice()[i_new] = new_level;
+                alist.as_mut()[i_new] = a2;
+                blist.as_mut()[i_new] = b2;
+                rlist.as_mut()[i_new] = area2;
+                elist.as_mut()[i_new] = error2;
+                level.as_mut()[i_new] = new_level;
             }
 
             (*w).size += 1;
@@ -1864,8 +1864,8 @@ impl IntegrationWorkspace {
             let mut elist = CSlice::new((*self.w).elist, 1);
 
             (*self.w).size = 1;
-            rlist.as_mut_slice()[0] = result;
-            elist.as_mut_slice()[0] = error;
+            rlist.as_mut()[0] = result;
+            elist.as_mut()[0] = error;
         }
     }
 
@@ -1883,12 +1883,12 @@ impl IntegrationWorkspace {
             (*w).size = 0;
             (*w).nrmax = 0;
             (*w).i = 0;
-            alist.as_mut_slice()[0] = a;
-            blist.as_mut_slice()[0] = b;
-            rlist.as_mut_slice()[0] = 0f64;
-            elist.as_mut_slice()[0] = 0f64;
-            order.as_mut_slice()[0] = 0u64;
-            level.as_mut_slice()[0] = 0u64;
+            alist.as_mut()[0] = a;
+            blist.as_mut()[0] = b;
+            rlist.as_mut()[0] = 0f64;
+            elist.as_mut()[0] = 0f64;
+            order.as_mut()[0] = 0u64;
+            level.as_mut()[0] = 0u64;
 
             (*w).maximum_level = 0;
         }
@@ -1905,12 +1905,12 @@ impl IntegrationWorkspace {
             let mut order = CSlice::new((*w).order, i_new + 1us);
             let mut level = CSlice::new((*w).level, i_new + 1us);
 
-            alist.as_mut_slice()[i_new] = a1;
-            blist.as_mut_slice()[i_new] = b1;
-            rlist.as_mut_slice()[i_new] = area1;
-            elist.as_mut_slice()[i_new] = error1;
-            order.as_mut_slice()[i_new] = i_new as u64;
-            level.as_mut_slice()[i_new] = 0;
+            alist.as_mut()[i_new] = a1;
+            blist.as_mut()[i_new] = b1;
+            rlist.as_mut()[i_new] = area1;
+            elist.as_mut()[i_new] = error1;
+            order.as_mut()[i_new] = i_new as u64;
+            level.as_mut()[i_new] = 0;
 
             (*w).size += 1;
         }
@@ -2342,7 +2342,7 @@ impl IntegrationQawoTable {
 
                 let level = CSlice::new((*workspace.w).level, (*workspace.w).i as usize + 1);
 
-                let current_level = level.as_slice()[(*workspace.w).i as usize] + 1;
+                let current_level = level.as_ref()[(*workspace.w).i as usize] + 1;
 
                 if current_level >= (*self.w).n {
                     /* exceeded limit of table */
@@ -2458,7 +2458,7 @@ impl IntegrationQawoTable {
                         let i = (*workspace.w).i as usize;
                         let blist = CSlice::new((*workspace.w).blist, i + 1us);
                         let alist = CSlice::new((*workspace.w).alist, i + 1us);
-                        let width = blist.as_slice()[i] - alist.as_slice()[i];
+                        let width = blist.as_ref()[i] - alist.as_ref()[i];
 
                         if 0.25f64 * fabsf64(width) * abs_omega > 2f64 {
                             continue;
@@ -2676,7 +2676,7 @@ impl CquadWorkspace {
             let mut h = (b - a) / 2f64;
             let mut nnans = 0usize;
 
-            for i in range(0us, n[3] as usize + 1us) {
+            for i in 0us..(n[3] as usize + 1us) {
                 (*iv).fx[i] = f(m + XI[i] * h, arg);
                 neval += 1;
                 if !(*iv).fx[i].is_finite() {
@@ -2687,11 +2687,11 @@ impl CquadWorkspace {
             }
             Vinvfx(&(*iv).fx, &mut ((*iv).c), 0);
             let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(3), (*iv).c.len() - 3);
-            Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), 3);
+            Vinvfx(&(*iv).fx, tmp_c.as_mut(), 3);
             let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(2), (*iv).c.len() - 2);
-            Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), 2);
+            Vinvfx(&(*iv).fx, tmp_c.as_mut(), 2);
 
-            for i in range(0us, nnans as usize) {
+            for i in 0us..(nnans as usize) {
                 (*iv).fx[nans[i] as usize] = ::NAN;
             }
 
@@ -2703,13 +2703,13 @@ impl CquadWorkspace {
             (*iv).igral = 2f64 * h * (*iv).c[idx[3] as usize] * w;
             let mut nc = 0f64;
 
-            for i in range(n[2] as usize, n[3] as usize + 1us) {
+            for i in (n[2] as usize)..(n[3] as usize + 1us) {
                 temp = (*iv).c[idx[3] as usize + i];
                 nc += temp * temp;
             }
 
             let mut ncdiff = nc;
-            for i in range(0us, n[2] as usize + 1us) {
+            for i in 0us..(n[2] as usize + 1us) {
                 temp = (*iv).c[idx[2] as usize + i] - (*iv).c[idx[3] as usize + i];
                 ncdiff += temp * temp;
                 nc += (*iv).c[idx[3] as usize + i] * (*iv).c[idx[3] as usize + i];
@@ -2723,12 +2723,12 @@ impl CquadWorkspace {
             }
 
             let mut t_heap = Vec::from_raw_buf((*self.w).heap, (*self.w).size as usize + 1us);
-            let heap = t_heap.as_mut_slice();
+            let heap = t_heap.as_mut();
             let mut t_ivals = Vec::from_raw_buf((*self.w).ivals, (*self.w).size as usize + 1us);
-            let ivals = t_ivals.as_mut_slice();
+            let ivals = t_ivals.as_mut();
 
             /* Initialize the heaps. */
-            for i in range(0us, (*self.w).size as usize) {
+            for i in 0us..((*self.w).size as usize) {
                 heap[i] = i as u64;
             }
 
@@ -2780,25 +2780,25 @@ impl CquadWorkspace {
                     /* Compute the new coefficients. */
                     let size = idx[d as usize] as usize;
                     let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(size as isize), (*iv).c.len() - size);
-                    Vinvfx(&(*iv).fx, tmp_c.as_mut_slice(), d);
+                    Vinvfx(&(*iv).fx, tmp_c.as_mut(), d);
 
                     /* Downdate any NaNs. */
                     if nnans > 0 {
-                        downdate(tmp_c.as_mut_slice(), n[d as usize], d, &mut nans, nnans as i32);
-                        for i in range(0us, nnans) {
+                        downdate(tmp_c.as_mut(), n[d as usize], d, &mut nans, nnans as i32);
+                        for i in 0us..nnans {
                             (*iv).fx[nans[i] as usize] = ::NAN;
                         }
                     }
 
                     /* Compute the error estimate. */
                     nc = 0f64;
-                    for i in range(n[d as usize - 1us] as usize, n[d as usize] as usize + 1us) {
+                    for i in (n[d as usize - 1us] as usize)..(n[d as usize] as usize + 1us) {
                         temp = (*iv).c[idx[d as usize] as usize + i];
                         nc += temp * temp;
                     }
 
                     ncdiff = nc;
-                    for i in range(0us, n[d as usize - 1us] as usize + 1us) {
+                    for i in 0us..(n[d as usize - 1us] as usize + 1us) {
                         temp = (*iv).c[idx[d as usize - 1us] as usize + i] - (*iv).c[idx[d as usize] as usize + i];
                         ncdiff += temp * temp;
                         nc += (*iv).c[idx[d as usize] as usize + i] * (*iv).c[idx[d as usize] as usize + i];
@@ -2892,22 +2892,22 @@ impl CquadWorkspace {
                     Vinvfx(&(*ivl).fx, &mut (*ivl).c, 0);
                     if nnans > 0 {
                         downdate(&mut (*ivl).c, n[0], 0, &mut nans, nnans as i32);
-                        for i in range(0us, nnans as usize) {
+                        for i in 0us..(nnans as usize) {
                             (*ivl).fx[nans[i] as usize] = ::NAN;
                         }
                     }
-                    for i in range(0us, n[d as usize] as usize + 1us) {
+                    for i in 0us..(n[d as usize] as usize + 1us) {
                         (*ivl).c[idx[d as usize] as usize + i] = 0f64;
-                        for j in range(i, n[d as usize] as usize + 1us) {
+                        for j in i..(n[d as usize] as usize + 1us) {
                             (*ivl).c[idx[d as usize] as usize + i] += Tleft[i * 33 + j] * (*iv).c[idx[d as usize] as usize + j];
                         }
                     }
                     ncdiff = 0f64;
-                    for i in range(0us, n[0] as usize + 1us) {
+                    for i in 0us..(n[0] as usize + 1us) {
                         temp = (*ivl).c[i] - (*ivl).c[idx[d as usize] as usize + i];
                         ncdiff += temp * temp;
                     }
-                    for i in range(n[0] as usize + 1us, n[d as usize] as usize + 1us) {
+                    for i in (n[0] as usize + 1us)..(n[d as usize] as usize + 1us) {
                         temp = (*ivl).c[idx[d as usize] as usize + i];
                         ncdiff += temp * temp;
                     }
@@ -2960,23 +2960,23 @@ impl CquadWorkspace {
                     Vinvfx(&(*ivr).fx, &mut (*ivr).c, 0);
                     if nnans > 0 {
                         downdate(&mut (*ivr).c, n[0], 0, &mut nans, nnans as i32);
-                        for i in range(0us, nnans) {
+                        for i in 0us..nnans {
                             (*ivr).fx[nans[i] as usize] = ::NAN;
                         }
                     }
 
-                    for i in range(0us, n[d as usize] as usize + 1us) {
+                    for i in 0us..(n[d as usize] as usize + 1us) {
                         (*ivr).c[idx[d as usize] as usize + i] = 0f64;
-                        for j in range(i, n[d as usize] as usize + 1us) {
+                        for j in i..(n[d as usize] as usize + 1us) {
                             (*ivr).c[idx[d as usize] as usize + i] += Tright[i * 33 + j] * (*iv).c[idx[d as usize] as usize + j];
                         }
                     }
                     ncdiff = 0f64;
-                    for i in range(0us, n[0] as usize + 1us) {
+                    for i in 0us..(n[0] as usize + 1us) {
                         temp = (*ivr).c[i] - (*ivr).c[idx[d as usize] as usize + i];
                         ncdiff += temp * temp;
                     }
-                    for i in range(n[0] as usize + 1us, n[d as usize] as usize + 1us) {
+                    for i in (n[0] as usize + 1us)..(n[d as usize] as usize + 1us) {
                         temp = (*ivr).c[idx[d as usize] as usize + i];
                         ncdiff += temp * temp;
                     }
@@ -3075,8 +3075,9 @@ impl CquadWorkspace {
                 /* Collect the value of the integral and error. */
                 igral = igral_final;
                 err = err_final;
-                for i in range(0us, nivals) {
-                    igral += ivals[heap[i] as usize].igral;
+                for i in 0us..nivals {
+                    let tmp = heap[i] as usize;
+                    igral += ivals[tmp].igral;
                     err += ivals[heap[i] as usize].err;
                 }
             }
@@ -3161,9 +3162,9 @@ impl GLFixedTable {
 
             let m = (n + 1) >> 1;
             let t_w = CSlice::new((*self.w).w, m as usize + 1us);
-            let w = t_w.as_slice();
+            let w = t_w.as_ref();
             let t_x = CSlice::new((*self.w).x, m as usize + 1us);
-            let x = t_x.as_slice();
+            let x = t_x.as_ref();
             let A = 0.5 * (b - a);
             let B = 0.5 * (b + a);
 
@@ -3171,13 +3172,13 @@ impl GLFixedTable {
             if n % 2 != 0 {
                 s = w[0] * f(B, arg);
 
-                for i in range(1us, m as usize) {
+                for i in 1us..(m as usize) {
                     let Ax = A * x[i];
                     s += w[i] * (f(B + Ax, arg) + f(B - Ax, arg));
                 }
             } else {
                 /* n - even */
-                for i in range(0us, m as usize) {
+                for i in 0us..(m as usize) {
                     let Ax = A * x[i];
                     s += w[i] * (f(B + Ax, arg) + f(B - Ax, arg));
                 }
@@ -3419,7 +3420,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     epstab[n + 2] = epstab[n];
     epstab[n] = ::DBL_MAX;
 
-    for i in range(0, newelm) {
+    for i in 0..newelm {
         let mut res = epstab[n - 2 * i + 2];
         let e0 = epstab[n - 2 * i - 2];
         let e1 = epstab[n - 2 * i - 1];
@@ -3488,17 +3489,17 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     }
 
     if n_orig % 2 == 1 {
-        for i in range(0, newelm + 1) {
+        for i in 0..(newelm + 1) {
           epstab[1 + i * 2] = epstab[i * 2 + 3];
         }
     } else {
-        for i in range(0, newelm + 1) {
+        for i in 0..(newelm + 1) {
             epstab[i * 2] = epstab[i * 2 + 2];
         }
     }
 
     if n_orig != n_final {
-        for i in range(0, n_final + 1) {
+        for i in 0..(n_final + 1) {
             epstab[i] = epstab[n_orig - n_final + i];
         }
     }
@@ -3506,7 +3507,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     (*table).n = n_final as u64 + 1;
 
     if nres_orig < 3 {
-        res3la.as_mut_slice()[nres_orig as usize] = *result;
+        res3la.as_mut()[nres_orig as usize] = *result;
         *abserr = ::DBL_MAX;
     } else {
         /* Compute error estimate */
@@ -3535,9 +3536,9 @@ unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool
     let id = (*workspace).nrmax;
 
     let t_order = CSlice::new((*workspace).order, (*workspace).nrmax as usize + 1us);
-    let order = t_order.as_slice();
+    let order = t_order.as_ref();
     let t_level = CSlice::new((*workspace).level, order[(*workspace).nrmax as usize] as usize + 1us);
-    let level = t_level.as_slice();
+    let level = t_level.as_ref();
 
     let limit = (*workspace).limit;
     let last = (*workspace).size - 1;
@@ -3548,7 +3549,7 @@ unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool
         last
     };
   
-    for k in range(id, jupbnd + 1) {
+    for k in id..(jupbnd + 1) {
         let i_max = order[(*workspace).nrmax as usize];
       
         (*workspace).i = i_max ;
@@ -3564,7 +3565,7 @@ unsafe fn large_interval(workspace: *mut ffi::gsl_integration_workspace) -> bool
     let i = (*workspace).i ;
     let level = CSlice::new((*workspace).level, i as usize + 1us);
   
-    if level.as_slice()[i as usize] < (*workspace).maximum_level {
+    if level.as_ref()[i as usize] < (*workspace).maximum_level {
         true
     } else {
         false
@@ -3708,7 +3709,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         f_w.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
         let t_level = CSlice::new((*w).level, (*w).i as usize + 1);
-        let current_level = t_level.as_slice()[(*w).i as usize] + 1;
+        let current_level = t_level.as_ref()[(*w).i as usize] + 1;
 
         let a1 = a_i;
         let b1 = 0.5f64 * (a_i + b_i);
@@ -3928,7 +3929,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     /* temporarily alias ndin to level */
     let mut t_ndin = Vec::from_raw_buf((*w).level, pts.len());
-    let ndin = t_ndin.as_mut_slice();
+    let ndin = t_ndin.as_mut();
 
     /* Initialize results */
     *result = 0f64;
@@ -3948,7 +3949,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     }
 
     /* Check that the integration range and break points are an ascending sequence */
-    for i in range(0us, nint as usize) {
+    for i in 0us..(nint as usize) {
         if pts[i + 1] < pts[i] {
             rgsl_error!("points are not in an ascending sequence", ::Value::Inval);
         }
@@ -3961,7 +3962,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     f_w.initialise(0f64, 0f64);
 
-    for i in range(0us, nint as usize) {
+    for i in 0us..(nint as usize) {
         let mut area1 = 0f64;
         let mut error1 = 0f64;
         let mut resabs1 = 0f64;
@@ -3987,18 +3988,18 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     /* Compute the initial error estimate */
     let mut errsum = 0f64;
     let mut t_elist = CSlice::new((*w).elist, nint as usize);
-    let elist = t_elist.as_mut_slice();
+    let elist = t_elist.as_mut();
     let mut t_level = CSlice::new((*w).level, nint as usize);
-    let level = t_level.as_mut_slice();
+    let level = t_level.as_mut();
 
-    for i in range(0us, nint as usize) {
+    for i in 0us..(nint as usize) {
         if ndin[i] != 0 {
             elist[i] = abserr0;
         }
         errsum = errsum + elist[i];
     }
 
-    for i in range(0us, nint as usize) {
+    for i in 0us..(nint as usize) {
         level[i] = 0u64;
     }
 
@@ -4281,11 +4282,11 @@ unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result
         gsl_integration_qcheb(f, arg, a, b, &mut cheb12, &mut cheb24);
         compute_moments(cc, &mut moment);
 
-        for i in range(0, 13) {
+        for i in 0..13 {
             res12 += cheb12[i] * moment[i];
         }
 
-        for i in range(0, 25) {
+        for i in 0..25 {
             res24 += cheb24[i] * moment[i];
         }
 
@@ -4309,7 +4310,7 @@ unsafe fn compute_moments(cc: f64, moment: &mut [f64]) {
     moment[0] = a0;
     moment[1] = a1;
 
-    for k in range(2us, 25us) {
+    for k in 2us..25us {
         let a2 = if (k % 2) == 0 {
             2f64 * cc * a1 - a0
         } else {
@@ -4351,7 +4352,7 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
     fval[12] = f(center, arg);
     fval[24] = 0.5f64 * f(a, arg);
 
-    for i in range(1us, 12us) {
+    for i in 1us..12us {
         let j = 24us - i;
         let u = half_length * x[i - 1us];
 
@@ -4359,7 +4360,7 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
         fval[j] = f(center - u, arg);
     }
 
-    for i in range(1us, 12us) {
+    for i in 1us..12us {
         let j = 24us - i;
 
         v[i] = fval[i] - fval[j];
@@ -4441,7 +4442,7 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
         cheb24[17] = cheb12[7] - alam;
     }
 
-    for i in range(0us, 6us) {
+    for i in 0us..6us {
         let j = 12us - i;
 
         v[i] = fval[i] - fval[j];
@@ -4479,7 +4480,7 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
         cheb24[14] = cheb12[10] - alam;
     }
 
-    for i in range(0us, 3us) {
+    for i in 0us..3us {
         let j = 6 - i;
 
         v[i] = fval[i] - fval[j];
@@ -4517,7 +4518,7 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
 
     let mut tmp = 1f64 / 6f64;
 
-    for i in range(0us, 12us) {
+    for i in 0us..12us {
         cheb12[i] *= tmp;
     }
 
@@ -4526,7 +4527,7 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
     cheb12[0] *= tmp;
     cheb12[12] *= tmp;
 
-    for i in range(1us, 24us) {
+    for i in 1us..24us {
         cheb24[i] *= tmp;
     }
 
@@ -4698,11 +4699,11 @@ unsafe fn qc25s_compute_result(r: &[f64], cheb12: &[f64], cheb24: &[f64], result
     let mut res12 = 0f64;
     let mut res24 = 0f64;
 
-    for i in range(0us, 13us) {
+    for i in 0us..13us {
         res12 += r[i] * cheb12[i];
     }
 
-    for i in range(0us, 25us) {
+    for i in 0us..25us {
         res24 += r[i] * cheb24[i];
     }
 
@@ -4745,12 +4746,12 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
 
         /* obtain moments from the table */
         let t_moment = CSlice::new((*wf).chebmo.offset(25is * level as isize), 25);
-        let moment = t_moment.as_slice();
+        let moment = t_moment.as_ref();
 
         let mut res12_cos = cheb12[12] * moment[12];
         let mut res12_sin = 0f64;
 
-        for i in range(0us, 6us) {
+        for i in 0us..6us {
             let k = 10us - 2us * i;
 
             res12_cos += cheb12[k] * moment[k];
@@ -4762,7 +4763,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
 
         let mut result_abs = fabsf64(cheb24[24]) ;
 
-        for i in range(0us, 12us) {
+        for i in 0us..12us {
             let k = 22us - 2us * i;
 
             res24_cos += cheb24[k] * moment[k];
@@ -4811,33 +4812,33 @@ fn fn_cos<T>(x: f64, p: &mut fn_fourier_params<T>) -> f64 {
 fn Vinvfx(fx: &[f64], c: &mut [f64], d: i32) {
     match d {
         0i32 => {
-            for i in range(0us, 5us) {
+            for i in 0us..5us {
                 c[i] = 0f64;
-                for j in range(0us, 5us) {
+                for j in 0us..5us {
                     c[i] += V1inv[i * 5 + j] * fx[j * 8];
                 }
             }
         }
         1i32 => {
-            for i in range(0us, 9us) {
+            for i in 0us..9us {
                 c[i] = 0f64;
-                for j in range(0us, 9us) {
+                for j in 0us..9us {
                     c[i] += V2inv[i * 9 + j] * fx[j * 4];
                 }
             }
         }
         2i32 => {
-            for i in range(0us, 17us) {
+            for i in 0us..17us {
                 c[i] = 0f64;
-                for j in range(0us, 17us) {
+                for j in 0us..17us {
                     c[i] += V3inv[i * 17 + j] * fx[j * 2];
                 }
             }
         }
         3i32 => {
-            for i in range(0us, 33us) {
+            for i in 0us..33us {
                 c[i] = 0f64;
-                for j in range(0us, 33us) {
+                for j in 0us..33us {
                     c[i] += V4inv[i * 33 + j] * fx[j];
                 }
             }
@@ -4852,22 +4853,23 @@ fn downdate(c: &mut [f64], t_n: i32, d: i32, nans: &mut [i32], nnans: i32) {
     let mut b_new : [f64; 34] = [0f64; 34];
     let mut n = t_n;
 
-    for i in range(0, n + 2) {
+    for i in 0..(n + 2) {
         b_new[i as usize] = bee[bidx[d as usize] as usize + i as usize];
     }
-    for i in range(0us, nnans as usize) {
+    for i in 0us..(nnans as usize) {
+        let tmp = nans[i] as usize;
         b_new[n as usize + 1us] = b_new[n as usize + 1us] / Lalpha[n as usize];
-        b_new[n as usize] = (b_new[n as usize] + XI[nans[i] as usize] * b_new[n as usize + 1us]) / Lalpha[n as usize - 1us];
-        for j in range(n - 1, 0) {
+        b_new[n as usize] = (b_new[n as usize] + XI[tmp] * b_new[n as usize + 1us]) / Lalpha[n as usize - 1us];
+        for j in (n - 1)..0 {
             b_new[j as usize] = (b_new[j as usize] + XI[nans[i] as usize] * b_new[j as usize + 1us] - Lgamma[j as usize + 1us]
                 * b_new[j as usize + 2us]) / Lalpha[j as usize - 1us];
         }
-        for j in range(0, n + 1) {
+        for j in 0..(n + 1) {
             b_new[j as usize] = b_new[j as usize + 1us];
         }
 
         let alpha = c[n as usize] / b_new[n as usize];
-        for j in range(0, n) {
+        for j in 0..n {
             c[j as usize] -= alpha * b_new[j as usize];
         }
         c[n as usize] = 0f64;

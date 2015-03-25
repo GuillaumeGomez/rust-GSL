@@ -12,7 +12,7 @@ use rgsl::Combination;
 
 fn main() {
     println!("All subsets of [0,1,2,3] by size:");
-    for i in range(0, 5) {
+    for i in 0..5 {
         let c = Combination::new_init_first(4, i).unwrap();
         let mut tmp = true;
 

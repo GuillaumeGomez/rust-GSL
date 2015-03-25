@@ -103,7 +103,7 @@ impl Permutation {
 
     /// This function returns a pointer to the array of elements in the permutation p.
     pub fn data<'r>(&'r mut self) -> &'r mut [u64] {
-        self.d.as_mut_slice()
+        self.d.as_mut()
     }
 
     /// This function checks that the permutation p is valid. The n elements should contain each of the numbers 0 to n-1 once and only once.
@@ -221,7 +221,7 @@ impl Debug for Permutation {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");
         unsafe {
-            for x in range(0u64, (*self.p).size) {
+            for x in 0u64..(*self.p).size {
                 let tmp = (*self.p).data.offset(x as isize);
 
                 write!(f, " {}", *tmp);

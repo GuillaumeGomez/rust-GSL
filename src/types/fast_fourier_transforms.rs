@@ -35,7 +35,7 @@ impl FftComplexWaveTable {
     }
 
     pub fn factor<'r>(&'r mut self) -> &'r mut [u64] {
-        self.f.as_mut_slice()
+        self.f.as_mut()
     }
 }
 

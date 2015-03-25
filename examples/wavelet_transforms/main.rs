@@ -12,7 +12,7 @@
 
 extern crate rgsl;
 
-use std::old_io::{File, Open, Read};
+use std::fs::File;
 use rgsl::{wavelet_transforms, sort};
 use std::num::Float;
 
@@ -36,12 +36,11 @@ fn main() {
     }
 
     {
-        let p = Path::new(tmp[0].as_slice());
-        let mut f = match File::open_mode(&p, Open, Read) {
+        let mut f = match File::open(tmp[0].as_ref()) {
             Ok(f) => f,
             Err(e) => panic!("file error: {}", e),
         };
-        for i in range(0usize, N) {
+        for i in 0usize..N {
             match f.read_be_f64() {
                 Ok(v) => {
                     data[i] = v;
@@ -56,7 +55,7 @@ fn main() {
 
     wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N as u64, &work);
 
-     for i in range(0usize, N) {
+     for i in 0usize..N {
         abscoeff[i] = data[i].abs();
     }
 
@@ -70,7 +69,7 @@ fn main() {
 
     wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N as u64, &work);
 
-    for it in range(0usize, N) {
+    for it in 0usize..N {
         println!("{}", data[it]);
     }
 }

@@ -79,7 +79,7 @@ impl QRng {
         if !tmp.is_null() {
             self.data = unsafe { CSlice::new(tmp as *mut i8, self.size() as usize) };
         }
-        self.data.as_mut_slice()
+        self.data.as_mut()
     }
 
     /// This function copies the quasi-random sequence generator src into the pre-existing generator dest, making dest into an exact copy

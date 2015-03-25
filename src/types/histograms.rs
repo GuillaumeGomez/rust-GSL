@@ -26,6 +26,7 @@ The distribution of events within each bin is assumed to be uniform.
 
 use ffi;
 use enums;
+use std::old_io::Writer;
 
 pub struct Histogram {
     h: *mut ffi::gsl_histogram
@@ -251,7 +252,7 @@ impl Histogram {
         unsafe {
             let n = (*self.h).n as isize;
 
-            for i in range(0is, n) {
+            for i in 0is..n {
                 write!(stream, "{}", *(*self.h).range.offset(i));
                 write!(stream, " ");
                 write!(stream, "{}", *(*self.h).range.offset(i + 1));

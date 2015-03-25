@@ -110,12 +110,12 @@ impl Combination {
 
     /// This function returns a pointer to the array of elements in the combination self.
     pub fn as_slice<'r>(&'r self) -> &'r [u64] {
-        self.data.as_slice()
+        self.data.as_ref()
     }
 
     /// This function returns a pointer to the array of elements in the combination self.
     pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [u64] {
-        self.data.as_mut_slice()
+        self.data.as_mut()
     }
 
     /// This function checks that the combination self is valid. The k elements should lie in the range 0 to n-1, with each value occurring
@@ -164,7 +164,7 @@ impl Debug for Combination {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");
-        for tmp in range(0, self.data.len()) {
+        for tmp in 0..self.data.len() {
             if tmp == 0 {
                 write!(f, "{}", self.data.get(tmp).unwrap());
             } else {
