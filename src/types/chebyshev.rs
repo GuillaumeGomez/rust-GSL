@@ -87,12 +87,12 @@ impl ChebSeries {
 
     /// This function returns the order of Chebyshev series cs.
     pub fn order(&self) -> u64 {
-        unsafe { ffi::gsl_cheb_order(self.c as *const ffi::gsl_cheb_series) }
+        unsafe { ffi::gsl_cheb_order(self.c) }
     }
 
     /// This function returns the size of the Chebyshev coefficient array c[] for the Chebyshev series cs.
     pub fn size(&self) -> u64 {
-        unsafe { ffi::gsl_cheb_size(self.c as *const ffi::gsl_cheb_series) }
+        unsafe { ffi::gsl_cheb_size(self.c) }
     }
 
     /// This function returns a pointer to the coefficient array c[] location in memory for the Chebyshev series cs.
@@ -107,36 +107,36 @@ impl ChebSeries {
 
     /// This function evaluates the Chebyshev series cs at a given point x.
     pub fn eval(&self, x: f64) -> f64 {
-        unsafe { ffi::gsl_cheb_eval(self.c as *const ffi::gsl_cheb_series, x) }
+        unsafe { ffi::gsl_cheb_eval(self.c, x) }
     }
 
     /// This function computes the Chebyshev series cs at a given point x, estimating both the series result and its absolute error abserr.
     /// The error estimate is made from the first neglected term in the series.
     pub fn eval_err(&self, x: f64, result: &mut f64, abs_err: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_cheb_eval_err(self.c as *const ffi::gsl_cheb_series, x, result, abs_err) }
+        unsafe { ffi::gsl_cheb_eval_err(self.c, x, result, abs_err) }
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given order order.
     pub fn eval_n(&self, order: u64, x: f64) -> f64 {
-        unsafe { ffi::gsl_cheb_eval_n(self.c as *const ffi::gsl_cheb_series, order, x) }
+        unsafe { ffi::gsl_cheb_eval_n(self.c, order, x) }
     }
 
     /// This function evaluates a Chebyshev series cs at a given point x, estimating both the series result and its absolute error abserr, to
     /// (at most) the given order order. The error estimate is made from the first neglected term in the series.
     pub fn eval_n_err(&self, order: u64, x: f64, result: &mut f64, abs_err: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_cheb_eval_n_err(self.c as *const ffi::gsl_cheb_series, order, x, result, abs_err) }
+        unsafe { ffi::gsl_cheb_eval_n_err(self.c, order, x, result, abs_err) }
     }
 
     /// This function computes the derivative of the series cs, storing the derivative coefficients in the previously allocated deriv. The
     /// two series cs and deriv must have been allocated with the same order.
     pub fn calc_deriv(&self, deriv: &ChebSeries) -> enums::value::Value {
-        unsafe { ffi::gsl_cheb_calc_deriv(deriv.c, self.c as *const ffi::gsl_cheb_series) }
+        unsafe { ffi::gsl_cheb_calc_deriv(deriv.c, self.c) }
     }
 
     /// This function computes the integral of the series cs, storing the integral coefficients in the previously allocated integ. The two series
     /// cs and integ must have been allocated with the same order. The lower limit of the integration is taken to be the left hand end of the range a.
     pub fn calc_integ(&self, integ: &ChebSeries) -> enums::value::Value {
-        unsafe { ffi::gsl_cheb_calc_integ(integ.c, self.c as *const ffi::gsl_cheb_series) }
+        unsafe { ffi::gsl_cheb_calc_integ(integ.c, self.c) }
     }
 }
 

@@ -60,7 +60,7 @@ impl VectorComplexF64 {
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: u64) -> ComplexF64 {
-        unsafe { ::std::mem::transmute(ffi::gsl_vector_complex_get(self.vec as *const ffi::gsl_vector_complex, i)) }
+        unsafe { ::std::mem::transmute(ffi::gsl_vector_complex_get(self.vec, i)) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
@@ -89,12 +89,12 @@ impl VectorComplexF64 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&self, other: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_memcpy(self.vec, other.vec as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_vector_complex_memcpy(self.vec, other.vec) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_memcpy(other.vec, self.vec as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_vector_complex_memcpy(other.vec, self.vec) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
@@ -115,25 +115,25 @@ impl VectorComplexF64 {
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&self, other: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_add(self.vec, other.vec as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_vector_complex_add(self.vec, other.vec) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&self, other: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_sub(self.vec, other.vec as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_vector_complex_sub(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&self, other: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_mul(self.vec, other.vec as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_vector_complex_mul(self.vec, other.vec) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&self, other: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_div(self.vec, other.vec as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_vector_complex_div(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
@@ -148,7 +148,7 @@ impl VectorComplexF64 {
 
     /// This function returns true if all the elements of the self vector are equal to 0.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_isnull(self.vec as *const ffi::gsl_vector_complex) } {
+        match unsafe { ffi::gsl_vector_complex_isnull(self.vec) } {
             1 => true,
             _ => false
         }
@@ -156,7 +156,7 @@ impl VectorComplexF64 {
 
     /// This function returns true if all the elements of the self vector are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_ispos(self.vec as *const ffi::gsl_vector_complex) } {
+        match unsafe { ffi::gsl_vector_complex_ispos(self.vec) } {
             1 => true,
             _ => false
         }
@@ -164,7 +164,7 @@ impl VectorComplexF64 {
 
     /// This function returns true if all the elements of the self vector are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_isneg(self.vec as *const ffi::gsl_vector_complex) } {
+        match unsafe { ffi::gsl_vector_complex_isneg(self.vec) } {
             1 => true,
             _ => false
         }
@@ -172,14 +172,14 @@ impl VectorComplexF64 {
 
     /// This function returns true if all the elements of the self vector are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_isnonneg(self.vec as *const ffi::gsl_vector_complex) } {
+        match unsafe { ffi::gsl_vector_complex_isnonneg(self.vec) } {
             1 => true,
             _ => false
         }
     }
 
     pub fn equal(&self, other: &VectorComplexF64) -> bool {
-        match unsafe { ffi::gsl_vector_complex_equal(self.vec as *const ffi::gsl_vector_complex, other.vec as *const ffi::gsl_vector_complex) } {
+        match unsafe { ffi::gsl_vector_complex_equal(self.vec, other.vec) } {
             1 => true,
             _ => false
         }
@@ -305,7 +305,7 @@ impl VectorComplexF32 {
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: u64) -> ComplexF32 {
-        unsafe { ::std::mem::transmute(ffi::gsl_vector_complex_float_get(self.vec as *const ffi::gsl_vector_complex_float, i)) }
+        unsafe { ::std::mem::transmute(ffi::gsl_vector_complex_float_get(self.vec, i)) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
@@ -334,12 +334,12 @@ impl VectorComplexF32 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&self, other: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_float_memcpy(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_vector_complex_float_memcpy(self.vec, other.vec) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_float_memcpy(other.vec, self.vec as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_vector_complex_float_memcpy(other.vec, self.vec) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
@@ -360,25 +360,25 @@ impl VectorComplexF32 {
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&self, other: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_float_add(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_vector_complex_float_add(self.vec, other.vec) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&self, other: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_float_sub(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_vector_complex_float_sub(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&self, other: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_float_mul(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_vector_complex_float_mul(self.vec, other.vec) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&self, other: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_complex_float_div(self.vec, other.vec as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_vector_complex_float_div(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
@@ -393,7 +393,7 @@ impl VectorComplexF32 {
 
     /// This function returns true if all the elements of the self vector are equal to 0.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_float_isnull(self.vec as *const ffi::gsl_vector_complex_float) } {
+        match unsafe { ffi::gsl_vector_complex_float_isnull(self.vec) } {
             1 => true,
             _ => false
         }
@@ -401,7 +401,7 @@ impl VectorComplexF32 {
 
     /// This function returns true if all the elements of the self vector are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_float_ispos(self.vec as *const ffi::gsl_vector_complex_float) } {
+        match unsafe { ffi::gsl_vector_complex_float_ispos(self.vec) } {
             1 => true,
             _ => false
         }
@@ -409,7 +409,7 @@ impl VectorComplexF32 {
 
     /// This function returns true if all the elements of the self vector are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_float_isneg(self.vec as *const ffi::gsl_vector_complex_float) } {
+        match unsafe { ffi::gsl_vector_complex_float_isneg(self.vec) } {
             1 => true,
             _ => false
         }
@@ -417,15 +417,15 @@ impl VectorComplexF32 {
 
     /// This function returns true if all the elements of the self vector are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_complex_float_isnonneg(self.vec as *const ffi::gsl_vector_complex_float) } {
+        match unsafe { ffi::gsl_vector_complex_float_isnonneg(self.vec) } {
             1 => true,
             _ => false
         }
     }
 
     pub fn equal(&self, other: &VectorComplexF32) -> bool {
-        match unsafe { ffi::gsl_vector_complex_float_equal(self.vec as *const ffi::gsl_vector_complex_float,
-            other.vec as *const ffi::gsl_vector_complex_float) } {
+        match unsafe { ffi::gsl_vector_complex_float_equal(self.vec,
+            other.vec) } {
             1 => true,
             _ => false
         }

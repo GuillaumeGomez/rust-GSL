@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for 0 <= k <= n.
 pub fn binomial(r: &Rng, p: f64, n: u32) -> u32 {
-    unsafe { ffi::gsl_ran_binomial(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, p, n) }
+    unsafe { ffi::gsl_ran_binomial(ffi::FFI::unwrap(r), p, n) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a binomial distribution with parameters p and n, using the formula given above.

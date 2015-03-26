@@ -2691,7 +2691,7 @@ impl CquadWorkspace {
             let mut tmp_c = CSlice::new((::std::mem::transmute::<&mut f64, *mut f64>(&mut (*iv).c[0])).offset(2), (*iv).c.len() - 2);
             Vinvfx(&(*iv).fx, tmp_c.as_mut(), 2);
 
-            for i in 0us..(nnans as usize) {
+            for i in 0us..nnans {
                 (*iv).fx[nans[i] as usize] = ::NAN;
             }
 
@@ -2892,7 +2892,7 @@ impl CquadWorkspace {
                     Vinvfx(&(*ivl).fx, &mut (*ivl).c, 0);
                     if nnans > 0 {
                         downdate(&mut (*ivl).c, n[0], 0, &mut nans, nnans as i32);
-                        for i in 0us..(nnans as usize) {
+                        for i in 0us..nnans {
                             (*ivl).fx[nans[i] as usize] = ::NAN;
                         }
                     }
@@ -3151,7 +3151,7 @@ impl GLFixedTable {
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight wi on the interval [a,b]. The points
     /// and weights are ordered by increasing point value. A function f may be integrated on [a,b] by summing wi * f(xi) over i.
     pub fn point(&self, a: f64, b: f64, i: u64, xi: &mut f64, wi: &mut f64) -> ::Value {
-        unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w as *const ffi::gsl_integration_glfixed_table) }
+        unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) }
     }
 
     /// This function applies the Gauss-Legendre integration rule contained in table self and returns the result.

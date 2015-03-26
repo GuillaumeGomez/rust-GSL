@@ -76,7 +76,7 @@ impl Wavelet {
 
     /// This function returns a pointer to the name of the wavelet family for w.
     pub fn name(&self) -> Option<String> {
-        let tmp = unsafe { ffi::gsl_wavelet_name(self.w as *const ffi::gsl_wavelet) };
+        let tmp = unsafe { ffi::gsl_wavelet_name(self.w) };
 
         if tmp.is_null() {
             None

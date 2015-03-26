@@ -12,7 +12,7 @@ pub mod type_1 {
     /// 
     /// for -\infty < x < \infty.
     pub fn gumbel1(r: &Rng, a: f64, b: f64) -> f64 {
-        unsafe { ffi::gsl_ran_gumbel1(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, a, b) }
+        unsafe { ffi::gsl_ran_gumbel1(ffi::FFI::unwrap(r), a, b) }
     }
 
     /// This function computes the probability density p(x) at x for a Type-1 Gumbel distribution with parameters a and b, using the formula given above.
@@ -51,7 +51,7 @@ pub mod type_2 {
     /// 
     /// for 0 < x < \infty.
     pub fn gumbel2(r: &Rng, a: f64, b: f64) -> f64 {
-        unsafe { ffi::gsl_ran_gumbel2(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, a, b) }
+        unsafe { ffi::gsl_ran_gumbel2(ffi::FFI::unwrap(r), a, b) }
     }
 
     /// This function computes the probability density p(x) at x for a Type-2 Gumbel distribution with parameters a and b, using the formula given above.

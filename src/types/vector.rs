@@ -198,7 +198,7 @@ impl VectorF32 {
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: u64) -> f32 {
-        unsafe { ffi::gsl_vector_float_get(self.vec as *const ffi::gsl_vector_float, i) }
+        unsafe { ffi::gsl_vector_float_get(self.vec, i) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
@@ -227,12 +227,12 @@ impl VectorF32 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&self, other: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_float_memcpy(self.vec, other.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_memcpy(self.vec, other.vec) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_float_memcpy(other.vec, self.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_memcpy(other.vec, self.vec) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
@@ -253,25 +253,25 @@ impl VectorF32 {
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&self, other: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_float_add(self.vec, other.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_add(self.vec, other.vec) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&self, other: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_float_sub(self.vec, other.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_sub(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&self, other: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_float_mul(self.vec, other.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_mul(self.vec, other.vec) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&self, other: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_float_div(self.vec, other.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_div(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
@@ -286,29 +286,29 @@ impl VectorF32 {
 
     /// This function returns the maximum value in the self vector.
     pub fn max(&self) -> f32 {
-        unsafe { ffi::gsl_vector_float_max(self.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_max(self.vec) }
     }
 
     /// This function returns the minimum value in the self vector.
     pub fn min(&self) -> f32 {
-        unsafe { ffi::gsl_vector_float_min(self.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_min(self.vec) }
     }
 
     /// This function returns the minimum and maximum values in the self vector, storing them in min_out and max_out.
     pub fn minmax(&self, min_out: &mut f32, max_out: &mut f32) {
-        unsafe { ffi::gsl_vector_float_minmax(self.vec as *const ffi::gsl_vector_float, min_out, max_out) }
+        unsafe { ffi::gsl_vector_float_minmax(self.vec, min_out, max_out) }
     }
 
     /// This function returns the index of the maximum value in the self vector.
     /// When there are several equal maximum elements then the lowest index is returned.
     pub fn max_index(&self) -> u64 {
-        unsafe { ffi::gsl_vector_float_max_index(self.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_max_index(self.vec) }
     }
 
     /// This function returns the index of the minimum value in the self vector.
     /// When there are several equal minimum elements then the lowest index is returned.
     pub fn min_index(&self) -> u64 {
-        unsafe { ffi::gsl_vector_float_min_index(self.vec as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_vector_float_min_index(self.vec) }
     }
 
     /// This function returns the indices of the minimum and maximum values in the self vector, storing them in imin and imax.
@@ -317,13 +317,13 @@ impl VectorF32 {
         let mut imin = 0u64;
         let mut imax = 0u64;
 
-        unsafe { ffi::gsl_vector_float_minmax_index(self.vec as *const ffi::gsl_vector_float, &mut imin, &mut imax) };
+        unsafe { ffi::gsl_vector_float_minmax_index(self.vec, &mut imin, &mut imax) };
         (imin, imax)
     }
 
     /// This function returns true if all the elements of the self vector are equal to 0.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_vector_float_isnull(self.vec as *const ffi::gsl_vector_float) } {
+        match unsafe { ffi::gsl_vector_float_isnull(self.vec) } {
             1 => true,
             _ => false
         }
@@ -331,7 +331,7 @@ impl VectorF32 {
 
     /// This function returns true if all the elements of the self vector are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_vector_float_ispos(self.vec as *const ffi::gsl_vector_float) } {
+        match unsafe { ffi::gsl_vector_float_ispos(self.vec) } {
             1 => true,
             _ => false
         }
@@ -339,7 +339,7 @@ impl VectorF32 {
 
     /// This function returns true if all the elements of the self vector are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_float_isneg(self.vec as *const ffi::gsl_vector_float) } {
+        match unsafe { ffi::gsl_vector_float_isneg(self.vec) } {
             1 => true,
             _ => false
         }
@@ -347,14 +347,14 @@ impl VectorF32 {
 
     /// This function returns true if all the elements of the self vector are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_float_isnonneg(self.vec as *const ffi::gsl_vector_float) } {
+        match unsafe { ffi::gsl_vector_float_isnonneg(self.vec) } {
             1 => true,
             _ => false
         }
     }
 
     pub fn equal(&self, other: &VectorF32) -> bool {
-        match unsafe { ffi::gsl_vector_float_equal(self.vec as *const ffi::gsl_vector_float, other.vec as *const ffi::gsl_vector_float) } {
+        match unsafe { ffi::gsl_vector_float_equal(self.vec, other.vec) } {
             1 => true,
             _ => false
         }
@@ -481,7 +481,7 @@ impl VectorF64 {
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: u64) -> f64 {
-        unsafe { ffi::gsl_vector_get(self.vec as *const ffi::gsl_vector, i) }
+        unsafe { ffi::gsl_vector_get(self.vec, i) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
@@ -510,12 +510,12 @@ impl VectorF64 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&self, other: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_memcpy(self.vec, other.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_memcpy(self.vec, other.vec) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_memcpy(other.vec, self.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_memcpy(other.vec, self.vec) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
@@ -536,25 +536,25 @@ impl VectorF64 {
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&self, other: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_add(self.vec, other.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_add(self.vec, other.vec) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&self, other: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_sub(self.vec, other.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_sub(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&self, other: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_mul(self.vec, other.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_mul(self.vec, other.vec) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&self, other: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_vector_div(self.vec, other.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_div(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
@@ -569,29 +569,29 @@ impl VectorF64 {
 
     /// This function returns the maximum value in the self vector.
     pub fn max(&self) -> f64 {
-        unsafe { ffi::gsl_vector_max(self.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_max(self.vec) }
     }
 
     /// This function returns the minimum value in the self vector.
     pub fn min(&self) -> f64 {
-        unsafe { ffi::gsl_vector_min(self.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_min(self.vec) }
     }
 
     /// This function returns the minimum and maximum values in the self vector, storing them in min_out and max_out.
     pub fn minmax(&self, min_out: &mut f64, max_out: &mut f64) {
-        unsafe { ffi::gsl_vector_minmax(self.vec as *const ffi::gsl_vector, min_out, max_out) }
+        unsafe { ffi::gsl_vector_minmax(self.vec, min_out, max_out) }
     }
 
     /// This function returns the index of the maximum value in the self vector.
     /// When there are several equal maximum elements then the lowest index is returned.
     pub fn max_index(&self) -> u64 {
-        unsafe { ffi::gsl_vector_max_index(self.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_max_index(self.vec) }
     }
 
     /// This function returns the index of the minimum value in the self vector.
     /// When there are several equal minimum elements then the lowest index is returned.
     pub fn min_index(&self) -> u64 {
-        unsafe { ffi::gsl_vector_min_index(self.vec as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_vector_min_index(self.vec) }
     }
 
     /// This function returns the indices of the minimum and maximum values in the self vector, storing them in imin and imax.
@@ -600,13 +600,13 @@ impl VectorF64 {
         let mut imin = 0u64;
         let mut imax = 0u64;
 
-        unsafe { ffi::gsl_vector_minmax_index(self.vec as *const ffi::gsl_vector, &mut imin, &mut imax) };
+        unsafe { ffi::gsl_vector_minmax_index(self.vec, &mut imin, &mut imax) };
         (imin, imax)
     }
 
     /// This function returns true if all the elements of the self vector are equal to 0.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_vector_isnull(self.vec as *const ffi::gsl_vector) } {
+        match unsafe { ffi::gsl_vector_isnull(self.vec) } {
             1 => true,
             _ => false
         }
@@ -614,7 +614,7 @@ impl VectorF64 {
 
     /// This function returns true if all the elements of the self vector are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_vector_ispos(self.vec as *const ffi::gsl_vector) } {
+        match unsafe { ffi::gsl_vector_ispos(self.vec) } {
             1 => true,
             _ => false
         }
@@ -622,7 +622,7 @@ impl VectorF64 {
 
     /// This function returns true if all the elements of the self vector are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_isneg(self.vec as *const ffi::gsl_vector) } {
+        match unsafe { ffi::gsl_vector_isneg(self.vec) } {
             1 => true,
             _ => false
         }
@@ -630,14 +630,14 @@ impl VectorF64 {
 
     /// This function returns true if all the elements of the self vector are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_vector_isnonneg(self.vec as *const ffi::gsl_vector) } {
+        match unsafe { ffi::gsl_vector_isnonneg(self.vec) } {
             1 => true,
             _ => false
         }
     }
 
     pub fn equal(&self, other: &VectorF64) -> bool {
-        match unsafe { ffi::gsl_vector_equal(self.vec as *const ffi::gsl_vector, other.vec as *const ffi::gsl_vector) } {
+        match unsafe { ffi::gsl_vector_equal(self.vec, other.vec) } {
             1 => true,
             _ => false
         }

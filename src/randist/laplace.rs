@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for -\infty < x < \infty.
 pub fn laplace(r: &Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_laplace(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, a) }
+    unsafe { ffi::gsl_ran_laplace(ffi::FFI::unwrap(r), a) }
 }
 
 /// This function computes the probability density p(x) at x for a Laplace distribution with width a, using the formula given above.

@@ -226,22 +226,22 @@ pub mod mixed_radix {
     use types::{FftComplexWaveTable, FftComplexWorkspace};
 
     pub fn forward(data: &mut [f64], stride: u64, n: u64, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_forward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable) as *const ffi::gsl_fft_complex_wavetable,
+        unsafe { ffi::gsl_fft_complex_forward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
             ffi::FFI::unwrap(work)) }
     }
 
     pub fn transform(data: &mut [f64], stride: u64, n: u64, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace, sign: ::FftDirection) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_transform(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable) as *const ffi::gsl_fft_complex_wavetable,
+        unsafe { ffi::gsl_fft_complex_transform(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
             ffi::FFI::unwrap(work), sign) }
     }
 
     pub fn backward(data: &mut [f64], stride: u64, n: u64, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_backward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable) as *const ffi::gsl_fft_complex_wavetable,
+        unsafe { ffi::gsl_fft_complex_backward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
             ffi::FFI::unwrap(work)) }
     }
 
     pub fn inverse(data: &mut [f64], stride: u64, n: u64, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_inverse(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable) as *const ffi::gsl_fft_complex_wavetable,
+        unsafe { ffi::gsl_fft_complex_inverse(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
             ffi::FFI::unwrap(work)) }
     }
 }

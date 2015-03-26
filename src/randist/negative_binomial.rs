@@ -12,7 +12,7 @@ use types::Rng;
 /// 
 /// Note that n is not required to be an integer.
 pub fn negative_binomial(r: &Rng, p: f64, n: f64) -> u32 {
-    unsafe { ffi::gsl_ran_negative_binomial(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, p, n) }
+    unsafe { ffi::gsl_ran_negative_binomial(ffi::FFI::unwrap(r), p, n) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a negative binomial distribution with parameters p and n, using the formula given above.

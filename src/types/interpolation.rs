@@ -114,7 +114,7 @@ impl Interp {
     /// interp uses 'cspline' interpolation.
     /// ```
     pub fn name(&self) -> String {
-        let tmp = unsafe { ffi::gsl_interp_name(self.interp as *const ffi::gsl_interp) };
+        let tmp = unsafe { ffi::gsl_interp_name(self.interp) };
 
         if tmp.is_null() {
             String::new()
@@ -126,7 +126,7 @@ impl Interp {
     /// This function returns the minimum number of points required by the interpolation object interp or interpolation type T. For example,
     /// Akima spline interpolation requires a minimum of 5 points.
     pub fn min_size(&self) -> u32 {
-        unsafe { ffi::gsl_interp_min_size(self.interp as *const ffi::gsl_interp) }
+        unsafe { ffi::gsl_interp_min_size(self.interp) }
     }
 }
 
@@ -201,7 +201,7 @@ impl InterpType {
 impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
     fn wrap(t: *mut ffi::gsl_interp_type) -> InterpType {
         InterpType {
-            t: t as *const ffi::gsl_interp_type
+            t: t
         }
     }
 
@@ -233,7 +233,7 @@ impl Spline {
     }
 
     pub fn name(&self) -> String {
-        let tmp = unsafe { ffi::gsl_spline_name(self.spline as *const ffi::gsl_spline) };
+        let tmp = unsafe { ffi::gsl_spline_name(self.spline) };
 
         if tmp.is_null() {
             String::new()
@@ -243,39 +243,39 @@ impl Spline {
     }
 
     pub fn min_size(&self) -> u32 {
-        unsafe { ffi::gsl_spline_min_size(self.spline as *const ffi::gsl_spline) }
+        unsafe { ffi::gsl_spline_min_size(self.spline) }
     }
 
     pub fn eval(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval(self.spline as *const ffi::gsl_spline, x, acc) }
+        unsafe { ffi::gsl_spline_eval(self.spline, x, acc) }
     }
 
     pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_spline_eval_e(self.spline as *const ffi::gsl_spline, x, acc, y) }
+        unsafe { ffi::gsl_spline_eval_e(self.spline, x, acc, y) }
     }
 
     pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_deriv(self.spline as *const ffi::gsl_spline, x, acc) }
+        unsafe { ffi::gsl_spline_eval_deriv(self.spline, x, acc) }
     }
 
     pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_spline_eval_deriv_e(self.spline as *const ffi::gsl_spline, x, acc, d) }
+        unsafe { ffi::gsl_spline_eval_deriv_e(self.spline, x, acc, d) }
     }
 
     pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_deriv2(self.spline as *const ffi::gsl_spline, x, acc) }
+        unsafe { ffi::gsl_spline_eval_deriv2(self.spline, x, acc) }
     }
 
     pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline as *const ffi::gsl_spline, x, acc, d2) }
+        unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline, x, acc, d2) }
     }
 
     pub fn eval_integ(&self, a: f64, b: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_integ(self.spline as *const ffi::gsl_spline, a, b, acc) }
+        unsafe { ffi::gsl_spline_eval_integ(self.spline, a, b, acc) }
     }
 
     pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_spline_eval_integ_e(self.spline as *const ffi::gsl_spline, a, b, acc, result) }
+        unsafe { ffi::gsl_spline_eval_integ_e(self.spline, a, b, acc, result) }
     }
 }
 

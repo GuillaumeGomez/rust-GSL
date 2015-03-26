@@ -36,7 +36,7 @@ impl MatrixComplexF64 {
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, y: u64, x: u64) -> ComplexF64 {
-        unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_get(self.mat as *const ffi::gsl_matrix_complex, y, x)) }
+        unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_get(self.mat, y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
@@ -67,12 +67,12 @@ impl MatrixComplexF64 {
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&self, other: &MatrixComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_memcpy(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
+        unsafe { ffi::gsl_matrix_complex_memcpy(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &MatrixComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_memcpy(other.mat, self.mat as *const ffi::gsl_matrix_complex) }
+        unsafe { ffi::gsl_matrix_complex_memcpy(other.mat, self.mat) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
@@ -87,7 +87,7 @@ impl MatrixComplexF64 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_complex_get_row(tmp, self.mat as *const ffi::gsl_matrix_complex, y) };
+            let ret = unsafe { ffi::gsl_matrix_complex_get_row(tmp, self.mat, y) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -100,7 +100,7 @@ impl MatrixComplexF64 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_complex_get_col(tmp, self.mat as *const ffi::gsl_matrix_complex, x) };
+            let ret = unsafe { ffi::gsl_matrix_complex_get_col(tmp, self.mat, x) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -109,13 +109,13 @@ impl MatrixComplexF64 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&self, y: u64, v: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_set_row(self.mat, y, ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_matrix_complex_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&self, x: u64, v: &VectorComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_set_col(self.mat, x, ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex) }
+        unsafe { ffi::gsl_matrix_complex_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -141,7 +141,7 @@ impl MatrixComplexF64 {
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_complex_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_complex) };
+            let ret = unsafe { ffi::gsl_matrix_complex_transpose_memcpy(dest, self.mat) };
 
             Some((MatrixComplexF64{mat: dest}, ret))
         }
@@ -156,25 +156,25 @@ impl MatrixComplexF64 {
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&self, other: &MatrixComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_add(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
+        unsafe { ffi::gsl_matrix_complex_add(self.mat, other.mat) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&self, other: &MatrixComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_sub(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
+        unsafe { ffi::gsl_matrix_complex_sub(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&self, other: &MatrixComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
+        unsafe { ffi::gsl_matrix_complex_mul_elements(self.mat, other.mat) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&self, other: &MatrixComplexF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_div_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex) }
+        unsafe { ffi::gsl_matrix_complex_div_elements(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
@@ -189,7 +189,7 @@ impl MatrixComplexF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_isnull(self.mat as *const ffi::gsl_matrix_complex) } {
+        match unsafe { ffi::gsl_matrix_complex_isnull(self.mat) } {
             1 => true,
             _ => false
         }
@@ -197,7 +197,7 @@ impl MatrixComplexF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_ispos(self.mat as *const ffi::gsl_matrix_complex) } {
+        match unsafe { ffi::gsl_matrix_complex_ispos(self.mat) } {
             1 => true,
             _ => false
         }
@@ -205,7 +205,7 @@ impl MatrixComplexF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_isneg(self.mat as *const ffi::gsl_matrix_complex) } {
+        match unsafe { ffi::gsl_matrix_complex_isneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -213,7 +213,7 @@ impl MatrixComplexF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_isnonneg(self.mat as *const ffi::gsl_matrix_complex) } {
+        match unsafe { ffi::gsl_matrix_complex_isnonneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -221,7 +221,7 @@ impl MatrixComplexF64 {
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixComplexF64) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_equal(self.mat as *const ffi::gsl_matrix_complex, other.mat as *const ffi::gsl_matrix_complex) } {
+        match unsafe { ffi::gsl_matrix_complex_equal(self.mat, other.mat) } {
             1 => true,
             _ => false
         }
@@ -312,7 +312,7 @@ impl MatrixComplexF32 {
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, y: u64, x: u64) -> ComplexF32 {
-        unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_float_get(self.mat as *const ffi::gsl_matrix_complex_float, y, x)) }
+        unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_float_get(self.mat, y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
@@ -343,12 +343,12 @@ impl MatrixComplexF32 {
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&self, other: &MatrixComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_memcpy(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_memcpy(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &MatrixComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_memcpy(other.mat, self.mat as *const ffi::gsl_matrix_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_memcpy(other.mat, self.mat) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
@@ -363,7 +363,7 @@ impl MatrixComplexF32 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_complex_float_get_row(tmp, self.mat as *const ffi::gsl_matrix_complex_float, y) };
+            let ret = unsafe { ffi::gsl_matrix_complex_float_get_row(tmp, self.mat, y) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -376,7 +376,7 @@ impl MatrixComplexF32 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_complex_float_get_col(tmp, self.mat as *const ffi::gsl_matrix_complex_float, x) };
+            let ret = unsafe { ffi::gsl_matrix_complex_float_get_col(tmp, self.mat, x) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -385,13 +385,13 @@ impl MatrixComplexF32 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&self, y: u64, v: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_set_row(self.mat, y, ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&self, x: u64, v: &VectorComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_set_col(self.mat, x, ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -417,7 +417,7 @@ impl MatrixComplexF32 {
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_complex_float) };
+            let ret = unsafe { ffi::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat) };
 
             Some((MatrixComplexF32{mat: dest}, ret))
         }
@@ -432,25 +432,25 @@ impl MatrixComplexF32 {
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&self, other: &MatrixComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_add(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_add(self.mat, other.mat) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&self, other: &MatrixComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_sub(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_sub(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&self, other: &MatrixComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_mul_elements(self.mat, other.mat) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&self, other: &MatrixComplexF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_complex_float_div_elements(self.mat, other.mat as *const ffi::gsl_matrix_complex_float) }
+        unsafe { ffi::gsl_matrix_complex_float_div_elements(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
@@ -465,7 +465,7 @@ impl MatrixComplexF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_float_isnull(self.mat as *const ffi::gsl_matrix_complex_float) } {
+        match unsafe { ffi::gsl_matrix_complex_float_isnull(self.mat) } {
             1 => true,
             _ => false
         }
@@ -473,7 +473,7 @@ impl MatrixComplexF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_float_ispos(self.mat as *const ffi::gsl_matrix_complex_float) } {
+        match unsafe { ffi::gsl_matrix_complex_float_ispos(self.mat) } {
             1 => true,
             _ => false
         }
@@ -481,7 +481,7 @@ impl MatrixComplexF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_float_isneg(self.mat as *const ffi::gsl_matrix_complex_float) } {
+        match unsafe { ffi::gsl_matrix_complex_float_isneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -489,7 +489,7 @@ impl MatrixComplexF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_float_isnonneg(self.mat as *const ffi::gsl_matrix_complex_float) } {
+        match unsafe { ffi::gsl_matrix_complex_float_isnonneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -497,8 +497,8 @@ impl MatrixComplexF32 {
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixComplexF32) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_float_equal(self.mat as *const ffi::gsl_matrix_complex_float,
-            other.mat as *const ffi::gsl_matrix_complex_float) } {
+        match unsafe { ffi::gsl_matrix_complex_float_equal(self.mat,
+            other.mat) } {
             1 => true,
             _ => false
         }

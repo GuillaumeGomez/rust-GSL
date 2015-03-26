@@ -47,7 +47,7 @@ pub mod evaluation {
         for it in c.iter() {
             unsafe { tmp.push(transmute(*it)) };
         }
-        unsafe { transmute(ffi::gsl_complex_poly_complex_eval(tmp.as_slice().as_ptr(), tmp.len() as i32, transmute(*z))) }
+        unsafe { transmute(ffi::gsl_complex_poly_complex_eval(tmp.as_ptr(), tmp.len() as i32, transmute(*z))) }
     }
 
     /// This function evaluates a polynomial and its derivatives storing the results in the array res of size lenres. The output array contains

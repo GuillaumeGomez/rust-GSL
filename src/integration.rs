@@ -1000,7 +1000,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
             let mut reseps = 0f64;
             let mut erreps = 0f64;
 
-            let a1 = a as f64 + iteration as f64 * cycle;
+            let a1 = a + iteration as f64 * cycle;
             let b1 = a1 + cycle;
 
             let epsabs1 = eps * factor;

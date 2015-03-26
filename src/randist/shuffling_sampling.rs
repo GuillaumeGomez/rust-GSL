@@ -29,7 +29,7 @@ use libc::c_void;
 /// gsl_ran_shuffle (r, a, 52, sizeof (int));
 /// ```
 pub fn shuffle<T>(r: &Rng, base: &mut [T]) {
-    unsafe { ffi::gsl_ran_shuffle(ffi::FFI::unwrap(r) as *const ffi::gsl_rng,
+    unsafe { ffi::gsl_ran_shuffle(ffi::FFI::unwrap(r),
         base.as_mut_ptr() as *mut c_void,
         base.len() as u64,
         ::std::mem::size_of::<T>() as u64) }
@@ -54,7 +54,7 @@ pub fn shuffle<T>(r: &Rng, base: &mut [T]) {
 /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
 /// ```
 pub fn choose<T>(r: &Rng, dest: &mut [T], src: &[T]) -> enums::value::Value {
-    unsafe { ffi::gsl_ran_choose(ffi::FFI::unwrap(r) as *const ffi::gsl_rng,
+    unsafe { ffi::gsl_ran_choose(ffi::FFI::unwrap(r),
         dest.as_mut_ptr() as *mut c_void,
         dest.len() as u64,
         src.as_ptr() as *mut c_void,
@@ -65,7 +65,7 @@ pub fn choose<T>(r: &Rng, dest: &mut [T], src: &[T]) -> enums::value::Value {
 /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more
 /// than once in the output sequence dest. There is no requirement that k be less than n in this case.
 pub fn sample<T>(r: &Rng, dest: &mut [T], src: &[T]) -> enums::value::Value {
-    unsafe { ffi::gsl_ran_sample(ffi::FFI::unwrap(r) as *const ffi::gsl_rng,
+    unsafe { ffi::gsl_ran_sample(ffi::FFI::unwrap(r),
         dest.as_mut_ptr() as *mut c_void,
         dest.len() as u64,
         src.as_ptr() as *mut c_void,

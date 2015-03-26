@@ -188,7 +188,7 @@ pub mod vectors {
     /// index of the vector element which would have been stored in that position if the vector had been sorted in place. The first element of p gives the index
     /// of the least element in v, and the last element of p gives the index of the greatest element in v. The vector v is not changed.
     pub fn sort_vector_index(p: &Permutation, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_vector_index(ffi::FFI::unwrap(p), ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_sort_vector_index(ffi::FFI::unwrap(p), ffi::FFI::unwrap(v)) }
     }
 }
 
@@ -215,12 +215,12 @@ pub mod select {
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
     pub fn sort_vector_smallest(dest: &mut [f64], k: u64, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
     pub fn sort_vector_largest(dest: &mut [f64], k: u64, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_vector_largest(dest.as_mut_ptr(), k, ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_sort_vector_largest(dest.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 
     /// This function stores the indices of the k smallest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
@@ -238,12 +238,12 @@ pub mod select {
     /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
     /// the vector v.
     pub fn sort_vector_smallest_index(p: &mut [u64], k: u64, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 
     /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
     /// the vector v.
     pub fn sort_vector_largest_index(p: &mut [u64], k: u64, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 }

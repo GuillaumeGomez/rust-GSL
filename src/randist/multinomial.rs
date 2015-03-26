@@ -15,7 +15,7 @@ use types::Rng;
 /// 
 /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
 pub fn multinomial(r: &Rng, N: u32, p: &[f64], n: &mut [u32]) {
-    unsafe { ffi::gsl_ran_multinomial(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, p.len() as u64, N, p.as_ptr(), n.as_mut_ptr()) }
+    unsafe { ffi::gsl_ran_multinomial(ffi::FFI::unwrap(r), p.len() as u64, N, p.as_ptr(), n.as_mut_ptr()) }
 }
 
 /// This function computes the probability P(n_1, n_2, ..., n_K) of sampling n[K] from a multinomial distribution with parameters p[K], using the formula given above.

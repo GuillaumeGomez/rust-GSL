@@ -86,23 +86,23 @@ impl MultiSet {
 
     /// This function copies the elements of the multiset self into the multiset dest. The two multisets must have the same size.
     pub fn copy(&self, dest: &MultiSet) -> enums::value::Value {
-        unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c as *const ffi::gsl_multiset) }
+        unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c) }
     }
 
     /// This function returns the value of the i-th element of the multiset c. If i lies outside the allowed range of 0 to k-1 then the
     /// error handler is invoked and 0 is returned.
     pub fn get(&self, i: u64) -> u64 {
-        unsafe { ffi::gsl_multiset_get(self.c as *const ffi::gsl_multiset, i) }
+        unsafe { ffi::gsl_multiset_get(self.c, i) }
     }
 
     /// This function returns the range (n) of the multiset self.
     pub fn n(&self) -> u64 {
-        unsafe { ffi::gsl_multiset_n(self.c as *const ffi::gsl_multiset) }
+        unsafe { ffi::gsl_multiset_n(self.c) }
     }
 
     /// This function returns the number of elements (k) in the multiset self.
     pub fn k(&self) -> u64 {
-        unsafe { ffi::gsl_multiset_k(self.c as *const ffi::gsl_multiset) }
+        unsafe { ffi::gsl_multiset_k(self.c) }
     }
 
     /// This function returns a pointer to the array of elements in the multiset self.

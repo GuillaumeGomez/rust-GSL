@@ -159,7 +159,7 @@ impl PlainMonteCarlo {
                 rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
-            for i in 0us..(dim as usize) {
+            for i in 0us..dim {
                 if xu[i] <= xl[i] {
                     rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
@@ -341,7 +341,7 @@ impl MiserMonteCarlo {
 
             let tmp = calls as f64 * (*self.s).estimate_frac;
             let estimate_calls = if min_calls as f64 > tmp {
-                min_calls as u64
+                min_calls
             } else {
                 tmp as u64
             };
@@ -422,8 +422,8 @@ impl MiserMonteCarlo {
                 let a = fraction_l * weight_l;
                 let b = fraction_r * weight_r;
 
-                calls_l = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (a as f64 / (a as f64 + b as f64))) as u64;
-                calls_r = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (b as f64 / (a as f64 + b as f64))) as u64;
+                calls_l = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (a / (a + b))) as u64;
+                calls_r = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (b / (a + b))) as u64;
             }
 
             /* Compute the integral for the left hand side of the bisection */
@@ -929,26 +929,26 @@ impl VegasMonteCarlo {
     /// close to 1. A value which differs significantly from 1 indicates that the values from different iterations are inconsistent. In this
     /// case the weighted error will be under-estimated, and further iterations of the algorithm are needed to obtain reliable results.
     pub fn chisq(&self) -> f64 {
-        unsafe { ffi::gsl_monte_vegas_chisq(self.s as *const ffi::gsl_monte_vegas_state) }
+        unsafe { ffi::gsl_monte_vegas_chisq(self.s) }
     }
 
     /// This function returns the raw (unaveraged) values of the integral result and its error sigma from the most recent iteration of the
     /// algorithm.
     pub fn runval(&self, result: &mut f64, sigma: &mut f64) {
-        unsafe { ffi::gsl_monte_vegas_runval(self.s as *const ffi::gsl_monte_vegas_state, result, sigma) }
+        unsafe { ffi::gsl_monte_vegas_runval(self.s, result, sigma) }
     }
 
     /// This function copies the parameters of the integrator state into the returned params structure.
     pub fn params_get(&self) -> VegasParams {
         let mut tmp : VegasParams = Default::default();
 
-        unsafe { ffi::gsl_monte_vegas_params_get(self.s as *const ffi::gsl_monte_vegas_state, &mut tmp) };
+        unsafe { ffi::gsl_monte_vegas_params_get(self.s, &mut tmp) };
         tmp
     }
 
     /// This function sets the integrator parameters based on values provided in the params structure.
     pub fn params_set(&self, params: &VegasParams) {
-        unsafe { ffi::gsl_monte_vegas_params_set(self.s, params as *const VegasParams) }
+        unsafe { ffi::gsl_monte_vegas_params_set(self.s, params) }
     }
 }
 
@@ -1046,7 +1046,7 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
         } else {
             // FIXME: problem is here -> xi hasn't the good values, when c == 4640 on second turn
             bin_width = *(*s).xi.offset((k + 1) * (*s).dim as isize + j as isize) - *(*s).xi.offset(k * (*s).dim as isize + j as isize);
-            y = *(*s).xi.offset(k as isize * (*s).dim as isize + j as isize) + (z - k as f64) * bin_width;
+            y = *(*s).xi.offset(k * (*s).dim as isize + j as isize) + (z - k as f64) * bin_width;
         }
 
         x[j] = xl[j] + y * delx[j];

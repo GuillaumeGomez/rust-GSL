@@ -91,7 +91,7 @@ impl ODEiv2Step {
     /// Please note that if you use a stepper method that requires access to a driver object, it is advisable to use a driver allocation
     /// method, which automatically allocates a stepper, too.
     pub fn new(t: &ODEiv2StepType, dim: u64) -> Option<ODEiv2Step> {
-        let tmp = unsafe { ffi::gsl_odeiv2_step_alloc(ffi::FFI::unwrap(t) as *const ffi::gsl_odeiv2_step_type, dim) };
+        let tmp = unsafe { ffi::gsl_odeiv2_step_alloc(ffi::FFI::unwrap(t), dim) };
 
         if tmp.is_null() {
             None
@@ -127,14 +127,14 @@ impl ODEiv2Step {
     /// This function returns the order of the stepping function on the previous step. The order can vary if the stepping function itself is
     /// adaptive.
     pub fn order(&self) -> u32 {
-        unsafe { ffi::gsl_odeiv2_step_order(self.s as *const ffi::gsl_odeiv2_step) }
+        unsafe { ffi::gsl_odeiv2_step_order(self.s) }
     }
 
     /// This function sets a pointer of the driver object d for stepper s, to allow the stepper to access control (and evolve) object through
     /// the driver object. This is a requirement for some steppers, to get the desired error level for internal iteration of stepper.
     /// Allocation of a driver object calls this function automatically.
     pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::value::Value {
-        unsafe { ffi::gsl_odeiv2_step_set_driver(self.s, d.d as *const ffi::gsl_odeiv2_driver) }
+        unsafe { ffi::gsl_odeiv2_step_set_driver(self.s, d.d) }
     }
 
     /// This function applies the stepping function s to the system of equations defined by sys, using the step-size h to advance the system
@@ -275,7 +275,7 @@ impl ODEiv2StepType {
 impl ffi::FFI<ffi::gsl_odeiv2_step_type> for ODEiv2StepType {
     fn wrap(t: *mut ffi::gsl_odeiv2_step_type) -> ODEiv2StepType {
         ODEiv2StepType {
-            t: t as *const ffi::gsl_odeiv2_step_type
+            t: t
         }
     }
 
@@ -371,7 +371,7 @@ impl ODEiv2Control {
     /// This function returns a pointer to a newly allocated instance of a control function of type T. This function is only needed for
     /// defining new types of control functions. For most purposes the standard control functions described above should be sufficient.
     pub fn alloc(t: &ODEiv2ControlType) -> Option<ODEiv2Control> {
-        let tmp = unsafe { ffi::gsl_odeiv2_control_alloc(ffi::FFI::unwrap(t) as *const ffi::gsl_odeiv2_control_type) };
+        let tmp = unsafe { ffi::gsl_odeiv2_control_alloc(ffi::FFI::unwrap(t)) };
 
         if tmp.is_null() {
             None
@@ -404,7 +404,7 @@ impl ODEiv2Control {
     /// ```
     /// would print something like control method is 'standard'
     pub fn name(&self) -> Option<String> {
-        let tmp = unsafe { ffi::gsl_odeiv2_control_name(self.c as *const ffi::gsl_odeiv2_control) };
+        let tmp = unsafe { ffi::gsl_odeiv2_control_name(self.c) };
 
         if tmp.is_null() {
             None
@@ -421,7 +421,7 @@ impl ODEiv2Control {
 
     /// This function sets a pointer of the driver object d for control object c.
     pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::value::Value {
-        unsafe { ffi::gsl_odeiv2_control_set_driver(self.c, d.d as *const ffi::gsl_odeiv2_driver) }
+        unsafe { ffi::gsl_odeiv2_control_set_driver(self.c, d.d) }
     }
 }
 
@@ -466,7 +466,7 @@ impl ODEiv2ControlType {
 impl ffi::FFI<ffi::gsl_odeiv2_control_type> for ODEiv2ControlType {
     fn wrap(t: *mut ffi::gsl_odeiv2_control_type) -> ODEiv2ControlType {
         ODEiv2ControlType {
-            t: t as *const ffi::gsl_odeiv2_control_type
+            t: t
         }
     }
 
@@ -536,7 +536,7 @@ impl ODEiv2Evolve {
     /// in sequence. For example, if a step-change in an external driving force occurs at times t_a, t_b and t_c then evolution should be carried
     /// out over the ranges (t_0,t_a), (t_a,t_b), (t_b,t_c), and (t_c,t_1) separately and not directly over the range (t_0,t_1).
     pub fn set_driver(&self, d: &ODEiv2Driver) -> enums::value::Value {
-        unsafe { ffi::gsl_odeiv2_evolve_set_driver(self.e, d.d as *const ffi::gsl_odeiv2_driver) }
+        unsafe { ffi::gsl_odeiv2_evolve_set_driver(self.e, d.d) }
     }
 }
 

@@ -89,18 +89,18 @@ impl DiscreteHankel {
     /// 
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2, up to numerical errors.
     pub fn apply(&self, f_in: &mut [f64], f_out: &mut [f64]) -> enums::value::Value {
-        unsafe { ffi::gsl_dht_apply(self.t as *const ffi::gsl_dht, f_in.as_mut_ptr(), f_out.as_mut_ptr()) }
+        unsafe { ffi::gsl_dht_apply(self.t, f_in.as_mut_ptr(), f_out.as_mut_ptr()) }
     }
 
     /// This function returns the value of the n-th sample point in the unit interval, (j_{\nu,n+1}/j_{\nu,M}) X. These are the points where the
     /// function f(t) is assumed to be sampled.
     pub fn x_sample(&self, n: i32) -> f64 {
-        unsafe { ffi::gsl_dht_x_sample(self.t as *const ffi::gsl_dht, n) }
+        unsafe { ffi::gsl_dht_x_sample(self.t, n) }
     }
 
     /// This function returns the value of the n-th sample point in “k-space”, j_{\nu,n+1}/X.
     pub fn k_sample(&self, n: i32) -> f64 {
-        unsafe { ffi::gsl_dht_k_sample(self.t as *const ffi::gsl_dht, n) }
+        unsafe { ffi::gsl_dht_k_sample(self.t, n) }
     }
 }
 

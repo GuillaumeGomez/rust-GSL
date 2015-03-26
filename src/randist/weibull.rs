@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for x >= 0.
 pub fn weibull(r: &Rng, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_weibull(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, a, b) }
+    unsafe { ffi::gsl_ran_weibull(ffi::FFI::unwrap(r), a, b) }
 }
 
 /// This function computes the probability density p(x) at x for a Weibull distribution with scale a and exponent b, using the formula given above.

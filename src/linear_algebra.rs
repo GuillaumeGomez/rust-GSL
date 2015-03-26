@@ -204,35 +204,35 @@ pub fn complex_LU_decomp(a: &::MatrixComplexF64, p: &::Permutation, signum: &mut
 
 /// This function solves the square system A x = b using the LU decomposition of A into (LU, p) given by LU_decomp or LU_decomp as input.
 pub fn LU_solve(lu: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_LU_solve(ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_LU_solve(ffi::FFI::unwrap(lu), ffi::FFI::unwrap(p),
+        ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the square system A x = b using the LU decomposition of A into (LU, p) given by LU_decomp or LU_decomp as input.
 pub fn complex_LU_solve(lu: &::MatrixComplexF64, p: &::Permutation, b: &::VectorComplexF64, x: &::VectorComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_LU_solve(ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector_complex, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_complex_LU_solve(ffi::FFI::unwrap(lu), ffi::FFI::unwrap(p),
+        ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the square system A x = b in-place using the precomputed LU decomposition of A into (LU,p). On input x should contain
 /// the right-hand side b, which is replaced by the solution on output.
 pub fn LU_svx(lu: &::MatrixF64, p: &::Permutation, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_LU_svx(ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+    unsafe { ffi::gsl_linalg_LU_svx(ffi::FFI::unwrap(lu), ffi::FFI::unwrap(p),
         ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the square system A x = b in-place using the precomputed LU decomposition of A into (LU,p). On input x should contain
 /// the right-hand side b, which is replaced by the solution on output.
 pub fn complex_LU_svx(lu: &::MatrixComplexF64, p: &::Permutation, x: &::VectorComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_LU_svx(ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+    unsafe { ffi::gsl_linalg_complex_LU_svx(ffi::FFI::unwrap(lu), ffi::FFI::unwrap(p),
         ffi::FFI::unwrap(x)) }
 }
 
 /// This function applies an iterative improvement to x, the solution of A x = b, from the precomputed LU decomposition of A into (LU,p). The
 /// initial residual r = A x - b is also computed and stored in residual.
 pub fn LU_refine(a: &::MatrixF64, lu: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64, residual: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_LU_refine(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix,
-        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x),
+    unsafe { ffi::gsl_linalg_LU_refine(ffi::FFI::unwrap(a), ffi::FFI::unwrap(lu),
+        ffi::FFI::unwrap(p), ffi::FFI::unwrap(b), ffi::FFI::unwrap(x),
         ffi::FFI::unwrap(residual)) }
 }
 
@@ -240,8 +240,8 @@ pub fn LU_refine(a: &::MatrixF64, lu: &::MatrixF64, p: &::Permutation, b: &::Vec
 /// initial residual r = A x - b is also computed and stored in residual.
 pub fn complex_LU_refine(a: &::MatrixComplexF64, lu: &::MatrixComplexF64, p: &::Permutation, b: &::VectorComplexF64, x: &::VectorComplexF64,
     residual: &::VectorComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_LU_refine(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix_complex,
-        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(b) as *const ffi::gsl_vector_complex, ffi::FFI::unwrap(x),
+    unsafe { ffi::gsl_linalg_complex_LU_refine(ffi::FFI::unwrap(a), ffi::FFI::unwrap(lu),
+        ffi::FFI::unwrap(p), ffi::FFI::unwrap(b), ffi::FFI::unwrap(x),
         ffi::FFI::unwrap(residual)) }
 }
 
@@ -250,7 +250,7 @@ pub fn complex_LU_refine(a: &::MatrixComplexF64, lu: &::MatrixComplexF64, p: &::
 /// whenever possible, as the linear solver functions can obtain the same result more efficiently and reliably (consult any introductory
 /// textbook on numerical linear algebra for details).
 pub fn LU_invert(lu: &::MatrixF64, p: &::Permutation, inverse: &::MatrixF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_LU_invert(ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+    unsafe { ffi::gsl_linalg_LU_invert(ffi::FFI::unwrap(lu), ffi::FFI::unwrap(p),
         ffi::FFI::unwrap(inverse)) }
 }
 
@@ -259,7 +259,7 @@ pub fn LU_invert(lu: &::MatrixF64, p: &::Permutation, inverse: &::MatrixF64) -> 
 /// whenever possible, as the linear solver functions can obtain the same result more efficiently and reliably (consult any introductory
 /// textbook on numerical linear algebra for details).
 pub fn complex_LU_invert(lu: &::MatrixComplexF64, p: &::Permutation, inverse: &::MatrixComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_LU_invert(ffi::FFI::unwrap(lu) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+    unsafe { ffi::gsl_linalg_complex_LU_invert(ffi::FFI::unwrap(lu), ffi::FFI::unwrap(p),
         ffi::FFI::unwrap(inverse)) }
 }
 
@@ -315,14 +315,14 @@ pub fn QR_decomp(a: &::MatrixF64, tau: &::VectorF64) -> enums::value::Value {
 /// This function solves the square system A x = b using the QR decomposition of A held in (QR, tau) which must have been computed previously
 /// with gsl_linalg_QR_decomp. The least-squares solution for rectangular systems can be found using QR_lssolve.
 pub fn QR_solve(qr: &::MatrixF64, tau: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_solve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_QR_solve(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
+        ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the square system A x = b in-place using the QR decomposition of A held in (QR,tau) which must have been computed
 /// previously by gsl_linalg_QR_decomp. On input x should contain the right-hand side b, which is replaced by the solution on output.
 pub fn QR_svx(qr: &::MatrixF64, tau: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_svx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_svx(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(x)) }
 }
 
@@ -331,54 +331,54 @@ pub fn QR_svx(qr: &::MatrixF64, tau: &::VectorF64, x: &::VectorF64) -> enums::va
 /// A into (QR, tau) given by gsl_linalg_QR_decomp. The solution is returned in x. The residual is computed as a by-product and stored in
 /// residual.
 pub fn QR_lssolve(qr: &::MatrixF64, tau: &::VectorF64, b: &::VectorF64, x: &::VectorF64, residual: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_lssolve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x), ffi::FFI::unwrap(residual)) }
+    unsafe { ffi::gsl_linalg_QR_lssolve(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
+        ffi::FFI::unwrap(b), ffi::FFI::unwrap(x), ffi::FFI::unwrap(residual)) }
 }
 
 /// This function applies the matrix Q^T encoded in the decomposition (QR,tau) to the vector v, storing the result Q^T v in v. The matrix
 /// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q^T.
 pub fn QR_QTvec(qr: &::MatrixF64, tau: &::VectorF64, v: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_QTvec(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_QTvec(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(v)) }
 }
 
 /// This function applies the matrix Q encoded in the decomposition (QR,tau) to the vector v, storing the result Q v in v. The matrix
 /// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q.
 pub fn QR_Qvec(qr: &::MatrixF64, tau: &::VectorF64, v: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_Qvec(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_Qvec(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(v)) }
 }
 
 /// This function applies the matrix Q^T encoded in the decomposition (QR,tau) to the matrix A, storing the result Q^T A in A. The matrix
 /// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q^T.
 pub fn QR_QTmat(qr: &::MatrixF64, tau: &::VectorF64, v: &::MatrixF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_QTmat(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_QTmat(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(v)) }
 }
 
 /// This function solves the triangular system R x = b for x. It may be useful if the product b' = Q^T b has already been computed using
 /// gsl_linalg_QR_QTvec.
 pub fn QR_Rsolve(qr: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_Rsolve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_Rsolve(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the triangular system R x = b for x in-place. On input x should contain the right-hand side b and is replaced by
 /// the solution on output. This function may be useful if the product b' = Q^T b has already been computed using gsl_linalg_QR_QTvec.
 pub fn QR_Rsvx(qr: &::MatrixF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_Rsvx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_QR_Rsvx(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(x)) }
 }
 
 /// This function unpacks the encoded QR decomposition (QR,tau) into the matrices Q and R, where Q is M-by-M and R is M-by-N.
 pub fn QR_unpack(qr: &::MatrixF64, tau: &::VectorF64, q: &::MatrixF64, r: &::MatrixF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_unpack(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_unpack(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(q), ffi::FFI::unwrap(r)) }
 }
 
 /// This function solves the system R x = Q^T b for x. It can be used when the QR decomposition of a matrix is available in unpacked
 /// form as (Q, R).
 pub fn QR_QRsolve(q: &::MatrixF64, r: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QR_QRsolve(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r), ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_QR_QRsolve(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r), ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
@@ -386,19 +386,19 @@ pub fn QR_QRsolve(q: &::MatrixF64, r: &::MatrixF64, b: &::VectorF64, x: &::Vecto
 /// output matrices Q' and R' are also orthogonal and right triangular. Note that w is destroyed by the update.
 pub fn QR_update(q: &::MatrixF64, r: &::MatrixF64, w: &::VectorF64, v: &::VectorF64) -> enums::value::Value {
     unsafe { ffi::gsl_linalg_QR_update(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r), ffi::FFI::unwrap(w),
-        ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        ffi::FFI::unwrap(v)) }
 }
 
 /// This function solves the triangular system R x = b for the N-by-N matrix R.
 pub fn R_solve(r: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_R_solve(ffi::FFI::unwrap(r) as *const ffi::gsl_matrix, ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_R_solve(ffi::FFI::unwrap(r), ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the triangular system R x = b in-place. On input x should contain the right-hand side b, which is replaced by
 /// the solution on output.
 pub fn R_svx(r: &::MatrixF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_R_svx(ffi::FFI::unwrap(r) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_R_svx(ffi::FFI::unwrap(r), ffi::FFI::unwrap(x)) }
 }
 
 /// This function factorizes the M-by-N matrix A into the QRP^T decomposition A = Q R P^T. On output the diagonal and upper triangular part
@@ -418,48 +418,48 @@ pub fn QRPT_decomp(a: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, signum
 /// This function factorizes the matrix A into the decomposition A = Q R P^T without modifying A itself and storing the output in the separate
 /// matrices q and r.
 pub fn QRPT_decomp2(a: &::MatrixF64, q: &::MatrixF64, r: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, signum: &mut i32, norm: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_decomp2(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(q), ffi::FFI::unwrap(r),
+    unsafe { ffi::gsl_linalg_QRPT_decomp2(ffi::FFI::unwrap(a), ffi::FFI::unwrap(q), ffi::FFI::unwrap(r),
         ffi::FFI::unwrap(tau), ffi::FFI::unwrap(p), signum, ffi::FFI::unwrap(norm)) }
 }
 
 /// This function solves the square system A x = b using the QRP^T decomposition of A held in (QR, tau, p) which must have been computed previously
 /// by QRPT_decomp.
 pub fn QRPT_solve(qr: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_solve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_QRPT_solve(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
+        ffi::FFI::unwrap(p), ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the square system A x = b in-place using the QRP^T decomposition of A held in (QR,tau,p). On input x should contain the
 /// right-hand side b, which is replaced by the solution on output.
 pub fn QRPT_svx(qr: &::MatrixF64, tau: &::VectorF64, p: &::Permutation, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_svx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_QRPT_svx(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(tau),
+        ffi::FFI::unwrap(p), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the square system R P^T x = Q^T b for x. It can be used when the QR decomposition of a matrix is available in unpacked
 /// form as (Q, R).
 pub fn QRPT_QRsolve(q: &::MatrixF64, r: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_QRsolve(ffi::FFI::unwrap(q) as *const ffi::gsl_matrix, ffi::FFI::unwrap(r) as *const ffi::gsl_matrix,
-        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_QRPT_QRsolve(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r),
+        ffi::FFI::unwrap(p), ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function performs a rank-1 update w v^T of the QRP^T decomposition (Q, R, p). The update is given by Q'R' = Q (R + w v^T P) where the
 /// output matrices Q' and R' are also orthogonal and right triangular. Note that w is destroyed by the update. The permutation p is not changed.
 pub fn QRPT_update(q: &::MatrixF64, r: &::MatrixF64, p: &::Permutation, w: &::VectorF64, v: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_update(ffi::FFI::unwrap(q) as *const ffi::gsl_matrix, ffi::FFI::unwrap(r) as *const ffi::gsl_matrix,
-        ffi::FFI::unwrap(p) as *const ffi::gsl_permutation, ffi::FFI::unwrap(w), ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+    unsafe { ffi::gsl_linalg_QRPT_update(ffi::FFI::unwrap(q), ffi::FFI::unwrap(r),
+        ffi::FFI::unwrap(p), ffi::FFI::unwrap(w), ffi::FFI::unwrap(v)) }
 }
 
 /// This function solves the triangular system R P^T x = b for the N-by-N matrix R contained in QR.
 pub fn QRPT_Rsolve(qr: &::MatrixF64, p: &::Permutation, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_Rsolve(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_QRPT_Rsolve(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(p),
+        ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the triangular system R P^T x = b in-place for the N-by-N matrix R contained in QR. On input x should contain the
 /// right-hand side b, which is replaced by the solution on output.
 pub fn QRPT_Rsvx(qr: &::MatrixF64, p: &::Permutation, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_QRPT_Rsvx(ffi::FFI::unwrap(qr) as *const ffi::gsl_matrix, ffi::FFI::unwrap(p) as *const ffi::gsl_permutation,
+    unsafe { ffi::gsl_linalg_QRPT_Rsvx(ffi::FFI::unwrap(qr), ffi::FFI::unwrap(p),
         ffi::FFI::unwrap(x)) }
 }
 
@@ -495,15 +495,15 @@ pub fn SV_decomp_jacobi(a: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64) -> en
 /// In the over-determined case where A has more rows than columns the system is solved in the least squares sense, returning the solution
 /// x which minimizes ||A x - b||_2.
 pub fn SV_solve(u: &::MatrixF64, v: &::MatrixF64, s: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_SV_solve(ffi::FFI::unwrap(u) as *const ffi::gsl_matrix, ffi::FFI::unwrap(v) as *const ffi::gsl_matrix,
-        ffi::FFI::unwrap(s) as *const ffi::gsl_vector, ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_SV_solve(ffi::FFI::unwrap(u), ffi::FFI::unwrap(v),
+        ffi::FFI::unwrap(s), ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function computes the statistical leverage values h_i of a matrix A using its singular value decomposition (U, S, V) previously computed
 /// with gsl_linalg_SV_decomp. h_i are the diagonal values of the matrix A (A^T A)^{-1} A^T and depend only on the matrix U which is the input to
 /// this function.
 pub fn SV_leverage(u: &::MatrixF64, h: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_SV_leverage(ffi::FFI::unwrap(u) as *const ffi::gsl_matrix, ffi::FFI::unwrap(h)) }
+    unsafe { ffi::gsl_linalg_SV_leverage(ffi::FFI::unwrap(u), ffi::FFI::unwrap(h)) }
 }
 
 /// This function factorizes the symmetric, positive-definite square matrix A into the Cholesky decomposition A = L L^T (or A = L L^H for
@@ -531,29 +531,29 @@ pub fn complex_cholesky_decomp(a: &::MatrixComplexF64) -> enums::value::Value {
 /// This function solves the system A x = b using the Cholesky decomposition of A held in the matrix cholesky which must have been previously
 /// computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp.
 pub fn cholesky_solve(cholesky: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_cholesky_solve(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix, ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_cholesky_solve(ffi::FFI::unwrap(cholesky), ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the system A x = b using the Cholesky decomposition of A held in the matrix cholesky which must have been previously
 /// computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp.
 pub fn complex_cholesky_solve(cholesky: &::MatrixComplexF64, b: &::VectorComplexF64, x: &::VectorComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_cholesky_solve(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix_complex,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector_complex, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_complex_cholesky_solve(ffi::FFI::unwrap(cholesky),
+        ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the system A x = b in-place using the Cholesky decomposition of A held in the matrix cholesky which must have been
 /// previously computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On input x should contain the right-hand side
 /// b, which is replaced by the solution on output.
 pub fn cholesky_svx(cholesky: &::MatrixF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_cholesky_svx(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_cholesky_svx(ffi::FFI::unwrap(cholesky), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the system A x = b in-place using the Cholesky decomposition of A held in the matrix cholesky which must have been
 /// previously computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On input x should contain the right-hand side
 /// b, which is replaced by the solution on output.
 pub fn complex_cholesky_svx(cholesky: &::MatrixComplexF64, x: &::VectorComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_cholesky_svx(ffi::FFI::unwrap(cholesky) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_complex_cholesky_svx(ffi::FFI::unwrap(cholesky), ffi::FFI::unwrap(x)) }
 }
 
 /// This function computes the inverse of a matrix from its Cholesky decomposition cholesky, which must have been previously computed by
@@ -579,14 +579,14 @@ pub fn symmtd_decomp(a: &::MatrixF64, tau: &::VectorF64) -> enums::value::Value 
 /// This function unpacks the encoded symmetric tridiagonal decomposition (A, tau) obtained from gsl_linalg_symmtd_decomp into the orthogonal
 /// matrix Q, the vector of diagonal elements diag and the vector of subdiagonal elements subdiag.
 pub fn symmtd_unpack(a: &::MatrixF64, tau: &::VectorF64, q: &::MatrixF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_symmtd_unpack(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_symmtd_unpack(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(q), ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
 }
 
 /// This function unpacks the diagonal and subdiagonal of the encoded symmetric tridiagonal decomposition (A, tau) obtained from
 /// gsl_linalg_symmtd_decomp into the vectors diag and subdiag.
 pub fn symmtd_unpack_T(a: &::MatrixF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_symmtd_unpack_T(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
+    unsafe { ffi::gsl_linalg_symmtd_unpack_T(ffi::FFI::unwrap(a), ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
 }
 
 /// This function factorizes the hermitian matrix A into the symmetric tridiagonal decomposition U T U^T. On output the real parts of the
@@ -601,15 +601,15 @@ pub fn hermtd_decomp(a: &::MatrixComplexF64, tau: &::VectorComplexF64) -> enums:
 /// the real vector of diagonal elements diag and the real vector of subdiagonal elements subdiag.
 pub fn hermtd_unpack(a: &::MatrixComplexF64, tau: &::VectorComplexF64, u: &::MatrixComplexF64, diag: &::VectorF64,
     subdiag: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_hermtd_unpack(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix_complex,
-        ffi::FFI::unwrap(tau) as *const ffi::gsl_vector_complex,
+    unsafe { ffi::gsl_linalg_hermtd_unpack(ffi::FFI::unwrap(a),
+        ffi::FFI::unwrap(tau),
         ffi::FFI::unwrap(u), ffi::FFI::unwrap(diag), ffi::FFI::unwrap(subdiag)) }
 }
 
 /// This function unpacks the diagonal and subdiagonal of the encoded tridiagonal decomposition (A, tau) obtained from the
 /// gsl_linalg_hermtd_decomp into the real vectors diag and subdiag.
 pub fn hermtd_unpack_T(a: &::MatrixComplexF64, diag: &::VectorF64, subdiag: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_hermtd_unpack_T(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix_complex, ffi::FFI::unwrap(diag),
+    unsafe { ffi::gsl_linalg_hermtd_unpack_T(ffi::FFI::unwrap(a), ffi::FFI::unwrap(diag),
         ffi::FFI::unwrap(subdiag)) }
 }
 
@@ -661,8 +661,8 @@ pub fn bidiag_decomp(a: &::MatrixF64, tau_u: &::VectorF64, tau_v: &::VectorF64) 
 /// U^T U = I for efficiency.
 pub fn bidiag_unpack(a: &::MatrixF64, tau_u: &::VectorF64, u: &::MatrixF64, tau_v: &::VectorF64, v: &::MatrixF64,
     diag: &::VectorF64, superdiag: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_bidiag_unpack(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(tau_u) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(u), ffi::FFI::unwrap(tau_v) as *const ffi::gsl_vector, ffi::FFI::unwrap(v), ffi::FFI::unwrap(diag),
+    unsafe { ffi::gsl_linalg_bidiag_unpack(ffi::FFI::unwrap(a), ffi::FFI::unwrap(tau_u),
+        ffi::FFI::unwrap(u), ffi::FFI::unwrap(tau_v), ffi::FFI::unwrap(v), ffi::FFI::unwrap(diag),
         ffi::FFI::unwrap(superdiag)) }
 }
 
@@ -676,7 +676,7 @@ pub fn bidiag_unpack2(a: &::MatrixF64, tau_u: &::VectorF64, tau_v: &::VectorF64,
 /// This function unpacks the diagonal and superdiagonal of the bidiagonal decomposition of A from gsl_linalg_bidiag_decomp, into the diagonal
 /// vector diag and superdiagonal vector superdiag.
 pub fn bidiag_unpack_B(a: &::MatrixF64, diag: &::VectorF64, superdiag: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_bidiag_unpack_B(ffi::FFI::unwrap(a) as *const ffi::gsl_matrix, ffi::FFI::unwrap(diag),
+    unsafe { ffi::gsl_linalg_bidiag_unpack_B(ffi::FFI::unwrap(a), ffi::FFI::unwrap(diag),
         ffi::FFI::unwrap(superdiag)) }
 }
 
@@ -695,46 +695,46 @@ pub fn complex_householder_transform(v: &::VectorComplexF64) -> ::ComplexF64 {
 /// This function applies the Householder matrix P defined by the scalar tau and the vector v to the left-hand side of the matrix A. On output
 /// the result P A is stored in A.
 pub fn householder_hm(tau: f64, v: &::VectorF64, a: &::MatrixF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_householder_hm(tau, ffi::FFI::unwrap(v) as *const ffi::gsl_vector, ffi::FFI::unwrap(a)) }
+    unsafe { ffi::gsl_linalg_householder_hm(tau, ffi::FFI::unwrap(v), ffi::FFI::unwrap(a)) }
 }
 
 /// This function applies the Householder matrix P defined by the scalar tau and the vector v to the left-hand side of the matrix A. On output
 /// the result P A is stored in A.
 pub fn complex_householder_hm(tau: &::ComplexF64, v: &::VectorComplexF64, a: &::MatrixComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_householder_hm(::std::mem::transmute(*tau), ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex,
+    unsafe { ffi::gsl_linalg_complex_householder_hm(::std::mem::transmute(*tau), ffi::FFI::unwrap(v),
         ffi::FFI::unwrap(a)) }
 }
 
 /// This function applies the Householder matrix P defined by the scalar tau and the vector v to the right-hand side of the matrix A. On output
 /// the result A P is stored in A.
 pub fn householder_mh(tau: f64, v: &::VectorF64, a: &::MatrixF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_householder_mh(tau, ffi::FFI::unwrap(v) as *const ffi::gsl_vector, ffi::FFI::unwrap(a)) }
+    unsafe { ffi::gsl_linalg_householder_mh(tau, ffi::FFI::unwrap(v), ffi::FFI::unwrap(a)) }
 }
 
 /// This function applies the Householder matrix P defined by the scalar tau and the vector v to the right-hand side of the matrix A. On output
 /// the result A P is stored in A.
 pub fn complex_householder_mh(tau: &::ComplexF64, v: &::VectorComplexF64, a: &::MatrixComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_householder_mh(::std::mem::transmute(*tau), ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex,
+    unsafe { ffi::gsl_linalg_complex_householder_mh(::std::mem::transmute(*tau), ffi::FFI::unwrap(v),
         ffi::FFI::unwrap(a)) }
 }
 
 /// This function applies the Householder transformation P defined by the scalar tau and the vector v to the vector w. On output the result P
 /// w is stored in w.
 pub fn householder_hv(tau: f64, v: &::VectorF64, w: &::MatrixF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_householder_hv(tau, ffi::FFI::unwrap(v) as *const ffi::gsl_vector, ffi::FFI::unwrap(w)) }
+    unsafe { ffi::gsl_linalg_householder_hv(tau, ffi::FFI::unwrap(v), ffi::FFI::unwrap(w)) }
 }
 
 /// This function applies the Householder transformation P defined by the scalar tau and the vector v to the vector w. On output the result P
 /// w is stored in w.
 pub fn complex_householder_hv(tau: &::ComplexF64, v: &::VectorComplexF64, w: &::MatrixComplexF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_complex_householder_hv(::std::mem::transmute(*tau), ffi::FFI::unwrap(v) as *const ffi::gsl_vector_complex,
+    unsafe { ffi::gsl_linalg_complex_householder_hv(::std::mem::transmute(*tau), ffi::FFI::unwrap(v),
         ffi::FFI::unwrap(w)) }
 }
 
 /// This function solves the system A x = b directly using Householder transformations. On output the solution is stored in x and b is not
 /// modified. The matrix A is destroyed by the Householder transformations.
 pub fn HH_solve(a: &::MatrixF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_HH_solve(ffi::FFI::unwrap(a), ffi::FFI::unwrap(b) as *const ffi::gsl_vector, ffi::FFI::unwrap(x)) }
+    unsafe { ffi::gsl_linalg_HH_solve(ffi::FFI::unwrap(a), ffi::FFI::unwrap(b), ffi::FFI::unwrap(x)) }
 }
 
 /// This function solves the system A x = b in-place using Householder transformations. On input x should contain the right-hand side b,
@@ -751,10 +751,10 @@ pub fn HH_svx(a: &::MatrixF64, x: &::VectorF64) -> enums::value::Value {
 ///     (  0  f_1 d_2 e_2 )
 ///     (  0   0  f_2 d_3 )
 pub fn solve_tridiag(diag: &::VectorF64, e: &::VectorF64, f: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_solve_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(f) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_solve_tridiag(ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(e),
+        ffi::FFI::unwrap(f),
+        ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
@@ -766,9 +766,9 @@ pub fn solve_tridiag(diag: &::VectorF64, e: &::VectorF64, f: &::VectorF64, b: &:
 ///     (  0  e_1 d_2 e_2 )
 ///     (  0   0  e_2 d_3 )
 pub fn solve_symm_tridiag(diag: &::VectorF64, e: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_solve_symm_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_solve_symm_tridiag(ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(e),
+        ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
@@ -780,10 +780,10 @@ pub fn solve_symm_tridiag(diag: &::VectorF64, e: &::VectorF64, b: &::VectorF64, 
 ///     (  0  f_1 d_2 e_2 )
 ///     ( e_3  0  f_2 d_3 )
 pub fn solve_cyc_tridiag(diag: &::VectorF64, e: &::VectorF64, f: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_solve_cyc_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(f) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_solve_cyc_tridiag(ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(e),
+        ffi::FFI::unwrap(f),
+        ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 
@@ -795,9 +795,9 @@ pub fn solve_cyc_tridiag(diag: &::VectorF64, e: &::VectorF64, f: &::VectorF64, b
 ///     (  0  e_1 d_2 e_2 )
 ///     ( e_3  0  e_2 d_3 )
 pub fn solve_symm_cyc_tridiag(diag: &::VectorF64, e: &::VectorF64, b: &::VectorF64, x: &::VectorF64) -> enums::value::Value {
-    unsafe { ffi::gsl_linalg_solve_symm_cyc_tridiag(ffi::FFI::unwrap(diag) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(e) as *const ffi::gsl_vector,
-        ffi::FFI::unwrap(b) as *const ffi::gsl_vector,
+    unsafe { ffi::gsl_linalg_solve_symm_cyc_tridiag(ffi::FFI::unwrap(diag),
+        ffi::FFI::unwrap(e),
+        ffi::FFI::unwrap(b),
         ffi::FFI::unwrap(x)) }
 }
 

@@ -53,12 +53,12 @@ impl QRng {
     /// This function stores the next point from the sequence generator self in the array x. The space available for x must match the
     /// dimension of the generator. The point x will lie in the range 0 < x_i < 1 for each x_i.
     pub fn get(&self, x: &mut [f64]) -> enums::value::Value {
-        unsafe { ffi::gsl_qrng_get(self.q as *const ffi::gsl_qrng, x.as_mut_ptr()) }
+        unsafe { ffi::gsl_qrng_get(self.q, x.as_mut_ptr()) }
     }
 
     /// This function returns a pointer to the name of the generator.
     pub fn name(&self) -> Option<String> {
-        let tmp = unsafe { ffi::gsl_qrng_name(self.q as *const ffi::gsl_qrng) };
+        let tmp = unsafe { ffi::gsl_qrng_name(self.q) };
 
         if tmp.is_null() {
             None
@@ -69,12 +69,12 @@ impl QRng {
 
     /// These functions return a pointer to the state of generator r and its size.
     pub fn size(&self) -> u64 {
-        unsafe { ffi::gsl_qrng_size(self.q as *const ffi::gsl_qrng) }
+        unsafe { ffi::gsl_qrng_size(self.q) }
     }
 
     /// These functions return a pointer to the state of generator r and its size.
     pub fn state<'r>(&'r mut self) -> &'r mut [i8] {
-        let tmp = unsafe { ffi::gsl_qrng_state(self.q as *const ffi::gsl_qrng) };
+        let tmp = unsafe { ffi::gsl_qrng_state(self.q) };
 
         if !tmp.is_null() {
             self.data = unsafe { CSlice::new(tmp as *mut i8, self.size() as usize) };
@@ -85,14 +85,14 @@ impl QRng {
     /// This function copies the quasi-random sequence generator src into the pre-existing generator dest, making dest into an exact copy
     /// of src. The two generators must be of the same type.
     pub fn copy(&self, dest: &QRng) -> enums::value::Value {
-        unsafe { ffi::gsl_qrng_memcpy(dest.q, self.q as *const ffi::gsl_qrng) }
+        unsafe { ffi::gsl_qrng_memcpy(dest.q, self.q) }
     }
 }
 
 impl Clone for QRng {
     /// This function returns a pointer to a newly created generator which is an exact copy of the generator self.
     fn clone(&self) -> QRng {
-        unsafe { ffi::FFI::wrap(ffi::gsl_qrng_clone(self.q as *const ffi::gsl_qrng)) }
+        unsafe { ffi::FFI::wrap(ffi::gsl_qrng_clone(self.q)) }
     }
 }
 
@@ -156,7 +156,7 @@ impl QRngType {
 impl ffi::FFI<ffi::gsl_qrng_type> for QRngType {
     fn wrap(t: *mut ffi::gsl_qrng_type) -> QRngType {
         QRngType {
-            t: t as *const ffi::gsl_qrng_type
+            t: t
         }
     }
 

@@ -55,7 +55,6 @@ use std::fmt::{Formatter, Debug};
 use types::{VectorF64, VectorF32};
 use ffi;
 use enums;
-use libc::size_t;
 
 pub struct MatrixView {
     mat: ffi::gsl_matrix
@@ -195,7 +194,7 @@ impl MatrixF64 {
     /// 
     /// XX XX XX
     pub fn new(n1: u64, n2: u64) -> Option<MatrixF64> {
-        let tmp = unsafe { ffi::gsl_matrix_calloc(n1 as size_t, n2 as size_t) };
+        let tmp = unsafe { ffi::gsl_matrix_calloc(n1, n2) };
 
         if tmp.is_null() {
             None
@@ -210,7 +209,7 @@ impl MatrixF64 {
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, y: u64, x: u64) -> f64 {
-        unsafe { ffi::gsl_matrix_get(self.mat as *const ffi::gsl_matrix, y, x) }
+        unsafe { ffi::gsl_matrix_get(self.mat, y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
@@ -241,12 +240,12 @@ impl MatrixF64 {
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&self, other: &MatrixF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_memcpy(self.mat, other.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_memcpy(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &MatrixF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_memcpy(other.mat, self.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_memcpy(other.mat, self.mat) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
@@ -261,7 +260,7 @@ impl MatrixF64 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_get_row(tmp, self.mat as *const ffi::gsl_matrix, y) };
+            let ret = unsafe { ffi::gsl_matrix_get_row(tmp, self.mat, y) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -274,7 +273,7 @@ impl MatrixF64 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_get_col(tmp, self.mat as *const ffi::gsl_matrix, x) };
+            let ret = unsafe { ffi::gsl_matrix_get_col(tmp, self.mat, x) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -283,13 +282,13 @@ impl MatrixF64 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&self, y: u64, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&self, x: u64, v: &VectorF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap(v) as *const ffi::gsl_vector) }
+        unsafe { ffi::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -316,7 +315,7 @@ impl MatrixF64 {
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix) };
+            let ret = unsafe { ffi::gsl_matrix_transpose_memcpy(dest, self.mat) };
 
             Some((MatrixF64 {mat: dest, can_free: true}, ret))
         }
@@ -331,25 +330,25 @@ impl MatrixF64 {
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&self, other: &MatrixF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_add(self.mat, other.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_add(self.mat, other.mat) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&self, other: &MatrixF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_sub(self.mat, other.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_sub(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&self, other: &MatrixF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_mul_elements(self.mat, other.mat) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&self, other: &MatrixF64) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_div_elements(self.mat, other.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_div_elements(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
@@ -364,17 +363,17 @@ impl MatrixF64 {
 
     /// This function returns the maximum value in the self matrix.
     pub fn max(&self) -> f64 {
-        unsafe { ffi::gsl_matrix_max(self.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_max(self.mat) }
     }
 
     /// This function returns the minimum value in the self matrix.
     pub fn min(&self) -> f64 {
-        unsafe { ffi::gsl_matrix_min(self.mat as *const ffi::gsl_matrix) }
+        unsafe { ffi::gsl_matrix_min(self.mat) }
     }
 
     /// This function returns the minimum and maximum values in the self matrix, storing them in min_out and max_out.
     pub fn minmax(&self, min_out: &mut f64, max_out: &mut f64) {
-        unsafe { ffi::gsl_matrix_minmax(self.mat as *const ffi::gsl_matrix, min_out, max_out) }
+        unsafe { ffi::gsl_matrix_minmax(self.mat, min_out, max_out) }
     }
 
     /// This function returns the indices of the maximum value in the self matrix, storing them in imax and jmax.
@@ -383,7 +382,7 @@ impl MatrixF64 {
         let mut imax = 0u64;
         let mut jmax = 0u64;
 
-        unsafe { ffi::gsl_matrix_max_index(self.mat as *const ffi::gsl_matrix, &mut imax, &mut jmax) };
+        unsafe { ffi::gsl_matrix_max_index(self.mat, &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -393,7 +392,7 @@ impl MatrixF64 {
         let mut imax = 0u64;
         let mut jmax = 0u64;
 
-        unsafe { ffi::gsl_matrix_min_index(self.mat as *const ffi::gsl_matrix, &mut imax, &mut jmax) };
+        unsafe { ffi::gsl_matrix_min_index(self.mat, &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -405,13 +404,13 @@ impl MatrixF64 {
         let mut imax = 0u64;
         let mut jmax = 0u64;
 
-        unsafe { ffi::gsl_matrix_minmax_index(self.mat as *const ffi::gsl_matrix, &mut imin, &mut jmin, &mut imax, &mut jmax) };
+        unsafe { ffi::gsl_matrix_minmax_index(self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax) };
         (imin, jmin, imax, jmax)
     }
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_isnull(self.mat as *const ffi::gsl_matrix) } {
+        match unsafe { ffi::gsl_matrix_isnull(self.mat) } {
             1 => true,
             _ => false
         }
@@ -419,7 +418,7 @@ impl MatrixF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_ispos(self.mat as *const ffi::gsl_matrix) } {
+        match unsafe { ffi::gsl_matrix_ispos(self.mat) } {
             1 => true,
             _ => false
         }
@@ -427,7 +426,7 @@ impl MatrixF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_isneg(self.mat as *const ffi::gsl_matrix) } {
+        match unsafe { ffi::gsl_matrix_isneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -435,7 +434,7 @@ impl MatrixF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_isnonneg(self.mat as *const ffi::gsl_matrix) } {
+        match unsafe { ffi::gsl_matrix_isnonneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -443,7 +442,7 @@ impl MatrixF64 {
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixF64) -> bool {
-        match unsafe { ffi::gsl_matrix_equal(self.mat as *const ffi::gsl_matrix, other.mat as *const ffi::gsl_matrix) } {
+        match unsafe { ffi::gsl_matrix_equal(self.mat, other.mat) } {
             1 => true,
             _ => false
         }
@@ -555,7 +554,7 @@ impl MatrixF32 {
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, y: u64, x: u64) -> f32 {
-        unsafe { ffi::gsl_matrix_float_get(self.mat as *const ffi::gsl_matrix_float, y, x) }
+        unsafe { ffi::gsl_matrix_float_get(self.mat, y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
@@ -586,12 +585,12 @@ impl MatrixF32 {
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&self, other: &MatrixF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_memcpy(self.mat, other.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_memcpy(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &MatrixF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_memcpy(other.mat, self.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_memcpy(other.mat, self.mat) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
@@ -606,7 +605,7 @@ impl MatrixF32 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_float_get_row(tmp, self.mat as *const ffi::gsl_matrix_float, y) };
+            let ret = unsafe { ffi::gsl_matrix_float_get_row(tmp, self.mat, y) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -619,7 +618,7 @@ impl MatrixF32 {
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_float_get_col(tmp, self.mat as *const ffi::gsl_matrix_float, x) };
+            let ret = unsafe { ffi::gsl_matrix_float_get_col(tmp, self.mat, x) };
 
             Some((ffi::FFI::wrap(tmp), ret))
         }
@@ -628,13 +627,13 @@ impl MatrixF32 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&self, y: u64, v: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap(v) as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&self, x: u64, v: &VectorF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap(v) as *const ffi::gsl_vector_float) }
+        unsafe { ffi::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -660,7 +659,7 @@ impl MatrixF32 {
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { ffi::gsl_matrix_float_transpose_memcpy(dest, self.mat as *const ffi::gsl_matrix_float) };
+            let ret = unsafe { ffi::gsl_matrix_float_transpose_memcpy(dest, self.mat) };
 
             Some((MatrixF32{
                     mat: dest,
@@ -678,25 +677,25 @@ impl MatrixF32 {
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&self, other: &MatrixF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_add(self.mat, other.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_add(self.mat, other.mat) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&self, other: &MatrixF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_sub(self.mat, other.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_sub(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&self, other: &MatrixF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_mul_elements(self.mat, other.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_mul_elements(self.mat, other.mat) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&self, other: &MatrixF32) -> enums::value::Value {
-        unsafe { ffi::gsl_matrix_float_div_elements(self.mat, other.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_div_elements(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
@@ -711,17 +710,17 @@ impl MatrixF32 {
 
     /// This function returns the maximum value in the self matrix.
     pub fn max(&self) -> f32 {
-        unsafe { ffi::gsl_matrix_float_max(self.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_max(self.mat) }
     }
 
     /// This function returns the minimum value in the self matrix.
     pub fn min(&self) -> f32 {
-        unsafe { ffi::gsl_matrix_float_min(self.mat as *const ffi::gsl_matrix_float) }
+        unsafe { ffi::gsl_matrix_float_min(self.mat) }
     }
 
     /// This function returns the minimum and maximum values in the self matrix, storing them in min_out and max_out.
     pub fn minmax(&self, min_out: &mut f32, max_out: &mut f32) {
-        unsafe { ffi::gsl_matrix_float_minmax(self.mat as *const ffi::gsl_matrix_float, min_out, max_out) }
+        unsafe { ffi::gsl_matrix_float_minmax(self.mat, min_out, max_out) }
     }
 
     /// This function returns the indices of the maximum value in the self matrix, storing them in imax and jmax.
@@ -730,7 +729,7 @@ impl MatrixF32 {
         let mut imax = 0u64;
         let mut jmax = 0u64;
 
-        unsafe { ffi::gsl_matrix_float_max_index(self.mat as *const ffi::gsl_matrix_float, &mut imax, &mut jmax) };
+        unsafe { ffi::gsl_matrix_float_max_index(self.mat, &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -740,7 +739,7 @@ impl MatrixF32 {
         let mut imax = 0u64;
         let mut jmax = 0u64;
 
-        unsafe { ffi::gsl_matrix_float_min_index(self.mat as *const ffi::gsl_matrix_float, &mut imax, &mut jmax) };
+        unsafe { ffi::gsl_matrix_float_min_index(self.mat, &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -752,13 +751,13 @@ impl MatrixF32 {
         let mut imax = 0u64;
         let mut jmax = 0u64;
 
-        unsafe { ffi::gsl_matrix_float_minmax_index(self.mat as *const ffi::gsl_matrix_float, &mut imin, &mut jmin, &mut imax, &mut jmax) };
+        unsafe { ffi::gsl_matrix_float_minmax_index(self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax) };
         (imin, jmin, imax, jmax)
     }
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_float_isnull(self.mat as *const ffi::gsl_matrix_float) } {
+        match unsafe { ffi::gsl_matrix_float_isnull(self.mat) } {
             1 => true,
             _ => false
         }
@@ -766,7 +765,7 @@ impl MatrixF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_float_ispos(self.mat as *const ffi::gsl_matrix_float) } {
+        match unsafe { ffi::gsl_matrix_float_ispos(self.mat) } {
             1 => true,
             _ => false
         }
@@ -774,7 +773,7 @@ impl MatrixF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_float_isneg(self.mat as *const ffi::gsl_matrix_float) } {
+        match unsafe { ffi::gsl_matrix_float_isneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -782,7 +781,7 @@ impl MatrixF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { ffi::gsl_matrix_float_isnonneg(self.mat as *const ffi::gsl_matrix_float) } {
+        match unsafe { ffi::gsl_matrix_float_isnonneg(self.mat) } {
             1 => true,
             _ => false
         }
@@ -790,7 +789,7 @@ impl MatrixF32 {
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixF32) -> bool {
-        match unsafe { ffi::gsl_matrix_float_equal(self.mat as *const ffi::gsl_matrix_float, other.mat as *const ffi::gsl_matrix_float) } {
+        match unsafe { ffi::gsl_matrix_float_equal(self.mat, other.mat) } {
             1 => true,
             _ => false
         }

@@ -13,5 +13,5 @@ use types::Rng;
 /// 
 /// The algorithm only works for 0 < alpha <= 2.
 pub fn levy(r: &Rng, c: f64, alpha: f64) -> f64 {
-    unsafe { ffi::gsl_ran_levy(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, c, alpha) }
+    unsafe { ffi::gsl_ran_levy(ffi::FFI::unwrap(r), c, alpha) }
 }

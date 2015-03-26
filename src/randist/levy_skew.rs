@@ -18,5 +18,5 @@ use types::Rng;
 /// 
 /// The Levy alpha-stable distributions have the property that if N alpha-stable variates are drawn from the distribution p(c, \alpha, \beta) then the sum Y = X_1 + X_2 + \dots + X_N will also be distributed as an alpha-stable variate, p(N^(1/\alpha) c, \alpha, \beta).
 pub fn levy_skew(r: &Rng, c: f64, alpha: f64, beta: f64) -> f64 {
-    unsafe { ffi::gsl_ran_levy_skew(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, c, alpha, beta) }
+    unsafe { ffi::gsl_ran_levy_skew(ffi::FFI::unwrap(r), c, alpha, beta) }
 }

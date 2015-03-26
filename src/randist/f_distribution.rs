@@ -26,7 +26,7 @@ use types::Rng;
 /// 
 /// for x >= 0.
 pub fn fdist(r: &Rng, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_ran_fdist(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, nu1, nu2) }
+    unsafe { ffi::gsl_ran_fdist(ffi::FFI::unwrap(r), nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.

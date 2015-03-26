@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for k >= 0.
 pub fn poisson(r: &Rng, mu: f64) -> u32 {
-    unsafe { ffi::gsl_ran_poisson(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, mu) }
+    unsafe { ffi::gsl_ran_poisson(ffi::FFI::unwrap(r), mu) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a Poisson distribution with mean mu, using the formula given above.

@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for k >= 1.
 pub fn logarithmic(r: &Rng, p: f64) -> u32 {
-    unsafe { ffi::gsl_ran_logarithmic(ffi::FFI::unwrap(r) as *const ffi::gsl_rng, p) }
+    unsafe { ffi::gsl_ran_logarithmic(ffi::FFI::unwrap(r), p) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a logarithmic distribution with probability parameter p, using the formula given above.
