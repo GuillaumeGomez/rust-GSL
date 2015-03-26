@@ -5,14 +5,12 @@
 // The example program below prints all multisets elements containing the values {0,1,2,3} ordered by size. Multiset elements of the same
 // size are ordered lexicographically.
 
-#![feature(core)]
-#![feature(old_io)]
 #![feature(collections)]
-#![feature(old_path)]
 
 extern crate rgsl;
 
 use std::fs::File;
+use std::io::Read;
 use rgsl::{wavelet_transforms, sort};
 use std::num::Float;
 
@@ -36,15 +34,18 @@ fn main() {
     }
 
     {
-        let mut f = match File::open(tmp[0].as_ref()) {
+        let mut f = match File::open(&tmp[0]) {
             Ok(f) => f,
             Err(e) => panic!("file error: {}", e),
         };
         for i in 0usize..N {
-            match f.read_be_f64() {
-                Ok(v) => {
-                    data[i] = v;
+            // read 8 bytes and parse them as a f64
+            let mut b = [0u8;8];
+            match f.read(&mut b) {
+                Ok(8) => {
+                    data[i] = unsafe { ::std::mem::transmute(b) };
                 }
+                Ok(_) => { /* premature EOF, abort */ break },
                 Err(e) => panic!("Read error : {}", e),
             }
         }

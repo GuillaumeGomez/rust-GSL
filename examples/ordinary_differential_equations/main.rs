@@ -2,7 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![feature(core)]
 #![feature(libc)]
 #![feature(collections)]
 #![feature(convert)]
@@ -21,8 +20,8 @@ fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::Va
         let mut f = CSlice::new(t_f, 2);
         let y = Vec::from_raw_buf(t_y as *mut f64, 2);
         
-        f.as_mut()[0] = y.as_slice()[1];
-        f.as_mut()[1] = -y.as_slice()[0] - *mu * y.as_slice()[1] * (y.as_slice()[0] *y.as_slice()[0] - 1f64);
+        f.as_mut()[0] = y[1];
+        f.as_mut()[1] = -y[0] - *mu * y[1] * (y[0] *y[0] - 1f64);
         rgsl::Value::Success
     }
 }
@@ -39,8 +38,8 @@ fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut
 
         m.set(0, 0, 0f64);
         m.set(0, 1, 1f64);
-        m.set(1, 0, -2f64 * *mu * y.as_slice()[0] * y.as_slice()[1] - 1f64);
-        m.set(1, 1, -*mu * (y.as_slice()[0] * y.as_slice()[0] - 1f64));
+        m.set(1, 0, -2f64 * *mu * y[0] * y[1] - 1f64);
+        m.set(1, 1, -*mu * (y[0] * y[0] - 1f64));
         dfdt.as_mut()[0] = 0f64;
         dfdt.as_mut()[1] = 0f64;
         rgsl::Value::Success

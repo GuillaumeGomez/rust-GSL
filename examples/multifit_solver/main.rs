@@ -47,8 +47,6 @@ for a poor fit. Note that a poor fit will result from the use an inappropriate m
 the range of validity for Gaussian errors.
 */
 
-#![feature(core)]
-
 #![allow(non_snake_case)]
 
 extern crate rgsl;
@@ -132,8 +130,8 @@ fn main() {
 
     let mut f = rgsl::MultiFitFunctionFdf {
         f: expb_f,
-        df: Some(expb_df as fn(&_, &mut _, &mut _) -> _),
-        fdf: Some(expb_fdf as fn(&_, &mut _, &mut _, &mut _) -> _),
+        df: Some(expb_df),
+        fdf: Some(expb_fdf),
         n: n as u64,
         p: p as u64,
         params: &mut d

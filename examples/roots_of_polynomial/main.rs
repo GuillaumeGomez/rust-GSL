@@ -7,8 +7,6 @@
 // 1, e^{2\pi i /5}, e^{4\pi i /5}, e^{6\pi i /5}, e^{8\pi i /5}
 // The following program will find these roots.
 
-#![feature(core)]
-
 extern crate rgsl;
 
 use rgsl::PolyComplex;

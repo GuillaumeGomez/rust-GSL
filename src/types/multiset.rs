@@ -13,9 +13,9 @@ Multisets are useful, for example, when iterating over the indices of a k-th ord
 
 use ffi;
 use enums;
-use std::old_io::IoResult;
+use std::io::Result as IoResult;
 use c_vec::CSlice;
-use std::old_io::Writer;
+use std::io::Write;
 
 pub struct MultiSet {
     c: *mut ffi::gsl_multiset,
@@ -129,7 +129,7 @@ impl MultiSet {
         unsafe { ffi::gsl_multiset_prev(self.c) }
     }
 
-    pub fn print(&self, writer: &mut Writer) -> IoResult<()> {
+    pub fn print(&self, writer: &mut Write) -> IoResult<()> {
         for value in self.data.as_ref().iter() {
             match write!(writer, " {}", *value) {
                 Ok(_) => {},

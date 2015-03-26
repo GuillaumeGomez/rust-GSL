@@ -4,8 +4,6 @@
 
 // The example program below prints all subsets of the set {0,1,2,3} ordered by size. Subsets of the same size are ordered lexicographically.
 
-#![feature(core)]
-
 extern crate rgsl;
 
 use rgsl::Combination;

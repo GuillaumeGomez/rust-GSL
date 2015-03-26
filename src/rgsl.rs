@@ -58,7 +58,6 @@ Here is the list of all modules :
 #![feature(unsafe_destructor)]
 #![feature(core)]
 #![feature(libc)]
-#![feature(old_io)]
 #![feature(collections)]
 #![feature(std_misc)]
 #![feature(int_uint)]

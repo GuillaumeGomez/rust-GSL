@@ -4,8 +4,6 @@
 
 // This program shows how to use matrices and vectors.
 
-#![feature(core)]
-
 extern crate rgsl;
 
 fn main() {
