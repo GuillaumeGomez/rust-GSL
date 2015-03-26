@@ -9,6 +9,9 @@ install:
 script:
   - rustc --version
   - RUST_BACKTRACE=1 cargo build
+  - cd examples
+  - RUST_BACKTRACE=1 cargo build
+  - cd ..
   - RUST_BACKTRACE=1 cargo doc
 after_script:
   - curl http://www.rust-ci.org/artifacts/put?t=$RUSTCI_TOKEN | sh
