@@ -4,8 +4,6 @@
 
 // The following program prints the first 1024 points of the 2-dimensional Sobol sequence.
 
-#![feature(core)]
-
 extern crate rgsl;
 
 fn main() {

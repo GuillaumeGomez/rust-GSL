@@ -2,8 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![feature(core)]
-
 extern crate rgsl;
 
 use rgsl::RngType;
