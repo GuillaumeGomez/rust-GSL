@@ -9,8 +9,6 @@ The following code calculates an estimate of \zeta(2) = \pi^2 / 6 using the seri
 After N terms the error in the sum is O(1/N), making direct summation of the series converge slowly.
 */
 
-#![feature(core)]
-
 extern crate rgsl;
 
 pub static N : usize = 20usize;

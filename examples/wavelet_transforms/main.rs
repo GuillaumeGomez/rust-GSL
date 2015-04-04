@@ -8,11 +8,12 @@
 #![feature(collections)]
 
 extern crate rgsl;
+extern crate num;
 
 use std::fs::File;
 use std::io::Read;
 use rgsl::{wavelet_transforms, sort};
-use std::num::Float;
+use num::Float;
 
 pub const N : usize = 256;
 pub const NC : usize = 20;

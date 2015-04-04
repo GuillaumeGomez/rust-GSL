@@ -4,7 +4,8 @@ version = "0.4.19"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
 [dependencies]
-c_vec="*"
+c_vec = "*"
+num = "*"
 
 [dependencies.GSL]
 path = "../"

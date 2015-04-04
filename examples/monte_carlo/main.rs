@@ -20,10 +20,11 @@
 #![feature(core)]
 
 extern crate rgsl;
+extern crate num;
 
 use std::intrinsics::{fabsf64};
 use std::f64::consts::PI;
-use std::num::Float;
+use num::Float;
 
 /* Computation of the integral,
 

@@ -50,8 +50,9 @@ the range of validity for Gaussian errors.
 #![allow(non_snake_case)]
 
 extern crate rgsl;
+extern crate num;
 
-use std::num::Float;
+use num::Float;
 
 struct Data {
     n: u64,

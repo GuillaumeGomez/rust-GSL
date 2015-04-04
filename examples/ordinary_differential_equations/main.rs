@@ -4,7 +4,6 @@
 
 #![feature(libc)]
 #![feature(collections)]
-#![feature(convert)]
 
 extern crate rgsl;
 extern crate libc;
