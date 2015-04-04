@@ -27,7 +27,7 @@ R. Broucke, “Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Al
 use ffi;
 use enums;
 use std::f64::consts::PI;
-use std::num::Float;
+use num::Float;
 use c_vec::CSlice;
 
 pub struct ChebSeries {

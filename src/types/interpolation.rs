@@ -42,7 +42,7 @@ use enums;
 
 /// evaluation accelerator
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct InterpAccel {
     /// cache of index
     pub cache: u64,
@@ -149,7 +149,7 @@ impl ffi::FFI<ffi::gsl_interp> for Interp {
     }
 }
 
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct InterpType {
     t: *const ffi::gsl_interp_type
 }

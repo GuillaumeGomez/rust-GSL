@@ -116,7 +116,7 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
     }
 }
 
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct QRngType {
     t: *const ffi::gsl_qrng_type
 }

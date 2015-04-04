@@ -2,12 +2,12 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct Index(pub u32);
 
 /// Indicates whether a matrix is in Row Major or Column Major order.
 /// Row major order is the native order for C programs, while Column major order is native for Fortran.
-#[derive(PartialEq, PartialOrd, Debug, Copy)]
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
 #[repr(C)]
 pub enum Order {
     RowMajor = 101,
@@ -15,7 +15,7 @@ pub enum Order {
 }
 
 /// Used to indicate the order of a matrix-matrix multiply.
-#[derive(PartialEq, PartialOrd, Debug, Copy)]
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
 #[repr(C)]
 pub enum Side {
     /// Means __A__ __B__
@@ -25,7 +25,7 @@ pub enum Side {
 }
 
 /// Used to represent transpose operations on a matrix.
-#[derive(PartialEq, PartialOrd, Debug, Copy)]
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
 #[repr(C)]
 pub enum Transpose {
     /// Represents __X__
@@ -37,7 +37,7 @@ pub enum Transpose {
 }
 
 /// Used to indicate which part of a symmetric matrix to use.
-#[derive(PartialEq, PartialOrd, Debug, Copy)]
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
 #[repr(C)]
 pub enum Uplo {
     /// Means user the upper triagle of the matrix.
@@ -46,7 +46,7 @@ pub enum Uplo {
     Lower
 }
 
-#[derive(PartialEq, PartialOrd, Debug, Copy)]
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
 #[repr(C)]
 pub enum Diag {
     NonUnit = 131,

@@ -115,7 +115,6 @@ use std::f64::INFINITY;
 use std::intrinsics::{sqrtf64, powf64, fabsf64, floorf64, logf64};
 use std::default::Default;
 use libc::c_void;
-use std::num::Int;
 use c_vec::CSlice;
 
 pub struct PlainMonteCarlo {
@@ -608,7 +607,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
 }
 
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct VegasParams {
     /// The parameter alpha controls the stiffness of the rebinning algorithm. It is typically set between one and two. A value of zero prevents
     /// rebinning of the grid. The default value is 1.5.

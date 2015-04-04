@@ -74,7 +74,7 @@ use libc::c_void;
 /// As with GSL function objects, user-supplied parameter data is also present.
 // FIXME : remove all C types !
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct ODEiv2System {
     pub function: fn(t: f64, *const f64, *mut f64, *mut c_void) -> enums::value::Value,
     pub jacobian: fn(t: f64, *const f64, *mut f64, *mut f64, *mut c_void) -> enums::value::Value,
@@ -178,7 +178,7 @@ impl ffi::FFI<ffi::gsl_odeiv2_step> for ODEiv2Step {
     }
 }
 
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct ODEiv2StepType {
     t: *const ffi::gsl_odeiv2_step_type
 }
@@ -444,7 +444,7 @@ impl ffi::FFI<ffi::gsl_odeiv2_control> for ODEiv2Control {
     }
 }
 
-#[derive(Copy)]
+#[derive(Clone, Copy)]
 pub struct ODEiv2ControlType {
     t: *const ffi::gsl_odeiv2_control_type
 }

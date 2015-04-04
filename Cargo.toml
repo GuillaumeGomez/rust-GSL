@@ -13,6 +13,7 @@ license = "GPL-3.0+"
 
 [dependencies]
 c_vec = "^1.0.0"
+num = "*"
 
 [lib]
 

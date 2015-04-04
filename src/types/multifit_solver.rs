@@ -40,7 +40,7 @@ These routines provide a high level wrapper that combine the iteration and conve
 !*/
 
 use ffi;
-use std::num::Float;
+use num::Float;
 use libc::c_void;
 
 pub struct MultiFitFunction<'r, T:'r> {

@@ -7,7 +7,7 @@
 use ffi;
 use enums;
 use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
-use std::num::Float;
+use num::Float;
 use c_vec::CSlice;
 
 static XI : [f64; 33] = [
@@ -2645,7 +2645,7 @@ impl CquadWorkspace {
         static n : [i32; 4] = [4i32, 8i32, 16i32, 32i32];
         static skip : [i32; 4] = [8i32, 4i32, 2i32, 1i32];
         static idx : [i32; 4] = [0i32, 5i32, 14i32, 31i32];
-        let w = ::std::f64::consts::SQRT2 / 2f64;
+        let w = ::std::f64::consts::SQRT_2 / 2f64;
         let ndiv_max = 20i32;
 
         /* Actual variables (as opposed to constants above). */

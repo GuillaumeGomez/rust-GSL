@@ -59,9 +59,6 @@ Here is the list of all modules :
 #![feature(core)]
 #![feature(libc)]
 #![feature(collections)]
-#![feature(std_misc)]
-#![feature(int_uint)]
-#![feature(convert)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -70,6 +67,7 @@ Here is the list of all modules :
 
 extern crate libc;
 extern crate c_vec;
+extern crate num;
 
 pub use types::{
     ComplexF32,
