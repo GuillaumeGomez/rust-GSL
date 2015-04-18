@@ -252,7 +252,7 @@ impl Histogram {
         unsafe {
             let n = (*self.h).n as isize;
 
-            for i in 0is..n {
+            for i in 0isize..n {
                 write!(stream, "{}", *(*self.h).range.offset(i));
                 write!(stream, " ");
                 write!(stream, "{}", *(*self.h).range.offset(i + 1));

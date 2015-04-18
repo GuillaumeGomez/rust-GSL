@@ -308,7 +308,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     let mut fv3 : [f64; 5] = [0f64; 5];
     let mut fv4 : [f64; 5] = [0f64; 5];
 
-    for k in 0us..5us {
+    for k in 0usize..5usize {
         let abscissa = half_length * x1[k];
         let fval1 = f(center + abscissa, arg);
         let fval2 = f(center - abscissa, arg);
@@ -322,7 +322,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         fv2[k] = fval2;
     }
 
-    for k in 0us..5us {
+    for k in 0usize..5usize {
         let abscissa = half_length * x2[k];
         let fval1 = f(center + abscissa, arg);
         let fval2 = f(center - abscissa, arg);
@@ -339,7 +339,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     let mean = 0.5f64 * res21;
     let mut resasc = unsafe { w21b[5] * fabsf64(f_center - mean) };
 
-    for k in 0us..5us {
+    for k in 0usize..5usize {
         resasc += unsafe { (w21a[k] * (fabsf64(fv1[k] - mean) + fabsf64(fv2[k] - mean)) + w21b[k] * (fabsf64(fv3[k] - mean) + fabsf64(fv4[k] - mean))) };
     }
     resasc *= abs_half_length;
@@ -357,11 +357,11 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     // compute the integral using the 43-point formula.
     let mut res43 = w43b[11] * f_center;
 
-    for k in 0us..10us {
+    for k in 0usize..10usize {
         res43 += savfun[k] * w43a[k];
     }
 
-    for k in 0us..11us {
+    for k in 0usize..11usize {
         let abscissa = half_length * x3[k];
         let fval = f(center + abscissa, arg) + f(center - abscissa, arg);
       
@@ -846,7 +846,7 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
         result_gauss = f_center * wg[n / 2 - 1];
     }
 
-    for j in 0us..((n - 1) / 2) {
+    for j in 0usize..((n - 1) / 2) {
         // in original fortran j=1,2,3 jtw=2,4,6
         let jtw = j * 2 + 1;
         let abscissa = half_length * xgk[jtw];
@@ -861,7 +861,7 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
         result_abs += unsafe { wgk[jtw] * (fabsf64(fval1) + fabsf64(fval2)) };
     }
 
-    for j in 0us..(n / 2) {
+    for j in 0usize..(n / 2) {
         let jtwm1 = j * 2;
         let abscissa = half_length * xgk[jtwm1];
         let fval1 = f(center - abscissa, arg);
@@ -877,7 +877,7 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 
     let mut result_asc = unsafe { wgk[n - 1] * fabsf64(f_center - mean) };
 
-    for j in 0us..(n - 1) {
+    for j in 0usize..(n - 1) {
         result_asc += unsafe { wgk[j] * (fabsf64(fv1[j] - mean) + fabsf64(fv2[j] - mean)) };
     }
 

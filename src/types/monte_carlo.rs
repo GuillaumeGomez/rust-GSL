@@ -158,7 +158,7 @@ impl PlainMonteCarlo {
                 rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 if xu[i] <= xl[i] {
                     rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
@@ -171,13 +171,13 @@ impl PlainMonteCarlo {
             /* Compute the volume of the region */
             let mut vol = 1f64;
 
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 vol *= xu[i] - xl[i];
             }
 
-            for n in 0us..(calls as usize) {
+            for n in 0usize..(calls as usize) {
                 /* Choose a random point in the integration region */
-                for i in 0us..dim {
+                for i in 0usize..dim {
                     x[i] = xl[i] + r.uniform_pos() * (xu[i] - xl[i]);
                 }
 
@@ -286,7 +286,7 @@ impl MiserMonteCarlo {
                 rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 if xu[i] <= xl[i] {
                     rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
@@ -303,7 +303,7 @@ impl MiserMonteCarlo {
             /* Compute volume */
             let mut vol = 1f64;
 
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 vol *= xu[i] - xl[i];
             }
 
@@ -315,9 +315,9 @@ impl MiserMonteCarlo {
                     rgsl_error!("insufficient calls for subvolume", ::Value::Failed);
                 }
 
-                for n in 0us..(calls as usize) {
+                for n in 0usize..(calls as usize) {
                     /* Choose a random point in the integration region */
-                    for i in 0us..dim {
+                    for i in 0usize..dim {
                         x[i] = xl[i] + r.uniform_pos() * (xu[i] - xl[i]);
                     }
 
@@ -350,7 +350,7 @@ impl MiserMonteCarlo {
             }
 
             /* Flip coins to bisect the integration region with some fuzz */
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 let s = if (r.uniform() - 0.5f64) >= 0f64 { (*self.s).dither } else { -(*self.s).dither };
                 
                 xmid[i] = (0.5f64 + s) * xl[i] + (0.5f64 - s) * xu[i];
@@ -375,7 +375,7 @@ impl MiserMonteCarlo {
                 weight_r = 1f64;
                 weight_l = weight_r;
 
-                for i in 0us..dim {
+                for i in 0usize..dim {
                     if sigma_l[i] >= 0f64 && sigma_r[i] >= 0f64 {
                         /* estimates are okay */
                         let var = powf64(sigma_l[i], beta) + powf64(sigma_r[i], beta);
@@ -524,7 +524,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
         let mut q = 0f64; 
         let mut vol = 1f64;
 
-        for i in 0us..dim {
+        for i in 0usize..dim {
             vol *= xu[i] - xl[i];
             hits_r[i] = 0;
             hits_l[i] = hits_r[i];
@@ -536,11 +536,11 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
             sigma_l[i] = sigma_r[i];
         }
 
-        for n in 0us..(calls as usize) {
-            let j = (n / 2us) % dim;
+        for n in 0usize..(calls as usize) {
+            let j = (n / 2usize) % dim;
             let side = n % 2usize;
 
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 let z = r.uniform_pos();
 
                 if i != j {
@@ -565,7 +565,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
             }
 
             /* compute the variances on each side of the bisection */
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 if x[i] <= xmid[i] {
                     fsum_l[i] += fval;
                     fsum2_l[i] += fval * fval;
@@ -578,7 +578,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
             }
         }
 
-        for i in 0us..dim {
+        for i in 0usize..dim {
             let fraction_l = (xmid[i] - xl[i]) / (xu[i] - xl[i]);
 
             if hits_l[i] > 0 {
@@ -686,7 +686,7 @@ impl VegasMonteCarlo {
                 rgsl_error!("number of dimensions must match allocated size", ::Value::Inval);
             }
 
-            for i in 0us..dim {
+            for i in 0usize..dim {
                 if xu[i] <= xl[i] {
                     rgsl_error!("xu must be greater than xl", ::Value::Inval);
                 }
@@ -772,7 +772,7 @@ impl VegasMonteCarlo {
             let mut cum_int = 0f64;
             let mut cum_sig = 0f64;
 
-            for it in 0us..((*self.s).iterations as usize) {
+            for it in 0usize..((*self.s).iterations as usize) {
                 let mut intgrl = 0f64;
                 let mut tss = 0f64;
                 let calls_per_box = (*self.s).calls_per_box;
@@ -792,7 +792,7 @@ impl VegasMonteCarlo {
                     let mut m = 0f64;
                     let mut q = 0f64;
 
-                    for k in 0us..(calls_per_box as usize) {
+                    for k in 0usize..(calls_per_box as usize) {
                         let mut bin_vol = 0f64;
 
                         random_point(x.as_mut(), bin.as_mut(), &mut bin_vol, t_box.as_mut(), xl, xu, self.s, r/*, c == 4640*/);
@@ -977,7 +977,7 @@ unsafe fn init_grid(s: *mut ffi::gsl_monte_vegas_state, xl: &[f64], xu: &[f64]) 
 
     (*s).bins = 1;
 
-    for j in 0us..xl.len() {
+    for j in 0usize..xl.len() {
         let dx = xu[j] - xl[j];
         
         delx[j] = dx;
@@ -994,8 +994,8 @@ unsafe fn reset_grid_values(s: *mut ffi::gsl_monte_vegas_state) {
     let dim = (*s).dim as isize;
     let bins = (*s).bins as isize;
 
-    for i in 0is..bins {
-        for j in 0is..dim {
+    for i in 0isize..bins {
+        for j in 0isize..dim {
             *(*s).d.offset(i * dim + j) = 0f64;
         }
     }
@@ -1004,7 +1004,7 @@ unsafe fn reset_grid_values(s: *mut ffi::gsl_monte_vegas_state) {
 unsafe fn accumulate_distribution(s: *mut ffi::gsl_monte_vegas_state, bin: &[i32], y: f64) {
     let dim = (*s).dim as usize;
 
-    for j in 0is..(dim as isize) {
+    for j in 0isize..(dim as isize) {
         let i = bin[j as usize] as isize;
 
         *(*s).d.offset(i * dim as isize + j) += y;
@@ -1027,7 +1027,7 @@ unsafe fn random_point(x: &mut [f64], bin: &mut [i32], bin_vol: &mut f64, box_: 
     let mut t_delx = CSlice::new((*s).delx, xl.len());
     let delx = t_delx.as_mut();
 
-    for j in 0us..dim {
+    for j in 0usize..dim {
         /* box[j] + ran gives the position in the box units, while z
            is the position in bin units.  */
 
@@ -1062,12 +1062,12 @@ unsafe fn resize_grid(s: *mut ffi::gsl_monte_vegas_state, bins: usize) {
     /* weight is ratio of bin sizes */
     let pts_per_bin = (*s).bins as f64 / bins as f64;
 
-    for j in 0us..dim {
+    for j in 0usize..dim {
         let mut xnew = 0f64;
         let mut dw = 0f64;
         let mut i = 1usize;
 
-        for k in 1us..((*s).bins as usize + 1us) {
+        for k in 1usize..((*s).bins as usize + 1usize) {
             dw += 1f64;
             let xold = xnew;
             xnew = *(*s).xi.offset(k as isize * dim as isize + j as isize);
@@ -1079,7 +1079,7 @@ unsafe fn resize_grid(s: *mut ffi::gsl_monte_vegas_state, bins: usize) {
             }
         }
 
-        for k in 1us..bins {
+        for k in 1usize..bins {
             *(*s).xi.offset(k as isize * dim as isize + j as isize) = *(*s).xin.offset(k as isize);
         }
 
@@ -1093,7 +1093,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
     let dim = (*s).dim as usize;
     let bins = (*s).bins as usize;
 
-    for j in 0us..dim {
+    for j in 0usize..dim {
         let mut t_weight = CSlice::new((*s).weight, bins);
         let weight = t_weight.as_mut();
 
@@ -1105,7 +1105,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
 
         /* This implements gs[i][j] = (gs[i-1][j]+gs[i][j]+gs[i+1][j])/3 */
 
-        for i in 1us..(bins - 1us) {
+        for i in 1usize..(bins - 1usize) {
             let rc = oldg + newg;
 
             oldg = newg;
@@ -1113,13 +1113,13 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
             *(*s).d.offset(i as isize * dim as isize + j as isize) = (rc + newg) / 3f64;
             grid_tot_j += *(*s).d.offset(i as isize * dim as isize + j as isize);
         }
-        *(*s).d.offset((bins as isize - 1is) * dim as isize + j as isize) = (newg + oldg) / 2f64;
+        *(*s).d.offset((bins as isize - 1isize) * dim as isize + j as isize) = (newg + oldg) / 2f64;
 
-        grid_tot_j += *(*s).d.offset((bins as isize - 1is) * dim as isize + j as isize);
+        grid_tot_j += *(*s).d.offset((bins as isize - 1isize) * dim as isize + j as isize);
 
         let mut tot_weight = 0f64;
 
-        for i in 0us..bins {
+        for i in 0usize..bins {
             weight[i] = 0f64;
 
             if *(*s).d.offset(i as isize * dim as isize + j as isize) > 0f64 {
@@ -1142,10 +1142,10 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
             let mut dw = 0f64;
             let mut i = 1usize;
 
-            for k in 0us..bins {
+            for k in 0usize..bins {
                 dw += weight[k];
                 let xold = xnew;
-                xnew = *(*s).xi.offset((k as isize + 1is) * dim as isize + j as isize);
+                xnew = *(*s).xi.offset((k as isize + 1isize) * dim as isize + j as isize);
 
                 while dw > pts_per_bin {
                     dw -= pts_per_bin;
@@ -1154,7 +1154,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
                 }
             }
 
-            for k in 1us..bins {
+            for k in 1usize..bins {
                 *(*s).xi.offset(k as isize * dim as isize + j as isize) = *(*s).xin.offset(k as isize);
             }
 
@@ -1171,7 +1171,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
     let output_stream = t_output_stream.unwrap();
 
     write!(output_stream, "The limits of integration are:\n");
-    for j in range(0us, xl.len()) {
+    for j in range(0usize, xl.len()) {
         write!(output_stream, "\nxl[{}]={}    xu[{}]={}", j, xl[j], j, xu[j]);
     }
     write!(output_stream, "\n");
@@ -1227,7 +1227,7 @@ unsafe fn print_dist(state: *mut ffi::gsl_monte_vegas_state, dim: u32) {
         for i in range(0i, (*state).bins as isize) {
             write!(output_stream, "weight [{:11.2}e , {:11.2}e] = ",
                 *(*state).xi.offset(i * (*state).dim as isize + j),
-                *(*state).xi.offset((i + 1is) * (*state).dim as isize + j));
+                *(*state).xi.offset((i + 1isize) * (*state).dim as isize + j));
             write!(output_stream, " {:11.2}e\n", *(*state).d.offset(i * (*state).dim as isize + j));
         }
         write!(output_stream, "\n");
@@ -1248,11 +1248,11 @@ unsafe fn print_grid(state: *mut ffi::gsl_monte_vegas_state, dim: u32) {
         return;
     }
 
-    for j in range(0us, dim as usize) {
+    for j in range(0usize, dim as usize) {
         write!(output_stream, "\n axis {} \n", j);
         write!(output_stream, "      x   \n");
 
-        for i in range(0us, (*state).bins as usize) {
+        for i in range(0usize, (*state).bins as usize) {
             write!(output_stream, "{:11.2}e", *(*state).xi.offset(i as isize * (*state).dim as isize + j as isize));
             
             if i % 5u == 4u {
@@ -1268,7 +1268,7 @@ unsafe fn print_grid(state: *mut ffi::gsl_monte_vegas_state, dim: u32) {
 unsafe fn init_box_coord(s: *mut ffi::gsl_monte_vegas_state, box_: &mut [ffi::coord]) {
     let dim = (*s).dim as usize;
 
-    for i in 0us..dim {
+    for i in 0usize..dim {
         box_[i] = 0;
     }
 }

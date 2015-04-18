@@ -71,7 +71,7 @@ pub mod objects {
             downheap(array, n, k, compare);
         }
         while n > 0 {
-            array.swap(0us, n as usize);
+            array.swap(0usize, n as usize);
             n -= 1;
             downheap(array, n, 0, compare);
         }
@@ -115,7 +115,7 @@ pub mod objects {
             downheap_index(p, array, n, k, compare);
         }
         while n > 0 {
-            p.swap(0us, n as usize);
+            p.swap(0usize, n as usize);
             n -= 1;
             downheap_index(p, array, n, 0, compare);
         }

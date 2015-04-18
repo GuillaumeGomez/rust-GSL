@@ -28,7 +28,7 @@ impl FftComplexWaveTable {
             unsafe {
                 Some(FftComplexWaveTable {
                     w: tmp,
-                    f: CSlice::new((*tmp).factor.as_mut_ptr(), 64us)
+                    f: CSlice::new((*tmp).factor.as_mut_ptr(), 64usize)
                 })
             }
         }
@@ -52,7 +52,7 @@ impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
         unsafe {
             FftComplexWaveTable {
                 w: w,
-                f: CSlice::new((*w).factor.as_mut_ptr(), 64us)
+                f: CSlice::new((*w).factor.as_mut_ptr(), 64usize)
             }
         }
     }

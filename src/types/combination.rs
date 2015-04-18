@@ -46,7 +46,7 @@ impl Combination {
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0usize)
                     })
                 }
             }
@@ -70,7 +70,7 @@ impl Combination {
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0usize)
                     })
                 }
             }

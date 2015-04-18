@@ -37,7 +37,7 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CSlice::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0usize)
                     })
                 } else {
                     Some(MultiSet {
@@ -62,7 +62,7 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CSlice::new(tmp as *mut u64, 0us)
+                        data: CSlice::new(tmp as *mut u64, 0usize)
                     })
                 } else {
                     Some(MultiSet {
@@ -154,7 +154,7 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
                 MultiSet {
                     c: c,
                     // dirty trick to avoid a failure
-                    data: CSlice::new(c as *mut u64, 0us)
+                    data: CSlice::new(c as *mut u64, 0usize)
                 }
             } else {
                 MultiSet {
