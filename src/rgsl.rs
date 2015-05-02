@@ -55,7 +55,6 @@ Here is the list of all modules :
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
 
-#![feature(unsafe_destructor)]
 #![feature(core)]
 #![feature(libc)]
 #![feature(collections)]

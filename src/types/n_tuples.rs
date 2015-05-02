@@ -119,7 +119,6 @@ impl<T> NTuples<T> {
     }
 }
 
-#[unsafe_destructor]
 impl<T> Drop for NTuples<T> {
     fn drop(&mut self) {
         unsafe { ffi::gsl_ntuple_close(self.n) };

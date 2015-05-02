@@ -145,7 +145,6 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
     }
 }
 
-#[unsafe_destructor]
 impl<'r, T> Drop for MultiFitFdfSolver<'r, T> {
     fn drop(&mut self) {
         //self.s = ::std::ptr::null_mut();

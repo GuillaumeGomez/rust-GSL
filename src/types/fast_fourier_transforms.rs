@@ -39,7 +39,6 @@ impl FftComplexWaveTable {
     }
 }
 
-#[unsafe_destructor]
 impl Drop for FftComplexWaveTable {
     fn drop(&mut self) {
         unsafe { ffi::gsl_fft_complex_wavetable_free(self.w) };

@@ -266,7 +266,6 @@ impl<T> Minimizer<T> {
     }
 }
 
-#[unsafe_destructor]
 impl<T> Drop for Minimizer<T> {
     fn drop(&mut self) {
         unsafe { free(self.state) };
