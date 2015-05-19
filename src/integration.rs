@@ -82,12 +82,12 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 
 use ffi;
 use enums;
-use std::intrinsics::{fabsf64, powf64, floorf64};
+use std::intrinsics::{powf64, floorf64};
 use num::Float;
 use std::ffi::CString;
 
 fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
-    let mut t_err = unsafe { fabsf64(err) };
+    let mut t_err = unsafe { err.abs() };
 
     if result_asc != 0f64 && t_err != 0f64 {
         let scale = unsafe { powf64((200f64 * t_err / result_asc), 1.5f64) };
@@ -117,7 +117,7 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
 pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_rel: f64, result: &mut f64, abs_err: &mut f64,
     n_eval: &mut u64) -> ::Value {
     let half_length = 0.5f64 * (b - a);
-    let abs_half_length = unsafe { fabsf64(half_length) };
+    let abs_half_length = unsafe { half_length.abs() };
     let center = 0.5f64 * (b + a);
     let f_center = f(center, arg);
 
@@ -301,7 +301,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     // Compute the integral using the 10- and 21-point formula.
     let mut res10 = 0f64;
     let mut res21 = w21b[5] * f_center;
-    let mut resabs = unsafe { w21b[5] * fabsf64(f_center) };
+    let mut resabs = unsafe { w21b[5] * f_center.abs() };
     let mut savfun : [f64; 21] = [0f64; 21];
     let mut fv1 : [f64; 5] = [0f64; 5];
     let mut fv2 : [f64; 5] = [0f64; 5];
@@ -316,7 +316,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
 
         res10 += w10[k] * fval;
         res21 += w21a[k] * fval;
-        resabs += unsafe { w21a[k] * (fabsf64(fval1) + fabsf64(fval2)) };
+        resabs += unsafe { w21a[k] * (fval1.abs() + fval2.abs()) };
         savfun[k] = fval;
         fv1[k] = fval1;
         fv2[k] = fval2;
@@ -329,7 +329,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
         let fval = fval1 + fval2;
 
         res21 += w21b[k] * fval;
-        resabs += unsafe { w21b[k] * (fabsf64(fval1) + fabsf64(fval2)) };
+        resabs += unsafe { w21b[k] * (fval1.abs() + fval2.abs()) };
         savfun[k + 5] = fval;
         fv3[k] = fval1;
         fv4[k] = fval2;
@@ -337,17 +337,17 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     resabs *= abs_half_length;
 
     let mean = 0.5f64 * res21;
-    let mut resasc = unsafe { w21b[5] * fabsf64(f_center - mean) };
+    let mut resasc = unsafe { w21b[5] * (f_center - mean).abs() };
 
     for k in 0usize..5usize {
-        resasc += unsafe { (w21a[k] * (fabsf64(fv1[k] - mean) + fabsf64(fv2[k] - mean)) + w21b[k] * (fabsf64(fv3[k] - mean) + fabsf64(fv4[k] - mean))) };
+        resasc += unsafe { (w21a[k] * ((fv1[k] - mean).abs() + (fv2[k] - mean).abs()) + w21b[k] * ((fv3[k] - mean).abs() + (fv4[k] - mean).abs())) };
     }
     resasc *= abs_half_length;
     let mut result_kronrod = res21 * half_length;
     let mut err = rescale_error((res21 - res10) * half_length, resabs, resasc);
 
     // test for convergence.
-    if err < eps_abs || err < eps_rel * unsafe { fabsf64(result_kronrod) } {
+    if err < eps_abs || err < eps_rel * unsafe { result_kronrod.abs() } {
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 21;
@@ -373,7 +373,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     result_kronrod = res43 * half_length;
     err = rescale_error((res43 - res21) * half_length, resabs, resasc);
 
-    if err < eps_abs || err < eps_rel * unsafe { fabsf64(result_kronrod) } {
+    if err < eps_abs || err < eps_rel * unsafe { result_kronrod.abs() } {
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 43;
@@ -396,7 +396,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     result_kronrod = res87 * half_length ;
     err = rescale_error((res87 - res43) * half_length, resabs, resasc);
   
-    if err < eps_abs || err < eps_rel * unsafe { fabsf64(result_kronrod) } {
+    if err < eps_abs || err < eps_rel * unsafe { result_kronrod.abs() } {
         *result = result_kronrod;
         *abs_err = err;
         *n_eval = 87;
@@ -834,13 +834,13 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 
     let center = 0.5f64 * (a + b);
     let half_length = 0.5f64 * (b - a);
-    let abs_half_length = unsafe { fabsf64(half_length) };
+    let abs_half_length = unsafe { half_length.abs() };
     let f_center = f(center, arg);
 
     let mut result_gauss = 0f64;
     let mut result_kronrod = f_center * wgk[n - 1];
 
-    let mut result_abs = unsafe { fabsf64(result_kronrod) };
+    let mut result_abs = unsafe { result_kronrod.abs() };
 
     if n % 2 == 0 {
         result_gauss = f_center * wg[n / 2 - 1];
@@ -858,7 +858,7 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
         fv2[jtw] = fval2;
         result_gauss += wg[j] * fsum;
         result_kronrod += wgk[jtw] * fsum;
-        result_abs += unsafe { wgk[jtw] * (fabsf64(fval1) + fabsf64(fval2)) };
+        result_abs += unsafe { wgk[jtw] * (fval1.abs() + fval2.abs()) };
     }
 
     for j in 0usize..(n / 2) {
@@ -870,15 +870,15 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
         fv1[jtwm1] = fval1;
         fv2[jtwm1] = fval2;
         result_kronrod += wgk[jtwm1] * (fval1 + fval2);
-        result_abs += unsafe { wgk[jtwm1] * (fabsf64(fval1) + fabsf64(fval2)) };
+        result_abs += unsafe { wgk[jtwm1] * (fval1.abs() + fval2.abs()) };
     }
 
     let mean = result_kronrod * 0.5;
 
-    let mut result_asc = unsafe { wgk[n - 1] * fabsf64(f_center - mean) };
+    let mut result_asc = unsafe { wgk[n - 1] * (f_center - mean).abs() };
 
     for j in 0usize..(n - 1) {
-        result_asc += unsafe { wgk[j] * (fabsf64(fv1[j] - mean) + fabsf64(fv2[j] - mean)) };
+        result_asc += unsafe { wgk[j] * ((fv1[j] - mean).abs() + (fv2[j] - mean).abs()) };
     }
 
     // scale by the width of the integration region
@@ -988,7 +988,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         let mut err_ext = ::DBL_MAX;
         let mut correc = 0f64;
 
-        let cycle = (2f64 * floorf64(fabsf64(omega)) + 1f64) * ::std::f64::consts::PI / fabsf64(omega);
+        let cycle = (2f64 * floorf64(omega.abs()) + 1f64) * ::std::f64::consts::PI / omega.abs();
 
         wf.set_length(cycle);
 
@@ -1015,7 +1015,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
             errsum = errsum + error1;
 
             /* estimate the truncation error as 50 times the final term */
-            let truncation_error = 50f64 * fabsf64(area1);
+            let truncation_error = 50f64 * area1.abs();
 
             total_error = errsum + truncation_error;
 
@@ -1088,7 +1088,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         }
 
         if res_ext != 0f64 && area != 0f64 {
-            if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
+            if err_ext / res_ext.abs() > errsum / area.abs() {
                 *result = area;
                 *abserr = total_error;
                 return ::types::integration::return_error(error_type);
