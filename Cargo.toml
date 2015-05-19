@@ -12,7 +12,7 @@ keywords = ["mathematics", "library", "GSL"]
 license = "GPL-3.0+"
 
 [dependencies]
-c_vec = "^1.0.0"
+c_vec = "*"
 num = "*"
 
 [lib]
