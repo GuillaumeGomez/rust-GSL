@@ -58,6 +58,8 @@ Here is the list of all modules :
 #![feature(core)]
 #![feature(libc)]
 #![feature(collections)]
+#![feature(core_intrinsics)]
+#![feature(vec_from_raw_buf)]
 
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
