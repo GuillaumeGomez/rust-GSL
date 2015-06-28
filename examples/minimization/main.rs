@@ -5,16 +5,13 @@
 // The following program uses the Brent algorithm to find the minimum of the function f(x) = \cos(x) + 1, which occurs at x = \pi. The 
 // starting interval is (0,6), with an initial guess for the minimum of 2.
 
-#![feature(core)]
-
 extern crate rgsl;
 
-use std::intrinsics::{cosf64};
 use std::f64::consts::PI;
 
 #[allow(unused_variables)]
 fn fn1(x: f64, params: &mut f64) -> f64 {
-    unsafe { cosf64(x) + 1f64 }
+    x.cos() + 1f64
 }
 
 #[allow(unused_assignments)]

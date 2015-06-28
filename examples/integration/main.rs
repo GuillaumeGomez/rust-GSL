@@ -2,12 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![feature(core)]
-
 extern crate rgsl;
 extern crate num;
 
-use std::intrinsics::{sinf64, logf64, expf64};
 use num::Float;
 
 struct FParams {
@@ -18,16 +15,16 @@ struct FParams {
 }
 
 fn f(x: f64, p: &mut FParams) -> f64 {
-    unsafe { sinf64(p.a * x + p.phi) }
+    (p.a * x + p.phi).sin()
 }
 
 #[allow(unused_variables)]
 fn cqf1(x: f64, p: &mut f64) -> f64 {
-    unsafe { expf64(x) }
+    x.exp()
 }
 
 fn qags_fn(x: f64, alpha: &mut f64) -> f64 {
-    unsafe { logf64(*alpha * x) / x.sqrt() }
+    (*alpha * x).ln() / x.sqrt()
 }
 
 /* f458(x) = 1/(1 + log(x)^2)^2 */
@@ -38,7 +35,7 @@ fn f458<T>(x: f64, params: &mut T) -> f64 {
     if x == 0f64 {
         0f64
     } else {
-        let u = unsafe { logf64(x) };
+        let u = x.ln();
         let v = 1f64 + u * u;
       
         1f64 / (v * v)

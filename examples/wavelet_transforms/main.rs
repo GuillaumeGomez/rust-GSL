@@ -5,8 +5,6 @@
 // The example program below prints all multisets elements containing the values {0,1,2,3} ordered by size. Multiset elements of the same
 // size are ordered lexicographically.
 
-#![feature(collections)]
-
 extern crate rgsl;
 extern crate num;
 
@@ -28,7 +26,7 @@ fn main() {
     for entry in std::env::args() {
         args.push(entry);
     }
-    let tmp = args.tail();
+    let tmp = args[1..].to_vec();
 
     if tmp.len() < 1 {
         panic!("USAGE: ./wavelet_transforms [file]");

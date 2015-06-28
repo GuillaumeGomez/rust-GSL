@@ -80,7 +80,6 @@ somewhere in the interval. If a valid initial interval is used then these algori
 
 use ffi;
 use libc::{c_void, malloc, free};
-use std::intrinsics::{fabsf64, sqrtf64};
 use num::Float;
 
 static REL_ERR_VAL    : f64 = 1.0e-06f64;
@@ -449,7 +448,7 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
         let w_lower = z - x_left;
         let w_upper = x_right - z;
 
-        let tolerance = ::SQRT_DBL_EPSILON * fabsf64(z);
+        let tolerance = ::SQRT_DBL_EPSILON * z.abs();
 
         let mut p = 0f64;
         let mut q = 0f64;
@@ -457,7 +456,7 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
 
         let midpoint = 0.5f64 * (x_left + x_right);
 
-        if fabsf64(e) > tolerance {
+        if e.abs() > tolerance {
             /* fit parabola */
 
             r = (z - w) * (f_z - f_v);
@@ -475,7 +474,7 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
             e = d;
         }
 
-        if fabsf64(p) < fabsf64(0.5f64 * q * r) && p < q * w_lower && p < q * w_upper {
+        if p.abs() < (0.5f64 * q * r).abs() && p < q * w_lower && p < q * w_upper {
             let t2 = 2f64 * tolerance;
 
             d = p / q;
@@ -490,7 +489,7 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
         }
 
 
-        if fabsf64(d) >= tolerance {
+        if d.abs() >= tolerance {
             u = z + d;
         } else {
             u = z + if d > 0f64 { tolerance } else { -tolerance };
@@ -611,9 +610,9 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
 
         let x_midpoint = 0.5f64 * (x_l + x_u);
         /* total error tolerance */
-        let tol = REL_ERR_VAL * fabsf64(x_m) + ABS_ERR_VAL;
+        let tol = REL_ERR_VAL * x_m.abs() + ABS_ERR_VAL;
 
-        if fabsf64(stored_step) - tol > -2.0f64 * ::DBL_EPSILON {
+        if stored_step.abs() - tol > -2.0f64 * ::DBL_EPSILON {
             /* Fit quadratic */
             let c3 = (x_m - x_small) * (f_m - f_prev_small);
             let mut c2 = (x_m - x_prev_small) * (f_m - f_small);
@@ -622,12 +621,12 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
             c2 = 2f64 * (c2 - c3);
 
             /* if( c2 != 0 ) */
-            if fabsf64(c2) > ::DBL_EPSILON {
+            if c2.abs() > ::DBL_EPSILON {
                 if c2 > 0f64 {
                     c1 = -c1;
                 }
 
-                c2 = fabsf64(c2);
+                c2 = c2.abs();
 
                 quad_step_size = c1 / c2;
             } else {
@@ -643,13 +642,13 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
 
         let x_trial = x_m + quad_step_size;
 
-        if fabsf64(quad_step_size) < fabsf64(0.5f64 * prev_stored_step) && x_trial > x_l && x_trial < x_u {
+        if quad_step_size.abs() < (0.5f64 * prev_stored_step).abs() && x_trial > x_l && x_trial < x_u {
             /* Take quadratic interpolation step */
             step_size = quad_step_size;
 
             /* Do not evaluate function too close to x_l or x_u */
             if (x_trial - x_l) < 2.0 * tol || (x_u - x_trial) < 2f64 * tol {
-                step_size = if x_midpoint >= x_m { 1f64 } else { -1f64 } * fabsf64(tol);
+                step_size = if x_midpoint >= x_m { 1f64 } else { -1f64 } * tol.abs();
             }
 
             // This line is supposed to do nothing
@@ -669,7 +668,7 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
                 inside_interval = x_l - x_m;
             }
 
-            if fabsf64(inside_interval) <= tol {
+            if inside_interval.abs() <= tol {
                 /* Swap inside and outside intervals */
                 let tmp = outside_interval;
 
@@ -681,8 +680,8 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
                 let step = inside_interval;
                 let scale_factor;
 
-                if fabsf64(outside_interval) < fabsf64(inside_interval) {
-                    scale_factor = 0.5f64 * sqrtf64(-outside_interval / inside_interval);
+                if outside_interval.abs() < inside_interval.abs() {
+                    scale_factor = 0.5f64 * (-outside_interval / inside_interval).sqrt();
                 } else {
                     scale_factor = (5f64 / 11f64) * (0.1f64 - inside_interval / outside_interval);
                 }
@@ -709,10 +708,10 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
         }
 
         /* Do not evaluate function too close to x_minimum */
-        let x_eval = if fabsf64(step_size) > tol {
+        let x_eval = if step_size.abs() > tol {
             x_m + step_size
         } else {
-            x_m + if step_size >= 0f64 { 1f64 } else { -1f64 } * fabsf64(tol)
+            x_m + if step_size >= 0f64 { 1f64 } else { -1f64 } * tol.abs()
         };
 
         /* Evaluate function at the new point x_eval */
@@ -745,14 +744,14 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
                 *f_upper = f_eval;
             }
 
-            if f_eval <= f_small || fabsf64(x_small - x_m) < 2f64 * ::DBL_EPSILON {
+            if f_eval <= f_small || (x_small - x_m).abs() < 2f64 * ::DBL_EPSILON {
                 state.x_prev_small = x_small;
                 state.f_prev_small = f_small;
 
                 state.x_small = x_eval;
                 state.f_small = f_eval;
-            } else if f_eval <= f_prev_small || fabsf64(x_prev_small - x_m) < 2f64 * ::DBL_EPSILON ||
-               fabsf64(x_prev_small - x_small) < 2f64 * ::DBL_EPSILON {
+            } else if f_eval <= f_prev_small || (x_prev_small - x_m).abs() < 2f64 * ::DBL_EPSILON ||
+               (x_prev_small - x_small).abs() < 2f64 * ::DBL_EPSILON {
                 state.x_prev_small = x_eval;
                 state.f_prev_small = f_eval;
             }

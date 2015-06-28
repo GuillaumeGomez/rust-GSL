@@ -6,7 +6,6 @@
 
 use ffi;
 use enums;
-use std::intrinsics::{fabsf64, logf64, powf64, sinf64, cosf64};
 use num::Float;
 use c_vec::CSlice;
 
@@ -1556,9 +1555,9 @@ impl IntegrationWorkspace {
             self.set_initial_result(result0, abserr0);
 
             /* Test on accuracy, use 0.01 relative error as an extra safety margin on the first iteration (ignored for subsequent iterations) */
-            let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+            let mut tolerance = epsabs.max(epsrel * result0.abs());
 
-            if abserr0 < tolerance && abserr0 < 0.01f64 * fabsf64(result0) {
+            if abserr0 < tolerance && abserr0 < 0.01f64 * result0.abs() {
                 *result = sign * result0;
                 *abserr = abserr0;
 
@@ -1615,7 +1614,7 @@ impl IntegrationWorkspace {
                 if err_reliable1 != 0 && err_reliable2 != 0 {
                     let delta = r_i - area12;
 
-                    if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i {
+                    if delta.abs() <= 1.0e-5f64 * area12.abs() && error12 >= 0.99f64 * e_i {
                         roundoff_type1 += 1;
                     }
                     if iteration >= 10 && error12 > e_i {
@@ -1623,7 +1622,7 @@ impl IntegrationWorkspace {
                     }
                 }
 
-                tolerance = epsabs.max(epsrel * fabsf64(area));
+                tolerance = epsabs.max(epsrel * area.abs());
 
                 if errsum > tolerance {
                     if roundoff_type1 >= 6 || roundoff_type2 >= 20 {
@@ -2052,10 +2051,10 @@ impl IntegrationQawsTable {
             }
 
             /* Test on accuracy */
-            let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+            let mut tolerance = epsabs.max(epsrel * result0.abs());
 
             // Test on accuracy, use 0.01 relative error as an extra safety margin on the first iteration (ignored for subsequent iterations)
-            if abserr0 < tolerance && abserr0 < 0.01 * fabsf64(result0) {
+            if abserr0 < tolerance && abserr0 < 0.01 * result0.abs() {
                 *result = result0;
                 *abserr = abserr0;
 
@@ -2104,7 +2103,7 @@ impl IntegrationQawsTable {
                 if err_reliable1 && err_reliable2 {
                     let delta = r_i - area12;
 
-                    if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99 * e_i {
+                    if delta.abs() <= 1.0e-5f64 * area12.abs() && error12 >= 0.99 * e_i {
                         roundoff_type1 += 1;
                     }
                     if iteration >= 10 && error12 > e_i {
@@ -2112,7 +2111,7 @@ impl IntegrationQawsTable {
                     }
                 }
 
-                tolerance = epsabs.max(epsrel * fabsf64(area));
+                tolerance = epsabs.max(epsrel * area.abs());
 
                 if errsum > tolerance {
                     if roundoff_type1 >= 6 || roundoff_type2 >= 20 {
@@ -2263,7 +2262,7 @@ impl IntegrationQawoTable {
             let mut table : ffi::extrapolation_table = ::std::mem::zeroed();
 
             let b = a + (*self.w).L ;
-            let abs_omega = fabsf64((*self.w).omega) ;
+            let abs_omega = (*self.w).omega.abs() ;
 
             /* Initialize results */
             workspace.initialise(a, b);
@@ -2285,7 +2284,7 @@ impl IntegrationQawoTable {
 
             workspace.set_initial_result(result0, abserr0);
 
-            let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+            let mut tolerance = epsabs.max(epsrel * result0.abs());
 
             if abserr0 <= 100f64 * ::DBL_EPSILON * resabs0 && abserr0 > tolerance {
                 *result = result0;
@@ -2307,7 +2306,7 @@ impl IntegrationQawoTable {
             /* Initialization */
             initialise_table(&mut table);
 
-            if 0.5f64 * abs_omega * fabsf64(b - a) <= 2f64 {
+            if 0.5f64 * abs_omega * (b - a).abs() <= 2f64 {
                 append_table(&mut table, result0);
                 extall = true;
             }
@@ -2371,12 +2370,12 @@ impl IntegrationQawoTable {
                 errsum = errsum + error12 - e_i;
                 area = area + area12 - r_i;
 
-                tolerance = epsabs.max(epsrel * fabsf64(area));
+                tolerance = epsabs.max(epsrel * area.abs());
 
                 if resasc1 != error1 && resasc2 != error2 {
                     let delta = r_i - area12;
 
-                    if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i {
+                    if delta.abs() <= 1.0e-5f64 * area12.abs() && error12 >= 0.99f64 * e_i {
                         if !extrapolate {
                             roundoff_type1 += 1;
                         } else {
@@ -2460,7 +2459,7 @@ impl IntegrationQawoTable {
                         let alist = CSlice::new((*workspace.w).alist, i + 1usize);
                         let width = blist.as_ref()[i] - alist.as_ref()[i];
 
-                        if 0.25f64 * fabsf64(width) * abs_omega > 2f64 {
+                        if 0.25f64 * width.abs() * abs_omega > 2f64 {
                             continue;
                         }
 
@@ -2500,7 +2499,7 @@ impl IntegrationQawoTable {
                     err_ext = abseps;
                     res_ext = reseps;
                     correc = error_over_large_intervals;
-                    ertest = epsabs.max(epsrel * fabsf64(reseps));
+                    ertest = epsabs.max(epsrel * reseps.abs());
                     if err_ext <= ertest {
                         break;
                     }
@@ -2544,7 +2543,7 @@ impl IntegrationQawoTable {
                 }
 
                 if *result != 0f64 && area != 0f64 {
-                    if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
+                    if err_ext / res_ext.abs() > errsum / area.abs() {
                         *result = workspace.sum_results();
                         *abserr = errsum;
                         return return_error(error_type);
@@ -2560,7 +2559,7 @@ impl IntegrationQawoTable {
 
             /*  Test on divergence. */
             {
-                let max_area = fabsf64(res_ext).max(fabsf64(area));
+                let max_area = res_ext.abs().max(area.abs());
 
                 if !positive_integrand && max_area < 0.01f64 * resabs0 {
                     return return_error(error_type);
@@ -2570,7 +2569,7 @@ impl IntegrationQawoTable {
             {
                 let ratio = res_ext / area;
 
-                if ratio < 0.01f64 || ratio > 100f64 || errsum > fabsf64(area) {
+                if ratio < 0.01f64 || ratio > 100f64 || errsum > area.abs() {
                     error_type = 6;
                 }
             }
@@ -2722,10 +2721,24 @@ impl CquadWorkspace {
                 (*iv).err = 2f64 * h * nc;
             }
 
-            let mut t_heap = Vec::from_raw_buf((*self.w).heap, (*self.w).size as usize + 1usize);
+            let mut t_heap = ::std::slice::from_raw_parts((*self.w).heap, (*self.w).size as usize + 1usize).to_vec();
             let heap = t_heap.as_mut();
-            let mut t_ivals = Vec::from_raw_buf((*self.w).ivals, (*self.w).size as usize + 1usize);
-            let ivals = t_ivals.as_mut();
+            let t_ivals = ::std::slice::from_raw_parts((*self.w).ivals, (*self.w).size as usize + 1usize);
+            let mut ivals = Vec::with_capacity((*self.w).size as usize + 1usize);
+
+            for v in t_ivals.iter() {
+                ivals.push(ffi::gsl_integration_cquad_ival {
+                    a: v.a,
+                    b: v.b,
+                    c: v.c,
+                    fx: v.fx,
+                    igral: v.igral,
+                    err: v.err,
+                    depth: v.depth,
+                    rdepth: v.rdepth,
+                    ndiv: v.ndiv
+                });
+            }
 
             /* Initialize the heaps. */
             for i in 0usize..((*self.w).size as usize) {
@@ -2740,8 +2753,8 @@ impl CquadWorkspace {
             let mut err_final = 0f64;
 
             /* Main loop. */
-            while nivals > 0 && err > 0f64 && !(err <= fabsf64(igral) * epsrel || err <= epsabs)
-                && !(err_final > fabsf64(igral) * epsrel && err - err_final < fabsf64(igral) * epsrel)
+            while nivals > 0 && err > 0f64 && !(err <= igral.abs() * epsrel || err <= epsabs)
+                && !(err_final > igral.abs() * epsrel && err - err_final < igral.abs() * epsrel)
                 && !(err_final > epsabs && err - err_final < epsabs) {
 
                 /* Put our finger on the interval with the largest error. */
@@ -2820,7 +2833,7 @@ impl CquadWorkspace {
 
                 /* Should we drop this interval? */
                 if (m + h * XI[0]) >= (m + h * XI[1]) || (m + h * XI[31]) >= (m + h * XI[32])
-                    || (*iv).err < fabsf64((*iv).igral) * ::DBL_EPSILON * 10f64 {
+                    || (*iv).err < (*iv).igral.abs() * ::DBL_EPSILON * 10f64 {
                     /* printf
                        ("cquad: dumping ival %i (of %i) with [%e,%e] int=%e, err=%e, depth=%i\n",
                        ws->heap[0], nivals, iv->a, iv->b, iv->igral, iv->err,
@@ -2915,7 +2928,7 @@ impl CquadWorkspace {
                     (*ivl).err = ncdiff * h;
 
                     /* Check for divergence. */
-                    (*ivl).ndiv = (*iv).ndiv + (fabsf64((*iv).c[0]) > 0f64 && (*ivl).c[0] / (*iv).c[0] > 2f64) as i32;
+                    (*ivl).ndiv = (*iv).ndiv + ((*iv).c[0].abs() > 0f64 && (*ivl).c[0] / (*iv).c[0] > 2f64) as i32;
                     if (*ivl).ndiv > ndiv_max && 2 * (*ivl).ndiv > (*ivl).rdepth {
                         /* need copysign(INFINITY, igral) */
                         *result = if igral >= 0f64 {
@@ -2984,7 +2997,7 @@ impl CquadWorkspace {
                     (*ivr).err = ncdiff * h;
 
                     /* Check for divergence. */
-                    (*ivr).ndiv = (*iv).ndiv + (fabsf64((*iv).c[0]) > 0f64 && (*ivr).c[0] / (*iv).c[0] > 2f64) as i32;
+                    (*ivr).ndiv = (*iv).ndiv + ((*iv).c[0].abs() > 0f64 && (*ivr).c[0] / (*iv).c[0] > 2f64) as i32;
                 
                     if (*ivr).ndiv > ndiv_max && 2i32 * (*ivr).ndiv > (*ivr).rdepth {
                         /* need copysign(INFINITY, igral) */
@@ -3263,7 +3276,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
     f_w.set_initial_result(result0, abserr0);
 
     // Test on accuracy
-    let mut tolerance = unsafe { epsabs.max(epsrel * fabsf64(result0)) };
+    let mut tolerance = unsafe { epsabs.max(epsrel * result0.abs()) };
 
     // need IEEE rounding here to match original quadpack behavior
     let round_off = 50f64 * ::DBL_EPSILON * resabs0;
@@ -3324,7 +3337,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
         if resasc1 != error1 && resasc2 != error2 {
             let delta = r_i - area12;
 
-            if unsafe { fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i } {
+            if unsafe { delta.abs() <= 1.0e-5f64 * area12.abs() && error12 >= 0.99f64 * e_i } {
                 roundoff_type1 += 1;
             }
             if iteration >= 10 && error12 > e_i {
@@ -3332,7 +3345,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
             }
         }
 
-        tolerance = unsafe { epsabs.max(epsrel * fabsf64(area)) };
+        tolerance = unsafe { epsabs.max(epsrel * area.abs()) };
 
         if errsum > tolerance {
             if roundoff_type1 >= 6 || roundoff_type2 >= 20 {
@@ -3400,7 +3413,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
     let current = (*epstab)[n];
 
     let mut absolute = ::DBL_MAX;
-    let mut relative = 5f64 * ::DBL_EPSILON * fabsf64(current);
+    let mut relative = 5f64 * ::DBL_EPSILON * current.abs();
 
     let newelm = n / 2usize;
     let n_orig = n;
@@ -3426,19 +3439,19 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
         let e1 = epstab[n - 2 * i - 1];
         let e2 = res;
 
-        let e1abs = fabsf64(e1);
+        let e1abs = e1.abs();
         let delta2 = e2 - e1;
-        let err2 = fabsf64(delta2);
-        let tol2 = fabsf64(e2).max(e1abs) * ::DBL_EPSILON;
+        let err2 = delta2.abs();
+        let tol2 = e2.abs().max(e1abs) * ::DBL_EPSILON;
         let delta3 = e1 - e0;
-        let err3 = fabsf64(delta3);
-        let tol3 = e1abs.max(fabsf64(e0)) * ::DBL_EPSILON;
+        let err3 = delta3.abs();
+        let tol3 = e1abs.max(e0.abs()) * ::DBL_EPSILON;
 
         if err2 <= tol2 && err3 <= tol3 {
             /* If e0, e1 and e2 are equal to within machine accuracy, convergence is assumed.  */
             *result = res;
             absolute = err2 + err3;
-            relative = 5f64 * ::DBL_EPSILON * fabsf64(res);
+            relative = 5f64 * ::DBL_EPSILON * res.abs();
             *abserr = absolute.max(relative);
             return;
         }
@@ -3446,8 +3459,8 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
         let e3 = epstab[n - 2 * i];
         epstab[n - 2 * i] = e1;
         let delta1 = e1 - e3;
-        let err1 = fabsf64(delta1);
-        let tol1 = e1abs.max(fabsf64(e3)) * ::DBL_EPSILON;
+        let err1 = delta1.abs();
+        let tol1 = e1abs.max(e3.abs()) * ::DBL_EPSILON;
 
         /* If two elements are very close to each other, omit a part of the table by adjusting the value of n */
         if err1 <= tol1 || err2 <= tol2 || err3 <= tol3 {
@@ -3459,7 +3472,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
 
         /* Test to detect irregular behaviour in the table, and eventually omit a part of the table by adjusting the value of n. */
 
-        if fabsf64(ss * e1) <= 0.0001f64 {
+        if (ss * e1).abs() <= 0.0001f64 {
             n_final = 2 * i;
             break;
         }
@@ -3470,7 +3483,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
         epstab[n - 2 * i] = res;
 
         {
-            let error = err2 + fabsf64(res - e2) + err3;
+            let error = err2 + (res - e2).abs() + err3;
 
             if error <= *abserr {
                 *abserr = error;
@@ -3511,7 +3524,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
         *abserr = ::DBL_MAX;
     } else {
         /* Compute error estimate */
-        *abserr = fabsf64(*result - res3la[2]) + fabsf64(*result - res3la[1]) + fabsf64(*result - res3la[0]);
+        *abserr = (*result - res3la[2]).abs() + (*result - res3la[1]).abs() + (*result - res3la[0]).abs();
 
         res3la[0] = res3la[1];
         res3la[1] = res3la[2];
@@ -3524,11 +3537,11 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
 
     (*table).nres = nres_orig + 1;  
 
-    *abserr = (*abserr).max(5f64 * ::DBL_EPSILON * fabsf64(*result));
+    *abserr = (*abserr).max(5f64 * ::DBL_EPSILON * (*result).abs());
 }
 
 unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
-    (fabsf64(result) >= (1f64 - 50f64 * ::DBL_EPSILON) * resabs)
+    (result.abs() >= (1f64 - 50f64 * ::DBL_EPSILON) * resabs)
 }
 
 #[allow(unused_variables)]
@@ -3658,7 +3671,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
 
     f_w.set_initial_result(result0, abserr0);
 
-    let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+    let mut tolerance = epsabs.max(epsrel * result0.abs());
 
     if abserr0 <= 100f64 * ::DBL_EPSILON * resabs0 && abserr0 > tolerance {
         *result = result0;
@@ -3733,12 +3746,12 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         errsum = errsum + error12 - e_i;
         area = area + area12 - r_i;
 
-        tolerance = epsabs.max(epsrel * fabsf64(area));
+        tolerance = epsabs.max(epsrel * area.abs());
 
         if resasc1 != error1 && resasc2 != error2 {
             let delta = r_i - area12;
 
-            if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i {
+            if delta.abs() <= 1.0e-5f64 * area12.abs() && error12 >= 0.99f64 * e_i {
                 if extrapolate == 0 {
                   roundoff_type1 += 1;
                 } else {
@@ -3835,7 +3848,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
             err_ext = abseps;
             res_ext = reseps;
             correc = error_over_large_intervals;
-            ertest = epsabs.max(epsrel * fabsf64(reseps));
+            ertest = epsabs.max(epsrel * reseps.abs());
             if err_ext <= ertest {
                 break;
             }
@@ -3878,7 +3891,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         }
 
         if res_ext != 0f64 && area != 0f64 {
-            if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
+            if err_ext / res_ext.abs() > errsum / area.abs() {
                 *result = f_w.sum_results();
                 *abserr = errsum;
                 return return_error(error_type);
@@ -3893,14 +3906,14 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
     }
 
     /*  Test on divergence. */
-    let max_area = fabsf64(res_ext).max(fabsf64(area));
+    let max_area = res_ext.abs().max(area.abs());
 
     if !positive_integrand && max_area < 0.01f64 * resabs0 {
         return return_error(error_type);
     }
 
     let ratio = res_ext / area;
-    if ratio < 0.01f64 || ratio > 100f64 || errsum > fabsf64(area) {
+    if ratio < 0.01f64 || ratio > 100f64 || errsum > area.abs() {
         error_type = 6;
     }
     return_error(error_type)
@@ -3928,7 +3941,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     let nint = pts.len() as u64 - 1u64;
 
     /* temporarily alias ndin to level */
-    let mut t_ndin = Vec::from_raw_buf((*w).level, pts.len());
+    let mut t_ndin = ::std::slice::from_raw_parts((*w).level, pts.len()).to_vec();
     let ndin = t_ndin.as_mut();
 
     /* Initialize results */
@@ -4007,7 +4020,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     f_w.sort_results();
 
     /* Test on accuracy */
-    let mut tolerance = epsabs.max(epsrel * fabsf64(result0));
+    let mut tolerance = epsabs.max(epsrel * result0.abs());
 
     if abserr0 <= 100f64 * ::DBL_EPSILON * resabs0 && abserr0 > tolerance {
         *result = result0;
@@ -4083,12 +4096,12 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         errsum = errsum + error12 - e_i;
         area = area + area12 - r_i;
 
-        tolerance = epsabs.max(epsrel * fabsf64(area));
+        tolerance = epsabs.max(epsrel * area.abs());
 
         if resasc1 != error1 && resasc2 != error2 {
             let delta = r_i - area12;
 
-            if fabsf64(delta) <= 1.0e-5f64 * fabsf64(area12) && error12 >= 0.99f64 * e_i {
+            if delta.abs() <= 1.0e-5f64 * area12.abs() && error12 >= 0.99f64 * e_i {
                 if extrapolate == 0 {
                     roundoff_type1 += 1;
                 } else {
@@ -4179,7 +4192,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
                 err_ext = abseps;
                 res_ext = reseps;
                 correc = error_over_large_intervals;
-                ertest = epsabs.max(epsrel * fabsf64(reseps));
+                ertest = epsabs.max(epsrel * reseps.abs());
                 if err_ext <= ertest {
                     break;
                 }
@@ -4222,7 +4235,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         }
 
         if *result != 0f64 && area != 0f64 {
-            if err_ext / fabsf64(res_ext) > errsum / fabsf64(area) {
+            if err_ext / res_ext.abs() > errsum / area.abs() {
                 *result = f_w.sum_results();
                 *abserr = errsum;
                 return return_error(error_type);
@@ -4238,7 +4251,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     /*  Test on divergence. */
     {
-        let max_area = fabsf64(res_ext).max(fabsf64(area));
+        let max_area = res_ext.abs().max(area.abs());
 
         if !positive_integrand && max_area < 0.01f64 * resabs0 {
             return return_error(error_type);
@@ -4248,7 +4261,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
     {
         let ratio = res_ext / area;
 
-        if ratio < 0.01f64 || ratio > 100f64 || errsum > fabsf64(area) {
+        if ratio < 0.01f64 || ratio > 100f64 || errsum > area.abs() {
             error_type = 6;
         }
     }
@@ -4259,7 +4272,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result: &mut f64, abserr: &mut f64, err_reliable: &mut i32) {
     let cc = (2f64 * c - b - a) / (b - a);
 
-    if fabsf64(cc) > 1.1f64 {
+    if cc.abs() > 1.1f64 {
         let mut resabs = 0f64;
         let mut resasc = 0f64;
 
@@ -4291,7 +4304,7 @@ unsafe fn qc25c<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, result
         }
 
         *result = res24;
-        *abserr = fabsf64(res24 - res12) ;
+        *abserr = (res24 - res12).abs() ;
         *err_reliable = 0;
     }
 }
@@ -4304,7 +4317,7 @@ fn fn_cauchy<T>(x: f64, p: &mut InternParam<T>) -> f64 {
 }
 
 unsafe fn compute_moments(cc: f64, moment: &mut [f64]) {
-    let mut a0 = logf64(fabsf64((1f64 - cc) / (1f64 + cc)));
+    let mut a0 = (((1f64 - cc) / (1f64 + cc)).abs()).ln();
     let mut a1 = 2f64 + a0 * cc;
 
     moment[0] = a0;
@@ -4553,7 +4566,7 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
         let mut cheb12 : [f64; 13] = [0f64; 13];
         let mut cheb24 : [f64; 25] = [0f64; 25];
 
-        let factor = powf64(0.5f64 * (b1 - a1), (*t).alpha + 1f64);
+        let factor = (0.5f64 * (b1 - a1)).powf((*t).alpha + 1f64);
 
         gsl_integration_qcheb(fn_qaws_R, &mut fn_params, a1, b1, &mut cheb12, &mut cheb24);
 
@@ -4565,28 +4578,28 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
             qc25s_compute_result(&(*t).ri, &cheb12, &cheb24, &mut res12, &mut res24);
 
             *result = u * res24;
-            *abserr = fabsf64(u * (res24 - res12));
+            *abserr = (u * (res24 - res12)).abs();
         } else {
             let mut res12a = 0f64;
             let mut res24a = 0f64;
             let mut res12b = 0f64;
             let mut res24b = 0f64;
 
-            let u = factor * logf64(b1 - a1);
+            let u = factor * (b1 - a1).ln();
             let v = factor;
 
             qc25s_compute_result(&(*t).ri, &cheb12, &cheb24, &mut res12a, &mut res24a);
             qc25s_compute_result(&(*t).rg, &cheb12, &cheb24, &mut res12b, &mut res24b);
 
             *result = u * res24a + v * res24b;
-            *abserr = fabsf64(u * (res24a - res12a)) + fabsf64(v * (res24b - res12b));
+            *abserr = (u * (res24a - res12a)).abs() + (v * (res24b - res12b)).abs();
         }
 
         *err_reliable = false;
     } else if b1 == b && ((*t).beta != 0.0 || (*t).nu != 0) {
         let mut cheb12 : [f64; 13] = [0f64; 13];
         let mut cheb24 : [f64; 25] = [0f64; 25];
-        let factor = powf64(0.5f64 * (b1 - a1), (*t).beta + 1f64);
+        let factor = (0.5f64 * (b1 - a1)).powf((*t).beta + 1f64);
 
         gsl_integration_qcheb(fn_qaws_L, &mut fn_params, a1, b1, &mut cheb12, &mut cheb24);
 
@@ -4598,21 +4611,21 @@ unsafe fn qc25s<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, a1: f64, b1: f
             qc25s_compute_result(&(*t).rj, &cheb12, &cheb24, &mut res12, &mut res24);
 
             *result = u * res24;
-            *abserr = fabsf64(u * (res24 - res12));
+            *abserr = (u * (res24 - res12)).abs();
         } else {
             let mut res12a = 0f64;
             let mut res24a = 0f64;
             let mut res12b = 0f64;
             let mut res24b = 0f64;
 
-            let u = factor * logf64(b1 - a1);
+            let u = factor * (b1 - a1).ln();
             let v = factor;
 
             qc25s_compute_result(&(*t).rj, &cheb12, &cheb24, &mut res12a, &mut res24a);
             qc25s_compute_result(&(*t).rh, &cheb12, &cheb24, &mut res12b, &mut res24b);
 
             *result = u * res24a + v * res24b;
-            *abserr = fabsf64(u * (res24a - res12a)) + fabsf64(v * (res24b - res12b));
+            *abserr = (u * (res24a - res12a)).abs() + (v * (res24b - res12b)).abs();
         }
         *err_reliable = false;
     }
@@ -4638,19 +4651,19 @@ fn fn_qaws<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
   
     unsafe {
         if (*t).alpha != 0f64 {
-            factor *= powf64(x - p.a, (*t).alpha);
+            factor *= (x - p.a).powf((*t).alpha);
         }
 
         if (*t).beta != 0f64 {
-            factor *= powf64(p.b - x, (*t).beta);
+            factor *= (p.b - x).powf((*t).beta);
         }
 
         if (*t).mu == 1 {
-            factor *= logf64(x - p.a);
+            factor *= (x - p.a).ln();
         }
 
         if (*t).nu == 1 {
-            factor *= logf64(p.b - x);
+            factor *= (p.b - x).ln();
         }
 
         factor * f(x, p.arg)
@@ -4665,11 +4678,11 @@ fn fn_qaws_R<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
   
     unsafe {
         if (*t).beta != 0f64 {
-            factor *= powf64(p.b - x, (*t).beta);
+            factor *= (p.b - x).powf((*t).beta);
         }
 
         if (*t).nu == 1 {
-            factor *= logf64(p.b - x);
+            factor *= (p.b - x).ln();
         }
 
         factor * f(x, p.arg)
@@ -4684,11 +4697,11 @@ fn fn_qaws_L<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
   
     unsafe {
         if (*t).alpha != 0f64 {
-            factor *= powf64(x - p.a, (*t).alpha);
+            factor *= (x - p.a).powf((*t).alpha);
         }
 
         if (*t).mu == 1 {
-            factor *= logf64(x - p.a);
+            factor *= (x - p.a).ln();
         }
 
         factor * f(x, p.arg)
@@ -4725,7 +4738,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
   
     let par = omega * half_length;
 
-    if fabsf64(par) < 2f64 {
+    if par.abs() < 2f64 {
         let mut fn_params = fn_fourier_params{omega: omega, function: f, arg: arg};
 
         ::integration::qk15(if (*wf).sine == ::IntegrationQawo::Sine {
@@ -4761,28 +4774,28 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
         let mut res24_cos = cheb24[24] * moment[24];
         let mut res24_sin = 0f64;
 
-        let mut result_abs = fabsf64(cheb24[24]) ;
+        let mut result_abs = cheb24[24].abs();
 
         for i in 0usize..12usize {
             let k = 22usize - 2usize * i;
 
             res24_cos += cheb24[k] * moment[k];
             res24_sin += cheb24[k + 1] * moment[k + 1];
-            result_abs += fabsf64(cheb24[k]) + fabsf64(cheb24[k + 1]);
+            result_abs += cheb24[k].abs() + cheb24[k + 1].abs();
         }
 
-        let est_cos = fabsf64(res24_cos - res12_cos);
-        let est_sin = fabsf64(res24_sin - res12_sin);
+        let est_cos = (res24_cos - res12_cos).abs();
+        let est_sin = (res24_sin - res12_sin).abs();
 
-        let c = half_length * cosf64(center * omega);
-        let s = half_length * sinf64(center * omega);
+        let c = half_length * (center * omega).cos();
+        let s = half_length * (center * omega).sin();
 
         if (*wf).sine == ::IntegrationQawo::Sine {
             *result = c * res24_sin + s * res24_cos;
-            *abserr = fabsf64(c * est_sin) + fabsf64(s * est_cos);
+            *abserr = (c * est_sin).abs() + (s * est_cos).abs();
         } else {
             *result = c * res24_cos - s * res24_sin;
-            *abserr = fabsf64(c * est_cos) + fabsf64(s * est_sin);
+            *abserr = (c * est_cos).abs() + (s * est_sin).abs();
         }
 
         *resabs = result_abs * half_length;
@@ -4794,7 +4807,7 @@ fn fn_sin<T>(x: f64, p: &mut fn_fourier_params<T>) -> f64 {
     let f = p.function;
     let w = p.omega;
     let wx = w * x;
-    let sinwx = unsafe { sinf64(wx) };
+    let sinwx = unsafe { wx.sin() };
 
     f(x, p.arg) * sinwx
 }
@@ -4803,7 +4816,7 @@ fn fn_cos<T>(x: f64, p: &mut fn_fourier_params<T>) -> f64 {
     let f = p.function;
     let w = p.omega;
     let wx = w * x;
-    let coswx = unsafe { cosf64(wx) };
+    let coswx = unsafe { wx.cos() };
 
     f(x, p.arg) * coswx
 }

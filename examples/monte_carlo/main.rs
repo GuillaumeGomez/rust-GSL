@@ -17,12 +17,9 @@
 // and (\pi,\pi,0). The Monte Carlo routines only select points which are strictly within the integration region and so no special measures
 // are needed to avoid these singularities.
 
-#![feature(core)]
-
 extern crate rgsl;
 extern crate num;
 
-use std::intrinsics::{fabsf64};
 use std::f64::consts::PI;
 use num::Float;
 
@@ -54,7 +51,7 @@ fn display_results(title: &str, result: f64, error: f64) {
     println!("result = {:.6}", result);
     println!("sigma  = {:.6}", error);
     println!("exact  = {:.6}", EXACT);
-    println!("error  = {:.6} = {:.2} sigma", result - EXACT, unsafe { fabsf64(result - EXACT) } / error);
+    println!("error  = {:.6} = {:.2} sigma", result - EXACT, (result - EXACT).abs() / error);
 }
 
 #[allow(unused_assignments)]
@@ -96,7 +93,7 @@ fn main() {
         loop {
             s.integrate(g, &mut 0f64, &xl, &xu, calls / 5, &r, &mut res, &mut err);
             println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
-            if unsafe { fabsf64(s.chisq() - 1f64) } <= 0.5f64 {
+            if (s.chisq() - 1f64).abs() <= 0.5f64 {
                 break;
             }
         }

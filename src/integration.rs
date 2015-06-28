@@ -82,7 +82,6 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 
 use ffi;
 use enums;
-use std::intrinsics::{powf64, floorf64};
 use num::Float;
 use std::ffi::CString;
 
@@ -90,7 +89,7 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
     let mut t_err = unsafe { err.abs() };
 
     if result_asc != 0f64 && t_err != 0f64 {
-        let scale = unsafe { powf64((200f64 * t_err / result_asc), 1.5f64) };
+        let scale = unsafe { (200f64 * t_err / result_asc).powf(1.5f64) };
         
         if scale < 1f64 {
             t_err = result_asc * scale;
@@ -988,7 +987,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
         let mut err_ext = ::DBL_MAX;
         let mut correc = 0f64;
 
-        let cycle = (2f64 * floorf64(omega.abs()) + 1f64) * ::std::f64::consts::PI / omega.abs();
+        let cycle = (2f64 * omega.abs().floor() + 1f64) * ::std::f64::consts::PI / omega.abs();
 
         wf.set_length(cycle);
 

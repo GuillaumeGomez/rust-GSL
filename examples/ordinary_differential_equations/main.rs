@@ -2,9 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#![feature(libc)]
-#![feature(collections)]
-
 extern crate rgsl;
 extern crate libc;
 extern crate c_vec;
@@ -17,7 +14,7 @@ fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::Va
     unsafe {
         let mu : &mut f64 = ::std::mem::transmute(params);
         let mut f = CSlice::new(t_f, 2);
-        let y = Vec::from_raw_buf(t_y as *mut f64, 2);
+        let y = ::std::slice::from_raw_parts(t_y as *mut f64, 2).to_vec();
         
         f.as_mut()[0] = y[1];
         f.as_mut()[1] = -y[0] - *mu * y[1] * (y[0] *y[0] - 1f64);
@@ -33,7 +30,7 @@ fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut
         let mut dfdy_mat = rgsl::MatrixView::from_array(dfdy.as_mut(), 2, 2);
         let m = dfdy_mat.matrix();
         let mut dfdt = CSlice::new(t_dfdt, 2);
-        let y = Vec::from_raw_buf(t_y as *mut f64, 2);
+        let y = ::std::slice::from_raw_parts(t_y as *mut f64, 2).to_vec();
 
         m.set(0, 0, 0f64);
         m.set(0, 1, 1f64);
@@ -48,8 +45,8 @@ fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut
 fn main() {
     let mut mu = 10f64;
     let sys : rgsl::ODEiv2System = rgsl::ODEiv2System {
-        function: func,
-        jacobian: jac,
+        function: unsafe { ::std::mem::transmute(func) },
+        jacobian: unsafe { ::std::mem::transmute(jac) },
         dimension: 2,
         params: unsafe { ::std::mem::transmute(&mut mu) }
     };

@@ -17,7 +17,6 @@ S.D. Conte and Carl de Boor, Elementary Numerical Analysis: An Algorithmic Appro
 !*/
 
 use enums;
-use std::intrinsics::{fabsf64, powf64};
 
 fn my_max(x1: f64, x2: f64) -> f64 {
     if x1 > x2 {
@@ -37,14 +36,14 @@ fn central_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mu
     let r3 = 0.5f64 * (fp1 - fm1);
     let r5 = (4f64 / 3f64) * (fph - fmh) - (1f64 / 3f64) * r3;
 
-    let e3 = unsafe { (fabsf64(fp1) + fabsf64(fm1)) * ::DBL_EPSILON };
-    let e5 = unsafe { 2f64 * (fabsf64(fph) + fabsf64(fmh)) * ::DBL_EPSILON + e3 };
+    let e3 = unsafe { (fp1.abs() + fm1.abs()) * ::DBL_EPSILON };
+    let e5 = unsafe { 2f64 * (fph.abs() + fmh.abs()) * ::DBL_EPSILON + e3 };
 
-    let dy = unsafe { my_max(fabsf64(r3 / h), fabsf64(r5 / h)) * (fabsf64(x) / h) * ::DBL_EPSILON };
+    let dy = unsafe { my_max((r3 / h).abs(), (r5 / h).abs()) * (x.abs() / h) * ::DBL_EPSILON };
 
     *result = r5 / h;
-    *abs_err_trunc = unsafe { fabsf64((r5 - r3) / h) };
-    *abs_err_round = unsafe { fabsf64(e5 / h) + dy };
+    *abs_err_trunc = unsafe { ((r5 - r3) / h).abs() };
+    *abs_err_round = unsafe { (e5 / h).abs() + dy };
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an adaptive central difference algorithm with a step-size
@@ -67,11 +66,11 @@ pub fn deriv_central<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result:
         let mut round_opt = 0f64;
         let mut trunc_opt = 0f64;
 
-        let h_opt = unsafe { h * powf64(round / (2f64 * trunc), 1f64 / 3f64) };
+        let h_opt = unsafe { h * (round / (2f64 * trunc)).powf(1f64 / 3f64) };
         central_deriv(f, param, x, h_opt, &mut r_opt, &mut round_opt, &mut trunc_opt);
         let error_opt = round_opt + trunc_opt;
 
-        if error_opt < error && unsafe { fabsf64(r_opt - r_0) } < 4f64 * error {
+        if error_opt < error && unsafe { (r_opt - r_0).abs() } < 4f64 * error {
             r_0 = r_opt;
             error = error_opt;
         }
@@ -90,13 +89,13 @@ fn forward_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mu
     let r2 = 2f64 * (f4 - f2);
     let r4 = (22f64 / 3f64) * (f4 - f3) - (62f64 / 3f64) * (f3 - f2) + (52f64 / 3f64) * (f2 - f1);
 
-    let e4 = unsafe { 2f64 * 20.67f64 * (fabsf64(f4) + fabsf64(f3) + fabsf64(f2) + fabsf64(f1)) * ::DBL_EPSILON };
+    let e4 = unsafe { 2f64 * 20.67f64 * (f4.abs() + f3.abs() + f2.abs() + f1.abs()) * ::DBL_EPSILON };
 
-    let dy = unsafe { my_max(fabsf64(r2 / h), fabsf64(r4 / h)) * (fabsf64(x) / h) * ::DBL_EPSILON };
+    let dy = unsafe { my_max((r2 / h).abs(), (r4 / h).abs()) * (x.abs() / h) * ::DBL_EPSILON };
 
     *result = r4 / h;
-    *abs_err_trunc = unsafe { fabsf64((r4 - r2) / h) };
-    *abs_err_round = unsafe { fabsf64(e4 / h) + dy };
+    *abs_err_trunc = unsafe { ((r4 - r2) / h).abs() };
+    *abs_err_round = unsafe { (e4 / h).abs() + dy };
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an adaptive forward difference algorithm with a step-size
@@ -120,11 +119,11 @@ pub fn deriv_forward<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result:
         let mut round_opt = 0f64;
         let mut trunc_opt = 0f64;
 
-        let h_opt = unsafe { h * powf64(round / trunc, 1f64 / 2f64) };
+        let h_opt = unsafe { h * (round / trunc).powf(1f64 / 2f64) };
         forward_deriv(f, param, x, h_opt, &mut r_opt, &mut round_opt, &mut trunc_opt);
         let error_opt = round_opt + trunc_opt;
 
-        if error_opt < error && unsafe { fabsf64(r_opt - r_0) } < 4f64 * error {
+        if error_opt < error && unsafe { (r_opt - r_0).abs() } < 4f64 * error {
             r_0 = r_opt;
             error = error_opt;
         }

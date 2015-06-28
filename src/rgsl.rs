@@ -55,10 +55,6 @@ Here is the list of all modules :
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
 
-#![feature(core)]
-#![feature(libc)]
-#![feature(collections)]
-
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]

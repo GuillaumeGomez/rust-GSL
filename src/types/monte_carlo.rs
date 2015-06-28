@@ -112,7 +112,6 @@ The estimates are averaged using the arithmetic mean, but no error is computed.
 
 use ffi;
 use std::f64::INFINITY;
-use std::intrinsics::{sqrtf64, powf64, fabsf64, floorf64, logf64};
 use std::default::Default;
 use libc::c_void;
 use c_vec::CSlice;
@@ -196,7 +195,7 @@ impl PlainMonteCarlo {
             *abserr = if calls < 2 {
                 INFINITY
             } else {
-                vol * sqrtf64(q / (calls as f64 * (calls as f64 - 1f64)))
+                vol * (q / (calls as f64 * (calls as f64 - 1f64))).sqrt()
             };
 
             ::Value::Success
@@ -333,7 +332,7 @@ impl MiserMonteCarlo {
 
                 *result = vol * m;
 
-                *abserr = vol * sqrtf64(q / (calls as f64 * (calls as f64 - 1f64)));
+                *abserr = vol * (q / (calls as f64 * (calls as f64 - 1f64))).sqrt();
 
                 return ::Value::Success;
             }
@@ -378,14 +377,14 @@ impl MiserMonteCarlo {
                 for i in 0usize..dim {
                     if sigma_l[i] >= 0f64 && sigma_r[i] >= 0f64 {
                         /* estimates are okay */
-                        let var = powf64(sigma_l[i], beta) + powf64(sigma_r[i], beta);
+                        let var = sigma_l[i].powf(beta) + sigma_r[i].powf(beta);
 
                         if var <= best_var {
                             found_best = true;
                             best_var = var;
                             i_bisect = i;
-                            weight_l = powf64(sigma_l[i], beta);
-                            weight_r = powf64(sigma_r[i], beta);
+                            weight_l = sigma_l[i].powf(beta);
+                            weight_r = sigma_r[i].powf(beta);
 
                             if weight_l == 0f64 && weight_r == 0f64 {
                                 weight_l = 1f64;
@@ -415,7 +414,7 @@ impl MiserMonteCarlo {
             /* Get the actual fractional sizes of the two "halves", and
              distribute the remaining calls among them */
             {
-                let fraction_l = fabsf64((xbi_m - xbi_l) / (xbi_r - xbi_l));
+                let fraction_l = ((xbi_m - xbi_l) / (xbi_r - xbi_l)).abs();
                 let fraction_r = 1f64 - fraction_l;
 
                 let a = fraction_l * weight_l;
@@ -475,7 +474,7 @@ impl MiserMonteCarlo {
             }
 
             *result = res_l + res_r;
-            *abserr = sqrtf64(err_l * err_l + err_r * err_r);
+            *abserr = (err_l * err_l + err_r * err_r).sqrt();
 
             ::Value::Success
         }
@@ -583,13 +582,13 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
 
             if hits_l[i] > 0 {
                 fsum_l[i] /= hits_l[i] as f64;
-                sigma_l[i] = sqrtf64(fsum2_l[i] - fsum_l[i] * fsum_l[i] / hits_l[i] as f64);
+                sigma_l[i] = (fsum2_l[i] - fsum_l[i] * fsum_l[i] / hits_l[i] as f64).sqrt();
                 sigma_l[i] *= fraction_l * vol / hits_l[i] as f64;
             }
 
             if hits_r[i] > 0 {
                 fsum_r[i] /= hits_r[i] as f64;
-                sigma_r[i] = sqrtf64(fsum2_r[i] - fsum_r[i] * fsum_r[i] / hits_r[i] as f64);
+                sigma_r[i] = (fsum2_r[i] - fsum_r[i] * fsum_r[i] / hits_r[i] as f64).sqrt();
                 sigma_r[i] *= (1f64 - fraction_l) * vol / hits_r[i] as f64;
             }
         }
@@ -599,7 +598,7 @@ fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64
         if calls < 2 {
             *abserr = INFINITY;
         } else {
-            *abserr = vol * sqrtf64(q / (calls as f64 * (calls as f64 - 1f64)));
+            *abserr = vol * (q / (calls as f64 * (calls as f64 - 1f64))).sqrt();
         }
 
         ::Value::Success
@@ -720,7 +719,7 @@ impl VegasMonteCarlo {
 
                 if (*self.s).mode != ::VegasMode::ImportanceOnly {
                     /* shooting for 2 calls/box */
-                    boxes = floorf64(powf64(calls as f64 / 2f64, 1f64 / dim as f64)) as u64;
+                    boxes = ((calls as f64 / 2f64).powf(1f64 / dim as f64)).floor() as u64;
                     (*self.s).mode = ::VegasMode::Importance;
 
                     if 2 * boxes >= (*self.s).bins_max {
@@ -745,7 +744,7 @@ impl VegasMonteCarlo {
                 }
 
                 /* total volume of x-space/(avg num of calls/bin) */
-                (*self.s).jac = (*self.s).vol * powf64(bins as f64, dim as f64) / (calls as f64);
+                (*self.s).jac = (*self.s).vol * (bins as f64).powf(dim as f64) / (calls as f64);
 
                 (*self.s).boxes = boxes as u32;
 
@@ -843,7 +842,7 @@ impl VegasMonteCarlo {
                 
                 let intgrl_sq = intgrl * intgrl;
 
-                let sig = sqrtf64(var);
+                let sig = var.sqrt();
 
                 (*self.s).result = intgrl;
                 (*self.s).sigma  = sig;
@@ -864,7 +863,7 @@ impl VegasMonteCarlo {
                     (*self.s).chi_sum += intgrl_sq * wgt;
 
                     cum_int = (*self.s).wtd_int_sum / (*self.s).sum_wgts;
-                    cum_sig = sqrtf64(1f64 / (*self.s).sum_wgts);
+                    cum_sig = (1f64 / (*self.s).sum_wgts).sqrt();
 
             /*#if USE_ORIGINAL_CHISQ_FORMULA
             // This is the chisq formula from the original Lepage paper.  It
@@ -1125,7 +1124,7 @@ unsafe fn refine_grid(s: *mut ffi::gsl_monte_vegas_state) {
             if *(*s).d.offset(i as isize * dim as isize + j as isize) > 0f64 {
                 oldg = grid_tot_j / *(*s).d.offset(i as isize * dim as isize + j as isize);
                 /* damped change */
-                weight[i] = powf64(((oldg - 1f64) / oldg / logf64(oldg)), (*s).alpha);
+                weight[i] = (((oldg - 1f64) / oldg / oldg.ln())).powf((*s).alpha);
             }
 
           tot_weight += weight[i];
