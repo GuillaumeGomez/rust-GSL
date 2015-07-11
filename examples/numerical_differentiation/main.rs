@@ -7,7 +7,7 @@
 
 extern crate rgsl;
 
- #[allow(unused_variables)]
+#[allow(unused_variables)]
 fn f(x: f64, param: &mut i32) -> f64 {
     x.powf(1.5f64)
 }
