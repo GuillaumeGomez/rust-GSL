@@ -22,6 +22,8 @@ pub trait FFI<T> {
     fn unwrap(&Self) -> *mut T;
 }
 
+#[link(name ="gsl")]
+#[link(name ="gslcblas")]
 extern "C" {
     pub static gsl_rng_mt19937 : *const gsl_rng_type;
     pub static gsl_rng_ranlxs0 : *const gsl_rng_type;
