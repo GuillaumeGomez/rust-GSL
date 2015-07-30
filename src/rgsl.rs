@@ -254,7 +254,7 @@ pub static NAN               : f64 = 0f64 / 0f64;
 pub static POSINF            : f64 = 1f64 / 0f64;
 pub static NEGINF            : f64 = -1f64 / 0f64;
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "windows"))]
 mod platform {
     #[link(name = "gsl")] extern {}
     #[link(name = "gslcblas")] extern {}
