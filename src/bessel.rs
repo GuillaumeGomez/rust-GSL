@@ -474,18 +474,18 @@ pub fn Knu_e(nu: f64, x: f64) -> (enums::value::Value, ::types::Result) {
     (ret, ::types::Result{val: result.val, err: result.err})
 }
 
-/// This routine computes the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
-pub fn InKnu(nu: f64, x: f64) -> f64 {
-    unsafe { ffi::gsl_sf_bessel_InKnu(nu, x) }
-}
+// /// This routine computes the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
+// pub fn InKnu(nu: f64, x: f64) -> f64 {
+//     unsafe { ffi::gsl_sf_bessel_InKnu(nu, x) }
+// }
 
-/// This routine computes the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
-pub fn InKnu_e(nu: f64, x: f64) -> (enums::value::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_bessel_InKnu_e(nu, x, &mut result) };
+// /// This routine computes the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
+// pub fn InKnu_e(nu: f64, x: f64) -> (enums::value::Value, ::types::Result) {
+//     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
+//     let ret = unsafe { ffi::gsl_sf_bessel_InKnu_e(nu, x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
-}
+//     (ret, ::types::Result{val: result.val, err: result.err})
+// }
 
 /// This routine computes the scaled irregular modified Bessel function of fractional order \nu, \exp(+|x|) K_\nu(x) for x>0, \nu>0.
 pub fn Knu_scaled(nu: f64, x: f64) -> f64 {
