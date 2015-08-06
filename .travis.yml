@@ -2,7 +2,7 @@ language: rust
 rust:
 - nightly
 - stable
-sudo: true
+sudo: false
 env:
   global:
     - secure: UbBFC1c7nxMQCJ+AIsU2PYFnNvh33UPeeobGWE89fIyV4HQ7k3IMX7zZKKCiRuHC5AZzVa3t2jEq/yQlBpk1Opy0rAU4S/F+RcygVlsfOXGDtZkdWpBekVhjAsxSDLzCWjLhlajje3jzFLu/5UomJweubmmZ0xtX0gx8zU0nPhU=
