@@ -184,25 +184,25 @@ pub mod radix2 {
         unsafe { ffi::gsl_fft_complex_radix2_inverse(data.as_mut_ptr(), stride, n) }
     }
 
-    /// This is decimation-in-frequency version of the radix-2 FFT function.
-    pub fn diff_forward(data: &mut[f64], stride: u64, n: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_diff_forward(data.as_mut_ptr(), stride, n) }
-    }
+    // / This is decimation-in-frequency version of the radix-2 FFT function.
+    // pub fn diff_forward(data: &mut[f64], stride: u64, n: u64) -> enums::value::Value {
+    //     unsafe { ffi::gsl_fft_complex_radix2_diff_forward(data.as_mut_ptr(), stride, n) }
+    // }
 
-    /// This is decimation-in-frequency version of the radix-2 FFT function.
-    pub fn diff_transform(data: &mut[f64], stride: u64, n: u64, sign: ::FftDirection) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_diff_transform(data.as_mut_ptr(), stride, n, sign) }
-    }
+    // /// This is decimation-in-frequency version of the radix-2 FFT function.
+    // pub fn diff_transform(data: &mut[f64], stride: u64, n: u64, sign: ::FftDirection) -> enums::value::Value {
+    //     unsafe { ffi::gsl_fft_complex_radix2_diff_transform(data.as_mut_ptr(), stride, n, sign) }
+    // }
 
-    /// This is decimation-in-frequency version of the radix-2 FFT function.
-    pub fn diff_backward(data: &mut[f64], stride: u64, n: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_diff_backward(data.as_mut_ptr(), stride, n) }
-    }
+    // /// This is decimation-in-frequency version of the radix-2 FFT function.
+    // pub fn diff_backward(data: &mut[f64], stride: u64, n: u64) -> enums::value::Value {
+    //     unsafe { ffi::gsl_fft_complex_radix2_diff_backward(data.as_mut_ptr(), stride, n) }
+    // }
 
-    /// This is decimation-in-frequency version of the radix-2 FFT function.
-    pub fn diff_inverse(data: &mut[f64], stride: u64, n: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_diff_inverse(data.as_mut_ptr(), stride, n) }
-    }
+    // /// This is decimation-in-frequency version of the radix-2 FFT function.
+    // pub fn diff_inverse(data: &mut[f64], stride: u64, n: u64) -> enums::value::Value {
+    //     unsafe { ffi::gsl_fft_complex_radix2_diff_inverse(data.as_mut_ptr(), stride, n) }
+    // }
 }
 
 /// These functions compute forward, backward and inverse FFTs of length n with stride stride, on the packed complex array data, using a
