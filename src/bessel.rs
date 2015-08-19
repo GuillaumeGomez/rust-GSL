@@ -475,14 +475,14 @@ pub fn Knu_e(nu: f64, x: f64) -> (enums::value::Value, ::types::Result) {
 }
 
 /// This routine computes the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
-pub fn InKnu(nu: f64, x: f64) -> f64 {
-    unsafe { ffi::gsl_sf_bessel_InKnu(nu, x) }
+pub fn lnKnu(nu: f64, x: f64) -> f64 {
+    unsafe { ffi::gsl_sf_bessel_lnKnu(nu, x) }
 }
 
 /// This routine computes the logarithm of the irregular modified Bessel function of fractional order \nu, \ln(K_\nu(x)) for x>0, \nu>0.
-pub fn InKnu_e(nu: f64, x: f64) -> (enums::value::Value, ::types::Result) {
+pub fn lnKnu_e(nu: f64, x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_bessel_InKnu_e(nu, x, &mut result) };
+    let ret = unsafe { ffi::gsl_sf_bessel_lnKnu_e(nu, x, &mut result) };
 
     (ret, ::types::Result{val: result.val, err: result.err})
 }

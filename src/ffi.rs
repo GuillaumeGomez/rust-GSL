@@ -214,8 +214,8 @@ extern "C" {
     // Irregular Modified Bessel Functions—Fractional Order
     pub fn gsl_sf_bessel_Knu(nu: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_bessel_Knu_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::value::Value;
-    pub fn gsl_sf_bessel_InKnu(nu: c_double, x: c_double) -> c_double;
-    pub fn gsl_sf_bessel_InKnu_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::value::Value;
+    pub fn gsl_sf_bessel_lnKnu(nu: c_double, x: c_double) -> c_double;
+    pub fn gsl_sf_bessel_lnKnu_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::value::Value;
     pub fn gsl_sf_bessel_Knu_scaled(nu: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_bessel_Knu_scaled_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::value::Value;
     // Irregular Cylindrical Bessel Functions
@@ -306,10 +306,10 @@ extern "C" {
     pub fn gsl_sf_hydrogenicR_e(n: c_int, l: c_int, Z: c_double, r: c_double, result: *mut gsl_sf_result) -> enums::value::Value;
     // Coulomb Wave Functions
     // The Coulomb wave functions F_L(\eta,x), G_L(\eta,x) are described in Abramowitz & Stegun, Chapter 14. Because there can be a large dynamic range of values for these functions, overflows are handled gracefully. If an overflow occurs, GSL_EOVRFLW is signalled and exponent(s) are returned through the modifiable parameters exp_F, exp_G. The full solution can be reconstructed from the following relations,
-    // 
+    //
     // F_L(eta,x)  =  fc[k_L] * exp(exp_F)
     // G_L(eta,x)  =  gc[k_L] * exp(exp_G)
-    // 
+    //
     // F_L'(eta,x) = fcp[k_L] * exp(exp_F)
     // G_L'(eta,x) = gcp[k_L] * exp(exp_G)
     pub fn gsl_sf_coulomb_wave_FG_e(eta: c_double, x: c_double, L_F: c_double, k: c_int, F: *mut gsl_sf_result, Fp: *mut gsl_sf_result,
@@ -1979,10 +1979,10 @@ extern "C" {
     pub fn gsl_fft_complex_radix2_transform(data: gsl_complex_packed_array, stride: size_t, n: size_t, sign: ::FftDirection) -> enums::value::Value;
     pub fn gsl_fft_complex_radix2_backward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
     pub fn gsl_fft_complex_radix2_inverse(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
-    pub fn gsl_fft_complex_radix2_diff_forward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
-    pub fn gsl_fft_complex_radix2_diff_transform(data: gsl_complex_packed_array, stride: size_t, n: size_t, sign: ::FftDirection) -> enums::value::Value;
-    pub fn gsl_fft_complex_radix2_diff_backward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
-    pub fn gsl_fft_complex_radix2_diff_inverse(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
+    pub fn gsl_fft_complex_radix2_dif_forward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
+    pub fn gsl_fft_complex_radix2_dif_transform(data: gsl_complex_packed_array, stride: size_t, n: size_t, sign: ::FftDirection) -> enums::value::Value;
+    pub fn gsl_fft_complex_radix2_dif_backward(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
+    pub fn gsl_fft_complex_radix2_dif_inverse(data: gsl_complex_packed_array, stride: size_t, n: size_t) -> enums::value::Value;
     // Mixed-radix FFT routines for complex data
     pub fn gsl_fft_complex_wavetable_alloc(n: size_t) -> *mut gsl_fft_complex_wavetable;
     pub fn gsl_fft_complex_wavetable_free(w: *mut gsl_fft_complex_wavetable);
