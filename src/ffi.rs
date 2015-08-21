@@ -2324,7 +2324,7 @@ extern "C" {
     pub fn gsl_odeiv2_step_order(s: *const gsl_odeiv2_step) -> c_uint;
     pub fn gsl_odeiv2_step_set_driver(s: *mut gsl_odeiv2_step, d: *const gsl_odeiv2_driver) -> enums::value::Value;
     pub fn gsl_odeiv2_step_apply(s: *mut gsl_odeiv2_step, t: c_double, h: c_double, y: *mut c_double, yerr: *mut c_double,
-        dydt_in: *const c_double, dydt_out: *mut c_double, sys: *const ::ODEiv2System) -> enums::value::Value;
+        dydt_in: *const c_double, dydt_out: *mut c_double, sys: *const gsl_odeiv2_system) -> enums::value::Value;
     // Adaptive Step-size Control
     pub fn gsl_odeiv2_control_standard_new(eps_abs: c_double, eps_rel: c_double, a_y: c_double, a_dydt: c_double) -> *mut gsl_odeiv2_control;
     pub fn gsl_odeiv2_control_y_new(eps_abs: c_double, eps_rel: c_double) -> *mut gsl_odeiv2_control;
@@ -2343,21 +2343,21 @@ extern "C" {
     pub fn gsl_odeiv2_control_set_driver(c: *mut gsl_odeiv2_control, d: *const gsl_odeiv2_driver) -> enums::value::Value;
     // Evolution
     pub fn gsl_odeiv2_evolve_alloc(dim: size_t) -> *mut gsl_odeiv2_evolve;
-    pub fn gsl_odeiv2_evolve_apply(e: *mut gsl_odeiv2_evolve, con: *mut gsl_odeiv2_control, step: *mut gsl_odeiv2_step, sys: *const ::ODEiv2System,
+    pub fn gsl_odeiv2_evolve_apply(e: *mut gsl_odeiv2_evolve, con: *mut gsl_odeiv2_control, step: *mut gsl_odeiv2_step, sys: *const gsl_odeiv2_system,
         t: *mut c_double, t1: c_double, h: *mut c_double, y: *mut c_double) -> enums::value::Value;
     pub fn gsl_odeiv2_evolve_apply_fixed_step(e: *mut gsl_odeiv2_evolve, con: *mut gsl_odeiv2_control, step: *mut gsl_odeiv2_step,
-        sys: *const ::ODEiv2System, t: *mut c_double, h: c_double, y: *mut c_double) -> enums::value::Value;
+        sys: *const gsl_odeiv2_system, t: *mut c_double, h: c_double, y: *mut c_double) -> enums::value::Value;
     pub fn gsl_odeiv2_evolve_reset(e: *mut gsl_odeiv2_evolve) -> enums::value::Value;
     pub fn gsl_odeiv2_evolve_free(e: *mut gsl_odeiv2_evolve);
     pub fn gsl_odeiv2_evolve_set_driver(e: *mut gsl_odeiv2_evolve, d: *const gsl_odeiv2_driver) -> enums::value::Value;
     // Driver
-    pub fn gsl_odeiv2_driver_alloc_y_new(sys: *const ::ODEiv2System, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
+    pub fn gsl_odeiv2_driver_alloc_y_new(sys: *const gsl_odeiv2_system, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
         epsrel: c_double) -> *mut gsl_odeiv2_driver;
-    pub fn gsl_odeiv2_driver_alloc_yp_new(sys: *const ::ODEiv2System, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
+    pub fn gsl_odeiv2_driver_alloc_yp_new(sys: *const gsl_odeiv2_system, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
         epsrel: c_double) -> *mut gsl_odeiv2_driver;
-    pub fn gsl_odeiv2_driver_alloc_standard_new(sys: *const ::ODEiv2System, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
+    pub fn gsl_odeiv2_driver_alloc_standard_new(sys: *const gsl_odeiv2_system, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
         epsrel: c_double, a_y: c_double, a_dydt: c_double) -> *mut gsl_odeiv2_driver;
-    pub fn gsl_odeiv2_driver_alloc_scaled_new(sys: *const ::ODEiv2System, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
+    pub fn gsl_odeiv2_driver_alloc_scaled_new(sys: *const gsl_odeiv2_system, t: *const gsl_odeiv2_step_type, hstart: c_double, epsabs: c_double,
         epsrel: c_double, a_y: c_double, a_dydt: c_double, scale_abs: *const c_double) -> *mut gsl_odeiv2_driver;
     pub fn gsl_odeiv2_driver_set_hmin(d: *mut gsl_odeiv2_driver, hmin: c_double) -> enums::value::Value;
     pub fn gsl_odeiv2_driver_set_hmax(d: *mut gsl_odeiv2_driver, hmax: c_double) -> enums::value::Value;
@@ -3177,9 +3177,17 @@ pub struct gsl_multiset {
 }
 
 #[repr(C)]
+pub struct gsl_odeiv2_system {
+    pub function: extern fn(t: f64, *const f64, *mut f64, *mut c_void) -> enums::value::Value,
+    pub jacobian: Option<extern fn(t: f64, *const f64, *mut f64, *mut f64, *mut c_void) -> enums::value::Value>,
+    pub dimension: u64,
+    pub params: *mut c_void
+}
+
+#[repr(C)]
 pub struct gsl_odeiv2_driver {
     // ODE system
-    pub sys: *const ::ODEiv2System,
+    pub sys: *const gsl_odeiv2_system,
     // stepper object
     pub s: *mut gsl_odeiv2_step,
     // control object
@@ -3243,7 +3251,7 @@ pub struct gsl_odeiv2_step_type {
     pub gives_exact_dydt_out: c_int,
     pub alloc: fn(dim: size_t) -> *mut c_void,
     pub apply: fn(state: *mut c_void, dim: size_t, t: c_double, h: c_double, y: *mut c_double, yerr: *mut c_double, dydt_in: *const c_double,
-        dydt_out: *mut c_double, dydt: *const ::ODEiv2System) -> enums::value::Value,
+        dydt_out: *mut c_double, dydt: *const gsl_odeiv2_system) -> enums::value::Value,
     pub set_driver: fn(state: *mut c_void, d: *const gsl_odeiv2_driver) -> enums::value::Value,
     pub reset: fn(state: *mut c_void, dim: size_t) -> enums::value::Value,
     pub order: fn(state: *mut c_void) -> c_uint,
