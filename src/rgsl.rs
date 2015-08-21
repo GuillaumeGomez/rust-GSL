@@ -147,7 +147,7 @@ pub use types::rng;
 
 // enums part
 pub use self::enums::mode::Mode;
-pub use self::enums::value::Value;
+pub use self::enums::value::{Value, GSLResult};
 pub use self::enums::eigen_sort::EigenSort;
 pub use self::enums::fft_direction::FftDirection;
 pub use self::enums::gauss_konrod_rule::GaussKonrodRule;

@@ -3,70 +3,55 @@
 //
 
 extern crate rgsl;
-extern crate libc;
-extern crate c_vec;
-
-use libc::c_void;
-use c_vec::CSlice;
-
-#[allow(unused_variables)]
-fn func(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void) -> rgsl::Value {
-    unsafe {
-        let mu : &mut f64 = ::std::mem::transmute(params);
-        let mut f = CSlice::new(t_f, 2);
-        let y = ::std::slice::from_raw_parts(t_y as *mut f64, 2).to_vec();
-        
-        f.as_mut()[0] = y[1];
-        f.as_mut()[1] = -y[0] - *mu * y[1] * (y[0] *y[0] - 1f64);
-        rgsl::Value::Success
-    }
-}
-
-#[allow(unused_variables)]
-fn jac(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64, params: *mut c_void) -> rgsl::Value {
-    unsafe {
-        let mu : &mut f64 = ::std::mem::transmute(params);
-        let mut dfdy = CSlice::new(t_dfdy, 4);
-        let mut dfdy_mat = rgsl::MatrixView::from_array(dfdy.as_mut(), 2, 2);
-        let m = dfdy_mat.matrix();
-        let mut dfdt = CSlice::new(t_dfdt, 2);
-        let y = ::std::slice::from_raw_parts(t_y as *mut f64, 2).to_vec();
-
-        m.set(0, 0, 0f64);
-        m.set(0, 1, 1f64);
-        m.set(1, 0, -2f64 * *mu * y[0] * y[1] - 1f64);
-        m.set(1, 1, -*mu * (y[0] * y[0] - 1f64));
-        dfdt.as_mut()[0] = 0f64;
-        dfdt.as_mut()[1] = 0f64;
-        rgsl::Value::Success
-    }
-}
 
 fn main() {
-    let mut mu = 10f64;
-    let sys : rgsl::ODEiv2System = rgsl::ODEiv2System {
-        function: unsafe { ::std::mem::transmute(func) },
-        jacobian: unsafe { ::std::mem::transmute(jac) },
-        dimension: 2,
-        params: unsafe { ::std::mem::transmute(&mut mu) }
-    };
+    let mu = 10.;
 
-    let d = rgsl::ODEiv2Driver::alloc_y_new(&sys, &rgsl::ODEiv2StepType::rk8pd(), 1e-6f64, 1e-6f64, 0f64).unwrap();
-    let mut t = 0f64;
-    let t1 = 100f64;
-    let mut y : [f64; 2] = [1f64, 0f64];
+    let mut func_eval = 0;
+    let mut jac_eval = 0;
 
-    for i in 1usize..101usize {
-        let ti = i as f64 * t1 / 100f64;
+    {
+        let mut func = |_, y: &[f64], f: &mut [f64]| {
+            func_eval += 1;
+            f[0] = y[1];
+            f[1] = -y[0] - mu * y[1] * (y[0] * y[0] - 1.);
+            Ok(())
+        };
 
-        match d.apply(&mut t, ti, &mut y) {
-            rgsl::Value::Success => {}
-            e => {
-                println!("error, return value={:?}", e);
-                break
+        let mut jac = |_, y: &[f64], dfdy: &mut [f64], dfdt: &mut [f64]| {
+            jac_eval += 1;
+            dfdy[0] = 0.;
+            dfdy[1] = 1.;
+            dfdy[2] = -2. * mu * y[0] * y[1] - 1.;
+            dfdy[3] = -mu * (y[0] * y[0] - 1.);
+
+            dfdt[0] = 0.;
+            dfdt[1] = 0.;
+            Ok(())
+        };
+
+        let mut sys = rgsl::ODEiv2System::with_jacobian(2, &mut func, &mut jac);
+
+        let mut d = rgsl::ODEiv2Driver::alloc_y_new(&mut sys, &rgsl::ODEiv2StepType::rk8pd(), 1e-6, 1e-6, 0.).unwrap();
+
+        let mut t = 0.;
+        let t1 = 100.;
+        let mut y = [1., 0.];
+
+        for i in 1..101 {
+            let ti = i as f64 * t1 / 100.;
+
+            match d.apply(&mut t, ti, &mut y) {
+                Ok(()) => {}
+                Err(e) => {
+                    println!("error, return value={:?}", e);
+                    break
+                }
             }
-        }
 
-        println!("{:.5} {:.5} {:.5}", t, y[0], y[1]);
+            println!("{:.5} {:.5} {:.5}", t, y[0], y[1]);
+        }
     }
+
+    println!("\nfunc evaluated {} times, jac evaluated {} times", func_eval, jac_eval);
 }
