@@ -95,24 +95,28 @@ pub fn exprel_2_e(x: f64) -> (enums::value::Value, ::types::Result) {
 
 /// This routine computes the N-relative exponential, which is the n-th generalization of the functions gsl_sf_exprel and gsl_sf_exprel_2.
 /// The N-relative exponential is given by:
-/// 
+///
+/// ```latex
 /// exprel_N(x) = N!/x^N (\exp(x) - \sum_{k=0}^{N-1} x^k/k!)
-/// 
+///
 ///             = 1 + x/(N+1) + x^2/((N+1)(N+2)) + ...
-/// 
+///
 ///             = 1F1 (1,1+N,x)
+/// ```
 pub fn exprel_n(n: i32, x: f64) -> f64 {
     unsafe { ffi::gsl_sf_exprel_n(n, x) }
 }
 
 /// This routine computes the N-relative exponential, which is the n-th generalization of the functions gsl_sf_exprel and gsl_sf_exprel_2.
 /// The N-relative exponential is given by:
-/// 
+///
+/// ```latex
 /// exprel_N(x) = N!/x^N (\exp(x) - \sum_{k=0}^{N-1} x^k/k!)
-/// 
+///
 ///             = 1 + x/(N+1) + x^2/((N+1)(N+2)) + ...
-/// 
+///
 ///             = 1F1 (1,1+N,x)
+/// ```
 pub fn exprel_n_e(n: i32, x: f64) -> (enums::value::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_exprel_n_e(n, x, &mut result) };

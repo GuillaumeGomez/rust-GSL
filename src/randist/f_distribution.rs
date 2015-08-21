@@ -14,16 +14,18 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the F-distribution with degrees of freedom nu1 and nu2. The distribution function is,
-/// 
-/// p(x) dx = 
+///
+/// ```latex
+/// p(x) dx =
 /// { Gamma((\nu_1 + \nu_2)/2)
 ///
-///         over Gamma(nu_1/2) Gamma(nu_2/2) } 
-/// 
-/// \nu_1^{\nu_1/2} \nu_2^{\nu_2/2} 
-/// 
+///         over Gamma(nu_1/2) Gamma(nu_2/2) }
+///
+/// \nu_1^{\nu_1/2} \nu_2^{\nu_2/2}
+///
 ///    x^{\nu_1/2 - 1} (\nu_2 + \nu_1 x)^{-\nu_1/2 -\nu_2/2}
-/// 
+/// ```
+///
 /// for x >= 0.
 pub fn fdist(r: &Rng, nu1: f64, nu2: f64) -> f64 {
     unsafe { ffi::gsl_ran_fdist(ffi::FFI::unwrap(r), nu1, nu2) }

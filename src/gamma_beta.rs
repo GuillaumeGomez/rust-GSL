@@ -5,9 +5,9 @@
 //! This following routines compute the gamma and beta functions in their full and incomplete forms, as well as various kinds of factorials.
 
 /// The Gamma function is defined by the following integral,
-/// 
+///
 /// \Gamma(x) = \int_0^\infty dt  t^{x-1} \exp(-t)
-/// 
+///
 /// It is related to the factorial function by \Gamma(n)=(n-1)! for positive integer n.
 /// Further information on the Gamma function can be found in Abramowitz & Stegun, Chapter 6.
 pub mod gamma {
@@ -55,22 +55,26 @@ pub mod gamma {
     }
 
     /// This routine computes the regulated Gamma Function \Gamma^*(x) for x > 0. The regulated gamma function is given by,
-    /// 
+    ///
+    /// ```latex
     /// \Gamma^*(x) = \Gamma(x)/(\sqrt{2\pi} x^{(x-1/2)} \exp(-x))
-    /// 
+    ///
     ///             = (1 + (1/12x) + ...)  for x to infty
-    /// 
+    /// ```
+    ///
     /// and is a useful suggestion of Temme.
     pub fn gammastar(x: f64) -> f64 {
         unsafe { ffi::gsl_sf_gammastar(x) }
     }
 
     /// This routine computes the regulated Gamma Function \Gamma^*(x) for x > 0. The regulated gamma function is given by,
-    /// 
+    ///
+    /// ```latex
     /// \Gamma^*(x) = \Gamma(x)/(\sqrt{2\pi} x^{(x-1/2)} \exp(-x))
-    /// 
+    ///
     ///             = (1 + (1/12x) + ...)  for x to infty
-    /// 
+    /// ```
+    ///
     /// and is a useful suggestion of Temme.
     pub fn gammastar_e(x: f64) -> (enums::value::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
@@ -331,14 +335,14 @@ pub mod incomplete_gamma {
     }
 
     /// This routine computes the complementary normalized incomplete Gamma Function P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt t^{a-1} \exp(-t) for a > 0, x >= 0.
-    /// 
+    ///
     /// Note that Abramowitz & Stegun call P(a,x) the incomplete gamma function (section 6.5).
     pub fn gamma_inc_P(a: f64, x: f64) -> f64 {
         unsafe { ffi::gsl_sf_gamma_inc_P(a, x) }
     }
 
     /// This routine computes the complementary normalized incomplete Gamma Function P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt t^{a-1} \exp(-t) for a > 0, x >= 0.
-    /// 
+    ///
     /// Note that Abramowitz & Stegun call P(a,x) the incomplete gamma function (section 6.5).
     pub fn gamma_inc_P_e(a: f64, x: f64) -> (enums::value::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
