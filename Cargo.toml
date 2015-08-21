@@ -11,9 +11,14 @@ readme = "README.md"
 keywords = ["mathematics", "library", "GSL"]
 license = "GPL-3.0+"
 
+build = "build.rs"
+
 [dependencies]
 c_vec = "~1.0"
 libc = "~0.2"
+
+[build-dependencies]
+pkg-config = "0.3"
 
 [lib]
 name = "rgsl"
