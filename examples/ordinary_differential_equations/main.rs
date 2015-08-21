@@ -42,8 +42,8 @@ fn main() {
             let ti = i as f64 * t1 / 100.;
 
             match d.apply(&mut t, ti, &mut y) {
-                rgsl::Value::Success => {}
-                e => {
+                Ok(()) => {}
+                Err(e) => {
                     println!("error, return value={:?}", e);
                     break
                 }
