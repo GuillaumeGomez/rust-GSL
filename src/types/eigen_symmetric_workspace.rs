@@ -5,7 +5,7 @@
 /*!
 #Real Symmetric Matrices
 
-For real symmetric matrices, the library uses the symmetric bidiagonalization and QR reduction method. This is described in Golub & van Loan, 
+For real symmetric matrices, the library uses the symmetric bidiagonalization and QR reduction method. This is described in Golub & van Loan,
 section 8.3. The computed eigenvalues are accurate to an absolute accuracy of \epsilon ||A||_2, where \epsilon is the machine precision.
 
 #Complex Hermitian Matrices
@@ -17,8 +17,8 @@ For hermitian matrices, the library uses the complex form of the symmetric bidia
 The solution of the real nonsymmetric eigensystem problem for a matrix A involves computing the Schur decomposition
 
 A = Z T Z^T
-where Z is an orthogonal matrix of Schur vectors and T, the Schur form, is quasi upper triangular with diagonal 1-by-1 blocks which are real 
-eigenvalues of A, and diagonal 2-by-2 blocks whose eigenvalues are complex conjugate eigenvalues of A. The algorithm used is the double-shift 
+where Z is an orthogonal matrix of Schur vectors and T, the Schur form, is quasi upper triangular with diagonal 1-by-1 blocks which are real
+eigenvalues of A, and diagonal 2-by-2 blocks whose eigenvalues are complex conjugate eigenvalues of A. The algorithm used is the double-shift
 Francis method.
 
 #Real Generalized Symmetric-Definite Eigensystems
@@ -26,14 +26,16 @@ Francis method.
 The real generalized symmetric-definite eigenvalue problem is to find eigenvalues \lambda and eigenvectors x such that
 
 A x = lambda B x
-where A and B are symmetric matrices, and B is positive-definite. This problem reduces to the standard symmetric eigenvalue problem by applying 
+where A and B are symmetric matrices, and B is positive-definite. This problem reduces to the standard symmetric eigenvalue problem by applying
 the Cholesky decomposition to B:
 
+```latex
                       A x = lambda B x
                       A x = lambda L L^t x
 ( L^{-1} A L^{-t} ) L^t x = lambda L^t x
-Therefore, the problem becomes C y = lambda y where C = L^{-1} A L^{-t} is symmetric, and y = L^t x. The standard symmetric eigensolver can be 
-applied to the matrix C. The resulting eigenvectors are backtransformed to find the vectors of the original problem. The eigenvalues and eigenvectors 
+```
+Therefore, the problem becomes C y = lambda y where C = L^{-1} A L^{-t} is symmetric, and y = L^t x. The standard symmetric eigensolver can be
+applied to the matrix C. The resulting eigenvectors are backtransformed to find the vectors of the original problem. The eigenvalues and eigenvectors
 of the generalized symmetric-definite eigenproblem are always real.
 
 #Complex Generalized Hermitian-Definite Eigensystems
@@ -41,8 +43,8 @@ of the generalized symmetric-definite eigenproblem are always real.
 The complex generalized hermitian-definite eigenvalue problem is to find eigenvalues \lambda and eigenvectors x such that
 
 A x = \lambda B x
-where A and B are hermitian matrices, and B is positive-definite. Similarly to the real case, this can be reduced to C y = \lambda y where C = L^{-1} 
-A L^{-H} is hermitian, and y = L^H x. The standard hermitian eigensolver can be applied to the matrix C. The resulting eigenvectors are backtransformed 
+where A and B are hermitian matrices, and B is positive-definite. Similarly to the real case, this can be reduced to C y = \lambda y where C = L^{-1}
+A L^{-H} is hermitian, and y = L^H x. The standard hermitian eigensolver can be applied to the matrix C. The resulting eigenvectors are backtransformed
 to find the vectors of the original problem. The eigenvalues of the generalized hermitian-definite eigenproblem are always real.
 
 #Real Generalized Nonsymmetric Eigensystems
@@ -53,24 +55,24 @@ A x = \lambda B x
 We may also define the problem as finding eigenvalues \mu and eigenvectors y such that
 
 \mu A y = B y
-Note that these two problems are equivalent (with \lambda = 1/\mu) if neither \lambda nor \mu is zero. If say, \lambda is zero, then it is still 
-a well defined eigenproblem, but its alternate problem involving \mu is not. Therefore, to allow for zero (and infinite) eigenvalues, the problem 
+Note that these two problems are equivalent (with \lambda = 1/\mu) if neither \lambda nor \mu is zero. If say, \lambda is zero, then it is still
+a well defined eigenproblem, but its alternate problem involving \mu is not. Therefore, to allow for zero (and infinite) eigenvalues, the problem
 which is actually solved is
 
 \beta A x = \alpha B x
-The eigensolver routines below will return two values \alpha and \beta and leave it to the user to perform the divisions \lambda = \alpha / \beta 
+The eigensolver routines below will return two values \alpha and \beta and leave it to the user to perform the divisions \lambda = \alpha / \beta
 and \mu = \beta / \alpha.
 
-If the determinant of the matrix pencil A - \lambda B is zero for all \lambda, the problem is said to be singular; otherwise it is called regular. 
-Singularity normally leads to some \alpha = \beta = 0 which means the eigenproblem is ill-conditioned and generally does not have well defined 
-eigenvalue solutions. The routines below are intended for regular matrix pencils and could yield unpredictable results when applied to singular 
+If the determinant of the matrix pencil A - \lambda B is zero for all \lambda, the problem is said to be singular; otherwise it is called regular.
+Singularity normally leads to some \alpha = \beta = 0 which means the eigenproblem is ill-conditioned and generally does not have well defined
+eigenvalue solutions. The routines below are intended for regular matrix pencils and could yield unpredictable results when applied to singular
 pencils.
 
 The solution of the real generalized nonsymmetric eigensystem problem for a matrix pair (A, B) involves computing the generalized Schur decomposition
 
 A = Q S Z^T
 B = Q T Z^T
-where Q and Z are orthogonal matrices of left and right Schur vectors respectively, and (S, T) is the generalized Schur form whose diagonal elements 
+where Q and Z are orthogonal matrices of left and right Schur vectors respectively, and (S, T) is the generalized Schur form whose diagonal elements
 give the \alpha and \beta values. The algorithm used is the QZ method due to Moler and Stewart (see references).
 !*/
 
@@ -284,23 +286,23 @@ impl EigenNonSymmWorkspace {
     }
 
     /// This function sets some parameters which determine how the eigenvalue problem is solved in subsequent calls to gsl_eigen_nonsymm.
-    /// 
-    /// If compute_t is set to 1, the full Schur form T will be computed by gsl_eigen_nonsymm. If it is set to 0, T will not be computed (this is the 
+    ///
+    /// If compute_t is set to 1, the full Schur form T will be computed by gsl_eigen_nonsymm. If it is set to 0, T will not be computed (this is the
     /// default setting). Computing the full Schur form T requires approximately 1.5–2 times the number of flops.
-    /// 
-    /// If balance is set to 1, a balancing transformation is applied to the matrix prior to computing eigenvalues. This transformation is designed 
-    /// to make the rows and columns of the matrix have comparable norms, and can result in more accurate eigenvalues for matrices whose entries vary 
-    /// widely in magnitude. See [`Balancing`](http://www.gnu.org/software/gsl/manual/html_node/Balancing.html#Balancing) for more information. Note 
-    /// that the balancing transformation does not preserve the orthogonality of the Schur vectors, so if you wish to compute the Schur vectors with 
+    ///
+    /// If balance is set to 1, a balancing transformation is applied to the matrix prior to computing eigenvalues. This transformation is designed
+    /// to make the rows and columns of the matrix have comparable norms, and can result in more accurate eigenvalues for matrices whose entries vary
+    /// widely in magnitude. See [`Balancing`](http://www.gnu.org/software/gsl/manual/html_node/Balancing.html#Balancing) for more information. Note
+    /// that the balancing transformation does not preserve the orthogonality of the Schur vectors, so if you wish to compute the Schur vectors with
     /// gsl_eigen_nonsymm_Z you will obtain the Schur vectors of the balanced matrix instead of the original matrix. The relationship will be
-    /// 
+    ///
     /// T = Q^t D^(-1) A D Q
-    /// 
-    /// where Q is the matrix of Schur vectors for the balanced matrix, and D is the balancing transformation. Then gsl_eigen_nonsymm_Z will compute 
+    ///
+    /// where Q is the matrix of Schur vectors for the balanced matrix, and D is the balancing transformation. Then gsl_eigen_nonsymm_Z will compute
     /// a matrix Z which satisfies
-    /// 
+    ///
     /// T = Z^(-1) A Z
-    /// 
+    ///
     /// with Z = D Q. Note that Z will not be orthogonal. For this reason, balancing is not performed by default.
     pub fn params(&self, compute_t: i32, balance: i32) {
         unsafe { ffi::gsl_eigen_nonsymm_params(compute_t, balance, self.w) }
@@ -605,15 +607,15 @@ impl EigenGenWorkspace {
     }
 
     /// This function sets some parameters which determine how the eigenvalue problem is solved in subsequent calls to gsl_eigen_gen.
-    /// 
+    ///
     /// If compute_s is set to 1, the full Schur form S will be computed by gsl_eigen_gen. If it is set to 0, S will not be computed (this is
     /// the default setting). S is a quasi upper triangular matrix with 1-by-1 and 2-by-2 blocks on its diagonal. 1-by-1 blocks correspond to
     /// real eigenvalues, and 2-by-2 blocks correspond to complex eigenvalues.
-    /// 
+    ///
     /// If compute_t is set to 1, the full Schur form T will be computed by gsl_eigen_gen. If it is set to 0, T will not be computed (this is
     /// the default setting). T is an upper triangular matrix with non-negative elements on its diagonal. Any 2-by-2 blocks in S will correspond
     /// to a 2-by-2 diagonal block in T.
-    /// 
+    ///
     /// The balance parameter is currently ignored, since generalized balancing is not yet implemented.
     pub fn params(&self, compute_s: i32, compute_t: i32, balance: i32) {
         unsafe { ffi::gsl_eigen_gen_params(compute_s, compute_t, balance, self.w) }
@@ -623,7 +625,7 @@ impl EigenGenWorkspace {
     /// beta), where alpha is complex and beta is real. If \beta_i is non-zero, then \lambda = \alpha_i / \beta_i is an eigenvalue. Likewise,
     /// if \alpha_i is non-zero, then \mu = \beta_i / \alpha_i is an eigenvalue of the alternate problem \mu A y = B y. The elements of beta
     /// are normalized to be non-negative.
-    /// 
+    ///
     /// If S is desired, it is stored in A on output. If T is desired, it is stored in B on output. The ordering of eigenvalues in (alpha, beta)
     /// follows the ordering of the diagonal blocks in the Schur forms S and T. In rare cases, this function may fail to find all eigenvalues.
     /// If this occurs, an error code is returned.

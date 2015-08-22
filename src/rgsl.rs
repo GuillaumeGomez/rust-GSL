@@ -2,54 +2,48 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-/*!
-rust-gsl
-========
-
-A __Rust__ binding for the [GSL library](http://www.gnu.org/software/gsl/).
-
-##Installation
-
-This binding requires the __GSL__ library to be installed.
-
-To build it, please use :
-
-```Shell
-> make
-```
-
-This command build __rgsl__, the examples and the documentation.
-
-You can build them separatly too.
-
-```Shell
-> make rgsl
-> make examples
-> make doc
-```
-
-Since this project supports cargo, you can also build it like this :
-
-```Shell
-> cargo build
-```
-
-##Documentation
-
-You can access the __rgsl__ documentation locally, just build it :
-
-```Shell
-> make doc
-```
-
-Then open this file with an internet browser :
-file:///{rgsl_location}/doc/rgsl/index.html
-
-## License
-__rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL licence](http://www.gnu.org/copyleft/gpl.html).
-
-Here is the list of all modules :
-!*/
+//! A __Rust__ binding for the [GSL library][] (the GNU Scientific Library).
+//!
+//! ##Installation
+//!
+//! This binding requires the [GSL library] library to be installed.
+//!
+//! This crate works with Cargo and is on [crates.io].  Just add the
+//! following to your `Cargo.toml` file:
+//!
+//! ```toml
+//! [dependencies]
+//! GSL = "*"
+//! ```
+//!
+//! Add the following line to your source code:
+//!
+//! ```rust
+//! extern crate rgsl;
+//! ```
+//!
+//! ##Documentation
+//!
+//! You can access the __rgsl__ documentation locally, just build it:
+//!
+//! ```Shell
+//! > cargo doc --open
+//! ```
+//!
+//! Then open this file with an internet browser:
+//! `file:///{rgsl_location}/target/doc/rgsl/index.html`
+//!
+//! You can also access the latest build of the documentation via the internet
+//! [here](http://rust-ci.org/GuillaumeGomez/rust-GSL/doc/rgsl/).
+//!
+//! ## License
+//! __rust-GSL__ is a wrapper for __GSL__, therefore inherits the
+//! [GPL license](http://www.gnu.org/copyleft/gpl.html).
+//!
+//! [crates.io]: https://crates.io/crates/GSL
+//! [GSL library]: http://www.gnu.org/software/gsl/
+//!
+//! Here is the list of all modules :
 
 #![crate_name = "rgsl"]
 #![crate_type = "rlib"]

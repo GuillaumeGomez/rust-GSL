@@ -7,6 +7,7 @@ B-splines are commonly used as basis functions to fit smoothing curves to large 
  To do this, the abscissa axis is broken up into some number of intervals, where the endpoints of each interval are called breakpoints.
  These breakpoints are then converted to knots by imposing various continuity and smoothness conditions at each interface. Given a nondecreasing knot vector t = {t_0, t_1, …, t_{n+k-1}}, the n basis splines of order k are defined by
 
+```latex
 B_(i,1)(x) = (1, t_i <= x < t_(i+1)
 
              (0, else
@@ -14,6 +15,7 @@ B_(i,1)(x) = (1, t_i <= x < t_(i+1)
 B_(i,k)(x) = [(x - t_i)/(t_(i+k-1) - t_i)] B_(i,k-1)(x)
 
               + [(t_(i+k) - x)/(t_(i+k) - t_(i+1))] B_(i+1,k-1)(x)
+```
 
 for i = 0, …, n-1. The common case of cubic B-splines is given by k = 4. The above recurrence relation can be evaluated in a numerically stable way by the de Boor algorithm.
 
@@ -91,7 +93,7 @@ impl BSpLineWorkspace {
     /// The Greville abscissae are defined to be the mean location of k-1 consecutive knots in the knot vector for each basis spline function of order k.
     /// With the first and last knots in the gsl_bspline_workspace knot vector excluded, there are gsl_bspline_ncoeffs Greville abscissae for any given B-spline basis.
     /// These values are often used in B-spline collocation applications and may also be called Marsden-Schoenberg points.
-    /// 
+    ///
     /// Returns the location of the i-th Greville abscissa for the given B-spline basis.
     /// For the ill-defined case when k=1, the implementation chooses to return breakpoint interval midpoints.
     pub fn greville_abscissa(&self, i: u64) -> f64 {
