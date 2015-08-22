@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-//! A __Rust__ binding for the [GSL library] (the GNU Scientific Library).
+//! A __Rust__ binding for the [GSL library][] (the GNU Scientific Library).
 //!
 //! ##Installation
 //!
