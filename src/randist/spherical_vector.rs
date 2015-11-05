@@ -45,5 +45,5 @@ pub fn dir_3d(r: &Rng, x: &mut f64, y: &mut f64, z: &mut f64) {
 /// The method uses the fact that a multivariate Gaussian distribution is spherically symmetric. Each component is generated to have a Gaussian distribution, and then
 /// the components are normalized. The method is described by Knuth, v2, 3rd ed, p135–136, and attributed to G. W. Brown, Modern Mathematics for the Engineer (1956).
 pub fn dir_nd(r: &Rng, x: &mut [f64]) {
-	unsafe { ffi::gsl_ran_dir_nd(ffi::FFI::unwrap(r), x.len() as u64, x.as_mut_ptr()) }
+	unsafe { ffi::gsl_ran_dir_nd(ffi::FFI::unwrap(r), x.len() as usize, x.as_mut_ptr()) }
 }

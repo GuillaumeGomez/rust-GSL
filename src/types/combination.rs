@@ -24,14 +24,14 @@ use c_vec::CSlice;
 
 pub struct Combination {
     c: *mut ffi::gsl_combination,
-    data: CSlice<u64>
+    data: CSlice<usize>
 }
 
 impl Combination {
     /// This function allocates memory for a new combination with parameters n, k. The combination is not initialized and its elements are
     /// undefined. Use the function Combination::new_init_first if you want to create a combination which is initialized to the lexicographically
     /// first combination. A null pointer is returned if insufficient memory is available to create the combination.
-    pub fn new(n: u64, k: u64) -> Option<Combination> {
+    pub fn new(n: usize, k: usize) -> Option<Combination> {
         let tmp = unsafe { ffi::gsl_combination_alloc(n, k) };
 
         if tmp.is_null() {
@@ -46,7 +46,7 @@ impl Combination {
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut u64, 0usize)
+                        data: CSlice::new(tmp as *mut usize, 0usize)
                     })
                 }
             }
@@ -55,7 +55,7 @@ impl Combination {
 
     /// This function allocates memory for a new combination with parameters n, k and initializes it to the lexicographically first combination.
     /// A null pointer is returned if insufficient memory is available to create the combination.
-    pub fn new_init_first(n: u64, k: u64) -> Option<Combination> {
+    pub fn new_init_first(n: usize, k: usize) -> Option<Combination> {
         let tmp = unsafe { ffi::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {
@@ -70,7 +70,7 @@ impl Combination {
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut u64, 0usize)
+                        data: CSlice::new(tmp as *mut usize, 0usize)
                     })
                 }
             }
@@ -94,27 +94,27 @@ impl Combination {
 
     /// This function returns the value of the i-th element of the combination self. If i lies outside the allowed range of 0 to k-1 then the
     /// error handler is invoked and 0 is returned.
-    pub fn get(&self, i: u64) -> u64 {
+    pub fn get(&self, i: usize) -> usize {
         unsafe { ffi::gsl_combination_get(self.c, i) }
     }
 
     /// This function returns the range (n) of the combination self.
-    pub fn n(&self) -> u64 {
+    pub fn n(&self) -> usize {
         unsafe { ffi::gsl_combination_n(self.c) }
     }
 
     /// This function returns the number of elements (k) in the combination self.
-    pub fn k(&self) -> u64 {
+    pub fn k(&self) -> usize {
         unsafe { ffi::gsl_combination_k(self.c) }
     }
 
     /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_slice<'r>(&'r self) -> &'r [u64] {
+    pub fn as_slice<'r>(&'r self) -> &'r [usize] {
         self.data.as_ref()
     }
 
     /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [u64] {
+    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [usize] {
         self.data.as_mut()
     }
 

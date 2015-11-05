@@ -30,7 +30,7 @@ Further information on the use of ntuples can be found in the documentation for 
 
 use ffi;
 use enums;
-use libc::funcs::c95::stdio::{feof, fread};
+use libc::{feof, fread};
 use std::marker::PhantomData;
 use std::ffi::CString;
 
@@ -47,7 +47,7 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_create(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
+            ffi::gsl_ntuple_create(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as usize)
         };
 
         if tmp.is_null() {
@@ -67,7 +67,7 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_open(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as u64)
+            ffi::gsl_ntuple_open(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as usize)
         };
 
         if tmp.is_null() {

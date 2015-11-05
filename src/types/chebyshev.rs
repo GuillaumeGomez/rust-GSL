@@ -36,7 +36,7 @@ pub struct ChebSeries {
 }
 
 impl ChebSeries {
-    pub fn new(n: u64) -> Option<ChebSeries> {
+    pub fn new(n: usize) -> Option<ChebSeries> {
         let tmp = unsafe { ffi::gsl_cheb_alloc(n) };
 
         if tmp.is_null() {
@@ -86,12 +86,12 @@ impl ChebSeries {
     }
 
     /// This function returns the order of Chebyshev series cs.
-    pub fn order(&self) -> u64 {
+    pub fn order(&self) -> usize {
         unsafe { ffi::gsl_cheb_order(self.c) }
     }
 
     /// This function returns the size of the Chebyshev coefficient array c[] for the Chebyshev series cs.
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { ffi::gsl_cheb_size(self.c) }
     }
 
@@ -117,13 +117,13 @@ impl ChebSeries {
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given order order.
-    pub fn eval_n(&self, order: u64, x: f64) -> f64 {
+    pub fn eval_n(&self, order: usize, x: f64) -> f64 {
         unsafe { ffi::gsl_cheb_eval_n(self.c, order, x) }
     }
 
     /// This function evaluates a Chebyshev series cs at a given point x, estimating both the series result and its absolute error abserr, to
     /// (at most) the given order order. The error estimate is made from the first neglected term in the series.
-    pub fn eval_n_err(&self, order: u64, x: f64, result: &mut f64, abs_err: &mut f64) -> enums::value::Value {
+    pub fn eval_n_err(&self, order: usize, x: f64, result: &mut f64, abs_err: &mut f64) -> enums::value::Value {
         unsafe { ffi::gsl_cheb_eval_n_err(self.c, order, x, result, abs_err) }
     }
 

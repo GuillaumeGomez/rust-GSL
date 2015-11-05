@@ -46,9 +46,9 @@ use libc::c_void;
 pub struct MultiFitFunction<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,
     /// number of functions
-    pub n: u64,
+    pub n: usize,
     /// number of independent variables
-    pub p: u64,
+    pub p: usize,
     pub params: &'r mut T
 }
 
@@ -65,7 +65,7 @@ pub struct MultiFitFdfSolver<'r, T:'r> {
 impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T for n observations and p parameters. The number
     /// of observations n must be greater than or equal to parameters p.
-    pub fn new(_type: &'r MultiFitFdfSolverType<T>, n: u64, p: u64) -> Option<MultiFitFdfSolver<'r, T>> {
+    pub fn new(_type: &'r MultiFitFdfSolverType<T>, n: usize, p: usize) -> Option<MultiFitFdfSolver<'r, T>> {
         let mut r = MultiFitFdfSolver {
             _type: _type,
             fdf: ::std::ptr::null_mut(),
@@ -122,9 +122,9 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// These functions iterate the solver s for a maximum of maxiter iterations. After each iteration, the system is tested for convergence
     /// using gsl_multifit_test_delta with the error tolerances epsabs and epsrel.
     #[allow(unused_assignments)]
-    pub fn driver(&mut self, max_iter: u64, epsabs: f64, epsrel: f64) -> ::Value {
+    pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> ::Value {
         let mut status = ::Value::Success;
-        let mut iter = 0u64;
+        let mut iter = 0usize;
 
         loop {
             status = self.iterate();
@@ -154,8 +154,8 @@ impl<'r, T> Drop for MultiFitFdfSolver<'r, T> {
 #[allow(dead_code)]
 pub struct MultiFitFdfSolverType<T> {
     name: &'static str,
-    //size: u64,
-    alloc: fn(state: &mut LmderStateT, n: u64, p: u64) -> ::Value,
+    //size: usize,
+    alloc: fn(state: &mut LmderStateT, n: usize, p: usize) -> ::Value,
     set: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, j: &mut ::MatrixF64,
         dx: &mut ::VectorF64) -> ::Value,
     iterate: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64,
@@ -189,13 +189,13 @@ pub struct MultiFitFunctionFdf<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value,
     pub df: Option<fn(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> ::Value>,
     pub fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> ::Value>,
-    pub n: u64,
-    pub p: u64,
+    pub n: usize,
+    pub p: usize,
     pub params: &'r mut T
 }
 
 struct LmderStateT {
-    iter: u64,
+    iter: usize,
     xnorm: f64,
     fnorm: f64,
     delta: f64,
@@ -217,9 +217,9 @@ struct LmderStateT {
 }
 
 impl LmderStateT {
-    fn new(n: u64, p: u64) -> LmderStateT {
+    fn new(n: usize, p: usize) -> LmderStateT {
         LmderStateT {
-            iter: 0u64,
+            iter: 0usize,
             xnorm: 0f64,
             fnorm: 0f64,
             delta: 0f64,
@@ -244,7 +244,7 @@ impl LmderStateT {
 
 #[allow(unused_variables)]
 // I'm not sure if I'll keep this function or not...
-fn lmder_alloc(state: &mut LmderStateT, n: u64, p: u64) -> ::Value {
+fn lmder_alloc(state: &mut LmderStateT, n: usize, p: usize) -> ::Value {
     /*state.r = match ::MatrixF64::new(n, p) {
         Some(m) => m,
         None => {
@@ -622,7 +622,7 @@ fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut
     { 
         let iamax = ::blas::level1::idamax(&state.gradient);
 
-        gnorm = unsafe { (state.gradient.get(iamax as u64) / state.fnorm).abs() };
+        gnorm = unsafe { (state.gradient.get(iamax as usize) / state.fnorm).abs() };
     }
 
     /* Determine the Levenberg-Marquardt parameter */
@@ -929,7 +929,7 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
     let mut par_c = 0f64;
 
     let mut par = *par_inout;
-    let mut iter = 0u64;
+    let mut iter = 0usize;
 
     /*#ifdef DEBUG
     printf("ENTERING lmpar\n");
@@ -1215,7 +1215,7 @@ fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::Vecto
         }
     }
 
-    if nsing > 0u64 {
+    if nsing > 0usize {
         for j in nsing..0 {
             let rjj = r.get(j, j);
             let temp = x.get(j) / rjj;
@@ -1510,12 +1510,12 @@ fn compute_newton_correction(r: &::MatrixF64, sdiag: &::VectorF64, p: &::Permuta
     }
 }
 
-fn count_nsing(r: &::MatrixF64) -> u64 {
+fn count_nsing(r: &::MatrixF64) -> usize {
     /* Count the number of nonsingular entries. Returns the index of the
        first entry which is singular. */
 
     let n = r.size2();
-    let mut i = 0u64;
+    let mut i = 0usize;
 
     while i < n {
         let rii = r.get(i, i);

@@ -54,7 +54,7 @@ pub struct DiscreteHankel {
 
 impl DiscreteHankel {
     /// This function allocates a Discrete Hankel transform object of size size.
-    pub fn new(size: u64) -> Option<DiscreteHankel> {
+    pub fn new(size: usize) -> Option<DiscreteHankel> {
         let tmp = unsafe { ffi::gsl_dht_alloc(size) };
 
         if tmp.is_null() {
@@ -67,7 +67,7 @@ impl DiscreteHankel {
     }
 
     /// This function allocates a Discrete Hankel transform object of size size and initializes it for the given values of nu and xmax.
-    pub fn new_with_init(size: u64, nu: f64, xmax: f64) -> Option<DiscreteHankel> {
+    pub fn new_with_init(size: usize, nu: f64, xmax: f64) -> Option<DiscreteHankel> {
         let tmp = unsafe { ffi::gsl_dht_new(size, nu, xmax) };
 
         if tmp.is_null() {

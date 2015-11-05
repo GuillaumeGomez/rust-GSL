@@ -29,7 +29,7 @@ pub struct MathieuWorkspace {
 impl MathieuWorkspace {
     /// This function returns a workspace for the array versions of the Mathieu routines.
     /// The arguments n and qmax specify the maximum order and q-value of Mathieu functions which can be computed with this workspace.
-    pub fn new(n: u64, qmax: f64) -> Option<MathieuWorkspace> {
+    pub fn new(n: usize, qmax: f64) -> Option<MathieuWorkspace> {
         let tmp = unsafe { ffi::gsl_sf_mathieu_alloc(n, qmax) };
 
         if tmp.is_null() {

@@ -274,7 +274,7 @@ impl<T> Drop for Minimizer<T> {
 
 pub struct MinimizerType<T> {
     pub name: String,
-    size: u64,
+    size: usize,
     set: fn(state: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
         f_upper: f64) -> ::Value,
     iterate: fn(state: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
@@ -293,7 +293,7 @@ impl<T> MinimizerType<T> {
     pub fn golden_section() -> MinimizerType<T> {
         MinimizerType {
             name: "goldensection".to_string(),
-            size: ::std::mem::size_of::<goldensection_state_t>() as u64,
+            size: ::std::mem::size_of::<goldensection_state_t>() as usize,
             set: goldensection_init,
             iterate: goldensection_iterate
         }
@@ -310,7 +310,7 @@ impl<T> MinimizerType<T> {
     pub fn brent() -> MinimizerType<T> {
         MinimizerType {
             name: "brent".to_string(),
-            size: ::std::mem::size_of::<brent_state_t>() as u64,
+            size: ::std::mem::size_of::<brent_state_t>() as usize,
             set: brent_init,
             iterate: brent_iterate
         }
@@ -320,7 +320,7 @@ impl<T> MinimizerType<T> {
     pub fn quad_golden() -> MinimizerType<T> {
         MinimizerType {
             name: "quad-golden".to_string(),
-            size: ::std::mem::size_of::<quad_golden_state_t>() as u64,
+            size: ::std::mem::size_of::<quad_golden_state_t>() as usize,
             set: quad_golden_init,
             iterate: quad_golden_iterate
         }

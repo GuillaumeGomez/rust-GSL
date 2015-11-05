@@ -63,7 +63,7 @@ pub mod objects {
         if array.len() == 0 {
             return;
         }
-        let mut n = array.len() as u64 - 1;
+        let mut n = array.len() as usize - 1;
         let mut k = n / 2;
         k += 1;
         while k > 0 {
@@ -78,7 +78,7 @@ pub mod objects {
     }
 
     #[doc(hidden)]
-    fn downheap<T>(array: &mut[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
+    fn downheap<T>(array: &mut[T], n: usize, t_k: usize, compare: ::comparison_fn<T>) {
         let mut k = t_k;
 
         while k <= n / 2 {
@@ -100,14 +100,14 @@ pub mod objects {
     /// function compare. The resulting permutation is stored in p, an array of length n. The elements of p give the index of the array element
     /// which would have been stored in that position if the array had been sorted in place. The first element of p gives the index of the
     /// least element in array, and the last element of p gives the index of the greatest element in array. The array itself is not changed.
-    pub fn heapsort_index<T>(p: &mut[u64], array: &[T], compare: ::comparison_fn<T>) -> ::Value {
+    pub fn heapsort_index<T>(p: &mut[usize], array: &[T], compare: ::comparison_fn<T>) -> ::Value {
         if array.len() == 0 {
             return ::Value::Success;
         }
-        for tmp in 0u64..array.len() as u64 {
+        for tmp in 0usize..array.len() as usize {
             p[tmp as usize] = tmp;
         }
-        let mut n = array.len() as u64 - 1;
+        let mut n = array.len() as usize - 1;
         let mut k = n / 2;
         k += 1;
         while k > 0 {
@@ -123,7 +123,7 @@ pub mod objects {
     }
 
     #[doc(hidden)]
-    fn downheap_index<T>(p: &mut[u64], array: &[T], n: u64, t_k: u64, compare: ::comparison_fn<T>) {
+    fn downheap_index<T>(p: &mut[usize], array: &[T], n: usize, t_k: usize, compare: ::comparison_fn<T>) {
         let pki = p[t_k as usize];
         let mut k = t_k;
 
@@ -157,13 +157,13 @@ pub mod vectors {
     use enums;
 
     /// This function sorts the n elements of the array data with stride stride into ascending numerical order.
-    pub fn sort(data: &mut [f64], stride: u64, n: u64) {
+    pub fn sort(data: &mut [f64], stride: usize, n: usize) {
         unsafe { ffi::gsl_sort(data.as_mut_ptr(), stride, n) }
     }
 
     /// This function sorts the n elements of the array data1 with stride stride1 into ascending numerical order, while making the same rearrangement
     /// of the array data2 with stride stride2, also of size n.
-    pub fn sort2(data1: &mut [f64], stride1: u64, data2: &mut [f64], stride2: u64, n: u64) {
+    pub fn sort2(data1: &mut [f64], stride1: usize, data2: &mut [f64], stride2: usize, n: usize) {
         unsafe { ffi::gsl_sort2(data1.as_mut_ptr(), stride1, data2.as_mut_ptr(), stride2, n) }
     }
 
@@ -180,7 +180,7 @@ pub mod vectors {
     /// This function indirectly sorts the n elements of the array data with stride stride into ascending order, storing the resulting
     /// permutation in p. The array p must be allocated with a sufficient length to store the n elements of the permutation. The elements of p
     /// give the index of the array element which would have been stored in that position if the array had been sorted in place. The array data is not changed.
-    pub fn sort_index(p: &mut [u64], data: &[f64], stride: u64, n: u64) {
+    pub fn sort_index(p: &mut [usize], data: &[f64], stride: usize, n: usize) {
         unsafe { ffi::gsl_sort_index(p.as_mut_ptr(), data.as_ptr(), stride, n) }
     }
 
@@ -203,47 +203,47 @@ pub mod select {
 
     /// This function copies the k smallest elements of the array src, of size n and stride stride, in ascending numerical order into the array dest. The size
     /// k of the subset must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_smallest(dest: &mut [f64], k: u64, src: &[f64], stride: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_smallest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as u64) }
+    pub fn sort_smallest(dest: &mut [f64], k: usize, src: &[f64], stride: usize) -> enums::value::Value {
+        unsafe { ffi::gsl_sort_smallest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as usize) }
     }
 
     /// This function copies the k largest elements of the array src, of size n and stride stride, in descending numerical order into the array dest. k must
     /// be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_largest(dest: &mut [f64], k: u64, src: &[f64], stride: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_largest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as u64) }
+    pub fn sort_largest(dest: &mut [f64], k: usize, src: &[f64], stride: usize) -> enums::value::Value {
+        unsafe { ffi::gsl_sort_largest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as usize) }
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
-    pub fn sort_vector_smallest(dest: &mut [f64], k: u64, v: &VectorF64) -> enums::value::Value {
+    pub fn sort_vector_smallest(dest: &mut [f64], k: usize, v: &VectorF64) -> enums::value::Value {
         unsafe { ffi::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
-    pub fn sort_vector_largest(dest: &mut [f64], k: u64, v: &VectorF64) -> enums::value::Value {
+    pub fn sort_vector_largest(dest: &mut [f64], k: usize, v: &VectorF64) -> enums::value::Value {
         unsafe { ffi::gsl_sort_vector_largest(dest.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 
     /// This function stores the indices of the k smallest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
     /// the corresponding data is in ascending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_smallest_index(p: &mut [u64], k: u64, src: &[f64], stride: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_smallest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as u64) }
+    pub fn sort_smallest_index(p: &mut [usize], k: usize, src: &[f64], stride: usize) -> enums::value::Value {
+        unsafe { ffi::gsl_sort_smallest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as usize) }
     }
 
     /// This function stores the indices of the k largest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
     /// the corresponding data is in descending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_largest_index(p: &mut [u64], k: u64, src: &[f64], stride: u64) -> enums::value::Value {
-        unsafe { ffi::gsl_sort_largest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as u64) }
+    pub fn sort_largest_index(p: &mut [usize], k: usize, src: &[f64], stride: usize) -> enums::value::Value {
+        unsafe { ffi::gsl_sort_largest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as usize) }
     }
 
     /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
     /// the vector v.
-    pub fn sort_vector_smallest_index(p: &mut [u64], k: u64, v: &VectorF64) -> enums::value::Value {
+    pub fn sort_vector_smallest_index(p: &mut [usize], k: usize, v: &VectorF64) -> enums::value::Value {
         unsafe { ffi::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 
     /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
     /// the vector v.
-    pub fn sort_vector_largest_index(p: &mut [u64], k: u64, v: &VectorF64) -> enums::value::Value {
+    pub fn sort_vector_largest_index(p: &mut [usize], k: usize, v: &VectorF64) -> enums::value::Value {
         unsafe { ffi::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap(v)) }
     }
 }

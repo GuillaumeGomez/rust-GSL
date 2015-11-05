@@ -21,7 +21,7 @@ impl MatrixComplexF64 {
     /// XX XX XX
     /// 
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixComplexF64> {
+    pub fn new(n1: usize, n2: usize) -> Option<MatrixComplexF64> {
         let tmp = unsafe { ffi::gsl_matrix_complex_calloc(n1, n2) };
 
         if tmp.is_null() {
@@ -35,13 +35,13 @@ impl MatrixComplexF64 {
 
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, y: u64, x: u64) -> ComplexF64 {
+    pub fn get(&self, y: usize, x: usize) -> ComplexF64 {
         unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_get(self.mat, y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: u64, x: u64, value: &ComplexF64) -> &MatrixComplexF64 {
+    pub fn set(&self, y: usize, x: usize, value: &ComplexF64) -> &MatrixComplexF64 {
         unsafe { ffi::gsl_matrix_complex_set(self.mat, y, x, ::std::mem::transmute(*value)) };
         self
     }
@@ -81,7 +81,7 @@ impl MatrixComplexF64 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorComplexF64, enums::value::Value)> {
+    pub fn get_row(&self, y: usize) -> Option<(VectorComplexF64, enums::value::Value)> {
         let tmp = unsafe { ffi::gsl_vector_complex_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -94,7 +94,7 @@ impl MatrixComplexF64 {
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorComplexF64, enums::value::Value)> {
+    pub fn get_col(&self, x: usize) -> Option<(VectorComplexF64, enums::value::Value)> {
         let tmp = unsafe { ffi::gsl_vector_complex_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -108,28 +108,28 @@ impl MatrixComplexF64 {
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: u64, v: &VectorComplexF64) -> enums::value::Value {
+    pub fn set_row(&self, y: usize, v: &VectorComplexF64) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: u64, v: &VectorComplexF64) -> enums::value::Value {
+    pub fn set_col(&self, x: usize, v: &VectorComplexF64) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&self, y1: u64, y2: u64) -> enums::value::Value {
+    pub fn swap_rows(&self, y1: usize, y2: usize) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_swap_rows(self.mat, y1, y2) }
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&self, x1: u64, x2: u64) -> enums::value::Value {
+    pub fn swap_columns(&self, x1: usize, x2: usize) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_swap_columns(self.mat, x1, x2) }
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&self, i: u64, j: u64) -> enums::value::Value {
+    pub fn swap_row_col(&self, i: usize, j: usize) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_swap_rowcol(self.mat, i, j) }
     }
 
@@ -255,9 +255,9 @@ impl Debug for MatrixComplexF64 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
-            for y in 0u64..(*self.mat).size1 {
+            for y in 0usize..(*self.mat).size1 {
                 write!(f, "[");
-                for x in 0u64..(*self.mat).size2 {
+                for x in 0usize..(*self.mat).size2 {
                     if x < (*self.mat).size2 - 1 {
                         write!(f, "{:?}, ", self.get(y, x));
                     } else {
@@ -297,7 +297,7 @@ impl MatrixComplexF32 {
     /// XX XX XX
     /// 
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixComplexF32> {
+    pub fn new(n1: usize, n2: usize) -> Option<MatrixComplexF32> {
         let tmp = unsafe { ffi::gsl_matrix_complex_float_calloc(n1, n2) };
 
         if tmp.is_null() {
@@ -311,13 +311,13 @@ impl MatrixComplexF32 {
 
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, y: u64, x: u64) -> ComplexF32 {
+    pub fn get(&self, y: usize, x: usize) -> ComplexF32 {
         unsafe { ::std::mem::transmute(ffi::gsl_matrix_complex_float_get(self.mat, y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: u64, x: u64, value: &ComplexF32) -> &MatrixComplexF32 {
+    pub fn set(&self, y: usize, x: usize, value: &ComplexF32) -> &MatrixComplexF32 {
         unsafe { ffi::gsl_matrix_complex_float_set(self.mat, y, x, ::std::mem::transmute(*value)) };
         self
     }
@@ -357,7 +357,7 @@ impl MatrixComplexF32 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorComplexF32, enums::value::Value)> {
+    pub fn get_row(&self, y: usize) -> Option<(VectorComplexF32, enums::value::Value)> {
         let tmp = unsafe { ffi::gsl_vector_complex_float_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -370,7 +370,7 @@ impl MatrixComplexF32 {
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorComplexF32, enums::value::Value)> {
+    pub fn get_col(&self, x: usize) -> Option<(VectorComplexF32, enums::value::Value)> {
         let tmp = unsafe { ffi::gsl_vector_complex_float_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -384,28 +384,28 @@ impl MatrixComplexF32 {
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: u64, v: &VectorComplexF32) -> enums::value::Value {
+    pub fn set_row(&self, y: usize, v: &VectorComplexF32) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_float_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: u64, v: &VectorComplexF32) -> enums::value::Value {
+    pub fn set_col(&self, x: usize, v: &VectorComplexF32) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_float_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&self, y1: u64, y2: u64) -> enums::value::Value {
+    pub fn swap_rows(&self, y1: usize, y2: usize) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_float_swap_rows(self.mat, y1, y2) }
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&self, x1: u64, x2: u64) -> enums::value::Value {
+    pub fn swap_columns(&self, x1: usize, x2: usize) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_float_swap_columns(self.mat, x1, x2) }
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&self, i: u64, j: u64) -> enums::value::Value {
+    pub fn swap_row_col(&self, i: usize, j: usize) -> enums::value::Value {
         unsafe { ffi::gsl_matrix_complex_float_swap_rowcol(self.mat, i, j) }
     }
 
@@ -532,9 +532,9 @@ impl Debug for MatrixComplexF32 {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
-            for y in 0u64..(*self.mat).size1 {
+            for y in 0usize..(*self.mat).size1 {
                 write!(f, "[");
-                for x in 0u64..(*self.mat).size2 {
+                for x in 0usize..(*self.mat).size2 {
                     if x < (*self.mat).size2 - 1 {
                         write!(f, "{:?}, ", self.get(y, x));
                     } else {

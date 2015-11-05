@@ -29,18 +29,18 @@ pub mod one_dimension {
     use ffi;
     use enums;
 
-    pub fn transform(w: &::Wavelet, data: &mut [f64], stride: u64, n: u64, dir: ::WaveletDirection,
+    pub fn transform(w: &::Wavelet, data: &mut [f64], stride: usize, n: usize, dir: ::WaveletDirection,
         work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet_transform(ffi::FFI::unwrap(w), data.as_mut_ptr(), stride, n, dir,
             ffi::FFI::unwrap(work)) }
     }
 
-    pub fn transform_forward(w: &::Wavelet, data: &mut [f64], stride: u64, n: u64, work: &::WaveletWorkspace) -> enums::value::Value {
+    pub fn transform_forward(w: &::Wavelet, data: &mut [f64], stride: usize, n: usize, work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet_transform_forward(ffi::FFI::unwrap(w), data.as_mut_ptr(), stride, n,
             ffi::FFI::unwrap(work)) }
     }
 
-    pub fn transform_inverse(w: &::Wavelet, data: &mut [f64], stride: u64, n: u64, work: &::WaveletWorkspace) -> enums::value::Value {
+    pub fn transform_inverse(w: &::Wavelet, data: &mut [f64], stride: usize, n: usize, work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet_transform_inverse(ffi::FFI::unwrap(w), data.as_mut_ptr(), stride, n,
             ffi::FFI::unwrap(work)) }
     }
@@ -70,7 +70,7 @@ pub mod two_dimension {
     /// 
     /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
-    pub fn transform(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, dir: ::WaveletDirection,
+    pub fn transform(w: &::Wavelet, data: &mut [f64], tda: usize, size1: usize, size2: usize, dir: ::WaveletDirection,
         work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_transform(ffi::FFI::unwrap(w), data.as_mut_ptr(), tda, size1, size2, dir,
             ffi::FFI::unwrap(work)) }
@@ -84,7 +84,7 @@ pub mod two_dimension {
     /// 
     /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
-    pub fn transform_forward(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, work: &::WaveletWorkspace) -> enums::value::Value {
+    pub fn transform_forward(w: &::Wavelet, data: &mut [f64], tda: usize, size1: usize, size2: usize, work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_transform_forward(ffi::FFI::unwrap(w), data.as_mut_ptr(), tda, size1, size2,
             ffi::FFI::unwrap(work)) }
     }
@@ -97,7 +97,7 @@ pub mod two_dimension {
     /// 
     /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
-    pub fn transform_inverse(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, work: &::WaveletWorkspace) -> enums::value::Value {
+    pub fn transform_inverse(w: &::Wavelet, data: &mut [f64], tda: usize, size1: usize, size2: usize, work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_transform_inverse(ffi::FFI::unwrap(w), data.as_mut_ptr(), tda, size1, size2,
             ffi::FFI::unwrap(work)) }
     }
@@ -121,21 +121,21 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
-    pub fn nstransform(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64, dir: ::WaveletDirection,
+    pub fn nstransform(w: &::Wavelet, data: &mut [f64], tda: usize, size1: usize, size2: usize, dir: ::WaveletDirection,
         work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_nstransform(ffi::FFI::unwrap(w), data.as_mut_ptr(), tda, size1, size2, dir,
             ffi::FFI::unwrap(work)) }
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
-    pub fn nstransform_forward(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64,
+    pub fn nstransform_forward(w: &::Wavelet, data: &mut [f64], tda: usize, size1: usize, size2: usize,
         work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_nstransform_forward(ffi::FFI::unwrap(w), data.as_mut_ptr(), tda, size1, size2,
             ffi::FFI::unwrap(work)) }
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
-    pub fn nstransform_inverse(w: &::Wavelet, data: &mut [f64], tda: u64, size1: u64, size2: u64,
+    pub fn nstransform_inverse(w: &::Wavelet, data: &mut [f64], tda: usize, size1: usize, size2: usize,
         work: &::WaveletWorkspace) -> enums::value::Value {
         unsafe { ffi::gsl_wavelet2d_nstransform_inverse(ffi::FFI::unwrap(w), data.as_mut_ptr(), tda, size1, size2,
             ffi::FFI::unwrap(work)) }

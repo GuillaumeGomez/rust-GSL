@@ -122,7 +122,7 @@ pub struct PlainMonteCarlo {
 
 impl PlainMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
-    pub fn new(dim: u64) -> Option<PlainMonteCarlo> {
+    pub fn new(dim: usize) -> Option<PlainMonteCarlo> {
         let tmp = unsafe { ffi::gsl_monte_plain_alloc(dim) };
 
         if tmp.is_null() {
@@ -144,7 +144,7 @@ impl PlainMonteCarlo {
     /// by the lower and upper limits in the arrays xl and xu, each of the same size. The integration uses a fixed number of function calls
     /// calls, and obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied.
     /// The result of the integration is returned in result, with an estimated absolute error abserr.
-    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], calls: u64, r: &::Rng, result: &mut f64,
+    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], calls: usize, r: &::Rng, result: &mut f64,
         abserr: &mut f64) -> ::Value {
         unsafe {
             let mut m = 0f64;
@@ -229,7 +229,7 @@ pub struct MiserMonteCarlo {
 impl MiserMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
     /// the state of the integration.
-    pub fn new(dim: u64) -> Option<MiserMonteCarlo> {
+    pub fn new(dim: usize) -> Option<MiserMonteCarlo> {
         let tmp_pointer = unsafe { ffi::gsl_monte_miser_alloc(dim) };
 
         if tmp_pointer.is_null() {
@@ -251,12 +251,12 @@ impl MiserMonteCarlo {
     /// and obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied. The result
     /// of the integration is returned in result, with an estimated absolute error abserr.
     #[allow(unused_assignments)]
-    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: u64, r: &::Rng, result: &mut f64,
+    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: usize, r: &::Rng, result: &mut f64,
         abserr: &mut f64) -> ::Value {
         unsafe {
             let mut calls = t_calls;
-            let mut calls_l = 0u64;
-            let mut calls_r = 0u64;
+            let mut calls_l = 0usize;
+            let mut calls_r = 0usize;
             let min_calls = (*self.s).min_calls;
             let mut i_bisect = 0usize;
             let dim = (*self.s).dim as usize;
@@ -341,10 +341,10 @@ impl MiserMonteCarlo {
             let estimate_calls = if min_calls as f64 > tmp {
                 min_calls
             } else {
-                tmp as u64
+                tmp as usize
             };
 
-            if estimate_calls < dim as u64 * 4u64 {
+            if estimate_calls < dim as usize * 4usize {
                 rgsl_error!("insufficient calls to sample all halfspaces", ::Value::Sanity);
             }
 
@@ -404,7 +404,7 @@ impl MiserMonteCarlo {
 
             if !found_best {
                 /* All estimates were the same, so chose a direction at random */
-                i_bisect = r.uniform_int(dim as u64) as usize;
+                i_bisect = r.uniform_int(dim as usize) as usize;
             }
 
             let xbi_l = xl[i_bisect];
@@ -420,8 +420,8 @@ impl MiserMonteCarlo {
                 let a = fraction_l * weight_l;
                 let b = fraction_r * weight_r;
 
-                calls_l = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (a / (a + b))) as u64;
-                calls_r = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (b / (a + b))) as u64;
+                calls_l = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (a / (a + b))) as usize;
+                calls_r = (min_calls as f64 + (calls as f64 - 2f64 * min_calls as f64) * (b / (a + b))) as usize;
             }
 
             /* Compute the integral for the left hand side of the bisection */
@@ -500,7 +500,7 @@ impl ffi::FFI<ffi::gsl_monte_miser_state> for MiserMonteCarlo {
     }
 }
 
-fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], calls: u64, r: &::Rng, state: &MiserMonteCarlo,
+fn estimate_corrmc<T>(f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], calls: usize, r: &::Rng, state: &MiserMonteCarlo,
     result: &mut f64, abserr: &mut f64, xmid: &[f64], sigma_l: &mut [f64], sigma_r: &mut [f64]) -> ::Value {
     unsafe {
         let dim = (*state.s).dim as usize;
@@ -612,7 +612,7 @@ pub struct VegasParams {
     /// rebinning of the grid. The default value is 1.5.
     pub alpha: f64,
     /// The number of iterations to perform for each call to the routine. The default value is 5 iterations.
-    pub iterations: u64,
+    pub iterations: usize,
     /// Setting this determines the stage of the calculation. Normally, stage = 0 which begins with a new uniform grid and empty weighted average.
     /// Calling VEGAS with stage = 1 retains the grid from the previous run but discards the weighted average, so that one can “tune” the grid
     /// using a relatively small number of points and then do a large run with stage = 1 on the optimized grid. Setting stage = 2 keeps the grid
@@ -636,7 +636,7 @@ impl Default for VegasParams {
     fn default() -> VegasParams {
         VegasParams {
             alpha: 1.5f64,
-            iterations: 5u64,
+            iterations: 5usize,
             stage: 0i32,
             mode: ::VegasMode::Importance,
             verbose: 0i32,
@@ -652,7 +652,7 @@ pub struct VegasMonteCarlo {
 impl VegasMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
     /// the state of the integration.
-    pub fn new(dim: u64) -> Option<VegasMonteCarlo> {
+    pub fn new(dim: usize) -> Option<VegasMonteCarlo> {
         let tmp_pointer = unsafe { ffi::gsl_monte_vegas_alloc(dim) };
 
         if tmp_pointer.is_null() {
@@ -675,7 +675,7 @@ impl VegasMonteCarlo {
     /// the integration is returned in result, with an estimated absolute error abserr. The result and its error estimate are based on a weighted
     /// average of independent samples. The chi-squared per degree of freedom for the weighted average is returned via the state struct
     /// component, s->chisq, and must be consistent with 1 for the weighted average to be reliable.
-    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: u64, r: &::Rng, result: &mut f64,
+    pub fn integrate<T>(&self, f: ::monte_function<T>, arg: &mut T, xl: &[f64], xu: &[f64], t_calls: usize, r: &::Rng, result: &mut f64,
         abserr: &mut f64) -> ::Value {
         unsafe {
             let mut calls = t_calls;
@@ -715,11 +715,11 @@ impl VegasMonteCarlo {
 
             if (*self.s).stage <= 2 {
                 let mut bins = (*self.s).bins_max;
-                let mut boxes = 1u64;
+                let mut boxes = 1usize;
 
                 if (*self.s).mode != ::VegasMode::ImportanceOnly {
                     /* shooting for 2 calls/box */
-                    boxes = ((calls as f64 / 2f64).powf(1f64 / dim as f64)).floor() as u64;
+                    boxes = ((calls as f64 / 2f64).powf(1f64 / dim as f64)).floor() as usize;
                     (*self.s).mode = ::VegasMode::Importance;
 
                     if 2 * boxes >= (*self.s).bins_max {
@@ -740,7 +740,7 @@ impl VegasMonteCarlo {
                     let tmp = calls / tot_boxes;
 
                     (*self.s).calls_per_box = if tmp > 2 { tmp as u32 } else { 2 };
-                    calls = ((*self.s).calls_per_box * tot_boxes as u32) as u64;
+                    calls = ((*self.s).calls_per_box * tot_boxes as u32) as usize;
                 }
 
                 /* total volume of x-space/(avg num of calls/bin) */
@@ -751,7 +751,7 @@ impl VegasMonteCarlo {
                 /* If the number of bins changes from the previous invocation, bins
                  are expanded or contracted accordingly, while preserving bin density */
 
-                if bins != (*self.s).bins as u64 {
+                if bins != (*self.s).bins as usize {
                     resize_grid(self.s, bins as usize);
 
                     // FIXME: allow verbose mode

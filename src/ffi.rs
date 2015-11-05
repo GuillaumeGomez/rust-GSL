@@ -2,8 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use libc::{c_double, c_int, c_uint, c_float, c_void, size_t, c_ulong, c_char};
-use libc::types::common::c95::FILE;
+#![allow(improper_ctypes)]
+
+use libc::{c_double, c_int, c_uint, c_float, c_void, size_t, c_ulong, c_char, FILE};
 use enums;
 use cblas;
 
@@ -2361,9 +2362,9 @@ extern "C" {
         epsrel: c_double, a_y: c_double, a_dydt: c_double, scale_abs: *const c_double) -> *mut gsl_odeiv2_driver;
     pub fn gsl_odeiv2_driver_set_hmin(d: *mut gsl_odeiv2_driver, hmin: c_double) -> enums::value::Value;
     pub fn gsl_odeiv2_driver_set_hmax(d: *mut gsl_odeiv2_driver, hmax: c_double) -> enums::value::Value;
-    pub fn gsl_odeiv2_driver_set_nmax(d: *mut gsl_odeiv2_driver, nmax: u64) -> enums::value::Value;
+    pub fn gsl_odeiv2_driver_set_nmax(d: *mut gsl_odeiv2_driver, nmax: usize) -> enums::value::Value;
     pub fn gsl_odeiv2_driver_apply(d: *mut gsl_odeiv2_driver, t: *mut c_double, t1: c_double, y: *mut c_double) -> enums::value::Value;
-    pub fn gsl_odeiv2_driver_apply_fixed_step(d: *mut gsl_odeiv2_driver, t: *mut c_double, h: c_double, n: u64,
+    pub fn gsl_odeiv2_driver_apply_fixed_step(d: *mut gsl_odeiv2_driver, t: *mut c_double, h: c_double, n: usize,
         y: *mut c_double) -> enums::value::Value;
     pub fn gsl_odeiv2_driver_reset(d: *mut gsl_odeiv2_driver) -> enums::value::Value;
     pub fn gsl_odeiv2_driver_reset_hstart(d: *mut gsl_odeiv2_driver, hstart: c_double) -> enums::value::Value;
@@ -3180,7 +3181,7 @@ pub struct gsl_multiset {
 pub struct gsl_odeiv2_system {
     pub function: extern fn(t: f64, *const f64, *mut f64, *mut c_void) -> enums::value::Value,
     pub jacobian: Option<extern fn(t: f64, *const f64, *mut f64, *mut f64, *mut c_void) -> enums::value::Value>,
-    pub dimension: u64,
+    pub dimension: usize,
     pub params: *mut c_void
 }
 
@@ -3201,9 +3202,9 @@ pub struct gsl_odeiv2_driver {
     // maximum step size allowed
     pub hmax: c_double,
     // number of steps taken
-    pub n: u64,
+    pub n: usize,
     // Maximum number of steps allowed
-    pub nmax: u64
+    pub nmax: usize
 }
 
 #[repr(C)]
@@ -3214,8 +3215,8 @@ pub struct gsl_odeiv2_evolve {
     pub dydt_in: *mut c_double,
     pub dydt_out: *mut c_double,
     pub last_step: c_double,
-    pub count: u64,
-    pub failed_steps: u64,
+    pub count: usize,
+    pub failed_steps: usize,
     pub driver: *const gsl_odeiv2_driver
 }
 

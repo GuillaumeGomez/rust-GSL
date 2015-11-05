@@ -62,7 +62,7 @@ pub struct Wavelet {
 impl Wavelet {
     /// This function allocates and initializes a wavelet object of type T. The parameter k selects the specific member of the wavelet
     /// family. A null pointer is returned if insufficient memory is available or if a unsupported member is selected.
-    pub fn new(t: &WaveletType, k: u64) -> Option<Wavelet> {
+    pub fn new(t: &WaveletType, k: usize) -> Option<Wavelet> {
         let tmp = unsafe { ffi::gsl_wavelet_alloc(t.t, k) };
 
         if tmp.is_null() {
@@ -171,7 +171,7 @@ impl WaveletWorkspace {
     /// workspace of size n must be provided. For two-dimensional transforms of n-by-n matrices it is sufficient to allocate a workspace
     /// of size n, since the transform operates on individual rows and columns. A null pointer is returned if insufficient memory is
     /// available.
-    pub fn new(n: u64) -> Option<WaveletWorkspace> {
+    pub fn new(n: usize) -> Option<WaveletWorkspace> {
         let tmp = unsafe { ffi::gsl_wavelet_workspace_alloc(n) };
 
         if tmp.is_null() {

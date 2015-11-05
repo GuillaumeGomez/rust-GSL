@@ -45,10 +45,10 @@ use enums;
 #[derive(Clone, Copy)]
 pub struct InterpAccel {
     /// cache of index
-    pub cache: u64,
+    pub cache: usize,
     /// keep statistics
-    pub miss_count: u64,
-    pub hit_count: u64
+    pub miss_count: usize,
+    pub hit_count: usize
 }
 
 impl InterpAccel {
@@ -56,24 +56,24 @@ impl InterpAccel {
     /// of lookups, thus allowing for application of various acceleration strategies.
     pub fn new() -> InterpAccel {
         InterpAccel {
-            cache: 0u64,
-            miss_count: 0u64,
-            hit_count: 0u64
+            cache: 0usize,
+            miss_count: 0usize,
+            hit_count: 0usize
         }
     }
 
     /// This function reinitializes the accelerator object acc. It should be used when the cached information is no longer applicable—for
     /// example, when switching to a new dataset.
     pub fn reset(&mut self) {
-        self.cache = 0u64;
-        self.miss_count = 0u64;
-        self.hit_count = 0u64;
+        self.cache = 0usize;
+        self.miss_count = 0usize;
+        self.hit_count = 0usize;
     }
 
     /// This function performs a lookup action on the data array x_array of size size, using the given accelerator a. This is how lookups
     /// are performed during evaluation of an interpolation. The function returns an index i such that x_array[i] <= x < x_array[i+1].
-    pub fn find(&mut self, x_array: &[f64], x: f64) -> u64 {
-        unsafe { ffi::gsl_interp_accel_find(self, x_array.as_ptr(), x_array.len() as u64, x) }
+    pub fn find(&mut self, x_array: &[f64], x: f64) -> usize {
+        unsafe { ffi::gsl_interp_accel_find(self, x_array.as_ptr(), x_array.len() as usize, x) }
     }
 }
 
@@ -83,7 +83,7 @@ pub struct Interp {
 
 impl Interp {
     /// This function returns a pointer to a newly allocated interpolation object of type T for size data-points.
-    pub fn new(t: &InterpType, size: u64) -> Option<Interp> {
+    pub fn new(t: &InterpType, size: usize) -> Option<Interp> {
         let tmp = unsafe { ffi::gsl_interp_alloc(t.t, size) };
 
         if tmp.is_null() {
@@ -99,7 +99,7 @@ impl Interp {
     /// object (gsl_interp) does not save the data arrays xa and ya and only stores the static state computed from the data. The xa data array
     /// is always assumed to be strictly ordered, with increasing x values; the behavior for other arrangements is not defined.
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::value::Value {
-        unsafe { ffi::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as u64) }
+        unsafe { ffi::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as usize) }
     }
 
     /// This function returns the name of the interpolation type used by interp. For example,
@@ -216,7 +216,7 @@ pub struct Spline {
 }
 
 impl Spline {
-    pub fn new(t: &InterpType, size: u64) -> Option<Spline> {
+    pub fn new(t: &InterpType, size: usize) -> Option<Spline> {
         let tmp = unsafe { ffi::gsl_spline_alloc(t.t, size) };
 
         if tmp.is_null() {
@@ -229,7 +229,7 @@ impl Spline {
     }
 
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::value::Value {
-        unsafe { ffi::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as u64) }
+        unsafe { ffi::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as usize) }
     }
 
     pub fn name(&self) -> String {

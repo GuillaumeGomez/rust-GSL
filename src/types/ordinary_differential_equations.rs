@@ -75,12 +75,12 @@ use libc::c_void;
 pub struct ODEiv2System<'a> {
     function: &'a mut FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
     jacobian: Option<&'a mut FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>>,
-    dimension: u64,
+    dimension: usize,
 }
 
 impl<'a> ODEiv2System<'a> {
     /// Returns a new ODEiv2System with a given dimension and right-hand side.
-    pub fn new(dimension: u64,
+    pub fn new(dimension: usize,
                function: &'a mut FnMut(f64, &[f64], &mut [f64])
                         -> GSLResult<()>) -> ODEiv2System<'a> {
         ODEiv2System {
@@ -91,7 +91,7 @@ impl<'a> ODEiv2System<'a> {
     }
 
     /// Returns a new ODEiv2System with a jacobian function provided.
-    pub fn with_jacobian(dimension: u64,
+    pub fn with_jacobian(dimension: usize,
                function: &'a mut FnMut(f64, &[f64], &mut [f64])
                         -> GSLResult<()>,
                jacobian: &'a mut FnMut(f64, &[f64], &mut [f64], &mut [f64])
@@ -155,7 +155,7 @@ impl ODEiv2Step {
     /// This function returns a pointer to a newly allocated instance of a stepping function of type T for a system of dim dimensions.
     /// Please note that if you use a stepper method that requires access to a driver object, it is advisable to use a driver allocation
     /// method, which automatically allocates a stepper, too.
-    pub fn new(t: &ODEiv2StepType, dim: u64) -> Option<ODEiv2Step> {
+    pub fn new(t: &ODEiv2StepType, dim: usize) -> Option<ODEiv2Step> {
         let tmp = unsafe { ffi::gsl_odeiv2_step_alloc(ffi::FFI::unwrap(t), dim) };
 
         if tmp.is_null() {
@@ -424,7 +424,7 @@ impl ODEiv2Control {
     ///
     /// where s_i is the i-th component of the array scale_abs. The same error control heuristic is used by the Matlab ODE suite.
     pub fn scaled_new(eps_abs: f64, eps_rel: f64, a_y: f64, a_dydt: f64, scale_abs: &[f64]) -> Option<ODEiv2Control> {
-        let tmp = unsafe { ffi::gsl_odeiv2_control_scaled_new(eps_abs, eps_rel, a_y, a_dydt, scale_abs.as_ptr(), scale_abs.len() as u64) };
+        let tmp = unsafe { ffi::gsl_odeiv2_control_scaled_new(eps_abs, eps_rel, a_y, a_dydt, scale_abs.as_ptr(), scale_abs.len() as usize) };
 
         if tmp.is_null() {
             None
@@ -482,7 +482,7 @@ impl ODEiv2Control {
 
     /// This function calculates the desired error level of the ind-th component to errlev. It requires the value (y) and value of the derivative
     /// (dydt) of the component, and the current step size h.
-    pub fn errlevel(&mut self, y: f64, dydt: f64, h: f64, ind: u64, errlev: &mut f64) -> GSLResult<()> {
+    pub fn errlevel(&mut self, y: f64, dydt: f64, h: f64, ind: usize, errlev: &mut f64) -> GSLResult<()> {
         GSLResult::from(unsafe { ffi::gsl_odeiv2_control_errlevel(self.c, y, dydt, h, ind, errlev) })
     }
 
@@ -548,7 +548,7 @@ pub struct ODEiv2Evolve {
 
 impl ODEiv2Evolve {
     /// This function returns a pointer to a newly allocated instance of an evolution function for a system of dim dimensions.
-    pub fn new(dim: u64) -> Option<ODEiv2Evolve> {
+    pub fn new(dim: usize) -> Option<ODEiv2Evolve> {
         let tmp = unsafe { ffi::gsl_odeiv2_evolve_alloc(dim) };
 
         if tmp.is_null() {
@@ -731,7 +731,7 @@ impl<'a> ODEiv2Driver<'a> {
     }
 
     /// The function sets a maximum for allowed number of steps nmax for driver self. Default value of 0 sets no limit for steps.
-    pub fn set_nmax(&mut self, nmax: u64) -> GSLResult<()> {
+    pub fn set_nmax(&mut self, nmax: usize) -> GSLResult<()> {
         GSLResult::from(unsafe { ffi::gsl_odeiv2_driver_set_nmax(self.d, nmax) })
     }
 
@@ -749,7 +749,7 @@ impl<'a> ODEiv2Driver<'a> {
 
     /// This function evolves the driver system d from t with n steps of size h. If the function is unable to complete the calculation, an
     /// error code from gsl_odeiv2_evolve_apply_fixed_step is returned, and t and y contain the values from last successful step.
-    pub fn apply_fixed_step(&mut self, t: &mut f64, h: f64, n: u64, y: &mut [f64]) -> GSLResult<()> {
+    pub fn apply_fixed_step(&mut self, t: &mut f64, h: f64, n: usize, y: &mut [f64]) -> GSLResult<()> {
         GSLResult::from(unsafe { ffi::gsl_odeiv2_driver_apply_fixed_step(self.d, t, h, n, y.as_mut_ptr()) })
     }
 

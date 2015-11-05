@@ -52,7 +52,7 @@ use ffi;
 /// \Hat\mu = (1/N) \sum x_i
 /// 
 /// where x_i are the elements of the dataset data. For samples drawn from a gaussian distribution the variance of \Hat\mu is \sigma^2 / N.
-pub fn mean(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn mean(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_mean(data.as_ptr(), stride, n) }
 }
 
@@ -67,7 +67,7 @@ pub fn mean(data: &[f64], stride: u64, n: u64) -> f64 {
 /// 
 /// This function computes the mean via a call to gsl_stats_mean. If you have already computed the mean then you can pass it directly to
 /// gsl_stats_variance_m.
-pub fn variance(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn variance(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_variance(data.as_ptr(), stride, n) }
 }
 
@@ -75,19 +75,19 @@ pub fn variance(data: &[f64], stride: u64, n: u64) -> f64 {
 /// by the value of mean that you supply,
 /// 
 /// \Hat\sigma^2 = (1/(N-1)) \sum (x_i - mean)^2
-pub fn variance_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn variance_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_variance_m(data.as_ptr(), stride, n, mean) }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the square root of the corresponding
 /// variance functions above.
-pub fn sd(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn sd(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_sd(data.as_ptr(), stride, n) }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the square root of the corresponding
 /// variance functions above.
-pub fn sd_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn sd_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_sd_m(data.as_ptr(), stride, n, mean) }
 }
 
@@ -95,7 +95,7 @@ pub fn sd_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
 /// used, and for gsl_stats_tss it is computed using gsl_stats_mean.
 /// 
 /// TSS =  \sum (x_i - mean)^2
-pub fn tss(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn tss(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_tss(data.as_ptr(), stride, n) }
 }
 
@@ -103,7 +103,7 @@ pub fn tss(data: &[f64], stride: u64, n: u64) -> f64 {
 /// used, and for gsl_stats_tss it is computed using gsl_stats_mean.
 /// 
 /// TSS =  \sum (x_i - mean)^2
-pub fn tss_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn tss_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_tss_m(data.as_ptr(), stride, n, mean) }
 }
 
@@ -112,13 +112,13 @@ pub fn tss_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
 /// population mean \mu,
 /// 
 /// \Hat\sigma^2 = (1/N) \sum (x_i - \mu)^2
-pub fn variance_with_fixed_mean(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn variance_with_fixed_mean(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_variance_with_fixed_mean(data.as_ptr(), stride, n, mean) }
 }
 
 /// This function calculates the standard deviation of data for a fixed population mean mean. The result is the square root of the
 /// corresponding variance function.
-pub fn sd_with_fixed_mean(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn sd_with_fixed_mean(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_sd_with_fixed_mean(data.as_ptr(), stride, n, mean) }
 }
 
@@ -129,7 +129,7 @@ pub fn sd_with_fixed_mean(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
 /// 
 /// where x_i are the elements of the dataset data. The absolute deviation from the mean provides a more robust measure of the width of a
 /// distribution than the variance. This function computes the mean of data via a call to gsl_stats_mean.
-pub fn absdev(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn absdev(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_absdev(data.as_ptr(), stride, n) }
 }
 
@@ -139,7 +139,7 @@ pub fn absdev(data: &[f64], stride: u64, n: u64) -> f64 {
 /// 
 /// This function is useful if you have already computed the mean of data (and want to avoid recomputing it), or wish to calculate the
 /// absolute deviation relative to another value (such as zero, or the median).
-pub fn absdev_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn absdev_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_absdev_m(data.as_ptr(), stride, n, mean) }
 }
 
@@ -150,7 +150,7 @@ pub fn absdev_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
 /// where x_i are the elements of the dataset data. The skewness measures the asymmetry of the tails of a distribution.
 /// 
 /// The function computes the mean and estimated standard deviation of data via calls to gsl_stats_mean and gsl_stats_sd.
-pub fn skew(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn skew(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_skew(data.as_ptr(), stride, n) }
 }
 
@@ -159,7 +159,7 @@ pub fn skew(data: &[f64], stride: u64, n: u64) -> f64 {
 /// skew = (1/N) \sum ((x_i - mean)/sd)^3
 /// 
 /// These functions are useful if you have already computed the mean and standard deviation of data and want to avoid recomputing them.
-pub fn skew_m_sd(data: &[f64], stride: u64, n: u64, mean: f64, sd: f64) -> f64 {
+pub fn skew_m_sd(data: &[f64], stride: usize, n: usize, mean: f64, sd: f64) -> f64 {
     unsafe { ffi::gsl_stats_skew_m_sd(data.as_ptr(), stride, n, mean, sd) }
 }
 
@@ -168,7 +168,7 @@ pub fn skew_m_sd(data: &[f64], stride: u64, n: u64, mean: f64, sd: f64) -> f64 {
 /// kurtosis = ((1/N) \sum ((x_i - \Hat\mu)/\Hat\sigma)^4)  - 3
 /// 
 /// The kurtosis measures how sharply peaked a distribution is, relative to its width. The kurtosis is normalized to zero for a Gaussian distribution.
-pub fn kurtosis(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn kurtosis(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_kurtosis(data.as_ptr(), stride, n) }
 }
 
@@ -177,7 +177,7 @@ pub fn kurtosis(data: &[f64], stride: u64, n: u64) -> f64 {
 /// kurtosis = ((1/N) \sum ((x_i - mean)/sd)^4) - 3
 /// 
 /// This function is useful if you have already computed the mean and standard deviation of data and want to avoid recomputing them.
-pub fn kurtosis_m_sd(data: &[f64], stride: u64, n: u64, mean: f64, sd: f64) -> f64 {
+pub fn kurtosis_m_sd(data: &[f64], stride: usize, n: usize, mean: f64, sd: f64) -> f64 {
     unsafe { ffi::gsl_stats_kurtosis_m_sd(data.as_ptr(), stride, n, mean, sd) }
 }
 
@@ -186,25 +186,25 @@ pub fn kurtosis_m_sd(data: &[f64], stride: u64, n: u64, mean: f64, sd: f64) -> f
 /// a_1 = {\sum_{i = 1}^{n} (x_{i} - \Hat\mu) (x_{i-1} - \Hat\mu)
 ///        \over
 ///        \sum_{i = 1}^{n} (x_{i} - \Hat\mu) (x_{i} - \Hat\mu)}
-pub fn lag1_autocorrelation(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn lag1_autocorrelation(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_lag1_autocorrelation(data.as_ptr(), stride, n) }
 }
 
 /// This function computes the lag-1 autocorrelation of the dataset data using the given value of the mean mean.
-pub fn lag1_autocorrelation_m(data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn lag1_autocorrelation_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_lag1_autocorrelation_m(data.as_ptr(), stride, n, mean) }
 }
 
 /// This function computes the covariance of the datasets data1 and data2 which must both be of the same length n.
 /// 
 /// covar = (1/(n - 1)) \sum_{i = 1}^{n} (x_i - \Hat x) (y_i - \Hat y)
-pub fn covariance(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n: u64) -> f64 {
+pub fn covariance(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_covariance(data1.as_ptr(), stride1, data2.as_ptr(), stride2, n) }
 }
 
 /// This function computes the covariance of the datasets data1 and data2 using the given values of the means, mean1 and mean2. This is
 /// useful if you have already computed the means of data1 and data2 and want to avoid recomputing them.
-pub fn covariance_m(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n: u64, mean1: f64, mean2: f64) -> f64 {
+pub fn covariance_m(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize, n: usize, mean1: f64, mean2: f64) -> f64 {
     unsafe { ffi::gsl_stats_covariance_m(data1.as_ptr(), stride1, data2.as_ptr(), stride2, n, mean1, mean2) }
 }
 
@@ -216,7 +216,7 @@ pub fn covariance_m(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n:
 ///      \over
 ///      \sqrt{1/(n-1) \sum (x_i - \Hat x)^2} \sqrt{1/(n-1) \sum (y_i - \Hat y)^2}
 ///     }
-pub fn correlation(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n: u64) -> f64 {
+pub fn correlation(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_correlation(data1.as_ptr(), stride1, data2.as_ptr(), stride2, n) }
 }
 
@@ -224,7 +224,7 @@ pub fn correlation(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n: 
 /// length n. Additional workspace of size 2*n is required in work. The Spearman rank correlation between vectors x and y is equivalent to
 /// the Pearson correlation between the ranked vectors x_R and y_R, where ranks are defined to be the average of the positions of an
 /// element in the ascending order of the values.
-pub fn spearman(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n: u64, work: &mut [f64]) -> f64 {
+pub fn spearman(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize, n: usize, work: &mut [f64]) -> f64 {
     unsafe { ffi::gsl_stats_spearman(data1.as_ptr(), stride1, data2.as_ptr(), stride2, n, work.as_mut_ptr()) }
 }
 
@@ -232,7 +232,7 @@ pub fn spearman(data1: &[f64], stride1: u64, data2: &[f64], stride2: u64, n: u64
 /// wstride and length n. The weighted mean is defined as,
 /// 
 /// \Hat\mu = (\sum w_i x_i) / (\sum w_i)
-pub fn wmean(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wmean(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wmean(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
@@ -243,23 +243,23 @@ pub fn wmean(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 
 ///                 \sum w_i (x_i - \Hat\mu)^2
 /// 
 /// Note that this expression reduces to an unweighted variance with the familiar 1/(N-1) factor when there are N equal non-zero weights.
-pub fn wvariance(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wvariance(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wvariance(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
 /// This function returns the estimated variance of the weighted dataset data using the given weighted mean wmean.
-pub fn wvariance_m(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: f64) -> f64 {
+pub fn wvariance_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
     unsafe { ffi::gsl_stats_wvariance_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the square root of the corresponding
 /// variance function gsl_stats_wvariance above.
-pub fn wsd(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wsd(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wsd(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
 /// This function returns the square root of the corresponding variance function gsl_stats_wvariance_m above.
-pub fn wsd_m(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: f64) -> f64 {
+pub fn wsd_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
     unsafe { ffi::gsl_stats_wsd_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
 }
 
@@ -268,13 +268,13 @@ pub fn wsd_m(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: 
 /// population mean \mu,
 /// 
 /// \Hat\sigma^2 = (\sum w_i (x_i - \mu)^2) / (\sum w_i)
-pub fn wvariance_with_fixed_mean(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn wvariance_with_fixed_mean(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_wvariance_with_fixed_mean(w.as_ptr(), wstride, data.as_ptr(), stride, n, mean) }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the square root of the corresponding
 /// variance function above.
-pub fn wsd_with_fixed_mean(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, mean: f64) -> f64 {
+pub fn wsd_with_fixed_mean(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
     unsafe { ffi::gsl_stats_wsd_with_fixed_mean(w.as_ptr(), wstride, data.as_ptr(), stride, n, mean) }
 }
 
@@ -282,7 +282,7 @@ pub fn wsd_with_fixed_mean(w: &[f64], wstride: u64, data: &[f64], stride: u64, n
 /// value of wmean is used, and for gsl_stats_wtss it is computed using gsl_stats_wmean.
 /// 
 /// TSS =  \sum w_i (x_i - wmean)^2
-pub fn wtss(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wtss(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wtss(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
@@ -290,7 +290,7 @@ pub fn wtss(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
 /// value of wmean is used, and for gsl_stats_wtss it is computed using gsl_stats_wmean.
 /// 
 /// TSS =  \sum w_i (x_i - wmean)^2
-pub fn wtss_m(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: f64) -> f64 {
+pub fn wtss_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
     unsafe { ffi::gsl_stats_wtss_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
 }
 
@@ -298,38 +298,38 @@ pub fn wtss_m(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean:
 /// as,
 /// 
 /// absdev = (\sum w_i |x_i - \Hat\mu|) / (\sum w_i)
-pub fn wabsdev(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wabsdev(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wabsdev(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
 /// This function computes the absolute deviation of the weighted dataset data about the given weighted mean wmean.
-pub fn wabsdev_m(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: f64) -> f64 {
+pub fn wabsdev_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
     unsafe { ffi::gsl_stats_wabsdev_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
 }
 
 /// This function computes the weighted skewness of the dataset data.
 /// 
 /// skew = (\sum w_i ((x_i - \Hat x)/\Hat \sigma)^3) / (\sum w_i)
-pub fn wskew(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wskew(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wskew(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
 /// This function computes the weighted skewness of the dataset data using the given values of the weighted mean and weighted standard
 /// deviation, wmean and wsd.
-pub fn wskew_m_sd(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: f64, wsd: f64) -> f64 {
+pub fn wskew_m_sd(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64, wsd: f64) -> f64 {
     unsafe { ffi::gsl_stats_wskew_m_sd(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean, wsd) }
 }
 
 /// This function computes the weighted kurtosis of the dataset data.
 /// 
 /// kurtosis = ((\sum w_i ((x_i - \Hat x)/\Hat \sigma)^4) / (\sum w_i)) - 3
-pub fn wkurtosis(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn wkurtosis(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_wkurtosis(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
 }
 
 /// This function computes the weighted kurtosis of the dataset data using the given values of the weighted mean and weighted standard
 /// deviation, wmean and wsd.
-pub fn wkurtosis_m_sd(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64, wmean: f64, wsd: f64) -> f64 {
+pub fn wkurtosis_m_sd(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64, wsd: f64) -> f64 {
     unsafe { ffi::gsl_stats_wkurtosis_m_sd(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean, wsd) }
 }
 
@@ -338,7 +338,7 @@ pub fn wkurtosis_m_sd(w: &[f64], wstride: u64, data: &[f64], stride: u64, n: u64
 /// 
 /// If you want instead to find the element with the largest absolute magnitude you will need to apply fabs or abs to your data before
 /// calling this function.
-pub fn max(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn max(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_max(data.as_ptr(), stride, n) }
 }
 
@@ -347,31 +347,31 @@ pub fn max(data: &[f64], stride: u64, n: u64) -> f64 {
 /// 
 /// If you want instead to find the element with the smallest absolute magnitude you will need to apply fabs or abs to your data before
 /// calling this function.
-pub fn min(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn min(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_min(data.as_ptr(), stride, n) }
 }
 
 /// This function finds both the minimum and maximum values min, max in data in a single pass.
-pub fn minmax(min: &mut f64, max: &mut f64, data: &[f64], stride: u64, n: u64) {
+pub fn minmax(min: &mut f64, max: &mut f64, data: &[f64], stride: usize, n: usize) {
     unsafe { ffi::gsl_stats_minmax(min, max, data.as_ptr(), stride, n) }
 }
 
 /// This function returns the index of the maximum value in data, a dataset of length n with stride stride. The maximum value is defined
 /// as the value of the element x_i which satisfies x_i >= x_j for all j. When there are several equal maximum elements then the first
 /// one is chosen.
-pub fn max_index(data: &[f64], stride: u64, n: u64) -> u64 {
+pub fn max_index(data: &[f64], stride: usize, n: usize) -> usize {
     unsafe { ffi::gsl_stats_max_index(data.as_ptr(), stride, n) }
 }
 
 /// This function returns the index of the minimum value in data, a dataset of length n with stride stride. The minimum value is defined
 /// as the value of the element x_i which satisfies x_i >= x_j for all j. When there are several equal minimum elements then the first
 /// one is chosen.
-pub fn min_index(data: &[f64], stride: u64, n: u64) -> u64 {
+pub fn min_index(data: &[f64], stride: usize, n: usize) -> usize {
     unsafe { ffi::gsl_stats_min_index(data.as_ptr(), stride, n) }
 }
 
 /// This function returns the indexes min_index, max_index of the minimum and maximum values in data in a single pass.
-pub fn minmax_index(min_index: &mut u64, max_index: &mut u64, data: &[f64], stride: u64, n: u64) {
+pub fn minmax_index(min_index: &mut usize, max_index: &mut usize, data: &[f64], stride: usize, n: usize) {
     unsafe { ffi::gsl_stats_minmax_index(min_index, max_index, data.as_ptr(), stride, n) }
 }
 
@@ -382,7 +382,7 @@ pub fn minmax_index(min_index: &mut u64, max_index: &mut u64, data: &[f64], stri
 /// When the dataset has an odd number of elements the median is the value of element (n-1)/2. When the dataset has an even number of
 /// elements the median is the mean of the two nearest middle values, elements (n-1)/2 and n/2. Since the algorithm for computing the
 /// median involves interpolation this function always returns a floating-point number, even for integer data types.
-pub fn median_from_sorted_data(data: &[f64], stride: u64, n: u64) -> f64 {
+pub fn median_from_sorted_data(data: &[f64], stride: usize, n: usize) -> f64 {
     unsafe { ffi::gsl_stats_median_from_sorted_data(data.as_ptr(), stride, n) }
 }
 
@@ -401,6 +401,6 @@ pub fn median_from_sorted_data(data: &[f64], stride: u64, n: u64) -> f64 {
 /// Thus the minimum value of the array (data[0*stride]) is given by f equal to zero, the maximum value (data[(n-1)*stride]) is given by
 /// f equal to one and the median value is given by f equal to 0.5. Since the algorithm for computing quantiles involves interpolation
 /// this function always returns a floating-point number, even for integer data types.
-pub fn quantile_from_sorted_data(data: &[f64], stride: u64, n: u64, f: f64) -> f64 {
+pub fn quantile_from_sorted_data(data: &[f64], stride: usize, n: usize, f: f64) -> f64 {
     unsafe { ffi::gsl_stats_quantile_from_sorted_data(data.as_ptr(), stride, n, f) }
 }

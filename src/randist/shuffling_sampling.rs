@@ -31,8 +31,8 @@ use libc::c_void;
 pub fn shuffle<T>(r: &Rng, base: &mut [T]) {
     unsafe { ffi::gsl_ran_shuffle(ffi::FFI::unwrap(r),
         base.as_mut_ptr() as *mut c_void,
-        base.len() as u64,
-        ::std::mem::size_of::<T>() as u64) }
+        base.len() as usize,
+        ::std::mem::size_of::<T>() as usize) }
 }
 
 /// This function fills the array dest[k] with k objects taken randomly from the n elements of the array src[0..n-1]. The objects are each of size size.
@@ -56,10 +56,10 @@ pub fn shuffle<T>(r: &Rng, base: &mut [T]) {
 pub fn choose<T>(r: &Rng, dest: &mut [T], src: &[T]) -> enums::value::Value {
     unsafe { ffi::gsl_ran_choose(ffi::FFI::unwrap(r),
         dest.as_mut_ptr() as *mut c_void,
-        dest.len() as u64,
+        dest.len() as usize,
         src.as_ptr() as *mut c_void,
-        src.len() as u64,
-        ::std::mem::size_of::<T>() as u64) }
+        src.len() as usize,
+        ::std::mem::size_of::<T>() as usize) }
 }
 
 /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more
@@ -67,8 +67,8 @@ pub fn choose<T>(r: &Rng, dest: &mut [T], src: &[T]) -> enums::value::Value {
 pub fn sample<T>(r: &Rng, dest: &mut [T], src: &[T]) -> enums::value::Value {
     unsafe { ffi::gsl_ran_sample(ffi::FFI::unwrap(r),
         dest.as_mut_ptr() as *mut c_void,
-        dest.len() as u64,
+        dest.len() as usize,
         src.as_ptr() as *mut c_void,
-        src.len() as u64,
-        ::std::mem::size_of::<T>() as u64) }
+        src.len() as usize,
+        ::std::mem::size_of::<T>() as usize) }
 }

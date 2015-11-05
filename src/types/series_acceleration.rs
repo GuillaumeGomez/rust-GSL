@@ -59,7 +59,7 @@ pub struct LevinUWorkspace {
 
 impl LevinUWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms. The size of the workspace is O(2n^2 + 3n).
-    pub fn new(n: u64) -> Option<LevinUWorkspace> {
+    pub fn new(n: usize) -> Option<LevinUWorkspace> {
         let tmp = unsafe { ffi::gsl_sum_levin_u_alloc(n) };
 
         if tmp.is_null() {
@@ -77,18 +77,18 @@ impl LevinUWorkspace {
     /// truncation error (the difference between two successive extrapolations) and round-off error (propagated from the individual terms)
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
     pub fn accel(&self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_sum_levin_u_accel(array.as_ptr(), array.len() as u64, self.w, sum_accel, abserr) }
+        unsafe { ffi::gsl_sum_levin_u_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr) }
     }
 
     pub fn sum_plain(&self) -> f64 {
         unsafe { (*self.w).sum_plain }
     }
 
-    pub fn terms_used(&self) -> u64 {
+    pub fn terms_used(&self) -> usize {
         unsafe { (*self.w).terms_used }
     }
 
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { (*self.w).size }
     }
 }
@@ -121,7 +121,7 @@ pub struct LevinUTruncWorkspace {
 
 impl LevinUTruncWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms, without error estimation. The size of the workspace is O(3n).
-    pub fn new(n: u64) -> Option<LevinUTruncWorkspace> {
+    pub fn new(n: usize) -> Option<LevinUTruncWorkspace> {
         let tmp = unsafe { ffi::gsl_sum_levin_utrunc_alloc(n) };
 
         if tmp.is_null() {
@@ -140,18 +140,18 @@ impl LevinUTruncWorkspace {
     /// in abserr_trunc. To improve the reliability of the algorithm the extrapolated values are replaced by moving averages when
     /// calculating the truncation error, smoothing out any fluctuations.
     pub fn accel(&self, array: &[f64], sum_accel: &mut f64, abserr_trunc: &mut f64) -> enums::value::Value {
-        unsafe { ffi::gsl_sum_levin_utrunc_accel(array.as_ptr(), array.len() as u64, self.w, sum_accel, abserr_trunc) }
+        unsafe { ffi::gsl_sum_levin_utrunc_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr_trunc) }
     }
 
     pub fn sum_plain(&self) -> f64 {
         unsafe { (*self.w).sum_plain }
     }
 
-    pub fn terms_used(&self) -> u64 {
+    pub fn terms_used(&self) -> usize {
         unsafe { (*self.w).terms_used }
     }
 
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { (*self.w).size }
     }
 }

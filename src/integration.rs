@@ -114,7 +114,7 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
 /// are designed in such a way that each rule uses all the results of its predecessors, in order to minimize the total number of function
 /// evaluations.
 pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_rel: f64, result: &mut f64, abs_err: &mut f64,
-    n_eval: &mut u64) -> ::Value {
+    n_eval: &mut usize) -> ::Value {
     let half_length = 0.5f64 * (b - a);
     let abs_half_length = unsafe { half_length.abs() };
     let center = 0.5f64 * (b + a);
@@ -123,7 +123,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     if eps_abs <= 0f64 && (eps_rel < 50f64 * ::DBL_EPSILON || eps_rel < 0.5e-28f64) {
         *result = 0f64;
         *abs_err = 0f64;
-        *n_eval = 0u64;
+        *n_eval = 0usize;
 
         //to avoid the dead_code warning on gsl_error
         unsafe {
@@ -928,12 +928,12 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 /// The subintervals and their results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit,
 /// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.
-pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, workspace: &::IntegrationWorkspace,
+pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize, workspace: &::IntegrationWorkspace,
     cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::value::Value {
     let mut total_error = 0f64;
 
-    let mut ktmin = 0u64;
-    let mut iteration = 0u64;
+    let mut ktmin = 0usize;
+    let mut iteration = 0usize;
 
     unsafe {
         let mut table : ffi::extrapolation_table = ::std::mem::zeroed();
@@ -968,7 +968,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
                 return ::Value::Success;
             }  else {
                 /* The function cos(w x) f(x) is always f(x) for w = 0 */
-                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit, result, abserr);
+                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit as usize, result, abserr);
             }
         }
 
@@ -1004,7 +1004,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: u64, w
 
             let epsabs1 = eps * factor;
 
-            let status = wf.qawo(f, arg, a1, epsabs1, 0f64, limit, cycle_workspace, &mut area1, &mut error1);
+            let status = wf.qawo(f, arg, a1, epsabs1, 0f64, limit as usize, cycle_workspace, &mut area1, &mut error1);
 
             ::types::integration::append_interval(workspace, a1, b1, area1, error1);
 

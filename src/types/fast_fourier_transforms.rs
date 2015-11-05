@@ -7,7 +7,7 @@ use c_vec::CSlice;
 
 pub struct FftComplexWaveTable {
     w: *mut ffi::gsl_fft_complex_wavetable,
-    f: CSlice<u64>
+    f: CSlice<usize>
 }
 
 impl FftComplexWaveTable {
@@ -19,7 +19,7 @@ impl FftComplexWaveTable {
     /// 
     /// The wavetable structure can be used repeatedly for any transform of the same length. The table is not modified by calls to any of the other
     /// FFT functions. The same wavetable can be used for both forward and backward (or inverse) transforms of a given length.
-    pub fn new(n: u64) -> Option<FftComplexWaveTable> {
+    pub fn new(n: usize) -> Option<FftComplexWaveTable> {
         let tmp = unsafe { ffi::gsl_fft_complex_wavetable_alloc(n) };
 
         if tmp.is_null() {
@@ -34,7 +34,7 @@ impl FftComplexWaveTable {
         }
     }
 
-    pub fn factor<'r>(&'r mut self) -> &'r mut [u64] {
+    pub fn factor<'r>(&'r mut self) -> &'r mut [usize] {
         self.f.as_mut()
     }
 }
@@ -67,7 +67,7 @@ pub struct FftComplexWorkspace {
 
 impl FftComplexWorkspace {
     /// This function allocates a workspace for a complex transform of length n.
-    pub fn new(n: u64) -> Option<FftComplexWorkspace> {
+    pub fn new(n: usize) -> Option<FftComplexWorkspace> {
         let tmp = unsafe { ffi::gsl_fft_complex_workspace_alloc(n) };
 
         if tmp.is_null() {

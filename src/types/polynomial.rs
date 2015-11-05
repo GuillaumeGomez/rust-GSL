@@ -22,7 +22,7 @@ impl PolyComplex {
     /// 
     /// The function returns a pointer to the newly allocated gsl_poly_complex_workspace if no errors were detected, and a null pointer in the case
     /// of error.
-    pub fn new(n: u64) -> Option<PolyComplex> {
+    pub fn new(n: usize) -> Option<PolyComplex> {
         let tmp = unsafe { ffi::gsl_poly_complex_workspace_alloc(n) };
 
         if tmp.is_null() {
@@ -44,7 +44,7 @@ impl PolyComplex {
     /// accuracy. The solution of polynomials with higher-order roots requires specialized algorithms that take the multiplicity structure into
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
     pub fn solve(&self, a: &[f64], z: &mut [f64]) -> enums::value::Value {
-        unsafe { ffi::gsl_poly_complex_solve(a.as_ptr(), a.len() as u64, self.w, z.as_mut_ptr()) }
+        unsafe { ffi::gsl_poly_complex_solve(a.as_ptr(), a.len() as usize, self.w, z.as_mut_ptr()) }
     }
 }
 
