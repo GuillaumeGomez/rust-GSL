@@ -20,7 +20,7 @@ pub const NC : usize = 20;
 fn main() {
     let mut data : [f64; 256] = [0f64; 256];
     let mut abscoeff : [f64; 256] = [0f64; 256];
-    let mut p : [u64; 256] = [0u64; 256];
+    let mut p : [usize; 256] = [0usize; 256];
     let mut args = Vec::new();
 
     for entry in std::env::args() {
@@ -50,16 +50,16 @@ fn main() {
         }
     }
 
-    let w = rgsl::Wavelet::new(&rgsl::WaveletType::daubechies(), 4u64).unwrap();
-    let work = rgsl::WaveletWorkspace::new(N as u64).unwrap();
+    let w = rgsl::Wavelet::new(&rgsl::WaveletType::daubechies(), 4).unwrap();
+    let work = rgsl::WaveletWorkspace::new(N).unwrap();
 
-    wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N as u64, &work);
+    wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N, &work);
 
      for i in 0usize..N {
         abscoeff[i] = data[i].abs();
     }
 
-    sort::vectors::sort_index(&mut p, &abscoeff, 1, N as u64);
+    sort::vectors::sort_index(&mut p, &abscoeff, 1, N);
 
     let mut i = 0usize;
     while i + NC < N {
@@ -67,7 +67,7 @@ fn main() {
         i += 1;
     }
 
-    wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N as u64, &work);
+    wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N, &work);
 
     for it in 0usize..N {
         println!("{}", data[it]);

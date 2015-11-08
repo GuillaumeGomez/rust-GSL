@@ -10,11 +10,11 @@ fn main() {
     println!("=== VECTOR PART ===");
     let v = rgsl::VectorF64::new(3).unwrap();
   
-    for i in 0u64..3u64 {
+    for i in 0..3 {
         v.set(i, 1.23f64 + i as f64);
     }
 
-    for i in 0u64..3u64 {
+    for i in 0..3 {
         println!("v_{} = {}", i, v.get(i));
     }
 

@@ -19,7 +19,7 @@ fn main() {
     let mut err = 0f64;
     let mut sum = 0f64;
 
-    let w = rgsl::LevinUWorkspace::new(N as u64).unwrap();
+    let w = rgsl::LevinUWorkspace::new(N).unwrap();
 
     let zeta_2 = ::std::f64::consts::PI * ::std::f64::consts::PI / 6f64;
 

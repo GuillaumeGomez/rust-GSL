@@ -46,7 +46,7 @@ fn main() {
     let mut params = FParams {a: 1f64, phi: 0f64};
     let mut result = 0f64;
     let mut error = 0f64;
-    let mut n_eval = 0u64;
+    let mut n_eval = 0;
     
     let xlow = 0f64;
     let xhigh = 10f64;

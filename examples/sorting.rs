@@ -25,7 +25,7 @@ fn main() {
     let n = 100000;
     let mut x : [f64; 100000] = [0f64; 100000];
     let mut small : [f64; 5] = [0f64; 5];
-    let mut p : [u64; 5] = [0u64; 5];
+    let mut p : [usize; 5] = [0usize; 5];
 
     for tmp in 0..n {
         x[tmp] = r.uniform();

@@ -17,7 +17,7 @@ fn main() {
     println!("sswap : {:?}", rgsl::blas::level1::sswap(&mut tmp_vec, &mut tmp_vec2));
 
     println!("\n=== MatrixFloat tests ===");
-    let mut tmp_mat = rgsl::MatrixF32::new(2u64, 3u64).unwrap();
+    let mut tmp_mat = rgsl::MatrixF32::new(2, 3).unwrap();
     tmp_mat.set(1, 2, 42f32);
     tmp_mat.set(0, 0, 1f32);
     match tmp_mat.min_index() {
@@ -45,7 +45,7 @@ fn main() {
     println!("Simple Legendre::conical test : {}", rgsl::legendre::conical::half(0.37f64, 1.2f64));
     println!("Simple BLAS::level1::snrm2 test : {}", rgsl::blas::level1::snrm2(&tmp_vec));
     println!("Simple Logarithm::log test : {}", rgsl::logarithm::log(0.1f64));
-    tmp_mat = rgsl::MatrixF32::new(4u64, 4u64).unwrap();
+    tmp_mat = rgsl::MatrixF32::new(4, 4).unwrap();
     tmp_mat.set(1, 2, 42f32);
     tmp_mat.set(0, 0, 1f32);
     tmp_mat.set(1, 2, 3f32);
@@ -72,7 +72,7 @@ fn main() {
     let mut cov11 = 0f64;
     let mut chisq = 0f64;
 
-    rgsl::fit::wlinear(&x, 1, &w, 1, &y, 1, x.len() as u64, &mut c0, &mut c1, &mut cov00, &mut cov01, &mut cov11, &mut chisq);
+    rgsl::fit::wlinear(&x, 1, &w, 1, &y, 1, x.len(), &mut c0, &mut c1, &mut cov00, &mut cov01, &mut cov11, &mut chisq);
     println!("=> wlinear test :");
     println!("best fit: Y = {} + {} X", c0, c1);
     println!("covariance matrix:");
@@ -83,7 +83,7 @@ fn main() {
     let dfx = [10f64, 12f64, 15f64, 8f64, 16f64];
     let mut sumsq = 0f64;
 
-    rgsl::fit::mul(&dx, 1, &dfx, 1, dx.len() as u64, &mut c1, &mut cov11, &mut sumsq);
+    rgsl::fit::mul(&dx, 1, &dfx, 1, dx.len(), &mut c1, &mut cov11, &mut sumsq);
     println!("=> mul test :");
     for i in 0..dx.len() {
         println!("dfx[{}]/dx[{}] = {} / {} = {}", i, i, dfx[i], dx[i], dfx[i] / dx[i]);

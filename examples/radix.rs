@@ -34,7 +34,7 @@ fn main() {
     /* Part 2 */
     println!("\n=== PART 2 ===");
     let mut data2 : [f64; 1260] = [0f64; 1260];
-    let n = 630u64;
+    let n = 630;
 
     for i in 1usize..11usize {
         data2[2 * i] = 1f64;

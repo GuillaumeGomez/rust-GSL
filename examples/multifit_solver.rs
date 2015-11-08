@@ -55,7 +55,7 @@ extern crate num;
 use num::Float;
 
 struct Data {
-    n: u64,
+    n: usize,
     y: Vec<f64>,
     sigma: Vec<f64>
 }
@@ -113,11 +113,11 @@ static N : usize = 40usize;
 fn main() {
     let mut status = rgsl::Value::Success;
     let n = N;
-    let p = 3u32;
+    let p = 3;
 
-    let mut covar = rgsl::MatrixF64::new(p as u64, p as u64).unwrap();
+    let mut covar = rgsl::MatrixF64::new(p, p).unwrap();
     let mut d = Data {
-        n: n as u64,
+        n: n,
         y: ::std::iter::repeat(0f64).take(N).collect(),
         sigma: ::std::iter::repeat(0f64).take(N).collect()
     };
@@ -133,13 +133,13 @@ fn main() {
         f: expb_f,
         df: Some(expb_df),
         fdf: Some(expb_fdf),
-        n: n as u64,
-        p: p as u64,
+        n: n,
+        p: p,
         params: &mut d
     };
 
     /* This is the data to be fitted */
-    let mut iter = 0u32;
+    let mut iter = 0;
 
     for i in 0..n {
         let t = i as f64;
@@ -149,11 +149,11 @@ fn main() {
         println!("data: {:2} {:.5} {:.5}", i, f.params.y[i], f.params.sigma[i]);
     }
 
-    let mut s = rgsl::MultiFitFdfSolver::new(&T, n as u64, p as u64).unwrap();
-    
+    let mut s = rgsl::MultiFitFdfSolver::new(&T, n, p).unwrap();
+
     s.set(&mut f, &x.vector());
 
-    print_state(iter as u64, &mut s);
+    print_state(iter, &mut s);
 
     loop {
         iter += 1;
@@ -161,7 +161,7 @@ fn main() {
 
         println!("status = {}", rgsl::error::str_error(status));
 
-        print_state(iter as u64, &mut s);
+        print_state(iter, &mut s);
 
         if status != rgsl::Value::Success {
             break;
@@ -190,6 +190,6 @@ fn main() {
     println!("status = {}", rgsl::error::str_error(status));
 }
 
-fn print_state<T>(iter: u64, s: &mut rgsl::MultiFitFdfSolver<T>) {
+fn print_state<T>(iter: usize, s: &mut rgsl::MultiFitFdfSolver<T>) {
     println!("iter: {:3} x = {:.8} {:.8} {:.8} |f(x)| = {}", iter, s.x.get(0), s.x.get(1), s.x.get(2), rgsl::blas::level1::dnrm2(&s.f));
 }

@@ -14,7 +14,7 @@ fn main() {
     let stdio = &mut ::std::io::stdout();
 
     println!("All multisets of {{0,1,2,3}} by size:");
-    for i in 0u64..5u64 {
+    for i in 0..5 {
         let c = rgsl::MultiSet::new_init(4, i).unwrap();
       
         loop {
