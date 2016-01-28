@@ -30,7 +30,7 @@ pub fn pow_int(x: f64, n: i32) -> f64 {
 /// /* compute 3.0**12 */
 /// double y = gsl_sf_pow_int(3.0, 12);
 /// ```
-pub fn pow_int_e(x: f64, n: i32) -> (enums::value::Value, ::types::Result) {
+pub fn pow_int_e(x: f64, n: i32) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_pow_int_e(x, n, &mut result) };
 

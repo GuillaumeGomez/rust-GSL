@@ -52,7 +52,6 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
-#![allow(raw_pointer_derive)]
 
 extern crate libc;
 extern crate c_vec;
@@ -140,15 +139,18 @@ pub use trigonometric::Trigonometric;
 pub use types::rng;
 
 // enums part
-pub use self::enums::mode::Mode;
-pub use self::enums::value::{Value, GSLResult};
-pub use self::enums::eigen_sort::EigenSort;
-pub use self::enums::fft_direction::FftDirection;
-pub use self::enums::gauss_konrod_rule::GaussKonrodRule;
-pub use self::enums::integration_qawo::IntegrationQawo;
-pub use self::enums::vegas_mode::VegasMode;
-pub use self::enums::odeiv::ODEiv;
-pub use self::enums::wavelet_direction::WaveletDirection;
+pub use self::enums::{
+    Mode,
+    Value,
+    GSLResult,
+    EigenSort,
+    FftDirection,
+    GaussKonrodRule,
+    IntegrationQawo,
+    VegasMode,
+    ODEiv,
+    WaveletDirection,
+};
 
 mod ffi;
 mod macros;

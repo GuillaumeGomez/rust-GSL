@@ -98,7 +98,7 @@ impl Interp {
     /// This function initializes the interpolation object interp for the data (xa,ya) where xa and ya are arrays of size size. The interpolation
     /// object (gsl_interp) does not save the data arrays xa and ya and only stores the static state computed from the data. The xa data array
     /// is always assumed to be strictly ordered, with increasing x values; the behavior for other arrangements is not defined.
-    pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::value::Value {
+    pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         unsafe { ffi::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as usize) }
     }
 
@@ -228,7 +228,7 @@ impl Spline {
         }
     }
 
-    pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::value::Value {
+    pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         unsafe { ffi::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as usize) }
     }
 
@@ -250,7 +250,7 @@ impl Spline {
         unsafe { ffi::gsl_spline_eval(self.spline, x, acc) }
     }
 
-    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::value::Value {
+    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::Value {
         unsafe { ffi::gsl_spline_eval_e(self.spline, x, acc, y) }
     }
 
@@ -258,7 +258,7 @@ impl Spline {
         unsafe { ffi::gsl_spline_eval_deriv(self.spline, x, acc) }
     }
 
-    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::value::Value {
+    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::Value {
         unsafe { ffi::gsl_spline_eval_deriv_e(self.spline, x, acc, d) }
     }
 
@@ -266,7 +266,7 @@ impl Spline {
         unsafe { ffi::gsl_spline_eval_deriv2(self.spline, x, acc) }
     }
 
-    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::value::Value {
+    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::Value {
         unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline, x, acc, d2) }
     }
 
@@ -274,7 +274,7 @@ impl Spline {
         unsafe { ffi::gsl_spline_eval_integ(self.spline, a, b, acc) }
     }
 
-    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> enums::value::Value {
+    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> enums::Value {
         unsafe { ffi::gsl_spline_eval_integ_e(self.spline, a, b, acc, result) }
     }
 }

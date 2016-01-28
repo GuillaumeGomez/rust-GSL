@@ -1392,7 +1392,7 @@ impl IntegrationWorkspace {
     /// On each iteration the adaptive integration strategy bisects the interval with the largest error estimate. The subintervals and their
     /// results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the
     /// allocated size of the workspace.
-    pub fn qag<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, key: enums::gauss_konrod_rule::GaussKonrodRule,
+    pub fn qag<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, key: enums::GaussKonrodRule,
         result: &mut f64, abserr: &mut f64) -> ::Value {
         match key {
             ::GaussKonrodRule::Gauss15 => {

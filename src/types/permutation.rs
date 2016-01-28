@@ -81,7 +81,7 @@ impl Permutation {
     }
 
     /// This function copies the elements of the permutation src into the permutation dest. The two permutations must have the same size.
-    pub fn copy(&self, dest: &Permutation) -> enums::value::Value {
+    pub fn copy(&self, dest: &Permutation) -> enums::Value {
         unsafe { ffi::gsl_permutation_memcpy(dest.p, self.p) }
     }
 
@@ -92,7 +92,7 @@ impl Permutation {
     }
 
     /// This function exchanges the i-th and j-th elements of the permutation p.
-    pub fn swap(&self, i: usize, j: usize) -> enums::value::Value {
+    pub fn swap(&self, i: usize, j: usize) -> enums::Value {
         unsafe { ffi::gsl_permutation_swap(self.p, i, j) }
     }
 
@@ -120,60 +120,60 @@ impl Permutation {
     }
 
     /// This function computes the inverse of the permutation p, storing the result in inv.
-    pub fn inverse(&self, inv: &Permutation) -> enums::value::Value {
+    pub fn inverse(&self, inv: &Permutation) -> enums::Value {
         unsafe { ffi::gsl_permutation_inverse(inv.p, self.p) }
     }
 
     /// This function advances the permutation p to the next permutation in lexicographic order and returns GSL_SUCCESS. If no further
     /// permutations are available it returns GSL_FAILURE and leaves p unmodified. Starting with the identity permutation and repeatedly
     /// applying this function will iterate through all possible permutations of a given order.
-    pub fn next(&self) -> enums::value::Value {
+    pub fn next(&self) -> enums::Value {
         unsafe { ffi::gsl_permutation_next(self.p) }
     }
 
     /// This function steps backwards from the permutation p to the previous permutation in lexicographic order, returning GSL_SUCCESS.
     /// If no previous permutation is available it returns GSL_FAILURE and leaves p unmodified.
-    pub fn prev(&self) -> enums::value::Value {
+    pub fn prev(&self) -> enums::Value {
         unsafe { ffi::gsl_permutation_prev(self.p) }
     }
 
     /// This function applies the permutation to the array data of size n with stride stride.
-    pub fn permute(&self, data: &mut [f64], stride: usize) -> enums::value::Value {
+    pub fn permute(&self, data: &mut [f64], stride: usize) -> enums::Value {
         unsafe { ffi::gsl_permute((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize) }
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
-    pub fn permute_inverse(&self, data: &mut [f64], stride: usize) -> enums::value::Value {
+    pub fn permute_inverse(&self, data: &mut [f64], stride: usize) -> enums::Value {
         unsafe { ffi::gsl_permute_inverse((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize) }
     }
 
     /// This function applies the permutation p to the elements of the vector v, considered as a row-vector acted on by a permutation
     /// matrix from the right, v' = v P. The j-th column of the permutation matrix P is given by the p_j-th column of the identity matrix.
     /// The permutation p and the vector v must have the same length.
-    pub fn permute_vector(&self, v: &VectorF64) -> enums::value::Value {
+    pub fn permute_vector(&self, v: &VectorF64) -> enums::Value {
         unsafe { ffi::gsl_permute_vector(self.p, ffi::FFI::unwrap(v)) }
     }
 
     /// This function applies the inverse of the permutation p to the elements of the vector v, considered as a row-vector acted on by an inverse permutation
     /// matrix from the right, v' = v P^T. Note that for permutation matrices the inverse is the same as the transpose. The j-th column of the permutation
     /// matrix P is given by the p_j-th column of the identity matrix. The permutation p and the vector v must have the same length.
-    pub fn permute_vector_inverse(&self, v: &VectorF64) -> enums::value::Value {
+    pub fn permute_vector_inverse(&self, v: &VectorF64) -> enums::Value {
         unsafe { ffi::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap(v)) }
     }
 
     /// This function combines the two permutations pa and pb into a single permutation p, where p = pa * pb. The permutation p is equivalent to applying pb
     /// first and then pa.
-    pub fn mul(&self, pa: &Permutation, pb: &Permutation) -> enums::value::Value {
+    pub fn mul(&self, pa: &Permutation, pb: &Permutation) -> enums::Value {
         unsafe { ffi::gsl_permutation_mul(self.p, pa.p, pb.p) }
     }
 
     /// This function computes the canonical form of the permutation self and stores it in the output argument q.
-    pub fn linear_to_canonical(&self, q: &Permutation) -> enums::value::Value {
+    pub fn linear_to_canonical(&self, q: &Permutation) -> enums::Value {
         unsafe { ffi::gsl_permutation_linear_to_canonical(q.p, self.p) }
     }
 
     /// This function converts the self permutation in canonical form back into linear form storing it in the output argument p.
-    pub fn canonical_to_linear(&self, p: &Permutation) -> enums::value::Value {
+    pub fn canonical_to_linear(&self, p: &Permutation) -> enums::Value {
         unsafe { ffi::gsl_permutation_canonical_to_linear(p.p, self.p) }
     }
 

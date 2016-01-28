@@ -76,7 +76,7 @@ impl LevinUWorkspace {
     /// of the absolute error stored in abserr. The actual term-by-term sum is returned in w->sum_plain. The algorithm calculates the
     /// truncation error (the difference between two successive extrapolations) and round-off error (propagated from the individual terms)
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
-    pub fn accel(&self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::value::Value {
+    pub fn accel(&self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::Value {
         unsafe { ffi::gsl_sum_levin_u_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr) }
     }
 
@@ -139,7 +139,7 @@ impl LevinUTruncWorkspace {
     /// reaches a minimum or is sufficiently small. The difference between these two values is used as estimate of the error and is stored
     /// in abserr_trunc. To improve the reliability of the algorithm the extrapolated values are replaced by moving averages when
     /// calculating the truncation error, smoothing out any fluctuations.
-    pub fn accel(&self, array: &[f64], sum_accel: &mut f64, abserr_trunc: &mut f64) -> enums::value::Value {
+    pub fn accel(&self, array: &[f64], sum_accel: &mut f64, abserr_trunc: &mut f64) -> enums::Value {
         unsafe { ffi::gsl_sum_levin_utrunc_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr_trunc) }
     }
 

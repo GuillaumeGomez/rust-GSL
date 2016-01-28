@@ -52,7 +52,7 @@ impl QRng {
 
     /// This function stores the next point from the sequence generator self in the array x. The space available for x must match the
     /// dimension of the generator. The point x will lie in the range 0 < x_i < 1 for each x_i.
-    pub fn get(&self, x: &mut [f64]) -> enums::value::Value {
+    pub fn get(&self, x: &mut [f64]) -> enums::Value {
         unsafe { ffi::gsl_qrng_get(self.q, x.as_mut_ptr()) }
     }
 
@@ -84,7 +84,7 @@ impl QRng {
 
     /// This function copies the quasi-random sequence generator src into the pre-existing generator dest, making dest into an exact copy
     /// of src. The two generators must be of the same type.
-    pub fn copy(&self, dest: &QRng) -> enums::value::Value {
+    pub fn copy(&self, dest: &QRng) -> enums::Value {
         unsafe { ffi::gsl_qrng_memcpy(dest.q, self.q) }
     }
 }
