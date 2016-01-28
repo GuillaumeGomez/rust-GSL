@@ -5,14 +5,19 @@ A __Rust__ binding for the [GSL library][] (the GNU Scientific Library).
 
 ##Installation
 
-This binding requires the [GSL library] library to be installed.
+This binding requires the [GSL library] library to be installed:
 
-This crate works with Cargo and is on [crates.io].  Just add the
+```Shell
+# on debian based systems:
+sudo apt-get install libgsl0-dev
+```
+
+This crate works with Cargo and is on [crates.io]. Just add the
 following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-GSL = "*"
+GSL = "0.4"
 ```
 
 Add the following line to your source code:
