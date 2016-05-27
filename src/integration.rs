@@ -8,20 +8,20 @@
 Each algorithm computes an approximation to a definite integral of the form,
 
 I = \int_a^b f(x) w(x) dx
-where w(x) is a weight function (for general integrands w(x)=1). The user provides absolute and relative error bounds (epsabs, epsrel) which 
+where w(x) is a weight function (for general integrands w(x)=1). The user provides absolute and relative error bounds (epsabs, epsrel) which
 specify the following accuracy requirement,
 
 |RESULT - I|  <= max(epsabs, epsrel |I|)
 
-where RESULT is the numerical approximation obtained by the algorithm. The algorithms attempt to estimate the absolute error ABSERR = |RESULT 
+where RESULT is the numerical approximation obtained by the algorithm. The algorithms attempt to estimate the absolute error ABSERR = |RESULT
 - I| in such a way that the following inequality holds,
 
 |RESULT - I| <= ABSERR <= max(epsabs, epsrel |I|)
 
 In short, the routines return the first approximation which has an absolute error smaller than epsabs or a relative error smaller than epsrel.
 
-Note that this is an either-or constraint, not simultaneous. To compute to a specified absolute error, set epsrel to zero. To compute to a 
-specified relative error, set epsabs to zero. The routines will fail to converge if the error bounds are too stringent, but always return the 
+Note that this is an either-or constraint, not simultaneous. To compute to a specified absolute error, set epsrel to zero. To compute to a
+specified relative error, set epsabs to zero. The routines will fail to converge if the error bounds are too stringent, but always return the
 best approximation obtained up to that stage.
 
 The algorithms in QUADPACK use a naming convention based on the following letters,
@@ -40,49 +40,48 @@ I - infinite range of integration
 O - oscillatory weight function, cos or sin
 F - Fourier integral
 C - Cauchy principal value
-The algorithms are built on pairs of quadrature rules, a higher order rule and a lower order rule. The higher order rule is used to compute the 
-best approximation to an integral over a small range. The difference between the results of the higher order rule and the lower order rule gives 
+The algorithms are built on pairs of quadrature rules, a higher order rule and a lower order rule. The higher order rule is used to compute the
+best approximation to an integral over a small range. The difference between the results of the higher order rule and the lower order rule gives
 an estimate of the error in the approximation.
 
- * [Integrands without weight functions](http://www.gnu.org/software/gsl/manual/html_node/Integrands-without-weight-functions.html#Integrands-without-weight-functions)   
+ * [Integrands without weight functions](http://www.gnu.org/software/gsl/manual/html_node/Integrands-without-weight-functions.html#Integrands-without-weight-functions)
  * [Integrands with weight functions](http://www.gnu.org/software/gsl/manual/html_node/Integrands-with-weight-functions.html#Integrands-with-weight-functions)
  * [Integrands with singular weight functions](http://www.gnu.org/software/gsl/manual/html_node/Integrands-with-singular-weight-functions.html#Integrands-with-singular-weight-functions)
 
 ##QNG non-adaptive Gauss-Kronrod integration
 
-The QNG algorithm is a non-adaptive procedure which uses fixed Gauss-Kronrod-Patterson abscissae to sample the integrand at a maximum of 87 
+The QNG algorithm is a non-adaptive procedure which uses fixed Gauss-Kronrod-Patterson abscissae to sample the integrand at a maximum of 87
 points. It is provided for fast integration of smooth functions.
 
 ##QAG adaptive integration
 
-The QAG algorithm is a simple adaptive integration procedure. The integration region is divided into subintervals, and on each iteration the 
-subinterval with the largest estimated error is bisected. This reduces the overall error rapidly, as the subintervals become concentrated 
-around local difficulties in the integrand. These subintervals are managed by a gsl_integration_workspace struct, which handles the memory 
+The QAG algorithm is a simple adaptive integration procedure. The integration region is divided into subintervals, and on each iteration the
+subinterval with the largest estimated error is bisected. This reduces the overall error rapidly, as the subintervals become concentrated
+around local difficulties in the integrand. These subintervals are managed by a gsl_integration_workspace struct, which handles the memory
 for the subinterval ranges, results and error estimates.
 
 ##QAGS adaptive integration with singularities
 
-The presence of an integrable singularity in the integration region causes an adaptive routine to concentrate new subintervals around the 
-singularity. As the subintervals decrease in size the successive approximations to the integral converge in a limiting fashion. This 
-approach to the limit can be accelerated using an extrapolation procedure. The QAGS algorithm combines adaptive bisection with the Wynn 
+The presence of an integrable singularity in the integration region causes an adaptive routine to concentrate new subintervals around the
+singularity. As the subintervals decrease in size the successive approximations to the integral converge in a limiting fashion. This
+approach to the limit can be accelerated using an extrapolation procedure. The QAGS algorithm combines adaptive bisection with the Wynn
 epsilon-algorithm to speed up the integration of many types of integrable singularities.
 
 ##References and Further Reading
 
-The following book is the definitive reference for QUADPACK, and was written by the original authors. It provides descriptions of the 
-algorithms, program listings, test programs and examples. It also includes useful advice on numerical integration and many references 
+The following book is the definitive reference for QUADPACK, and was written by the original authors. It provides descriptions of the
+algorithms, program listings, test programs and examples. It also includes useful advice on numerical integration and many references
 to the numerical integration literature used in developing QUADPACK.
 
 R. Piessens, E. de Doncker-Kapenga, C.W. Ueberhuber, D.K. Kahaner. QUADPACK A subroutine package for automatic integration Springer Verlag, 1983.
 The CQUAD integration algorithm is described in the following paper:
 
-P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit Interpolants”, ACM Transactions on Mathematical Software, Volume 37 
+P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit Interpolants”, ACM Transactions on Mathematical Software, Volume 37
 (2010), Issue 3, Article 26.
 !*/
 
 use ffi;
 use enums;
-use num::Float;
 use std::ffi::CString;
 
 fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
@@ -90,7 +89,7 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
 
     if result_asc != 0f64 && t_err != 0f64 {
         let scale = unsafe { (200f64 * t_err / result_asc).powf(1.5f64) };
-        
+
         if scale < 1f64 {
             t_err = result_asc * scale;
         } else {
@@ -363,7 +362,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     for k in 0usize..11usize {
         let abscissa = half_length * x3[k];
         let fval = f(center + abscissa, arg) + f(center - abscissa, arg);
-      
+
         res43 += fval * w43b[k];
         savfun[k + 10] = fval;
     }
@@ -394,7 +393,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     // test for convergence
     result_kronrod = res87 * half_length ;
     err = rescale_error((res87 - res43) * half_length, resabs, resasc);
-  
+
     if err < eps_abs || err < eps_rel * unsafe { result_kronrod.abs() } {
         *result = result_kronrod;
         *abs_err = err;
@@ -425,7 +424,7 @@ pub fn qk15<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.000000000000000000000000000000000f64
     ];
 
-    // xgk[1], xgk[3], ... abscissae of the 7-point gauss rule. 
+    // xgk[1], xgk[3], ... abscissae of the 7-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 7-point gauss rule
 
     // weights of the 7-point gauss rule
@@ -894,37 +893,37 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 }
 
 /// This function attempts to compute a Fourier integral of the function f over the semi-infinite interval [a,+\infty).
-/// 
+///
 /// I = \int_a^{+\infty} dx f(x) sin(omega x)
 /// I = \int_a^{+\infty} dx f(x) cos(omega x)
-/// 
+///
 /// The parameter \omega and choice of \sin or \cos is taken from the table wf (the length L can take any value, since it is overridden by
 /// this function to a value appropriate for the Fourier integration). The integral is computed using the QAWO algorithm over each of the
 /// subintervals,
-/// 
+///
 /// C_1 = [a, a + c]
 /// C_2 = [a + c, a + 2 c]
 /// ... = ...
 /// C_k = [a + (k-1) c, a + k c]
-/// 
+///
 /// where c = (2 floor(|\omega|) + 1) \pi/|\omega|. The width c is chosen to cover an odd number of periods so that the contributions from
 /// the intervals alternate in sign and are monotonically decreasing when f is positive and monotonically decreasing. The sum of this sequence
 /// of contributions is accelerated using the epsilon-algorithm.
-/// 
+///
 /// This function works to an overall absolute tolerance of abserr. The following strategy is used: on each interval C_k the algorithm tries
 /// to achieve the tolerance
-/// 
+///
 /// TOL_k = u_k abserr
-/// 
+///
 /// where u_k = (1 - p)p^{k-1} and p = 9/10. The sum of the geometric series of contributions from each interval gives an overall tolerance
 /// of abserr.
-/// 
+///
 /// If the integration of a subinterval leads to difficulties then the accuracy requirement for subsequent intervals is relaxed,
-/// 
+///
 /// TOL_k = u_k max(abserr, max_{i<k}{E_i})
-/// 
+///
 /// where E_k is the estimated error on the interval C_k.
-/// 
+///
 /// The subintervals and their results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit,
 /// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.

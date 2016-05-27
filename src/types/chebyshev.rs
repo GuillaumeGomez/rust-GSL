@@ -5,9 +5,9 @@
 /*!
 #Chebyshev Approximations
 
-This chapter describes routines for computing Chebyshev approximations to univariate functions. A Chebyshev approximation is a truncation of the 
-series f(x) = \sum c_n T_n(x), where the Chebyshev polynomials T_n(x) = \cos(n \arccos x) provide an orthogonal basis of polynomials on the 
-interval [-1,1] with the weight function 1 / \sqrt{1-x^2}. The first few Chebyshev polynomials are, T_0(x) = 1, T_1(x) = x, T_2(x) = 2 x^2 - 1. 
+This chapter describes routines for computing Chebyshev approximations to univariate functions. A Chebyshev approximation is a truncation of the
+series f(x) = \sum c_n T_n(x), where the Chebyshev polynomials T_n(x) = \cos(n \arccos x) provide an orthogonal basis of polynomials on the
+interval [-1,1] with the weight function 1 / \sqrt{1-x^2}. The first few Chebyshev polynomials are, T_0(x) = 1, T_1(x) = x, T_2(x) = 2 x^2 - 1.
 For further information see Abramowitz & Stegun, Chapter 22.
 
 ##Definitions
@@ -27,7 +27,6 @@ R. Broucke, “Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Al
 use ffi;
 use enums;
 use std::f64::consts::PI;
-use num::Float;
 use c_vec::CSlice;
 
 pub struct ChebSeries {

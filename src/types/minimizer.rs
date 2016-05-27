@@ -5,27 +5,27 @@
 /*!
 #One dimensional Minimization
 
-This chapter describes routines for finding minima of arbitrary one-dimensional functions. The library provides low level components for a 
-variety of iterative minimizers and convergence tests. These can be combined by the user to achieve the desired solution, with full access 
-to the intermediate steps of the algorithms. Each class of methods uses the same framework, so that you can switch between minimizers at 
-runtime without needing to recompile your program. Each instance of a minimizer keeps track of its own state, allowing the minimizers to be 
+This chapter describes routines for finding minima of arbitrary one-dimensional functions. The library provides low level components for a
+variety of iterative minimizers and convergence tests. These can be combined by the user to achieve the desired solution, with full access
+to the intermediate steps of the algorithms. Each class of methods uses the same framework, so that you can switch between minimizers at
+runtime without needing to recompile your program. Each instance of a minimizer keeps track of its own state, allowing the minimizers to be
 used in multi-threaded programs.
 
 ##Overview
 
-The minimization algorithms begin with a bounded region known to contain a minimum. The region is described by a lower bound a and an upper 
+The minimization algorithms begin with a bounded region known to contain a minimum. The region is described by a lower bound a and an upper
 bound b, with an estimate of the location of the minimum x.
 
 The value of the function at x must be less than the value of the function at the ends of the interval,
 
 f(a) > f(x) < f(b)
-This condition guarantees that a minimum is contained somewhere within the interval. On each iteration a new point x' is selected using one 
-of the available algorithms. If the new point is a better estimate of the minimum, i.e. where f(x') < f(x), then the current estimate of 
-the minimum x is updated. The new point also allows the size of the bounded interval to be reduced, by choosing the most compact set of 
-points which satisfies the constraint f(a) > f(x) < f(b). The interval is reduced until it encloses the true minimum to a desired tolerance. 
+This condition guarantees that a minimum is contained somewhere within the interval. On each iteration a new point x' is selected using one
+of the available algorithms. If the new point is a better estimate of the minimum, i.e. where f(x') < f(x), then the current estimate of
+the minimum x is updated. The new point also allows the size of the bounded interval to be reduced, by choosing the most compact set of
+points which satisfies the constraint f(a) > f(x) < f(b). The interval is reduced until it encloses the true minimum to a desired tolerance.
 This provides a best estimate of the location of the minimum and a rigorous error estimate.
 
-Several bracketing algorithms are available within a single framework. The user provides a high-level driver for the algorithm, and the library 
+Several bracketing algorithms are available within a single framework. The user provides a high-level driver for the algorithm, and the library
 provides the individual functions necessary for each of the steps. There are three main phases of the iteration. The steps are,
 
  * initialize minimizer state, s, for algorithm T
@@ -36,29 +36,29 @@ The state for the minimizers is held in a gsl_min_fminimizer struct. The updatin
 
 ##Caveats
 
-Note that minimization functions can only search for one minimum at a time. When there are several minima in the search area, the first minimum 
-to be found will be returned; however it is difficult to predict which of the minima this will be. In most cases, no error will be reported if 
+Note that minimization functions can only search for one minimum at a time. When there are several minima in the search area, the first minimum
+to be found will be returned; however it is difficult to predict which of the minima this will be. In most cases, no error will be reported if
 you try to find a minimum in an area where there is more than one.
 
-With all minimization algorithms it can be difficult to determine the location of the minimum to full numerical precision. The behavior of the 
+With all minimization algorithms it can be difficult to determine the location of the minimum to full numerical precision. The behavior of the
 function in the region of the minimum x^* can be approximated by a Taylor expansion,
 
 y = f(x^*) + (1/2) f''(x^*) (x - x^*)^2
 
-and the second term of this expansion can be lost when added to the first term at finite precision. This magnifies the error in locating x^*, 
-making it proportional to \sqrt \epsilon (where \epsilon is the relative accuracy of the floating point numbers). For functions with higher 
-order minima, such as x^4, the magnification of the error is correspondingly worse. The best that can be achieved is to converge to the limit 
+and the second term of this expansion can be lost when added to the first term at finite precision. This magnifies the error in locating x^*,
+making it proportional to \sqrt \epsilon (where \epsilon is the relative accuracy of the floating point numbers). For functions with higher
+order minima, such as x^4, the magnification of the error is correspondingly worse. The best that can be achieved is to converge to the limit
 of numerical accuracy in the function values, rather than the location of the minimum itself.
 
 ##Providing the function to minimize
 
-You must provide a continuous function of one variable for the minimizers to operate on. In order to allow for general parameters the functions 
+You must provide a continuous function of one variable for the minimizers to operate on. In order to allow for general parameters the functions
 are defined by a gsl_function data type (see [Providing the function to solve](http://www.gnu.org/software/gsl/manual/html_node/Providing-the-function-to-solve.html#Providing-the-function-to-solve)).
 
 ##Iteration
 
-The following functions drive the iteration of each algorithm. Each function performs one iteration to update the state of any minimizer of 
-the corresponding type. The same functions work for all minimizers so that different methods can be substituted at runtime without modifications 
+The following functions drive the iteration of each algorithm. Each function performs one iteration to update the state of any minimizer of
+the corresponding type. The same functions work for all minimizers so that different methods can be substituted at runtime without modifications
 to the code.
 
 ##Stopping Parameters
@@ -73,14 +73,13 @@ The handling of these conditions is under user control. The function below allow
 
 ##Minimization Algorithms
 
-The minimization algorithms described in this section require an initial interval which is guaranteed to contain a minimum—if a and b are the 
-endpoints of the interval and x is an estimate of the minimum then f(a) > f(x) < f(b). This ensures that the function has at least one minimum 
+The minimization algorithms described in this section require an initial interval which is guaranteed to contain a minimum—if a and b are the
+endpoints of the interval and x is an estimate of the minimum then f(a) > f(x) < f(b). This ensures that the function has at least one minimum
 somewhere in the interval. If a valid initial interval is used then these algorithm cannot fail, provided the function is well-behaved.
 !*/
 
 use ffi;
 use libc::{c_void, malloc, free};
-use num::Float;
 
 static REL_ERR_VAL    : f64 = 1.0e-06f64;
 static ABS_ERR_VAL    : f64 = 1.0e-10f64;
@@ -121,14 +120,14 @@ pub struct Minimizer<T> {
 impl<T> Minimizer<T> {
     /// This function returns a pointer to a newly allocated instance of a minimizer of type T. For example, the following code creates an
     /// instance of a golden section minimizer,
-    /// 
+    ///
     /// ```C
-    /// const gsl_min_fminimizer_type * T 
+    /// const gsl_min_fminimizer_type * T
     ///   = gsl_min_fminimizer_goldensection;
-    /// gsl_min_fminimizer * s 
+    /// gsl_min_fminimizer * s
     ///   = gsl_min_fminimizer_alloc (T);
     /// ```
-    /// 
+    ///
     /// If there is insufficient memory to create the minimizer then the function returns a null pointer and the error handler is invoked
     /// with an error code of ::NoMem.
     pub fn new(t: &MinimizerType<T>) -> Option<Minimizer<T>> {
@@ -154,7 +153,7 @@ impl<T> Minimizer<T> {
 
     /// This function sets, or resets, an existing minimizer s to use the function f and the initial search interval [x_lower, x_upper], with
     /// a guess for the location of the minimum x_minimum.
-    /// 
+    ///
     /// If the interval given does not contain a minimum, then the function returns an error code of ::Value::Inval.
     pub fn set(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, x_lower: f64, x_upper: f64) -> ::Value {
         let mut f_minimum = 0f64;
@@ -203,11 +202,11 @@ impl<T> Minimizer<T> {
     }
 
     /// This function returns a pointer to the name of the minimizer. For example,
-    /// 
+    ///
     /// ```C
     /// printf("s is a '%s' minimizer\n", gsl_min_fminimizer_name (s));
     /// ```
-    /// 
+    ///
     /// would print something like s is a 'brent' minimizer.
     pub fn name(&self) -> String {
         self.type_.name.clone()
@@ -228,19 +227,19 @@ impl<T> Minimizer<T> {
         self.x_upper
     }
 
-    /// This function returns the value of the function at the current estimate of the minimum and at the upper and lower bounds of the 
+    /// This function returns the value of the function at the current estimate of the minimum and at the upper and lower bounds of the
     /// interval for the minimizer s.
     pub fn f_minimum(&self) -> f64 {
         self.f_minimum
     }
 
-    /// This function returns the value of the function at the current estimate of the minimum and at the upper and lower bounds of the 
+    /// This function returns the value of the function at the current estimate of the minimum and at the upper and lower bounds of the
     /// interval for the minimizer s.
     pub fn f_lower(&self) -> f64 {
         self.f_lower
     }
 
-    /// This function returns the value of the function at the current estimate of the minimum and at the upper and lower bounds of the 
+    /// This function returns the value of the function at the current estimate of the minimum and at the upper and lower bounds of the
     /// interval for the minimizer s.
     pub fn f_upper(&self) -> f64 {
         self.f_upper
@@ -248,13 +247,13 @@ impl<T> Minimizer<T> {
 
     /// This function performs a single iteration of the minimizer s. If the iteration encounters an unexpected problem then an error code
     /// will be returned,
-    /// 
+    ///
     /// ::Value::BadFunc
     /// the iteration encountered a singular point where the function evaluated to Inf or NaN.
-    /// 
+    ///
     /// ::Value::Failure
     /// the algorithm could not improve the current best approximation or bounding interval.
-    /// 
+    ///
     /// The minimizer maintains a current best estimate of the position of the minimum at all times, and the current interval bounding the
     /// minimum. This information can be accessed with the following auxiliary functions,
     pub fn iterate(&mut self) -> ::Value {
@@ -284,7 +283,7 @@ pub struct MinimizerType<T> {
 impl<T> MinimizerType<T> {
     /// The golden section algorithm is the simplest method of bracketing the minimum of a function. It is the slowest algorithm provided
     /// by the library, with linear convergence.
-    /// 
+    ///
     /// On each iteration, the algorithm first compares the subintervals from the endpoints to the current minimum. The larger subinterval
     /// is divided in a golden section (using the famous ratio (3-\sqrt 5)/2 = 0.3189660…) and the value of the function at this new point
     /// is calculated. The new value is used with the constraint f(a') > f(x') < f(b') to a select new interval containing the minimum, by
@@ -301,7 +300,7 @@ impl<T> MinimizerType<T> {
 
     /// The Brent minimization algorithm combines a parabolic interpolation with the golden section algorithm. This produces a fast algorithm
     /// which is still robust.
-    /// 
+    ///
     /// The outline of the algorithm can be summarized as follows: on each iteration Brent’s method approximates the function using an
     /// interpolating parabola through three existing points. The minimum of the parabola is taken as a guess for the minimum. If it lies
     /// within the bounds of the current interval then the interpolating point is accepted, and used to generate a smaller interval. If the
@@ -739,7 +738,7 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
             if x_eval < x_m {
                 *x_lower = x_eval;
                 *f_lower = f_eval;
-            } else {    
+            } else {
                 *x_upper = x_eval;
                 *f_upper = f_eval;
             }

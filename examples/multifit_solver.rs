@@ -5,14 +5,14 @@
 // The following example program fits a weighted exponential model with background to experimental data, Y = A \exp(-\lambda t) + b. The
 // first part of the program sets up the functions expb_f and expb_df to calculate the model and its Jacobian. The appropriate fitting
 // function is given by,
-// 
+//
 // f_i = ((A \exp(-\lambda t_i) + b) - y_i)/\sigma_i
 // where we have chosen t_i = i. The Jacobian matrix J is the derivative of these functions with respect to the three parameters (A,
 // \lambda, b). It is given by,
-// 
+//
 // J_{ij} = d f_i / d x_j
 // where x_0 = A, x_1 = \lambda and x_2 = b.
-// 
+//
 // expfit.c -- model functions for exponential + background */
 
 /*
@@ -50,9 +50,6 @@ the range of validity for Gaussian errors.
 #![allow(non_snake_case)]
 
 extern crate rgsl;
-extern crate num;
-
-use num::Float;
 
 struct Data {
     n: usize,
@@ -88,8 +85,8 @@ fn expb_df(x: &rgsl::VectorF64, data: &mut Data, J: &mut rgsl::MatrixF64) -> rgs
         let t = i as f64;
         let s = data.sigma[i as usize];
         let e = (-lambda * t).exp();
-      
-        J.set(i, 0, e / s); 
+
+        J.set(i, 0, e / s);
         J.set(i, 1, -t * A * e / s);
         J.set(i, 2, 1f64 / s);
     }
@@ -175,10 +172,10 @@ fn main() {
 
     rgsl::multifit::covar(&s.j, 0f64, &mut covar);
 
-    { 
+    {
         let chi = rgsl::blas::level1::dnrm2(&s.f);
         let dof = n as f64 - p as f64;
-        let c = 1f64.max(chi / dof.sqrt()); 
+        let c = 1f64.max(chi / dof.sqrt());
 
         println!("chisq/dof = {}",  chi.powf(2f64) / dof);
 

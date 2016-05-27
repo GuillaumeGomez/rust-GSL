@@ -5,31 +5,31 @@
 /*!
 #Nonlinear Least-Squares Fitting
 
-This chapter describes functions for multidimensional nonlinear least-squares fitting. The library provides low level components for a 
-variety of iterative solvers and convergence tests. These can be combined by the user to achieve the desired solution, with full access to 
-the intermediate steps of the iteration. Each class of methods uses the same framework, so that you can switch between solvers at runtime 
-without needing to recompile your program. Each instance of a solver keeps track of its own state, allowing the solvers to be used in 
+This chapter describes functions for multidimensional nonlinear least-squares fitting. The library provides low level components for a
+variety of iterative solvers and convergence tests. These can be combined by the user to achieve the desired solution, with full access to
+the intermediate steps of the iteration. Each class of methods uses the same framework, so that you can switch between solvers at runtime
+without needing to recompile your program. Each instance of a solver keeps track of its own state, allowing the solvers to be used in
 multi-threaded programs.
 
 ##Overview
 
-The problem of multidimensional nonlinear least-squares fitting requires the minimization of the squared residuals of n functions, f_i, in 
+The problem of multidimensional nonlinear least-squares fitting requires the minimization of the squared residuals of n functions, f_i, in
 p parameters, x_i,
 
 \Phi(x) = (1/2) || F(x) ||^2
-        = (1/2) \sum_{i=1}^{n} f_i(x_1, ..., x_p)^2 
+        = (1/2) \sum_{i=1}^{n} f_i(x_1, ..., x_p)^2
 All algorithms proceed from an initial guess using the linearization,
 
 \psi(p) = || F(x+p) || ~=~ || F(x) + J p ||
-where x is the initial point, p is the proposed step and J is the Jacobian matrix J_{ij} = d f_i / d x_j. Additional strategies are used to 
-enlarge the region of convergence. These include requiring a decrease in the norm ||F|| on each step or using a trust region to avoid steps 
+where x is the initial point, p is the proposed step and J is the Jacobian matrix J_{ij} = d f_i / d x_j. Additional strategies are used to
+enlarge the region of convergence. These include requiring a decrease in the norm ||F|| on each step or using a trust region to avoid steps
 which fall outside the linear regime.
 
-To perform a weighted least-squares fit of a nonlinear model Y(x,t) to data (t_i, y_i) with independent Gaussian errors \sigma_i, use 
+To perform a weighted least-squares fit of a nonlinear model Y(x,t) to data (t_i, y_i) with independent Gaussian errors \sigma_i, use
 function components of the following form,
 
 f_i = (Y(x, t_i) - y_i) / \sigma_i
-Note that the model parameters are denoted by x in this chapter since the non-linear least-squares algorithms are described geometrically 
+Note that the model parameters are denoted by x in this chapter since the non-linear least-squares algorithms are described geometrically
 (i.e. finding the minimum of a surface). The independent variable of any data to be fitted is denoted by t.
 
 With the definition above the Jacobian is J_{ij} =(1 / \sigma_i) d Y_i / d x_j, where Y_i = Y(x,t_i).
@@ -40,7 +40,6 @@ These routines provide a high level wrapper that combine the iteration and conve
 !*/
 
 use ffi;
-use num::Float;
 use libc::c_void;
 
 pub struct MultiFitFunction<'r, T:'r> {
@@ -92,7 +91,7 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
         if self.x.len() != x.len() {
             rgsl_error!("vector length does not match solver", ::Value::BadLen);
             return ::Value::BadLen;
-        }  
+        }
 
         self.fdf = unsafe { ::std::mem::transmute(f) };
         self.x.copy_from(x);
@@ -427,7 +426,7 @@ fn update_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
 
         for i in 0..n {
           let jij = J.get(i, j);
-          
+
           sum += jij * jij;
         }
         if sum == 0f64 {
@@ -619,7 +618,7 @@ fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut
 
     compute_gradient_direction(&state.r, &state.perm, &state.qtf, &state.diag, &mut state.gradient);
 
-    { 
+    {
         let iamax = ::blas::level1::idamax(&state.gradient);
 
         gnorm = unsafe { (state.gradient.get(iamax as usize) / state.fnorm).abs() };
@@ -660,7 +659,7 @@ fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut
         /* return immediately if evaluation raised error */
         {
             let status = ((*fdf).f)(&state.x_trial, fdf.params, &mut state.f_trial); //GSL_MULTIFIT_FN_EVAL_F (fdf, x_trial, f_trial);
-            
+
             if status != ::Value::Success {
                 return status;
             }
@@ -691,7 +690,7 @@ fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut
 
         /* Compute the scaled predicted reduction = |J dx|^2 + 2 par |D dx|^2 */
 
-        { 
+        {
             let t1 = fnorm1p / state.fnorm;
             let t2 = (state.par.sqrt() * pnorm) / state.fnorm;
 
@@ -1001,8 +1000,8 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
         let wnorm = enorm(w);
         let phider = wnorm * wnorm;
 
-        /* w == zero if r rank-deficient, 
-           then set lower bound to zero form MINPACK, lmder.f 
+        /* w == zero if r rank-deficient,
+           then set lower bound to zero form MINPACK, lmder.f
            Hans E. Plesser 2002-02-25 (hans.plesser@itf.nlh.no) */
         par_lower = if wnorm > 0f64 {
             fp / (delta * phider)
@@ -1219,13 +1218,13 @@ fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::Vecto
         for j in nsing..0 {
             let rjj = r.get(j, j);
             let temp = x.get(j) / rjj;
-          
+
             x.set(j, temp);
-              
+
             for i in 0..j {
                 let rij = r.get(i, j);
                 let xi = x.get(i);
-              
+
                 x.set(i, xi - rij * temp);
             }
         }
@@ -1276,7 +1275,7 @@ fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::
 
 /* This function computes the solution to the least squares system
    phi = [ A x =  b , lambda D x = 0 ]^2
-    
+
    where A is an M by N matrix, D is an N by N diagonal matrix, lambda
    is a scalar parameter and b is a vector of length M.
    The function requires the factorization of A into A = Q R P^T,
@@ -1289,7 +1288,7 @@ fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::
    an upper triangular matrix S such that
    P^T (A^T A + lambda^2 D^T D) P = S^T S
    Parameters,
-   
+
    r: On input, contains the full upper triangle of R. On output the
    strict lower triangle contains the transpose of the strict upper
    triangle of S, and the diagonal of S is stored in sdiag.  The full
@@ -1302,7 +1301,7 @@ fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::
    x: on output contains the least squares solution of the system
    wa: is a workspace of length N
    */
-fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF64, qtb: &::VectorF64, 
+fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF64, qtb: &::VectorF64,
     x: &mut ::VectorF64, sdiag: &mut ::VectorF64, wa: &mut ::VectorF64) -> ::Value {
     let n = r.size2();
 
@@ -1382,7 +1381,7 @@ fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF6
             {
                 let new_rkk = cosine * rkk + sine * sdiagk;
                 let new_wak = cosine * wak + sine * qtbpj;
-                
+
                 qtbpj = -sine * wak + cosine * qtbpj;
 
                 r.set(k, k, new_rkk);
@@ -1394,10 +1393,10 @@ fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF6
             while i < n {
                 let rik = r.get(i, k);
                 let sdiagi = sdiag.get(i);
-              
+
                 let new_rik = cosine * rik + sine * sdiagi;
                 let new_sdiagi = -sine * rik + cosine * sdiagi;
-              
+
                 r.set(i, k, new_rik);
                 sdiag.set(i, new_sdiagi);
                 i += 1;
@@ -1411,7 +1410,7 @@ fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF6
         {
             let rjj = r.get(j, j);
             let xj = x.get(j);
-            
+
             sdiag.set(j, rjj);
             r.set(j, j, xj);
         }

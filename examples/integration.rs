@@ -3,9 +3,6 @@
 //
 
 extern crate rgsl;
-extern crate num;
-
-use num::Float;
 
 struct FParams {
     // Amplitude
@@ -28,7 +25,7 @@ fn qags_fn(x: f64, alpha: &mut f64) -> f64 {
 }
 
 /* f458(x) = 1/(1 + log(x)^2)^2 */
-/* integ(log(x) f458(x),x,0,1) = (Ci(1) sin(1) + (pi/2 - Si(1)) cos(1))/pi 
+/* integ(log(x) f458(x),x,0,1) = (Ci(1) sin(1) + (pi/2 - Si(1)) cos(1))/pi
                                = -0.1892752 */
 #[allow(unused_variables)]
 fn f458<T>(x: f64, params: &mut T) -> f64 {
@@ -37,7 +34,7 @@ fn f458<T>(x: f64, params: &mut T) -> f64 {
     } else {
         let u = x.ln();
         let v = 1f64 + u * u;
-      
+
         1f64 / (v * v)
     }
 }
@@ -47,7 +44,7 @@ fn main() {
     let mut result = 0f64;
     let mut error = 0f64;
     let mut n_eval = 0;
-    
+
     let xlow = 0f64;
     let xhigh = 10f64;
     let eps_abs = 1e-4f64;
@@ -119,7 +116,7 @@ fn main() {
         let expected = -4f64;
         let mut alpha = 1f64;
 
-        w.qags(qags_fn, &mut alpha, 0f64, 1f64, 0f64, 1e-7f64, 1000, &mut result, &mut error); 
+        w.qags(qags_fn, &mut alpha, 0f64, 1f64, 0f64, 1e-7f64, 1000, &mut result, &mut error);
 
         println!("result          = {:.18}", result);
         println!("exact result    = {:.18}", expected);
