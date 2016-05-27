@@ -6,7 +6,6 @@
 
 use ffi;
 use enums;
-use num::Float;
 use c_vec::CSlice;
 
 static XI : [f64; 33] = [
@@ -1373,22 +1372,22 @@ impl IntegrationWorkspace {
     /// This function applies an integration rule adaptively until an estimate of the integral of f over (a,b) is achieved within the desired
     /// absolute and relative error limits, epsabs and epsrel. The function returns the final approximation, result, and an estimate of the
     /// absolute error, abserr. The integration rule is determined by the value of key, which should be chosen from the following symbolic names,
-    /// 
+    ///
     /// GSL_INTEG_GAUSS15  (key = 1)
-    /// 
+    ///
     /// GSL_INTEG_GAUSS21  (key = 2)
-    /// 
+    ///
     /// GSL_INTEG_GAUSS31  (key = 3)
-    /// 
+    ///
     /// GSL_INTEG_GAUSS41  (key = 4)
-    /// 
+    ///
     /// GSL_INTEG_GAUSS51  (key = 5)
-    /// 
+    ///
     /// GSL_INTEG_GAUSS61  (key = 6)
-    /// 
+    ///
     /// corresponding to the 15f64, 21f64, 31f64, 41f64, 51 and 61 point Gauss-Kronrod rules. The higher-order rules give better accuracy for smooth functions,
     /// while lower-order rules save time when the function contains local difficulties, such as discontinuities.
-    /// 
+    ///
     /// On each iteration the adaptive integration strategy bisects the interval with the largest error estimate. The subintervals and their
     /// results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the
     /// allocated size of the workspace.
@@ -1447,14 +1446,14 @@ impl IntegrationWorkspace {
     /// pts of length npts should contain the endpoints of the integration ranges defined by the integration region and locations of the singularities.
     /// For example, to integrate over the region (a,b) with break-points at x_1, x_2, x_3 (where a < x_1 < x_2 < x_3 < b) the following pts array
     /// should be used
-    /// 
+    ///
     /// pts[0] = a
     /// pts[1] = x_1
     /// pts[2] = x_2
     /// pts[3] = x_3
     /// pts[4] = b
     /// with npts = 5.
-    /// 
+    ///
     /// If you know the locations of the singular points in the integration region then this routine will be faster than QAGS.
     pub fn qagp<T>(&self, f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
         abserr: &mut f64) -> ::Value {
@@ -1463,10 +1462,10 @@ impl IntegrationWorkspace {
 
     /// This function computes the integral of the function f over the infinite interval (-\infty,+\infty). The integral is mapped onto the
     /// semi-open interval (0,1] using the transformation x = (1-t)/t,
-    /// 
-    /// \int_{-\infty}^{+\infty} dx f(x) = 
+    ///
+    /// \int_{-\infty}^{+\infty} dx f(x) =
     ///      \int_0^1 dt (f((1-t)/t) + f((-1+t)/t))/t^2.
-    /// 
+    ///
     /// It is then integrated using the QAGS algorithm. The normal 21-point Gauss-Kronrod rule of QAGS is replaced by a 15-point rule, because
     /// the transformation can generate an integrable singularity at the origin. In this case a lower-order rule is more efficient.
     pub fn qagi<T>(&self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
@@ -1477,10 +1476,10 @@ impl IntegrationWorkspace {
 
     /// This function computes the integral of the function f over the semi-infinite interval (a,+\infty). The integral is mapped onto the
     /// semi-open interval (0,1] using the transformation x = a + (1-t)/t,
-    /// 
-    /// \int_{a}^{+\infty} dx f(x) = 
+    ///
+    /// \int_{a}^{+\infty} dx f(x) =
     ///      \int_0^1 dt f(a + (1-t)/t)/t^2
-    /// 
+    ///
     /// and then integrated using the QAGS algorithm.
     pub fn qagiu<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: a};
@@ -1490,10 +1489,10 @@ impl IntegrationWorkspace {
 
     /// This function computes the integral of the function f over the semi-infinite interval (-\infty,b). The integral is mapped onto the semi-open
     /// interval (0,1] using the transformation x = b - (1-t)/t,
-    /// 
-    /// \int_{-\infty}^{b} dx f(x) = 
+    ///
+    /// \int_{-\infty}^{b} dx f(x) =
     ///      \int_0^1 dt f(b - (1-t)/t)/t^2
-    /// 
+    ///
     /// and then integrated using the QAGS algorithm.
     pub fn qagil<T>(&self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: b};
@@ -1502,9 +1501,9 @@ impl IntegrationWorkspace {
     }
 
     /// This function computes the Cauchy principal value of the integral of f over (a,b), with a singularity at c,
-    /// 
+    ///
     /// I = \int_a^b dx f(x) / (x - c)
-    /// 
+    ///
     /// The adaptive bisection algorithm of QAG is used, with modifications to ensure that subdivisions do not occur at the singular point x = c.
     /// When a subinterval contains the point x = c or is close to it then a special 25-point modified Clenshaw-Curtis rule is used to control
     /// the singularity. Further away from the singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
@@ -1547,7 +1546,7 @@ impl IntegrationWorkspace {
 
             if c == a || c == b {
                 rgsl_error!("cannot integrate with singularity on endpoint", ::Value::Inval);
-            }      
+            }
 
             /* perform the first integration */
             qc25c(f, arg, lower, higher, c, &mut result0, &mut abserr0, &mut err_reliable);
@@ -1589,7 +1588,7 @@ impl IntegrationWorkspace {
                 /* Bisect the subinterval with the largest error estimate */
                 self.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
-                let a1 = a_i; 
+                let a1 = a_i;
                 let mut b1 = 0.5 * (a_i + b_i);
                 let mut a2 = b1;
                 let b2 = b_i;
@@ -1757,7 +1756,7 @@ impl IntegrationWorkspace {
                 order.as_mut()[k as usize + 1usize] = order.as_ref()[k as usize];
                 k -= 1;
             }
-      
+
             order.as_mut()[k as usize + 1usize] = last;
 
             // Set i_max and e_max
@@ -1952,20 +1951,20 @@ pub struct IntegrationQawsTable {
 impl IntegrationQawsTable {
     /// This function allocates space for a gsl_integration_qaws_table struct describing a singular weight function W(x) with the parameters
     /// (\alpha, \beta, \mu, \nu),
-    /// 
+    ///
     /// W(x) = (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x)
-    /// 
+    ///
     /// where \alpha > -1f64, \beta > -1f64, and \mu = 0, 1, \nu = 0, 1. The weight function can take four different forms depending on the values
     /// of \mu and \nu,
-    /// 
+    ///
     /// W(x) = (x-a)^alpha (b-x)^beta                   (mu = 0, nu = 0)
     /// W(x) = (x-a)^alpha (b-x)^beta log(x-a)          (mu = 1, nu = 0)
     /// W(x) = (x-a)^alpha (b-x)^beta log(b-x)          (mu = 0, nu = 1)
     /// W(x) = (x-a)^alpha (b-x)^beta log(x-a) log(b-x) (mu = 1, nu = 1)
-    /// 
+    ///
     /// The singular points (a,b) do not have to be specified until the integral is computed, where they are the endpoints of the integration
     /// range.
-    /// 
+    ///
     /// The function returns a pointer to the newly allocated table gsl_integration_qaws_table if no errors were detected, and 0 in the case
     /// of error.
     pub fn new(alpha: f64, beta: f64, mu: i32, nu: i32) -> Option<IntegrationQawsTable> {
@@ -1988,9 +1987,9 @@ impl IntegrationQawsTable {
     /// This function computes the integral of the function f(x) over the interval (a,b) with the singular weight function (x-a)^\alpha
     /// (b-x)^\beta \log^\mu (x-a) \log^\nu (b-x). The parameters of the weight function (\alpha, \beta, \mu, \nu) are taken from the
     /// table self. The integral is,
-    /// 
+    ///
     /// I = \int_a^b dx f(x) (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x).
-    /// 
+    ///
     /// The adaptive bisection algorithm of QAG is used. When a subinterval contains one of the endpoints then a special 25-point modified
     /// Clenshaw-Curtis rule is used to control the singularities. For subintervals which do not include the endpoints an ordinary 15-point
     /// Gauss-Kronrod integration rule is used.
@@ -2086,7 +2085,7 @@ impl IntegrationQawsTable {
                 /* Bisect the subinterval with the largest error estimate */
                 workspace.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
-                let a1 = a_i; 
+                let a1 = a_i;
                 let b1 = 0.5f64 * (a_i + b_i);
                 let a2 = b1;
                 let b2 = b_i;
@@ -2186,16 +2185,16 @@ pub struct IntegrationQawoTable {
 impl IntegrationQawoTable {
     /// This function allocates space for a gsl_integration_qawo_table struct and its associated workspace describing a sine or cosine weight
     /// function W(x) with the parameters (\omega, L),
-    /// 
+    ///
     /// W(x) = sin(omega x)
     /// W(x) = cos(omega x)
-    /// 
+    ///
     /// The parameter L must be the length of the interval over which the function will be integrated L = b - a. The choice of sine or cosine
     /// is made with the parameter sine which should be chosen from one of the two following symbolic values:
-    /// 
+    ///
     /// ::Cosine
     /// ::IntegrationQawo::Sine
-    /// 
+    ///
     /// The gsl_integration_qawo_table is a table of the trigonometric coefficients required in the integration process. The parameter n determines
     /// the number of levels of coefficients that are computed. Each level corresponds to one bisection of the interval L, so that n levels are
     /// sufficient for subintervals down to the length L/2^n. The integration routine gsl_integration_qawo returns the error ::Table if the
@@ -2224,15 +2223,15 @@ impl IntegrationQawoTable {
 
     /// This function uses an adaptive algorithm to compute the integral of f over (a,b) with the weight function \sin(\omega x) or \cos(\omega x)
     /// defined by the table wf,
-    /// 
+    ///
     /// I = \int_a^b dx f(x) sin(omega x)
     /// I = \int_a^b dx f(x) cos(omega x)
-    /// 
+    ///
     /// The results are extrapolated using the epsilon-algorithm to accelerate the convergence of the integral. The function returns the final
     /// approximation from the extrapolation, result, and an estimate of the absolute error, abserr. The subintervals and their results are
     /// stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the allocated
     /// size of the workspace.
-    /// 
+    ///
     /// Those subintervals with “large” widths d where d\omega > 4 are computed using a 25-point Clenshaw-Curtis integration rule, which handles
     /// the oscillatory behavior. Subintervals with a “small” widths where d\omega < 4 are computed using a 15-point Gauss-Kronrod integration.
     pub fn qawo<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, workspace: &IntegrationWorkspace,
@@ -2600,7 +2599,7 @@ impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
 /// CQUAD is a new doubly-adaptive general-purpose quadrature routine which can handle most types of singularities, non-numerical function
 /// values such as Inf or NaN, as well as some divergent integrals. It generally requires more function evaluations than the integration
 /// routines in QUADPACK, yet fails less often for difficult integrands.
-/// 
+///
 /// The underlying algorithm uses a doubly-adaptive scheme in which Clenshaw-Curtis quadrature rules of increasing degree are used to compute
 /// the integral in each interval. The L_2-norm of the difference between the underlying interpolatory polynomials of two successive rules
 /// is used as an error estimate. The interval is subdivided if the difference between two successive rules is too large or a rule of maximum
@@ -2628,13 +2627,13 @@ impl CquadWorkspace {
     /// This function computes the integral of f over (a,b) within the desired absolute and relative error limits, epsabs and epsrel using
     /// the CQUAD algorithm. The function returns the final approximation, result, an estimate of the absolute error, abserr, and the number
     /// of function evaluations required, nevals.
-    /// 
+    ///
     /// The CQUAD algorithm divides the integration region into subintervals, and in each iteration, the subinterval with the largest estimated
     /// error is processed. The algorithm uses Clenshaw-Curits quadrature rules of degree 4, 8, 16 and 32 over 5, 9, 17 and 33 nodes respectively.
     /// Each interval is initialized with the lowest-degree rule. When an interval is processed, the next-higher degree rule is evaluated and
     /// an error estimate is computed based on the L_2-norm of the difference between the underlying interpolating polynomials of both rules.
     /// If the highest-degree rule has already been used, or the interpolatory polynomials differ significantly, the interval is bisected.
-    /// 
+    ///
     /// The subintervals and their results are stored in the memory provided by workspace. If the error estimate or the number of function
     /// evaluations is not needed, the pointers abserr and nevals can be set to NULL (not in rgsl).
     #[allow(unused_assignments)]
@@ -2998,7 +2997,7 @@ impl CquadWorkspace {
 
                     /* Check for divergence. */
                     (*ivr).ndiv = (*iv).ndiv + ((*iv).c[0].abs() > 0f64 && (*ivr).c[0] / (*iv).c[0] > 2f64) as i32;
-                
+
                     if (*ivr).ndiv > ndiv_max && 2i32 * (*ivr).ndiv > (*ivr).rdepth {
                         /* need copysign(INFINITY, igral) */
                         *result = if igral >= 0f64 {
@@ -3224,7 +3223,7 @@ fn i_transform<T>(t: f64, params: &mut InternParam<T>) -> f64 {
     let f = params.func;
     let x = (1f64 - t) / t;
     let y = f(x, params.param) + f(-x, params.param);
-  
+
     (y / t) / t
 }
 
@@ -3320,7 +3319,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
         // Bisect the subinterval with the largest error estimate
         f_w.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
-        let a1 = a_i; 
+        let a1 = a_i;
         let b1 = 0.5 * (a_i + b_i);
         let a2 = b1;
         let b2 = b_i;
@@ -3535,7 +3534,7 @@ pub unsafe fn intern_qelg(table: &mut ffi::extrapolation_table, result: &mut f64
        res3la being accessed when its elements are still undefined, so I have moved the update to this point so that its value more
        useful. */
 
-    (*table).nres = nres_orig + 1;  
+    (*table).nres = nres_orig + 1;
 
     *abserr = (*abserr).max(5f64 * ::DBL_EPSILON * (*result).abs());
 }
@@ -3561,10 +3560,10 @@ unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool
     } else {
         last
     };
-  
+
     for k in id..(jupbnd + 1) {
         let i_max = order[(*workspace).nrmax as usize];
-      
+
         (*workspace).i = i_max ;
         if level[i_max as usize] < (*workspace).maximum_level {
             return true;
@@ -3577,7 +3576,7 @@ unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool
 unsafe fn large_interval(workspace: *mut ffi::gsl_integration_workspace) -> bool {
     let i = (*workspace).i ;
     let level = CSlice::new((*workspace).level, i as usize + 1usize);
-  
+
     if level.as_ref()[i as usize] < (*workspace).maximum_level {
         true
     } else {
@@ -4053,7 +4052,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     let positive_integrand = test_positivity(result0, resabs0);
 
-    let mut iteration = nint - 1; 
+    let mut iteration = nint - 1;
 
     loop {
         let mut a_i = 0f64;
@@ -4346,21 +4345,21 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
 
     /* These are the values of cos(pi*k/24) for k=1..11 needed for the Chebyshev expansion of f(x) */
     let x : [f64; 11] = [
-        0.9914448613738104f64,     
+        0.9914448613738104f64,
         0.9659258262890683f64,
-        0.9238795325112868f64,     
+        0.9238795325112868f64,
         0.8660254037844386f64,
-        0.7933533402912352f64,     
+        0.7933533402912352f64,
         0.7071067811865475f64,
-        0.6087614290087206f64,     
+        0.6087614290087206f64,
         0.5000000000000000f64,
-        0.3826834323650898f64,     
+        0.3826834323650898f64,
         0.2588190451025208f64,
         0.1305261922200516f64];
-  
+
     let center = 0.5f64 * (b + a);
     let half_length =  0.5f64 * (b - a);
-  
+
     fval[0] = 0.5f64 * f(b, arg);
     fval[12] = f(center, arg);
     fval[24] = 0.5f64 * f(a, arg);
@@ -4409,15 +4408,15 @@ fn gsl_integration_qcheb<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, cheb1
         let part1 = x[3] * v[4];
         let part2 = x[7] * v[8];
         let part3 = x[5] * v[6];
-        
+
         {
             let alam1 = v[0] + part1 + part2;
             let alam2 = x[1] * v[2] + part3 + x[9] * v[10];
-          
+
             cheb12[1] = alam1 + alam2;
             cheb12[11] = alam1 - alam2;
         }
-        
+
         {
             let alam1 = v[0] - part1 + part2;
             let alam2 = x[9] * v[2] - part3 + x[1] * v[10];
@@ -4648,7 +4647,7 @@ fn fn_qaws<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
     let t = p.table;
 
     let mut factor = 1f64;
-  
+
     unsafe {
         if (*t).alpha != 0f64 {
             factor *= (x - p.a).powf((*t).alpha);
@@ -4675,7 +4674,7 @@ fn fn_qaws_R<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
     let t = p.table;
 
     let mut factor = 1f64;
-  
+
     unsafe {
         if (*t).beta != 0f64 {
             factor *= (p.b - x).powf((*t).beta);
@@ -4694,7 +4693,7 @@ fn fn_qaws_L<T>(x: f64, p: &mut fn_qaws_params<T>) -> f64 {
     let t = p.table;
 
     let mut factor = 1f64;
-  
+
     unsafe {
         if (*t).alpha != 0f64 {
             factor *= (x - p.a).powf((*t).alpha);
@@ -4735,7 +4734,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
     let center = 0.5f64 * (a + b);
     let half_length = 0.5f64 * (b - a);
     let omega = (*wf).omega ;
-  
+
     let par = omega * half_length;
 
     if par.abs() < 2f64 {

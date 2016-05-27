@@ -55,7 +55,6 @@
 
 extern crate libc;
 extern crate c_vec;
-extern crate num;
 
 pub use types::{
     ComplexF32,
