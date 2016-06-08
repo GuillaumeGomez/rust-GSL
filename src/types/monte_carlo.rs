@@ -118,14 +118,18 @@ impl PlainMonteCarlo {
     /// calls, and obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied.
     /// The result of the integration is returned in result, with an estimated absolute error abserr.
     ///
+    /// In C, the function takes a `gsl_monte_function` as first argument. In here, you have to
+    /// pass the `dim` argument and the function pointer (which became a closure) directly to the
+    /// function.
+    ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: Fn(&[f64]) -> f64 + 'static>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                                     t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
+                                              t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
-            let f: Box<Box<Fn(&[f64]) -> f64 + 'static>> = Box::new(Box::new(f));
+            let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
                                f: transmute(monte_trampoline as usize),
                                dim: dim,
@@ -217,14 +221,18 @@ impl MiserMonteCarlo {
     /// and obtains random sampling points using the random number generator r. A previously allocated workspace s must be supplied. The result
     /// of the integration is returned in result, with an estimated absolute error abserr.
     ///
+    /// In C, the function takes a `gsl_monte_function` as first argument. In here, you have to
+    /// pass the `dim` argument and the function pointer (which became a closure) directly to the
+    /// function.
+    ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: Fn(&[f64]) -> f64 + 'static>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                                     t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
+                                              t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
-            let f: Box<Box<Fn(&[f64]) -> f64 + 'static>> = Box::new(Box::new(f));
+            let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
                                f: transmute(monte_trampoline as usize),
                                dim: dim,
@@ -366,13 +374,13 @@ pub struct MiserParams {
 ///
 /// current estimate has zero error, weighted average has finite error
 ///
-///     The current estimate is assigned a weight which is the average weight of the preceding estimates.
+/// * The current estimate is assigned a weight which is the average weight of the preceding estimates.
 /// current estimate has finite error, previous estimates had zero error
 ///
-///     The previous estimates are discarded and the weighted averaging procedure begins with the current estimate.
+/// * The previous estimates are discarded and the weighted averaging procedure begins with the current estimate.
 /// current estimate has zero error, previous estimates had zero error
 ///
-///     The estimates are averaged using the arithmetic mean, but no error is computed.
+/// * The estimates are averaged using the arithmetic mean, but no error is computed.
 pub struct VegasMonteCarlo {
     s: *mut ffi::gsl_monte_vegas_state,
 }
@@ -407,14 +415,18 @@ impl VegasMonteCarlo {
     /// for the weighted average is returned via the state struct component, s->chisq, and must be consistent
     /// with 1 for the weighted average to be reliable.
     ///
+    /// In C, the function takes a `gsl_monte_function` as first argument. In here, you have to
+    /// pass the `dim` argument and the function pointer (which became a closure) directly to the
+    /// function.
+    ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: Fn(&[f64]) -> f64 + 'static>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                                     t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
+                                              t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
-            let f: Box<Box<Fn(&[f64]) -> f64 + 'static>> = Box::new(Box::new(f));
+            let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
                                f: transmute(monte_trampoline as usize),
                                dim: dim,
@@ -481,6 +493,150 @@ impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
 }
 
 unsafe extern "C" fn monte_trampoline(x: *mut c_double, dim: size_t, param: *mut c_void) -> c_double {
-    let f: &Box<Fn(&[f64]) -> f64 + 'static> = transmute(param);
+    let f: &mut Box<FnMut(&[f64]) -> f64> = transmute(param);
     f(slice::from_raw_parts(x, dim as usize))
+}
+
+
+#[test]
+fn plain() {
+    use std::f64::consts::PI;
+    fn g(k: &[f64]) -> f64 {
+        let a = 1f64 / (PI * PI * PI);
+
+        a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+    }
+
+    let xl : [f64; 3] = [0f64; 3];
+    let xu : [f64; 3] = [PI, PI, PI];
+
+    let calls = 500000;
+
+    ::RngType::env_setup();
+    let t : ::RngType = ::rng::default();
+    let r = ::Rng::new(&t).unwrap();
+
+    {
+        let s = PlainMonteCarlo::new(3).unwrap();
+
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
+        assert_eq!(&format!("{:.6}", res), "1.412209");
+        assert_eq!(&format!("{:.6}", err), "0.013436");
+    }
+}
+
+#[test]
+fn miser() {
+    use std::f64::consts::PI;
+    fn g(k: &[f64]) -> f64 {
+        let a = 1f64 / (PI * PI * PI);
+
+        a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+    }
+
+    let xl : [f64; 3] = [0f64; 3];
+    let xu : [f64; 3] = [PI, PI, PI];
+
+    let calls = 500000;
+
+    ::RngType::env_setup();
+    let t : ::RngType = ::rng::default();
+    let r = ::Rng::new(&t).unwrap();
+
+    {
+        let s = MiserMonteCarlo::new(3).unwrap();
+
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
+        assert_eq!(&format!("{:.6}", res), "1.389530");
+        assert_eq!(&format!("{:.6}", err), "0.005011");
+    }
+}
+
+#[test]
+fn miser_closure() {
+    use std::f64::consts::PI;
+
+    let xl : [f64; 3] = [0f64; 3];
+    let xu : [f64; 3] = [PI, PI, PI];
+
+    let calls = 500000;
+
+    ::RngType::env_setup();
+    let t : ::RngType = ::rng::default();
+    let r = ::Rng::new(&t).unwrap();
+
+    {
+        let s = MiserMonteCarlo::new(3).unwrap();
+
+        let (res, err) = s.integrate(3, |k| {
+                let a = 1f64 / (PI * PI * PI);
+
+                a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+            }, &xl, &xu, calls, &r).unwrap();
+        assert_eq!(&format!("{:.6}", res), "1.389530");
+        assert_eq!(&format!("{:.6}", err), "0.005011");
+    }
+}
+
+#[test]
+fn vegas_warm_up() {
+    use std::f64::consts::PI;
+    fn g(k: &[f64]) -> f64 {
+        let a = 1f64 / (PI * PI * PI);
+
+        a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+    }
+
+    let xl : [f64; 3] = [0f64; 3];
+    let xu : [f64; 3] = [PI, PI, PI];
+
+    ::RngType::env_setup();
+    let t : ::RngType = ::rng::default();
+    let r = ::Rng::new(&t).unwrap();
+
+    {
+        let s = VegasMonteCarlo::new(3).unwrap();
+
+        let (res, err) = s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
+        assert_eq!(&format!("{:.6}", res), "1.385603");
+        assert_eq!(&format!("{:.6}", err), "0.002212");
+    }
+}
+
+#[test]
+fn vegas() {
+    use std::f64::consts::PI;
+    fn g(k: &[f64]) -> f64 {
+        let a = 1f64 / (PI * PI * PI);
+
+        a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+    }
+
+    let calls = 500000;
+
+    let xl : [f64; 3] = [0f64; 3];
+    let xu : [f64; 3] = [PI, PI, PI];
+
+    ::RngType::env_setup();
+    let t : ::RngType = ::rng::default();
+    let r = ::Rng::new(&t).unwrap();
+
+    {
+        let s = VegasMonteCarlo::new(3).unwrap();
+
+        s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
+        let mut res;
+        let mut err;
+        loop {
+            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &r).unwrap();
+            res = _res;
+            err = _err;
+            println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
+            if (s.chisq() - 1f64).abs() <= 0.5f64 {
+                break;
+            }
+        }
+        assert_eq!(&format!("{:.6}", res), "1.393307");
+        assert_eq!(&format!("{:.6}", err), "0.000335");
+    }
 }

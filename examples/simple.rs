@@ -5,7 +5,7 @@
 extern crate rgsl;
 
 use std::default::Default;
-use rgsl::{Pow, Elementary, Trigonometric};
+use rgsl::{Pow/*, Elementary*/, Trigonometric};
 
 fn main() {
     println!("=== VectorFloat tests ===");

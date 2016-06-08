@@ -37,7 +37,6 @@ use std::f64::consts::PI;
 
 const EXACT : f64 = 1.3932039296856768591842462603255f64;
 
-#[allow(unused_variables)]
 fn g(k: &[f64]) -> f64 {
     let a = 1f64 / (PI * PI * PI);
 
@@ -72,20 +71,22 @@ fn main() {
     {
         let s = rgsl::MiserMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
+        let (res, err) = s.integrate(3, |k| {
+                let a = 1f64 / (PI * PI * PI);
+
+                a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+            }, &xl, &xu, calls, &r).unwrap();
         display_results("miser", res, err);
     }
 
     {
         let s = rgsl::VegasMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
+        let (mut res, mut err) = s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
         display_results("vegas warm-up", res, err);
 
         println!("converging...");
 
-        let mut res;
-        let mut err;
         loop {
             let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &r).unwrap();
             res = _res;
