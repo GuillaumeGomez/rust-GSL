@@ -91,7 +91,7 @@ static GOLDEN_MEAN    : f64 = 0.3819660112501052f64;
 fn safe_func_call<T>(f: ::function<T>, arg: &mut T, x: f64, yp: &mut f64) {
     *yp = f(x, arg);
     if !yp.is_finite() {
-        rgsl_error!("computed function value is infinite or NaN", ::Value::BadFunc);
+        rgsl_error!("computed function value is infinite or NaN", ::Value::BadFunction);
     }
 }
 
@@ -154,7 +154,7 @@ impl<T> Minimizer<T> {
     /// This function sets, or resets, an existing minimizer s to use the function f and the initial search interval [x_lower, x_upper], with
     /// a guess for the location of the minimum x_minimum.
     ///
-    /// If the interval given does not contain a minimum, then the function returns an error code of ::Value::Inval.
+    /// If the interval given does not contain a minimum, then the function returns an error code of ::Value::Invalid.
     pub fn set(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, x_lower: f64, x_upper: f64) -> ::Value {
         let mut f_minimum = 0f64;
         let mut f_lower = 0f64;
@@ -180,11 +180,11 @@ impl<T> Minimizer<T> {
         self.x_upper = x_upper;
 
         if x_lower > x_upper {
-            rgsl_error!("invalid interval (lower > upper)", ::Value::Inval);
+            rgsl_error!("invalid interval (lower > upper)", ::Value::Invalid);
         }
 
         if x_minimum >= x_upper || x_minimum <= x_lower {
-            rgsl_error!("x_minimum must lie inside interval (lower < x < upper)", ::Value::Inval);
+            rgsl_error!("x_minimum must lie inside interval (lower < x < upper)", ::Value::Invalid);
         }
 
         self.f_upper = f_upper;
@@ -192,7 +192,7 @@ impl<T> Minimizer<T> {
         self.f_lower = f_lower;
 
         if f_minimum >= f_lower || f_minimum >= f_upper {
-            rgsl_error!("endpoints do not enclose a minimum", ::Value::Inval);
+            rgsl_error!("endpoints do not enclose a minimum", ::Value::Invalid);
         }
 
         unsafe {

@@ -84,13 +84,13 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and the initial guess x.
     pub fn set(&mut self, f: &mut MultiFitFunctionFdf<'r, T>, x: &::VectorF64) -> ::Value {
         if self.f.len() != f.n {
-            rgsl_error!("function size does not match solver", ::Value::BadLen);
-            return ::Value::BadLen;
+            rgsl_error!("function size does not match solver", ::Value::BadLength);
+            return ::Value::BadLength;
         }
 
         if self.x.len() != x.len() {
-            rgsl_error!("vector length does not match solver", ::Value::BadLen);
-            return ::Value::BadLen;
+            rgsl_error!("vector length does not match solver", ::Value::BadLength);
+            return ::Value::BadLength;
         }
 
         self.fdf = unsafe { ::std::mem::transmute(f) };
@@ -783,26 +783,26 @@ fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut
 
             return ::Value::Success;
         } else if actred.abs() <= ::DBL_EPSILON  && prered <= ::DBL_EPSILON  && p5 * ratio <= 1f64 {
-            return ::Value::TolF;
+            return ::Value::ToleranceF;
         } else if state.delta <= ::DBL_EPSILON * state.xnorm {
-            return ::Value::TolX;
+            return ::Value::ToleranceX;
         } else if gnorm <= ::DBL_EPSILON {
-            return ::Value::TolG;
+            return ::Value::ToleranceG;
         } else if iter >= 10 {
             /* stop inner loop if successful */
             break;
         }
     }
 
-    return ::Value::NoProg;
+    return ::Value::NoProgress;
 }
 
 fn gsl_multifit_test_delta(dx: &::VectorF64, x: &::VectorF64, epsabs: f64, epsrel: f64) -> ::Value {
     let mut ok = false;
 
     if epsrel < 0f64 {
-        rgsl_error!("relative tolerance is negative", ::Value::BadTol);
-        return ::Value::BadTol;
+        rgsl_error!("relative tolerance is negative", ::Value::BadTolerance);
+        return ::Value::BadTolerance;
     }
 
     for i in 0..x.len() {

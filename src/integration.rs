@@ -131,10 +131,10 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
             let c_file = CString::new(file.as_bytes()).unwrap();
 
             unsafe {
-                ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTol as i32);
+                ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTolerance as i32);
             }
         }
-        return ::Value::BadTol;
+        return ::Value::BadTolerance;
     }
 
     // w21b, weights of the 21-point formula for abscissae x2
@@ -405,8 +405,8 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
     *result = result_kronrod;
     *abs_err = err;
     *n_eval = 87;
-    rgsl_error!("failed to reach tolerance with highest-order rule", ::Value::Tol);
-    ::Value::Tol
+    rgsl_error!("failed to reach tolerance with highest-order rule", ::Value::Tolerance);
+    ::Value::Tolerance
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80 decimal digit arithmetic by L. W.
@@ -950,12 +950,12 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
         *abserr = 0f64;
 
         if limit > (*ffi::FFI::unwrap(workspace)).limit {
-            rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+            rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
         }
 
         /* Test on accuracy */
         if epsabs <= 0f64 {
-            rgsl_error!("absolute tolerance epsabs must be positive", ::Value::BadTol);
+            rgsl_error!("absolute tolerance epsabs must be positive", ::Value::BadTolerance);
         }
 
         if omega == 0f64 {

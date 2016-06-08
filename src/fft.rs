@@ -217,7 +217,7 @@ pub mod radix2 {
 ///
 /// The length of the data n is not a positive integer (i.e. n is zero).
 ///
-/// Value::Inval
+/// Value::Invalid
 ///
 /// The length of the data n and the length used to compute the given wavetable do not match.
 pub mod mixed_radix {
