@@ -12,7 +12,7 @@
 
 extern crate rgsl;
 
-use std::io::Write;
+//use std::io::Write;
 
 struct Data {
     x: f64,
