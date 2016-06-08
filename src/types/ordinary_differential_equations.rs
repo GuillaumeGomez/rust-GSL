@@ -142,7 +142,7 @@ extern fn jacobian_handler(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *m
                 Ok(()) => enums::Value::Success,
                 Err(e) => e,
             },
-        None => enums::Value::BadFunc,
+        None => enums::Value::BadFunction,
     }
 }
 
@@ -738,7 +738,7 @@ impl<'a> ODEiv2Driver<'a> {
     /// point t. If the function is unable to complete the calculation, an error code from gsl_odeiv2_evolve_apply is returned, and t and
     /// y contain the values from last successful step.
     ///
-    /// If maximum number of steps is reached, a value of enums::value::MaxIter is returned. If the step size drops below minimum value, the
+    /// If maximum number of steps is reached, a value of enums::Value::MaxIteration is returned. If the step size drops below minimum value, the
     /// function returns with ::NoProg. If the user-supplied functions defined in the system sys returns enums::value::BadFunc, the function
     /// returns immediately with the same return code. In this case the user must call gsl_odeiv2_driver_reset before calling this
     /// function again.

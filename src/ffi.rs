@@ -2271,18 +2271,29 @@ extern "C" {
     pub fn gsl_monte_plain_alloc(dim: size_t) -> *mut gsl_monte_plain_state;
     pub fn gsl_monte_plain_init(s: *mut gsl_monte_plain_state) -> enums::Value;
     pub fn gsl_monte_plain_free(s: *mut gsl_monte_plain_state);
+    pub fn gsl_monte_plain_integrate(f: *mut c_void, xl: *const c_double, xu: *const c_double, dim: size_t,
+                                     calls: size_t, r: *mut gsl_rng, s: *mut gsl_monte_plain_state,
+                                     result: *mut c_double, abserr: *mut c_double) -> enums::Value;
     // MISER
     pub fn gsl_monte_miser_alloc(dim: size_t) -> *mut gsl_monte_miser_state;
     pub fn gsl_monte_miser_init(s: *mut gsl_monte_miser_state) -> enums::Value;
     pub fn gsl_monte_miser_free(s: *mut gsl_monte_miser_state);
+    pub fn gsl_monte_miser_integrate(f: *mut c_void, xl: *const c_double, xu: *const c_double, dim: size_t,
+                                     calls: size_t, r: *mut gsl_rng, s: *mut gsl_monte_miser_state,
+                                     result: *mut c_double, abserr: *mut c_double) -> enums::Value;
+    pub fn gsl_monte_miser_params_get(s: *mut gsl_monte_miser_state, m: *mut ::MiserParams);
+    pub fn gsl_monte_miser_params_set(s: *mut gsl_monte_miser_state, m: *const ::MiserParams);
     // VEGAS
     pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
     pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> enums::Value;
     pub fn gsl_monte_vegas_free(s: *mut gsl_monte_vegas_state);
+    pub fn gsl_monte_vegas_integrate(f: *mut c_void, xl: *const c_double, xu: *const c_double, dim: size_t,
+                                     calls: size_t, r: *mut gsl_rng, s: *mut gsl_monte_vegas_state,
+                                     result: *mut c_double, abserr: *mut c_double) -> enums::Value;
     pub fn gsl_monte_vegas_chisq(s: *const gsl_monte_vegas_state) -> c_double;
     pub fn gsl_monte_vegas_runval(s: *const gsl_monte_vegas_state, result: *mut c_double, sigma: *mut c_double);
-    pub fn gsl_monte_vegas_params_get(s: *const gsl_monte_vegas_state, params: *mut ::VegasParams);
-    pub fn gsl_monte_vegas_params_set(s: *mut gsl_monte_vegas_state, params: *const ::VegasParams);
+    //pub fn gsl_monte_vegas_params_get(s: *const gsl_monte_vegas_state, params: *mut ::VegasParams);
+    //pub fn gsl_monte_vegas_params_set(s: *mut gsl_monte_vegas_state, params: *const ::VegasParams);
 
     // N-tuples
     // Creating ntuples
@@ -3079,6 +3090,13 @@ pub struct gsl_function {
 pub struct gsl_monte_plain_state {
     pub dim: size_t,
     pub x: *mut c_double
+}
+
+#[repr(C)]
+pub struct gsl_monte_function {
+    pub f: *mut c_void,
+    pub dim: size_t,
+    pub params: *mut c_void,
 }
 
 #[repr(C)]

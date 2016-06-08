@@ -38,7 +38,7 @@ use std::f64::consts::PI;
 const EXACT : f64 = 1.3932039296856768591842462603255f64;
 
 #[allow(unused_variables)]
-fn g(k: &mut [f64], params: &mut f64) -> f64 {
+fn g(k: &[f64]) -> f64 {
     let a = 1f64 / (PI * PI * PI);
 
     a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
@@ -52,11 +52,7 @@ fn display_results(title: &str, result: f64, error: f64) {
     println!("error  = {:.6} = {:.2} sigma", result - EXACT, (result - EXACT).abs() / error);
 }
 
-#[allow(unused_assignments)]
 fn main() {
-    let mut res = 0f64;
-    let mut err = 0f64;
-
     let xl : [f64; 3] = [0f64; 3];
     let xu : [f64; 3] = [PI, PI, PI];
 
@@ -69,27 +65,31 @@ fn main() {
     {
         let s = rgsl::PlainMonteCarlo::new(3).unwrap();
 
-        s.integrate(g, &mut 0f64, &xl, &xu, calls, &r, &mut res, &mut err);
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
         display_results("plain", res, err);
     }
 
     {
         let s = rgsl::MiserMonteCarlo::new(3).unwrap();
 
-        s.integrate(g, &mut 0f64, &xl, &xu, calls, &r, &mut res, &mut err);
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
         display_results("miser", res, err);
     }
 
     {
         let s = rgsl::VegasMonteCarlo::new(3).unwrap();
 
-        s.integrate(g, &mut 0f64, &xl, &xu, 10000, &r, &mut res, &mut err);
+        let (res, err) = s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
         display_results("vegas warm-up", res, err);
 
         println!("converging...");
 
+        let mut res;
+        let mut err;
         loop {
-            s.integrate(g, &mut 0f64, &xl, &xu, calls / 5, &r, &mut res, &mut err);
+            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &r).unwrap();
+            res = _res;
+            err = _err;
             println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
             if (s.chisq() - 1f64).abs() <= 0.5f64 {
                 break;

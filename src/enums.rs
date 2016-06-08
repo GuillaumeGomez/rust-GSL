@@ -30,69 +30,112 @@ pub enum Value {
     /// iteration has not converged
     Continue = -2,
     /// input domain error, e.g sqrt(-1)
-    Dom = 1,
+    Domain = 1,
     /// output range error, e.g. exp(1e100)
     Range = 2,
     /// invalid pointer
     Fault = 3,
     /// invalid argument supplied by user
-    Inval = 4,
+    Invalid = 4,
     /// generic failure
     Failed = 5,
     /// factorization failed
-    Factor = 6,
+    Factorization = 6,
     /// sanity check failed - shouldn't happen
     Sanity = 7,
     /// malloc failed
-    NoMem = 8,
+    NoMemory = 8,
     /// problem with user-supplied function
-    BadFunc = 9,
+    BadFunction = 9,
     /// iterative process is out of control
     RunAway = 10,
     /// exceeded max number of iterations
-    MaxIter = 11,
+    MaxIteration = 11,
     /// tried to divide by zero
     ZeroDiv = 12,
     /// user specified an invalid tolerance
-    BadTol = 13,
+    BadTolerance = 13,
     /// failed to reach the specified tolerance
-    Tol = 14,
+    Tolerance = 14,
     /// underflow
-    UndrFlw = 15,
+    UnderFlow = 15,
     /// overflow
-    OvrFlw = 16,
+    OverFlow = 16,
     /// loss of accuracy
     Loss = 17,
     /// failed because of roundoff error
     Round = 18,
     /// matrix, vector lengths are not conformant
-    BadLen = 19,
+    BadLength = 19,
     /// matrix not square
-    NotSqr = 20,
+    NotSquare = 20,
     /// apparent singularity detected
-    Sing = 21,
+    Singularity = 21,
     /// integral or series is divergent
     Diverge = 22,
     /// requested feature is not supported by the hardware
-    Unsup = 23,
+    Unsupported = 23,
     /// requested feature not (yet) implemented
-    Unimpl = 24,
+    Unimplemented = 24,
     /// cache limit exceeded
     Cache = 25,
     /// table limit exceeded
     Table = 26,
     /// iteration is not making progress towards solution
-    NoProg = 27,
+    NoProgress = 27,
     /// jacobian evaluations are not improving the solution
-    NoProgJ = 28,
+    NoProgressJacobian = 28,
     /// cannot reach the specified tolerance in F
-    TolF = 29,
+    ToleranceF = 29,
     /// cannot reach the specified tolerance in X
-    TolX = 30,
+    ToleranceX = 30,
     /// cannot reach the specified tolerance in gradient
-    TolG = 31,
+    ToleranceG = 31,
     /// cannot reach the specified tolerance in gradient
     EOF = 32,
+}
+
+impl Value {
+    pub fn wrap(v: i32) -> Value {
+        match v {
+            -2 => Value::Continue,
+            -1 => Value::Failure,
+            0  => Value::Success,
+            1  => Value::Domain,
+            2  => Value::Range,
+            3  => Value::Fault,
+            4  => Value::Invalid,
+            5  => Value::Failed,
+            6  => Value::Factorization,
+            7  => Value::Sanity,
+            8  => Value::NoMemory,
+            9  => Value::BadFunction,
+            10 => Value::RunAway,
+            11 => Value::MaxIteration,
+            12 => Value::ZeroDiv,
+            13 => Value::BadTolerance,
+            14 => Value::Tolerance,
+            15 => Value::UnderFlow,
+            16 => Value::OverFlow,
+            17 => Value::Loss,
+            18 => Value::Round,
+            19 => Value::BadLength,
+            20 => Value::NotSquare,
+            21 => Value::Singularity,
+            22 => Value::Diverge,
+            23 => Value::Unsupported,
+            24 => Value::Unimplemented,
+            25 => Value::Cache,
+            26 => Value::Table,
+            27 => Value::NoProgress,
+            28 => Value::NoProgressJacobian,
+            29 => Value::ToleranceF,
+            30 => Value::ToleranceX,
+            31 => Value::ToleranceG,
+            32 => Value::EOF,
+            x  => panic!("Unknow value for Value enum: '{}'", x),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]

@@ -1422,7 +1422,7 @@ impl IntegrationWorkspace {
                 let file = file!();
                 "value of key does specify a known integration rule".with_c_str(|c_str|{
                     file.with_c_str(|c_file|{
-                        unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, ::Value::Inval as i32) }
+                        unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, ::Value::Invalid as i32) }
                     });
                 });
                 // this line is not used but just for compilation...
@@ -1526,7 +1526,7 @@ impl IntegrationWorkspace {
 
         unsafe {
             if limit > (*self.w).limit {
-                rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+                rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
             }
 
             if b < a {
@@ -1541,11 +1541,11 @@ impl IntegrationWorkspace {
             self.initialise(lower, higher);
 
             if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTol);
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTolerance);
             }
 
             if c == a || c == b {
-                rgsl_error!("cannot integrate with singularity on endpoint", ::Value::Inval);
+                rgsl_error!("cannot integrate with singularity on endpoint", ::Value::Invalid);
             }
 
             /* perform the first integration */
@@ -1565,7 +1565,7 @@ impl IntegrationWorkspace {
                 *result = sign * result0;
                 *abserr = abserr0;
 
-                rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIter);
+                rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIteration);
             }
 
             let mut area = result0;
@@ -1656,11 +1656,11 @@ impl IntegrationWorkspace {
                 rgsl_error!("roundoff error prevents tolerance from being achieved", ::Value::Round);
                 ::Value::Round
             } else if error_type == 3 {
-                rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Sing);
-                ::Value::Sing
+                rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Singularity);
+                ::Value::Singularity
             } else if iteration == limit {
-                rgsl_error!("maximum number of subdivisions reached", ::Value::MaxIter);
-                ::Value::MaxIter
+                rgsl_error!("maximum number of subdivisions reached", ::Value::MaxIteration);
+                ::Value::MaxIteration
             } else {
                 rgsl_error!("could not integrate function", ::Value::Failed);
                 ::Value::Failed
@@ -2010,15 +2010,15 @@ impl IntegrationQawsTable {
 
         unsafe {
             if limit > (*workspace.w).limit {
-                rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+                rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
             }
 
             if b <= a {
-                rgsl_error!("limits must form an ascending sequence, a < b", ::Value::Inval);
+                rgsl_error!("limits must form an ascending sequence, a < b", ::Value::Invalid);
             }
 
             if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTol);
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTolerance);
             }
 
             /* perform the first integration */
@@ -2062,7 +2062,7 @@ impl IntegrationQawsTable {
                 *result = result0;
                 *abserr = abserr0;
 
-                rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIter);
+                rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIteration);
             }
 
             let mut area = result0;
@@ -2144,11 +2144,11 @@ impl IntegrationQawsTable {
                 rgsl_error!("roundoff error prevents tolerance from being achieved", ::Value::Round);
                 ::Value::Round
             } else if error_type == 3 {
-                rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Sing);
-                ::Value::Sing
+                rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Singularity);
+                ::Value::Singularity
             } else if iteration == limit {
-                rgsl_error!("maximum number of subdivisions reached", ::Value::MaxIter);
-                ::Value::MaxIter
+                rgsl_error!("maximum number of subdivisions reached", ::Value::MaxIteration);
+                ::Value::MaxIteration
             } else {
                 rgsl_error!("could not integrate function", ::Value::Failed);
                 ::Value::Failed
@@ -2270,12 +2270,12 @@ impl IntegrationQawoTable {
             *abserr = 0f64;
 
             if limit > (*workspace.w).limit {
-                rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+                rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
             }
 
             /* Test on accuracy */
             if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTol);
+                rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTolerance);
             }
 
             /* Perform the first integration */
@@ -2299,7 +2299,7 @@ impl IntegrationQawoTable {
                 *result = result0;
                 *abserr = abserr0;
 
-                rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIter);
+                rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIteration);
             }
 
             /* Initialization */
@@ -2662,10 +2662,10 @@ impl CquadWorkspace {
         unsafe {
             /* Check for unreasonable accuracy demands */
             if epsabs < 0f64 || epsrel < 0f64 {
-                rgsl_error!("tolerances may not be negative", ::Value::BadTol);
+                rgsl_error!("tolerances may not be negative", ::Value::BadTolerance);
             }
             if epsabs <= 0f64 && epsrel < ::DBL_EPSILON {
-                rgsl_error!("unreasonable accuracy requirement", ::Value::BadTol);
+                rgsl_error!("unreasonable accuracy requirement", ::Value::BadTolerance);
             }
 
             /* Create the first interval. */
@@ -3259,10 +3259,10 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
     f_w.initialise(a, b);
 
     if unsafe { limit > (*w).limit } {
-        rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+        rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
     }
     if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-        rgsl_error!("tolerance cannot be achieved with given epsabs and epsrel", ::Value::BadTol);
+        rgsl_error!("tolerance cannot be achieved with given epsabs and epsrel", ::Value::BadTolerance);
     }
 
     // perform the first integration
@@ -3294,7 +3294,7 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIter);
+        rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIteration);
     }
 
     let mut area = result0;
@@ -3373,11 +3373,11 @@ fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, eps
         rgsl_error!("roundoff error prevents tolerance from being achieved", ::Value::Round);
         ::Value::Round
     } else if error_type == 3 {
-        rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Sing);
-        ::Value::Sing
+        rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Singularity);
+        ::Value::Singularity
     } else if iteration == limit {
-        rgsl_error!("maximum number of subdivisions reached", ::Value::MaxIter);
-        ::Value::MaxIter
+        rgsl_error!("maximum number of subdivisions reached", ::Value::MaxIteration);
+        ::Value::MaxIteration
     } else {
         rgsl_error!("could not integrate function", ::Value::Failed);
         ::Value::Failed
@@ -3600,16 +3600,16 @@ pub unsafe fn return_error(t_error_type: i32) -> ::Value {
     match error_type {
         0 => ::Value::Success,
         1 => {
-            rgsl_error!("number of iterations was insufficient", ::Value::MaxIter);
-            ::Value::MaxIter
+            rgsl_error!("number of iterations was insufficient", ::Value::MaxIteration);
+            ::Value::MaxIteration
         }
         2 => {
             rgsl_error!("cannot reach tolerance because of roundoff error", ::Value::Round);
             ::Value::Round
         }
         3 => {
-            rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Sing);
-            ::Value::Sing
+            rgsl_error!("bad integrand behavior found in the integration interval", ::Value::Singularity);
+            ::Value::Singularity
         }
         4 => {
             rgsl_error!("roundoff error detected in the extrapolation table", ::Value::Round);
@@ -3657,12 +3657,12 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
     *abserr = 0f64;
 
     if limit > (*w).limit {
-        rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+        rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
     }
 
     /* Test on accuracy */
     if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTol);
+        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTolerance);
     }
 
     /* Perform the first integration */
@@ -3686,7 +3686,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIter);
+        rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIteration);
     }
 
     /* Initialization */
@@ -3949,21 +3949,21 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
 
     /* Test on validity of parameters */
     if limit > (*w).limit {
-        rgsl_error!("iteration limit exceeds available workspace", ::Value::Inval);
+        rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
     }
 
     if pts.len() as usize > (*w).limit {
-        rgsl_error!("pts length exceeds size of workspace", ::Value::Inval);
+        rgsl_error!("pts length exceeds size of workspace", ::Value::Invalid);
     }
 
     if epsabs <= 0f64 && (epsrel < 50f64 * ::DBL_EPSILON || epsrel < 0.5e-28f64) {
-        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTol);
+        rgsl_error!("tolerance cannot be acheived with given epsabs and epsrel", ::Value::BadTolerance);
     }
 
     /* Check that the integration range and break points are an ascending sequence */
     for i in 0usize..(nint as usize) {
         if pts[i + 1] < pts[i] {
-            rgsl_error!("points are not in an ascending sequence", ::Value::Inval);
+            rgsl_error!("points are not in an ascending sequence", ::Value::Invalid);
         }
     }
 
@@ -4035,7 +4035,7 @@ unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs:
         *result = result0;
         *abserr = abserr0;
 
-        rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIter);
+        rgsl_error!("a maximum of one iteration was insufficient", ::Value::MaxIteration);
     }
 
     /* Initialization */
