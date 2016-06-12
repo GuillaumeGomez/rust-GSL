@@ -1296,7 +1296,7 @@ extern "C" {
     pub fn gsl_complex_arccoth(z: gsl_complex) -> gsl_complex;
 
     // ComplexFloat number functions
-    /*pub fn gsl_complex_float_arg(z: gsl_complex_float) -> c_float;
+    pub fn gsl_complex_float_arg(z: gsl_complex_float) -> c_float;
     pub fn gsl_complex_float_abs(z: gsl_complex_float) -> c_float;
     pub fn gsl_complex_float_abs2(z: gsl_complex_float) -> c_float;
     pub fn gsl_complex_float_logabs(z: gsl_complex_float) -> c_float;
@@ -1352,7 +1352,7 @@ extern "C" {
     pub fn gsl_complex_float_arctanh_real(z: c_float) -> gsl_complex_float;
     pub fn gsl_complex_float_arcsech(z: gsl_complex_float) -> gsl_complex_float;
     pub fn gsl_complex_float_arccsch(z: gsl_complex_float) -> gsl_complex_float;
-    pub fn gsl_complex_float_arccoth(z: gsl_complex_float) -> gsl_complex_float;*/
+    pub fn gsl_complex_float_arccoth(z: gsl_complex_float) -> gsl_complex_float;
 
     // Basis Splines
     pub fn gsl_bspline_alloc(k: size_t, nbreak: size_t) -> *mut gsl_bspline_workspace;
@@ -2599,9 +2599,30 @@ pub struct gsl_complex {
     pub data: [c_double; 2]
 }
 
+impl gsl_complex {
+    pub fn wrap(&self) -> ::ComplexF64 {
+        let mut c = ::ComplexF64 {
+            data: [0., 0.],
+        };
+        c.data[0] = self.data[0];
+        c.data[1] = self.data[1];
+        c
+    }
+}
+
 #[repr(C)]
 pub struct gsl_complex_float {
     pub data: [c_float; 2]
+}
+
+impl gsl_complex_float {
+    pub fn wrap(&self) -> ::ComplexF32 {
+        unsafe {
+            ::ComplexF32 {
+                data: ::std::mem::transmute(self.data),
+            }
+        }
+    }
 }
 
 #[repr(C)]
@@ -2697,6 +2718,38 @@ pub struct gsl_bspline_deriv_workspace {
     pub A: *mut gsl_matrix, // work matrix
     pub dB: *mut gsl_matrix // temporary derivative results
 }
+
+/*#[repr(C)]
+pub struct gsl_multifit_fsolver {
+    pub type_: *const gsl_multifit_fsolver_type,
+    pub function: *mut gsl_multifit_function,
+    pub x: *mut gsl_vector,
+    pub f: *mut gsl_vector,
+    pub dx: *mut gsl_vector,
+    pub state: *mut c_void,
+}
+
+#[repr(C)]
+pub struct gsl_multifit_fsolver_type {
+    pub name: *const c_char,
+    pub size: size_t,
+    pub alloc: Option<extern "C" fn(state: *mut c_void, n: size_t, p: size_t) -> c_int>,
+    pub set: Option<extern "C" fn(state: *mut c_void, function: *mut gsl_multifit_function,
+                                  x: *mut gsl_vector, f: *mut gsl_vector,
+                                  dx: *mut gsl_vector) -> c_int>,
+    pub iterate: Option<extern "C" fn(state: *mut c_void, function: *mut gsl_multifit_function,
+                                      x: *mut gsl_vector, f: *mut gsl_vector,
+                                      dx: *mut gsl_vector) -> c_int>,
+    pub free: Option<extern "C" fn(state: *mut c_void)>,
+}
+
+#[repr(C)]
+pub struct gsl_multifit_function {
+    f: Option<extern "C" fn(x: *mut gsl_vector, params: *mut c_void, f: *mut gsl_vector) -> c_int>,
+    n: size_t,
+    p: size_t,
+    params: *mut c_void,
+}*/
 
 pub type rng_set = Option<extern "C" fn(state: *mut c_void, seed: c_ulong)>;
 pub type rng_get = Option<extern "C" fn(state: *mut c_void) -> c_ulong>;

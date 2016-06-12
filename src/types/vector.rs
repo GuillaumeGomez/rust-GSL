@@ -295,8 +295,12 @@ impl VectorF32 {
     }
 
     /// This function returns the minimum and maximum values in the self vector, storing them in min_out and max_out.
-    pub fn minmax(&self, min_out: &mut f32, max_out: &mut f32) {
-        unsafe { ffi::gsl_vector_float_minmax(self.vec, min_out, max_out) }
+    pub fn minmax(&self) -> (f32, f32) {
+        let mut min_out = 0.;
+        let mut max_out = 0.;
+
+        unsafe { ffi::gsl_vector_float_minmax(self.vec, &mut min_out, &mut max_out); }
+        (min_out, max_out)
     }
 
     /// This function returns the index of the maximum value in the self vector.
@@ -578,8 +582,12 @@ impl VectorF64 {
     }
 
     /// This function returns the minimum and maximum values in the self vector, storing them in min_out and max_out.
-    pub fn minmax(&self, min_out: &mut f64, max_out: &mut f64) {
-        unsafe { ffi::gsl_vector_minmax(self.vec, min_out, max_out) }
+    pub fn minmax(&self) -> (f64, f64) {
+        let mut min_out = 0.;
+        let mut max_out = 0.;
+
+        unsafe { ffi::gsl_vector_minmax(self.vec, &mut min_out, &mut max_out); }
+        (min_out, max_out)
     }
 
     /// This function returns the index of the maximum value in the self vector.

@@ -498,6 +498,77 @@ unsafe extern "C" fn monte_trampoline(x: *mut c_double, dim: size_t, param: *mut
 }
 
 
+// The following tests have been made and tested against the following C code:
+//
+// ```
+// double
+// g (double *k, size_t dim, void *params)
+// {
+//   (void)(dim);
+//   (void)(params);
+//   double A = 1.0 / (M_PI * M_PI * M_PI);
+//   return A / (1.0 - cos (k[0]) * cos (k[1]) * cos (k[2]));
+// }
+//
+// void
+// display_results (char *title, double result, double error)
+// {
+//   printf ("%s ==================\n", title);
+//   printf ("result = % .6f\n", result);
+//   printf ("sigma  = % .6f\n", error);
+//   printf ("exact  = % .6f\n", exact);
+//   printf ("error  = % .6f = %.2g sigma\n", result - exact,
+//       fabs (result - exact) / error);
+// }
+//
+// int
+// main (void)
+// {
+//   double res, err;
+//
+//   double xl[3] = { 0, 0, 0 };
+//   double xu[3] = { M_PI, M_PI, M_PI };
+//
+//   const gsl_rng_type *T;
+//   gsl_rng *r;
+//
+//   gsl_monte_function G = { &g, 3, 0 };
+//
+//   size_t calls = 500000;
+//
+//   gsl_rng_env_setup ();
+//
+//   T = gsl_rng_default;
+//   r = gsl_rng_alloc (T);
+//
+//   {
+//     gsl_monte_vegas_state *s = gsl_monte_vegas_alloc (3);
+//
+//     gsl_monte_vegas_integrate (&G, xl, xu, 3, 10000, r, s,
+//                    &res, &err);
+//     display_results ("vegas warm-up", res, err);
+//
+//     printf ("converging...\n");
+//
+//         do
+//       {
+//         gsl_monte_vegas_integrate (&G, xl, xu, 3, calls/5, r, s,
+//                        &res, &err);
+//         printf ("result = % .6f sigma = % .6f "
+//             "chisq/dof = %.1f\n", res, err, gsl_monte_vegas_chisq (s));
+//       }
+//     while (fabs (gsl_monte_vegas_chisq (s) - 1.0) > 0.5);
+//
+//     display_results ("vegas final", res, err);
+//
+//     gsl_monte_vegas_free (s);
+//   }
+//
+//   gsl_rng_free (r);
+//
+//   return 0;
+// }
+// ```
 #[test]
 fn plain() {
     use std::f64::consts::PI;

@@ -42,6 +42,53 @@ These routines provide a high level wrapper that combine the iteration and conve
 use ffi;
 use libc::c_void;
 
+/*pub struct MultiFitFSolver {
+    s: *mut ffi::gsl_multifit_fsolver,
+}
+
+impl MultiFitFSolver {
+    /// This function returns a pointer to a newly allocated instance of a solver of type T for n
+    /// observations and p parameters. The number of observations n must be greater than or equal to
+    /// parameters p.
+    ///
+    /// If there is insufficient memory to create the solver then the function returns a null
+    /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    pub fn new(t: *mut gsl_multifit_fsolver_type, n: usize, p: usize) -> Option<MultiFitFSolver> {
+        let tmp = unsafe { ffi::gsl_multifit_fsolver_alloc(ffi::unwrap(t), n, p) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(MultiFitFSolver {
+                s: tmp
+            })
+        }
+    }
+
+    pub fn set(&self, gsl_multifit_function * f, const gsl_vector * x) -> ::Value {
+        unsafe { gsl_multifit_fsolver_set(self.s, gsl_multifit_function * f, const gsl_vector * x)
+    }
+}
+
+impl Drop for MultiFitFSolver {
+    fn drop(&mut self) {
+        unsafe { ffi::gsl_multifit_fsolver_free(self.s) };
+        self.s = ::std::ptr::null_mut();
+    }
+}
+
+impl ffi::FFI<ffi::gsl_multifit_fsolver> for MultiFitFSolver {
+    fn wrap(s: *mut ffi::gsl_multifit_fsolver) -> MultiFitFSolver {
+        MultiFitFSolver {
+            s: s
+        }
+    }
+
+    fn unwrap(s: &MultiFitFSolver) -> *mut ffi::gsl_multifit_fsolver {
+        s.s
+    }
+}*/
+
 pub struct MultiFitFunction<'r, T:'r> {
     pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,
     /// number of functions
