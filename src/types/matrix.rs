@@ -99,6 +99,7 @@ impl MatrixView {
     /// 
     /// The function gsl_matrix_const_view_array is equivalent to gsl_matrix_view_array but can be used for matrices which are declared const.
     pub fn from_array(base: &mut [f64], n1: usize, n2: usize) -> MatrixView {
+        assert!(n1 * n2 <= base.len(), "n1 * n2 cannot be longer than base");
         unsafe {
             MatrixView {
                 mat: ffi::gsl_matrix_view_array(base.as_mut_ptr(), n1, n2).mat
