@@ -500,7 +500,7 @@ unsafe extern "C" fn monte_trampoline(x: *mut c_double, dim: size_t, param: *mut
 
 // The following tests have been made and tested against the following C code:
 //
-// ```
+// ```ignore
 // double
 // g (double *k, size_t dim, void *params)
 // {
@@ -521,9 +521,7 @@ unsafe extern "C" fn monte_trampoline(x: *mut c_double, dim: size_t, param: *mut
 //       fabs (result - exact) / error);
 // }
 //
-// int
-// main (void)
-// {
+// int main(void) {
 //   double res, err;
 //
 //   double xl[3] = { 0, 0, 0 };

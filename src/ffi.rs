@@ -1907,7 +1907,7 @@ extern "C" {
     pub fn gsl_dht_init(t: *mut gsl_dht, nu: c_double, xmax: c_double) -> enums::Value;
     pub fn gsl_dht_new(size: size_t, nu: c_double, xmax: c_double) -> *mut gsl_dht;
     pub fn gsl_dht_free(t: *mut gsl_dht);
-    pub fn gsl_dht_apply(t: *const gsl_dht, f_in: *mut c_double, f_out: *mut c_double) -> enums::Value;
+    pub fn gsl_dht_apply(t: *const gsl_dht, f_in: *const c_double, f_out: *mut c_double) -> enums::Value;
     pub fn gsl_dht_x_sample(t: *const gsl_dht, n: c_int) -> c_double;
     pub fn gsl_dht_k_sample(t: *const gsl_dht, n: c_int) -> c_double;
 
