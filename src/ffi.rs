@@ -1235,6 +1235,7 @@ extern "C" {
         result_array: *mut c_double) -> enums::Value;
 
     // Complex number functions
+    // https://www.gnu.org/software/gsl/manual/html_node/Representation-of-complex-numbers.html#Representation-of-complex-numbers
     pub fn gsl_complex_rect(x: c_double, y: c_double) -> gsl_complex;
     pub fn gsl_complex_polar(r: c_double, theta: c_double) -> gsl_complex;
     pub fn gsl_complex_arg(z: gsl_complex) -> c_double;
@@ -1296,7 +1297,7 @@ extern "C" {
     pub fn gsl_complex_arccoth(z: gsl_complex) -> gsl_complex;
 
     // ComplexFloat number functions
-    pub fn gsl_complex_float_arg(z: gsl_complex_float) -> c_float;
+    /*pub fn gsl_complex_float_arg(z: gsl_complex_float) -> c_float;
     pub fn gsl_complex_float_abs(z: gsl_complex_float) -> c_float;
     pub fn gsl_complex_float_abs2(z: gsl_complex_float) -> c_float;
     pub fn gsl_complex_float_logabs(z: gsl_complex_float) -> c_float;
@@ -1352,7 +1353,7 @@ extern "C" {
     pub fn gsl_complex_float_arctanh_real(z: c_float) -> gsl_complex_float;
     pub fn gsl_complex_float_arcsech(z: gsl_complex_float) -> gsl_complex_float;
     pub fn gsl_complex_float_arccsch(z: gsl_complex_float) -> gsl_complex_float;
-    pub fn gsl_complex_float_arccoth(z: gsl_complex_float) -> gsl_complex_float;
+    pub fn gsl_complex_float_arccoth(z: gsl_complex_float) -> gsl_complex_float;*/
 
     // Basis Splines
     pub fn gsl_bspline_alloc(k: size_t, nbreak: size_t) -> *mut gsl_bspline_workspace;
@@ -2599,30 +2600,9 @@ pub struct gsl_complex {
     pub data: [c_double; 2]
 }
 
-impl gsl_complex {
-    pub fn wrap(&self) -> ::ComplexF64 {
-        let mut c = ::ComplexF64 {
-            data: [0., 0.],
-        };
-        c.data[0] = self.data[0];
-        c.data[1] = self.data[1];
-        c
-    }
-}
-
 #[repr(C)]
 pub struct gsl_complex_float {
     pub data: [c_float; 2]
-}
-
-impl gsl_complex_float {
-    pub fn wrap(&self) -> ::ComplexF32 {
-        unsafe {
-            ::ComplexF32 {
-                data: ::std::mem::transmute(self.data),
-            }
-        }
-    }
 }
 
 #[repr(C)]
