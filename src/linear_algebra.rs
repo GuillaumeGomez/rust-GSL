@@ -164,6 +164,8 @@ http://www.netlib.org/lapack/ in the lawns or lawnspdf directories.
 use ffi;
 use enums;
 
+use types::complex::FFFI;
+
 /// Factorise a general N x N matrix A into,
 ///
 ///  P A = L U
@@ -272,9 +274,7 @@ pub fn LU_det(lu: &::MatrixF64, signum: i32) -> f64 {
 /// This function computes the determinant of a matrix A from its LU decomposition, LU. The determinant is computed as the product of the
 /// diagonal elements of U and the sign of the row permutation signum.
 pub fn complex_LU_det(lu: &::MatrixComplexF64, signum: i32) -> ::ComplexF64 {
-    ::ComplexF64 {
-        data: unsafe { ffi::gsl_linalg_complex_LU_det(ffi::FFI::unwrap(lu), signum).data }
-    }
+    unsafe { ffi::gsl_linalg_complex_LU_det(ffi::FFI::unwrap(lu), signum).wrap() }
 }
 
 /// These functions compute the logarithm of the absolute value of the determinant of a matrix A, \ln|\det(A)|, from its LU decomposition,
@@ -296,9 +296,7 @@ pub fn LU_sgndet(lu: &::MatrixF64, signum: i32) -> f64 {
 
 /// This function computes the sign or phase factor of the determinant of a matrix A, \det(A)/|\det(A)|, from its LU decomposition, LU.
 pub fn complex_LU_sgndet(lu: &::MatrixComplexF64, signum: i32) -> ::ComplexF64 {
-    ::ComplexF64 {
-        data: unsafe { ffi::gsl_linalg_complex_LU_sgndet(ffi::FFI::unwrap(lu), signum).data }
-    }
+    unsafe { ffi::gsl_linalg_complex_LU_sgndet(ffi::FFI::unwrap(lu), signum).wrap() }
 }
 
 /// This function factorizes the M-by-N matrix A into the QR decomposition A = Q R. On output the diagonal and upper triangular part of the
