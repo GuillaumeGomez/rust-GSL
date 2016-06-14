@@ -30,12 +30,12 @@ fn main() {
 
     println!("\n=== Complex tests ===");
     let mut tmp_complex : rgsl::ComplexF64 = Default::default();
-    tmp_complex.data[0] = -1f64;
+    tmp_complex.dat[0] = -1f64;
     println!("abs : {}", tmp_complex.abs());
     println!("add_real : {:?}", tmp_complex.add_real(14f64));
-    tmp_complex.data[0] = 3f64;
+    tmp_complex.dat[0] = 3f64;
     println!("sqrt : {:?}", tmp_complex.sqrt());
-    tmp_complex.data[1] = 14f64;
+    tmp_complex.dat[1] = 14f64;
     println!("sqrt : {:?}", tmp_complex.sqrt());
 
     println!("\n=== Modules tests ===");

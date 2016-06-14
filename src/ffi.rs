@@ -2577,7 +2577,7 @@ pub struct gsl_vector_complex_float {
 #[repr(C)]
 pub struct gsl_block_complex_float {
     pub size: size_t,
-    pub data: *mut c_float
+    pub data: *mut c_float,
 }
 
 #[repr(C)]
@@ -2586,23 +2586,23 @@ pub struct gsl_vector_complex {
     pub stride: size_t,
     pub data: *mut c_double,
     pub block: *mut gsl_block_complex,
-    pub owner: c_int
+    pub owner: c_int,
 }
 
 #[repr(C)]
 pub struct gsl_block_complex {
     pub size: size_t,
-    pub data: *mut c_double
+    pub data: *mut c_double,
 }
 
 #[repr(C)]
 pub struct gsl_complex {
-    pub data: [c_double; 2]
+    pub dat: [c_double; 2],
 }
 
 #[repr(C)]
 pub struct gsl_complex_float {
-    pub data: [c_float; 2]
+    pub dat: [c_float; 2],
 }
 
 #[repr(C)]
@@ -2612,12 +2612,12 @@ pub struct gsl_matrix {
     pub tda: size_t,
     pub data: *mut c_double,
     pub block: *mut gsl_block,
-    pub owner: c_int
+    pub owner: c_int,
 }
 
 #[repr(C)]
 pub struct gsl_matrix_view {
-    pub mat: gsl_matrix
+    pub mat: gsl_matrix,
 }
 
 #[repr(C)]
@@ -2627,7 +2627,7 @@ pub struct gsl_matrix_float {
     pub tda: size_t,
     pub data: *mut c_float,
     pub block: *mut gsl_block_float,
-    pub owner: c_int
+    pub owner: c_int,
 }
 
 #[repr(C)]
