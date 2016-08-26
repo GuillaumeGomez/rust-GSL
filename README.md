@@ -37,7 +37,7 @@ You can access the __rgsl__ documentation locally, just build it:
 Then open this file with an internet browser:
 `file:///{rgsl_location}/target/doc/rgsl/index.html`
 
-You can also access the latest build of the documentation via the internet [here](http://rust-ci.org/GuillaumeGomez/rust-GSL/doc/rgsl/).
+You can also access the latest build of the documentation via the internet [here](https://beta.docs.rs/GSL/0.4.28/rgsl/).
 
 ## License
 __rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL license](http://www.gnu.org/copyleft/gpl.html).
