@@ -150,15 +150,11 @@ fn main() {
 
     s.set(&mut f, &x.vector());
 
-    print_state(iter, &mut s);
-
     loop {
         iter += 1;
         status = s.iterate();
 
         println!("status = {}", rgsl::error::str_error(status));
-
-        print_state(iter, &mut s);
 
         if status != rgsl::Value::Success {
             break;
@@ -185,8 +181,4 @@ fn main() {
     }
 
     println!("status = {}", rgsl::error::str_error(status));
-}
-
-fn print_state<T>(iter: usize, s: &mut rgsl::MultiFitFdfSolver<T>) {
-    println!("iter: {:3} x = {:.8} {:.8} {:.8} |f(x)| = {}", iter, s.x.get(0), s.x.get(1), s.x.get(2), rgsl::blas::level1::dnrm2(&s.f));
 }

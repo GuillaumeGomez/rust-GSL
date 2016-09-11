@@ -142,7 +142,7 @@ impl VectorView {
         unsafe {
             VectorF64 {
                 vec: ::std::mem::transmute(&mut self.v),
-                can_free: false
+                can_free: false,
             }
         }
     }
@@ -150,7 +150,7 @@ impl VectorView {
 
 pub struct VectorF32 {
     vec: *mut ffi::gsl_vector_float,
-    can_free: bool
+    can_free: bool,
 }
 
 impl VectorF32 {
@@ -163,7 +163,7 @@ impl VectorF32 {
         } else {
             Some(VectorF32 {
                 vec: tmp,
-                can_free: true
+                can_free: true,
             })
         }
     }
@@ -176,7 +176,7 @@ impl VectorF32 {
         } else {
             let v = VectorF32 {
                 vec: tmp,
-                can_free: true
+                can_free: true,
             };
             let mut pos = 0usize;
 

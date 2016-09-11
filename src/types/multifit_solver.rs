@@ -5,44 +5,67 @@
 /*!
 #Nonlinear Least-Squares Fitting
 
-This chapter describes functions for multidimensional nonlinear least-squares fitting. The library provides low level components for a
-variety of iterative solvers and convergence tests. These can be combined by the user to achieve the desired solution, with full access to
-the intermediate steps of the iteration. Each class of methods uses the same framework, so that you can switch between solvers at runtime
-without needing to recompile your program. Each instance of a solver keeps track of its own state, allowing the solvers to be used in
-multi-threaded programs.
+This chapter describes functions for multidimensional nonlinear least-squares fitting. The library
+provides low level components for a variety of iterative solvers and convergence tests. These can
+be combined by the user to achieve the desired solution, with full access to the intermediate steps
+of the iteration. Each class of methods uses the same framework, so that you can switch between
+solvers at runtime without needing to recompile your program. Each instance of a solver keeps track
+of its own state, allowing the solvers to be used in multi-threaded programs.
 
 ##Overview
 
-The problem of multidimensional nonlinear least-squares fitting requires the minimization of the squared residuals of n functions, f_i, in
-p parameters, x_i,
+The problem of multidimensional nonlinear least-squares fitting requires the minimization of the
+squared residuals of n functions, f_i, in p parameters, x_i,
 
 \Phi(x) = (1/2) || F(x) ||^2
         = (1/2) \sum_{i=1}^{n} f_i(x_1, ..., x_p)^2
 All algorithms proceed from an initial guess using the linearization,
 
 \psi(p) = || F(x+p) || ~=~ || F(x) + J p ||
-where x is the initial point, p is the proposed step and J is the Jacobian matrix J_{ij} = d f_i / d x_j. Additional strategies are used to
-enlarge the region of convergence. These include requiring a decrease in the norm ||F|| on each step or using a trust region to avoid steps
-which fall outside the linear regime.
+where x is the initial point, p is the proposed step and J is the Jacobian matrix J_{ij} = d f_i /
+d x_j. Additional strategies are used to enlarge the region of convergence. These include requiring
+a decrease in the norm ||F|| on each step or using a trust region to avoid steps which fall outside
+the linear regime.
 
-To perform a weighted least-squares fit of a nonlinear model Y(x,t) to data (t_i, y_i) with independent Gaussian errors \sigma_i, use
-function components of the following form,
+To perform a weighted least-squares fit of a nonlinear model Y(x,t) to data (t_i, y_i) with
+independent Gaussian errors \sigma_i, use function components of the following form,
 
 f_i = (Y(x, t_i) - y_i) / \sigma_i
-Note that the model parameters are denoted by x in this chapter since the non-linear least-squares algorithms are described geometrically
-(i.e. finding the minimum of a surface). The independent variable of any data to be fitted is denoted by t.
+Note that the model parameters are denoted by x in this chapter since the non-linear least-squares
+algorithms are described geometrically (i.e. finding the minimum of a surface). The independent
+variable of any data to be fitted is denoted by t.
 
-With the definition above the Jacobian is J_{ij} =(1 / \sigma_i) d Y_i / d x_j, where Y_i = Y(x,t_i).
+With the definition above the Jacobian is J_{ij} =(1 / \sigma_i) d Y_i / d x_j, where Y_i =
+Y(x,t_i).
 
 ##High Level Driver
 
-These routines provide a high level wrapper that combine the iteration and convergence testing for easy use.
+These routines provide a high level wrapper that combine the iteration and convergence testing for
+easy use.
 !*/
 
 use ffi;
 use libc::c_void;
+use VectorF64;
+use std::mem::transmute;
 
-/*pub struct MultiFitFSolver {
+pub struct MultiFitFSolverType {
+    s: *mut ffi::gsl_multifit_fsolver_type,
+}
+
+impl ffi::FFI<ffi::gsl_multifit_fsolver_type> for MultiFitFSolverType {
+    fn wrap(r: *mut ffi::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
+        MultiFitFSolverType {
+            s: r,
+        }
+    }
+
+    fn unwrap(s: &MultiFitFSolverType) -> *mut ffi::gsl_multifit_fsolver_type {
+        s.s
+    }
+}
+
+pub struct MultiFitFSolver {
     s: *mut ffi::gsl_multifit_fsolver,
 }
 
@@ -53,20 +76,20 @@ impl MultiFitFSolver {
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
-    pub fn new(t: *mut gsl_multifit_fsolver_type, n: usize, p: usize) -> Option<MultiFitFSolver> {
-        let tmp = unsafe { ffi::gsl_multifit_fsolver_alloc(ffi::unwrap(t), n, p) };
+    pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
+        let tmp = unsafe { ffi::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap(t), n, p) };
 
         if tmp.is_null() {
             None
         } else {
             Some(MultiFitFSolver {
-                s: tmp
+                s: tmp,
             })
         }
     }
 
-    pub fn set(&self, gsl_multifit_function * f, const gsl_vector * x) -> ::Value {
-        unsafe { gsl_multifit_fsolver_set(self.s, gsl_multifit_function * f, const gsl_vector * x)
+    pub fn set(&self, f: &mut MultiFitFunction, x: &VectorF64) -> ::Value {
+        unsafe { ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap(x)) }
     }
 }
 
@@ -87,33 +110,44 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver> for MultiFitFSolver {
     fn unwrap(s: &MultiFitFSolver) -> *mut ffi::gsl_multifit_fsolver {
         s.s
     }
-}*/
+}
 
-pub struct MultiFitFunction<'r, T:'r> {
-    pub f: fn(x: &::VectorF64, params: &mut T, f: &::VectorF64) -> ::Value,
+#[repr(C)]
+pub struct MultiFitFunction {
+    pub f: Option<extern "C" fn(x: *const ffi::gsl_vector, params: *mut c_void,
+                                f: *mut ffi::gsl_vector) -> ::Value>,
     /// number of functions
     pub n: usize,
     /// number of independent variables
     pub p: usize,
-    pub params: &'r mut T
+    pub params: *mut c_void,
 }
 
-pub struct MultiFitFdfSolver<'r, T:'r> {
-    _type: &'r MultiFitFdfSolverType<T>,
+/*impl MultiFitFunction {
+    pub fn new() -> MultiFitFunction {
+        ;
+    }
+}
+*/
+pub struct MultiFitFdfSolver/*<'r, T:'r>*/ {
+    /*_type: *mut ffi::gsl_multifit_fsolver_type,
     fdf: *mut c_void, //MultiFitFunctionFdf<'r, T>,
     pub x: ::VectorF64,
     pub f: ::VectorF64,
     pub j: ::MatrixF64,
     pub dx: ::VectorF64,
-    state: LmderStateT
+    state: LmderStateT,*/
+    intern: *mut ffi::gsl_multifit_fdfsolver,
 }
 
-impl<'r, T> MultiFitFdfSolver<'r, T> {
-    /// This function returns a pointer to a newly allocated instance of a solver of type T for n observations and p parameters. The number
-    /// of observations n must be greater than or equal to parameters p.
-    pub fn new(_type: &'r MultiFitFdfSolverType<T>, n: usize, p: usize) -> Option<MultiFitFdfSolver<'r, T>> {
-        let mut r = MultiFitFdfSolver {
-            _type: _type,
+impl/*<'r, T>*/ MultiFitFdfSolver/*<'r, T>*/ {
+    /// This function returns a pointer to a newly allocated instance of a solver of type T for n
+    /// observations and p parameters. The number of observations n must be greater than or equal
+    /// to parameters p.
+    pub fn new(_type: &/*'r*/ MultiFitFdfSolverType/*<T>*/, n: usize, p: usize)
+               -> Option<MultiFitFdfSolver/*<'r, T>*/> {
+        /*let mut r = MultiFitFdfSolver {
+            _type: _type.intern,
             fdf: ::std::ptr::null_mut(),
             x: ::VectorF64::new(p).unwrap(),
             f: ::VectorF64::new(n).unwrap(),
@@ -121,16 +155,29 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
             dx: ::VectorF64::new(p).unwrap(),
             state: LmderStateT::new(n, p)
         };
-        if ((*_type).alloc)(&mut r.state, n, p) == ::Value::Success {
+        if ((*r._type).alloc.unwrap())(&mut r.state, n, p) == ::Value::Success {
             Some(r)
         } else {
             None
+        }*/
+        let s = unsafe {
+            ffi::gsl_multifit_fdfsolver_alloc(_type.intern as *const ffi::gsl_multifit_fdfsolver_type,
+                                              n, p)
+        };
+        if s.is_null() {
+            None
+        } else {
+            Some(MultiFitFdfSolver {
+                intern: s,
+            })
         }
     }
 
-    /// This function initializes, or reinitializes, an existing solver s to use the function f and the initial guess x.
-    pub fn set(&mut self, f: &mut MultiFitFunctionFdf<'r, T>, x: &::VectorF64) -> ::Value {
-        if self.f.len() != f.n {
+    /// This function initializes, or reinitializes, an existing solver s to use the function f and
+    /// the initial guess x.
+    pub fn set(&mut self, f: &mut MultiFitFunctionFdf/*<'r, T>*/, x: &::VectorF64) -> ::Value {
+        unsafe { ffi::gsl_multifit_fdfsolver_set(self.intern, f.intern, ffi::FFI::unwrap(x)) }
+        /*if self.f.len() != f.n {
             rgsl_error!("function size does not match solver", ::Value::BadLength);
             return ::Value::BadLength;
         }
@@ -144,32 +191,41 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
         self.x.copy_from(x);
 
         unsafe {
-            (self._type.set)(&mut self.state, ::std::mem::transmute(self.fdf), &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
-        }
+            (self._type.set)(&mut self.state, ::std::mem::transmute(self.fdf), &mut self.x,
+                             &mut self.f, &mut self.j, &mut self.dx)
+        }*/
     }
 
-    pub fn name(&self) -> &'static str {
-        self._type.name
-    }
-
-    /// This function performs a single iteration of the solver s. If the iteration encounters an unexpected problem then an error code
-    /// will be returned. The solver maintains a current estimate of the best-fit parameters at all times.
-    pub fn iterate(&mut self) -> ::Value {
+    pub fn name(&self) -> String {
         unsafe {
-            (self._type.iterate)(&mut self.state, ::std::mem::transmute(self.fdf), &mut self.x, &mut self.f, &mut self.j, &mut self.dx)
+            let tmp = ffi::gsl_multifit_fdfsolver_name(self.intern);
+
+            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
+    }
+
+    /// This function performs a single iteration of the solver s. If the iteration encounters an
+    /// unexpected problem then an error code will be returned. The solver maintains a current
+    /// estimate of the best-fit parameters at all times.
+    pub fn iterate(&mut self) -> ::Value {
+        unsafe { ffi::gsl_multifit_fdfsolver_iterate(self.intern) }
+        /*unsafe {
+            (self._type.iterate)(&mut self.state, ::std::mem::transmute(self.fdf), &mut self.x,
+                                 &mut self.f, &mut self.j, &mut self.dx)
+        }*/
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
-    pub fn position(&'r self) -> &'r ::VectorF64 {
-        &self.x
+    pub fn position(&self) -> ::VectorF64 {
+        unsafe { ffi::FFI::wrap(ffi::gsl_multifit_fdfsolver_position(self.intern)) }
     }
 
-    /// These functions iterate the solver s for a maximum of maxiter iterations. After each iteration, the system is tested for convergence
-    /// using gsl_multifit_test_delta with the error tolerances epsabs and epsrel.
+    /// These functions iterate the solver s for a maximum of maxiter iterations. After each
+    /// iteration, the system is tested for convergence using gsl_multifit_test_delta with the
+    /// error tolerances epsabs and epsrel.
     #[allow(unused_assignments)]
     pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> ::Value {
-        let mut status = ::Value::Success;
+        /*let mut status = ::Value::Success;
         let mut iter = 0usize;
 
         loop {
@@ -187,57 +243,71 @@ impl<'r, T> MultiFitFdfSolver<'r, T> {
             }
         }
 
-        status
+        status*/
+        ::Value::Success
     }
 }
 
-impl<'r, T> Drop for MultiFitFdfSolver<'r, T> {
+impl Drop for MultiFitFdfSolver {
     fn drop(&mut self) {
-        //self.s = ::std::ptr::null_mut();
+        if !self.intern.is_null() {
+            unsafe { ffi::gsl_multifit_fdfsolver_free(self.intern); }
+            self.intern = ::std::ptr::null_mut();
+        }
     }
 }
 
 #[allow(dead_code)]
-pub struct MultiFitFdfSolverType<T> {
-    name: &'static str,
+pub struct MultiFitFdfSolverType/*<T>*/ {
+    /*name: &'static str,
     //size: usize,
     alloc: fn(state: &mut LmderStateT, n: usize, p: usize) -> ::Value,
-    set: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, j: &mut ::MatrixF64,
+    set: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+            f: &mut ::VectorF64, j: &mut ::MatrixF64,
         dx: &mut ::VectorF64) -> ::Value,
-    iterate: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64,
-        j: &mut ::MatrixF64, dx: &mut ::VectorF64) -> ::Value,
-    free: fn(state: &mut LmderStateT)
+    iterate: fn(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+                f: &mut ::VectorF64, j: &mut ::MatrixF64, dx: &mut ::VectorF64) -> ::Value,
+    free: fn(state: &mut LmderStateT),*/
+    intern: *mut ffi::gsl_multifit_fdfsolver_type,
 }
 
-impl<T> MultiFitFdfSolverType<T> {
-    pub fn lmder() -> MultiFitFdfSolverType<T> {
-        MultiFitFdfSolverType {
+impl/*<T>*/ MultiFitFdfSolverType/*<T>*/ {
+    pub fn lmder() -> MultiFitFdfSolverType/*<T>*/ {
+        /*MultiFitFdfSolverType {
             name: "lmder",
             alloc: lmder_alloc,
             set: lmder_set,
             iterate: lmder_iterate,
-            free: lmder_free
+            free: lmder_free,
+        }*/
+        MultiFitFdfSolverType {
+            intern: ffi::gsl_multifit_fdfsolver_lmder,
         }
     }
 
-    pub fn lmsder() -> MultiFitFdfSolverType<T> {
-        MultiFitFdfSolverType {
+    pub fn lmsder() -> MultiFitFdfSolverType/*<T>*/ {
+        /*MultiFitFdfSolverType {
             name: "lmsder",
             alloc: lmder_alloc,
             set: lmsder_set,
             iterate: lmder_iterate,
-            free: lmder_free
+            free: lmder_free,
+        }*/
+        MultiFitFdfSolverType {
+            intern: ffi::gsl_multifit_fdfsolver_lmsder,
         }
     }
 }
 
-pub struct MultiFitFunctionFdf<'r, T:'r> {
-    pub f: fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value,
+pub struct MultiFitFunctionFdf/*<'r, T:'r>*/ {
+    /*pub f: fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64) -> ::Value,
     pub df: Option<fn(x: &::VectorF64, params: &mut T, df: &mut ::MatrixF64) -> ::Value>,
-    pub fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64, df: &mut ::MatrixF64) -> ::Value>,
+    pub fdf: Option<fn(x: &::VectorF64, params: &mut T, f: &mut ::VectorF64,
+                       df: &mut ::MatrixF64) -> ::Value>,
     pub n: usize,
     pub p: usize,
-    pub params: &'r mut T
+    pub params: &'r mut T*/
+    intern: *mut ffi::gsl_multifit_function_fdf,
 }
 
 #[allow(dead_code)]
@@ -260,7 +330,7 @@ struct LmderStateT {
     rptdx: ::VectorF64,
     w: ::VectorF64,
     work1: ::VectorF64,
-    perm: ::Permutation
+    perm: ::Permutation,
 }
 
 impl LmderStateT {
@@ -425,26 +495,27 @@ fn lmder_free(state: &mut LmderStateT) {
     ::std::mem::drop(state.r);*/
 }
 
-fn lmder_set<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
-    dx: &mut ::VectorF64) -> ::Value {
+/*fn lmder_set<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+                f: &mut ::VectorF64, J: &mut ::MatrixF64, dx: &mut ::VectorF64) -> ::Value {
     set(vstate, fdf, x, f, J, dx, 0)
 }
 
-fn lmsder_set<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
-    dx: &mut ::VectorF64) -> ::Value {
+fn lmsder_set<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+                 f: &mut ::VectorF64, J: &mut ::MatrixF64, dx: &mut ::VectorF64) -> ::Value {
     set(vstate, fdf, x, f, J, dx, 1)
 }
 
-fn lmder_iterate<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
-    dx: &mut ::VectorF64) -> ::Value {
+fn lmder_iterate<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+                    f: &mut ::VectorF64, J: &mut ::MatrixF64, dx: &mut ::VectorF64) -> ::Value {
     iterate(vstate, fdf, x, f, J, dx, 0)
 }
 
 #[allow(dead_code)]
-fn lmsder_iterate<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
-    dx: &mut ::VectorF64) -> ::Value {
+fn lmsder_iterate<T>(vstate: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>,
+                     x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
+                     dx: &mut ::VectorF64) -> ::Value {
     iterate(vstate, fdf, x, f, J, dx, 1)
-}
+}*/
 
 fn compute_diag(J: &::MatrixF64, diag: &mut ::VectorF64) {
     let n = J.size1();
@@ -515,8 +586,8 @@ fn compute_delta(diag: &mut ::VectorF64, x: &mut ::VectorF64) -> f64 {
     }
 }
 
-fn set<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, j: &mut ::MatrixF64,
-    dx: &mut ::VectorF64, scale: i32) -> ::Value {
+/*fn set<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+          f: &mut ::VectorF64, j: &mut ::MatrixF64, dx: &mut ::VectorF64, scale: i32) -> ::Value {
     let mut signum = 0i32;
 
     /* Evaluate function at x */
@@ -578,7 +649,8 @@ fn enorm(f: &::VectorF64) -> f64 {
     ::blas::level1::dnrm2(f)
 }
 
-fn compute_gradient_direction(r: &::MatrixF64, p: &::Permutation, qtf: &::VectorF64, diag: &::VectorF64, g: &mut ::VectorF64) {
+fn compute_gradient_direction(r: &::MatrixF64, p: &::Permutation, qtf: &::VectorF64,
+                              diag: &::VectorF64, g: &mut ::VectorF64) {
     let n = r.size2();
 
     for j in 0..n {
@@ -635,8 +707,9 @@ fn compute_rptdx(r: &::MatrixF64, p: &::Permutation, dx: &::VectorF64, rptdx: &m
 }
 
 #[allow(unused_assignments)]
-fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64, f: &mut ::VectorF64, J: &mut ::MatrixF64,
-    dx: &mut ::VectorF64, scale: i32) -> ::Value {
+fn iterate<T>(state: &mut LmderStateT, fdf: &mut MultiFitFunctionFdf<T>, x: &mut ::VectorF64,
+              f: &mut ::VectorF64, J: &mut ::MatrixF64, dx: &mut ::VectorF64,
+              scale: i32) -> ::Value {
     let mut prered = 0f64;
     let mut actred = 0f64;
     let mut pnorm = 0f64;
@@ -884,8 +957,8 @@ Inputs: x      - parameter vector
 Return: success or error
 */
 
-fn gsl_multifit_fdfsolver_dif_fdf<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &mut ::VectorF64,
-    j: &mut ::MatrixF64) -> ::Value {
+fn gsl_multifit_fdfsolver_dif_fdf<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>,
+                                     f: &mut ::VectorF64, j: &mut ::MatrixF64) -> ::Value {
     let mut status = ((*fdf).f)(x, fdf.params, f); // GSL_MULTIFIT_FN_EVAL_F(fdf, x, f);
     if status != ::Value::Success {
         return status;
@@ -909,7 +982,8 @@ Inputs: x   - parameter vector
 Return: success or error
 */
 
-fn fdjac<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF64, jm: &mut ::MatrixF64) -> ::Value {
+fn fdjac<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF64,
+            jm: &mut ::MatrixF64) -> ::Value {
     let mut status = ::Value::Success;
     let epsfcn = 0f64;
     let eps = (epsfcn.max(::DBL_EPSILON)).sqrt();
@@ -958,15 +1032,15 @@ Inputs: x   - parameter vector
 Return: success or error
 */
 
-fn gsl_multifit_fdfsolver_dif_df<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>, f: &::VectorF64,
-    J: &mut ::MatrixF64) -> ::Value {
+fn gsl_multifit_fdfsolver_dif_df<T>(x: &mut ::VectorF64, fdf: &mut MultiFitFunctionFdf<T>,
+                                    f: &::VectorF64, J: &mut ::MatrixF64) -> ::Value {
     fdjac(x, fdf, f, J)
 }
 
 #[allow(unused_assignments)]
-fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::VectorF64, delta: f64, par_inout: &mut f64,
-    newton: &mut ::VectorF64, gradient: &mut ::VectorF64, sdiag: &mut ::VectorF64, x: &mut ::VectorF64,
-    w: &mut ::VectorF64) -> ::Value {
+fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::VectorF64,
+         delta: f64, par_inout: &mut f64, newton: &mut ::VectorF64, gradient: &mut ::VectorF64,
+         sdiag: &mut ::VectorF64, x: &mut ::VectorF64, w: &mut ::VectorF64) -> ::Value {
     let mut dxnorm = 0f64;
     let mut gnorm = 0f64;
     let mut fp = 0f64;
@@ -1235,7 +1309,8 @@ fn lmpar(r: &mut ::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, diag: &::
     ::Value::Success
 }
 
-fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::VectorF64, x: &mut ::VectorF64) {
+fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::VectorF64,
+                            x: &mut ::VectorF64) {
     /* Compute and store in x the Gauss-Newton direction. If the
      Jacobian is rank-deficient then obtain a least squares
      solution. */
@@ -1281,8 +1356,8 @@ fn compute_newton_direction(r: &::MatrixF64, perm: &::Permutation, qtf: &::Vecto
     perm.permute_vector_inverse(x);
 }
 
-fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::Permutation, diag: &::VectorF64,
-    w: &mut ::VectorF64) {
+fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::Permutation,
+                        diag: &::VectorF64, w: &mut ::VectorF64) {
     /* If the jacobian is not rank-deficient then the Newton step
      provides a lower bound for the zero of the function. Otherwise
      set this bound to zero. */
@@ -1349,8 +1424,9 @@ fn compute_newton_bound(r: &::MatrixF64, x: &::VectorF64, dxnorm: f64, perm: &::
    x: on output contains the least squares solution of the system
    wa: is a workspace of length N
    */
-fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF64, qtb: &::VectorF64,
-    x: &mut ::VectorF64, sdiag: &mut ::VectorF64, wa: &mut ::VectorF64) -> ::Value {
+fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF64,
+          qtb: &::VectorF64, x: &mut ::VectorF64, sdiag: &mut ::VectorF64,
+          wa: &mut ::VectorF64) -> ::Value {
     let n = r.size2();
 
     /* Copy r and qtb to preserve input and initialise s. In particular,
@@ -1521,8 +1597,9 @@ fn qrsolv(r: &mut ::MatrixF64, p: &::Permutation, lambda: f64, diag: &::VectorF6
     ::Value::Success
 }
 
-fn compute_newton_correction(r: &::MatrixF64, sdiag: &::VectorF64, p: &::Permutation, x: &mut ::VectorF64, dxnorm: f64,
-    diag: &::VectorF64, w: &mut ::VectorF64) {
+fn compute_newton_correction(r: &::MatrixF64, sdiag: &::VectorF64, p: &::Permutation,
+                             x: &mut ::VectorF64, dxnorm: f64, diag: &::VectorF64,
+                             w: &mut ::VectorF64) {
     let n = r.size2();
 
     let mut i = 0;
@@ -1574,4 +1651,4 @@ fn count_nsing(r: &::MatrixF64) -> usize {
     }
 
     i
-}
+}*/

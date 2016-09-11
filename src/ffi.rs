@@ -2523,6 +2523,20 @@ extern "C" {
     pub fn gsl_multifit_covar(j: *const gsl_matrix, epsrel: c_double, covar: *mut gsl_matrix) -> enums::Value;
     pub fn gsl_multifit_test_delta(dx: *const gsl_vector, x: *const gsl_vector, epsabs: c_double, epsrel: c_double) -> enums::Value;
     pub fn gsl_multifit_gradient(j: *const gsl_matrix, f: *const gsl_vector, g: *mut gsl_vector) -> enums::Value;
+
+    pub fn gsl_multifit_fsolver_alloc(T: *const gsl_multifit_fsolver_type, n: size_t, p: size_t) -> *mut gsl_multifit_fsolver;
+    pub fn gsl_multifit_fsolver_free(s: *mut gsl_multifit_fsolver);
+    pub fn gsl_multifit_fsolver_set(s: *mut gsl_multifit_fsolver, f: *mut ::MultiFitFunction, x: *const gsl_vector) -> enums::Value;
+    pub fn gsl_multifit_fsolver_iterate(s: *mut gsl_multifit_fsolver) -> enums::Value;
+    pub fn gsl_multifit_fsolver_name(s: *const gsl_multifit_fsolver) -> *const c_char;
+    pub fn gsl_multifit_fsolver_position(s: *const gsl_multifit_fsolver) -> *mut gsl_vector;
+
+    pub fn gsl_multifit_fdfsolver_alloc(T: *const gsl_multifit_fdfsolver_type, n: size_t, p: size_t) -> *mut gsl_multifit_fdfsolver;
+    pub fn gsl_multifit_fdfsolver_set(s: *mut gsl_multifit_fdfsolver, fdf: *mut gsl_multifit_function_fdf, x: *const gsl_vector) -> enums::Value;
+    pub fn gsl_multifit_fdfsolver_iterate(s: *mut gsl_multifit_fdfsolver) -> enums::Value;
+    pub fn gsl_multifit_fdfsolver_free(s: *mut gsl_multifit_fdfsolver);
+    pub fn gsl_multifit_fdfsolver_name(s: *const gsl_multifit_fdfsolver) -> *const c_char;
+    pub fn gsl_multifit_fdfsolver_position(s: *const gsl_multifit_fdfsolver) -> *mut gsl_vector;
 }
 
 #[repr(C)]
@@ -3398,4 +3412,71 @@ pub struct gsl_wavelet_type {
     pub name: *const c_char,
     pub init: Option<extern "C" fn(h1: *const *const c_double, g1: *const *const c_double, h2: *const *const c_double,
         g2: *const *const c_double, nc: *mut size_t, offset: *mut size_t, member: size_t) -> enums::Value>
+}
+
+#[repr(C)]
+pub struct gsl_multifit_fsolver_type {
+    name: *const c_char,
+    pub size: size_t,
+    pub alloc: Option<extern "C" fn(state: *mut c_void, n: size_t, p: size_t) -> enums::Value>,
+    pub set: Option<extern "C" fn(state: *mut c_void, function :*mut ::MultiFitFunction,
+                                  x: *mut gsl_vector, f: *mut gsl_vector,
+                                  dx: *mut gsl_vector) -> enums::Value>,
+    pub iterate: Option<extern "C" fn(state: *mut c_void, function: *mut ::MultiFitFunction,
+                                      x: *mut gsl_vector, f: *mut gsl_vector,
+                                      dx: *mut gsl_vector) -> enums::Value>,
+    pub free: Option<extern "C" fn(state: *mut c_void)>,
+}
+
+#[repr(C)]
+pub struct gsl_multifit_fsolver {
+    pub type_: *const gsl_multifit_fsolver_type,
+    pub function: *mut ::MultiFitFunction,
+    pub x: *mut gsl_vector,
+    pub f: *mut gsl_vector,
+    pub dx: *mut gsl_vector,
+    pub state: *mut c_void,
+}
+
+#[repr(C)]
+pub struct gsl_multifit_function_fdf {
+    pub f: Option<extern "C" fn(x: *const gsl_vector, params: *mut c_void,
+                                f: *mut gsl_vector) -> enums::Value>,
+    pub df: Option<extern "C" fn(x: *const gsl_vector, params: *mut c_void,
+                                 df: *mut gsl_matrix) -> enums::Value>,
+    pub fdf: Option<extern "C" fn(x: *const gsl_vector, params: *mut c_void, f: *mut gsl_vector,
+                                  df: *mut gsl_matrix) -> enums::Value>,
+    pub n: size_t,
+    pub p: size_t,
+    pub params: *mut c_void,
+}
+
+#[repr(C)]
+pub struct gsl_multifit_fdfsolver_type {
+    pub name: *const c_char,
+    pub size: size_t,
+    pub alloc: Option<extern "C" fn(state: *mut c_void, n: size_t, p: size_t) -> enums::Value>,
+    pub set: Option<extern "C" fn(state: *mut c_void, fdf: *mut gsl_multifit_function_fdf,
+                                  x: *mut gsl_vector, f: *mut gsl_vector, J: *mut gsl_matrix,
+                                  dx: *mut gsl_vector) -> enums::Value>,
+    pub iterate: Option<extern "C" fn(state: *mut c_void, fdf: *mut gsl_multifit_function_fdf,
+                                      x: *mut gsl_vector, f: *mut gsl_vector, J: *mut gsl_matrix,
+                                      dx: *mut gsl_vector) -> enums::Value>,
+    pub free: Option<extern "C" fn(state: *mut c_void)>,
+}
+
+#[repr(C)]
+pub struct gsl_multifit_fdfsolver {
+    pub type_: *const gsl_multifit_fdfsolver_type,
+    pub fdf: *mut gsl_multifit_function_fdf,
+    pub x: *mut gsl_vector,
+    pub f: *mut gsl_vector,
+    pub J: *mut gsl_matrix,
+    pub dx: *mut gsl_vector,
+    pub state: *mut c_void,
+}
+
+extern "C" {
+    pub static gsl_multifit_fdfsolver_lmder: *mut gsl_multifit_fdfsolver_type;
+    pub static gsl_multifit_fdfsolver_lmsder: *mut gsl_multifit_fdfsolver_type;
 }
