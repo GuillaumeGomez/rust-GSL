@@ -72,6 +72,7 @@ Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the
 
 use ffi;
 use enums;
+use libc::c_ulong;
 
 pub struct Rng {
     r: *mut ffi::gsl_rng
@@ -108,7 +109,7 @@ impl Rng {
     /// 
     /// Note that the most generators only accept 32-bit seeds, with higher values being reduced modulo 2^32. For generators with smaller ranges the maximum seed value will typically be lower.
     pub fn set(&self, s: usize) {
-        unsafe { ffi::gsl_rng_set(self.r, s as u64) }
+        unsafe { ffi::gsl_rng_set(self.r, s as c_ulong) }
     }
 
     /// This function returns a random integer from the generator r. The minimum and maximum values depend on the algorithm used, but all integers in the range [min,max] are equally likely.
@@ -140,7 +141,7 @@ impl Rng {
     /// In particular, this function is not intended for generating the full range of unsigned integer values [0,2^32-1].
     /// Instead choose a generator with the maximal integer range and zero minimum value, such as gsl_rng_ranlxd1, gsl_rng_mt19937 or gsl_rng_taus, and sample it directly using gsl_rng_get. The range of each generator can be found using the auxiliary functions described in the next section.
     pub fn uniform_int(&self, n: usize) -> usize {
-        unsafe { ffi::gsl_rng_uniform_int(self.r, n as u64) as usize }
+        unsafe { ffi::gsl_rng_uniform_int(self.r, n as c_ulong) as usize }
     }
 
     /// This function returns a pointer to the name of the generator. For example,
