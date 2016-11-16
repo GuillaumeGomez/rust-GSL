@@ -536,15 +536,8 @@ extern "C" {
     // Associated Legendre Polynomials and Spherical Harmonics
     pub fn gsl_sf_legendre_Plm(l: c_int, m: c_int, x: c_double) -> c_double;
     pub fn gsl_sf_legendre_Plm_e(l: c_int, m: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_legendre_Plm_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double) -> enums::Value;
-    pub fn gsl_sf_legendre_Plm_deriv_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double,
-        result_deriv_array: *mut c_double) -> enums::Value;
     pub fn gsl_sf_legendre_sphPlm(l: c_int, m: c_int, x: c_double) -> c_double;
     pub fn gsl_sf_legendre_sphPlm_e(l: c_int, m: c_int, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_legendre_sphPlm_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double) -> enums::Value;
-    pub fn gsl_sf_legendre_sphPlm_deriv_array(lmax: c_int, m: c_int, x: c_double, result_array: *mut c_double,
-        result_deriv_array: *mut c_double) -> enums::Value;
-    pub fn gsl_sf_legendre_array_size(lmax: c_int, m: c_int) -> enums::Value;
     // Conical functions
     pub fn gsl_sf_conicalP_half(lambda: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_conicalP_half_e(lambda: c_double, x: c_double, result: *mut gsl_sf_result) -> enums::Value;
@@ -1358,8 +1351,6 @@ extern "C" {
     // Basis Splines
     pub fn gsl_bspline_alloc(k: size_t, nbreak: size_t) -> *mut gsl_bspline_workspace;
     pub fn gsl_bspline_free(w: *mut gsl_bspline_workspace);
-    pub fn gsl_bspline_deriv_alloc(k: size_t) -> *mut gsl_bspline_deriv_workspace;
-    pub fn gsl_bspline_deriv_free(w: *mut gsl_bspline_deriv_workspace);
     pub fn gsl_bspline_knots(breakpts: *mut gsl_vector, w: *mut gsl_bspline_workspace) -> enums::Value;
     pub fn gsl_bspline_knots_uniform(a: c_double, b: c_double, w: *mut gsl_bspline_workspace) -> enums::Value;
     pub fn gsl_bspline_eval(x: c_double, B: *mut gsl_vector, w: *mut gsl_bspline_workspace) -> enums::Value;
@@ -1367,9 +1358,9 @@ extern "C" {
         w: *mut gsl_bspline_workspace) -> enums::Value;
     pub fn gsl_bspline_ncoeffs(w: *mut gsl_bspline_workspace) -> size_t;
     pub fn gsl_bspline_deriv_eval(x: c_double, nderiv: size_t, dB: *mut gsl_matrix, w: *mut gsl_bspline_workspace,
-        dw: *mut gsl_bspline_deriv_workspace) -> enums::Value;
+        dw: *mut gsl_bspline_workspace) -> enums::Value;
     pub fn gsl_bspline_deriv_eval_nonzero(x: c_double, nderiv: size_t, Bk: *mut gsl_matrix, istart: *mut size_t, iend: *mut size_t,
-        w: *mut gsl_bspline_workspace, dw: *mut gsl_bspline_deriv_workspace) -> enums::Value;
+        w: *mut gsl_bspline_workspace, dw: *mut gsl_bspline_workspace) -> enums::Value;
     pub fn gsl_bspline_greville_abscissa(i: size_t, w: *mut gsl_bspline_workspace) -> c_double;
 
     // Level 1 BLAS functions
@@ -2692,12 +2683,6 @@ pub struct gsl_bspline_workspace {
     pub B: *mut gsl_vector       // temporary spline results
 }
 
-#[repr(C)]
-pub struct gsl_bspline_deriv_workspace {
-    pub k: size_t,          // spline order
-    pub A: *mut gsl_matrix, // work matrix
-    pub dB: *mut gsl_matrix // temporary derivative results
-}
 
 /*#[repr(C)]
 pub struct gsl_multifit_fsolver {
