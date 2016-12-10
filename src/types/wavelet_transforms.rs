@@ -116,46 +116,58 @@ impl WaveletType {
     /// This is the Daubechies wavelet family of maximum phase with k/2 vanishing moments. The implemented wavelets are k=4, 6, …, 20, with
     /// k even.
     pub fn daubechies() -> WaveletType {
-        WaveletType {
-            t: ffi::gsl_wavelet_daubechies
+        unsafe {
+            WaveletType {
+                t: ffi::gsl_wavelet_daubechies
+            }
         }
     }
 
     /// This is the Daubechies wavelet family of maximum phase with k/2 vanishing moments. The implemented wavelets are k=4, 6, …, 20, with
     /// k even.
     pub fn daubechies_centered() -> WaveletType {
-        WaveletType {
-            t: ffi::gsl_wavelet_daubechies_centered
+        unsafe {
+            WaveletType {
+                t: ffi::gsl_wavelet_daubechies_centered
+            }
         }
     }
 
     /// This is the Haar wavelet. The only valid choice of k for the Haar wavelet is k=2.
     pub fn haar() -> WaveletType {
-        WaveletType {
-            t: ffi::gsl_wavelet_haar
+        unsafe {
+            WaveletType {
+                t: ffi::gsl_wavelet_haar
+            }
         }
     }
 
     /// This is the Haar wavelet. The only valid choice of k for the Haar wavelet is k=2.
     pub fn haar_centered() -> WaveletType {
-        WaveletType {
-            t: ffi::gsl_wavelet_haar_centered
+        unsafe {
+            WaveletType {
+                t: ffi::gsl_wavelet_haar_centered
+            }
         }
     }
 
     /// This is the biorthogonal B-spline wavelet family of order (i,j). The implemented values of k = 100*i + j are 103, 105, 202, 204,
     /// 206, 208, 301, 303, 305 307, 309.
     pub fn bspline() -> WaveletType {
-        WaveletType {
-            t: ffi::gsl_wavelet_bspline
+        unsafe {
+            WaveletType {
+                t: ffi::gsl_wavelet_bspline
+            }
         }
     }
 
     /// This is the biorthogonal B-spline wavelet family of order (i,j). The implemented values of k = 100*i + j are 103, 105, 202, 204,
     /// 206, 208, 301, 303, 305 307, 309.
     pub fn bspline_centered() -> WaveletType {
-        WaveletType {
-            t: ffi::gsl_wavelet_bspline_centered
+        unsafe {
+            WaveletType {
+                t: ffi::gsl_wavelet_bspline_centered
+            }
         }
     }
 }

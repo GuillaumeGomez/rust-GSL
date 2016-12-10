@@ -47,7 +47,10 @@ A large collection of B-spline routines is available in the PPPACK library avail
 http://www.netlib.org/pppack, which is also part of SLATEC.
 !*/
 
+#[cfg(not(feature = "v2"))]
 use types::{VectorF64, MatrixF64};
+#[cfg(feature = "v2")]
+use types::VectorF64;
 use ffi;
 use enums;
 
@@ -152,10 +155,12 @@ impl ffi::FFI<ffi::gsl_bspline_workspace> for BSpLineWorkspace {
     }
 }
 
+#[cfg(not(feature = "v2"))]
 pub struct BSpLineDerivWorkspace {
     w: *mut ffi::gsl_bspline_deriv_workspace
 }
 
+#[cfg(not(feature = "v2"))]
 impl BSpLineDerivWorkspace {
     /// This function allocates a workspace for computing the derivatives of a B-spline basis
     /// function of order k.
@@ -206,6 +211,7 @@ impl BSpLineDerivWorkspace {
     }
 }
 
+#[cfg(not(feature = "v2"))]
 impl Drop for BSpLineDerivWorkspace {
     fn drop(&mut self) {
         unsafe { ffi::gsl_bspline_deriv_free(self.w) };
@@ -213,6 +219,7 @@ impl Drop for BSpLineDerivWorkspace {
     }
 }
 
+#[cfg(not(feature = "v2"))]
 impl ffi::FFI<ffi::gsl_bspline_deriv_workspace> for BSpLineDerivWorkspace {
     fn wrap(r: *mut ffi::gsl_bspline_deriv_workspace) -> BSpLineDerivWorkspace {
         BSpLineDerivWorkspace {

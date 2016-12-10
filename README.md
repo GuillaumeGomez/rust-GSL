@@ -26,6 +26,16 @@ Add the following line to your source code:
 extern crate rgsl;
 ```
 
+##Building
+
+Just run `cargo build`. However, if you have issues with GSL version 2.x, try building it with:
+
+```bash
+cargo build --features v2
+```
+
+If a project depends on this version, don't forget to add in your `Cargo.toml`!
+
 ##Documentation
 
 You can access the __rgsl__ documentation locally, just build it:

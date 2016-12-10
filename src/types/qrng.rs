@@ -125,30 +125,38 @@ impl QRngType {
     /// This generator uses the algorithm described in Bratley, Fox, Niederreiter, ACM Trans. Model. Comp. Sim. 2, 195 (1992). It is valid
     /// up to 12 dimensions.
     pub fn niederreiter_2() -> QRngType {
-        QRngType {
-            t: ffi::gsl_qrng_niederreiter_2
+        unsafe {
+            QRngType {
+                t: ffi::gsl_qrng_niederreiter_2
+            }
         }
     }
 
     /// This generator uses the Sobol sequence described in Antonov, Saleev, USSR Comput. Maths. Math. Phys. 19, 252 (1980). It is valid
     /// up to 40 dimensions.
     pub fn sobol() -> QRngType {
-        QRngType {
-            t: ffi::gsl_qrng_sobol
+        unsafe {
+            QRngType {
+                t: ffi::gsl_qrng_sobol
+            }
         }
     }
 
     /// These generators use the Halton and reverse Halton sequences described in J.H. Halton, Numerische Mathematik 2, 84-90 (1960) and
     /// B. Vandewoestyne and R. Cools Computational and Applied Mathematics 189, 1&2, 341-361 (2006). They are valid up to 1229 dimensions.
     pub fn halton() -> QRngType {
-        QRngType {
-            t: ffi::gsl_qrng_halton
+        unsafe {
+            QRngType {
+                t: ffi::gsl_qrng_halton
+            }
         }
     }
 
     pub fn reversehalton() -> QRngType {
-        QRngType {
-            t: ffi::gsl_qrng_reversehalton
+        unsafe {
+            QRngType {
+                t: ffi::gsl_qrng_reversehalton
+            }
         }
     }
 }

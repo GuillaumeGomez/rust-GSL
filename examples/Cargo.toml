@@ -3,6 +3,9 @@ name = "gsl-examples"
 version = "0.4.6"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
+[features]
+v2 = ["GSL/v2"]
+
 [dependencies.GSL]
 path = "../"
 

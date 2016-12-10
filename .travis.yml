@@ -1,18 +1,31 @@
 language: rust
-rust:
-- nightly
-- stable
+matrix:
+  include:
+    - os: linux
+      rust: stable
+      dist: trusty
+    - os: linux
+      rust: nightly
+      dist: trusty
+    - os: osx
+      rust: stable
+    - os: osx
+      rust: nightly
 sudo: true
 env:
   global:
     - LD_LIBRARY_PATH=/usr/local/lib
-install:
-  - sudo apt-get -qq update
-  - sudo apt-get install libgsl0-dev
+addons:
+  apt:
+    packages:
+    - libgsl0-dev
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gsl; fi
 script:
   - rustc --version
-  - RUST_BACKTRACE=1 cargo build
-  - RUST_BACKTRACE=1 cargo doc
-  - RUST_BACKTRACE=1 cargo test
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo build --features v2; else cargo build; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo doc --features v2; else cargo doc; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo test --features v2; else cargo test; fi
   - cd examples
-  - cargo build
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo build --features v2; else cargo build; fi

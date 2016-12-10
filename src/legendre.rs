@@ -137,11 +137,13 @@ pub mod associated_polynomials {
     }
 
     /// This function computes arrays of Legendre polynomials P_l^m(x) and derivatives dP_l^m(x)/dx, for m >= 0, l = |m|, ..., lmax, |x| <= 1.
+    #[cfg(not(feature = "v2"))]
     pub fn legendre_Plm_array(m: i32, x: f64, result_array: &mut [f64]) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_Plm_array(result_array.len() as i32, m, x, result_array.as_mut_ptr()) }
     }
 
     /// This function computes arrays of Legendre polynomials P_l^m(x) and derivatives dP_l^m(x)/dx, for m >= 0, l = |m|, ..., lmax, |x| <= 1.
+    #[cfg(not(feature = "v2"))]
     pub fn legendre_Plm_deriv_array(m: i32, x: f64, result_array: &mut [f64], result_deriv_array: &mut [f64]) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_Plm_deriv_array(result_array.len() as i32, m, x, result_array.as_mut_ptr(),
             result_deriv_array.as_mut_ptr()) }
@@ -165,17 +167,20 @@ pub mod associated_polynomials {
     }
 
     /// This function computes arrays of normalized associated Legendre functions \sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x), and derivatives, for m >= 0, l = |m|, ..., lmax, |x| <= 1.0
+    #[cfg(not(feature = "v2"))]
     pub fn legendre_sphPlm_array(m: i32, x: f64, result_array: &mut [f64]) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_sphPlm_array(result_array.len() as i32, m, x, result_array.as_mut_ptr()) }
     }
 
     /// This function computes arrays of normalized associated Legendre functions \sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x), and derivatives, for m >= 0, l = |m|, ..., lmax, |x| <= 1.0
+    #[cfg(not(feature = "v2"))]
     pub fn legendre_sphPlm_deriv_array(m: i32, x: f64, result_array: &mut [f64], result_deriv_array: &mut [f64]) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_sphPlm_deriv_array(result_array.len() as i32, m, x, result_array.as_mut_ptr(),
             result_deriv_array.as_mut_ptr()) }
     }
 
     /// This function returns the size of result_array[] needed for the array versions of P_l^m(x), lmax - m + 1.
+    #[cfg(not(feature = "v2"))]
     pub fn legendre_array_size(lmax: i32, m: i32) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_array_size(lmax, m) }
     }
