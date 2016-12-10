@@ -199,7 +199,7 @@ impl Rng {
 
     /// Equivalent to DefaultRngSeed
     pub fn default_seed() -> usize {
-        ffi::gsl_rng_default_seed as usize
+        unsafe { ffi::gsl_rng_default_seed as usize }
     }
 }
 
@@ -339,7 +339,7 @@ impl ffi::FFI<ffi::gsl_rng_type> for RngType {
 }
 
 pub fn default() -> RngType {
-    ffi::FFI::wrap(ffi::gsl_rng_default as *mut ffi::gsl_rng_type)
+    ffi_wrap!(gsl_rng_default, gsl_rng_type)
 }
 
 /// The functions described above make no reference to the actual algorithm used. This is deliberate so that you can switch algorithms without having
@@ -367,7 +367,7 @@ pub mod algorithms {
     /// procedures could cause spurious artifacts for some seed values. They are still available through the alternative generators gsl_rng_mt19937_1999 and
     /// gsl_rng_mt19937_1998.
     pub fn mt19937() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_mt19937 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_mt19937, gsl_rng_type)
     }
 
     /// The generator ranlxs0 is a second-generation version of the RANLUX algorithm of Lüscher, which produces “luxury random numbers”. This generator
@@ -378,7 +378,7 @@ pub mod algorithms {
     /// 
     /// Note that the range of allowed seeds for this generator is [0,2^31-1]. Higher seed values are wrapped modulo 2^31.
     pub fn ranlxs0() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlxs0 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlxs0, gsl_rng_type)
     }
 
     /// The generator ranlxs0 is a second-generation version of the RANLUX algorithm of Lüscher, which produces “luxury random numbers”. This generator
@@ -389,7 +389,7 @@ pub mod algorithms {
     /// 
     /// Note that the range of allowed seeds for this generator is [0,2^31-1]. Higher seed values are wrapped modulo 2^31.
     pub fn ranlxs1() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlxs1 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlxs1, gsl_rng_type)
     }
 
     /// The generator ranlxs0 is a second-generation version of the RANLUX algorithm of Lüscher, which produces “luxury random numbers”. This generator
@@ -400,19 +400,19 @@ pub mod algorithms {
     /// 
     /// Note that the range of allowed seeds for this generator is [0,2^31-1]. Higher seed values are wrapped modulo 2^31.
     pub fn ranlxs2() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlxs2 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlxs2, gsl_rng_type)
     }
 
     /// This generator produces double precision output (48 bits) from the RANLXS generator. The library provides two luxury levels ranlxd1 and ranlxd2,
     /// in increasing order of strength.
     pub fn ranlxd1() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlxd1 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlxd1, gsl_rng_type)
     }
 
     /// This generator produces double precision output (48 bits) from the RANLXS generator. The library provides two luxury levels ranlxd1 and ranlxd2,
     /// in increasing order of strength.
     pub fn ranlxd2() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlxd2 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlxd2, gsl_rng_type)
     }
 
     /// The ranlux generator is an implementation of the original algorithm developed by Lüscher. It uses a lagged-fibonacci-with-skipping algorithm to
@@ -428,7 +428,7 @@ pub mod algorithms {
     /// M. Lüscher, “A portable high-quality random number generator for lattice field theory calculations”, Computer Physics Communications, 79 (1994) 100–110.
     /// F. James, “RANLUX: A Fortran implementation of the high-quality pseudo-random number generator of Lüscher”, Computer Physics Communications, 79 (1994) 111–114
     pub fn ranlux() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlux as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlux, gsl_rng_type)
     }
 
     /// The ranlux generator is an implementation of the original algorithm developed by Lüscher. It uses a lagged-fibonacci-with-skipping algorithm to
@@ -444,7 +444,7 @@ pub mod algorithms {
     /// M. Lüscher, “A portable high-quality random number generator for lattice field theory calculations”, Computer Physics Communications, 79 (1994) 100–110.
     /// F. James, “RANLUX: A Fortran implementation of the high-quality pseudo-random number generator of Lüscher”, Computer Physics Communications, 79 (1994) 111–114
     pub fn ranlux389() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranlux389 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranlux389, gsl_rng_type)
     }
 
     /// This is a combined multiple recursive generator by L’Ecuyer. Its sequence is,
@@ -462,7 +462,7 @@ pub mod algorithms {
     /// 
     /// P. L’Ecuyer, “Combined Multiple Recursive Random Number Generators”, Operations Research, 44, 5 (1996), 816–822.
     pub fn cmrg() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_cmrg as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_cmrg, gsl_rng_type)
     }
 
     /// This is a fifth-order multiple recursive generator by L’Ecuyer, Blouin and Coutre. Its sequence is,
@@ -475,7 +475,7 @@ pub mod algorithms {
     /// 
     /// P. L’Ecuyer, F. Blouin, and R. Coutre, “A search for good multiple recursive random number generators”, ACM Transactions on Modeling and Computer Simulation 3, 87–98 (1993).
     pub fn mrg() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_mrg as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_mrg, gsl_rng_type)
     }
 
     /// This is a maximally equidistributed combined Tausworthe generator by L’Ecuyer. The sequence is,
@@ -501,7 +501,7 @@ pub mod algorithms {
     /// 
     /// The generator gsl_rng_taus2 should now be used in preference to gsl_rng_taus.
     pub fn taus() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_taus as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_taus, gsl_rng_type)
     }
 
     /// This is a maximally equidistributed combined Tausworthe generator by L’Ecuyer. The sequence is,
@@ -527,7 +527,7 @@ pub mod algorithms {
     /// 
     /// The generator gsl_rng_taus2 should now be used in preference to gsl_rng_taus.
     pub fn taus2() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_taus2 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_taus2, gsl_rng_type)
     }
 
     /// The gfsr4 generator is like a lagged-fibonacci generator, and produces each number as an xor’d sum of four previous values.
@@ -554,7 +554,7 @@ pub mod algorithms {
     /// 
     /// Robert M. Ziff, “Four-tap shift-register-sequence random-number generators”, Computers in Physics, 12(4), Jul/Aug 1998, pp 385–392.
     pub fn gfsr4() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_gfsr4 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_gfsr4, gsl_rng_type)
     }
 }
 
@@ -574,7 +574,7 @@ pub mod unix {
     /// with a = 1103515245, c = 12345 and m = 2^31. The seed specifies the initial value, x_1. The period of this generator is 2^31, and it
     /// uses 1 word of storage per generator.
     pub fn rand() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_rand as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_rand, gsl_rng_type)
     }
 
     /// These generators implement the random family of functions, a set of linear feedback shift register generators originally used in BSD
@@ -596,7 +596,7 @@ pub mod unix {
     /// gsl_rng_random_bsd has been made equivalent to gsl_rng_random128_bsd. Corresponding versions of the libc5 and glibc2 generators are
     /// also available, with the names gsl_rng_random8_libc5, gsl_rng_random8_glibc2, etc.
     pub fn random_bsd() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_random_bsd as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_random_bsd, gsl_rng_type)
     }
 
     /// These generators implement the random family of functions, a set of linear feedback shift register generators originally used in BSD
@@ -618,7 +618,7 @@ pub mod unix {
     /// gsl_rng_random_bsd has been made equivalent to gsl_rng_random128_bsd. Corresponding versions of the libc5 and glibc2 generators are
     /// also available, with the names gsl_rng_random8_libc5, gsl_rng_random8_glibc2, etc.
     pub fn random_libc5() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_random_libc5 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_random_libc5, gsl_rng_type)
     }
 
     /// These generators implement the random family of functions, a set of linear feedback shift register generators originally used in BSD
@@ -640,7 +640,7 @@ pub mod unix {
     /// gsl_rng_random_bsd has been made equivalent to gsl_rng_random128_bsd. Corresponding versions of the libc5 and glibc2 generators are
     /// also available, with the names gsl_rng_random8_libc5, gsl_rng_random8_glibc2, etc.
     pub fn random_glic2() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_random_glibc2 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_random_glibc2, gsl_rng_type)
     }
 
     /// This is the Unix rand48 generator. Its sequence is
@@ -653,7 +653,7 @@ pub mod unix {
     /// is equivalent to the function drand48. Note that some versions of the GNU C Library contained a bug in mrand48 function which caused
     /// it to produce different results (only the lower 16-bits of the return value were set).
     pub fn rand48() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_rand48 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_rand48, gsl_rng_type)
     }
 }
 
@@ -686,13 +686,13 @@ pub mod other {
     /// 
     /// The period of this generator is 2^46.
     pub fn ranf() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranf as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranf, gsl_rng_type)
     }
 
     /// This is the RANMAR lagged-fibonacci generator of Marsaglia, Zaman and Tsang. It is a 24-bit generator, originally designed for single-precision IEEE floating point numbers. 
     /// It was included in the CERNLIB high-energy physics library.
     pub fn ranmar() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_ranmar as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_ranmar, gsl_rng_type)
     }
 
     /// This is the shift-register generator of Kirkpatrick and Stoll. The sequence is based on the recurrence
@@ -704,7 +704,7 @@ pub mod other {
     /// 
     /// S. Kirkpatrick and E. Stoll, “A very fast shift-register sequence random number generator”, Journal of Computational Physics, 40, 517–526 (1981)
     pub fn r250() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_r250 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_r250, gsl_rng_type)
     }
 
     /// This is an earlier version of the twisted generalized feedback shift-register generator, and has been superseded by the development of MT19937. However, it is
@@ -714,7 +714,7 @@ pub mod other {
     /// 
     /// Makoto Matsumoto and Yoshiharu Kurita, “Twisted GFSR Generators II”, ACM Transactions on Modelling and Computer Simulation, Vol. 4, No. 3, 1994, pages 254–266.
     pub fn tt800() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_tt800 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_tt800, gsl_rng_type)
     }
 
     /// This is the VAX generator MTH$RANDOM. Its sequence is,
@@ -723,7 +723,7 @@ pub mod other {
     /// 
     /// with a = 69069, c = 1 and m = 2^32. The seed specifies the initial value, x_1. The period of this generator is 2^32 and it uses 1 word of storage per generator.
     pub fn vax() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_vax as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_vax, gsl_rng_type)
     }
 
     /// This is the random number generator from the INMOS Transputer Development system. Its sequence is,
@@ -732,7 +732,7 @@ pub mod other {
     /// 
     /// with a = 1664525 and m = 2^32. The seed specifies the initial value, x_1.
     pub fn transputer() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_transputer as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_transputer, gsl_rng_type)
     }
 
     /// This is the IBM RANDU generator. Its sequence is
@@ -741,7 +741,7 @@ pub mod other {
     /// 
     /// with a = 65539 and m = 2^31. The seed specifies the initial value, x_1. The period of this generator was only 2^29. It has become a textbook example of a poor generator.
     pub fn randu() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_randu as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_randu, gsl_rng_type)
     }
 
     /// This is Park and Miller’s “minimal standard” MINSTD generator, a simple linear congruence which takes care to avoid the major pitfalls of such algorithms. Its sequence is,
@@ -756,24 +756,24 @@ pub mod other {
     /// 
     /// Park and Miller, "Random Number Generators: Good ones are hard to find", Communications of the ACM, October 1988, Volume 31, No 10, pages 1192–1201.
     pub fn minstd() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_minstd as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_minstd, gsl_rng_type)
     }
 
     /// This is a reimplementation of the 16-bit SLATEC random number generator RUNIF. A generalization of the generator to 32 bits is provided by gsl_rng_uni32.
     /// The original source code is available from NETLIB.
     pub fn uni() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_uni as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_uni, gsl_rng_type)
     }
 
     /// This is a reimplementation of the 16-bit SLATEC random number generator RUNIF. A generalization of the generator to 32 bits is provided by gsl_rng_uni32.
     /// The original source code is available from NETLIB.
     pub fn uni32() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_uni32 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_uni32, gsl_rng_type)
     }
 
     /// This is the SLATEC random number generator RAND. It is ancient. The original source code is available from NETLIB.
     pub fn slatec() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_slatec as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_slatec, gsl_rng_type)
     }
 
     /// This is the ZUFALL lagged Fibonacci series generator of Peterson. Its sequence is,
@@ -785,7 +785,7 @@ pub mod other {
     /// 
     /// W. Petersen, “Lagged Fibonacci Random Number Generators for the NEC SX-3”, International Journal of High Speed Computing (1994).
     pub fn zuf() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_zuf as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_zuf, gsl_rng_type)
     }
 
     /// This is a second-order multiple recursive generator described by Knuth in Seminumerical Algorithms, 3rd Ed., page 108. Its sequence is,
@@ -794,21 +794,21 @@ pub mod other {
     /// 
     /// with a_1 = 271828183, a_2 = 314159269, and m = 2^31 - 1.
     pub fn knuthran2() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_knuthran2 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_knuthran2, gsl_rng_type)
     }
 
     /// This is a second-order multiple recursive generator described by Knuth in Seminumerical Algorithms, 3rd Ed., Section 3.6. Knuth provides
     /// its C code. The updated routine gsl_rng_knuthran2002 is from the revised 9th printing and corrects some weaknesses in the earlier version,
     /// which is implemented as gsl_rng_knuthran.
     pub fn knuthran2002() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_knuthran2002 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_knuthran2002, gsl_rng_type)
     }
 
     /// This is a second-order multiple recursive generator described by Knuth in Seminumerical Algorithms, 3rd Ed., Section 3.6. Knuth provides
     /// its C code. The updated routine gsl_rng_knuthran2002 is from the revised 9th printing and corrects some weaknesses in the earlier version,
     /// which is implemented as gsl_rng_knuthran.
     pub fn knuthran() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_knuthran as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_knuthran, gsl_rng_type)
     }
 
     /// This multiplicative generator is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., pages 106–108. Their sequence is,
@@ -819,7 +819,7 @@ pub mod other {
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
     pub fn borosh13() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_borosh13 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_borosh13, gsl_rng_type)
     }
 
     /// This multiplicative generator is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., pages 106–108. Their sequence is,
@@ -830,7 +830,7 @@ pub mod other {
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
     pub fn fishman18() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_fishman18 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_fishman18, gsl_rng_type)
     }
 
     /// This multiplicative generator is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., pages 106–108. Their sequence is,
@@ -841,7 +841,7 @@ pub mod other {
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
     pub fn fishman20() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_fishman20 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_fishman20, gsl_rng_type)
     }
 
     /// This multiplicative generator is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., pages 106–108. Their sequence is,
@@ -852,7 +852,7 @@ pub mod other {
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
     pub fn lecuyer21() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_lecuyer21 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_lecuyer21, gsl_rng_type)
     }
 
     /// This multiplicative generator is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., pages 106–108. Their sequence is,
@@ -863,7 +863,7 @@ pub mod other {
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
     pub fn waterman14() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_waterman14 as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_waterman14, gsl_rng_type)
     }
 
     /// This is the L’Ecuyer–Fishman random number generator. It is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., page 108. Its sequence is,
@@ -872,7 +872,7 @@ pub mod other {
     /// 
     /// with m = 2^31 - 1. x_n and y_n are given by the fishman20 and lecuyer21 algorithms. The seed specifies the initial value, x_1.
     pub fn fishman2x() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_fishman2x as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_fishman2x, gsl_rng_type)
     }
 
     /// This is the Coveyou random number generator. It is taken from Knuth’s Seminumerical Algorithms, 3rd Ed., Section 3.2.2. Its sequence is,
@@ -881,6 +881,6 @@ pub mod other {
     /// 
     /// with m = 2^32. The seed specifies the initial value, x_1.
     pub fn coveyou() -> RngType {
-        ffi::FFI::wrap(ffi::gsl_rng_coveyou as *mut ffi::gsl_rng_type)
+        ffi_wrap!(gsl_rng_coveyou, gsl_rng_type)
     }
 }

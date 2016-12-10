@@ -240,6 +240,7 @@ pub struct MultiFitFunctionFdf<'r, T:'r> {
     pub params: &'r mut T
 }
 
+#[allow(dead_code)]
 struct LmderStateT {
     iter: usize,
     xnorm: f64,

@@ -252,69 +252,87 @@ pub struct ODEiv2StepType {
 impl ODEiv2StepType {
     /// Explicit embedded Runge-Kutta (2, 3) method.
     pub fn rk2() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rk2
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rk2
+            }
         }
     }
 
     /// Explicit 4th order (classical) Runge-Kutta. Error estimation is carried out by the step doubling method. For more efficient
     /// estimate of the error, use the embedded methods described below.
     pub fn rk4() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rk4
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rk4
+            }
         }
     }
 
     /// Explicit embedded Runge-Kutta-Fehlberg (4, 5) method. This method is a good general-purpose integrator.
     pub fn rk45() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rkf45
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rkf45
+            }
         }
     }
 
     /// Explicit embedded Runge-Kutta Cash-Karp (4, 5) method.
     pub fn rkck() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rkck
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rkck
+            }
         }
     }
 
     /// Explicit embedded Runge-Kutta Prince-Dormand (8, 9) method.
     pub fn rk8pd() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rk8pd
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rk8pd
+            }
         }
     }
 
     /// Implicit Gaussian first order Runge-Kutta. Also known as implicit Euler or backward Euler method. Error estimation is carried out by
     /// the step doubling method. This algorithm requires the Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn rk1imp() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rk1imp
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rk1imp
+            }
         }
     }
 
     /// Implicit Gaussian second order Runge-Kutta. Also known as implicit mid-point rule. Error estimation is carried out by the step doubling
     /// method. This stepper requires the Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn rk2imp() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rk2imp
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rk2imp
+            }
         }
     }
 
     /// Implicit Gaussian 4th order Runge-Kutta. Error estimation is carried out by the step doubling method. This algorithm requires the
     /// Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn rk4imp() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_rk4imp
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_rk4imp
+            }
         }
     }
 
     /// Implicit Bulirsch-Stoer method of Bader and Deuflhard. The method is generally suitable for stiff problems. This stepper requires
     /// the Jacobian.
     pub fn bsimp() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_bsimp
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_bsimp
+            }
         }
     }
 
@@ -322,8 +340,10 @@ impl ODEiv2StepType {
     /// implicit Adams-Moulton (corrector) methods in P(EC)^m functional iteration mode. Method order varies dynamically between 1 and 12.
     /// This stepper requires the access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn msadams() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_msadams
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_msadams
+            }
         }
     }
 
@@ -332,8 +352,10 @@ impl ODEiv2StepType {
     /// non-linear equations. Method order varies dynamically between 1 and 5. The method is generally suitable for stiff problems. This
     /// stepper requires the Jacobian and the access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn msbdf() -> ODEiv2StepType {
-        ODEiv2StepType {
-            t: ffi::gsl_odeiv2_step_msbdf
+        unsafe {
+            ODEiv2StepType {
+                t: ffi::gsl_odeiv2_step_msbdf
+            }
         }
     }
 }
@@ -517,14 +539,18 @@ pub struct ODEiv2ControlType {
 
 impl ODEiv2ControlType {
     pub fn scaled() -> ODEiv2ControlType {
-        ODEiv2ControlType {
-            t: ffi::gsl_odeiv2_control_scaled
+        unsafe {
+            ODEiv2ControlType {
+                t: ffi::gsl_odeiv2_control_scaled
+            }
         }
     }
 
     pub fn standard() -> ODEiv2ControlType {
-        ODEiv2ControlType {
-            t: ffi::gsl_odeiv2_control_standard
+        unsafe {
+            ODEiv2ControlType {
+                t: ffi::gsl_odeiv2_control_standard
+            }
         }
     }
 }

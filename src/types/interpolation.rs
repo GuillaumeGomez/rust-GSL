@@ -163,20 +163,20 @@ impl InterpType {
 
     /// Linear interpolation. This interpolation method does not require any additional memory.
     pub fn linear() -> InterpType {
-        ffi::FFI::wrap(ffi::gsl_interp_linear as *mut ffi::gsl_interp_type)
+        ffi_wrap!(gsl_interp_linear, gsl_interp_type)
     }
 
     /// Polynomial interpolation. This method should only be used for interpolating small numbers of points because polynomial interpolation
     /// introduces large oscillations, even for well-behaved datasets. The number of terms in the interpolating polynomial is equal to the
     /// number of points.
     pub fn polynomial() -> InterpType {
-        ffi::FFI::wrap(ffi::gsl_interp_polynomial as *mut ffi::gsl_interp_type)
+        ffi_wrap!(gsl_interp_polynomial, gsl_interp_type)
     }
 
     /// Cubic spline with natural boundary conditions. The resulting curve is piecewise cubic on each interval, with matching first and second
     /// derivatives at the supplied data-points. The second derivative is chosen to be zero at the first point and last point.
     pub fn cspline() -> InterpType {
-        ffi::FFI::wrap(ffi::gsl_interp_cspline as *mut ffi::gsl_interp_type)
+        ffi_wrap!(gsl_interp_cspline, gsl_interp_type)
     }
 
     /// Cubic spline with periodic boundary conditions. The resulting curve is piecewise cubic on each interval, with matching first and second
@@ -184,17 +184,17 @@ impl InterpType {
     /// the data must have the same y-value as the first point, otherwise the resulting periodic interpolation will have a discontinuity at
     /// the boundary.
     pub fn cspline_periodic() -> InterpType {
-        ffi::FFI::wrap(ffi::gsl_interp_cspline_periodic as *mut ffi::gsl_interp_type)
+        ffi_wrap!(gsl_interp_cspline_periodic, gsl_interp_type)
     }
 
     /// Non-rounded Akima spline with natural boundary conditions. This method uses the non-rounded corner algorithm of Wodicka.
     pub fn akima() -> InterpType {
-        ffi::FFI::wrap(ffi::gsl_interp_akima as *mut ffi::gsl_interp_type)
+        ffi_wrap!(gsl_interp_akima, gsl_interp_type)
     }
 
     /// Non-rounded Akima spline with periodic boundary conditions. This method uses the non-rounded corner algorithm of Wodicka.
     pub fn akima_periodic() -> InterpType {
-        ffi::FFI::wrap(ffi::gsl_interp_akima_periodic as *mut ffi::gsl_interp_type)
+        ffi_wrap!(gsl_interp_akima_periodic, gsl_interp_type)
     }
 }
 

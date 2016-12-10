@@ -2,7 +2,14 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-pub use self::basis_spline::{BSpLineWorkspace, BSpLineDerivWorkspace};
+#[cfg(not(feature = "v2"))]
+pub use self::basis_spline::{
+    BSpLineWorkspace,
+    BSpLineDerivWorkspace
+};
+#[cfg(feature = "v2")]
+pub use self::basis_spline::BSpLineWorkspace;
+
 pub use self::chebyshev::ChebSeries;
 pub use self::combination::Combination;
 pub use self::complex::{ComplexF32, ComplexF64};
