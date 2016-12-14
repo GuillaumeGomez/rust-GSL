@@ -34,7 +34,12 @@ Just run `cargo build`. However, if you have issues with GSL version 2.x, try bu
 cargo build --features v2
 ```
 
-If a project depends on this version, don't forget to add in your `Cargo.toml`!
+If a project depends on this version, don't forget to add in your `Cargo.toml`:
+
+```toml
+[features]
+v2 = ["GSL/v2"]
+```
 
 ##Documentation
 
