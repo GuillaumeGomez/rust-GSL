@@ -426,7 +426,14 @@ impl ffi::FFI<ffi::gsl_vector_float> for VectorF32 {
     fn wrap(r: *mut ffi::gsl_vector_float) -> VectorF32 {
         VectorF32 {
             vec: r,
-            can_free: true
+            can_free: true,
+        }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_vector_float) -> VectorF32 {
+        VectorF32 {
+            vec: r,
+            can_free: false,
         }
     }
 
@@ -713,18 +720,18 @@ impl ffi::FFI<ffi::gsl_vector> for VectorF64 {
     fn wrap(r: *mut ffi::gsl_vector) -> VectorF64 {
         VectorF64 {
             vec: r,
-            can_free: true
+            can_free: true,
+        }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_vector) -> VectorF64 {
+        VectorF64 {
+            vec: r,
+            can_free: false,
         }
     }
 
     fn unwrap(v: &VectorF64) -> *mut ffi::gsl_vector {
         v.vec
-    }
-}
-
-pub fn wrap(v: *mut ffi::gsl_vector) -> VectorF64 {
-    VectorF64 {
-        vec: v,
-        can_free: false
     }
 }

@@ -224,6 +224,10 @@ impl ffi::FFI<ffi::gsl_rng> for Rng {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_rng) -> Rng {
+        Self::wrap(r)
+    }
+
     fn unwrap(m: &Rng) -> *mut ffi::gsl_rng {
         m.r
     }
@@ -331,6 +335,10 @@ impl ffi::FFI<ffi::gsl_rng_type> for RngType {
         RngType {
             ptr: r
         }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_rng_type) -> RngType {
+        Self::wrap(r)
     }
 
     fn unwrap(m: &RngType) -> *mut ffi::gsl_rng_type {

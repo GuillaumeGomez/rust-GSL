@@ -144,6 +144,10 @@ impl ffi::FFI<ffi::gsl_interp> for Interp {
         }
     }
 
+    fn soft_wrap(interp: *mut ffi::gsl_interp) -> Interp {
+        Self::wrap(interp)
+    }
+
     fn unwrap(interp: &Interp) -> *mut ffi::gsl_interp {
         interp.interp
     }
@@ -203,6 +207,10 @@ impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
         InterpType {
             t: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_interp_type) -> InterpType {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &InterpType) -> *mut ffi::gsl_interp_type {
@@ -291,6 +299,10 @@ impl ffi::FFI<ffi::gsl_spline> for Spline {
         Spline {
             spline: spline
         }
+    }
+
+    fn soft_wrap(spline: *mut ffi::gsl_spline) -> Spline {
+        Self::wrap(spline)
     }
 
     fn unwrap(spline: &Spline) -> *mut ffi::gsl_spline {

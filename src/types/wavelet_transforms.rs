@@ -100,6 +100,10 @@ impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
         }
     }
 
+    fn soft_wrap(w: *mut ffi::gsl_wavelet) -> Wavelet {
+        Self::wrap(w)
+    }
+
     fn unwrap(w: &Wavelet) -> *mut ffi::gsl_wavelet {
         w.w
     }
@@ -208,6 +212,10 @@ impl ffi::FFI<ffi::gsl_wavelet_workspace> for WaveletWorkspace {
         WaveletWorkspace {
             w: w
         }
+    }
+
+    fn soft_wrap(w: *mut ffi::gsl_wavelet_workspace) -> WaveletWorkspace {
+        Self::wrap(w)
     }
 
     fn unwrap(w: &WaveletWorkspace) -> *mut ffi::gsl_wavelet_workspace {

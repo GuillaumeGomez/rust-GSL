@@ -165,6 +165,10 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
         }
     }
 
+    fn soft_wrap(c: *mut ffi::gsl_multiset) -> MultiSet {
+        Self::wrap(c)
+    }
+
     fn unwrap(c: &MultiSet) -> *mut ffi::gsl_multiset {
         c.c
     }

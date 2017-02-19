@@ -280,6 +280,10 @@ impl ffi::FFI<ffi::gsl_histogram> for Histogram {
         }
     }
 
+    fn soft_wrap(h: *mut ffi::gsl_histogram) -> Histogram {
+        Self::wrap(h)
+    }
+
     fn unwrap(h: &Histogram) -> *mut ffi::gsl_histogram {
         h.h
     }
@@ -339,6 +343,10 @@ impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
         HistogramPdf {
             h: h
         }
+    }
+
+    fn soft_wrap(h: *mut ffi::gsl_histogram_pdf) -> HistogramPdf {
+        Self::wrap(h)
     }
 
     fn unwrap(h: &HistogramPdf) -> *mut ffi::gsl_histogram_pdf {
@@ -605,6 +613,10 @@ impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
         }
     }
 
+    fn soft_wrap(h: *mut ffi::gsl_histogram2d) -> Histogram2D {
+        Self::wrap(h)
+    }
+
     fn unwrap(h: &Histogram2D) -> *mut ffi::gsl_histogram2d {
         h.h
     }
@@ -666,6 +678,10 @@ impl ffi::FFI<ffi::gsl_histogram2d_pdf> for Histogram2DPdf {
         Histogram2DPdf {
             h: h
         }
+    }
+
+    fn soft_wrap(h: *mut ffi::gsl_histogram2d_pdf) -> Histogram2DPdf {
+        Self::wrap(h)
     }
 
     fn unwrap(h: &Histogram2DPdf) -> *mut ffi::gsl_histogram2d_pdf {

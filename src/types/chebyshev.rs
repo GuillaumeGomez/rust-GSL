@@ -174,6 +174,10 @@ impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_cheb_series) -> ChebSeries {
+        Self::wrap(r)
+    }
+
     fn unwrap(c: &ChebSeries) -> *mut ffi::gsl_cheb_series {
         c.c
     }

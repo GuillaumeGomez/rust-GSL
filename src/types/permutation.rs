@@ -211,6 +211,10 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
         }
     }
 
+    fn soft_wrap(p: *mut ffi::gsl_permutation) -> Permutation {
+        Self::wrap(p)
+    }
+
     fn unwrap(p: &Permutation) -> *mut ffi::gsl_permutation {
         p.p
     }

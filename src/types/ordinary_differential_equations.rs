@@ -239,6 +239,10 @@ impl ffi::FFI<ffi::gsl_odeiv2_step> for ODEiv2Step {
         }
     }
 
+    fn soft_wrap(s: *mut ffi::gsl_odeiv2_step) -> ODEiv2Step {
+        Self::wrap(s)
+    }
+
     fn unwrap(s: &ODEiv2Step) -> *mut ffi::gsl_odeiv2_step {
         s.s
     }
@@ -365,6 +369,10 @@ impl ffi::FFI<ffi::gsl_odeiv2_step_type> for ODEiv2StepType {
         ODEiv2StepType {
             t: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_odeiv2_step_type) -> ODEiv2StepType {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &ODEiv2StepType) -> *mut ffi::gsl_odeiv2_step_type {
@@ -527,6 +535,10 @@ impl ffi::FFI<ffi::gsl_odeiv2_control> for ODEiv2Control {
         }
     }
 
+    fn soft_wrap(c: *mut ffi::gsl_odeiv2_control) -> ODEiv2Control {
+        Self::wrap(c)
+    }
+
     fn unwrap(c: &ODEiv2Control) -> *mut ffi::gsl_odeiv2_control {
         c.c
     }
@@ -560,6 +572,10 @@ impl ffi::FFI<ffi::gsl_odeiv2_control_type> for ODEiv2ControlType {
         ODEiv2ControlType {
             t: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_odeiv2_control_type) -> ODEiv2ControlType {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &ODEiv2ControlType) -> *mut ffi::gsl_odeiv2_control_type {
@@ -648,6 +664,10 @@ impl ffi::FFI<ffi::gsl_odeiv2_evolve> for ODEiv2Evolve {
         ODEiv2Evolve {
             e: e
         }
+    }
+
+    fn soft_wrap(e: *mut ffi::gsl_odeiv2_evolve) -> ODEiv2Evolve {
+        Self::wrap(e)
     }
 
     fn unwrap(e: &ODEiv2Evolve) -> *mut ffi::gsl_odeiv2_evolve {

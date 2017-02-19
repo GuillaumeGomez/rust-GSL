@@ -248,6 +248,10 @@ impl ffi::FFI<ffi::gsl_vector_complex> for VectorComplexF64 {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_vector_complex) -> VectorComplexF64 {
+        Self::wrap(r)
+    }
+
     fn unwrap(v: &VectorComplexF64) -> *mut ffi::gsl_vector_complex {
         v.vec
     }
@@ -492,6 +496,10 @@ impl ffi::FFI<ffi::gsl_vector_complex_float> for VectorComplexF32 {
         VectorComplexF32 {
             vec: r
         }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_vector_complex_float) -> VectorComplexF32 {
+        Self::wrap(r)
     }
 
     fn unwrap(v: &VectorComplexF32) -> *mut ffi::gsl_vector_complex_float {

@@ -62,6 +62,10 @@ impl ffi::FFI<ffi::gsl_poly_complex_workspace> for PolyComplex {
         }
     }
 
+    fn soft_wrap(w: *mut ffi::gsl_poly_complex_workspace) -> PolyComplex {
+        Self::wrap(w)
+    }
+
     fn unwrap(w: &PolyComplex) -> *mut ffi::gsl_poly_complex_workspace {
         w.w
     }

@@ -141,6 +141,10 @@ impl ffi::FFI<ffi::gsl_eigen_symm_workspace> for EigenSymmetricWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_symm_workspace) -> EigenSymmetricWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenSymmetricWorkspace) -> *mut ffi::gsl_eigen_symm_workspace {
         t.w
     }
@@ -192,6 +196,10 @@ impl ffi::FFI<ffi::gsl_eigen_symmv_workspace> for EigenSymmetricVWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_symmv_workspace) -> EigenSymmetricVWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenSymmetricVWorkspace) -> *mut ffi::gsl_eigen_symmv_workspace {
         t.w
     }
@@ -238,6 +246,10 @@ impl ffi::FFI<ffi::gsl_eigen_herm_workspace> for EigenHermitianWorkspace {
         EigenHermitianWorkspace {
             w: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_eigen_herm_workspace) -> EigenHermitianWorkspace {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &EigenHermitianWorkspace) -> *mut ffi::gsl_eigen_herm_workspace {
@@ -292,6 +304,10 @@ impl ffi::FFI<ffi::gsl_eigen_hermv_workspace> for EigenHermitianVWorkspace {
         EigenHermitianVWorkspace {
             w: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_eigen_hermv_workspace) -> EigenHermitianVWorkspace {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &EigenHermitianVWorkspace) -> *mut ffi::gsl_eigen_hermv_workspace {
@@ -386,6 +402,10 @@ impl ffi::FFI<ffi::gsl_eigen_nonsymm_workspace> for EigenNonSymmWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_nonsymm_workspace) -> EigenNonSymmWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenNonSymmWorkspace) -> *mut ffi::gsl_eigen_nonsymm_workspace {
         t.w
     }
@@ -454,6 +474,10 @@ impl ffi::FFI<ffi::gsl_eigen_nonsymmv_workspace> for EigenNonSymmVWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_nonsymmv_workspace) -> EigenNonSymmVWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenNonSymmVWorkspace) -> *mut ffi::gsl_eigen_nonsymmv_workspace {
         t.w
     }
@@ -499,6 +523,10 @@ impl ffi::FFI<ffi::gsl_eigen_gensymm_workspace> for EigenGenSymmWorkspace {
         EigenGenSymmWorkspace {
             w: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_eigen_gensymm_workspace) -> EigenGenSymmWorkspace {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &EigenGenSymmWorkspace) -> *mut ffi::gsl_eigen_gensymm_workspace {
@@ -550,6 +578,10 @@ impl ffi::FFI<ffi::gsl_eigen_gensymmv_workspace> for EigenGenSymmVWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_gensymmv_workspace) -> EigenGenSymmVWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenGenSymmVWorkspace) -> *mut ffi::gsl_eigen_gensymmv_workspace {
         t.w
     }
@@ -598,6 +630,10 @@ impl ffi::FFI<ffi::gsl_eigen_genherm_workspace> for EigenGenHermWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_genherm_workspace) -> EigenGenHermWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenGenHermWorkspace) -> *mut ffi::gsl_eigen_genherm_workspace {
         t.w
     }
@@ -644,6 +680,10 @@ impl ffi::FFI<ffi::gsl_eigen_genhermv_workspace> for EigenGenHermVWorkspace {
         EigenGenHermVWorkspace {
             w: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_eigen_genhermv_workspace) -> EigenGenHermVWorkspace {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &EigenGenHermVWorkspace) -> *mut ffi::gsl_eigen_genhermv_workspace {
@@ -729,6 +769,10 @@ impl ffi::FFI<ffi::gsl_eigen_gen_workspace> for EigenGenWorkspace {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_eigen_gen_workspace) -> EigenGenWorkspace {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &EigenGenWorkspace) -> *mut ffi::gsl_eigen_gen_workspace {
         t.w
     }
@@ -792,6 +836,10 @@ impl ffi::FFI<ffi::gsl_eigen_genv_workspace> for EigenGenVWorkspace {
         EigenGenVWorkspace {
             w: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_eigen_genv_workspace) -> EigenGenVWorkspace {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &EigenGenVWorkspace) -> *mut ffi::gsl_eigen_genv_workspace {

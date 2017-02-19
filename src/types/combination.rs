@@ -165,6 +165,10 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_combination) -> Combination {
+        Self::wrap(r)
+    }
+
     fn unwrap(c: &Combination) -> *mut ffi::gsl_combination {
         c.c
     }

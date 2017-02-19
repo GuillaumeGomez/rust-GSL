@@ -20,6 +20,7 @@ pub type coord = c_int;
 
 pub trait FFI<T> {
     fn wrap(r: *mut T) -> Self;
+    fn soft_wrap(r: *mut T) -> Self;
     fn unwrap(&Self) -> *mut T;
 }
 
@@ -3440,11 +3441,11 @@ pub struct gsl_multifit_fsolver {
 
 #[repr(C)]
 pub struct gsl_multifit_function_fdf {
-    pub f: Option<extern "C" fn(x: *const gsl_vector, params: *mut c_void,
+    pub f: Option<extern "C" fn(x: *mut gsl_vector, params: *mut c_void,
                                 f: *mut gsl_vector) -> enums::Value>,
-    pub df: Option<extern "C" fn(x: *const gsl_vector, params: *mut c_void,
+    pub df: Option<extern "C" fn(x: *mut gsl_vector, params: *mut c_void,
                                  df: *mut gsl_matrix) -> enums::Value>,
-    pub fdf: Option<extern "C" fn(x: *const gsl_vector, params: *mut c_void, f: *mut gsl_vector,
+    pub fdf: Option<extern "C" fn(x: *mut gsl_vector, params: *mut c_void, f: *mut gsl_vector,
                                   df: *mut gsl_matrix) -> enums::Value>,
     pub n: size_t,
     pub p: size_t,

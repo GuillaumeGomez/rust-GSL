@@ -68,6 +68,10 @@ impl ffi::FFI<ffi::gsl_ran_discrete_t> for RanDiscrete {
         }
     }
 
+    fn soft_wrap(v: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {
+        Self::wrap(v)
+    }
+
     fn unwrap(v: &RanDiscrete) -> *mut ffi::gsl_ran_discrete_t {
         v.ran
     }
