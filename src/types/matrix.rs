@@ -517,7 +517,14 @@ impl ffi::FFI<ffi::gsl_matrix> for MatrixF64 {
     fn wrap(r: *mut ffi::gsl_matrix) -> MatrixF64 {
         MatrixF64 {
             mat: r,
-            can_free: true
+            can_free: true,
+        }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_matrix) -> MatrixF64 {
+        MatrixF64 {
+            mat: r,
+            can_free: false,
         }
     }
 
@@ -848,7 +855,14 @@ impl ffi::FFI<ffi::gsl_matrix_float> for MatrixF32 {
     fn wrap(r: *mut ffi::gsl_matrix_float) -> MatrixF32 {
         MatrixF32 {
             mat: r,
-            can_free: true
+            can_free: true,
+        }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_matrix_float) -> MatrixF32 {
+        MatrixF32 {
+            mat: r,
+            can_free: false,
         }
     }
 

@@ -138,6 +138,10 @@ impl ffi::FFI<ffi::gsl_sf_mathieu_workspace> for MathieuWorkspace {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
+        Self::wrap(r)
+    }
+
     fn unwrap(v: &MathieuWorkspace) -> *mut ffi::gsl_sf_mathieu_workspace {
         v.work
     }

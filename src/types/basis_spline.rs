@@ -150,6 +150,10 @@ impl ffi::FFI<ffi::gsl_bspline_workspace> for BSpLineWorkspace {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_bspline_workspace) -> BSpLineWorkspace {
+        Self::wrap(r)
+    }
+
     fn unwrap(bsp: &BSpLineWorkspace) -> *mut ffi::gsl_bspline_workspace {
         bsp.w
     }
@@ -225,6 +229,10 @@ impl ffi::FFI<ffi::gsl_bspline_deriv_workspace> for BSpLineDerivWorkspace {
         BSpLineDerivWorkspace {
             w: r
         }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_bspline_deriv_workspace) -> BSpLineDerivWorkspace {
+        Self::wrap(r)
     }
 
     fn unwrap(bsp: &BSpLineDerivWorkspace) -> *mut ffi::gsl_bspline_deriv_workspace {

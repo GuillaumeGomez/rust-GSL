@@ -111,6 +111,10 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
         }
     }
 
+    fn soft_wrap(q: *mut ffi::gsl_qrng) -> QRng {
+        Self::wrap(q)
+    }
+
     fn unwrap(q: &QRng) -> *mut ffi::gsl_qrng {
         q.q
     }
@@ -166,6 +170,10 @@ impl ffi::FFI<ffi::gsl_qrng_type> for QRngType {
         QRngType {
             t: t
         }
+    }
+
+    fn soft_wrap(t: *mut ffi::gsl_qrng_type) -> QRngType {
+        Self::wrap(t)
     }
 
     fn unwrap(t: &QRngType) -> *mut ffi::gsl_qrng_type {

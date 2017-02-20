@@ -51,13 +51,34 @@ the range of validity for Gaussian errors.
 
 extern crate rgsl;
 
+use std::rc::Rc;
+use std::cell::RefCell;
+
+macro_rules! clone {
+    (@param _) => ( _ );
+    (@param $x:ident) => ( $x );
+    ($($n:ident),+ => move || $body:expr) => (
+        {
+            $( let $n = $n.clone(); )+
+            move || $body
+        }
+    );
+    ($($n:ident),+ => move |$($p:tt),+| $body:expr) => (
+        {
+            $( let $n = $n.clone(); )+
+            move |$(clone!(@param $p),)+| $body
+        }
+    );
+}
+
+#[derive(Clone)]
 struct Data {
     n: usize,
     y: Vec<f64>,
-    sigma: Vec<f64>
+    sigma: Vec<f64>,
 }
 
-fn expb_f(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64) -> rgsl::Value {
+fn exp_f(x: &rgsl::VectorF64, f: &rgsl::VectorF64, data: &Data) -> rgsl::Value {
     let A = x.get(0);
     let lambda = x.get(1);
     let b = x.get(2);
@@ -73,7 +94,7 @@ fn expb_f(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64) -> rgsl
     rgsl::Value::Success
 }
 
-fn expb_df(x: &rgsl::VectorF64, data: &mut Data, J: &mut rgsl::MatrixF64) -> rgsl::Value {
+fn exp_df(x: &rgsl::VectorF64, J: &rgsl::MatrixF64, data: &Data) -> rgsl::Value {
     let A = x.get(0);
     let lambda = x.get(1);
 
@@ -93,11 +114,9 @@ fn expb_df(x: &rgsl::VectorF64, data: &mut Data, J: &mut rgsl::MatrixF64) -> rgs
     rgsl::Value::Success
 }
 
-fn expb_fdf(x: &rgsl::VectorF64, data: &mut Data, f: &mut rgsl::VectorF64, J: &mut rgsl::MatrixF64) -> rgsl::Value {
-    expb_f(x, data, f);
-    expb_df(x, data, J);
-
-    rgsl::Value::Success
+fn print_state(iter: usize, s: &rgsl::MultiFitFdfSolver) {
+    println!("iter: {} x = {} {} {} |f(x)| = {}", iter,
+             s.x().get(0), s.x().get(1), s.x().get(2), rgsl::blas::level1::dnrm2(&s.f()));
 }
 
 // The main part of the program sets up a Levenberg-Marquardt solver and some simulated random data. The data uses the known parameters
@@ -113,12 +132,12 @@ fn main() {
     let p = 3;
 
     let mut covar = rgsl::MatrixF64::new(p, p).unwrap();
-    let mut d = Data {
+    let mut data = Rc::new(RefCell::new(Data {
         n: n,
         y: ::std::iter::repeat(0f64).take(N).collect(),
         sigma: ::std::iter::repeat(0f64).take(N).collect()
-    };
-    let mut x_init : [f64; 3] = [1f64, 0f64, 0f64];
+    }));
+    let mut x_init: [f64; 3] = [1f64, 0f64, 0f64];
     let mut x = rgsl::VectorView::from_array(&mut x_init);
 
     rgsl::RngType::env_setup();
@@ -126,67 +145,71 @@ fn main() {
     let r = rgsl::Rng::new(&t).unwrap();
     let T = rgsl::MultiFitFdfSolverType::lmsder();
 
-    let mut f = rgsl::MultiFitFunctionFdf {
-        f: expb_f,
-        df: Some(expb_df),
-        fdf: Some(expb_fdf),
-        n: n,
-        p: p,
-        params: &mut d
-    };
+    let mut f = rgsl::MultiFitFunctionFdf::new(n, p);
+    let expb_f = clone!(data => move |x, f| {
+        exp_f(&x, &f, &*data.borrow())
+    });
+    f.f = Some(Box::new(expb_f));
+    let expb_df = clone!(data => move |x, J| {
+        exp_df(&x, &J, &*data.borrow())
+    });
+    f.df = Some(Box::new(expb_df));
+    let expb_fdf = clone!(data => move |x, f, J| {
+        exp_f(&x, &f, &*data.borrow());
+        exp_df(&x, &J, &*data.borrow());
+
+        rgsl::Value::Success
+    });
+    f.fdf = Some(Box::new(expb_fdf));
 
     /* This is the data to be fitted */
     let mut iter = 0;
 
     for i in 0..n {
         let t = i as f64;
+        let mut data = data.borrow_mut();
 
-        f.params.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp() + rgsl::randist::gaussian::gaussian(&r, 0.1f64);
-        f.params.sigma[i] = 0.1f64;
-        println!("data: {:2} {:.5} {:.5}", i, f.params.y[i], f.params.sigma[i]);
+        data.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp()
+            + rgsl::randist::gaussian::gaussian(&r, 0.1f64);
+        data.sigma[i] = 0.1f64;
+        println!("data: {:2} {:.5} {:.5}", i, data.y[i], data.sigma[i]);
     }
 
     let mut s = rgsl::MultiFitFdfSolver::new(&T, n, p).unwrap();
 
     s.set(&mut f, &x.vector());
-
-    print_state(iter, &mut s);
+    print_state(iter, &s);
 
     loop {
         iter += 1;
         status = s.iterate();
 
         println!("status = {}", rgsl::error::str_error(status));
-
-        print_state(iter, &mut s);
+        print_state(iter, &s);
 
         if status != rgsl::Value::Success {
             break;
         }
 
-        status = rgsl::multifit::test_delta(&s.dx, &s.x, 1e-4, 1e-4);
+        status = rgsl::multifit::test_delta(&s.dx(), &s.x(), 1e-4, 1e-4);
         if status != rgsl::Value::Continue || iter >= 500 {
             break;
         }
     }
 
-    rgsl::multifit::covar(&s.j, 0f64, &mut covar);
+    rgsl::multifit::covar(&s.J(), 0f64, &mut covar);
 
     {
-        let chi = rgsl::blas::level1::dnrm2(&s.f);
+        let chi = rgsl::blas::level1::dnrm2(&s.f());
         let dof = n as f64 - p as f64;
         let c = 1f64.max(chi / dof.sqrt());
 
         println!("chisq/dof = {}",  chi.powf(2f64) / dof);
 
-        println!("A      = {:.5} +/- {:.5}", s.x.get(0), c * covar.get(0, 0).sqrt());
-        println!("lambda = {:.5} +/- {:.5}", s.x.get(1), c * covar.get(1, 1).sqrt());
-        println!("b      = {:.5} +/- {:.5}", s.x.get(2), c * covar.get(2, 2).sqrt());
+        println!("A      = {:.5} +/- {:.5}", s.x().get(0), c * covar.get(0, 0).sqrt());
+        println!("lambda = {:.5} +/- {:.5}", s.x().get(1), c * covar.get(1, 1).sqrt());
+        println!("b      = {:.5} +/- {:.5}", s.x().get(2), c * covar.get(2, 2).sqrt());
     }
 
     println!("status = {}", rgsl::error::str_error(status));
-}
-
-fn print_state<T>(iter: usize, s: &mut rgsl::MultiFitFdfSolver<T>) {
-    println!("iter: {:3} x = {:.8} {:.8} {:.8} |f(x)| = {}", iter, s.x.get(0), s.x.get(1), s.x.get(2), rgsl::blas::level1::dnrm2(&s.f));
 }

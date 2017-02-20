@@ -134,6 +134,10 @@ impl<T> ffi::FFI<ffi::gsl_ntuple> for NTuples<T> {
         }
     }
 
+    fn soft_wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
+        Self::wrap(n)
+    }
+
     fn unwrap(n: &NTuples<T>) -> *mut ffi::gsl_ntuple {
         n.n
     }

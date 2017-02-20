@@ -164,6 +164,10 @@ impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
         }
     }
 
+    fn soft_wrap(s: *mut ffi::gsl_monte_plain_state) -> PlainMonteCarlo {
+        Self::wrap(s)
+    }
+
     fn unwrap(s: &PlainMonteCarlo) -> *mut ffi::gsl_monte_plain_state {
         s.s
     }
@@ -288,6 +292,10 @@ impl ffi::FFI<ffi::gsl_monte_miser_state> for MiserMonteCarlo {
         MiserMonteCarlo {
             s: s
         }
+    }
+
+    fn soft_wrap(s: *mut ffi::gsl_monte_miser_state) -> MiserMonteCarlo {
+        Self::wrap(s)
     }
 
     fn unwrap(s: &MiserMonteCarlo) -> *mut ffi::gsl_monte_miser_state {
@@ -485,6 +493,10 @@ impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
         VegasMonteCarlo {
             s: s
         }
+    }
+
+    fn soft_wrap(s: *mut ffi::gsl_monte_vegas_state) -> VegasMonteCarlo {
+        Self::wrap(s)
     }
 
     fn unwrap(s: &VegasMonteCarlo) -> *mut ffi::gsl_monte_vegas_state {

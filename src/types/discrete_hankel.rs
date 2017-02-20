@@ -137,6 +137,10 @@ impl ffi::FFI<ffi::gsl_dht> for DiscreteHankel {
         }
     }
 
+    fn soft_wrap(t: *mut ffi::gsl_dht) -> DiscreteHankel {
+        Self::wrap(t)
+    }
+
     fn unwrap(t: &DiscreteHankel) -> *mut ffi::gsl_dht {
         t.t
     }

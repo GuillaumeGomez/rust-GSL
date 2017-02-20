@@ -280,6 +280,10 @@ impl ffi::FFI<ffi::gsl_matrix_complex> for MatrixComplexF64 {
         }
     }
 
+    fn soft_wrap(r: *mut ffi::gsl_matrix_complex) -> MatrixComplexF64 {
+        Self::wrap(r)
+    }
+
     fn unwrap(m: &MatrixComplexF64) -> *mut ffi::gsl_matrix_complex {
         m.mat
     }
@@ -555,6 +559,10 @@ impl ffi::FFI<ffi::gsl_matrix_complex_float> for MatrixComplexF32 {
         MatrixComplexF32 {
             mat: r
         }
+    }
+
+    fn soft_wrap(r: *mut ffi::gsl_matrix_complex_float) -> MatrixComplexF32 {
+        Self::wrap(r)
     }
 
     fn unwrap(m: &MatrixComplexF32) -> *mut ffi::gsl_matrix_complex_float {

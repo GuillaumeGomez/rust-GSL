@@ -1937,6 +1937,10 @@ impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
         }
     }
 
+    fn soft_wrap(w: *mut ffi::gsl_integration_workspace) -> IntegrationWorkspace {
+        Self::wrap(w)
+    }
+
     fn unwrap(w: &IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
         w.w
     }
@@ -2169,6 +2173,10 @@ impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
         IntegrationQawsTable {
             w: w
         }
+    }
+
+    fn soft_wrap(w: *mut ffi::gsl_integration_qaws_table) -> IntegrationQawsTable {
+        Self::wrap(w)
     }
 
     fn unwrap(w: &IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
@@ -2589,6 +2597,10 @@ impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
         IntegrationQawoTable {
             w: w
         }
+    }
+
+    fn soft_wrap(w: *mut ffi::gsl_integration_qawo_table) -> IntegrationQawoTable {
+        Self::wrap(w)
     }
 
     fn unwrap(w: &IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
@@ -3131,6 +3143,10 @@ impl ffi::FFI<ffi::gsl_integration_cquad_workspace> for CquadWorkspace {
         }
     }
 
+    fn soft_wrap(w: *mut ffi::gsl_integration_cquad_workspace) -> CquadWorkspace {
+        Self::wrap(w)
+    }
+
     fn unwrap(w: &CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
         w.w
     }
@@ -3212,6 +3228,10 @@ impl ffi::FFI<ffi::gsl_integration_glfixed_table> for GLFixedTable {
         GLFixedTable {
             w: w
         }
+    }
+
+    fn soft_wrap(w: *mut ffi::gsl_integration_glfixed_table) -> GLFixedTable {
+        Self::wrap(w)
     }
 
     fn unwrap(w: &GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
