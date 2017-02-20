@@ -54,13 +54,6 @@ extern crate rgsl;
 use std::rc::Rc;
 use std::cell::RefCell;
 
-#[derive(Clone)]
-struct Data {
-    n: usize,
-    y: Vec<f64>,
-    sigma: Vec<f64>,
-}
-
 macro_rules! clone {
     (@param _) => ( _ );
     (@param $x:ident) => ( $x );
@@ -76,6 +69,54 @@ macro_rules! clone {
             move |$(clone!(@param $p),)+| $body
         }
     );
+}
+
+#[derive(Clone)]
+struct Data {
+    n: usize,
+    y: Vec<f64>,
+    sigma: Vec<f64>,
+}
+
+fn exp_f(x: &rgsl::VectorF64, f: &rgsl::VectorF64, data: &Data) -> rgsl::Value {
+    let A = x.get(0);
+    let lambda = x.get(1);
+    let b = x.get(2);
+
+    for i in 0..data.n {
+        /* Model Yi = A * exp(-lambda * i) + b */
+        let t = i as f64;
+        let Yi = A * (-lambda * t).exp() + b;
+
+        f.set(i, (Yi - data.y[i as usize]) / data.sigma[i as usize]);
+    }
+
+    rgsl::Value::Success
+}
+
+fn exp_df(x: &rgsl::VectorF64, J: &rgsl::MatrixF64, data: &Data) -> rgsl::Value {
+    let A = x.get(0);
+    let lambda = x.get(1);
+
+    for i in 0..data.n {
+        /* Jacobian matrix J(i,j) = dfi / dxj, */
+        /* where fi = (Yi - yi)/sigma[i],      */
+        /*       Yi = A * exp(-lambda * i) + b  */
+        /* and the xj are the parameters (A,lambda,b) */
+        let t = i as f64;
+        let s = data.sigma[i as usize];
+        let e = (-lambda * t).exp();
+
+        J.set(i, 0, e / s);
+        J.set(i, 1, -t * A * e / s);
+        J.set(i, 2, 1f64 / s);
+    }
+    rgsl::Value::Success
+}
+
+fn print_state(iter: usize, s: &rgsl::MultiFitFdfSolver) {
+    println!("iter: {} x = {} {} {} |f(x)| = {}", iter,
+             s.x().get(0), s.x().get(1), s.x().get(2), rgsl::blas::level1::dnrm2(&s.f()));
 }
 
 // The main part of the program sets up a Levenberg-Marquardt solver and some simulated random data. The data uses the known parameters
@@ -96,7 +137,7 @@ fn main() {
         y: ::std::iter::repeat(0f64).take(N).collect(),
         sigma: ::std::iter::repeat(0f64).take(N).collect()
     }));
-    let mut x_init : [f64; 3] = [1f64, 0f64, 0f64];
+    let mut x_init: [f64; 3] = [1f64, 0f64, 0f64];
     let mut x = rgsl::VectorView::from_array(&mut x_init);
 
     rgsl::RngType::env_setup();
@@ -106,55 +147,19 @@ fn main() {
 
     let mut f = rgsl::MultiFitFunctionFdf::new(n, p);
     let expb_f = clone!(data => move |x, f| {
-        let x: rgsl::VectorF64 = x;
-        let f: rgsl::VectorF64 = f;
-
-        let A = x.get(0);
-        let lambda = x.get(1);
-        let b = x.get(2);
-
-        let n = data.borrow().n;
-        for i in 0..n {
-            /* Model Yi = A * exp(-lambda * i) + b */
-            let t = i as f64;
-            let Yi = A * (-lambda * t).exp() + b;
-
-            f.set(i, (Yi - data.borrow().y[i as usize]) / data.borrow().sigma[i as usize]);
-        }
-
-        rgsl::Value::Success
+        exp_f(&x, &f, &*data.borrow())
     });
     f.f = Some(Box::new(expb_f));
     let expb_df = clone!(data => move |x, J| {
-        let x: rgsl::VectorF64 = x;
-        let J: rgsl::MatrixF64 = J;
-
-        let A = x.get(0);
-        let lambda = x.get(1);
-
-        let n = data.borrow().n;
-        for i in 0..n {
-            /* Jacobian matrix J(i,j) = dfi / dxj, */
-            /* where fi = (Yi - yi)/sigma[i],      */
-            /*       Yi = A * exp(-lambda * i) + b  */
-            /* and the xj are the parameters (A,lambda,b) */
-            let t = i as f64;
-            let s = data.borrow().sigma[i as usize];
-            let e = (-lambda * t).exp();
-
-            J.set(i, 0, e / s);
-            J.set(i, 1, -t * A * e / s);
-            J.set(i, 2, 1f64 / s);
-        }
-        rgsl::Value::Success
+        exp_df(&x, &J, &*data.borrow())
     });
     f.df = Some(Box::new(expb_df));
-    let expb_fdf = move |x: rgsl::VectorF64, f: rgsl::VectorF64, J: rgsl::MatrixF64| {
-        expb_f(x, f);
-        expb_df(x, J);
+    let expb_fdf = clone!(data => move |x, f, J| {
+        exp_f(&x, &f, &*data.borrow());
+        exp_df(&x, &J, &*data.borrow());
 
         rgsl::Value::Success
-    };
+    });
     f.fdf = Some(Box::new(expb_fdf));
 
     /* This is the data to be fitted */
@@ -162,25 +167,25 @@ fn main() {
 
     for i in 0..n {
         let t = i as f64;
+        let mut data = data.borrow_mut();
 
-        data.borrow_mut().y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp()
+        data.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp()
             + rgsl::randist::gaussian::gaussian(&r, 0.1f64);
-        data.borrow_mut().sigma[i] = 0.1f64;
-        println!("data: {:2} {:.5} {:.5}",
-                 i,
-                 data.borrow_mut().y[i],
-                 data.borrow_mut().sigma[i]);
+        data.sigma[i] = 0.1f64;
+        println!("data: {:2} {:.5} {:.5}", i, data.y[i], data.sigma[i]);
     }
 
     let mut s = rgsl::MultiFitFdfSolver::new(&T, n, p).unwrap();
 
     s.set(&mut f, &x.vector());
+    print_state(iter, &s);
 
     loop {
         iter += 1;
         status = s.iterate();
 
         println!("status = {}", rgsl::error::str_error(status));
+        print_state(iter, &s);
 
         if status != rgsl::Value::Success {
             break;
