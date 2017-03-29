@@ -56,7 +56,7 @@ use std::cell::RefCell;
 
 macro_rules! clone {
     (@param _) => ( _ );
-    (@param $x:ident) => ( $x );
+    (@param $x:ident) => ( mut $x );
     ($($n:ident),+ => move || $body:expr) => (
         {
             $( let $n = $n.clone(); )+
@@ -78,7 +78,7 @@ struct Data {
     sigma: Vec<f64>,
 }
 
-fn exp_f(x: &rgsl::VectorF64, f: &rgsl::VectorF64, data: &Data) -> rgsl::Value {
+fn exp_f(x: &rgsl::VectorF64, f: &mut rgsl::VectorF64, data: &Data) -> rgsl::Value {
     let A = x.get(0);
     let lambda = x.get(1);
     let b = x.get(2);
@@ -94,7 +94,7 @@ fn exp_f(x: &rgsl::VectorF64, f: &rgsl::VectorF64, data: &Data) -> rgsl::Value {
     rgsl::Value::Success
 }
 
-fn exp_df(x: &rgsl::VectorF64, J: &rgsl::MatrixF64, data: &Data) -> rgsl::Value {
+fn exp_df(x: &rgsl::VectorF64, J: &mut rgsl::MatrixF64, data: &Data) -> rgsl::Value {
     let A = x.get(0);
     let lambda = x.get(1);
 
@@ -125,6 +125,7 @@ fn print_state(iter: usize, s: &rgsl::MultiFitFdfSolver) {
 
 static N : usize = 40usize;
 
+#[allow(unused_mut)]
 #[allow(unused_assignments)]
 fn main() {
     let mut status = rgsl::Value::Success;
@@ -147,16 +148,16 @@ fn main() {
 
     let mut f = rgsl::MultiFitFunctionFdf::new(n, p);
     let expb_f = clone!(data => move |x, f| {
-        exp_f(&x, &f, &*data.borrow())
+        exp_f(&x, &mut f, &*data.borrow())
     });
     f.f = Some(Box::new(expb_f));
     let expb_df = clone!(data => move |x, J| {
-        exp_df(&x, &J, &*data.borrow())
+        exp_df(&x, &mut J, &*data.borrow())
     });
     f.df = Some(Box::new(expb_df));
     let expb_fdf = clone!(data => move |x, f, J| {
-        exp_f(&x, &f, &*data.borrow());
-        exp_df(&x, &J, &*data.borrow());
+        exp_f(&x, &mut f, &*data.borrow());
+        exp_df(&x, &mut J, &*data.borrow());
 
         rgsl::Value::Success
     });

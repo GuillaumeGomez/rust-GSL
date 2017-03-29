@@ -20,7 +20,7 @@ fn main() {
     rgsl::RngType::env_setup();
 
     let t : RngType = rgsl::rng::default();
-    let r = rgsl::Rng::new(&t).unwrap();
+    let mut r = rgsl::Rng::new(&t).unwrap();
     let k = 5;
     let n = 100000;
     let mut x : [f64; 100000] = [0f64; 100000];

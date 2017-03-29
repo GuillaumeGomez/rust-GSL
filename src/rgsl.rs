@@ -4,7 +4,7 @@
 
 //! A __Rust__ binding for the [GSL library][] (the GNU Scientific Library).
 //!
-//! ##Installation
+//! ## Installation
 //!
 //! This binding requires the [GSL library] library to be installed.
 //!
@@ -22,7 +22,7 @@
 //! extern crate rgsl;
 //! ```
 //!
-//! ##Documentation
+//! ## Documentation
 //!
 //! You can access the __rgsl__ documentation locally, just build it:
 //!
@@ -34,7 +34,7 @@
 //! `file:///{rgsl_location}/target/doc/rgsl/index.html`
 //!
 //! You can also access the latest build of the documentation via the internet
-//! [here](http://rust-ci.org/GuillaumeGomez/rust-GSL/doc/rgsl/).
+//! [here](https://docs.rs/crate/GSL/).
 //!
 //! ## License
 //! __rust-GSL__ is a wrapper for __GSL__, therefore inherits the
@@ -248,4 +248,3 @@ pub static LOG_DBL_MAX       : f64 = 7.0978271289338397e+02;
 pub static NAN               : f64 = 0f64 / 0f64;
 pub static POSINF            : f64 = 1f64 / 0f64;
 pub static NEGINF            : f64 = -1f64 / 0f64;
-

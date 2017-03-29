@@ -37,7 +37,7 @@ impl VectorComplexF64 {
         if tmp.is_null() {
             None
         } else {
-            let v = VectorComplexF64 {
+            let mut v = VectorComplexF64 {
                 vec: tmp
             };
             let mut pos = 0usize;
@@ -64,85 +64,85 @@ impl VectorComplexF64 {
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&self, i: usize, x: &ComplexF64) -> &VectorComplexF64 {
+    pub fn set(&mut self, i: usize, x: &ComplexF64) -> &VectorComplexF64 {
         unsafe { ffi::gsl_vector_complex_set(self.vec, i, ::std::mem::transmute(*x)) };
         self
     }
 
     /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&self, x: &ComplexF64) -> &VectorComplexF64 {
+    pub fn set_all(&mut self, x: &ComplexF64) -> &VectorComplexF64 {
         unsafe { ffi::gsl_vector_complex_set_all(self.vec, ::std::mem::transmute(*x)) };
         self
     }
 
     /// This function sets all the elements of the vector v to zero.
-    pub fn set_zero(&self) -> &VectorComplexF64 {
+    pub fn set_zero(&mut self) -> &VectorComplexF64 {
         unsafe { ffi::gsl_vector_complex_set_zero(self.vec) };
         self
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&self, i: usize) -> &VectorComplexF64 {
+    pub fn set_basis(&mut self, i: usize) -> &VectorComplexF64 {
         unsafe { ffi::gsl_vector_complex_set_basis(self.vec, i) };
         self
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn copy_from(&mut self, other: &VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_memcpy(self.vec, other.vec) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn copy_to(&self, other: &mut VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_memcpy(other.vec, self.vec) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn swap(&mut self, other: &mut VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_swap(other.vec, self.vec) }
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_swap_elements(self.vec, i, j) }
     }
 
     /// This function reverses the order of the elements of the vector v.
-    pub fn reverse(&self) -> enums::Value {
+    pub fn reverse(&mut self) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_reverse(self.vec) }
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn add(&mut self, other: &VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_add(self.vec, other.vec) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn sub(&mut self, other: &VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_sub(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn mul(&mut self, other: &VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_mul(self.vec, other.vec) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&self, other: &VectorComplexF64) -> enums::Value {
+    pub fn div(&mut self, other: &VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_div(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&self, x: &ComplexF64) -> enums::Value {
+    pub fn scale(&mut self, x: &ComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_scale(self.vec, ::std::mem::transmute(*x)) }
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&self, x: &ComplexF64) -> enums::Value {
+    pub fn add_constant(&mut self, x: &ComplexF64) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_add_constant(self.vec, ::std::mem::transmute(*x)) }
     }
 
@@ -206,7 +206,7 @@ impl VectorComplexF64 {
                 None
             } else {
                 match VectorComplexF64::new((*self.vec).size) {
-                    Some(v) => {
+                    Some(mut v) => {
                         v.copy_from(self);
                         Some(v)
                     }
@@ -286,7 +286,7 @@ impl VectorComplexF32 {
         if tmp.is_null() {
             None
         } else {
-            let v = VectorComplexF32 {
+            let mut v = VectorComplexF32 {
                 vec: tmp
             };
             let mut pos = 0usize;
@@ -313,85 +313,85 @@ impl VectorComplexF32 {
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&self, i: usize, x: &ComplexF32) -> &VectorComplexF32 {
+    pub fn set(&mut self, i: usize, x: &ComplexF32) -> &VectorComplexF32 {
         unsafe { ffi::gsl_vector_complex_float_set(self.vec, i, ::std::mem::transmute(*x)) };
         self
     }
 
     /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&self, x: &ComplexF32) -> &VectorComplexF32 {
+    pub fn set_all(&mut self, x: &ComplexF32) -> &VectorComplexF32 {
         unsafe { ffi::gsl_vector_complex_float_set_all(self.vec, ::std::mem::transmute(*x)) };
         self
     }
 
     /// This function sets all the elements of the vector v to zero.
-    pub fn set_zero(&self) -> &VectorComplexF32 {
+    pub fn set_zero(&mut self) -> &VectorComplexF32 {
         unsafe { ffi::gsl_vector_complex_float_set_zero(self.vec) };
         self
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&self, i: usize) -> &VectorComplexF32 {
+    pub fn set_basis(&mut self, i: usize) -> &VectorComplexF32 {
         unsafe { ffi::gsl_vector_complex_float_set_basis(self.vec, i) };
         self
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn copy_from(&mut self, other: &VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_memcpy(self.vec, other.vec) }
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn copy_to(&self, other: &mut VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_memcpy(other.vec, self.vec) }
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn swap(&mut self, other: &mut VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_swap(other.vec, self.vec) }
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_swap_elements(self.vec, i, j) }
     }
 
     /// This function reverses the order of the elements of the vector v.
-    pub fn reverse(&self) -> enums::Value {
+    pub fn reverse(&mut self) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_reverse(self.vec) }
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn add(&mut self, other: &VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_add(self.vec, other.vec) }
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn sub(&mut self, other: &VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_sub(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn mul(&mut self, other: &VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_mul(self.vec, other.vec) }
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&self, other: &VectorComplexF32) -> enums::Value {
+    pub fn div(&mut self, other: &VectorComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_div(self.vec, other.vec) }
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&self, x: &ComplexF32) -> enums::Value {
+    pub fn scale(&mut self, x: &ComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_scale(self.vec, ::std::mem::transmute(*x)) }
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&self, x: &ComplexF32) -> enums::Value {
+    pub fn add_constant(&mut self, x: &ComplexF32) -> enums::Value {
         unsafe { ffi::gsl_vector_complex_float_add_constant(self.vec, ::std::mem::transmute(*x)) }
     }
 
@@ -456,7 +456,7 @@ impl VectorComplexF32 {
                 None
             } else {
                 match VectorComplexF32::new((*self.vec).size) {
-                    Some(v) => {
+                    Some(mut v) => {
                         v.copy_from(self);
                         Some(v)
                     }

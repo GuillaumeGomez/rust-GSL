@@ -246,8 +246,8 @@ extern "C" {
     pub fn gsl_sf_bessel_zero_J0_e(s: c_uint, result: *mut gsl_sf_result) -> enums::Value;
     pub fn gsl_sf_bessel_zero_J1(s: c_uint) -> c_double;
     pub fn gsl_sf_bessel_zero_J1_e(s: c_uint, result: *mut gsl_sf_result) -> enums::Value;
-    pub fn gsl_sf_bessel_zero_Jnu(nu: f64, s: c_uint) -> c_double;
-    pub fn gsl_sf_bessel_zero_Jnu_e(nu: f64, s: c_uint, result: *mut gsl_sf_result) -> enums::Value;
+    pub fn gsl_sf_bessel_zero_Jnu(nu: c_double, s: c_uint) -> c_double;
+    pub fn gsl_sf_bessel_zero_Jnu_e(nu: c_double, s: c_uint, result: *mut gsl_sf_result) -> enums::Value;
 
     // Trigonometric Functions
     pub fn gsl_sf_sin(x: c_double) -> c_double;
@@ -1412,7 +1412,7 @@ extern "C" {
     pub fn gsl_blas_ccopy(x: *const gsl_vector_complex_float, y: *mut gsl_vector_complex_float) -> enums::Value;
     pub fn gsl_blas_zcopy(x: *const gsl_vector_complex, y: *mut gsl_vector_complex) -> enums::Value;
     pub fn gsl_blas_saxpy(alpha: c_float, x: *const gsl_vector_float, y: *mut gsl_vector_float) -> enums::Value;
-    pub fn gsl_blas_daxpy(alpha: f64, x: *const gsl_vector, y: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_blas_daxpy(alpha: c_double, x: *const gsl_vector, y: *mut gsl_vector) -> enums::Value;
     pub fn gsl_blas_caxpy(alpha: gsl_complex_float, x: *const gsl_vector_complex_float, y: *mut gsl_vector_complex_float) -> enums::Value;
     pub fn gsl_blas_zaxpy(alpha: gsl_complex, x: *const gsl_vector_complex, y: *mut gsl_vector_complex) -> enums::Value;
     pub fn gsl_blas_sscal(alpha: c_float, x: *mut gsl_vector_float);
@@ -3255,8 +3255,8 @@ pub struct gsl_multiset {
 
 #[repr(C)]
 pub struct gsl_odeiv2_system {
-    pub function: extern fn(t: f64, *const f64, *mut f64, *mut c_void) -> enums::Value,
-    pub jacobian: Option<extern fn(t: f64, *const f64, *mut f64, *mut f64, *mut c_void) -> enums::Value>,
+    pub function: extern fn(t: c_double, *const c_double, *mut c_double, *mut c_void) -> enums::Value,
+    pub jacobian: Option<extern fn(t: c_double, *const c_double, *mut c_double, *mut c_double, *mut c_void) -> enums::Value>,
     pub dimension: usize,
     pub params: *mut c_void
 }
