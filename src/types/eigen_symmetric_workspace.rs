@@ -371,7 +371,7 @@ impl EigenNonSymmWorkspace {
     /// cases, this function may fail to find all eigenvalues. If this happens, an error code is
     /// returned and the number of converged eigenvalues is stored in w->n_evals. The converged
     /// eigenvalues are stored in the beginning of `eval`.
-    pub fn nonsymm(&self, A: &MatrixF64, eval: &mut VectorComplexF64) -> enums::Value {
+    pub fn nonsymm(&self, A: &mut MatrixF64, eval: &mut VectorComplexF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_nonsymm(ffi::FFI::unwrap(A), ffi::FFI::unwrap(eval), self.w) }
     }
 
@@ -434,7 +434,7 @@ impl EigenNonSymmVWorkspace {
     /// subsequent calls to gsl_eigen_nonsymmv. If `balance` is set to 1, a balancing transformation
     /// is applied to the matrix. See gsl_eigen_nonsymm_params for more information. Balancing is
     /// turned off by default since it does not preserve the orthogonality of the Schur vectors.
-    pub fn params(&self, balance: i32) {
+    pub fn params(&mut self, balance: i32) {
         unsafe { ffi::gsl_eigen_nonsymmv_params(balance, self.w) }
     }
 
@@ -445,7 +445,7 @@ impl EigenNonSymmVWorkspace {
     /// gsl_eigen_nonsymmv_Z. The computed eigenvectors are normalized to have unit magnitude. On
     /// output, the upper portion of `A` contains the Schur form T. If gsl_eigen_nonsymm fails, no
     /// eigenvectors are computed, and an error code is returned.
-    pub fn nonsymmv(&self, A: &MatrixF64, eval: &mut VectorComplexF64,
+    pub fn nonsymmv(&self, A: &mut MatrixF64, eval: &mut VectorComplexF64,
                     evec: &mut MatrixComplexF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_nonsymmv(ffi::FFI::unwrap(A), ffi::FFI::unwrap(eval),
                                          ffi::FFI::unwrap(evec), self.w) }
@@ -505,7 +505,7 @@ impl EigenGenSymmWorkspace {
     /// This function computes the eigenvalues of the real generalized symmetric-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
-    pub fn gensymm(&self, A: MatrixF64, B: &MatrixF64, eval: &mut VectorF64) -> enums::Value {
+    pub fn gensymm(&self, A: MatrixF64, B: &mut MatrixF64, eval: &mut VectorF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_gensymm(ffi::FFI::unwrap(&A), ffi::FFI::unwrap(B),
                                         ffi::FFI::unwrap(eval), self.w) }
     }
@@ -557,7 +557,7 @@ impl EigenGenSymmVWorkspace {
     /// symmetric-definite matrix pair (A, B), and stores them in `eval` and `evec` respectively.
     /// The computed eigenvectors are normalized to have unit magnitude. On output, `B` contains its
     /// Cholesky decomposition and `A` is destroyed.
-    pub fn gensymmv(&self, A: MatrixF64, B: &MatrixF64, eval: &mut VectorF64,
+    pub fn gensymmv(&self, A: MatrixF64, B: &mut MatrixF64, eval: &mut VectorF64,
                     evec: &MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_gensymmv(ffi::FFI::unwrap(&A), ffi::FFI::unwrap(B),
                                          ffi::FFI::unwrap(eval), ffi::FFI::unwrap(evec), self.w) }
@@ -609,7 +609,7 @@ impl EigenGenHermWorkspace {
     /// This function computes the eigenvalues of the complex generalized hermitian-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
-    pub fn genherm(&self, A: MatrixComplexF64, B: &MatrixComplexF64,
+    pub fn genherm(&self, A: MatrixComplexF64, B: &mut MatrixComplexF64,
                    eval: &mut VectorF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_genherm(ffi::FFI::unwrap(&A), ffi::FFI::unwrap(B),
                                         ffi::FFI::unwrap(eval), self.w) }
@@ -661,7 +661,7 @@ impl EigenGenHermVWorkspace {
     /// This function computes the eigenvalues of the complex generalized hermitian-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
-    pub fn genhermv(&self, A: &MatrixComplexF64, B: &MatrixComplexF64, eval: &mut VectorF64,
+    pub fn genhermv(&self, A: &MatrixComplexF64, B: &mut MatrixComplexF64, eval: &mut VectorF64,
                     evec: &mut MatrixComplexF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_genhermv(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B),
                                          ffi::FFI::unwrap(eval), ffi::FFI::unwrap(evec), self.w) }
@@ -739,7 +739,7 @@ impl EigenGenWorkspace {
     /// The ordering of eigenvalues in (alpha, beta) follows the ordering of the diagonal blocks in
     /// the Schur forms S and T. In rare cases, this function may fail to find all eigenvalues. If
     /// this occurs, an error code is returned.
-    pub fn gen(&self, A: &MatrixF64, B: &MatrixF64, alpha: &mut VectorComplexF64,
+    pub fn gen(&self, A: &mut MatrixF64, B: &mut MatrixF64, alpha: &mut VectorComplexF64,
                beta: &mut VectorF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_gen(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B),
                                     ffi::FFI::unwrap(alpha), ffi::FFI::unwrap(beta), self.w) }
@@ -805,7 +805,7 @@ impl EigenGenVWorkspace {
     /// but can be saved by using gsl_eigen_genv_QZ. The computed eigenvectors are normalized to
     /// have unit magnitude. On output, (A, B) contains the generalized Schur form (S, T). If
     /// gsl_eigen_gen fails, no eigenvectors are computed, and an error code is returned.
-    pub fn genv(&self, A: &MatrixF64, B: &MatrixF64, alpha: &mut VectorComplexF64,
+    pub fn genv(&self, A: &mut MatrixF64, B: &mut MatrixF64, alpha: &mut VectorComplexF64,
                 beta: &mut VectorF64, evec: &mut MatrixComplexF64) -> enums::Value {
         unsafe { ffi::gsl_eigen_genv(ffi::FFI::unwrap(A), ffi::FFI::unwrap(B),
                                      ffi::FFI::unwrap(alpha), ffi::FFI::unwrap(beta),

@@ -43,7 +43,7 @@ impl RanDiscrete {
     }
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
-    pub fn discrete(&self, r: &Rng) -> usize {
+    pub fn discrete(&self, r: &mut Rng) -> usize {
         unsafe { ffi::gsl_ran_discrete(ffi::FFI::unwrap(r), self.ran) }
     }
 

@@ -927,8 +927,8 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 /// The subintervals and their results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit,
 /// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.
-pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize, workspace: &::IntegrationWorkspace,
-    cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
+pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize, workspace: &mut ::IntegrationWorkspace,
+    cycle_workspace: &mut ::IntegrationWorkspace, wf: &mut ::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
     let mut total_error = 0f64;
 
     let mut ktmin = 0usize;
@@ -967,7 +967,8 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
                 return ::Value::Success;
             }  else {
                 /* The function cos(w x) f(x) is always f(x) for w = 0 */
-                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit as usize, result, abserr);
+                let limit = (*ffi::FFI::unwrap(cycle_workspace)).limit as usize;
+                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, limit, result, abserr);
             }
         }
 
