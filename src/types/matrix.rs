@@ -215,42 +215,42 @@ impl MatrixF64 {
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: usize, x: usize, value: f64) -> &MatrixF64 {
+    pub fn set(&mut self, y: usize, x: usize, value: f64) -> &MatrixF64 {
         unsafe { ffi::gsl_matrix_set(self.mat, y, x, value) };
         self
     }
 
     /// This function sets all the elements of the matrix to the value x.
-    pub fn set_all(&self, x: f64) -> &MatrixF64 {
+    pub fn set_all(&mut self, x: f64) -> &MatrixF64 {
         unsafe { ffi::gsl_matrix_set_all(self.mat, x) };
         self
     }
 
     /// This function sets all the elements of the matrix to zero.
-    pub fn set_zero(&self) -> &MatrixF64 {
+    pub fn set_zero(&mut self) -> &MatrixF64 {
         unsafe { ffi::gsl_matrix_set_zero(self.mat) };
         self
     }
 
     /// This function sets the elements of the matrix to the corresponding elements of the identity matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
-    pub fn set_identity(&self) -> &MatrixF64 {
+    pub fn set_identity(&mut self) -> &MatrixF64 {
         unsafe { ffi::gsl_matrix_set_identity(self.mat) };
         self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&self, other: &MatrixF64) -> enums::Value {
+    pub fn copy_from(&mut self, other: &MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_memcpy(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &MatrixF64) -> enums::Value {
+    pub fn copy_to(&self, other: &mut MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_memcpy(other.mat, self.mat) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&self, other: &MatrixF64) -> enums::Value {
+    pub fn swap(&mut self, other: &mut MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_swap(self.mat, other.mat) }
     }
 
@@ -282,29 +282,29 @@ impl MatrixF64 {
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: usize, v: &VectorF64) -> enums::Value {
+    pub fn set_row(&mut self, y: usize, v: &VectorF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: usize, v: &VectorF64) -> enums::Value {
+    pub fn set_col(&mut self, x: usize, v: &VectorF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&self, y1: usize, y2: usize) -> enums::Value {
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
         unsafe { ffi::gsl_matrix_swap_rows(self.mat, y1, y2) }
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&self, x1: usize, x2: usize) -> enums::Value {
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
         unsafe { ffi::gsl_matrix_swap_columns(self.mat, x1, x2) }
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
         unsafe { ffi::gsl_matrix_swap_rowcol(self.mat, i, j) }
     }
 
@@ -324,41 +324,41 @@ impl MatrixF64 {
 
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn transpose(&self) -> enums::Value {
+    pub fn transpose(&mut self) -> enums::Value {
         unsafe { ffi::gsl_matrix_transpose(self.mat) }
     }
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&self, other: &MatrixF64) -> enums::Value {
+    pub fn add(&mut self, other: &MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_add(self.mat, other.mat) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&self, other: &MatrixF64) -> enums::Value {
+    pub fn sub(&mut self, other: &MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_sub(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&self, other: &MatrixF64) -> enums::Value {
+    pub fn mul_elements(&mut self, other: &MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_mul_elements(self.mat, other.mat) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&self, other: &MatrixF64) -> enums::Value {
+    pub fn div_elements(&mut self, other: &MatrixF64) -> enums::Value {
         unsafe { ffi::gsl_matrix_div_elements(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
-    pub fn scale(&self, x: f64) -> enums::Value {
+    pub fn scale(&mut self, x: f64) -> enums::Value {
         unsafe { ffi::gsl_matrix_scale(self.mat, x) }
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
-    pub fn add_constant(&self, x: f64) -> enums::Value {
+    pub fn add_constant(&mut self, x: f64) -> enums::Value {
         unsafe { ffi::gsl_matrix_add_constant(self.mat, x) }
     }
 
@@ -471,7 +471,7 @@ impl MatrixF64 {
                 None
             } else {
                 match MatrixF64::new((*self.mat).size1, (*self.mat).size2) {
-                    Some(m) => {
+                    Some(mut m) => {
                         m.copy_from(self);
                         Some(m)
                     }
@@ -567,42 +567,42 @@ impl MatrixF32 {
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&self, y: usize, x: usize, value: f32) -> &MatrixF32 {
+    pub fn set(&mut self, y: usize, x: usize, value: f32) -> &MatrixF32 {
         unsafe { ffi::gsl_matrix_float_set(self.mat, y, x, value) };
         self
     }
 
     /// This function sets all the elements of the matrix to the value x.
-    pub fn set_all(&self, x: f32) -> &MatrixF32 {
+    pub fn set_all(&mut self, x: f32) -> &MatrixF32 {
         unsafe { ffi::gsl_matrix_float_set_all(self.mat, x) };
         self
     }
 
     /// This function sets all the elements of the matrix to zero.
-    pub fn set_zero(&self) -> &MatrixF32 {
+    pub fn set_zero(&mut self) -> &MatrixF32 {
         unsafe { ffi::gsl_matrix_float_set_zero(self.mat) };
         self
     }
 
     /// This function sets the elements of the matrix to the corresponding elements of the identity matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
-    pub fn set_identity(&self) -> &MatrixF32 {
+    pub fn set_identity(&mut self) -> &MatrixF32 {
         unsafe { ffi::gsl_matrix_float_set_identity(self.mat) };
         self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&self, other: &MatrixF32) -> enums::Value {
+    pub fn copy_from(&mut self, other: &MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_memcpy(self.mat, other.mat) }
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &MatrixF32) -> enums::Value {
+    pub fn copy_to(&self, other: &mut MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_memcpy(other.mat, self.mat) }
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&self, other: &MatrixF32) -> enums::Value {
+    pub fn swap(&mut self, other: &mut MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_swap(self.mat, other.mat) }
     }
 
@@ -634,28 +634,28 @@ impl MatrixF32 {
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&self, y: usize, v: &VectorF32) -> enums::Value {
+    pub fn set_row(&mut self, y: usize, v: &VectorF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&self, x: usize, v: &VectorF32) -> enums::Value {
+    pub fn set_col(&mut self, x: usize, v: &VectorF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&self, y1: usize, y2: usize) -> enums::Value {
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_swap_rows(self.mat, y1, y2) }
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&self, x1: usize, x2: usize) -> enums::Value {
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_swap_columns(self.mat, x1, x2) }
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_swap_rowcol(self.mat, i, j) }
     }
 
@@ -684,35 +684,35 @@ impl MatrixF32 {
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&self, other: &MatrixF32) -> enums::Value {
+    pub fn add(&mut self, other: &MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_add(self.mat, other.mat) }
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&self, other: &MatrixF32) -> enums::Value {
+    pub fn sub(&mut self, other: &MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_sub(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&self, other: &MatrixF32) -> enums::Value {
+    pub fn mul_elements(&mut self, other: &MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_mul_elements(self.mat, other.mat) }
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&self, other: &MatrixF32) -> enums::Value {
+    pub fn div_elements(&mut self, other: &MatrixF32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_div_elements(self.mat, other.mat) }
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
-    pub fn scale(&self, x: f32) -> enums::Value {
+    pub fn scale(&mut self, x: f32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_scale(self.mat, x) }
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
-    pub fn add_constant(&self, x: f32) -> enums::Value {
+    pub fn add_constant(&mut self, x: f32) -> enums::Value {
         unsafe { ffi::gsl_matrix_float_add_constant(self.mat, x) }
     }
 
@@ -809,7 +809,7 @@ impl MatrixF32 {
                 None
             } else {
                 match MatrixF32::new((*self.mat).size1, (*self.mat).size2) {
-                    Some(m) => {
+                    Some(mut m) => {
                         m.copy_from(self);
                         Some(m)
                     }
