@@ -11,7 +11,7 @@ pub mod type_1 {
     /// p(x) dx = a b \exp(-(b \exp(-ax) + ax)) dx
     /// 
     /// for -\infty < x < \infty.
-    pub fn gumbel1(r: &Rng, a: f64, b: f64) -> f64 {
+    pub fn gumbel1(r: &mut Rng, a: f64, b: f64) -> f64 {
         unsafe { ffi::gsl_ran_gumbel1(ffi::FFI::unwrap(r), a, b) }
     }
 
@@ -50,7 +50,7 @@ pub mod type_2 {
     /// p(x) dx = a b x^{-a-1} \exp(-b x^{-a}) dx
     /// 
     /// for 0 < x < \infty.
-    pub fn gumbel2(r: &Rng, a: f64, b: f64) -> f64 {
+    pub fn gumbel2(r: &mut Rng, a: f64, b: f64) -> f64 {
         unsafe { ffi::gsl_ran_gumbel2(ffi::FFI::unwrap(r), a, b) }
     }
 

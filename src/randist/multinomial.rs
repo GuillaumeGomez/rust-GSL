@@ -14,7 +14,7 @@ use types::Rng;
 /// entries will be treated as weights and normalized appropriately. The arrays n[] and p[] must both be of length K.
 /// 
 /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
-pub fn multinomial(r: &Rng, N: u32, p: &[f64], n: &mut [u32]) {
+pub fn multinomial(r: &mut Rng, N: u32, p: &[f64], n: &mut [u32]) {
     unsafe { ffi::gsl_ran_multinomial(ffi::FFI::unwrap(r), p.len() as usize, N, p.as_ptr(), n.as_mut_ptr()) }
 }
 

@@ -10,7 +10,7 @@ use types::Rng;
 /// p(k) = {-1 \over \log(1-p)} {(p^k \over k)}
 /// 
 /// for k >= 1.
-pub fn logarithmic(r: &Rng, p: f64) -> u32 {
+pub fn logarithmic(r: &mut Rng, p: f64) -> u32 {
     unsafe { ffi::gsl_ran_logarithmic(ffi::FFI::unwrap(r), p) }
 }
 

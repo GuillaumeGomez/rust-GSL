@@ -11,7 +11,7 @@ use types::Rng;
 /// p(k) = {\Gamma(n + k) \over \Gamma(k+1) \Gamma(n) } p^n (1-p)^k
 /// 
 /// Note that n is not required to be an integer.
-pub fn negative_binomial(r: &Rng, p: f64, n: f64) -> u32 {
+pub fn negative_binomial(r: &mut Rng, p: f64, n: f64) -> u32 {
     unsafe { ffi::gsl_ran_negative_binomial(ffi::FFI::unwrap(r), p, n) }
 }
 

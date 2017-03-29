@@ -12,6 +12,6 @@ use types::Rng;
 /// There is no explicit solution for the form of p(x) and the library does not define a corresponding pdf function. For \alpha = 1 the distribution reduces to the Cauchy distribution. For \alpha = 2 it is a Gaussian distribution with \sigma = \sqrt{2} c. For \alpha < 1 the tails of the distribution become extremely wide.
 /// 
 /// The algorithm only works for 0 < alpha <= 2.
-pub fn levy(r: &Rng, c: f64, alpha: f64) -> f64 {
+pub fn levy(r: &mut Rng, c: f64, alpha: f64) -> f64 {
     unsafe { ffi::gsl_ran_levy(ffi::FFI::unwrap(r), c, alpha) }
 }

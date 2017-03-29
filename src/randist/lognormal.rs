@@ -10,7 +10,7 @@ use types::Rng;
 /// p(x) dx = {1 \over x \sqrt{2 \pi \sigma^2} } \exp(-(\ln(x) - \zeta)^2/2 \sigma^2) dx
 /// 
 /// for x > 0.
-pub fn lognormal(r: &Rng, zeta: f64, sigma: f64) -> f64 {
+pub fn lognormal(r: &mut Rng, zeta: f64, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_lognormal(ffi::FFI::unwrap(r), zeta, sigma) }
 }
 

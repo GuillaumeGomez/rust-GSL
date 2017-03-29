@@ -27,7 +27,7 @@ use types::Rng;
 /// ```
 ///
 /// for x >= 0.
-pub fn fdist(r: &Rng, nu1: f64, nu2: f64) -> f64 {
+pub fn fdist(r: &mut Rng, nu1: f64, nu2: f64) -> f64 {
     unsafe { ffi::gsl_ran_fdist(ffi::FFI::unwrap(r), nu1, nu2) }
 }
 

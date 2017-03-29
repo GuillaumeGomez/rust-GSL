@@ -10,7 +10,7 @@ use types::Rng;
 /// p(x) dx = {1 \over \mu} \exp(-x/\mu) dx
 /// 
 /// for x >= 0.
-pub fn exponential(r: &Rng, mu: f64) -> f64 {
+pub fn exponential(r: &mut Rng, mu: f64) -> f64 {
     unsafe { ffi::gsl_ran_exponential(ffi::FFI::unwrap(r), mu) }
 }
 

@@ -20,7 +20,7 @@ use types::Rng;
 ///    (1 + x^2/\nu)^{-(\nu + 1)/2} dx
 /// 
 /// for -\infty < x < +\infty.
-pub fn tdist(r: &Rng, nu: f64) -> f64 {
+pub fn tdist(r: &mut Rng, nu: f64) -> f64 {
     unsafe { ffi::gsl_ran_tdist(ffi::FFI::unwrap(r), nu) }
 }
 

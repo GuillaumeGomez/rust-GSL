@@ -10,7 +10,7 @@ use types::Rng;
 /// p(k) = {\mu^k \over k!} \exp(-\mu)
 /// 
 /// for k >= 0.
-pub fn poisson(r: &Rng, mu: f64) -> u32 {
+pub fn poisson(r: &mut Rng, mu: f64) -> u32 {
     unsafe { ffi::gsl_ran_poisson(ffi::FFI::unwrap(r), mu) }
 }
 

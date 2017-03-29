@@ -11,7 +11,7 @@ use types::Rng;
 /// p(x) dx = {1 \over \sqrt{2 \pi \sigma^2}} \exp (-x^2 / 2\sigma^2) dx
 /// for x in the range -\infty to +\infty. Use the transformation z = \mu + x on the numbers returned by gsl_ran_gaussian to obtain a Gaussian distribution with mean \mu.
 /// This function uses the Box-Muller algorithm which requires two calls to the random number generator r.
-pub fn gaussian(r: &Rng, sigma: f64) -> f64 {
+pub fn gaussian(r: &mut Rng, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_gaussian(ffi::FFI::unwrap(r), sigma) }
 }
 
@@ -20,19 +20,19 @@ pub fn gaussian_pdf(x: f64, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_gaussian_pdf(x, sigma) }
 }
 
-pub fn gaussian_ziggurat(r: &Rng, sigma: f64) -> f64 {
+pub fn gaussian_ziggurat(r: &mut Rng, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_gaussian_ziggurat(ffi::FFI::unwrap(r), sigma) }
 }
 
 /// This function computes a Gaussian random variate using the alternative Marsaglia-Tsang ziggurat and Kinderman-Monahan-Leva ratio methods.
 /// The Ziggurat algorithm is the fastest available algorithm in most cases.
-pub fn gaussian_ratio_method(r: &Rng, sigma: f64) -> f64 {
+pub fn gaussian_ratio_method(r: &mut Rng, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_gaussian_ratio_method(ffi::FFI::unwrap(r), sigma) }
 }
 
 /// This function computes results for the unit Gaussian distribution.
 /// They are equivalent to the functions above with a standard deviation of one, sigma = 1.
-pub fn ugaussian(r: &Rng) -> f64 {
+pub fn ugaussian(r: &mut Rng) -> f64 {
     unsafe { ffi::gsl_ran_ugaussian(ffi::FFI::unwrap(r)) }
 }
 
@@ -44,7 +44,7 @@ pub fn ugaussian_pdf(x: f64) -> f64 {
 
 /// This function computes results for the unit Gaussian distribution.
 /// They are equivalent to the functions above with a standard deviation of one, sigma = 1.
-pub fn ugaussian_ratio_method(r: &Rng) -> f64 {
+pub fn ugaussian_ratio_method(r: &mut Rng) -> f64 {
     unsafe { ffi::gsl_ran_ugaussian_ratio_method(ffi::FFI::unwrap(r)) }
 }
 

@@ -11,11 +11,11 @@ fn main() {
 
     let mu = 3f64;
     let t = rgsl::rng::default();
-    let r = Rng::new(&t).unwrap();
+    let mut r = Rng::new(&t).unwrap();
 
     // print n random variates chosen from the poisson distribution with mean parameter mu
     for _ in 0u8..10u8 {
-        print!("{} ", rgsl::randist::poisson::poisson(&r, mu));
+        print!("{} ", rgsl::randist::poisson::poisson(&mut r, mu));
     }
     println!("");
 }

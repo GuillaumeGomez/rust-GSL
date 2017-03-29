@@ -10,7 +10,7 @@ use types::Rng;
 /// p(x) dx = {b \over a^b} x^{b-1}  \exp(-(x/a)^b) dx
 /// 
 /// for x >= 0.
-pub fn weibull(r: &Rng, a: f64, b: f64) -> f64 {
+pub fn weibull(r: &mut Rng, a: f64, b: f64) -> f64 {
     unsafe { ffi::gsl_ran_weibull(ffi::FFI::unwrap(r), a, b) }
 }
 
