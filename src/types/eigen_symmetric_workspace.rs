@@ -853,7 +853,7 @@ fn eigen_symmetric_workspace() {
     use VectorF64;
 
     let e = EigenSymmetricWorkspace::new(2).unwrap();
-    let m = MatrixF64::new(2, 2).unwrap();
+    let mut m = MatrixF64::new(2, 2).unwrap();
 
     let data = [5., 5., 1., 6.];
     m.set(0, 0, data[0]);
@@ -899,7 +899,7 @@ fn eigen_symmetric_vworkspace() {
 
     let e = EigenSymmetricVWorkspace::new(3).unwrap();
     let data = [5., 5., 1., 6.];
-    let m = MatrixF64::new(2, 2).unwrap();
+    let mut m = MatrixF64::new(2, 2).unwrap();
 
     m.set(0, 0, data[0]);
     m.set(0, 1, data[1]);
@@ -947,7 +947,7 @@ fn eigen_hermitian_workspace() {
     use ComplexF64;
 
     let e = EigenHermitianWorkspace::new(3).unwrap();
-    let m = MatrixComplexF64::new(2, 2).unwrap();
+    let mut m = MatrixComplexF64::new(2, 2).unwrap();
 
     m.set(0, 0, &ComplexF64::rect(5., 5.));
     m.set(0, 1, &ComplexF64::rect(1., 4.));
@@ -999,7 +999,7 @@ fn eigen_hermitian_vworkspace() {
     use ComplexF64;
 
     let e = EigenHermitianVWorkspace::new(3).unwrap();
-    let m = MatrixComplexF64::new(2, 2).unwrap();
+    let mut m = MatrixComplexF64::new(2, 2).unwrap();
 
     m.set(0, 0, &ComplexF64::rect(5., 5.));
     m.set(0, 1, &ComplexF64::rect(1., 4.));
