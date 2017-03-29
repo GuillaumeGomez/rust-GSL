@@ -104,7 +104,11 @@ impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &Wavelet) -> *mut ffi::gsl_wavelet {
+    fn unwrap_shared(w: &Wavelet) -> *const ffi::gsl_wavelet {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut Wavelet) -> *mut ffi::gsl_wavelet {
         w.w
     }
 }
@@ -218,7 +222,11 @@ impl ffi::FFI<ffi::gsl_wavelet_workspace> for WaveletWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &WaveletWorkspace) -> *mut ffi::gsl_wavelet_workspace {
+    fn unwrap_shared(w: &WaveletWorkspace) -> *const ffi::gsl_wavelet_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut WaveletWorkspace) -> *mut ffi::gsl_wavelet_workspace {
         w.w
     }
 }

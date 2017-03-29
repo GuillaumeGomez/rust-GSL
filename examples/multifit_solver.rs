@@ -143,7 +143,7 @@ fn main() {
 
     rgsl::RngType::env_setup();
     let t : rgsl::RngType = rgsl::rng::default();
-    let r = rgsl::Rng::new(&t).unwrap();
+    let mut r = rgsl::Rng::new(&t).unwrap();
     let T = rgsl::MultiFitFdfSolverType::lmsder();
 
     let mut f = rgsl::MultiFitFunctionFdf::new(n, p);
@@ -171,7 +171,7 @@ fn main() {
         let mut data = data.borrow_mut();
 
         data.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp()
-            + rgsl::randist::gaussian::gaussian(&r, 0.1f64);
+            + rgsl::randist::gaussian::gaussian(&mut r, 0.1f64);
         data.sigma[i] = 0.1f64;
         println!("data: {:2} {:.5} {:.5}", i, data.y[i], data.sigma[i]);
     }

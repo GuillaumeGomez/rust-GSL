@@ -46,7 +46,7 @@ impl QRng {
 
     /// This function reinitializes the generator self to its starting point. Note that quasi-random sequences do not use a seed and always
     /// produce the same set of values.
-    pub fn init(&self) {
+    pub fn init(&mut self) {
         unsafe { ffi::gsl_qrng_init(self.q) }
     }
 
@@ -84,7 +84,7 @@ impl QRng {
 
     /// This function copies the quasi-random sequence generator src into the pre-existing generator dest, making dest into an exact copy
     /// of src. The two generators must be of the same type.
-    pub fn copy(&self, dest: &QRng) -> enums::Value {
+    pub fn copy(&self, dest: &mut QRng) -> enums::Value {
         unsafe { ffi::gsl_qrng_memcpy(dest.q, self.q) }
     }
 }
@@ -115,7 +115,11 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
         Self::wrap(q)
     }
 
-    fn unwrap(q: &QRng) -> *mut ffi::gsl_qrng {
+    fn unwrap_shared(q: &QRng) -> *const ffi::gsl_qrng {
+        q.q as *const _
+    }
+
+    fn unwrap_unique(q: &mut QRng) -> *mut ffi::gsl_qrng {
         q.q
     }
 }
@@ -176,7 +180,11 @@ impl ffi::FFI<ffi::gsl_qrng_type> for QRngType {
         Self::wrap(t)
     }
 
-    fn unwrap(t: &QRngType) -> *mut ffi::gsl_qrng_type {
+    fn unwrap_shared(t: &QRngType) -> *const ffi::gsl_qrng_type {
+        t.t as *const ffi::gsl_qrng_type
+    }
+
+    fn unwrap_unique(t: &mut QRngType) -> *mut ffi::gsl_qrng_type {
         t.t as *mut ffi::gsl_qrng_type
     }
 }

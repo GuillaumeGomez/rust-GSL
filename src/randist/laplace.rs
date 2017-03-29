@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = {1 \over 2 a}  \exp(-|x/a|) dx
 /// 
 /// for -\infty < x < \infty.
-pub fn laplace(r: &Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_laplace(ffi::FFI::unwrap(r), a) }
+pub fn laplace(r: &mut Rng, a: f64) -> f64 {
+    unsafe { ffi::gsl_ran_laplace(ffi::FFI::unwrap_unique(r), a) }
 }
 
 /// This function computes the probability density p(x) at x for a Laplace distribution with width a, using the formula given above.
