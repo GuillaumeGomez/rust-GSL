@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = {1 \over \mu} \exp(-x/\mu) dx
 /// 
 /// for x >= 0.
-pub fn exponential(r: &Rng, mu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_exponential(ffi::FFI::unwrap(r), mu) }
+pub fn exponential(r: &mut Rng, mu: f64) -> f64 {
+    unsafe { ffi::gsl_ran_exponential(ffi::FFI::unwrap_unique(r), mu) }
 }
 
 /// This function computes the probability density p(x) at x for an exponential distribution with mean mu, using the formula given above.

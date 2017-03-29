@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = {x \over \sigma^2} \exp(- x^2/(2 \sigma^2)) dx
 /// 
 /// for x > 0.
-pub fn rayleigh(r: &Rng, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_rayleigh(ffi::FFI::unwrap(r), sigma) }
+pub fn rayleigh(r: &mut Rng, sigma: f64) -> f64 {
+    unsafe { ffi::gsl_ran_rayleigh(ffi::FFI::unwrap_unique(r), sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a Rayleigh distribution with scale parameter sigma, using the formula given above.

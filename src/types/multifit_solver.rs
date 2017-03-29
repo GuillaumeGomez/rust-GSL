@@ -232,7 +232,11 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver_type> for MultiFitFSolverType {
         Self::wrap(r)
     }
 
-    fn unwrap(s: &MultiFitFSolverType) -> *mut ffi::gsl_multifit_fsolver_type {
+    fn unwrap_shared(s: &MultiFitFSolverType) -> *const ffi::gsl_multifit_fsolver_type {
+        s.s as *const _
+    }
+
+    fn unwrap_unique(s: &mut MultiFitFSolverType) -> *mut ffi::gsl_multifit_fsolver_type {
         s.s
     }
 }
@@ -249,7 +253,7 @@ impl MultiFitFSolver {
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
-        let tmp = unsafe { ffi::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap(t), n, p) };
+        let tmp = unsafe { ffi::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap_shared(t), n, p) };
 
         if tmp.is_null() {
             None
@@ -260,11 +264,11 @@ impl MultiFitFSolver {
         }
     }
 
-    pub fn set(&self, f: &mut MultiFitFunction, x: &VectorF64) -> ::Value {
-        unsafe { ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap(x)) }
+    pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> ::Value {
+        unsafe { ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap_shared(x)) }
     }
 
-    pub fn iterate(&self) -> ::Value {
+    pub fn iterate(&mut self) -> ::Value {
         unsafe { ffi::gsl_multifit_fsolver_iterate(self.s) }
     }
 
@@ -299,7 +303,11 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver> for MultiFitFSolver {
         Self::wrap(s)
     }
 
-    fn unwrap(s: &MultiFitFSolver) -> *mut ffi::gsl_multifit_fsolver {
+    fn unwrap_shared(s: &MultiFitFSolver) -> *const ffi::gsl_multifit_fsolver {
+        s.s as *const _
+    }
+
+    fn unwrap_unique(s: &mut MultiFitFSolver) -> *mut ffi::gsl_multifit_fsolver {
         s.s
     }
 }
@@ -340,7 +348,7 @@ impl MultiFitFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial guess x.
     pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &::VectorF64) -> ::Value {
-        unsafe { ffi::gsl_multifit_fdfsolver_set(self.intern, f.to_raw(), ffi::FFI::unwrap(x)) }
+        unsafe { ffi::gsl_multifit_fdfsolver_set(self.intern, f.to_raw(), ffi::FFI::unwrap_shared(x)) }
     }
 
     pub fn x(&self) -> ::VectorF64 {

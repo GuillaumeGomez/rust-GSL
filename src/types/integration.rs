@@ -1391,7 +1391,7 @@ impl IntegrationWorkspace {
     /// On each iteration the adaptive integration strategy bisects the interval with the largest error estimate. The subintervals and their
     /// results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the
     /// allocated size of the workspace.
-    pub fn qag<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, key: enums::GaussKonrodRule,
+    pub fn qag<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, key: enums::GaussKonrodRule,
         result: &mut f64, abserr: &mut f64) -> ::Value {
         match key {
             ::GaussKonrodRule::Gauss15 => {
@@ -1437,7 +1437,7 @@ impl IntegrationWorkspace {
     /// final approximation from the extrapolation, result, and an estimate of the absolute error, abserr. The subintervals and their results are
     /// stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the allocated size
     /// of the workspace.
-    pub fn qags<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
+    pub fn qags<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
         abserr: &mut f64) -> ::Value {
         unsafe { intern_qags(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
     }
@@ -1455,7 +1455,7 @@ impl IntegrationWorkspace {
     /// with npts = 5.
     ///
     /// If you know the locations of the singular points in the integration region then this routine will be faster than QAGS.
-    pub fn qagp<T>(&self, f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
+    pub fn qagp<T>(&mut self, f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
         abserr: &mut f64) -> ::Value {
         unsafe { intern_qagp(f, arg, pts, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
     }
@@ -1468,7 +1468,7 @@ impl IntegrationWorkspace {
     ///
     /// It is then integrated using the QAGS algorithm. The normal 21-point Gauss-Kronrod rule of QAGS is replaced by a 15-point rule, because
     /// the transformation can generate an integrable singularity at the origin. In this case a lower-order rule is more efficient.
-    pub fn qagi<T>(&self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qagi<T>(&mut self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: 0f64};
 
         unsafe { intern_qags(i_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
@@ -1481,7 +1481,7 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(a + (1-t)/t)/t^2
     ///
     /// and then integrated using the QAGS algorithm.
-    pub fn qagiu<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qagiu<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: a};
 
         unsafe { intern_qags(iu_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
@@ -1494,7 +1494,7 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(b - (1-t)/t)/t^2
     ///
     /// and then integrated using the QAGS algorithm.
-    pub fn qagil<T>(&self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qagil<T>(&mut self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: b};
 
         unsafe { intern_qags(il_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
@@ -1508,7 +1508,7 @@ impl IntegrationWorkspace {
     /// When a subinterval contains the point x = c or is close to it then a special 25-point modified Clenshaw-Curtis rule is used to control
     /// the singularity. Further away from the singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
     #[allow(unused_assignments)]
-    pub fn qawc<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, epsabs: f64, epsrel: f64, limit: usize,
+    pub fn qawc<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, epsabs: f64, epsrel: f64, limit: usize,
         result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
@@ -1668,7 +1668,7 @@ impl IntegrationWorkspace {
         }
     }
 
-    pub fn sort_results(&self) {
+    pub fn sort_results(&mut self) {
         unsafe {
             let nint = (*self.w).size as usize;
             let mut t_elist = CSlice::new((*self.w).elist, nint);
@@ -1700,7 +1700,7 @@ impl IntegrationWorkspace {
         }
     }
 
-    pub fn qpsrt(&self) {
+    pub fn qpsrt(&mut self) {
         let w = self.w;
 
         unsafe {
@@ -1799,7 +1799,7 @@ impl IntegrationWorkspace {
         }
     }
 
-    pub fn update(&self, a1: f64, b1: f64, area1: f64, error1: f64, a2: f64, b2: f64, area2: f64, error2: f64) {
+    pub fn update(&mut self, a1: f64, b1: f64, area1: f64, error1: f64, a2: f64, b2: f64, area2: f64, error2: f64) {
         let w = self.w;
 
         unsafe {
@@ -1856,7 +1856,7 @@ impl IntegrationWorkspace {
         }
     }
 
-    pub fn set_initial_result(&self, result: f64, error: f64) {
+    pub fn set_initial_result(&mut self, result: f64, error: f64) {
         unsafe {
             let mut rlist = CSlice::new((*self.w).rlist, 1);
             let mut elist = CSlice::new((*self.w).elist, 1);
@@ -1867,7 +1867,7 @@ impl IntegrationWorkspace {
         }
     }
 
-    pub fn initialise(&self, a: f64, b: f64) {
+    pub fn initialise(&mut self, a: f64, b: f64) {
         let w = self.w;
 
         unsafe {
@@ -1892,7 +1892,7 @@ impl IntegrationWorkspace {
         }
     }
 
-    fn append_interval(&self, a1: f64, b1: f64, area1: f64, error1: f64) {
+    fn append_interval(&mut self, a1: f64, b1: f64, area1: f64, error1: f64) {
         unsafe {
             let w = self.w;
             let i_new = (*w).size as usize;
@@ -1941,7 +1941,11 @@ impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
+    fn unwrap_shared(w: &IntegrationWorkspace) -> *const ffi::gsl_integration_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
         w.w
     }
 }
@@ -1984,7 +1988,7 @@ impl IntegrationQawsTable {
     }
 
     /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
-    pub fn set(&self, alpha: f64, beta: f64, mu: i32, nu: i32) -> ::Value {
+    pub fn set(&mut self, alpha: f64, beta: f64, mu: i32, nu: i32) -> ::Value {
         unsafe { ffi::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu) }
     }
 
@@ -1998,7 +2002,7 @@ impl IntegrationQawsTable {
     /// Clenshaw-Curtis rule is used to control the singularities. For subintervals which do not include the endpoints an ordinary 15-point
     /// Gauss-Kronrod integration rule is used.
     #[allow(unused_assignments)]
-    pub fn qaws<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, workspace: &IntegrationWorkspace,
+    pub fn qaws<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, workspace: &mut IntegrationWorkspace,
         result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
@@ -2179,7 +2183,11 @@ impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
+    fn unwrap_shared(w: &IntegrationQawsTable) -> *const ffi::gsl_integration_qaws_table {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
         w.w
     }
 }
@@ -2220,12 +2228,12 @@ impl IntegrationQawoTable {
     }
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
-    pub fn set(&self, omega: f64, l: f64, sine: ::IntegrationQawo) -> ::Value {
+    pub fn set(&mut self, omega: f64, l: f64, sine: ::IntegrationQawo) -> ::Value {
         unsafe { ffi::gsl_integration_qawo_table_set(self.w, omega, l, sine) }
     }
 
     /// This function allows the length parameter l of the self workspace to be changed.
-    pub fn set_length(&self, l: f64) -> ::Value {
+    pub fn set_length(&mut self, l: f64) -> ::Value {
         unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) }
     }
 
@@ -2242,7 +2250,7 @@ impl IntegrationQawoTable {
     ///
     /// Those subintervals with “large” widths d where d\omega > 4 are computed using a 25-point Clenshaw-Curtis integration rule, which handles
     /// the oscillatory behavior. Subintervals with a “small” widths where d\omega < 4 are computed using a 15-point Gauss-Kronrod integration.
-    pub fn qawo<T>(&self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, workspace: &IntegrationWorkspace,
+    pub fn qawo<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, workspace: &mut IntegrationWorkspace,
         result: &mut f64, abserr: &mut f64) -> ::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
@@ -2603,7 +2611,11 @@ impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
+    fn unwrap_shared(w: &IntegrationQawoTable) -> *const ffi::gsl_integration_qawo_table {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
         w.w
     }
 }
@@ -2649,7 +2661,7 @@ impl CquadWorkspace {
     /// The subintervals and their results are stored in the memory provided by workspace. If the error estimate or the number of function
     /// evaluations is not needed, the pointers abserr and nevals can be set to NULL (not in rgsl).
     #[allow(unused_assignments)]
-    pub fn cquad<T>(&self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, result: &mut f64, abserr: &mut f64,
+    pub fn cquad<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, result: &mut f64, abserr: &mut f64,
         nevals: &mut usize) -> ::Value {
         /* Some constants that we will need. */
         static n : [i32; 4] = [4i32, 8i32, 16i32, 32i32];
@@ -3147,9 +3159,13 @@ impl ffi::FFI<ffi::gsl_integration_cquad_workspace> for CquadWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
-        w.w
+    fn unwrap_shared(w: &CquadWorkspace) -> *const ffi::gsl_integration_cquad_workspace {
+        w.w as *const _
     }
+
+    fn unwrap_unique(w: &mut CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
+        w.w
+    }    
 }
 
 /// The fixed-order Gauss-Legendre integration routines are provided for fast integration of smooth functions with known polynomial order.
@@ -3234,9 +3250,13 @@ impl ffi::FFI<ffi::gsl_integration_glfixed_table> for GLFixedTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
-        w.w
+    fn unwrap_shared(w: &GLFixedTable) -> *const ffi::gsl_integration_glfixed_table {
+        w.w as *const _
     }
+
+    fn unwrap_unique(w: &mut GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
+        w.w
+    }    
 }
 
 fn i_transform<T>(t: f64, params: &mut InternParam<T>) -> f64 {
@@ -3265,7 +3285,7 @@ fn il_transform<T>(t: f64, p: &mut InternParam<T>) -> f64 {
     (y / t) / t
 }
 
-fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, f_w: &IntegrationWorkspace,
+fn intern_qag<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, f_w: &mut IntegrationWorkspace,
     result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> ::Value {
     let w = f_w.w;
     let mut roundoff_type1 = 0i32;
@@ -3419,7 +3439,7 @@ pub unsafe fn append_table(table: &mut ffi::extrapolation_table, y: f64) {
 }
 
 #[doc(hidden)]
-pub fn append_interval(w: &IntegrationWorkspace, a: f64, b: f64, area: f64, error: f64) {
+pub fn append_interval(w: &mut IntegrationWorkspace, a: f64, b: f64, area: f64, error: f64) {
     w.append_interval(a, b, area, error)
 }
 
@@ -3646,7 +3666,7 @@ pub unsafe fn return_error(t_error_type: i32) -> ::Value {
     }
 }
 
-unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, f_w: &IntegrationWorkspace,
+unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, f_w: &mut IntegrationWorkspace,
     result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> ::Value {
     let w = f_w.w;
     let mut ertest = 0f64;
@@ -3938,7 +3958,7 @@ unsafe fn intern_qags<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: 
     return_error(error_type)
 }
 
-unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: usize, f_w: &IntegrationWorkspace,
+unsafe fn intern_qagp<T>(f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: usize, f_w: &mut IntegrationWorkspace,
     result: &mut f64, abserr: &mut f64, q: ::integration_function<T>) -> ::Value {
     let w = f_w.w;
     let mut reseps = 0f64;

@@ -10,8 +10,8 @@ use types::Rng;
 /// p(k) = {\mu^k \over k!} \exp(-\mu)
 /// 
 /// for k >= 0.
-pub fn poisson(r: &Rng, mu: f64) -> u32 {
-    unsafe { ffi::gsl_ran_poisson(ffi::FFI::unwrap(r), mu) }
+pub fn poisson(r: &mut Rng, mu: f64) -> u32 {
+    unsafe { ffi::gsl_ran_poisson(ffi::FFI::unwrap_unique(r), mu) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a Poisson distribution with mean mu, using the formula given above.

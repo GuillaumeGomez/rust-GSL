@@ -95,7 +95,7 @@ impl<T> NTuples<T> {
         unsafe { ffi::gsl_ntuple_read(self.n) }
     }
 
-    pub fn project<U, V>(&self, h: &::Histogram, value_func: ::value_function<T, U>, value_arg: &mut U,
+    pub fn project<U, V>(&self, h: &mut ::Histogram, value_func: ::value_function<T, U>, value_arg: &mut U,
         select_func: ::select_function<T, V>, select_arg: &mut V) -> enums::Value {
         unsafe {
             loop {
@@ -110,7 +110,7 @@ impl<T> NTuples<T> {
                 }
 
                 if select_func(::std::mem::transmute((*self.n).ntuple_data), select_arg) {
-                    ffi::gsl_histogram_increment(ffi::FFI::unwrap(h), value_func(::std::mem::transmute((*self.n).ntuple_data), value_arg));
+                    ffi::gsl_histogram_increment(ffi::FFI::unwrap_unique(h), value_func(::std::mem::transmute((*self.n).ntuple_data), value_arg));
                 }
             }
 
@@ -138,7 +138,11 @@ impl<T> ffi::FFI<ffi::gsl_ntuple> for NTuples<T> {
         Self::wrap(n)
     }
 
-    fn unwrap(n: &NTuples<T>) -> *mut ffi::gsl_ntuple {
+    fn unwrap_shared(n: &NTuples<T>) -> *const ffi::gsl_ntuple {
+        n.n as *const _
+    }
+
+    fn unwrap_unique(n: &mut NTuples<T>) -> *mut ffi::gsl_ntuple {
         n.n
     }
 }

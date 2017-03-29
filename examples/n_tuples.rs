@@ -39,7 +39,7 @@ fn val_func(data: &mut Data, params: &mut i32) -> f64 {
     x * x + y * y + z * z
 }
 
-fn first_part(r: &rgsl::Rng) {
+fn first_part(r: &mut rgsl::Rng) {
     let mut ntuple_row = Data { x: 0f64, y: 0f64, z: 0f64};
     let ntuple = rgsl::NTuples::create("test.dat", &mut ntuple_row).unwrap();
 
@@ -58,10 +58,10 @@ fn second_part() {
     let ntuple = rgsl::NTuples::open("test.dat", &mut ntuple_row).unwrap();
     let mut lower = 1.5f64;
 
-    let h = rgsl::Histogram::new(100).unwrap();
+    let mut h = rgsl::Histogram::new(100).unwrap();
     h.set_ranges_uniform(0f64, 10f64);
 
-    ntuple.project(&h, val_func, &mut 0i32, sel_func, &mut lower);
+    ntuple.project(&mut h, val_func, &mut 0i32, sel_func, &mut lower);
     //gsl_histogram_fprintf(stdout, h, "%f", "%f");
     h.print(&mut ::std::io::stdout());
 }
@@ -69,8 +69,8 @@ fn second_part() {
 fn main() {
     rgsl::RngType::env_setup();
     let t : rgsl::RngType = rgsl::rng::default();
-    let r = rgsl::Rng::new(&t).unwrap();
+    let mut r = rgsl::Rng::new(&t).unwrap();
 
-    first_part(&r);
+    first_part(&mut r);
     second_part();
 }

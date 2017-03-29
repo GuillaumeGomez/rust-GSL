@@ -225,24 +225,24 @@ pub mod mixed_radix {
     use ffi;
     use types::{FftComplexWaveTable, FftComplexWorkspace};
 
-    pub fn forward(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_forward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
-            ffi::FFI::unwrap(work)) }
+    pub fn forward(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace) -> enums::Value {
+        unsafe { ffi::gsl_fft_complex_forward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work)) }
     }
 
-    pub fn transform(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace, sign: ::FftDirection) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_transform(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
-            ffi::FFI::unwrap(work), sign) }
+    pub fn transform(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace, sign: ::FftDirection) -> enums::Value {
+        unsafe { ffi::gsl_fft_complex_transform(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work), sign) }
     }
 
-    pub fn backward(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_backward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
-            ffi::FFI::unwrap(work)) }
+    pub fn backward(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace) -> enums::Value {
+        unsafe { ffi::gsl_fft_complex_backward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work)) }
     }
 
-    pub fn inverse(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &FftComplexWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_inverse(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap(wavetable),
-            ffi::FFI::unwrap(work)) }
+    pub fn inverse(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace) -> enums::Value {
+        unsafe { ffi::gsl_fft_complex_inverse(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work)) }
     }
 }
 
