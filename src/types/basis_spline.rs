@@ -195,8 +195,8 @@ impl BSpLineDerivWorkspace {
     /// Computing all the basis function derivatives at once is more efficient than computing them
     /// individually, due to the nature of the defining recurrence relation.
     pub fn eval(&mut self, x: f64, nderiv: usize, dB: &mut MatrixF64,
-                w: &BSpLineWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_bspline_deriv_eval(x, nderiv, ffi::FFI::unwrap_shared(dB), ffi::FFI::unwrap_shared(w),
+                w: &mut BSpLineWorkspace) -> enums::Value {
+        unsafe { ffi::gsl_bspline_deriv_eval(x, nderiv, ffi::FFI::unwrap_unique(dB), ffi::FFI::unwrap_unique(w),
                                              self.w) }
     }
 
@@ -213,9 +213,9 @@ impl BSpLineDerivWorkspace {
     /// linear combinations of the B_i(x) and their derivatives to be computed without unnecessary
     /// terms.
     pub fn eval_non_zero(&mut self, x: f64, nderiv: usize, dB: &mut MatrixF64, istart: &mut usize,
-                         iend: &mut usize, w: &BSpLineWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_bspline_deriv_eval_nonzero(x, nderiv, ffi::FFI::unwrap_shared(dB), istart, iend,
-                                                     ffi::FFI::unwrap_shared(w), self.w) }
+                         iend: &mut usize, w: &mut BSpLineWorkspace) -> enums::Value {
+        unsafe { ffi::gsl_bspline_deriv_eval_nonzero(x, nderiv, ffi::FFI::unwrap_unique(dB), istart, iend,
+                                                     ffi::FFI::unwrap_unique(w), self.w) }
     }
 }
 
