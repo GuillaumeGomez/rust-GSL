@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = {x \over \sigma^2} \exp ((a^2 - x^2) /(2 \sigma^2)) dx
 /// 
 /// for x > a.
-pub fn rayleigh_tail(r: &Rng, a: f64, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_rayleigh_tail(ffi::FFI::unwrap(r), a, sigma) }
+pub fn rayleigh_tail(r: &mut Rng, a: f64, sigma: f64) -> f64 {
+    unsafe { ffi::gsl_ran_rayleigh_tail(ffi::FFI::unwrap_unique(r), a, sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a Rayleigh tail distribution with scale parameter sigma and lower limit a, using the formula given above.

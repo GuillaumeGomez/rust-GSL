@@ -10,8 +10,8 @@ use types::Rng;
 /// p(k) = {-1 \over \log(1-p)} {(p^k \over k)}
 /// 
 /// for k >= 1.
-pub fn logarithmic(r: &Rng, p: f64) -> u32 {
-    unsafe { ffi::gsl_ran_logarithmic(ffi::FFI::unwrap(r), p) }
+pub fn logarithmic(r: &mut Rng, p: f64) -> u32 {
+    unsafe { ffi::gsl_ran_logarithmic(ffi::FFI::unwrap_unique(r), p) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a logarithmic distribution with probability parameter p, using the formula given above.

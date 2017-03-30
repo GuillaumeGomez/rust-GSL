@@ -144,7 +144,7 @@ impl ChebSeries {
     /// This function computes the derivative of the series cs, storing the derivative coefficients
     /// in the previously allocated deriv. The two series cs and deriv must have been allocated with
     /// the same order.
-    pub fn calc_deriv(&self, deriv: &ChebSeries) -> enums::Value {
+    pub fn calc_deriv(&self, deriv: &mut ChebSeries) -> enums::Value {
         unsafe { ffi::gsl_cheb_calc_deriv(deriv.c, self.c) }
     }
 
@@ -152,7 +152,7 @@ impl ChebSeries {
     /// the previously allocated integ. The two series cs and integ must have been allocated with
     /// the same order. The lower limit of the integration is taken to be the left hand end of the
     /// range a.
-    pub fn calc_integ(&self, integ: &ChebSeries) -> enums::Value {
+    pub fn calc_integ(&self, integ: &mut ChebSeries) -> enums::Value {
         unsafe { ffi::gsl_cheb_calc_integ(integ.c, self.c) }
     }
 }
@@ -178,7 +178,11 @@ impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
         Self::wrap(r)
     }
 
-    fn unwrap(c: &ChebSeries) -> *mut ffi::gsl_cheb_series {
+    fn unwrap_shared(c: &ChebSeries) -> *const ffi::gsl_cheb_series {
+        c.c as *const _
+    }
+
+    fn unwrap_unique(c: &mut ChebSeries) -> *mut ffi::gsl_cheb_series {
         c.c
     }
 }

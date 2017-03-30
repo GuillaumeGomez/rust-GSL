@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = {Gamma(a+b) over Gamma(a) Gamma(b)} x^{a-1} (1-x)^{b-1} dx
 /// 
 /// for 0 <= x <= 1.
-pub fn beta(r: &Rng, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_beta(ffi::FFI::unwrap(r), a, b) }
+pub fn beta(r: &mut Rng, a: f64, b: f64) -> f64 {
+    unsafe { ffi::gsl_ran_beta(ffi::FFI::unwrap_unique(r), a, b) }
 }
 
 /// This function computes the probability density p(x) at x for a beta distribution with parameters a and b, using the formula given above.

@@ -437,7 +437,11 @@ impl ffi::FFI<ffi::gsl_vector_float> for VectorF32 {
         }
     }
 
-    fn unwrap(v: &VectorF32) -> *mut ffi::gsl_vector_float {
+    fn unwrap_shared(v: &VectorF32) -> *const ffi::gsl_vector_float {
+        v.vec as *const _
+    }
+
+    fn unwrap_unique(v: &mut VectorF32) -> *mut ffi::gsl_vector_float {
         v.vec
     }
 }
@@ -731,7 +735,11 @@ impl ffi::FFI<ffi::gsl_vector> for VectorF64 {
         }
     }
 
-    fn unwrap(v: &VectorF64) -> *mut ffi::gsl_vector {
+    fn unwrap_shared(v: &VectorF64) -> *const ffi::gsl_vector {
+        v.vec as *const _
+    }
+
+    fn unwrap_unique(v: &mut VectorF64) -> *mut ffi::gsl_vector {
         v.vec
     }
 }

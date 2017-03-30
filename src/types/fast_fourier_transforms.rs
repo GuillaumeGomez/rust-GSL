@@ -60,7 +60,11 @@ impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &FftComplexWaveTable) -> *mut ffi::gsl_fft_complex_wavetable {
+    fn unwrap_shared(w: &FftComplexWaveTable) -> *const ffi::gsl_fft_complex_wavetable {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut FftComplexWaveTable) -> *mut ffi::gsl_fft_complex_wavetable {
         w.w
     }
 }
@@ -102,7 +106,11 @@ impl ffi::FFI<ffi::gsl_fft_complex_workspace> for FftComplexWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &FftComplexWorkspace) -> *mut ffi::gsl_fft_complex_workspace {
+    fn unwrap_shared(w: &FftComplexWorkspace) -> *const ffi::gsl_fft_complex_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut FftComplexWorkspace) -> *mut ffi::gsl_fft_complex_workspace {
         w.w
     }
 }

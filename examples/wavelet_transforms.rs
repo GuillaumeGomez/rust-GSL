@@ -49,11 +49,11 @@ fn main() {
     }
 
     let w = rgsl::Wavelet::new(&rgsl::WaveletType::daubechies(), 4).unwrap();
-    let work = rgsl::WaveletWorkspace::new(N).unwrap();
+    let mut work = rgsl::WaveletWorkspace::new(N).unwrap();
 
-    wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N, &work);
+    wavelet_transforms::one_dimension::transform_forward(&w, &mut data, 1, N, &mut work);
 
-     for i in 0usize..N {
+    for i in 0usize..N {
         abscoeff[i] = data[i].abs();
     }
 
@@ -65,7 +65,7 @@ fn main() {
         i += 1;
     }
 
-    wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N, &work);
+    wavelet_transforms::one_dimension::transform_inverse(&w, &mut data, 1, N, &mut work);
 
     for it in 0usize..N {
         println!("{}", data[it]);

@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = { \exp(-x/a) \over a (1 + \exp(-x/a))^2 } dx
 /// 
 /// for -\infty < x < +\infty.
-pub fn logistic(r: &Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_logistic(ffi::FFI::unwrap(r), a) }
+pub fn logistic(r: &mut Rng, a: f64) -> f64 {
+    unsafe { ffi::gsl_ran_logistic(ffi::FFI::unwrap_unique(r), a) }
 }
 
 /// This function computes the probability density p(x) at x for a logistic distribution with scale parameter a, using the formula given above.

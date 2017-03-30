@@ -90,7 +90,7 @@ impl Rng {
     /// The generator is automatically initialized with the default seed, gsl_rng_default_seed. This is zero by default but can be changed either directly or by using the environment variable
     /// GSL_RNG_SEED (see [`Random number environment variables`](https://www.gnu.org/software/gsl/manual/html_node/Random-number-environment-variables.html#Random-number-environment-variables)).
     pub fn new(T: &RngType) -> Option<Rng> {
-        let tmp = unsafe { ffi::gsl_rng_alloc(ffi::FFI::unwrap(T)) };
+        let tmp = unsafe { ffi::gsl_rng_alloc(ffi::FFI::unwrap_shared(T)) };
 
         if tmp.is_null() {
             None
@@ -228,7 +228,11 @@ impl ffi::FFI<ffi::gsl_rng> for Rng {
         Self::wrap(r)
     }
 
-    fn unwrap(m: &Rng) -> *mut ffi::gsl_rng {
+    fn unwrap_shared(m: &Rng) -> *const ffi::gsl_rng {
+        m.r as *const _
+    }
+
+    fn unwrap_unique(m: &mut Rng) -> *mut ffi::gsl_rng {
         m.r
     }
 }
@@ -341,7 +345,11 @@ impl ffi::FFI<ffi::gsl_rng_type> for RngType {
         Self::wrap(r)
     }
 
-    fn unwrap(m: &RngType) -> *mut ffi::gsl_rng_type {
+    fn unwrap_shared(m: &RngType) -> *const ffi::gsl_rng_type {
+        m.ptr as *const _
+    }
+
+    fn unwrap_unique(m: &mut RngType) -> *mut ffi::gsl_rng_type {
         m.ptr
     }
 }

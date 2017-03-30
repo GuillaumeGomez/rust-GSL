@@ -9,8 +9,8 @@ use types::Rng;
 /// 
 /// p(0) = 1 - p
 /// p(1) = p
-pub fn bernoulli(r: &Rng, p: f64) -> u32 {
-    unsafe { ffi::gsl_ran_bernoulli(ffi::FFI::unwrap(r), p) }
+pub fn bernoulli(r: &mut Rng, p: f64) -> u32 {
+    unsafe { ffi::gsl_ran_bernoulli(ffi::FFI::unwrap_unique(r), p) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a Bernoulli distribution with probability parameter p, using the formula given above.

@@ -78,7 +78,7 @@ impl MatrixView {
     /// is still in use.
     /// 
     /// The function gsl_matrix_const_submatrix is equivalent to gsl_matrix_submatrix but can be used for matrices which are declared const.
-    pub fn from_matrix(m: &MatrixF64, k1: usize, k2: usize, n1: usize, n2: usize) -> MatrixView {
+    pub fn from_matrix(m: &mut MatrixF64, k1: usize, k2: usize, n1: usize, n2: usize) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: ffi::gsl_matrix_submatrix(m.mat, k1, k2, n1, n2).mat
@@ -141,10 +141,10 @@ impl MatrixView {
     /// is still in use.
     /// 
     /// The function gsl_matrix_const_view_vector is equivalent to gsl_matrix_view_vector but can be used for matrices which are declared const.
-    pub fn from_vector(v: &VectorF64, n1: usize, n2: usize) -> MatrixView {
+    pub fn from_vector(v: &mut VectorF64, n1: usize, n2: usize) -> MatrixView {
         unsafe {
             MatrixView {
-                mat: ffi::gsl_matrix_view_vector(ffi::FFI::unwrap(v), n1, n2).mat
+                mat: ffi::gsl_matrix_view_vector(ffi::FFI::unwrap_unique(v), n1, n2).mat
             }
         }
     }
@@ -163,10 +163,10 @@ impl MatrixView {
     /// 
     /// The function gsl_matrix_const_view_vector_with_tda is equivalent to gsl_matrix_view_vector_with_tda but can be used for matrices which
     /// are declared const.
-    pub fn from_vector_with_tda(v: &VectorF64, n1: usize, n2: usize, tda: usize) -> MatrixView {
+    pub fn from_vector_with_tda(v: &mut VectorF64, n1: usize, n2: usize, tda: usize) -> MatrixView {
         unsafe {
             MatrixView {
-                mat: ffi::gsl_matrix_view_vector_with_tda(ffi::FFI::unwrap(v), n1, n2, tda).mat
+                mat: ffi::gsl_matrix_view_vector_with_tda(ffi::FFI::unwrap_unique(v), n1, n2, tda).mat
             }
         }
     }
@@ -283,13 +283,13 @@ impl MatrixF64 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -528,7 +528,11 @@ impl ffi::FFI<ffi::gsl_matrix> for MatrixF64 {
         }
     }
 
-    fn unwrap(m: &MatrixF64) -> *mut ffi::gsl_matrix {
+    fn unwrap_shared(m: &MatrixF64) -> *const ffi::gsl_matrix {
+        m.mat as *const _
+    }
+
+    fn unwrap_unique(m: &mut MatrixF64) -> *mut ffi::gsl_matrix {
         m.mat
     }
 }
@@ -635,13 +639,13 @@ impl MatrixF32 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -866,7 +870,11 @@ impl ffi::FFI<ffi::gsl_matrix_float> for MatrixF32 {
         }
     }
 
-    fn unwrap(m: &MatrixF32) -> *mut ffi::gsl_matrix_float {
+    fn unwrap_shared(m: &MatrixF32) -> *const ffi::gsl_matrix_float {
+        m.mat as *const _
+    }
+
+    fn unwrap_unique(m: &mut MatrixF32) -> *mut ffi::gsl_matrix_float {
         m.mat
     }
 }
