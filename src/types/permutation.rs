@@ -151,14 +151,14 @@ impl Permutation {
     /// matrix from the right, v' = v P. The j-th column of the permutation matrix P is given by the p_j-th column of the identity matrix.
     /// The permutation p and the vector v must have the same length.
     pub fn permute_vector(&mut self, v: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_permute_vector(self.p, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_permute_vector(self.p, ffi::FFI::unwrap_unique(v)) }
     }
 
     /// This function applies the inverse of the permutation p to the elements of the vector v, considered as a row-vector acted on by an inverse permutation
     /// matrix from the right, v' = v P^T. Note that for permutation matrices the inverse is the same as the transpose. The j-th column of the permutation
     /// matrix P is given by the p_j-th column of the identity matrix. The permutation p and the vector v must have the same length.
     pub fn permute_vector_inverse(&self, v: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap_unique(v)) }
     }
 
     /// This function combines the two permutations pa and pb into a single permutation p, where p = pa * pb. The permutation p is equivalent to applying pb
@@ -215,7 +215,11 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
         Self::wrap(p)
     }
 
-    fn unwrap(p: &Permutation) -> *mut ffi::gsl_permutation {
+    fn unwrap_shared(p: &Permutation) -> *const ffi::gsl_permutation {
+        p.p as *const _
+    }
+
+    fn unwrap_unique(p: &mut Permutation) -> *mut ffi::gsl_permutation {
         p.p
     }
 }

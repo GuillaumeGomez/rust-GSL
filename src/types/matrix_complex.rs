@@ -109,13 +109,13 @@ impl MatrixComplexF64 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorComplexF64) -> enums::Value {
-        unsafe { ffi::gsl_matrix_complex_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_complex_set_row(self.mat, y, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorComplexF64) -> enums::Value {
-        unsafe { ffi::gsl_matrix_complex_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_complex_set_col(self.mat, x, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -284,7 +284,11 @@ impl ffi::FFI<ffi::gsl_matrix_complex> for MatrixComplexF64 {
         Self::wrap(r)
     }
 
-    fn unwrap(m: &MatrixComplexF64) -> *mut ffi::gsl_matrix_complex {
+    fn unwrap_shared(m: &MatrixComplexF64) -> *const ffi::gsl_matrix_complex {
+        m.mat as *const _
+    }
+
+    fn unwrap_unique(m: &mut MatrixComplexF64) -> *mut ffi::gsl_matrix_complex {
         m.mat
     }
 }
@@ -389,13 +393,13 @@ impl MatrixComplexF32 {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorComplexF32) -> enums::Value {
-        unsafe { ffi::gsl_matrix_complex_float_set_row(self.mat, y, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_complex_float_set_row(self.mat, y, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorComplexF32) -> enums::Value {
-        unsafe { ffi::gsl_matrix_complex_float_set_col(self.mat, x, ffi::FFI::unwrap(v)) }
+        unsafe { ffi::gsl_matrix_complex_float_set_col(self.mat, x, ffi::FFI::unwrap_shared(v)) }
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
@@ -565,7 +569,11 @@ impl ffi::FFI<ffi::gsl_matrix_complex_float> for MatrixComplexF32 {
         Self::wrap(r)
     }
 
-    fn unwrap(m: &MatrixComplexF32) -> *mut ffi::gsl_matrix_complex_float {
+    fn unwrap_shared(m: &MatrixComplexF32) -> *const ffi::gsl_matrix_complex_float {
+        m.mat as *const _
+    }
+
+    fn unwrap_unique(m: &mut MatrixComplexF32) -> *mut ffi::gsl_matrix_complex_float {
         m.mat
     }
 }

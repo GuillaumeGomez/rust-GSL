@@ -111,7 +111,11 @@ impl ffi::FFI<ffi::gsl_sum_levin_u_workspace> for LevinUWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &LevinUWorkspace) -> *mut ffi::gsl_sum_levin_u_workspace {
+    fn unwrap_shared(w: &LevinUWorkspace) -> *const ffi::gsl_sum_levin_u_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut LevinUWorkspace) -> *mut ffi::gsl_sum_levin_u_workspace {
         w.w
     }
 }
@@ -178,7 +182,11 @@ impl ffi::FFI<ffi::gsl_sum_levin_utrunc_workspace> for LevinUTruncWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &LevinUTruncWorkspace) -> *mut ffi::gsl_sum_levin_utrunc_workspace {
+    fn unwrap_shared(w: &LevinUTruncWorkspace) -> *const ffi::gsl_sum_levin_utrunc_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut LevinUTruncWorkspace) -> *mut ffi::gsl_sum_levin_utrunc_workspace {
         w.w
     }
 }

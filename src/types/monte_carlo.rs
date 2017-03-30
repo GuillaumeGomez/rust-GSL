@@ -137,7 +137,7 @@ impl PlainMonteCarlo {
                            };
             let ret = ffi::gsl_monte_plain_integrate(&mut func as *mut _ as *mut c_void,
                                                      xl.as_ptr(), xu.as_ptr(), xl.len(), t_calls,
-                                                     ffi::FFI::unwrap(r), self.s,
+                                                     ffi::FFI::unwrap_unique(r), self.s,
                                                      (&mut result) as *mut c_double,
                                                      (&mut abserr) as *mut c_double);
 
@@ -168,7 +168,11 @@ impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
         Self::wrap(s)
     }
 
-    fn unwrap(s: &PlainMonteCarlo) -> *mut ffi::gsl_monte_plain_state {
+    fn unwrap_shared(s: &PlainMonteCarlo) -> *const ffi::gsl_monte_plain_state {
+        s.s as *const _
+    }
+
+    fn unwrap_unique(s: &mut PlainMonteCarlo) -> *mut ffi::gsl_monte_plain_state {
         s.s
     }
 }
@@ -244,7 +248,7 @@ impl MiserMonteCarlo {
                            };
             let ret = ffi::gsl_monte_miser_integrate(&mut func as *mut _ as *mut c_void,
                                                      xl.as_ptr(), xu.as_ptr(), xl.len(), t_calls,
-                                                     ffi::FFI::unwrap(r), self.s,
+                                                     ffi::FFI::unwrap_unique(r), self.s,
                                                      (&mut result) as *mut c_double,
                                                      (&mut abserr) as *mut c_double);
 
@@ -298,7 +302,11 @@ impl ffi::FFI<ffi::gsl_monte_miser_state> for MiserMonteCarlo {
         Self::wrap(s)
     }
 
-    fn unwrap(s: &MiserMonteCarlo) -> *mut ffi::gsl_monte_miser_state {
+    fn unwrap_shared(s: &MiserMonteCarlo) -> *const ffi::gsl_monte_miser_state {
+        s.s as *const _
+    }
+
+    fn unwrap_unique(s: &mut MiserMonteCarlo) -> *mut ffi::gsl_monte_miser_state {
         s.s
     }
 }
@@ -442,7 +450,7 @@ impl VegasMonteCarlo {
                            };
             let ret = ffi::gsl_monte_vegas_integrate(&mut func as *mut _ as *mut c_void,
                                                      xl.as_ptr(), xu.as_ptr(), xl.len(), t_calls,
-                                                     ffi::FFI::unwrap(r), self.s,
+                                                     ffi::FFI::unwrap_unique(r), self.s,
                                                      (&mut result) as *mut c_double,
                                                      (&mut abserr) as *mut c_double);
 
@@ -499,7 +507,11 @@ impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
         Self::wrap(s)
     }
 
-    fn unwrap(s: &VegasMonteCarlo) -> *mut ffi::gsl_monte_vegas_state {
+    fn unwrap_shared(s: &VegasMonteCarlo) -> *const ffi::gsl_monte_vegas_state {
+        s.s as *const _
+    }
+
+    fn unwrap_unique(s: &mut VegasMonteCarlo) -> *mut ffi::gsl_monte_vegas_state {
         s.s
     }
 }

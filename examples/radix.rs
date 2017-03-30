@@ -41,13 +41,13 @@ fn main() {
         println!("{} {:.6} {:.6}", i, data2[2 * i], data2[2 * i + 1]);
     }
     let mut wavetable = rgsl::FftComplexWaveTable::new(n).unwrap();
-    let workspace = rgsl::FftComplexWorkspace::new(n).unwrap();
+    let mut workspace = rgsl::FftComplexWorkspace::new(n).unwrap();
 
     for i in 0..wavetable.factor().len() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);
     }
 
-    rgsl::fft::mixed_radix::forward(&mut data2, 1, n, &wavetable, &workspace);
+    rgsl::fft::mixed_radix::forward(&mut data2, 1, n, &wavetable, &mut workspace);
 
     println!("");
     for i in 0usize..(n as usize) {

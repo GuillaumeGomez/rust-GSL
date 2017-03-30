@@ -14,12 +14,12 @@ fn main() {
 
     let mut m = rgsl::MatrixView::from_array(&mut a_data, 4, 4);
     let mut b = rgsl::VectorView::from_array(&mut b_data);
-    let x = rgsl::VectorF64::new(4).unwrap();
+    let mut x = rgsl::VectorF64::new(4).unwrap();
     let mut s = 0i32;
-    let p = rgsl::Permutation::new(4).unwrap();
+    let mut p = rgsl::Permutation::new(4).unwrap();
 
-    rgsl::linear_algebra::LU_decomp(&m.matrix(), &p, &mut s);
-    rgsl::linear_algebra::LU_solve(&m.matrix(), &p, &b.vector(), &x);
+    rgsl::linear_algebra::LU_decomp(&mut m.matrix(), &mut p, &mut s);
+    rgsl::linear_algebra::LU_solve(&m.matrix(), &p, &b.vector(), &mut x);
 
     println!("x = \n{:?}", x);
 }

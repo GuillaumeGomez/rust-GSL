@@ -12,7 +12,7 @@ use types::Rng;
 /// 
 /// for k >= 1. Note that the distribution begins with k=1 with this definition. There is another convention in which the exponent k-1 is replaced by k.
 pub fn geometric(r: &mut Rng, p: f64) -> u32 {
-    unsafe { ffi::gsl_ran_geometric(ffi::FFI::unwrap(r), p) }
+    unsafe { ffi::gsl_ran_geometric(ffi::FFI::unwrap_unique(r), p) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a geometric distribution with probability parameter p, using the formula given above.

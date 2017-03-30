@@ -169,7 +169,11 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
         Self::wrap(c)
     }
 
-    fn unwrap(c: &MultiSet) -> *mut ffi::gsl_multiset {
+    fn unwrap_shared(c: &MultiSet) -> *const ffi::gsl_multiset {
+        c.c as *const _
+    }
+
+    fn unwrap_unique(c: &mut MultiSet) -> *mut ffi::gsl_multiset {
         c.c
     }
 }

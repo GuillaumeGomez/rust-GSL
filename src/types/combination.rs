@@ -169,7 +169,11 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
         Self::wrap(r)
     }
 
-    fn unwrap(c: &Combination) -> *mut ffi::gsl_combination {
+    fn unwrap_shared(c: &Combination) -> *const ffi::gsl_combination {
+        c.c as *const _
+    }
+
+    fn unwrap_unique(c: &mut Combination) -> *mut ffi::gsl_combination {
         c.c
     }
 }

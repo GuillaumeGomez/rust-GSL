@@ -1941,7 +1941,11 @@ impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
+    fn unwrap_shared(w: &IntegrationWorkspace) -> *const ffi::gsl_integration_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
         w.w
     }
 }
@@ -2179,7 +2183,11 @@ impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
+    fn unwrap_shared(w: &IntegrationQawsTable) -> *const ffi::gsl_integration_qaws_table {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
         w.w
     }
 }
@@ -2603,7 +2611,11 @@ impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
+    fn unwrap_shared(w: &IntegrationQawoTable) -> *const ffi::gsl_integration_qawo_table {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(w: &mut IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
         w.w
     }
 }
@@ -3147,9 +3159,13 @@ impl ffi::FFI<ffi::gsl_integration_cquad_workspace> for CquadWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
-        w.w
+    fn unwrap_shared(w: &CquadWorkspace) -> *const ffi::gsl_integration_cquad_workspace {
+        w.w as *const _
     }
+
+    fn unwrap_unique(w: &mut CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
+        w.w
+    }    
 }
 
 /// The fixed-order Gauss-Legendre integration routines are provided for fast integration of smooth functions with known polynomial order.
@@ -3234,9 +3250,13 @@ impl ffi::FFI<ffi::gsl_integration_glfixed_table> for GLFixedTable {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
-        w.w
+    fn unwrap_shared(w: &GLFixedTable) -> *const ffi::gsl_integration_glfixed_table {
+        w.w as *const _
     }
+
+    fn unwrap_unique(w: &mut GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
+        w.w
+    }    
 }
 
 fn i_transform<T>(t: f64, params: &mut InternParam<T>) -> f64 {

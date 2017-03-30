@@ -61,7 +61,7 @@ fn second_part() {
     let mut h = rgsl::Histogram::new(100).unwrap();
     h.set_ranges_uniform(0f64, 10f64);
 
-    ntuple.project(&h, val_func, &mut 0i32, sel_func, &mut lower);
+    ntuple.project(&mut h, val_func, &mut 0i32, sel_func, &mut lower);
     //gsl_histogram_fprintf(stdout, h, "%f", "%f");
     h.print(&mut ::std::io::stdout());
 }

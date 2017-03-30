@@ -284,7 +284,11 @@ impl ffi::FFI<ffi::gsl_histogram> for Histogram {
         Self::wrap(h)
     }
 
-    fn unwrap(h: &Histogram) -> *mut ffi::gsl_histogram {
+    fn unwrap_shared(h: &Histogram) -> *const ffi::gsl_histogram {
+        h.h as *const _
+    }
+
+    fn unwrap_unique(h: &mut Histogram) -> *mut ffi::gsl_histogram {
         h.h
     }
 }
@@ -349,7 +353,11 @@ impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
         Self::wrap(h)
     }
 
-    fn unwrap(h: &HistogramPdf) -> *mut ffi::gsl_histogram_pdf {
+    fn unwrap_shared(h: &HistogramPdf) -> *const ffi::gsl_histogram_pdf {
+        h.h as *const _
+    }
+
+    fn unwrap_unique(h: &mut HistogramPdf) -> *mut ffi::gsl_histogram_pdf {
         h.h
     }
 }
@@ -617,7 +625,11 @@ impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
         Self::wrap(h)
     }
 
-    fn unwrap(h: &Histogram2D) -> *mut ffi::gsl_histogram2d {
+    fn unwrap_shared(h: &Histogram2D) -> *const ffi::gsl_histogram2d {
+        h.h as *const _
+    }
+
+    fn unwrap_unique(h: &mut Histogram2D) -> *mut ffi::gsl_histogram2d {
         h.h
     }
 }
@@ -682,7 +694,11 @@ impl ffi::FFI<ffi::gsl_histogram2d_pdf> for Histogram2DPdf {
         Self::wrap(h)
     }
 
-    fn unwrap(h: &Histogram2DPdf) -> *mut ffi::gsl_histogram2d_pdf {
+    fn unwrap_shared(h: &Histogram2DPdf) -> *const ffi::gsl_histogram2d_pdf {
+        h.h as *const _
+    }
+
+    fn unwrap_unique(h: &mut Histogram2DPdf) -> *mut ffi::gsl_histogram2d_pdf {
         h.h
     }
 }

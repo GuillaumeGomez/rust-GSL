@@ -142,7 +142,11 @@ impl ffi::FFI<ffi::gsl_sf_mathieu_workspace> for MathieuWorkspace {
         Self::wrap(r)
     }
 
-    fn unwrap(v: &MathieuWorkspace) -> *mut ffi::gsl_sf_mathieu_workspace {
+    fn unwrap_shared(v: &MathieuWorkspace) -> *const ffi::gsl_sf_mathieu_workspace {
+        v.work as *const _
+    }
+
+    fn unwrap_unique(v: &mut MathieuWorkspace) -> *mut ffi::gsl_sf_mathieu_workspace {
         v.work
     }
 }

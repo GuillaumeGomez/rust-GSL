@@ -148,7 +148,11 @@ impl ffi::FFI<ffi::gsl_interp> for Interp {
         Self::wrap(interp)
     }
 
-    fn unwrap(interp: &Interp) -> *mut ffi::gsl_interp {
+    fn unwrap_shared(interp: &Interp) -> *const ffi::gsl_interp {
+        interp.interp as *const _
+    }
+
+    fn unwrap_unique(interp: &mut Interp) -> *mut ffi::gsl_interp {
         interp.interp
     }
 }
@@ -213,7 +217,11 @@ impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
         Self::wrap(t)
     }
 
-    fn unwrap(t: &InterpType) -> *mut ffi::gsl_interp_type {
+    fn unwrap_shared(t: &InterpType) -> *const ffi::gsl_interp_type {
+        t.t as *const ffi::gsl_interp_type
+    }
+
+    fn unwrap_unique(t: &mut InterpType) -> *mut ffi::gsl_interp_type {
         t.t as *mut ffi::gsl_interp_type
     }
 }
@@ -305,7 +313,11 @@ impl ffi::FFI<ffi::gsl_spline> for Spline {
         Self::wrap(spline)
     }
 
-    fn unwrap(spline: &Spline) -> *mut ffi::gsl_spline {
+    fn unwrap_shared(spline: &Spline) -> *const ffi::gsl_spline {
+        spline.spline as *const _
+    }
+
+    fn unwrap_unique(spline: &mut Spline) -> *mut ffi::gsl_spline {
         spline.spline
     }
 }

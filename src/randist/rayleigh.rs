@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for x > 0.
 pub fn rayleigh(r: &mut Rng, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_rayleigh(ffi::FFI::unwrap(r), sigma) }
+    unsafe { ffi::gsl_ran_rayleigh(ffi::FFI::unwrap_unique(r), sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a Rayleigh distribution with scale parameter sigma, using the formula given above.

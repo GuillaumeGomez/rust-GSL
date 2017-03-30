@@ -66,7 +66,11 @@ impl ffi::FFI<ffi::gsl_poly_complex_workspace> for PolyComplex {
         Self::wrap(w)
     }
 
-    fn unwrap(w: &PolyComplex) -> *mut ffi::gsl_poly_complex_workspace {
-        w.w
+    fn unwrap_shared(w: &PolyComplex) -> *const ffi::gsl_poly_complex_workspace {
+        w.w as *const _
     }
+
+    fn unwrap_unique(w: &mut PolyComplex) -> *mut ffi::gsl_poly_complex_workspace {
+        w.w
+    } 
 }

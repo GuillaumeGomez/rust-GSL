@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for x > 0.
 pub fn lognormal(r: &mut Rng, zeta: f64, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_lognormal(ffi::FFI::unwrap(r), zeta, sigma) }
+    unsafe { ffi::gsl_ran_lognormal(ffi::FFI::unwrap_unique(r), zeta, sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a lognormal distribution with parameters zeta and sigma, using the formula given above.

@@ -11,7 +11,7 @@ use types::Rng;
 /// 
 /// for x in the range -\infty to +\infty. The Cauchy distribution is also known as the Lorentz distribution.
 pub fn cauchy(r: &mut Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_cauchy(ffi::FFI::unwrap(r), a) }
+    unsafe { ffi::gsl_ran_cauchy(ffi::FFI::unwrap_unique(r), a) }
 }
 
 /// This function computes the probability density p(x) at x for a Cauchy distribution with scale parameter a, using the formula given above.

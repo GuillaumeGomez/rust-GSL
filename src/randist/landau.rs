@@ -13,7 +13,7 @@ use types::Rng;
 /// 
 /// p(x) = (1/\pi) \int_0^\infty dt \exp(-t \log(t) - x t) \sin(\pi t).
 pub fn landau(r: &mut Rng) -> f64 {
-    unsafe { ffi::gsl_ran_landau(ffi::FFI::unwrap(r)) }
+    unsafe { ffi::gsl_ran_landau(ffi::FFI::unwrap_unique(r)) }
 }
 
 /// This function computes the probability density p(x) at x for the Landau distribution using an approximation to the formula given above.

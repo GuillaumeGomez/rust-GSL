@@ -141,7 +141,11 @@ impl ffi::FFI<ffi::gsl_dht> for DiscreteHankel {
         Self::wrap(t)
     }
 
-    fn unwrap(t: &DiscreteHankel) -> *mut ffi::gsl_dht {
+    fn unwrap_shared(t: &DiscreteHankel) -> *const ffi::gsl_dht {
+        t.t as *const _
+    }
+
+    fn unwrap_unique(t: &mut DiscreteHankel) -> *mut ffi::gsl_dht {
         t.t
     }
 }

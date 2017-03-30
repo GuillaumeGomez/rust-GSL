@@ -21,7 +21,7 @@ use types::Rng;
 /// 
 /// for -\infty < x < +\infty.
 pub fn tdist(r: &mut Rng, nu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_tdist(ffi::FFI::unwrap(r), nu) }
+    unsafe { ffi::gsl_ran_tdist(ffi::FFI::unwrap_unique(r), nu) }
 }
 
 /// This function computes the probability density p(x) at x for a t-distribution with nu degrees of freedom, using the formula given above.

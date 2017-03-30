@@ -155,7 +155,7 @@ impl ODEiv2Step {
     /// Please note that if you use a stepper method that requires access to a driver object, it is advisable to use a driver allocation
     /// method, which automatically allocates a stepper, too.
     pub fn new(t: &ODEiv2StepType, dim: usize) -> Option<ODEiv2Step> {
-        let tmp = unsafe { ffi::gsl_odeiv2_step_alloc(ffi::FFI::unwrap(t), dim) };
+        let tmp = unsafe { ffi::gsl_odeiv2_step_alloc(ffi::FFI::unwrap_shared(t), dim) };
 
         if tmp.is_null() {
             None
@@ -243,7 +243,11 @@ impl ffi::FFI<ffi::gsl_odeiv2_step> for ODEiv2Step {
         Self::wrap(s)
     }
 
-    fn unwrap(s: &ODEiv2Step) -> *mut ffi::gsl_odeiv2_step {
+    fn unwrap_shared(s: &ODEiv2Step) -> *const ffi::gsl_odeiv2_step {
+        s.s
+    }
+
+    fn unwrap_unique(s: &mut ODEiv2Step) -> *mut ffi::gsl_odeiv2_step {
         s.s
     }
 }
@@ -375,7 +379,11 @@ impl ffi::FFI<ffi::gsl_odeiv2_step_type> for ODEiv2StepType {
         Self::wrap(t)
     }
 
-    fn unwrap(t: &ODEiv2StepType) -> *mut ffi::gsl_odeiv2_step_type {
+    fn unwrap_shared(t: &ODEiv2StepType) -> *const ffi::gsl_odeiv2_step_type {
+        t.t as *const ffi::gsl_odeiv2_step_type
+    }
+
+    fn unwrap_unique(t: &mut ODEiv2StepType) -> *mut ffi::gsl_odeiv2_step_type {
         t.t as *mut ffi::gsl_odeiv2_step_type
     }
 }
@@ -467,7 +475,7 @@ impl ODEiv2Control {
     /// This function returns a pointer to a newly allocated instance of a control function of type T. This function is only needed for
     /// defining new types of control functions. For most purposes the standard control functions described above should be sufficient.
     pub fn alloc(t: &ODEiv2ControlType) -> Option<ODEiv2Control> {
-        let tmp = unsafe { ffi::gsl_odeiv2_control_alloc(ffi::FFI::unwrap(t)) };
+        let tmp = unsafe { ffi::gsl_odeiv2_control_alloc(ffi::FFI::unwrap_shared(t)) };
 
         if tmp.is_null() {
             None
@@ -539,7 +547,11 @@ impl ffi::FFI<ffi::gsl_odeiv2_control> for ODEiv2Control {
         Self::wrap(c)
     }
 
-    fn unwrap(c: &ODEiv2Control) -> *mut ffi::gsl_odeiv2_control {
+    fn unwrap_shared(c: &ODEiv2Control) -> *const ffi::gsl_odeiv2_control {
+        c.c
+    }
+
+    fn unwrap_unique(c: &mut ODEiv2Control) -> *mut ffi::gsl_odeiv2_control {
         c.c
     }
 }
@@ -578,7 +590,11 @@ impl ffi::FFI<ffi::gsl_odeiv2_control_type> for ODEiv2ControlType {
         Self::wrap(t)
     }
 
-    fn unwrap(t: &ODEiv2ControlType) -> *mut ffi::gsl_odeiv2_control_type {
+    fn unwrap_shared(t: &ODEiv2ControlType) -> *const ffi::gsl_odeiv2_control_type {
+        t.t as *const ffi::gsl_odeiv2_control_type
+    }
+
+    fn unwrap_unique(t: &mut ODEiv2ControlType) -> *mut ffi::gsl_odeiv2_control_type {
         t.t as *mut ffi::gsl_odeiv2_control_type
     }
 }
@@ -670,7 +686,11 @@ impl ffi::FFI<ffi::gsl_odeiv2_evolve> for ODEiv2Evolve {
         Self::wrap(e)
     }
 
-    fn unwrap(e: &ODEiv2Evolve) -> *mut ffi::gsl_odeiv2_evolve {
+    fn unwrap_shared(e: &ODEiv2Evolve) -> *const ffi::gsl_odeiv2_evolve {
+        e.e as *const _
+    }
+
+    fn unwrap_unique(e: &mut ODEiv2Evolve) -> *mut ffi::gsl_odeiv2_evolve {
         e.e
     }
 }

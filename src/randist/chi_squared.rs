@@ -19,7 +19,7 @@ use types::Rng;
 /// 
 /// for x >= 0.
 pub fn chisq(r: &mut Rng, nu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_chisq(ffi::FFI::unwrap(r), nu) }
+    unsafe { ffi::gsl_ran_chisq(ffi::FFI::unwrap_unique(r), nu) }
 }
 
 /// This function computes the probability density p(x) at x for a chi-squared distribution with nu degrees of freedom, using the formula given above.

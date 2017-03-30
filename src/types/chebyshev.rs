@@ -178,7 +178,11 @@ impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
         Self::wrap(r)
     }
 
-    fn unwrap(c: &ChebSeries) -> *mut ffi::gsl_cheb_series {
+    fn unwrap_shared(c: &ChebSeries) -> *const ffi::gsl_cheb_series {
+        c.c as *const _
+    }
+
+    fn unwrap_unique(c: &mut ChebSeries) -> *mut ffi::gsl_cheb_series {
         c.c
     }
 }

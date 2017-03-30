@@ -115,7 +115,11 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
         Self::wrap(q)
     }
 
-    fn unwrap(q: &QRng) -> *mut ffi::gsl_qrng {
+    fn unwrap_shared(q: &QRng) -> *const ffi::gsl_qrng {
+        q.q as *const _
+    }
+
+    fn unwrap_unique(q: &mut QRng) -> *mut ffi::gsl_qrng {
         q.q
     }
 }
@@ -176,7 +180,11 @@ impl ffi::FFI<ffi::gsl_qrng_type> for QRngType {
         Self::wrap(t)
     }
 
-    fn unwrap(t: &QRngType) -> *mut ffi::gsl_qrng_type {
+    fn unwrap_shared(t: &QRngType) -> *const ffi::gsl_qrng_type {
+        t.t as *const ffi::gsl_qrng_type
+    }
+
+    fn unwrap_unique(t: &mut QRngType) -> *mut ffi::gsl_qrng_type {
         t.t as *mut ffi::gsl_qrng_type
     }
 }
