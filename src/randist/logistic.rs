@@ -10,7 +10,7 @@ use types::Rng;
 /// p(x) dx = { \exp(-x/a) \over a (1 + \exp(-x/a))^2 } dx
 /// 
 /// for -\infty < x < +\infty.
-pub fn logistic(r: &Rng, a: f64) -> f64 {
+pub fn logistic(r: &mut Rng, a: f64) -> f64 {
     unsafe { ffi::gsl_ran_logistic(ffi::FFI::unwrap(r), a) }
 }
 

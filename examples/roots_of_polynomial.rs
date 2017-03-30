@@ -14,7 +14,7 @@ use rgsl::PolyComplex;
 fn main() {
     let a : [f64; 6] = [-1f64, 0f64, 0f64, 0f64, 0f64, 1f64];
     let mut z : [f64; 10] = [0f64; 10];
-    let w = PolyComplex::new(6).unwrap();
+    let mut w = PolyComplex::new(6).unwrap();
 
     w.solve(&a, &mut z);
     for i in 0..5 {

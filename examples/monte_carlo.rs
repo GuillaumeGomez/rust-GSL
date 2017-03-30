@@ -59,36 +59,36 @@ fn main() {
 
     rgsl::RngType::env_setup();
     let t : rgsl::RngType = rgsl::rng::default();
-    let r = rgsl::Rng::new(&t).unwrap();
+    let mut r = rgsl::Rng::new(&t).unwrap();
 
     {
-        let s = rgsl::PlainMonteCarlo::new(3).unwrap();
+        let mut s = rgsl::PlainMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &mut r).unwrap();
         display_results("plain", res, err);
     }
 
     {
-        let s = rgsl::MiserMonteCarlo::new(3).unwrap();
+        let mut s = rgsl::MiserMonteCarlo::new(3).unwrap();
 
         let (res, err) = s.integrate(3, |k| {
                 let a = 1f64 / (PI * PI * PI);
 
                 a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
-            }, &xl, &xu, calls, &r).unwrap();
+            }, &xl, &xu, calls, &mut r).unwrap();
         display_results("miser", res, err);
     }
 
     {
-        let s = rgsl::VegasMonteCarlo::new(3).unwrap();
+        let mut s = rgsl::VegasMonteCarlo::new(3).unwrap();
 
-        let (mut res, mut err) = s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
+        let (mut res, mut err) = s.integrate(3, g, &xl, &xu, 10000, &mut r).unwrap();
         display_results("vegas warm-up", res, err);
 
         println!("converging...");
 
         loop {
-            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &r).unwrap();
+            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &mut r).unwrap();
             res = _res;
             err = _err;
             println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());

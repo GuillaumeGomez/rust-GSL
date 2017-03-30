@@ -15,7 +15,7 @@ use types::Rng;
 /// for x > a where N(a;\sigma) is the normalization constant,
 /// 
 /// N(a;\sigma) = (1/2) erfc(a / sqrt(2 sigma^2)).
-pub fn gaussian_tail(r: &Rng, a: f64, sigma: f64) -> f64 {
+pub fn gaussian_tail(r: &mut Rng, a: f64, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_gaussian_tail(ffi::FFI::unwrap(r), a, sigma) }
 }
 
@@ -25,7 +25,7 @@ pub fn gaussian_tail_pdf(x: f64, a: f64, sigma: f64) -> f64 {
 }
 
 /// This function computes results for the tail of a unit Gaussian distribution. They are equivalent to the functions above with a standard deviation of one, sigma = 1.
-pub fn ugaussian_tail(r: &Rng, a: f64) -> f64 {
+pub fn ugaussian_tail(r: &mut Rng, a: f64) -> f64 {
     unsafe { ffi::gsl_ran_ugaussian_tail(ffi::FFI::unwrap(r), a) }
 }
 

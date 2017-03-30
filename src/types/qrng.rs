@@ -46,7 +46,7 @@ impl QRng {
 
     /// This function reinitializes the generator self to its starting point. Note that quasi-random sequences do not use a seed and always
     /// produce the same set of values.
-    pub fn init(&self) {
+    pub fn init(&mut self) {
         unsafe { ffi::gsl_qrng_init(self.q) }
     }
 
@@ -84,7 +84,7 @@ impl QRng {
 
     /// This function copies the quasi-random sequence generator src into the pre-existing generator dest, making dest into an exact copy
     /// of src. The two generators must be of the same type.
-    pub fn copy(&self, dest: &QRng) -> enums::Value {
+    pub fn copy(&self, dest: &mut QRng) -> enums::Value {
         unsafe { ffi::gsl_qrng_memcpy(dest.q, self.q) }
     }
 }

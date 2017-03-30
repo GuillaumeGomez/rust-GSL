@@ -11,7 +11,7 @@ use types::Rng;
 /// p(k) =  p (1-p)^(k-1)
 /// 
 /// for k >= 1. Note that the distribution begins with k=1 with this definition. There is another convention in which the exponent k-1 is replaced by k.
-pub fn geometric(r: &Rng, p: f64) -> u32 {
+pub fn geometric(r: &mut Rng, p: f64) -> u32 {
     unsafe { ffi::gsl_ran_geometric(ffi::FFI::unwrap(r), p) }
 }
 

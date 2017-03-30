@@ -826,7 +826,7 @@ impl<'a> Drop for ODEiv2Driver<'a> {
 //         }
 //     }
 //
-//     fn unwrap(d: &ODEiv2Driver) -> *mut ffi::gsl_odeiv2_driver {
+//     fn unwrap(d: &mut ODEiv2Driver) -> *mut ffi::gsl_odeiv2_driver {
 //         d.d
 //     }
 // }

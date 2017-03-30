@@ -89,7 +89,7 @@ impl DiscreteHankel {
     }
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
-    pub fn init(&self, nu: f64, xmax: f64) -> enums::Value {
+    pub fn init(&mut self, nu: f64, xmax: f64) -> enums::Value {
         unsafe { ffi::gsl_dht_init(self.t, nu, xmax) }
     }
 
@@ -165,7 +165,7 @@ impl ffi::FFI<ffi::gsl_dht> for DiscreteHankel {
 // ```
 #[test]
 fn discrete_hankel() {
-    let d = DiscreteHankel::new(3).unwrap();
+    let mut d = DiscreteHankel::new(3).unwrap();
     assert_eq!(d.init(3., 2.), ::Value::Success);
     assert_eq!(&format!("{:.4} {:.4}", d.x_sample(1), d.k_sample(1)), "1.2033 4.8805");
     let v = d.apply(&[100., 2., 3.]);

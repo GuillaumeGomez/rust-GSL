@@ -61,7 +61,7 @@ fn main() {
     };
 
     println!("\n=== IntegrationWorkspace.qag ===");
-    let iw = rgsl::IntegrationWorkspace::new(5).unwrap();
+    let mut iw = rgsl::IntegrationWorkspace::new(5).unwrap();
 
     match iw.qag(f, &mut params, xlow, xhigh, eps_abs, eps_rel, 1, rgsl::GaussKonrodRule::Gauss15, &mut result, &mut error) {
         rgsl::Value::Success => {
@@ -73,7 +73,8 @@ fn main() {
     };
 
     println!("\n=== IntegrationWorkspace.qagi ===");
-    match iw.qagi(f, &mut params, 1.0e-7f64, 0f64, iw.limit(), &mut result, &mut error) {
+    let limit = iw.limit();
+    match iw.qagi(f, &mut params, 1.0e-7f64, 0f64, limit, &mut result, &mut error) {
         rgsl::Value::Success => {
             println!("Result {} +/- {}", result, error);
         }
@@ -84,10 +85,10 @@ fn main() {
 
     {
         println!("\n=== IntegrationQawsTable.qaws ===");
-        let t = rgsl::IntegrationQawsTable::new(0f64, 0f64, 1, 0).unwrap();
-        let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
+        let mut t = rgsl::IntegrationQawsTable::new(0f64, 0f64, 1, 0).unwrap();
+        let mut w = rgsl::IntegrationWorkspace::new(1000).unwrap();
 
-        match t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &w, &mut result, &mut error) {
+        match t.qaws(f458, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-7f64, w.limit(), &mut w, &mut result, &mut error) {
             rgsl::Value::Success => {
                 println!("Result {} +/- {}", result, error);
             }
@@ -98,7 +99,7 @@ fn main() {
     }
 
     println!("\n=== CquadWorkspace.cquad ===");
-    let t = rgsl::CquadWorkspace::new(200).unwrap();
+    let mut t = rgsl::CquadWorkspace::new(200).unwrap();
 
     match t.cquad(cqf1, &mut 1f64, 0f64, 1f64, 0f64, 1.0e-12f64, &mut result, &mut error, &mut n_eval) {
         rgsl::Value::Success => {
@@ -111,7 +112,7 @@ fn main() {
 
     {
         println!("\n=== IntegrationWorkspace.qags ===");
-        let w = rgsl::IntegrationWorkspace::new(1000).unwrap();
+        let mut w = rgsl::IntegrationWorkspace::new(1000).unwrap();
 
         let expected = -4f64;
         let mut alpha = 1f64;

@@ -109,7 +109,7 @@ impl PlainMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
-    pub fn init(&self) -> ::Value {
+    pub fn init(&mut self) -> ::Value {
         unsafe { ffi::gsl_monte_plain_init(self.s) }
     }
 
@@ -123,8 +123,8 @@ impl PlainMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: FnMut(&[f64]) -> f64>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                              t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self, dim: usize, f: F, xl: &[f64], xu: &[f64],
+                                              t_calls: usize, r: &mut ::Rng) -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
@@ -216,7 +216,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
-    pub fn init(&self) -> ::Value {
+    pub fn init(&mut self) -> ::Value {
         unsafe { ffi::gsl_monte_miser_init(self.s) }
     }
 
@@ -230,8 +230,8 @@ impl MiserMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: FnMut(&[f64]) -> f64>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                              t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self, dim: usize, f: F, xl: &[f64], xu: &[f64],
+                                              t_calls: usize, r: &mut ::Rng) -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
@@ -273,7 +273,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function sets the integrator parameters based on values provided in the params structure.
-    pub fn set_params(&self, params: &MiserParams) {
+    pub fn set_params(&mut self, params: &MiserParams) {
         unsafe {
             ffi::gsl_monte_miser_params_set(self.s, params as *const MiserParams);
         }
@@ -410,7 +410,7 @@ impl VegasMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace
     /// to be reused for different integrations.
-    pub fn init(&self) -> ::Value {
+    pub fn init(&mut self) -> ::Value {
         unsafe { ffi::gsl_monte_vegas_init(self.s) }
     }
 
@@ -428,8 +428,8 @@ impl VegasMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: FnMut(&[f64]) -> f64>(&self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                              t_calls: usize, r: &::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self, dim: usize, f: F, xl: &[f64], xu: &[f64],
+                                              t_calls: usize, r: &mut ::Rng) -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
@@ -458,7 +458,7 @@ impl VegasMonteCarlo {
     /// The returned value should be close to 1. A value which differs significantly from 1 indicates that
     /// the values from different iterations are inconsistent. In this case the weighted error will be
     /// under-estimated, and further iterations of the algorithm are needed to obtain reliable results.
-    pub fn chisq(&self) -> f64 {
+    pub fn chisq(&mut self) -> f64 {
         unsafe {
             ffi::gsl_monte_vegas_chisq(self.s)
         }
@@ -466,7 +466,7 @@ impl VegasMonteCarlo {
 
     /// This function returns the raw (unaveraged) values of the integral result and its error sigma from
     /// the most recent iteration of the algorithm.
-    pub fn runval(&self, result: &mut f64, sigma: &mut f64) {
+    pub fn runval(&mut self, result: &mut f64, sigma: &mut f64) {
         unsafe {
             ffi::gsl_monte_vegas_runval(self.s, result as *mut c_double, sigma as *mut c_double)
         }
@@ -595,12 +595,12 @@ fn plain() {
 
     ::RngType::env_setup();
     let t : ::RngType = ::rng::default();
-    let r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(&t).unwrap();
 
     {
-        let s = PlainMonteCarlo::new(3).unwrap();
+        let mut s = PlainMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.412209");
         assert_eq!(&format!("{:.6}", err), "0.013436");
     }
@@ -622,12 +622,12 @@ fn miser() {
 
     ::RngType::env_setup();
     let t : ::RngType = ::rng::default();
-    let r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(&t).unwrap();
 
     {
-        let s = MiserMonteCarlo::new(3).unwrap();
+        let mut s = MiserMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &r).unwrap();
+        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -644,16 +644,16 @@ fn miser_closure() {
 
     ::RngType::env_setup();
     let t : ::RngType = ::rng::default();
-    let r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(&t).unwrap();
 
     {
-        let s = MiserMonteCarlo::new(3).unwrap();
+        let mut s = MiserMonteCarlo::new(3).unwrap();
 
         let (res, err) = s.integrate(3, |k| {
                 let a = 1f64 / (PI * PI * PI);
 
                 a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
-            }, &xl, &xu, calls, &r).unwrap();
+            }, &xl, &xu, calls, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -673,12 +673,12 @@ fn vegas_warm_up() {
 
     ::RngType::env_setup();
     let t : ::RngType = ::rng::default();
-    let r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(&t).unwrap();
 
     {
-        let s = VegasMonteCarlo::new(3).unwrap();
+        let mut s = VegasMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
+        let (res, err) = s.integrate(3, g, &xl, &xu, 10000, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.385603");
         assert_eq!(&format!("{:.6}", err), "0.002212");
     }
@@ -700,16 +700,16 @@ fn vegas() {
 
     ::RngType::env_setup();
     let t : ::RngType = ::rng::default();
-    let r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(&t).unwrap();
 
     {
-        let s = VegasMonteCarlo::new(3).unwrap();
+        let mut s = VegasMonteCarlo::new(3).unwrap();
 
-        s.integrate(3, g, &xl, &xu, 10000, &r).unwrap();
+        s.integrate(3, g, &xl, &xu, 10000, &mut r).unwrap();
         let mut res;
         let mut err;
         loop {
-            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &r).unwrap();
+            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &mut r).unwrap();
             res = _res;
             err = _err;
             println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());

@@ -260,11 +260,11 @@ impl MultiFitFSolver {
         }
     }
 
-    pub fn set(&self, f: &mut MultiFitFunction, x: &VectorF64) -> ::Value {
+    pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> ::Value {
         unsafe { ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap(x)) }
     }
 
-    pub fn iterate(&self) -> ::Value {
+    pub fn iterate(&mut self) -> ::Value {
         unsafe { ffi::gsl_multifit_fsolver_iterate(self.s) }
     }
 

@@ -10,7 +10,7 @@ use types::Rng;
 /// p(x) dx = (a/b) / (x/b)^{a+1} dx
 /// 
 /// for x >= b.
-pub fn pareto(r: &Rng, a: f64, b: f64) -> f64 {
+pub fn pareto(r: &mut Rng, a: f64, b: f64) -> f64 {
     unsafe { ffi::gsl_ran_pareto(ffi::FFI::unwrap(r), a, b) }
 }
 

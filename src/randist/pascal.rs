@@ -10,7 +10,7 @@ use types::Rng;
 /// p(k) = {(n + k - 1)! \over k! (n - 1)! } p^n (1-p)^k
 /// 
 /// for k >= 0
-pub fn pascal(r: &Rng, p: f64, n: u32) -> u32 {
+pub fn pascal(r: &mut Rng, p: f64, n: u32) -> u32 {
     unsafe { ffi::gsl_ran_pascal(ffi::FFI::unwrap(r), p, n) }
 }
 

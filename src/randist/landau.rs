@@ -12,7 +12,7 @@ use types::Rng;
 /// For numerical purposes it is more convenient to use the following equivalent form of the integral,
 /// 
 /// p(x) = (1/\pi) \int_0^\infty dt \exp(-t \log(t) - x t) \sin(\pi t).
-pub fn landau(r: &Rng) -> f64 {
+pub fn landau(r: &mut Rng) -> f64 {
     unsafe { ffi::gsl_ran_landau(ffi::FFI::unwrap(r)) }
 }
 

@@ -13,7 +13,7 @@ use types::Rng;
 /// 
 /// If a population contains n_1 elements of “type 1” and n_2 elements of “type 2” then the hypergeometric distribution gives the probability of obtaining
 /// k elements of “type 1” in t samples from the population without replacement.
-pub fn hypergeometric(r: &Rng, n1: u32, n2: u32, t: u32) -> u32 {
+pub fn hypergeometric(r: &mut Rng, n1: u32, n2: u32, t: u32) -> u32 {
     unsafe { ffi::gsl_ran_hypergeometric(ffi::FFI::unwrap(r), n1, n2, t) }
 }
 
