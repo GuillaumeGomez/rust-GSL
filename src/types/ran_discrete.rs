@@ -43,8 +43,8 @@ impl RanDiscrete {
     }
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
-    pub fn discrete(&self, r: &Rng) -> usize {
-        unsafe { ffi::gsl_ran_discrete(ffi::FFI::unwrap(r), self.ran) }
+    pub fn discrete(&self, r: &mut Rng) -> usize {
+        unsafe { ffi::gsl_ran_discrete(ffi::FFI::unwrap_unique(r), self.ran) }
     }
 
     /// Returns the probability P[k] of observing the variable k. Since P[k] is not stored as part of the lookup table, it must be recomputed; this computation takes O(K),
@@ -72,7 +72,11 @@ impl ffi::FFI<ffi::gsl_ran_discrete_t> for RanDiscrete {
         Self::wrap(v)
     }
 
-    fn unwrap(v: &RanDiscrete) -> *mut ffi::gsl_ran_discrete_t {
+    fn unwrap_shared(v: &RanDiscrete) -> *const ffi::gsl_ran_discrete_t {
+        v.ran as *const _
+    }
+
+    fn unwrap_unique(v: &mut RanDiscrete) -> *mut ffi::gsl_ran_discrete_t {
         v.ran
     }
 }

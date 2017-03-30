@@ -927,8 +927,8 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 /// The subintervals and their results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit,
 /// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.
-pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize, workspace: &::IntegrationWorkspace,
-    cycle_workspace: &::IntegrationWorkspace, wf: &::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
+pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize, workspace: &mut ::IntegrationWorkspace,
+    cycle_workspace: &mut ::IntegrationWorkspace, wf: &mut ::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
     let mut total_error = 0f64;
 
     let mut ktmin = 0usize;
@@ -937,7 +937,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
     unsafe {
         let mut table : ffi::extrapolation_table = ::std::mem::zeroed();
 
-        let omega = (*ffi::FFI::unwrap(wf)).omega;
+        let omega = (*ffi::FFI::unwrap_shared(wf)).omega;
 
         let p = 0.9f64;
         let mut factor = 1f64;
@@ -949,7 +949,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
         *result = 0f64;
         *abserr = 0f64;
 
-        if limit > (*ffi::FFI::unwrap(workspace)).limit {
+        if limit > (*ffi::FFI::unwrap_shared(workspace)).limit {
             rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
         }
 
@@ -959,7 +959,7 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
         }
 
         if omega == 0f64 {
-            if (*ffi::FFI::unwrap(wf)).sine == ::IntegrationQawo::Sine {
+            if (*ffi::FFI::unwrap_shared(wf)).sine == ::IntegrationQawo::Sine {
                 /* The function sin(w x) f(x) is always zero for w = 0 */
                 *result = 0f64;
                 *abserr = 0f64;
@@ -967,7 +967,8 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
                 return ::Value::Success;
             }  else {
                 /* The function cos(w x) f(x) is always f(x) for w = 0 */
-                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, (*ffi::FFI::unwrap(cycle_workspace)).limit as usize, result, abserr);
+                let limit = (*ffi::FFI::unwrap_shared(cycle_workspace)).limit as usize;
+                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, limit, result, abserr);
             }
         }
 

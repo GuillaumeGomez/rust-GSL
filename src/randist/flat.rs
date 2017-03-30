@@ -10,8 +10,8 @@ use types::Rng;
 /// p(x) dx = {1 \over (b-a)} dx
 /// 
 /// if a <= x < b and 0 otherwise.
-pub fn flat(r: &Rng, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_flat(ffi::FFI::unwrap(r), a, b) }
+pub fn flat(r: &mut Rng, a: f64, b: f64) -> f64 {
+    unsafe { ffi::gsl_ran_flat(ffi::FFI::unwrap_unique(r), a, b) }
 }
 
 /// This function computes the probability density p(x) at x for a uniform distribution from a to b, using the formula given above.

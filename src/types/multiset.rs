@@ -75,17 +75,17 @@ impl MultiSet {
     }
 
     /// This function initializes the multiset c to the lexicographically first multiset element, i.e. 0 repeated k times.
-    pub fn init_first(&self) {
+    pub fn init_first(&mut self) {
         unsafe { ffi::gsl_multiset_init_first(self.c) }
     }
 
     /// This function initializes the multiset c to the lexicographically last multiset element, i.e. n-1 repeated k times.
-    pub fn init_last(&self) {
+    pub fn init_last(&mut self) {
         unsafe { ffi::gsl_multiset_init_last(self.c) }
     }
 
     /// This function copies the elements of the multiset self into the multiset dest. The two multisets must have the same size.
-    pub fn copy(&self, dest: &MultiSet) -> enums::Value {
+    pub fn copy(&self, dest: &mut MultiSet) -> enums::Value {
         unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c) }
     }
 
@@ -119,13 +119,13 @@ impl MultiSet {
     /// This function advances the multiset self to the next multiset element in lexicographic order and returns ::Value::Success. If no
     /// further multisets elements are available it returns enums::value::Failure and leaves self unmodified. Starting with the first multiset and
     /// repeatedly applying this function will iterate through all possible multisets of a given order.
-    pub fn next(&self) -> enums::Value {
+    pub fn next(&mut self) -> enums::Value {
         unsafe { ffi::gsl_multiset_next(self.c) }
     }
 
     /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning ::Value::Success.
     /// If no previous multiset is available it returns enums::value::Failure and leaves self unmodified.
-    pub fn prev(&self) -> enums::Value {
+    pub fn prev(&mut self) -> enums::Value {
         unsafe { ffi::gsl_multiset_prev(self.c) }
     }
 
@@ -169,7 +169,11 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
         Self::wrap(c)
     }
 
-    fn unwrap(c: &MultiSet) -> *mut ffi::gsl_multiset {
+    fn unwrap_shared(c: &MultiSet) -> *const ffi::gsl_multiset {
+        c.c as *const _
+    }
+
+    fn unwrap_unique(c: &mut MultiSet) -> *mut ffi::gsl_multiset {
         c.c
     }
 }

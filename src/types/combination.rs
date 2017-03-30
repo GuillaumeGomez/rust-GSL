@@ -84,19 +84,19 @@ impl Combination {
 
     /// This function initializes the combination c to the lexicographically first combination, i.e.
     /// (0,1,2,...,k-1).
-    pub fn init_first(&self) {
+    pub fn init_first(&mut self) {
         unsafe { ffi::gsl_combination_init_first(self.c) }
     }
 
     /// This function initializes the combination c to the lexicographically last combination, i.e.
     /// (n-k,n-k+1,…,n-1).
-    pub fn init_last(&self) {
+    pub fn init_last(&mut self) {
         unsafe { ffi::gsl_combination_init_last(self.c) }
     }
 
     /// This function copies the elements of the combination self into the combination dest. The two
     /// combinations must have the same size.
-    pub fn copy(&self, dest: &Combination) -> enums::Value {
+    pub fn copy(&self, dest: &mut Combination) -> enums::Value {
         unsafe { ffi::gsl_combination_memcpy(dest.c, self.c) }
     }
 
@@ -136,14 +136,14 @@ impl Combination {
     /// and returns `Success`. If no further combinations are available it returns Failure and
     /// leaves self unmodified. Starting with the first combination and repeatedly applying this
     /// function will iterate through all possible combinations of a given order.
-    pub fn next(&self) -> enums::Value {
+    pub fn next(&mut self) -> enums::Value {
         unsafe { ffi::gsl_combination_next(self.c) }
     }
 
     /// This function steps backwards from the combination self to the previous combination in
     /// lexicographic order, returning `Success`. If no previous combination is available it returns
     /// `Failure` and leaves self unmodified.
-    pub fn prev(&self) -> enums::Value {
+    pub fn prev(&mut self) -> enums::Value {
         unsafe { ffi::gsl_combination_prev(self.c) }
     }
 }
@@ -169,7 +169,11 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
         Self::wrap(r)
     }
 
-    fn unwrap(c: &Combination) -> *mut ffi::gsl_combination {
+    fn unwrap_shared(c: &Combination) -> *const ffi::gsl_combination {
+        c.c as *const _
+    }
+
+    fn unwrap_unique(c: &mut Combination) -> *mut ffi::gsl_combination {
         c.c
     }
 }

@@ -252,7 +252,11 @@ impl ffi::FFI<ffi::gsl_vector_complex> for VectorComplexF64 {
         Self::wrap(r)
     }
 
-    fn unwrap(v: &VectorComplexF64) -> *mut ffi::gsl_vector_complex {
+    fn unwrap_shared(v: &VectorComplexF64) -> *const ffi::gsl_vector_complex {
+        v.vec as *const _
+    }
+
+    fn unwrap_unique(v: &mut VectorComplexF64) -> *mut ffi::gsl_vector_complex {
         v.vec
     }
 }
@@ -502,7 +506,11 @@ impl ffi::FFI<ffi::gsl_vector_complex_float> for VectorComplexF32 {
         Self::wrap(r)
     }
 
-    fn unwrap(v: &VectorComplexF32) -> *mut ffi::gsl_vector_complex_float {
+    fn unwrap_shared(v: &VectorComplexF32) -> *const ffi::gsl_vector_complex_float {
+        v.vec as *const _
+    }
+
+    fn unwrap_unique(v: &mut VectorComplexF32) -> *mut ffi::gsl_vector_complex_float {
         v.vec
     }
 }
