@@ -937,8 +937,8 @@ extern "C" {
                                       superdiag: *mut gsl_vector)
                                       -> enums::Value;
     // Givens Rotations
-    pub fn gsl_linalg_givens();
-    pub fn gsl_linalg_givens_gv();
+    //pub fn gsl_linalg_givens();
+    //pub fn gsl_linalg_givens_gv();
     // Householder Transformations
     pub fn gsl_linalg_householder_transform(v: *mut gsl_vector) -> c_double;
     pub fn gsl_linalg_complex_householder_transform(v: *mut gsl_vector_complex) -> gsl_complex;
