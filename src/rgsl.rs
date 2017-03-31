@@ -129,7 +129,13 @@ pub use types::{
     MultiFitFdfSolver,
     MultiFitFunction,
     MultiFitFdfSolverType,
-    MultiFitFunctionFdf
+    MultiFitFunctionFdf,
+    RootFdfSolver,
+    RootFdfSolverType,
+    RootFSolver,
+    RootFSolverType,
+    RootFunction,
+    RootFunctionFdf 
 };
 
 pub use elementary::Elementary;
@@ -197,6 +203,7 @@ pub mod polynomials;
 pub mod pow;
 pub mod power;
 pub mod psi;
+pub mod roots;
 pub mod sort;
 pub mod statistics;
 pub mod synchrotron;
