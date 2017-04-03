@@ -192,6 +192,12 @@ pub enum IntegrationQawo {
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
 #[repr(C)]
 /// Used by VegasMonteCarlo struct
+///
+/// The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_
+/// STRATIFIED, GSL_VEGAS_MODE_IMPORTANCE_ONLY. This determines whether vegas
+/// will use importance sampling or stratified sampling, or whether it can pick on
+/// its own. In low dimensions vegas uses strict stratified sampling (more precisely,
+/// stratified sampling is chosen if there are fewer than 2 bins per box).
 pub enum VegasMode {
     Importance = 1,
     ImportanceOnly = 0,

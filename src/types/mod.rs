@@ -26,7 +26,8 @@ pub use self::mathieu::MathieuWorkspace;
 pub use self::matrix::{MatrixF32, MatrixF64, MatrixView};
 pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};
 pub use self::minimizer::{Minimizer, MinimizerType};
-pub use self::monte_carlo::{PlainMonteCarlo, MiserMonteCarlo, MiserParams, VegasMonteCarlo};
+pub use self::monte_carlo::{PlainMonteCarlo, MiserMonteCarlo, MiserParams, VegasMonteCarlo,
+                            VegasParams};
 pub use self::multifit_solver::{MultiFitFdfSolver, MultiFitFunction, MultiFitFdfSolverType,
                                 MultiFitFunctionFdf};
 pub use self::multiset::MultiSet;
