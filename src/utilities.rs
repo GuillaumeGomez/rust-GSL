@@ -20,18 +20,17 @@ enum Mode {
 
 impl IOStream {
     /// Open a file in write mode.
-    pub fn fwrite_handle(file: &Path) -> Result<IOStream, ::std::io::ErrorKind> {
+    pub fn fwrite_handle<P: AsRef<Path>>(file: &P) -> Result<IOStream, ::std::io::ErrorKind> {
         {
             let f = File::open(file);
             if f.is_err() {
                 return Err(f.unwrap_err().kind());
             }
         }
-        let w = CString::new("w").unwrap();
-        let path = CString::new(file.to_str().unwrap()).unwrap();
+        let path = CString::new(file.as_ref().to_str().unwrap()).unwrap();
         unsafe {
             Ok(IOStream {
-                inner: fopen(path.as_ptr(), w.as_ptr()),
+                inner: fopen(path.as_ptr(), b"w\0".as_ptr() as *const i8),
                 mode: Mode::Write,
             })
         }

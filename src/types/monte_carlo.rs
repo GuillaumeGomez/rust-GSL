@@ -536,7 +536,7 @@ impl<'a> VegasParams<'a> {
     /// of histogram bins in the grid depending on the number of calls available. Choosing
     /// stage = 3 enters at the main loop, so that nothing is changed, and is equivalent to
     /// performing additional iterations in a previous call.
-    /// 
+    ///
     /// mode: The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_
     /// STRATIFIED, GSL_VEGAS_MODE_IMPORTANCE_ONLY. This determines whether vegas
     /// will use importance sampling or stratified sampling, or whether it can pick on
@@ -552,31 +552,32 @@ impl<'a> VegasParams<'a> {
                stream: Option<&'a mut ::IOStream>)
                -> Result<VegasParams, String> {
         if !verbosity.is_off() && stream.is_none() {
-            return Err("rust-GSL: ".to_string());
+            return Err("rust-GSL: need to provide an input stream for Vegas Monte Carlo \
+                        integration if verbosity is not 'Off'"
+                .to_string());
         } else if verbosity.is_off() && stream.is_some() {
-            return Err("rust-GSL: ".to_string());
+            return Err("rust-GSL: need to provide the verbosity flag for Vegas Monta Carlo \
+                        integration, currently set to 'Off'"
+                .to_string());
         }
 
         let stream = if let Some(stream) = stream {
             if !stream.write_mode() {
-                return Err("rust-GSL: ".to_string())
+                return Err("rust-GSL: input stream not flagged as 'write' mode".to_string());
             }
             stream.as_raw()
         } else {
             ::std::ptr::null_mut()
         };
-
-        let inner = ffi::gsl_monte_vegas_params {
-            alpha: alpha,
-            iterations: iterations,
-            stage: stage,
-            mode: mode,
-            verbose: verbosity.to_int(),
-            ostream: stream,
-        };
-
         Ok(VegasParams {
-            inner: inner,
+            inner: ffi::gsl_monte_vegas_params {
+                alpha: alpha,
+                iterations: iterations,
+                stage: stage,
+                mode: mode,
+                verbose: verbosity.to_int(),
+                ostream: stream,
+            },
             lt: PhantomData,
         })
     }
@@ -584,16 +585,15 @@ impl<'a> VegasParams<'a> {
 
 impl<'a> ::std::default::Default for VegasParams<'a> {
     fn default() -> VegasParams<'a> {
-        let inner = ffi::gsl_monte_vegas_params {
-            alpha: 1.5,
-            iterations: 5,
-            stage: 0,
-            mode: ::VegasMode::ImportanceOnly,
-            verbose: -1,
-            ostream: ::std::ptr::null_mut(),
-        };
         VegasParams {
-            inner: inner,
+            inner: ffi::gsl_monte_vegas_params {
+                alpha: 1.5,
+                iterations: 5,
+                stage: 0,
+                mode: ::VegasMode::ImportanceOnly,
+                verbose: -1,
+                ostream: ::std::ptr::null_mut(),
+            },
             lt: PhantomData,
         }
     }
