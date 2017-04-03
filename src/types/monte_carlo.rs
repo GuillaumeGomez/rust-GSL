@@ -77,8 +77,9 @@ use ffi;
 use libc::{c_void, c_double, size_t};
 use std::slice;
 use std::mem::transmute;
+use std::marker::PhantomData;
 
-/// The plain Monte Carlo algorithm samples points randomly from the integration region to estimate the integral and its error. Using this algorithm 
+/// The plain Monte Carlo algorithm samples points randomly from the integration region to estimate the integral and its error. Using this algorithm
 /// the estimate of the integral E(f; N) for N randomly distributed points x_i is given by,
 ///
 /// E(f; N) = =  V <f> = (V / N) \sum_i^N f(x_i)
@@ -86,8 +87,8 @@ use std::mem::transmute;
 ///
 /// \sigma^2 (E; N) = (V^2 / N^2) \sum_i^N (f(x_i) -  <f>)^2.
 ///
-/// For large N this variance decreases asymptotically as \Var(f)/N, where \Var(f) is the true variance of the function over the integration region. 
-/// The error estimate itself should decrease as \sigma(f)/\sqrt{N}. The familiar law of errors decreasing as 1/\sqrt{N} applies—to reduce the 
+/// For large N this variance decreases asymptotically as \Var(f)/N, where \Var(f) is the true variance of the function over the integration region.
+/// The error estimate itself should decrease as \sigma(f)/\sqrt{N}. The familiar law of errors decreasing as 1/\sqrt{N} applies—to reduce the
 /// error by a factor of 10 requires a 100-fold increase in the number of sample points.
 pub struct PlainMonteCarlo {
     s: *mut ffi::gsl_monte_plain_state,
@@ -101,9 +102,7 @@ impl PlainMonteCarlo {
         if tmp.is_null() {
             None
         } else {
-            Some(PlainMonteCarlo {
-                s: tmp
-            })
+            Some(PlainMonteCarlo { s: tmp })
         }
     }
 
@@ -123,21 +122,31 @@ impl PlainMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                              t_calls: usize, r: &mut ::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self,
+                                              dim: usize,
+                                              f: F,
+                                              xl: &[f64],
+                                              xu: &[f64],
+                                              t_calls: usize,
+                                              r: &mut ::Rng)
+                                              -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
             let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
-                               f: transmute(monte_trampoline as usize),
-                               dim: dim,
-                               params: Box::into_raw(f) as *mut _,
-                           };
+                f: transmute(monte_trampoline as usize),
+                dim: dim,
+                params: Box::into_raw(f) as *mut _,
+            };
             let ret = ffi::gsl_monte_plain_integrate(&mut func as *mut _ as *mut c_void,
-                                                     xl.as_ptr(), xu.as_ptr(), xl.len(), t_calls,
-                                                     ffi::FFI::unwrap_unique(r), self.s,
+                                                     xl.as_ptr(),
+                                                     xu.as_ptr(),
+                                                     xl.len(),
+                                                     t_calls,
+                                                     ffi::FFI::unwrap_unique(r),
+                                                     self.s,
                                                      (&mut result) as *mut c_double,
                                                      (&mut abserr) as *mut c_double);
 
@@ -159,9 +168,7 @@ impl Drop for PlainMonteCarlo {
 
 impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
     fn wrap(s: *mut ffi::gsl_monte_plain_state) -> PlainMonteCarlo {
-        PlainMonteCarlo {
-            s: s
-        }
+        PlainMonteCarlo { s: s }
     }
 
     fn soft_wrap(s: *mut ffi::gsl_monte_plain_state) -> PlainMonteCarlo {
@@ -177,11 +184,11 @@ impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
     }
 }
 
-/// The MISER algorithm of Press and Farrar is based on recursive stratified sampling. This technique aims to reduce the overall integration error 
+/// The MISER algorithm of Press and Farrar is based on recursive stratified sampling. This technique aims to reduce the overall integration error
 /// by concentrating integration points in the regions of highest variance.
 ///
-/// The idea of stratified sampling begins with the observation that for two disjoint regions a and b with Monte Carlo estimates of the integral 
-/// E_a(f) and E_b(f) and variances \sigma_a^2(f) and \sigma_b^2(f), the variance \Var(f) of the combined estimate E(f) = (1/2) (E_a(f) + E_b(f)) 
+/// The idea of stratified sampling begins with the observation that for two disjoint regions a and b with Monte Carlo estimates of the integral
+/// E_a(f) and E_b(f) and variances \sigma_a^2(f) and \sigma_b^2(f), the variance \Var(f) of the combined estimate E(f) = (1/2) (E_a(f) + E_b(f))
 /// is given by,
 ///
 /// \Var(f) = (\sigma_a^2(f) / 4 N_a) + (\sigma_b^2(f) / 4 N_b).
@@ -190,15 +197,15 @@ impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
 ///
 /// N_a / (N_a + N_b) = \sigma_a / (\sigma_a + \sigma_b).
 ///
-/// Hence the smallest error estimate is obtained by allocating sample points in proportion to the standard deviation of the function in each 
+/// Hence the smallest error estimate is obtained by allocating sample points in proportion to the standard deviation of the function in each
 /// sub-region.
 ///
-/// The MISER algorithm proceeds by bisecting the integration region along one coordinate axis to give two sub-regions at each step. The direction 
-/// is chosen by examining all d possible bisections and selecting the one which will minimize the combined variance of the two sub-regions. The 
-/// variance in the sub-regions is estimated by sampling with a fraction of the total number of points available to the current step. The same 
-/// procedure is then repeated recursively for each of the two half-spaces from the best bisection. The remaining sample points are allocated to 
-/// the sub-regions using the formula for N_a and N_b. This recursive allocation of integration points continues down to a user-specified depth 
-/// where each sub-region is integrated using a plain Monte Carlo estimate. These individual values and their error estimates are then combined 
+/// The MISER algorithm proceeds by bisecting the integration region along one coordinate axis to give two sub-regions at each step. The direction
+/// is chosen by examining all d possible bisections and selecting the one which will minimize the combined variance of the two sub-regions. The
+/// variance in the sub-regions is estimated by sampling with a fraction of the total number of points available to the current step. The same
+/// procedure is then repeated recursively for each of the two half-spaces from the best bisection. The remaining sample points are allocated to
+/// the sub-regions using the formula for N_a and N_b. This recursive allocation of integration points continues down to a user-specified depth
+/// where each sub-region is integrated using a plain Monte Carlo estimate. These individual values and their error estimates are then combined
 /// upwards to give an overall result and an estimate of its error.
 pub struct MiserMonteCarlo {
     s: *mut ffi::gsl_monte_miser_state,
@@ -213,9 +220,7 @@ impl MiserMonteCarlo {
         if tmp_pointer.is_null() {
             None
         } else {
-            Some(MiserMonteCarlo {
-                s: tmp_pointer
-            })
+            Some(MiserMonteCarlo { s: tmp_pointer })
         }
     }
 
@@ -234,21 +239,31 @@ impl MiserMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                              t_calls: usize, r: &mut ::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self,
+                                              dim: usize,
+                                              f: F,
+                                              xl: &[f64],
+                                              xu: &[f64],
+                                              t_calls: usize,
+                                              r: &mut ::Rng)
+                                              -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
             let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
-                               f: transmute(monte_trampoline as usize),
-                               dim: dim,
-                               params: Box::into_raw(f) as *mut _,
-                           };
+                f: transmute(monte_trampoline as usize),
+                dim: dim,
+                params: Box::into_raw(f) as *mut _,
+            };
             let ret = ffi::gsl_monte_miser_integrate(&mut func as *mut _ as *mut c_void,
-                                                     xl.as_ptr(), xu.as_ptr(), xl.len(), t_calls,
-                                                     ffi::FFI::unwrap_unique(r), self.s,
+                                                     xl.as_ptr(),
+                                                     xu.as_ptr(),
+                                                     xl.len(),
+                                                     t_calls,
+                                                     ffi::FFI::unwrap_unique(r),
+                                                     self.s,
                                                      (&mut result) as *mut c_double,
                                                      (&mut abserr) as *mut c_double);
 
@@ -293,9 +308,7 @@ impl Drop for MiserMonteCarlo {
 
 impl ffi::FFI<ffi::gsl_monte_miser_state> for MiserMonteCarlo {
     fn wrap(s: *mut ffi::gsl_monte_miser_state) -> MiserMonteCarlo {
-        MiserMonteCarlo {
-            s: s
-        }
+        MiserMonteCarlo { s: s }
     }
 
     fn soft_wrap(s: *mut ffi::gsl_monte_miser_state) -> MiserMonteCarlo {
@@ -333,7 +346,7 @@ pub struct MiserParams {
     /// to depend on a scaling parameter \alpha,
     ///
     /// \Var(f) = {\sigma_a \over N_a^\alpha} + {\sigma_b \over N_b^\alpha}.
-    /// 
+    ///
     /// The authors of the original paper describing MISER recommend the value \alpha = 2 as a good choice,
     /// obtained from numerical experiments, and this is used as the default value in this implementation.
     pub alpha: f64,
@@ -410,9 +423,7 @@ impl VegasMonteCarlo {
         if tmp_pointer.is_null() {
             None
         } else {
-            Some(VegasMonteCarlo {
-                s: tmp_pointer
-            })
+            Some(VegasMonteCarlo { s: tmp_pointer })
         }
     }
 
@@ -436,21 +447,31 @@ impl VegasMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
-    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self, dim: usize, f: F, xl: &[f64], xu: &[f64],
-                                              t_calls: usize, r: &mut ::Rng) -> Result<(f64, f64), ::Value> {
+    pub fn integrate<F: FnMut(&[f64]) -> f64>(&mut self,
+                                              dim: usize,
+                                              f: F,
+                                              xl: &[f64],
+                                              xu: &[f64],
+                                              t_calls: usize,
+                                              r: &mut ::Rng)
+                                              -> Result<(f64, f64), ::Value> {
         unsafe {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
             let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
-                               f: transmute(monte_trampoline as usize),
-                               dim: dim,
-                               params: Box::into_raw(f) as *mut _,
-                           };
+                f: transmute(monte_trampoline as usize),
+                dim: dim,
+                params: Box::into_raw(f) as *mut _,
+            };
             let ret = ffi::gsl_monte_vegas_integrate(&mut func as *mut _ as *mut c_void,
-                                                     xl.as_ptr(), xu.as_ptr(), xl.len(), t_calls,
-                                                     ffi::FFI::unwrap_unique(r), self.s,
+                                                     xl.as_ptr(),
+                                                     xu.as_ptr(),
+                                                     xl.len(),
+                                                     t_calls,
+                                                     ffi::FFI::unwrap_unique(r),
+                                                     self.s,
                                                      (&mut result) as *mut c_double,
                                                      (&mut abserr) as *mut c_double);
 
@@ -467,9 +488,7 @@ impl VegasMonteCarlo {
     /// the values from different iterations are inconsistent. In this case the weighted error will be
     /// under-estimated, and further iterations of the algorithm are needed to obtain reliable results.
     pub fn chisq(&mut self) -> f64 {
-        unsafe {
-            ffi::gsl_monte_vegas_chisq(self.s)
-        }
+        unsafe { ffi::gsl_monte_vegas_chisq(self.s) }
     }
 
     /// This function returns the raw (unaveraged) values of the integral result and its error sigma from
@@ -480,13 +499,134 @@ impl VegasMonteCarlo {
         }
     }
 
-    /*pub params_get(&self) -> VegasParams {
-        ;
+    pub fn get_params(&self) -> VegasParams {
+        let mut params = VegasParams::default();
+        unsafe {
+            ffi::gsl_monte_vegas_params_get(self.s, &mut params.inner as *mut _);
+        }
+        params
     }
 
-    pub params_set(&self, params: &VegasParams) {
-        ;
-    }*/
+    pub fn set_params(&mut self, params: &VegasParams) {
+        unsafe {
+            ffi::gsl_monte_vegas_params_set(self.s, &params.inner as *const _);
+        }
+    }
+}
+
+pub struct VegasParams<'a> {
+    inner: ffi::gsl_monte_vegas_params,
+    lt: PhantomData<&'a ()>,
+}
+
+impl<'a> VegasParams<'a> {
+    /// alpha: The parameter alpha controls the stiffness of the rebinning algorithm. It is typically
+    /// set between one and two. A value of zero prevents rebinning of the grid. The default
+    /// value is 1.5.
+    ///
+    /// iterations: The number of iterations to perform for each call to the routine. The default value
+    /// is 5 iterations.
+    ///
+    /// stage: Setting this determines the stage of the calculation. Normally, stage = 0 which begins
+    /// with a new uniform grid and empty weighted average. Calling vegas with stage =
+    /// 1 retains the grid from the previous run but discards the weighted average, so that
+    /// one can “tune” the grid using a relatively small number of points and then do a large
+    /// run with stage = 1 on the optimized grid. Setting stage = 2 keeps the grid and the
+    /// weighted average from the previous run, but may increase (or decrease) the number
+    /// of histogram bins in the grid depending on the number of calls available. Choosing
+    /// stage = 3 enters at the main loop, so that nothing is changed, and is equivalent to
+    /// performing additional iterations in a previous call.
+    ///
+    /// mode: The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_
+    /// STRATIFIED, GSL_VEGAS_MODE_IMPORTANCE_ONLY. This determines whether vegas
+    /// will use importance sampling or stratified sampling, or whether it can pick on
+    /// its own. In low dimensions vegas uses strict stratified sampling (more precisely,
+    /// stratified sampling is chosen if there are fewer than 2 bins per box).
+    ///
+    /// verbosity + stream: These parameters set the level of information printed by vegas.
+    pub fn new(alpha: f64,
+               iterations: usize,
+               stage: i32,
+               mode: ::VegasMode,
+               verbosity: VegasVerbosity,
+               stream: Option<&'a mut ::IOStream>)
+               -> Result<VegasParams, String> {
+        if !verbosity.is_off() && stream.is_none() {
+            return Err("rust-GSL: need to provide an input stream for Vegas Monte Carlo \
+                        integration if verbosity is not 'Off'"
+                .to_string());
+        } else if verbosity.is_off() && stream.is_some() {
+            return Err("rust-GSL: need to provide the verbosity flag for Vegas Monta Carlo \
+                        integration, currently set to 'Off'"
+                .to_string());
+        }
+
+        let stream = if let Some(stream) = stream {
+            if !stream.write_mode() {
+                return Err("rust-GSL: input stream not flagged as 'write' mode".to_string());
+            }
+            stream.as_raw()
+        } else {
+            ::std::ptr::null_mut()
+        };
+        Ok(VegasParams {
+            inner: ffi::gsl_monte_vegas_params {
+                alpha: alpha,
+                iterations: iterations,
+                stage: stage,
+                mode: mode,
+                verbose: verbosity.to_int(),
+                ostream: stream,
+            },
+            lt: PhantomData,
+        })
+    }
+}
+
+impl<'a> ::std::default::Default for VegasParams<'a> {
+    fn default() -> VegasParams<'a> {
+        VegasParams {
+            inner: ffi::gsl_monte_vegas_params {
+                alpha: 1.5,
+                iterations: 5,
+                stage: 0,
+                mode: ::VegasMode::ImportanceOnly,
+                verbose: -1,
+                ostream: ::std::ptr::null_mut(),
+            },
+            lt: PhantomData,
+        }
+    }
+}
+
+/// The default setting of verbose is `Off`, which turns off all output.
+/// A verbose value of `Summary` prints summary information about the weighted average
+/// and final result, while a value of `Grid` also displays the grid coordinates.
+/// A value of 'Rebinning' prints information from the rebinning procedure for each iteration.
+#[derive(Clone, Copy)]
+pub enum VegasVerbosity {
+    Off, // -1
+    Summary, // 0
+    Grid, // 1
+    Rebinning, // 2
+}
+
+impl VegasVerbosity {
+    fn to_int(&self) -> i32 {
+        match *self {
+            VegasVerbosity::Off => -1,
+            VegasVerbosity::Summary => 0,
+            VegasVerbosity::Grid => 1,
+            VegasVerbosity::Rebinning => 2,
+        }
+    }
+
+    fn is_off(&self) -> bool {
+        match *self {
+            VegasVerbosity::Off => true,
+            _ => false,
+        }
+    }
 }
 
 impl Drop for VegasMonteCarlo {
@@ -498,9 +638,7 @@ impl Drop for VegasMonteCarlo {
 
 impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
     fn wrap(s: *mut ffi::gsl_monte_vegas_state) -> VegasMonteCarlo {
-        VegasMonteCarlo {
-            s: s
-        }
+        VegasMonteCarlo { s: s }
     }
 
     fn soft_wrap(s: *mut ffi::gsl_monte_vegas_state) -> VegasMonteCarlo {
@@ -516,11 +654,13 @@ impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
     }
 }
 
-unsafe extern "C" fn monte_trampoline(x: *mut c_double, dim: size_t, param: *mut c_void) -> c_double {
+unsafe extern "C" fn monte_trampoline(x: *mut c_double,
+                                      dim: size_t,
+                                      param: *mut c_void)
+                                      -> c_double {
     let f: &mut Box<FnMut(&[f64]) -> f64> = transmute(param);
     f(slice::from_raw_parts(x, dim as usize))
 }
-
 
 // The following tests have been made and tested against the following C code:
 //
@@ -600,13 +740,13 @@ fn plain() {
         a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
     }
 
-    let xl : [f64; 3] = [0f64; 3];
-    let xu : [f64; 3] = [PI, PI, PI];
+    let xl: [f64; 3] = [0f64; 3];
+    let xu: [f64; 3] = [PI, PI, PI];
 
     let calls = 500000;
 
     ::RngType::env_setup();
-    let t : ::RngType = ::rng::default();
+    let t: ::RngType = ::rng::default();
     let mut r = ::Rng::new(&t).unwrap();
 
     {
@@ -627,13 +767,13 @@ fn miser() {
         a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
     }
 
-    let xl : [f64; 3] = [0f64; 3];
-    let xu : [f64; 3] = [PI, PI, PI];
+    let xl: [f64; 3] = [0f64; 3];
+    let xu: [f64; 3] = [PI, PI, PI];
 
     let calls = 500000;
 
     ::RngType::env_setup();
-    let t : ::RngType = ::rng::default();
+    let t: ::RngType = ::rng::default();
     let mut r = ::Rng::new(&t).unwrap();
 
     {
@@ -649,23 +789,29 @@ fn miser() {
 fn miser_closure() {
     use std::f64::consts::PI;
 
-    let xl : [f64; 3] = [0f64; 3];
-    let xu : [f64; 3] = [PI, PI, PI];
+    let xl: [f64; 3] = [0f64; 3];
+    let xu: [f64; 3] = [PI, PI, PI];
 
     let calls = 500000;
 
     ::RngType::env_setup();
-    let t : ::RngType = ::rng::default();
+    let t: ::RngType = ::rng::default();
     let mut r = ::Rng::new(&t).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, |k| {
-                let a = 1f64 / (PI * PI * PI);
+        let (res, err) = s.integrate(3,
+                       |k| {
+                           let a = 1f64 / (PI * PI * PI);
 
-                a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
-            }, &xl, &xu, calls, &mut r).unwrap();
+                           a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+                       },
+                       &xl,
+                       &xu,
+                       calls,
+                       &mut r)
+            .unwrap();
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -680,11 +826,11 @@ fn vegas_warm_up() {
         a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
     }
 
-    let xl : [f64; 3] = [0f64; 3];
-    let xu : [f64; 3] = [PI, PI, PI];
+    let xl: [f64; 3] = [0f64; 3];
+    let xu: [f64; 3] = [PI, PI, PI];
 
     ::RngType::env_setup();
-    let t : ::RngType = ::rng::default();
+    let t: ::RngType = ::rng::default();
     let mut r = ::Rng::new(&t).unwrap();
 
     {
@@ -707,11 +853,11 @@ fn vegas() {
 
     let calls = 500000;
 
-    let xl : [f64; 3] = [0f64; 3];
-    let xu : [f64; 3] = [PI, PI, PI];
+    let xl: [f64; 3] = [0f64; 3];
+    let xu: [f64; 3] = [PI, PI, PI];
 
     ::RngType::env_setup();
-    let t : ::RngType = ::rng::default();
+    let t: ::RngType = ::rng::default();
     let mut r = ::Rng::new(&t).unwrap();
 
     {
@@ -724,7 +870,10 @@ fn vegas() {
             let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &mut r).unwrap();
             res = _res;
             err = _err;
-            println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
+            println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}",
+                     res,
+                     err,
+                     s.chisq());
             if (s.chisq() - 1f64).abs() <= 0.5f64 {
                 break;
             }

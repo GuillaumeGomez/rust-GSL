@@ -111,6 +111,7 @@ pub use types::{
     MiserMonteCarlo,
     MiserParams,
     VegasMonteCarlo,
+    VegasParams,
     NTuples,
     MultiSet,
     ODEiv2System,
@@ -142,6 +143,7 @@ pub use elementary::Elementary;
 pub use pow::Pow;
 pub use trigonometric::Trigonometric;
 pub use types::rng;
+pub use utilities::IOStream;
 
 // enums part
 pub use self::enums::{
@@ -160,6 +162,7 @@ pub use self::enums::{
 mod ffi;
 mod macros;
 mod enums;
+mod utilities;
 
 pub mod randist;
 pub mod types;
