@@ -11,6 +11,7 @@ path = "../"
 
 [dependencies]
 num = "^0.1"
+libc = "*"
 
 [[bin]]
 name = "chebyshev_approximation"
@@ -89,12 +90,20 @@ name = "roots_of_polynomial"
 path = "./roots_of_polynomial.rs"
 
 [[bin]]
+name = "roots"
+path = "./roots.rs"
+
+[[bin]]
 name = "series_acceleration"
 path = "./series_acceleration.rs"
 
 [[bin]]
 name = "simple"
 path = "./simple.rs"
+
+[[bin]]
+name = "simulated_annealing"
+path = "./siman.rs"
 
 [[bin]]
 name = "sorting"

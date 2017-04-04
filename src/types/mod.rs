@@ -43,6 +43,7 @@ pub use self::rng::{Rng, RngType};
 pub use self::roots::{RootFSolver, RootFdfSolver, RootFSolverType, RootFdfSolverType, RootFunction,
                       RootFunctionFdf};
 pub use self::series_acceleration::{LevinUWorkspace, LevinUTruncWorkspace};
+pub use self::siman::{SimAnnealing, SimAnnealingParams};
 pub use self::vector::{VectorF32, VectorF64, VectorView};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
 pub use self::wavelet_transforms::{Wavelet, WaveletType, WaveletWorkspace};
@@ -74,6 +75,7 @@ pub mod result;
 pub mod rng;
 pub mod roots;
 pub mod series_acceleration;
+pub mod siman;
 pub mod vector;
 pub mod vector_complex;
 pub mod wavelet_transforms;
