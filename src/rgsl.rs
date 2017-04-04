@@ -138,7 +138,7 @@ pub use types::{
     RootFunction,
     RootFunctionFdf,
     SimAnnealing,
-    SimAnnealingParams 
+    SimAnnealingParams, 
 };
 
 pub use elementary::Elementary;

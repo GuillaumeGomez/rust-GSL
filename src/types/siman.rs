@@ -1,4 +1,4 @@
-/*
+/*!
 # 25 Simulated Annealing
 
 Stochastic search techniques are used when the structure of a space is not well understood or
@@ -20,8 +20,8 @@ The simulated annealing algorithm takes random walks through the problem space, 
 for points with low energies; in these random walks, the probability of taking a step is
 determined by the Boltzmann distribution,
 
-    p = e −(E i+1 −E i )/(kT )
-    if E i+1 > E i , and p = 1 when E i+1 ≤ E i .
+> p = e −(E i+1 −E i )/(kT )
+> if E i+1 > E i , and p = 1 when E i+1 ≤ E i
 
 In other words, a step will occur if the new energy is lower. If the new energy is higher,
 the transition can still occur, and its likelihood is proportional to the temperature T and
@@ -33,7 +33,7 @@ schedule, for example: T → T /μ T where μ T is slightly greater than 1.
 
 The slight probability of taking a step that gives higher energy is what allows simulated
 annealing to frequently get out of local minima.
-*/
+!*/
 
 const GSL_LOG_DBL_MIN: f64 = -7.0839641853226408e+02;
 

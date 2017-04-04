@@ -84,8 +84,7 @@ fn M1(x: &f64, y: &f64) -> f64 {
 }
 
 fn S1(r: &mut rgsl::Rng, x: &mut f64, step_size: f64) {
-    let u = r.uniform();
-    let new_x = u * 2.0 * step_size - step_size + *x;
+    let new_x = r.uniform() * 2.0 * step_size - step_size + *x;
     *x = new_x;
 }
 
@@ -102,6 +101,6 @@ fn main() {
     // single run
     let siman = rgsl::SimAnnealing::new(15.5, E1, S1, M1, Some(P1), params);
     siman.solve(&mut r);
-    println!();
+    println!(); // ignore this line, just there to split the log of both method calls
     siman.solve_many(&mut r);
 }

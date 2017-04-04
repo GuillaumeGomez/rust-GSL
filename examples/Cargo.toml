@@ -11,7 +11,7 @@ path = "../"
 
 [dependencies]
 num = "^0.1"
-libc = "*"
+libc = "~0.2"
 
 [[bin]]
 name = "chebyshev_approximation"
