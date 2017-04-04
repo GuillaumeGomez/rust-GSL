@@ -136,7 +136,9 @@ pub use types::{
     RootFSolver,
     RootFSolverType,
     RootFunction,
-    RootFunctionFdf 
+    RootFunctionFdf,
+    SimAnnealing,
+    SimAnnealingParams, 
 };
 
 pub use elementary::Elementary;

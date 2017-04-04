@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-/*
+/*!
 # One dimensional Root-Finding
 
 This chapter describes routines for finding roots of arbitrary one-dimensional functions.
@@ -39,7 +39,7 @@ The state for bracketing solvers is held in a gsl_root_fsolver struct. The updat
 procedure uses only function evaluations (not derivatives). The state for root polishing
 solvers is held in a gsl_root_fdfsolver struct. The updates require both the function and
 its derivative (hence the name fdf) to be supplied by the user.
-*/
+!*/
 
 use ffi;
 
