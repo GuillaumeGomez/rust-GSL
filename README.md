@@ -1,5 +1,6 @@
 rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL) [![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/GuillaumeGomez/rust-GSL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ========
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/GuillaumeGomez/rust-GSL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A __Rust__ binding for the [GSL library] (the GNU Scientific Library).
 
