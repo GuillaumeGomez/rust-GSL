@@ -943,6 +943,11 @@ extern "C" {
                                               -> enums::Value;
     #[cfg(not(feature = "v2"))]
     pub fn gsl_sf_legendre_array_size(lmax: c_int, m: c_int) -> enums::Value;
+    #[cfg(feature = "v2")]
+    pub fn gsl_sf_legendre_array_n(lmax: size_t) -> size_t;
+    #[cfg(feature = "v2")]
+    pub fn gsl_sf_legendre_array_index(l: size_t, m: size_t) -> size_t;
+
     // Conical functions
     pub fn gsl_sf_conicalP_half(lambda: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_conicalP_half_e(lambda: c_double,
