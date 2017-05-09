@@ -222,3 +222,12 @@ pub enum WaveletDirection {
     Forward = 1,
     Backward = -1,
 }
+
+#[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
+#[repr(C)]
+pub enum SfLegendreNorm {
+    Schmidt,
+    SphericalHarmonic,
+    Full,
+    None,
+}

@@ -948,6 +948,15 @@ extern "C" {
     #[cfg(feature = "v2")]
     pub fn gsl_sf_legendre_array_index(l: size_t, m: size_t) -> size_t;
 
+    pub fn gsl_sf_legendre_array(norm: enums::SfLegendreNorm,
+                                       lmax: size_t, x: c_double,
+                                       result_array: *mut c_double) -> enums::Value;
+    #[cfg(feature = "v2")]
+    pub fn gsl_sf_legendre_deriv_array(norm: enums::SfLegendreNorm,
+                                       lmax: size_t, x: c_double,
+                                       result_array: *mut c_double,
+                                       result_deriv_array: *mut c_double) -> enums::Value;
+
     // Conical functions
     pub fn gsl_sf_conicalP_half(lambda: c_double, x: c_double) -> c_double;
     pub fn gsl_sf_conicalP_half_e(lambda: c_double,

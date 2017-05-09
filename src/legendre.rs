@@ -195,6 +195,23 @@ pub mod associated_polynomials {
     pub fn legendre_array_index(l: usize, m: usize) -> usize {
         unsafe { ffi::gsl_sf_legendre_array_index(l as _, m as _) as _ }
     }
+
+    #[cfg(feature = "v2")]
+    pub fn legendre_alp(norm: enums::SfLegendreNorm, lmax: usize,
+                        x: f64, result: &mut [f64]) -> enums::Value {
+        unsafe {
+            ffi::gsl_sf_legendre_array(norm, lmax, x, result.as_mut_ptr())
+        }
+    }
+
+    #[cfg(feature = "v2")]
+    pub fn legendre_alp_deriv(norm: enums::SfLegendreNorm, lmax: usize,
+                              x: f64, result: &mut [f64], deriv: &mut [f64]) -> enums::Value {
+        unsafe {
+            ffi::gsl_sf_legendre_deriv_array(norm, lmax, x, result.as_mut_ptr(),
+                                             deriv.as_mut_ptr())
+        }
+    }
 }
 
 /// The Conical Functions P^\mu_{-(1/2)+i\lambda}(x) and Q^\mu_{-(1/2)+i\lambda} are described in Abramowitz & Stegun, Section 8.12.
