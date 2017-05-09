@@ -184,6 +184,17 @@ pub mod associated_polynomials {
     pub fn legendre_array_size(lmax: i32, m: i32) -> enums::Value {
         unsafe { ffi::gsl_sf_legendre_array_size(lmax, m) }
     }
+
+    /// Returns the size of the array needed for these functions, including GSL workspace.
+    #[cfg(feature = "v2")]
+    pub fn legendre_array_n(lmax: usize) -> usize {
+        unsafe { ffi::gsl_sf_legendre_array_n(lmax as _) as _ }
+    }
+
+    #[cfg(feature = "v2")]
+    pub fn legendre_array_index(l: usize, m: usize) -> usize {
+        unsafe { ffi::gsl_sf_legendre_array_index(l as _, m as _) as _ }
+    }
 }
 
 /// The Conical Functions P^\mu_{-(1/2)+i\lambda}(x) and Q^\mu_{-(1/2)+i\lambda} are described in Abramowitz & Stegun, Section 8.12.
