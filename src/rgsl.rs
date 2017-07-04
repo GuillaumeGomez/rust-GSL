@@ -159,6 +159,7 @@ pub use self::enums::{
     VegasMode,
     ODEiv,
     WaveletDirection,
+    SfLegendreNorm,
 };
 
 mod ffi;
