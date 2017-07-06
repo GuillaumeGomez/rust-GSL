@@ -57,10 +57,6 @@ You can also access the latest build of the documentation via the internet [here
 
 If you appreciate my work and want to support me, you can do it here:
 
-
-
-## Donate
-
 [![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/GuillaumeGomez)
 
 ## License
