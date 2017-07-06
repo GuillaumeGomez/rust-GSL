@@ -53,6 +53,16 @@ Then open this file with an internet browser: `file:///{rgsl_location}/target/do
 
 You can also access the latest build of the documentation via the internet [here](https://docs.rs/crate/GSL/).
 
+## Donations
+
+If you appreciate my work and want to support me, you can do it here:
+
+
+
+## Donate
+
+[![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/GuillaumeGomez)
+
 ## License
 __rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL license](http://www.gnu.org/copyleft/gpl.html).
 
