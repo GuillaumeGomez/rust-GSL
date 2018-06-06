@@ -116,7 +116,7 @@ impl<'a> ODEiv2System<'a> {
 /// Default handler for calling the function closure.
 extern fn function_handler(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut c_void)
         -> enums::Value {
-    let mut sys = unsafe { &mut *(params as *mut ODEiv2System) };
+    let sys = unsafe { &mut *(params as *mut ODEiv2System) };
     let n = sys.dimension as usize;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
     let t_f = unsafe { ::std::slice::from_raw_parts_mut(t_f, n) };
@@ -130,7 +130,7 @@ extern fn function_handler(t: f64, t_y: *const f64, t_f: *mut f64, params: *mut 
 /// Default handler for calling the jacobian closure.
 extern fn jacobian_handler(t: f64, t_y: *const f64, t_dfdy: *mut f64, t_dfdt: *mut f64,
                            params: *mut c_void) -> enums::Value {
-    let mut sys = unsafe { &mut *(params as *mut ODEiv2System) };
+    let sys = unsafe { &mut *(params as *mut ODEiv2System) };
     let n = sys.dimension as usize;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
     let t_dfdy = unsafe { ::std::slice::from_raw_parts_mut(t_dfdy, n * n) };

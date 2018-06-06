@@ -41,6 +41,12 @@ If a project depends on this version, don't forget to add in your `Cargo.toml`:
 v2 = ["GSL/v2"]
 ```
 
+If you always want to run the v2 features you can, instead, use the following in your `Cargo.toml`: 
+```toml
+[features]
+default = ["GSL/v2"]
+```
+
 ## Documentation
 
 You can access the __rgsl__ documentation locally, just build it:
