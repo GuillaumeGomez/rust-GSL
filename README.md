@@ -7,9 +7,55 @@ A __Rust__ binding for the [GSL library] (the GNU Scientific Library).
 
 This binding requires the [GSL library] library to be installed:
 
-```Shell
+### Linux
+
+```bash
 # on debian based systems:
 sudo apt-get install libgsl0-dev
+```
+
+### OSX
+
+```bash
+brew install gsl
+```
+
+### Windows
+
+Instructions from https://www.gnu.org/software/gsl/extras/native_win_builds.html:
+
+```
+Building GSL on Windows Using Native Tools
+
+Several packages are available for building GSL on Windows using Microsoft Visual Studio with the native Microsoft and Intel compilers.
+
+1. Using Visual Studio Build Files
+
+These files are designed for building the repository version of GSL using Visual Studio 2015. No additional build tools are required.
+
+     https://github.com/BrianGladman/gsl
+
+2. Using Perl Generated Visual Studio Project Files
+
+This approach, which offers project files for Visual Studio 2010 and 2012, has been tested with GSL versions from 1.8 to 2.3. This can also be used to obtain build files for later version of Visual Studio since these can load files intended for use in the earlier versions of Visual Studio. This approach requires that Perl is installed.
+
+     https://github.com/aweatherguy/GSL-on-Windows
+
+3. Using Cmake
+
+Cmake can produce build files for most versions of Visual Studio and for MSBUILD. A Cmake installation is required
+
+     https://github.com/ampl/gsl/commit/0cf47581583de7ed4ee1cf0a095066af0d2f97d1
+
+This approach will be especially useful for Visual Studio 2017, which has built-in support for Cmake build files.
+
+4. Installation using NuGet
+
+For those using NuGet there are win32 and x64 installation packages at:
+
+     https://www.nuget.org/packages/gsl-msvc14-x86/
+
+     https://www.nuget.org/packages/gsl-msvc14-x64/
 ```
 
 This crate works with Cargo and is on [crates.io]. Just add the
