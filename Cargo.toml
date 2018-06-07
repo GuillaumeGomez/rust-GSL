@@ -1,6 +1,6 @@
 [package]
 name = "GSL"
-version = "0.4.31"
+version = "1.0.0"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
 description = "A rust binding for the GSL (the GNU scientific library)"
