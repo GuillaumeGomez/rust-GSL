@@ -33,6 +33,7 @@ use enums;
 use libc::{feof, fread};
 use std::marker::PhantomData;
 use std::ffi::CString;
+use std::os::raw::c_char;
 
 pub struct NTuples<T> {
     n: *mut ffi::gsl_ntuple,
@@ -47,7 +48,7 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_create(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as usize)
+            ffi::gsl_ntuple_create(c_str.as_ptr() as *mut c_char, t_data, ::std::mem::size_of::<T>() as usize)
         };
 
         if tmp.is_null() {
@@ -67,7 +68,7 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_open(c_str.as_ptr() as *mut i8, t_data, ::std::mem::size_of::<T>() as usize)
+            ffi::gsl_ntuple_open(c_str.as_ptr() as *mut c_char, t_data, ::std::mem::size_of::<T>() as usize)
         };
 
         if tmp.is_null() {
