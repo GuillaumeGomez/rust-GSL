@@ -21,10 +21,11 @@ Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–
 use ffi;
 use enums;
 use c_vec::CSlice;
+use std::os::raw::c_char;
 
 pub struct QRng {
     q: *mut ffi::gsl_qrng,
-    data: CSlice<i8>
+    data: CSlice<c_char>
 }
 
 impl QRng {
@@ -39,7 +40,7 @@ impl QRng {
         } else {
             Some(QRng {
                 q: tmp,
-                data: unsafe { CSlice::new(tmp as *mut i8, 0) }
+                data: unsafe { CSlice::new(tmp as *mut c_char, 0) }
             })
         }
     }
@@ -73,11 +74,11 @@ impl QRng {
     }
 
     /// These functions return a pointer to the state of generator r and its size.
-    pub fn state<'r>(&'r mut self) -> &'r mut [i8] {
+    pub fn state<'r>(&'r mut self) -> &'r mut [c_char] {
         let tmp = unsafe { ffi::gsl_qrng_state(self.q) };
 
         if !tmp.is_null() {
-            self.data = unsafe { CSlice::new(tmp as *mut i8, self.size() as usize) };
+            self.data = unsafe { CSlice::new(tmp as *mut c_char, self.size() as usize) };
         }
         self.data.as_mut()
     }
@@ -107,7 +108,7 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
     fn wrap(q: *mut ffi::gsl_qrng) -> QRng {
         QRng {
             q: q,
-            data: unsafe { CSlice::new(q as *mut i8, 0) }
+            data: unsafe { CSlice::new(q as *mut c_char, 0) }
         }
     }
 

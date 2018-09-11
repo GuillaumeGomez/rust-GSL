@@ -3,6 +3,7 @@
 use std::ffi::CString;
 use std::path::Path;
 use std::fs::File;
+use std::os::raw::c_char;
 
 use libc::{FILE, fopen, fclose};
 
@@ -30,7 +31,7 @@ impl IOStream {
         let path = CString::new(file.as_ref().to_str().unwrap()).unwrap();
         unsafe {
             Ok(IOStream {
-                inner: fopen(path.as_ptr(), b"w\0".as_ptr() as *const i8),
+                inner: fopen(path.as_ptr(), b"w\0".as_ptr() as *const c_char),
                 mode: Mode::Write,
             })
         }
