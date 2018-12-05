@@ -26,7 +26,15 @@ fn my_max(x1: f64, x2: f64) -> f64 {
     }
 }
 
-fn central_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mut f64, abs_err_round: &mut f64, abs_err_trunc: &mut f64) {
+fn central_deriv<T>(
+    f: ::function<T>,
+    param: &mut T,
+    x: f64,
+    h: f64,
+    result: &mut f64,
+    abs_err_round: &mut f64,
+    abs_err_trunc: &mut f64,
+) {
     let fm1 = f(x - h, param);
     let fp1 = f(x + h, param);
 
@@ -53,7 +61,14 @@ fn central_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mu
 /// derivative calculation. The derivative is computed using a 5-point rule for equally spaced abscissae at x-h, x-h/2, x, x+h/2, x+h, with
 /// an error estimate taken from the difference between the 5-point rule and the corresponding 3-point rule x-h, x, x+h. Note that the value
 /// of the function at x does not contribute to the derivative calculation, so only 4-points are actually used.
-pub fn deriv_central<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mut f64, abs_err: &mut f64) -> enums::Value {
+pub fn deriv_central<T>(
+    f: ::function<T>,
+    param: &mut T,
+    x: f64,
+    h: f64,
+    result: &mut f64,
+    abs_err: &mut f64,
+) -> enums::Value {
     let mut r_0 = 0f64;
     let mut round = 0f64;
     let mut trunc = 0f64;
@@ -80,7 +95,15 @@ pub fn deriv_central<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result:
     ::Value::Success
 }
 
-fn forward_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mut f64, abs_err_round: &mut f64, abs_err_trunc: &mut f64) {
+fn forward_deriv<T>(
+    f: ::function<T>,
+    param: &mut T,
+    x: f64,
+    h: f64,
+    result: &mut f64,
+    abs_err_round: &mut f64,
+    abs_err_trunc: &mut f64,
+) {
     let f1 = f(x + h / 4f64, param);
     let f2 = f(x + h / 2f64, param);
     let f3 = f(x + (3f64 / 4f64) * h, param);
@@ -106,7 +129,14 @@ fn forward_deriv<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mu
 /// The initial value of h is used to estimate an optimal step-size, based on the scaling of the truncation error and round-off error in the
 /// derivative calculation. The derivative at x is computed using an “open” 4-point rule for equally spaced abscissae at x+h/4, x+h/2, x+3h/4,
 /// x+h, with an error estimate taken from the difference between the 4-point rule and the corresponding 2-point rule x+h/2, x+h.
-pub fn deriv_forward<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mut f64, abs_err: &mut f64) -> enums::Value {
+pub fn deriv_forward<T>(
+    f: ::function<T>,
+    param: &mut T,
+    x: f64,
+    h: f64,
+    result: &mut f64,
+    abs_err: &mut f64,
+) -> enums::Value {
     let mut r_0 = 0f64;
     let mut round = 0f64;
     let mut trunc = 0f64;
@@ -139,6 +169,13 @@ pub fn deriv_forward<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result:
 /// values greater than x.
 /// 
 /// This function is equivalent to calling gsl_deriv_forward with a negative step-size.
-pub fn deriv_backward<T>(f: ::function<T>, param: &mut T, x: f64, h: f64, result: &mut f64, abs_err: &mut f64) -> enums::Value {
+pub fn deriv_backward<T>(
+    f: ::function<T>,
+    param: &mut T,
+    x: f64,
+    h: f64,
+    result: &mut f64,
+    abs_err: &mut f64,
+) -> enums::Value {
     deriv_forward(f, param, x, -h, result, abs_err)
 }

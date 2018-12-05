@@ -90,7 +90,7 @@ impl DiscreteHankel {
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
     pub fn init(&mut self, nu: f64, xmax: f64) -> enums::Value {
-        unsafe { ffi::gsl_dht_init(self.t, nu, xmax) }
+        enums::Value::from(unsafe { ffi::gsl_dht_init(self.t, nu, xmax) })
     }
 
     /// This function applies the transform t to the array f_in whose size is equal to the size of
@@ -103,7 +103,7 @@ impl DiscreteHankel {
             assert!((*self.t).size == f_in.len(),
                     "f_in and f_out must have the same length as this struct");
             let mut f_out: Vec<f64> = ::std::iter::repeat(0.).take(f_in.len()).collect();
-            match ffi::gsl_dht_apply(self.t, f_in.as_ptr(), f_out.as_mut_ptr()) {
+            match enums::Value::from(ffi::gsl_dht_apply(self.t, f_in.as_ptr(), f_out.as_mut_ptr())) {
                 enums::Value::Success => Ok(f_out),
                 err => Err(err),
             }

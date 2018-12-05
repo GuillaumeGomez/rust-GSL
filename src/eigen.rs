@@ -26,37 +26,51 @@ use types::{VectorF64, MatrixF64, MatrixComplexF64, VectorComplexF64};
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding real eigenvectors stored in the columns
 /// of the matrix evec into ascending or descending order according to the value of the parameter sort_type
 pub fn symmv_sort(eval: &mut VectorF64, evec: &mut MatrixF64, sort_type: ::EigenSort) -> enums::Value {
-    unsafe { ffi::gsl_eigen_symmv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type) }
+    enums::Value::from(unsafe {
+        ffi::gsl_eigen_symmv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type.into())
+    })
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding complex eigenvectors stored in the columns
 /// of the matrix evec into ascending or descending order according to the value of the parameter sort_type.
 pub fn hermv_sort(eval: &mut VectorF64, evec: &mut MatrixComplexF64, sort_type: ::EigenSort) -> enums::Value {
-    unsafe { ffi::gsl_eigen_hermv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type) }
+    enums::Value::from(unsafe {
+        ffi::gsl_eigen_hermv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type.into())
+    })
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding complex eigenvectors stored in the columns
 /// of the matrix evec into ascending or descending order according to the value of the parameter sort_type. Only EigenSort::AbsAsc and
 /// EigenSort::AbsDesc are supported due to the eigenvalues being complex.
 pub fn nonsymmv_sort(eval: &mut VectorComplexF64, evec: &mut MatrixComplexF64, sort_type: ::EigenSort) -> enums::Value {
-    unsafe { ffi::gsl_eigen_nonsymmv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type) }
+    enums::Value::from(unsafe { ffi::gsl_eigen_nonsymmv_sort(ffi::FFI::unwrap_unique(eval),
+                                                             ffi::FFI::unwrap_unique(evec),
+                                                             sort_type.into())
+    })
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding real eigenvectors stored in the columns
 /// of the matrix evec into ascending or descending order according to the value of the parameter sort_type.
 pub fn gensymmv_sort(eval: &mut VectorF64, evec: &mut MatrixF64, sort_type: ::EigenSort) -> enums::Value {
-    unsafe { ffi::gsl_eigen_gensymmv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type) }
+    enums::Value::from(unsafe {
+        ffi::gsl_eigen_gensymmv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type.into())
+    })
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding complex eigenvectors stored in the
 /// columns of the matrix evec into ascending or descending order according to the value of the parameter sort_type.
 pub fn genhermv_sort(eval: &mut VectorF64, evec: &mut MatrixComplexF64, sort_type: ::EigenSort) -> enums::Value {
-    unsafe { ffi::gsl_eigen_genhermv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type) }
+    enums::Value::from(unsafe {
+        ffi::gsl_eigen_genhermv_sort(ffi::FFI::unwrap_unique(eval), ffi::FFI::unwrap_unique(evec), sort_type.into())
+    })
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vectors (alpha, beta) and the corresponding complex eigenvectors stored
 /// in the columns of the matrix evec into ascending or descending order according to the value of the parameter sort_type. Only
 /// EigenSort::AbsAsc and EigenSort::AbsDesc are supported due to the eigenvalues being complex.
 pub fn genv_sort(alpha: &mut VectorComplexF64, beta: &mut VectorF64, evec: &mut MatrixComplexF64, sort_type: ::EigenSort) -> enums::Value {
-    unsafe { ffi::gsl_eigen_genv_sort(ffi::FFI::unwrap_unique(alpha), ffi::FFI::unwrap_unique(beta), ffi::FFI::unwrap_unique(evec), sort_type) }
+    enums::Value::from(unsafe {
+        ffi::gsl_eigen_genv_sort(ffi::FFI::unwrap_unique(alpha), ffi::FFI::unwrap_unique(beta),
+                                 ffi::FFI::unwrap_unique(evec), sort_type.into())
+    })
 }

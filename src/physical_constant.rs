@@ -23,9 +23,11 @@ http://physics.nist.gov/Pubs/SP811/appenB9.html
 // Fundamental Constants
 /// The speed of light in vacuum, c. m / s
 pub static MKSA_SPEED_OF_LIGHT : f64 = 2.99792458e8;
-/// The permeability of free space, \mu_0. This constant is defined in the MKSA system only. kg m / A^2 s^2
+/// The permeability of free space, \mu_0. This constant is defined in the MKSA system only.
+/// `kg m / A^2 s^2`
 pub static MKSA_VACUUM_PERMEABILITY : f64 = 1.25663706144e-6;
-/// The permittivity of free space, \epsilon_0. This constant is defined in the MKSA system only. A^2 s^4 / kg m^3
+/// The permittivity of free space, \epsilon_0. This constant is defined in the MKSA system only.
+/// `A^2 s^4 / kg m^3`
 pub static MKSA_VACUUM_PERMITTIVITY : f64 = 8.854187817e-12;
 /// Planck’s constant, h. kg m^2 / s
 pub static MKSA_PLANCKS_CONSTANT_H : f64 = 6.62606896e-34;
@@ -77,7 +79,8 @@ pub static MKSA_MASS_PROTON : f64 = 1.67262158e-27;
 pub static MKSA_MASS_NEUTRON : f64 = 1.67492716e-27;
 /// The electromagnetic fine structure constant \alpha. 1
 pub static NUM_FINE_STRUCTURE : f64 = 7.297352533e-3;
-/// The Rydberg constant, Ry, in units of energy. This is related to the Rydberg inverse wavelength R_\infty by Ry = h c R_\infty. kg m^2 / s^2
+/// The Rydberg constant, Ry, in units of energy. This is related to the Rydberg inverse
+/// wavelength `R_\infty by Ry = h c R_\infty. kg m^2 / s^2`
 pub static MKSA_RYDBERG : f64 = 2.17987196968e-18;
 /// The Bohr radius, a_0. m
 pub static MKSA_BOHR_RADIUS : f64 = 5.291772083e-11;
@@ -89,7 +92,8 @@ pub static MKSA_BARN : f64 = 1e-28;
 pub static MKSA_BOHR_MAGNETON : f64 = 9.27400899e-24;
 /// The Nuclear Magneton, \mu_N. A m^2
 pub static MKSA_NUCLEAR_MAGNETON : f64 = 5.05078317e-27;
-/// The absolute value of the magnetic moment of the electron, \mu_e. The physical magnetic moment of the electron is negative. A m^2
+/// The absolute value of the magnetic moment of the electron, \mu_e. The physical magnetic moment
+/// of the electron is negative. A m^2
 pub static MKSA_ELECTRON_MAGNETIC_MOMENT : f64 = 9.28476362e-24;
 /// The magnetic moment of the proton, \mu_p. A m^2
 pub static MKSA_PROTON_MAGNETIC_MOMENT : f64 = 1.410606633e-26;

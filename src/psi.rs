@@ -25,7 +25,7 @@ pub mod diagamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_psi_int_e(n, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the digamma function \psi(x) for general x, x \ne 0.
@@ -38,7 +38,7 @@ pub mod diagamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_psi_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the real part of the digamma function on the line 1+i y, \Re[\psi(1 + i y)].
@@ -51,7 +51,7 @@ pub mod diagamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_psi_1piy_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }
 
@@ -70,7 +70,7 @@ pub mod trigamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_psi_1_int_e(n, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the Trigamma function \psi'(x) for general x.
@@ -83,7 +83,7 @@ pub mod trigamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_psi_1_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }
 
@@ -102,6 +102,6 @@ pub mod polygamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_psi_n_e(n, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }

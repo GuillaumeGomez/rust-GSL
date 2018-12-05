@@ -24,5 +24,5 @@ pub fn clausen_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_clausen_e(x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }

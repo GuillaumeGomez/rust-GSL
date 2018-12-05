@@ -1391,9 +1391,20 @@ impl IntegrationWorkspace {
     /// On each iteration the adaptive integration strategy bisects the interval with the largest error estimate. The subintervals and their
     /// results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the
     /// allocated size of the workspace.
-    pub fn qag<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, key: enums::GaussKonrodRule,
-        result: &mut f64, abserr: &mut f64) -> ::Value {
-        match key {
+    pub fn qag<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        a: f64,
+        b: f64,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        key: enums::GaussKonrodRule,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
+        ::Value::from(match key {
             ::GaussKonrodRule::Gauss15 => {
                 intern_qag(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr,
                     ::integration::qk15)
@@ -1428,7 +1439,7 @@ impl IntegrationWorkspace {
                 // this line is not used but just for compilation...
                 ::integration::qk15
             }*/
-        }
+        })
     }
 
     /// This function applies the Gauss-Kronrod 21-point integration rule adaptively until an estimate of the integral of f over (a,b) is achieved
@@ -1437,9 +1448,21 @@ impl IntegrationWorkspace {
     /// final approximation from the extrapolation, result, and an estimate of the absolute error, abserr. The subintervals and their results are
     /// stored in the memory provided by workspace. The maximum number of subintervals is given by limit, which may not exceed the allocated size
     /// of the workspace.
-    pub fn qags<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
-        abserr: &mut f64) -> ::Value {
-        unsafe { intern_qags(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
+    pub fn qags<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        a: f64,
+        b: f64,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
+        ::Value::from(unsafe {
+            intern_qags(f, arg, a, b, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21)
+        })
     }
 
     /// This function applies the adaptive integration algorithm QAGS taking account of the user-supplied locations of singular points. The array
@@ -1455,9 +1478,20 @@ impl IntegrationWorkspace {
     /// with npts = 5.
     ///
     /// If you know the locations of the singular points in the integration region then this routine will be faster than QAGS.
-    pub fn qagp<T>(&mut self, f: ::function<T>, arg: &mut T, pts: &mut [f64], epsabs: f64, epsrel: f64, limit: usize, result: &mut f64,
-        abserr: &mut f64) -> ::Value {
-        unsafe { intern_qagp(f, arg, pts, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21) }
+    pub fn qagp<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        pts: &mut [f64],
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
+        ::Value::from(unsafe {
+            intern_qagp(f, arg, pts, epsabs, epsrel, limit, self, result, abserr, ::integration::qk21)
+        })
     }
 
     /// This function computes the integral of the function f over the infinite interval (-\infty,+\infty). The integral is mapped onto the
@@ -1468,10 +1502,21 @@ impl IntegrationWorkspace {
     ///
     /// It is then integrated using the QAGS algorithm. The normal 21-point Gauss-Kronrod rule of QAGS is replaced by a 15-point rule, because
     /// the transformation can generate an integrable singularity at the origin. In this case a lower-order rule is more efficient.
-    pub fn qagi<T>(&mut self, f: ::function<T>, arg: &mut T, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qagi<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: 0f64};
 
-        unsafe { intern_qags(i_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
+        ::Value::from(unsafe {
+            intern_qags(i_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15)
+        })
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval (a,+\infty). The integral is mapped onto the
@@ -1481,10 +1526,22 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(a + (1-t)/t)/t^2
     ///
     /// and then integrated using the QAGS algorithm.
-    pub fn qagiu<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qagiu<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        a: f64,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: a};
 
-        unsafe { intern_qags(iu_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
+        ::Value::from(unsafe {
+            intern_qags(iu_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15)
+        })
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval (-\infty,b). The integral is mapped onto the semi-open
@@ -1494,10 +1551,22 @@ impl IntegrationWorkspace {
     ///      \int_0^1 dt f(b - (1-t)/t)/t^2
     ///
     /// and then integrated using the QAGS algorithm.
-    pub fn qagil<T>(&mut self, f: ::function<T>, arg: &mut T, b: f64, epsabs: f64, epsrel: f64, limit: usize, result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qagil<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        b: f64,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
         let mut s = InternParam{func: f, param: arg, p2: b};
 
-        unsafe { intern_qags(il_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15) }
+        ::Value::from(unsafe {
+            intern_qags(il_transform, &mut s, 0f64, 1f64, epsabs, epsrel, limit, self, result, abserr, ::integration::qk15)
+        })
     }
 
     /// This function computes the Cauchy principal value of the integral of f over (a,b), with a singularity at c,
@@ -1508,8 +1577,19 @@ impl IntegrationWorkspace {
     /// When a subinterval contains the point x = c or is close to it then a special 25-point modified Clenshaw-Curtis rule is used to control
     /// the singularity. Further away from the singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
     #[allow(unused_assignments)]
-    pub fn qawc<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, c: f64, epsabs: f64, epsrel: f64, limit: usize,
-        result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qawc<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        a: f64,
+        b: f64,
+        c: f64,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
         let mut roundoff_type1 = 0i32;
@@ -1989,7 +2069,9 @@ impl IntegrationQawsTable {
 
     /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
     pub fn set(&mut self, alpha: f64, beta: f64, mu: i32, nu: i32) -> ::Value {
-        unsafe { ffi::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu) }
+        ::Value::from(unsafe {
+            ffi::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu)
+        })
     }
 
     /// This function computes the integral of the function f(x) over the interval (a,b) with the singular weight function (x-a)^\alpha
@@ -2002,8 +2084,19 @@ impl IntegrationQawsTable {
     /// Clenshaw-Curtis rule is used to control the singularities. For subintervals which do not include the endpoints an ordinary 15-point
     /// Gauss-Kronrod integration rule is used.
     #[allow(unused_assignments)]
-    pub fn qaws<T>(&mut self, f: ::function<T>, arg: &mut T, a: f64, b: f64, epsabs: f64, epsrel: f64, limit: usize, workspace: &mut IntegrationWorkspace,
-        result: &mut f64, abserr: &mut f64) -> ::Value {
+    pub fn qaws<T>(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        a: f64,
+        b: f64,
+        epsabs: f64,
+        epsrel: f64,
+        limit: usize,
+        workspace: &mut IntegrationWorkspace,
+        result: &mut f64,
+        abserr: &mut f64,
+    ) -> ::Value {
         let mut result0 = 0f64;
         let mut abserr0 = 0f64;
         let mut roundoff_type1 = 0i32;
@@ -2216,7 +2309,7 @@ impl IntegrationQawoTable {
     /// sufficient for subintervals down to the length L/2^n. The integration routine gsl_integration_qawo returns the error ::Table if the
     /// number of levels is insufficient for the requested accuracy.
     pub fn new(omega: f64, l: f64, sine: ::IntegrationQawo, n: usize) -> Option<IntegrationQawoTable> {
-        let tmp = unsafe { ffi::gsl_integration_qawo_table_alloc(omega, l, sine, n) };
+        let tmp = unsafe { ffi::gsl_integration_qawo_table_alloc(omega, l, sine.into(), n) };
 
         if tmp.is_null() {
             None
@@ -2229,12 +2322,12 @@ impl IntegrationQawoTable {
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
     pub fn set(&mut self, omega: f64, l: f64, sine: ::IntegrationQawo) -> ::Value {
-        unsafe { ffi::gsl_integration_qawo_table_set(self.w, omega, l, sine) }
+        ::Value::from(unsafe { ffi::gsl_integration_qawo_table_set(self.w, omega, l, sine.into()) })
     }
 
     /// This function allows the length parameter l of the self workspace to be changed.
     pub fn set_length(&mut self, l: f64) -> ::Value {
-        unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) }
+        ::Value::from(unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) })
     }
 
     /// This function uses an adaptive algorithm to compute the integral of f over (a,b) with the weight function \sin(\omega x) or \cos(\omega x)
@@ -3195,7 +3288,7 @@ impl GLFixedTable {
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight wi on the interval [a,b]. The points
     /// and weights are ordered by increasing point value. A function f may be integrated on [a,b] by summing wi * f(xi) over i.
     pub fn point(&self, a: f64, b: f64, i: usize, xi: &mut f64, wi: &mut f64) -> ::Value {
-        unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) }
+        ::Value::from(unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) })
     }
 
     /// This function applies the Gauss-Legendre integration rule contained in table self and returns the result.
@@ -4780,7 +4873,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
     if par.abs() < 2f64 {
         let mut fn_params = fn_fourier_params{omega: omega, function: f, arg: arg};
 
-        ::integration::qk15(if (*wf).sine == ::IntegrationQawo::Sine {
+        ::integration::qk15(if (*wf).sine == ::IntegrationQawo::Sine.into() {
                 fn_sin
             } else {
                 fn_cos
@@ -4829,7 +4922,7 @@ unsafe fn qc25f<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, wf: *mut ffi::
         let c = half_length * (center * omega).cos();
         let s = half_length * (center * omega).sin();
 
-        if (*wf).sine == ::IntegrationQawo::Sine {
+        if (*wf).sine == ::IntegrationQawo::Sine.into() {
             *result = c * res24_sin + s * res24_cos;
             *abserr = (c * est_sin).abs() + (s * est_cos).abs();
         } else {

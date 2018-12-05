@@ -1,12 +1,11 @@
 use libc::{c_double, c_int, c_uint, c_void, size_t, FILE};
 
-use super::{gsl_rng};
-use enums;
+use super::gsl_rng;
 
 extern "C" {
     // PLAIN Monte Carlo
     pub fn gsl_monte_plain_alloc(dim: size_t) -> *mut gsl_monte_plain_state;
-    pub fn gsl_monte_plain_init(s: *mut gsl_monte_plain_state) -> enums::Value;
+    pub fn gsl_monte_plain_init(s: *mut gsl_monte_plain_state) -> c_int;
     pub fn gsl_monte_plain_free(s: *mut gsl_monte_plain_state);
     pub fn gsl_monte_plain_integrate(f: *mut c_void,
                                      xl: *const c_double,
@@ -17,10 +16,10 @@ extern "C" {
                                      s: *mut gsl_monte_plain_state,
                                      result: *mut c_double,
                                      abserr: *mut c_double)
-                                     -> enums::Value;
+                                     -> c_int;
     // MISER
     pub fn gsl_monte_miser_alloc(dim: size_t) -> *mut gsl_monte_miser_state;
-    pub fn gsl_monte_miser_init(s: *mut gsl_monte_miser_state) -> enums::Value;
+    pub fn gsl_monte_miser_init(s: *mut gsl_monte_miser_state) -> c_int;
     pub fn gsl_monte_miser_free(s: *mut gsl_monte_miser_state);
     pub fn gsl_monte_miser_integrate(f: *mut c_void,
                                      xl: *const c_double,
@@ -31,12 +30,12 @@ extern "C" {
                                      s: *mut gsl_monte_miser_state,
                                      result: *mut c_double,
                                      abserr: *mut c_double)
-                                     -> enums::Value;
+                                     -> c_int;
     pub fn gsl_monte_miser_params_get(s: *mut gsl_monte_miser_state, m: *mut ::MiserParams);
     pub fn gsl_monte_miser_params_set(s: *mut gsl_monte_miser_state, m: *const ::MiserParams);
     // VEGAS
     pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
-    pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> enums::Value;
+    pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> c_int;
     pub fn gsl_monte_vegas_free(s: *mut gsl_monte_vegas_state);
     pub fn gsl_monte_vegas_integrate(f: *mut c_void,
                                      xl: *const c_double,
@@ -47,7 +46,7 @@ extern "C" {
                                      s: *mut gsl_monte_vegas_state,
                                      result: *mut c_double,
                                      abserr: *mut c_double)
-                                     -> enums::Value;
+                                     -> c_int;
     pub fn gsl_monte_vegas_chisq(s: *const gsl_monte_vegas_state) -> c_double;
     pub fn gsl_monte_vegas_runval(s: *const gsl_monte_vegas_state,
                                   result: *mut c_double,
@@ -121,7 +120,7 @@ pub struct gsl_monte_vegas_state {
 
     /* control variables */
     pub alpha: c_double,
-    pub mode: ::VegasMode,
+    pub mode: c_int,
     pub verbose: c_int,
     pub iterations: c_uint,
     pub stage: c_int,
@@ -149,7 +148,7 @@ pub struct gsl_monte_vegas_params {
     pub alpha: c_double,
     pub iterations: size_t,
     pub stage: c_int,
-    pub mode: ::VegasMode,
+    pub mode: c_int,
     pub verbose: c_int,
     pub ostream: *mut FILE,
 }

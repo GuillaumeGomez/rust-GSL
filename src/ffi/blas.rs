@@ -14,7 +14,6 @@ use libc::{c_double, c_int, c_uint, c_float, c_void};
 use super::{gsl_vector, gsl_vector_float, gsl_vector_complex, gsl_vector_complex_float, gsl_matrix,
             gsl_matrix_float, gsl_matrix_complex, gsl_matrix_complex_float, gsl_complex,
             gsl_complex_float};
-use enums;
 
 extern "C" {
     // Level 1 CBLAS functions
@@ -1255,35 +1254,35 @@ extern "C" {
                            x: *const gsl_vector_float,
                            y: *const gsl_vector_float,
                            result: *mut c_float)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_sdot(x: *const gsl_vector_float,
                          y: *const gsl_vector_float,
                          result: *mut c_float)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_dsdot(x: *const gsl_vector_float,
                           y: *const gsl_vector_float,
                           result: *mut c_double)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ddot(x: *const gsl_vector,
                          y: *const gsl_vector,
                          result: *mut c_double)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_cdotu(x: *const gsl_vector_complex_float,
                           y: *const gsl_vector_complex_float,
                           dotu: *mut gsl_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zdotu(x: *const gsl_vector_complex,
                           y: *const gsl_vector_complex,
                           dotu: *mut gsl_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_cdotc(x: *const gsl_vector_complex_float,
                           y: *const gsl_vector_complex_float,
                           dotc: *mut gsl_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zdotc(x: *const gsl_vector_complex,
                           y: *const gsl_vector_complex,
                           dotc: *mut gsl_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_snrm2(x: *const gsl_vector_float) -> c_float;
     pub fn gsl_blas_dnrm2(x: *const gsl_vector) -> c_double;
     pub fn gsl_blas_scnrm2(x: *const gsl_vector_complex_float) -> c_float;
@@ -1296,36 +1295,36 @@ extern "C" {
     pub fn gsl_blas_idamax(x: *const gsl_vector) -> CBLAS_INDEX_t;
     pub fn gsl_blas_icamax(x: *const gsl_vector_complex_float) -> CBLAS_INDEX_t;
     pub fn gsl_blas_izamax(x: *const gsl_vector_complex) -> CBLAS_INDEX_t;
-    pub fn gsl_blas_sswap(x: *mut gsl_vector_float, y: *mut gsl_vector_float) -> enums::Value;
-    pub fn gsl_blas_dswap(x: *mut gsl_vector, y: *mut gsl_vector) -> enums::Value;
+    pub fn gsl_blas_sswap(x: *mut gsl_vector_float, y: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_blas_dswap(x: *mut gsl_vector, y: *mut gsl_vector) -> c_int;
     pub fn gsl_blas_cswap(x: *mut gsl_vector_complex_float,
                           y: *mut gsl_vector_complex_float)
-                          -> enums::Value;
-    pub fn gsl_blas_zswap(x: *mut gsl_vector_complex, y: *mut gsl_vector_complex) -> enums::Value;
-    pub fn gsl_blas_scopy(x: *const gsl_vector_float, y: *mut gsl_vector_float) -> enums::Value;
-    pub fn gsl_blas_dcopy(x: *const gsl_vector, y: *mut gsl_vector) -> enums::Value;
+                          -> c_int;
+    pub fn gsl_blas_zswap(x: *mut gsl_vector_complex, y: *mut gsl_vector_complex) -> c_int;
+    pub fn gsl_blas_scopy(x: *const gsl_vector_float, y: *mut gsl_vector_float) -> c_int;
+    pub fn gsl_blas_dcopy(x: *const gsl_vector, y: *mut gsl_vector) -> c_int;
     pub fn gsl_blas_ccopy(x: *const gsl_vector_complex_float,
                           y: *mut gsl_vector_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zcopy(x: *const gsl_vector_complex,
                           y: *mut gsl_vector_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_saxpy(alpha: c_float,
                           x: *const gsl_vector_float,
                           y: *mut gsl_vector_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_daxpy(alpha: c_double,
                           x: *const gsl_vector,
                           y: *mut gsl_vector)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_caxpy(alpha: gsl_complex_float,
                           x: *const gsl_vector_complex_float,
                           y: *mut gsl_vector_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zaxpy(alpha: gsl_complex,
                           x: *const gsl_vector_complex,
                           y: *mut gsl_vector_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_sscal(alpha: c_float, x: *mut gsl_vector_float);
     pub fn gsl_blas_dscal(alpha: c_double, x: *mut gsl_vector);
     pub fn gsl_blas_cscal(alpha: gsl_complex_float, x: *mut gsl_vector_complex_float);
@@ -1336,42 +1335,42 @@ extern "C" {
                           b: *mut c_float,
                           c: *mut c_float,
                           d: *mut c_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_drotg(a: *mut c_double,
                           b: *mut c_double,
                           c: *mut c_double,
                           d: *mut c_double)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_srot(a: *mut gsl_vector_float,
                          b: *mut gsl_vector_float,
                          c: c_float,
                          d: c_float)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_drot(a: *mut gsl_vector,
                          b: *mut gsl_vector,
                          c: c_double,
                          d: c_double)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_srotmg(d1: *mut c_float,
                            d2: *mut c_float,
                            b1: *mut c_float,
                            b2: c_float,
                            P: *mut c_float)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_drotmg(d1: *mut c_double,
                            d2: *mut c_double,
                            b1: *mut c_double,
                            b2: c_double,
                            P: *mut c_double)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_srotm(x: *mut gsl_vector_float,
                           y: *mut gsl_vector_float,
                           P: *mut c_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_drotm(x: *mut gsl_vector,
                           y: *mut gsl_vector,
                           P: *mut c_double)
-                          -> enums::Value;
+                          -> c_int;
 
     // Level 2 BLAS functions
     pub fn gsl_blas_sgemv(transA: CBLAS_TRANSPOSE_t,
@@ -1380,178 +1379,178 @@ extern "C" {
                           x: *const gsl_vector_float,
                           beta: c_float,
                           y: *mut gsl_vector_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dgemv(transA: CBLAS_TRANSPOSE_t,
                           alpha: c_double,
                           A: *const gsl_matrix,
                           x: *const gsl_vector,
                           beta: c_double,
                           y: *mut gsl_vector)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_cgemv(transA: CBLAS_TRANSPOSE_t,
                           alpha: gsl_complex_float,
                           A: *const gsl_matrix_complex_float,
                           x: *const gsl_vector_complex_float,
                           beta: gsl_complex_float,
                           y: *mut gsl_vector_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zgemv(transA: CBLAS_TRANSPOSE_t,
                           alpha: gsl_complex,
                           A: *const gsl_matrix_complex,
                           x: *const gsl_vector_complex,
                           beta: gsl_complex,
                           y: *mut gsl_vector_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_strmv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix_float,
                           x: *mut gsl_vector_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dtrmv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix,
                           x: *mut gsl_vector)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ctrmv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix_complex_float,
                           x: *mut gsl_vector_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ztrmv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix_complex,
                           x: *mut gsl_vector_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_strsv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix_float,
                           x: *mut gsl_vector_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dtrsv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix,
                           x: *mut gsl_vector)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ctrsv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix_complex_float,
                           x: *mut gsl_vector_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ztrsv(uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
                           diag: CBLAS_DIAG_t,
                           A: *const gsl_matrix_complex,
                           x: *mut gsl_vector_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ssymv(uplo: CBLAS_UPLO_t,
                           alpha: c_float,
                           A: *const gsl_matrix_float,
                           x: *const gsl_vector_float,
                           beta: c_float,
                           y: *mut gsl_vector_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dsymv(uplo: CBLAS_UPLO_t,
                           alpha: c_double,
                           A: *const gsl_matrix,
                           x: *const gsl_vector,
                           beta: c_double,
                           y: *mut gsl_vector)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_chemv(uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex_float,
                           A: *const gsl_matrix_complex_float,
                           x: *const gsl_vector_complex_float,
                           beta: gsl_complex_float,
                           y: *mut gsl_vector_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zhemv(uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex,
                           A: *const gsl_matrix_complex,
                           x: *const gsl_vector_complex,
                           beta: gsl_complex,
                           y: *mut gsl_vector_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_sger(alpha: c_float,
                          x: *const gsl_vector_float,
                          y: *const gsl_vector_float,
                          A: *mut gsl_matrix_float)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_dger(alpha: c_double,
                          x: *const gsl_vector,
                          y: *const gsl_vector,
                          A: *mut gsl_matrix)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_cgeru(alpha: gsl_complex_float,
                           x: *const gsl_vector_complex_float,
                           y: *const gsl_vector_complex_float,
                           A: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zgeru(alpha: gsl_complex,
                           x: *const gsl_vector_complex,
                           y: *const gsl_vector_complex,
                           A: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_cgerc(alpha: gsl_complex_float,
                           x: *const gsl_vector_complex_float,
                           y: *const gsl_vector_complex_float,
                           A: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zgerc(alpha: gsl_complex,
                           x: *const gsl_vector_complex,
                           y: *const gsl_vector_complex,
                           A: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ssyr(uplo: CBLAS_UPLO_t,
                          alpha: c_float,
                          x: *const gsl_vector_float,
                          A: *mut gsl_matrix_float)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_dsyr(uplo: CBLAS_UPLO_t,
                          alpha: c_double,
                          x: *const gsl_vector,
                          A: *mut gsl_matrix)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_cher(uplo: CBLAS_UPLO_t,
                          alpha: c_float,
                          x: *const gsl_vector_complex_float,
                          A: *mut gsl_matrix_complex_float)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_zher(uplo: CBLAS_UPLO_t,
                          alpha: c_double,
                          x: *const gsl_vector_complex,
                          A: *mut gsl_matrix_complex)
-                         -> enums::Value;
+                         -> c_int;
     pub fn gsl_blas_ssyr2(uplo: CBLAS_UPLO_t,
                           alpha: c_float,
                           x: *const gsl_vector_float,
                           y: *const gsl_vector_float,
                           A: *mut gsl_matrix_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dsyr2(uplo: CBLAS_UPLO_t,
                           alpha: c_double,
                           x: *const gsl_vector,
                           y: *const gsl_vector,
                           A: *mut gsl_matrix)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_cher2(uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex_float,
                           x: *const gsl_vector_complex_float,
                           y: *const gsl_vector_complex_float,
                           A: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zher2(uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex,
                           x: *const gsl_vector_complex,
                           y: *const gsl_vector_complex,
                           A: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
 
     // Level 3 BLAS functions
     pub fn gsl_blas_sgemm(transA: CBLAS_TRANSPOSE_t,
@@ -1561,7 +1560,7 @@ extern "C" {
                           B: *const gsl_matrix_float,
                           beta: c_float,
                           C: *mut gsl_matrix_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dgemm(transA: CBLAS_TRANSPOSE_t,
                           transB: CBLAS_TRANSPOSE_t,
                           alpha: c_double,
@@ -1569,7 +1568,7 @@ extern "C" {
                           B: *const gsl_matrix,
                           beta: c_double,
                           C: *mut gsl_matrix)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_cgemm(transA: CBLAS_TRANSPOSE_t,
                           transB: CBLAS_TRANSPOSE_t,
                           alpha: gsl_complex_float,
@@ -1577,7 +1576,7 @@ extern "C" {
                           B: *const gsl_matrix_complex_float,
                           beta: gsl_complex_float,
                           C: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zgemm(transA: CBLAS_TRANSPOSE_t,
                           transB: CBLAS_TRANSPOSE_t,
                           alpha: gsl_complex,
@@ -1585,7 +1584,7 @@ extern "C" {
                           B: *const gsl_matrix_complex,
                           beta: gsl_complex,
                           C: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ssymm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           alpha: c_float,
@@ -1593,7 +1592,7 @@ extern "C" {
                           B: *const gsl_matrix_float,
                           beta: c_float,
                           C: *mut gsl_matrix_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dsymm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           alpha: c_double,
@@ -1601,7 +1600,7 @@ extern "C" {
                           B: *const gsl_matrix,
                           beta: c_double,
                           C: *mut gsl_matrix)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_csymm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex_float,
@@ -1609,7 +1608,7 @@ extern "C" {
                           B: *const gsl_matrix_complex_float,
                           beta: gsl_complex_float,
                           C: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zsymm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex,
@@ -1617,7 +1616,7 @@ extern "C" {
                           B: *const gsl_matrix_complex,
                           beta: gsl_complex,
                           C: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_chemm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex_float,
@@ -1625,7 +1624,7 @@ extern "C" {
                           B: *const gsl_matrix_complex_float,
                           beta: gsl_complex_float,
                           C: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zhemm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           alpha: gsl_complex,
@@ -1633,7 +1632,7 @@ extern "C" {
                           B: *const gsl_matrix_complex,
                           beta: gsl_complex,
                           C: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_strmm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1641,7 +1640,7 @@ extern "C" {
                           alpha: c_float,
                           A: *const gsl_matrix_float,
                           B: *mut gsl_matrix_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dtrmm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1649,7 +1648,7 @@ extern "C" {
                           alpha: c_double,
                           A: *const gsl_matrix,
                           B: *mut gsl_matrix)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ctrmm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1657,7 +1656,7 @@ extern "C" {
                           alpha: gsl_complex_float,
                           A: *const gsl_matrix_complex_float,
                           B: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ztrmm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1665,7 +1664,7 @@ extern "C" {
                           alpha: gsl_complex,
                           A: *const gsl_matrix_complex,
                           B: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_strsm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1673,7 +1672,7 @@ extern "C" {
                           alpha: c_float,
                           A: *const gsl_matrix_float,
                           B: *mut gsl_matrix_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dtrsm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1681,7 +1680,7 @@ extern "C" {
                           alpha: c_double,
                           A: *const gsl_matrix,
                           B: *mut gsl_matrix)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ctrsm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1689,7 +1688,7 @@ extern "C" {
                           alpha: gsl_complex_float,
                           A: *const gsl_matrix_complex_float,
                           B: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ztrsm(side: CBLAS_SIDE_t,
                           uplo: CBLAS_UPLO_t,
                           transA: CBLAS_TRANSPOSE_t,
@@ -1697,49 +1696,49 @@ extern "C" {
                           alpha: gsl_complex,
                           A: *const gsl_matrix_complex,
                           B: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ssyrk(uplo: CBLAS_UPLO_t,
                           trans: CBLAS_TRANSPOSE_t,
                           alpha: c_float,
                           A: *const gsl_matrix_float,
                           beta: c_float,
                           C: *mut gsl_matrix_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_dsyrk(uplo: CBLAS_UPLO_t,
                           trans: CBLAS_TRANSPOSE_t,
                           alpha: c_double,
                           A: *const gsl_matrix,
                           beta: c_double,
                           C: *mut gsl_matrix)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_csyrk(uplo: CBLAS_UPLO_t,
                           trans: CBLAS_TRANSPOSE_t,
                           alpha: gsl_complex_float,
                           A: *const gsl_matrix_complex_float,
                           beta: gsl_complex_float,
                           C: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zsyrk(uplo: CBLAS_UPLO_t,
                           trans: CBLAS_TRANSPOSE_t,
                           alpha: gsl_complex,
                           A: *const gsl_matrix_complex,
                           beta: gsl_complex,
                           C: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_cherk(uplo: CBLAS_UPLO_t,
                           trans: CBLAS_TRANSPOSE_t,
                           alpha: c_float,
                           A: *const gsl_matrix_complex_float,
                           beta: c_float,
                           C: *mut gsl_matrix_complex_float)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_zherk(uplo: CBLAS_UPLO_t,
                           trans: CBLAS_TRANSPOSE_t,
                           alpha: c_double,
                           A: *const gsl_matrix_complex,
                           beta: c_double,
                           C: *mut gsl_matrix_complex)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_blas_ssyr2k(uplo: CBLAS_UPLO_t,
                            trans: CBLAS_TRANSPOSE_t,
                            alpha: c_float,
@@ -1747,7 +1746,7 @@ extern "C" {
                            B: *const gsl_matrix_float,
                            beta: c_float,
                            C: *mut gsl_matrix_float)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_dsyr2k(uplo: CBLAS_UPLO_t,
                            trans: CBLAS_TRANSPOSE_t,
                            alpha: c_double,
@@ -1755,7 +1754,7 @@ extern "C" {
                            B: *const gsl_matrix,
                            beta: c_double,
                            C: *mut gsl_matrix)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_csyr2k(uplo: CBLAS_UPLO_t,
                            trans: CBLAS_TRANSPOSE_t,
                            alpha: gsl_complex_float,
@@ -1763,7 +1762,7 @@ extern "C" {
                            B: *const gsl_matrix_complex_float,
                            beta: gsl_complex_float,
                            C: *mut gsl_matrix_complex_float)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_zsyr2k(uplo: CBLAS_UPLO_t,
                            trans: CBLAS_TRANSPOSE_t,
                            alpha: gsl_complex,
@@ -1771,7 +1770,7 @@ extern "C" {
                            B: *const gsl_matrix_complex,
                            beta: gsl_complex,
                            C: *mut gsl_matrix_complex)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_cher2k(uplo: CBLAS_UPLO_t,
                            trans: CBLAS_TRANSPOSE_t,
                            alpha: gsl_complex_float,
@@ -1779,7 +1778,7 @@ extern "C" {
                            B: *const gsl_matrix_complex_float,
                            beta: c_float,
                            C: *mut gsl_matrix_complex_float)
-                           -> enums::Value;
+                           -> c_int;
     pub fn gsl_blas_zher2k(uplo: CBLAS_UPLO_t,
                            trans: CBLAS_TRANSPOSE_t,
                            alpha: gsl_complex,
@@ -1787,5 +1786,5 @@ extern "C" {
                            B: *const gsl_matrix_complex,
                            beta: c_double,
                            C: *mut gsl_matrix_complex)
-                           -> enums::Value;
+                           -> c_int;
 }

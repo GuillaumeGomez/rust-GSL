@@ -83,17 +83,17 @@ impl<T> NTuples<T> {
 
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the corresponding file.
     pub fn write(&self) -> enums::Value {
-        unsafe { ffi::gsl_ntuple_write(self.n) }
+        enums::Value::from(unsafe { ffi::gsl_ntuple_write(self.n) })
     }
 
     /// This function is a synonym for NTuples::write.
     pub fn bookdata(&self) -> enums::Value {
-        unsafe { ffi::gsl_ntuple_bookdata(self.n) }
+        enums::Value::from(unsafe { ffi::gsl_ntuple_bookdata(self.n) })
     }
 
     /// This function reads the current row of the ntuple file for ntuple and stores the values in ntuple->data.
     pub fn read(&self) -> enums::Value {
-        unsafe { ffi::gsl_ntuple_read(self.n) }
+        enums::Value::from(unsafe { ffi::gsl_ntuple_read(self.n) })
     }
 
     pub fn project<U, V>(&self, h: &mut ::Histogram, value_func: ::value_function<T, U>, value_arg: &mut U,

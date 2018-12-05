@@ -112,8 +112,17 @@ fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
 /// approximation, result, an estimate of the absolute error, abserr and the number of function evaluations used, neval. The Gauss-Kronrod rules
 /// are designed in such a way that each rule uses all the results of its predecessors, in order to minimize the total number of function
 /// evaluations.
-pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_rel: f64, result: &mut f64, abs_err: &mut f64,
-    n_eval: &mut usize) -> ::Value {
+pub fn qng<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    eps_abs: f64,
+    eps_rel: f64,
+    result: &mut f64,
+    abs_err: &mut f64,
+    n_eval: &mut usize,
+) -> ::Value {
     let half_length = 0.5f64 * (b - a);
     let abs_half_length = unsafe { half_length.abs() };
     let center = 0.5f64 * (b + a);
@@ -131,7 +140,7 @@ pub fn qng<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, eps_abs: f64, eps_r
             let c_file = CString::new(file.as_bytes()).unwrap();
 
             unsafe {
-                ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTolerance as i32);
+                ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTolerance.into());
             }
         }
         return ::Value::BadTolerance;
@@ -959,17 +968,16 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
         }
 
         if omega == 0f64 {
-            if (*ffi::FFI::unwrap_shared(wf)).sine == ::IntegrationQawo::Sine {
+            if (*ffi::FFI::unwrap_shared(wf)).sine == ::IntegrationQawo::Sine.into() {
                 /* The function sin(w x) f(x) is always zero for w = 0 */
                 *result = 0f64;
                 *abserr = 0f64;
 
                 return ::Value::Success;
-            }  else {
-                /* The function cos(w x) f(x) is always f(x) for w = 0 */
-                let limit = (*ffi::FFI::unwrap_shared(cycle_workspace)).limit as usize;
-                return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, limit, result, abserr);
             }
+            /* The function cos(w x) f(x) is always f(x) for w = 0 */
+            let limit = (*ffi::FFI::unwrap_shared(cycle_workspace)).limit;
+            return cycle_workspace.qagiu(f, arg, a, epsabs, 0f64, limit as _, result, abserr);
         }
 
         let mut eps = if epsabs > ::DBL_MIN / (1f64 - p) {

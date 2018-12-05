@@ -124,7 +124,7 @@ impl ChebSeries {
     /// series result and its absolute error abserr.
     /// The error estimate is made from the first neglected term in the series.
     pub fn eval_err(&self, x: f64, result: &mut f64, abs_err: &mut f64) -> enums::Value {
-        unsafe { ffi::gsl_cheb_eval_err(self.c, x, result, abs_err) }
+        enums::Value::from(unsafe { ffi::gsl_cheb_eval_err(self.c, x, result, abs_err) })
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given
@@ -138,14 +138,14 @@ impl ChebSeries {
     /// is made from the first neglected term in the series.
     pub fn eval_n_err(&self, order: usize, x: f64, result: &mut f64,
                       abs_err: &mut f64) -> enums::Value {
-        unsafe { ffi::gsl_cheb_eval_n_err(self.c, order, x, result, abs_err) }
+        enums::Value::from(unsafe { ffi::gsl_cheb_eval_n_err(self.c, order, x, result, abs_err) })
     }
 
     /// This function computes the derivative of the series cs, storing the derivative coefficients
     /// in the previously allocated deriv. The two series cs and deriv must have been allocated with
     /// the same order.
     pub fn calc_deriv(&self, deriv: &mut ChebSeries) -> enums::Value {
-        unsafe { ffi::gsl_cheb_calc_deriv(deriv.c, self.c) }
+        enums::Value::from(unsafe { ffi::gsl_cheb_calc_deriv(deriv.c, self.c) })
     }
 
     /// This function computes the integral of the series cs, storing the integral coefficients in
@@ -153,7 +153,7 @@ impl ChebSeries {
     /// the same order. The lower limit of the integration is taken to be the left hand end of the
     /// range a.
     pub fn calc_integ(&self, integ: &mut ChebSeries) -> enums::Value {
-        unsafe { ffi::gsl_cheb_calc_integ(integ.c, self.c) }
+        enums::Value::from(unsafe { ffi::gsl_cheb_calc_integ(integ.c, self.c) })
     }
 }
 

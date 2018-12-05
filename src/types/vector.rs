@@ -227,61 +227,61 @@ impl VectorF32 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&mut self, other: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_memcpy(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_memcpy(self.vec, other.vec) })
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &mut VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_memcpy(other.vec, self.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_memcpy(other.vec, self.vec) })
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
     pub fn swap(&mut self, other: &mut VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_swap(other.vec, self.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_swap(other.vec, self.vec) })
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
     pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_swap_elements(self.vec, i, j) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_swap_elements(self.vec, i, j) })
     }
 
     /// This function reverses the order of the elements of the vector v.
     pub fn reverse(&mut self) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_reverse(self.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_reverse(self.vec) })
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&mut self, other: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_add(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_add(self.vec, other.vec) })
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&mut self, other: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_sub(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_sub(self.vec, other.vec) })
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&mut self, other: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_mul(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_mul(self.vec, other.vec) })
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&mut self, other: &VectorF32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_div(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_div(self.vec, other.vec) })
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
     pub fn scale(&mut self, x: f32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_scale(self.vec, x) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_scale(self.vec, x) })
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
     pub fn add_constant(&mut self, x: f32) -> enums::Value {
-        unsafe { ffi::gsl_vector_float_add_constant(self.vec, x) }
+        enums::Value::from(unsafe { ffi::gsl_vector_float_add_constant(self.vec, x) })
     }
 
     /// This function returns the maximum value in the self vector.
@@ -525,61 +525,61 @@ impl VectorF64 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&mut self, other: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_memcpy(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_memcpy(self.vec, other.vec) })
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_memcpy(other.vec, self.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_memcpy(other.vec, self.vec) })
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
     pub fn swap(&mut self, other: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_swap(other.vec, self.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_swap(other.vec, self.vec) })
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
     pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
-        unsafe { ffi::gsl_vector_swap_elements(self.vec, i, j) }
+        enums::Value::from(unsafe { ffi::gsl_vector_swap_elements(self.vec, i, j) })
     }
 
     /// This function reverses the order of the elements of the vector v.
     pub fn reverse(&mut self) -> enums::Value {
-        unsafe { ffi::gsl_vector_reverse(self.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_reverse(self.vec) })
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&mut self, other: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_add(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_add(self.vec, other.vec) })
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&mut self, other: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_sub(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_sub(self.vec, other.vec) })
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&mut self, other: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_mul(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_mul(self.vec, other.vec) })
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&mut self, other: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_vector_div(self.vec, other.vec) }
+        enums::Value::from(unsafe { ffi::gsl_vector_div(self.vec, other.vec) })
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
     pub fn scale(&mut self, x: f64) -> enums::Value {
-        unsafe { ffi::gsl_vector_scale(self.vec, x) }
+        enums::Value::from(unsafe { ffi::gsl_vector_scale(self.vec, x) })
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
     pub fn add_constant(&mut self, x: f64) -> enums::Value {
-        unsafe { ffi::gsl_vector_add_constant(self.vec, x) }
+        enums::Value::from(unsafe { ffi::gsl_vector_add_constant(self.vec, x) })
     }
 
     /// This function returns the maximum value in the self vector.

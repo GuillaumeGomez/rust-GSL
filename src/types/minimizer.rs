@@ -160,7 +160,8 @@ impl<T> Minimizer<T> {
         let mut f_lower = 0f64;
         let mut f_upper = 0f64;
 
-        let status = compute_f_values(f, arg, x_minimum, &mut f_minimum, x_lower, &mut f_lower, x_upper, &mut f_upper);
+        let status = ::Value::from(compute_f_values(f, arg, x_minimum, &mut f_minimum, x_lower,
+                                                    &mut f_lower, x_upper, &mut f_upper));
 
         if status != ::Value::Success {
             status
@@ -195,10 +196,11 @@ impl<T> Minimizer<T> {
             rgsl_error!("endpoints do not enclose a minimum", ::Value::Invalid);
         }
 
-        unsafe {
-            (self.type_.set)(self.state, self.function.unwrap(), ::std::mem::transmute(self.arg.unwrap()), x_minimum, f_minimum, x_lower,
+        ::Value::from(unsafe {
+            (self.type_.set)(self.state, self.function.unwrap(),
+                             ::std::mem::transmute(self.arg.unwrap()), x_minimum, f_minimum, x_lower,
                 f_lower, x_upper, f_upper)
-        }
+        })
     }
 
     /// This function returns a pointer to the name of the minimizer. For example,
@@ -257,10 +259,10 @@ impl<T> Minimizer<T> {
     /// The minimizer maintains a current best estimate of the position of the minimum at all times, and the current interval bounding the
     /// minimum. This information can be accessed with the following auxiliary functions,
     pub fn iterate(&mut self) -> ::Value {
-        unsafe {
+        ::Value::from(unsafe {
             (self.type_.iterate)(self.state, self.function.unwrap(), ::std::mem::transmute(self.arg.unwrap()), &mut self.x_minimum,
                 &mut self.f_minimum, &mut self.x_lower, &mut self.f_lower, &mut self.x_upper, &mut self.f_upper)
-        }
+        })
     }
 }
 

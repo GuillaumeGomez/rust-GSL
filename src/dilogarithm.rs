@@ -21,7 +21,7 @@ pub fn dilog_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_dilog_e(x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }
 
 /// This function computes the full complex-valued dilogarithm for the complex argument z = r \exp(i \theta).
@@ -31,5 +31,7 @@ pub fn complex_dilog_e(r: f64, theta: f64) -> (enums::Value, ::types::Result, ::
     let mut result_im = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_complex_dilog_e(r, theta, &mut result, &mut result_im) };
 
-    (ret, ::types::Result{val: result.val, err: result.err}, ::types::Result{val: result_im.val, err: result_im.err})
+    (enums::Value::from(ret),
+     ::types::Result{val: result.val, err: result.err},
+     ::types::Result{val: result_im.val, err: result_im.err})
 }

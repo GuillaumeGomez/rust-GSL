@@ -265,11 +265,13 @@ impl MultiFitFSolver {
     }
 
     pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> ::Value {
-        unsafe { ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap_shared(x)) }
+        ::Value::from(unsafe {
+            ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap_shared(x))
+        })
     }
 
     pub fn iterate(&mut self) -> ::Value {
-        unsafe { ffi::gsl_multifit_fsolver_iterate(self.s) }
+        ::Value::from(unsafe { ffi::gsl_multifit_fsolver_iterate(self.s) })
     }
 
     pub fn name(&self) -> String {
@@ -348,7 +350,9 @@ impl MultiFitFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial guess x.
     pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &::VectorF64) -> ::Value {
-        unsafe { ffi::gsl_multifit_fdfsolver_set(self.intern, f.to_raw(), ffi::FFI::unwrap_shared(x)) }
+        ::Value::from(unsafe {
+            ffi::gsl_multifit_fdfsolver_set(self.intern, f.to_raw(), ffi::FFI::unwrap_shared(x))
+        })
     }
 
     pub fn x(&self) -> ::VectorF64 {
@@ -379,7 +383,7 @@ impl MultiFitFdfSolver {
     /// unexpected problem then an error code will be returned. The solver maintains a current
     /// estimate of the best-fit parameters at all times.
     pub fn iterate(&mut self) -> ::Value {
-        unsafe { ffi::gsl_multifit_fdfsolver_iterate(self.intern) }
+        ::Value::from(unsafe { ffi::gsl_multifit_fdfsolver_iterate(self.intern) })
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
@@ -404,8 +408,10 @@ impl MultiFitFdfSolver {
                 }
 
                 /* test for convergence */
-                status = unsafe { ffi::gsl_multifit_test_delta((*self.intern).dx, (*self.intern).x,
-                                                               epsabs, epsrel) };
+                status = ::Value::from(unsafe { ffi::gsl_multifit_test_delta((*self.intern).dx,
+                                                                             (*self.intern).x,
+                                                                             epsabs,
+                                                                             epsrel) });
                 iter += 1;
                 if status != ::Value::Continue || iter >= max_iter {
                     break
@@ -482,37 +488,37 @@ impl MultiFitFunctionFdf {
 }
 
 extern "C" fn f(x: *mut ffi::gsl_vector, params: *mut c_void,
-                pf: *mut ffi::gsl_vector) -> ::Value {
+                pf: *mut ffi::gsl_vector) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
-        if let Some(ref f) = (*t).f {
-            f(ffi::FFI::soft_wrap(x), ffi::FFI::soft_wrap(pf))
+        if let Some(ref i_f) = (*t).f {
+            i_f(ffi::FFI::soft_wrap(x), ffi::FFI::soft_wrap(pf)).into()
         } else {
-            ::Value::Success
+            ::Value::Success.into()
         }
     }
 }
 
 extern "C" fn df(x: *mut ffi::gsl_vector, params: *mut c_void,
-                 pdf: *mut ffi::gsl_matrix) -> ::Value {
+                 pdf: *mut ffi::gsl_matrix) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
-        if let Some(ref df) = (*t).df {
-            df(ffi::FFI::soft_wrap(x), ffi::FFI::soft_wrap(pdf))
+        if let Some(ref i_df) = (*t).df {
+            i_df(ffi::FFI::soft_wrap(x), ffi::FFI::soft_wrap(pdf)).into()
         } else {
-            ::Value::Success
+            ::Value::Success.into()
         }
     }
 }
 
 extern "C" fn fdf(x: *mut ffi::gsl_vector, params: *mut c_void, pf: *mut ffi::gsl_vector,
-                  pdf: *mut ffi::gsl_matrix) -> ::Value {
+                  pdf: *mut ffi::gsl_matrix) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
-        if let Some(ref fdf) = (*t).fdf {
-            fdf(ffi::FFI::soft_wrap(x), ffi::FFI::soft_wrap(pf), ffi::FFI::soft_wrap(pdf))
+        if let Some(ref i_fdf) = (*t).fdf {
+            i_fdf(ffi::FFI::soft_wrap(x), ffi::FFI::soft_wrap(pf), ffi::FFI::soft_wrap(pdf)).into()
         } else {
-            ::Value::Success
+            ::Value::Success.into()
         }
     }
 }
