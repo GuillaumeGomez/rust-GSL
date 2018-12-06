@@ -63,7 +63,7 @@ following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-GSL = "0.4"
+GSL = "1.1"
 ```
 
 Add the following line to your source code:
