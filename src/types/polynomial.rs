@@ -44,7 +44,9 @@ impl PolyComplex {
     /// accuracy. The solution of polynomials with higher-order roots requires specialized algorithms that take the multiplicity structure into
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
     pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> enums::Value {
-        unsafe { ffi::gsl_poly_complex_solve(a.as_ptr(), a.len() as usize, self.w, z.as_mut_ptr()) }
+        enums::Value::from(unsafe {
+            ffi::gsl_poly_complex_solve(a.as_ptr(), a.len() as usize, self.w, z.as_mut_ptr())
+        })
     }
 }
 

@@ -109,7 +109,7 @@ impl PlainMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
     pub fn init(&mut self) -> ::Value {
-        unsafe { ffi::gsl_monte_plain_init(self.s) }
+        ::Value::from(unsafe { ffi::gsl_monte_plain_init(self.s) })
     }
 
     /// This routines uses the plain Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined
@@ -140,15 +140,16 @@ impl PlainMonteCarlo {
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ffi::gsl_monte_plain_integrate(&mut func as *mut _ as *mut c_void,
-                                                     xl.as_ptr(),
-                                                     xu.as_ptr(),
-                                                     xl.len(),
-                                                     t_calls,
-                                                     ffi::FFI::unwrap_unique(r),
-                                                     self.s,
-                                                     (&mut result) as *mut c_double,
-                                                     (&mut abserr) as *mut c_double);
+            let ret = ::Value::from(
+                ffi::gsl_monte_plain_integrate(&mut func as *mut _ as *mut c_void,
+                                               xl.as_ptr(),
+                                               xu.as_ptr(),
+                                               xl.len(),
+                                               t_calls,
+                                               ffi::FFI::unwrap_unique(r),
+                                               self.s,
+                                               (&mut result) as *mut c_double,
+                                               (&mut abserr) as *mut c_double));
 
             if ret == ::Value::Success {
                 Ok((result, abserr))
@@ -226,7 +227,7 @@ impl MiserMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
     pub fn init(&mut self) -> ::Value {
-        unsafe { ffi::gsl_monte_miser_init(self.s) }
+        ::Value::from(unsafe { ffi::gsl_monte_miser_init(self.s) })
     }
 
     /// This routines uses the MISER Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined by
@@ -257,15 +258,16 @@ impl MiserMonteCarlo {
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ffi::gsl_monte_miser_integrate(&mut func as *mut _ as *mut c_void,
-                                                     xl.as_ptr(),
-                                                     xu.as_ptr(),
-                                                     xl.len(),
-                                                     t_calls,
-                                                     ffi::FFI::unwrap_unique(r),
-                                                     self.s,
-                                                     (&mut result) as *mut c_double,
-                                                     (&mut abserr) as *mut c_double);
+            let ret = ::Value::from(
+                ffi::gsl_monte_miser_integrate(&mut func as *mut _ as *mut c_void,
+                                               xl.as_ptr(),
+                                               xu.as_ptr(),
+                                               xl.len(),
+                                               t_calls,
+                                               ffi::FFI::unwrap_unique(r),
+                                               self.s,
+                                               (&mut result) as *mut c_double,
+                                               (&mut abserr) as *mut c_double));
 
             if ret == ::Value::Success {
                 Ok((result, abserr))
@@ -430,7 +432,7 @@ impl VegasMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace
     /// to be reused for different integrations.
     pub fn init(&mut self) -> ::Value {
-        unsafe { ffi::gsl_monte_vegas_init(self.s) }
+        ::Value::from(unsafe { ffi::gsl_monte_vegas_init(self.s) })
     }
 
     /// This routines uses the VEGAS Monte Carlo algorithm to integrate the function f over the dim-dimensional
@@ -465,15 +467,16 @@ impl VegasMonteCarlo {
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ffi::gsl_monte_vegas_integrate(&mut func as *mut _ as *mut c_void,
-                                                     xl.as_ptr(),
-                                                     xu.as_ptr(),
-                                                     xl.len(),
-                                                     t_calls,
-                                                     ffi::FFI::unwrap_unique(r),
-                                                     self.s,
-                                                     (&mut result) as *mut c_double,
-                                                     (&mut abserr) as *mut c_double);
+            let ret = ::Value::from(
+                ffi::gsl_monte_vegas_integrate(&mut func as *mut _ as *mut c_void,
+                                               xl.as_ptr(),
+                                               xu.as_ptr(),
+                                               xl.len(),
+                                               t_calls,
+                                               ffi::FFI::unwrap_unique(r),
+                                               self.s,
+                                               (&mut result) as *mut c_double,
+                                               (&mut abserr) as *mut c_double));
 
             if ret == ::Value::Success {
                 Ok((result, abserr))
@@ -574,7 +577,7 @@ impl<'a> VegasParams<'a> {
                 alpha: alpha,
                 iterations: iterations,
                 stage: stage,
-                mode: mode,
+                mode: mode.into(),
                 verbose: verbosity.to_int(),
                 ostream: stream,
             },
@@ -590,7 +593,7 @@ impl<'a> ::std::default::Default for VegasParams<'a> {
                 alpha: 1.5,
                 iterations: 5,
                 stage: 0,
-                mode: ::VegasMode::ImportanceOnly,
+                mode: ::VegasMode::ImportanceOnly.into(),
                 verbose: -1,
                 ostream: ::std::ptr::null_mut(),
             },

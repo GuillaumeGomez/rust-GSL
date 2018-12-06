@@ -86,7 +86,7 @@ impl MultiSet {
 
     /// This function copies the elements of the multiset self into the multiset dest. The two multisets must have the same size.
     pub fn copy(&self, dest: &mut MultiSet) -> enums::Value {
-        unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c) }
+        enums::Value::from(unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c) })
     }
 
     /// This function returns the value of the i-th element of the multiset c. If i lies outside the allowed range of 0 to k-1 then the
@@ -113,20 +113,20 @@ impl MultiSet {
     /// This function checks that the multiset self is valid. The k elements should lie in the range 0 to n-1, with each value occurring in
     /// nondecreasing order.
     pub fn valid(&self) -> enums::Value {
-        unsafe { ffi::gsl_multiset_valid(self.c) }
+        enums::Value::from(unsafe { ffi::gsl_multiset_valid(self.c) })
     }
 
     /// This function advances the multiset self to the next multiset element in lexicographic order and returns ::Value::Success. If no
     /// further multisets elements are available it returns enums::value::Failure and leaves self unmodified. Starting with the first multiset and
     /// repeatedly applying this function will iterate through all possible multisets of a given order.
     pub fn next(&mut self) -> enums::Value {
-        unsafe { ffi::gsl_multiset_next(self.c) }
+        enums::Value::from(unsafe { ffi::gsl_multiset_next(self.c) })
     }
 
     /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning ::Value::Success.
     /// If no previous multiset is available it returns enums::value::Failure and leaves self unmodified.
     pub fn prev(&mut self) -> enums::Value {
-        unsafe { ffi::gsl_multiset_prev(self.c) }
+        enums::Value::from(unsafe { ffi::gsl_multiset_prev(self.c) })
     }
 
     pub fn print(&self, writer: &mut Write) -> IoResult<()> {

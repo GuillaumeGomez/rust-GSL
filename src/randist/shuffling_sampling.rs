@@ -54,21 +54,23 @@ pub fn shuffle<T>(r: &mut Rng, base: &mut [T]) {
 /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
 /// ```
 pub fn choose<T>(r: &mut Rng, dest: &mut [T], src: &[T]) -> enums::Value {
-    unsafe { ffi::gsl_ran_choose(ffi::FFI::unwrap_unique(r),
-        dest.as_mut_ptr() as *mut c_void,
-        dest.len() as usize,
-        src.as_ptr() as *mut c_void,
-        src.len() as usize,
-        ::std::mem::size_of::<T>() as usize) }
+    enums::Value::from(unsafe { ffi::gsl_ran_choose(ffi::FFI::unwrap_unique(r),
+                                                    dest.as_mut_ptr() as *mut c_void,
+                                                    dest.len() as usize,
+                                                    src.as_ptr() as *mut c_void,
+                                                    src.len() as usize,
+                                                    ::std::mem::size_of::<T>() as usize)
+    })
 }
 
 /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more
 /// than once in the output sequence dest. There is no requirement that k be less than n in this case.
 pub fn sample<T>(r: &mut Rng, dest: &mut [T], src: &[T]) -> enums::Value {
-    unsafe { ffi::gsl_ran_sample(ffi::FFI::unwrap_unique(r),
-        dest.as_mut_ptr() as *mut c_void,
-        dest.len() as usize,
-        src.as_ptr() as *mut c_void,
-        src.len() as usize,
-        ::std::mem::size_of::<T>() as usize) }
+    enums::Value::from(unsafe { ffi::gsl_ran_sample(ffi::FFI::unwrap_unique(r),
+                                                    dest.as_mut_ptr() as *mut c_void,
+                                                    dest.len() as usize,
+                                                    src.as_ptr() as *mut c_void,
+                                                    src.len() as usize,
+                                                    ::std::mem::size_of::<T>() as usize)
+    })
 }

@@ -183,7 +183,7 @@ impl Rng {
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
     pub fn copy(&self, other: &mut Rng) -> enums::Value {
-        unsafe { ffi::gsl_rng_memcpy(other.r, self.r) }
+        enums::Value::from(unsafe { ffi::gsl_rng_memcpy(other.r, self.r) })
     }
 
     /// This function returns the size of the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,

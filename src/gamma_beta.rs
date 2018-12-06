@@ -26,7 +26,7 @@ pub mod gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gamma_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the Gamma function \Gamma(x), subject to x not being a negative integer or zero.
@@ -41,7 +41,7 @@ pub mod gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lngamma_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the sign of the gamma function and the logarithm of its magnitude, subject to x not being a negative integer or zero.
@@ -51,7 +51,7 @@ pub mod gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lngamma_sgn_e(x, &mut result, sgn) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the regulated Gamma Function \Gamma^*(x) for x > 0. The regulated gamma function is given by,
@@ -80,7 +80,7 @@ pub mod gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gammastar_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the reciprocal of the gamma function, 1/\Gamma(x) using the real Lanczos method.
@@ -93,7 +93,7 @@ pub mod gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gammainv_e(x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes \log(\Gamma(z)) for complex z=z_r+i z_i and z not a negative integer or zero, using the complex Lanczos method.
@@ -104,7 +104,7 @@ pub mod gamma {
         let mut arg = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lngamma_complex_e(zr, zi, &mut lnr, &mut arg) };
 
-        (ret, ::types::Result{val: lnr.val, err: lnr.err}, ::types::Result{val: arg.val, err: arg.err})
+        (enums::Value::from(ret), ::types::Result{val: lnr.val, err: lnr.err}, ::types::Result{val: arg.val, err: arg.err})
     }
 }
 
@@ -127,7 +127,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_fact_e(n, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the double factorial n!! = n(n-2)(n-4) \dots.
@@ -142,7 +142,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_doublefact_e(n, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the logarithm of the factorial of n, \log(n!).
@@ -157,7 +157,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lnfact_e(n, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the logarithm of the double factorial of n, \log(n!!).
@@ -170,7 +170,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lndoublefact_e(n, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the combinatorial factor n choose m = n!/(m!(n-m)!)
@@ -183,7 +183,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_choose_e(n, m, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the logarithm of n choose m. This is equivalent to the sum \log(n!) - \log(m!) - \log((n-m)!).
@@ -196,7 +196,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lnchoose_e(n, m, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the Taylor coefficient x^n / n! for x >= 0, n >= 0.
@@ -209,7 +209,7 @@ pub mod factorials {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_taylorcoeff_e(n, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }
 
@@ -232,7 +232,7 @@ pub mod pochhammer_symbol {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_poch_e(a, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the logarithm of the Pochhammer symbol, \log((a)_x) = \log(\Gamma(a + x)/\Gamma(a)).
@@ -245,7 +245,7 @@ pub mod pochhammer_symbol {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lnpoch_e(a, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// These routines compute the sign of the Pochhammer symbol and the logarithm of its magnitude.
@@ -254,7 +254,7 @@ pub mod pochhammer_symbol {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lnpoch_sgn_e(a, x, &mut result, sgn) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the relative Pochhammer symbol ((a)_x - 1)/x where (a)_x = \Gamma(a + x)/\Gamma(a).
@@ -267,7 +267,7 @@ pub mod pochhammer_symbol {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_pochrel_e(a, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }
 
@@ -286,7 +286,7 @@ pub mod beta {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_beta_e(a, b, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the logarithm of the Beta Function, \log(B(a,b)) subject to a and b not being negative integers.
@@ -299,7 +299,7 @@ pub mod beta {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_lnbeta_e(a, b, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }
 
@@ -318,7 +318,7 @@ pub mod incomplete_gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gamma_inc_e(a, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the normalized incomplete Gamma Function Q(a,x) = 1/\Gamma(a) \int_x^\infty dt t^{a-1} \exp(-t) for a > 0, x >= 0.
@@ -331,7 +331,7 @@ pub mod incomplete_gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gamma_inc_Q_e(a, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the complementary normalized incomplete Gamma Function P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt t^{a-1} \exp(-t) for a > 0, x >= 0.
@@ -348,7 +348,7 @@ pub mod incomplete_gamma {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_gamma_inc_P_e(a, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }
 
@@ -371,6 +371,6 @@ pub mod incomplete_beta {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_beta_inc_e(a, b, x, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }

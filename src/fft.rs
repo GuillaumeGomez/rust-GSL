@@ -169,39 +169,39 @@ pub mod radix2 {
     use ffi;
 
     pub fn forward(data: &mut[f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_forward(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_forward(data.as_mut_ptr(), stride, n) })
     }
 
     pub fn transform(data: &mut[f64], stride: usize, n: usize, sign: ::FftDirection) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_transform(data.as_mut_ptr(), stride, n, sign) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_transform(data.as_mut_ptr(), stride, n, sign.into()) })
     }
 
     pub fn backward(data: &mut[f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_backward(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_backward(data.as_mut_ptr(), stride, n) })
     }
 
     pub fn inverse(data: &mut[f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_inverse(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_inverse(data.as_mut_ptr(), stride, n) })
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     pub fn dif_forward(data: &mut[f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_dif_forward(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_dif_forward(data.as_mut_ptr(), stride, n) })
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     pub fn dif_transform(data: &mut[f64], stride: usize, n: usize, sign: ::FftDirection) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_dif_transform(data.as_mut_ptr(), stride, n, sign) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_dif_transform(data.as_mut_ptr(), stride, n, sign.into()) })
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     pub fn dif_backward(data: &mut[f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_dif_backward(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_dif_backward(data.as_mut_ptr(), stride, n) })
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     pub fn dif_inverse(data: &mut[f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_radix2_dif_inverse(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_radix2_dif_inverse(data.as_mut_ptr(), stride, n) })
     }
 }
 
@@ -226,23 +226,23 @@ pub mod mixed_radix {
     use types::{FftComplexWaveTable, FftComplexWorkspace};
 
     pub fn forward(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_forward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
-            ffi::FFI::unwrap_unique(work)) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_forward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work)) })
     }
 
     pub fn transform(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace, sign: ::FftDirection) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_transform(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
-            ffi::FFI::unwrap_unique(work), sign) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_transform(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work), sign.into()) })
     }
 
     pub fn backward(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_backward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
-            ffi::FFI::unwrap_unique(work)) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_backward(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work)) })
     }
 
     pub fn inverse(data: &mut [f64], stride: usize, n: usize, wavetable: &FftComplexWaveTable, work: &mut FftComplexWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_fft_complex_inverse(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
-            ffi::FFI::unwrap_unique(work)) }
+        enums::Value::from(unsafe { ffi::gsl_fft_complex_inverse(data.as_mut_ptr(), stride, n, ffi::FFI::unwrap_shared(wavetable),
+            ffi::FFI::unwrap_unique(work)) })
     }
 }
 
@@ -280,19 +280,19 @@ pub mod real_radix2 {
     /// Note that the output data can be converted into the full complex sequence using the function gsl_fft_halfcomplex_radix2_unpack described
     /// below.
     pub fn transform(data: &mut [f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_real_radix2_transform(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_real_radix2_transform(data.as_mut_ptr(), stride, n) })
     }
 
     /// This function computes the inverse or backwards in-place radix-2 FFT of length n and stride stride on the half-complex sequence data
     /// stored according the output scheme used by gsl_fft_real_radix2. The result is a real array stored in natural order.
     pub fn inverse(data: &mut [f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_halfcomplex_radix2_inverse(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_halfcomplex_radix2_inverse(data.as_mut_ptr(), stride, n) })
     }
 
     /// This function computes the inverse or backwards in-place radix-2 FFT of length n and stride stride on the half-complex sequence data
     /// stored according the output scheme used by gsl_fft_real_radix2. The result is a real array stored in natural order.
     pub fn backward(data: &mut [f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_halfcomplex_radix2_backward(data.as_mut_ptr(), stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_halfcomplex_radix2_backward(data.as_mut_ptr(), stride, n) })
     }
 
     /// This function converts halfcomplex_coefficient, an array of half-complex coefficients as returned by gsl_fft_real_radix2_transform,
@@ -326,7 +326,7 @@ pub mod real_radix2 {
     ///   }
     /// ```
     pub fn unpack(halfcomplex_coefficient: &mut [f64], complex_coefficient: &mut [f64], stride: usize, n: usize) -> enums::Value {
-        unsafe { ffi::gsl_fft_halfcomplex_radix2_unpack(halfcomplex_coefficient.as_mut_ptr(), complex_coefficient.as_mut_ptr(),
-            stride, n) }
+        enums::Value::from(unsafe { ffi::gsl_fft_halfcomplex_radix2_unpack(halfcomplex_coefficient.as_mut_ptr(), complex_coefficient.as_mut_ptr(),
+            stride, n) })
     }
 }

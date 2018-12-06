@@ -147,7 +147,9 @@ impl RootFSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial search interval [x lower, x upper].
     pub fn set(&mut self, f: &mut RootFunction, x_lower: f64, x_upper: f64) -> ::Value {
-        unsafe { ffi::gsl_root_fsolver_set(self.s, f as *mut RootFunction, x_lower, x_upper) }
+        ::Value::from(unsafe {
+            ffi::gsl_root_fsolver_set(self.s, f as *mut RootFunction, x_lower, x_upper)
+        })
     }
 
     /// The following function drives the iteration of each algorithm. Each function performs one
@@ -161,7 +163,7 @@ impl RootFSolver {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     pub fn iterate(&mut self) -> ::Value {
-        unsafe { ffi::gsl_root_fsolver_iterate(self.s) }
+        ::Value::from(unsafe { ffi::gsl_root_fsolver_iterate(self.s) })
     }
 
     /// Returns the solver type name.
@@ -275,7 +277,9 @@ impl RootFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function and
     /// derivative fdf and the initial guess root.
     pub fn set(&mut self, f: &mut RootFunctionFdf, root: f64) -> ::Value {
-        unsafe { ffi::gsl_root_fdfsolver_set(self.s, f as *mut RootFunctionFdf, root) }
+        ::Value::from(unsafe {
+            ffi::gsl_root_fdfsolver_set(self.s, f as *mut RootFunctionFdf, root)
+        })
     }
 
     /// The following function drives the iteration of each algorithm. Each function performs one
@@ -289,7 +293,7 @@ impl RootFdfSolver {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     pub fn iterate(&mut self) -> ::Value {
-        unsafe { ffi::gsl_root_fdfsolver_iterate(self.s) }
+        ::Value::from(unsafe { ffi::gsl_root_fdfsolver_iterate(self.s) })
     }
 
     /// Returns the solver type name.

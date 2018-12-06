@@ -77,7 +77,9 @@ impl LevinUWorkspace {
     /// truncation error (the difference between two successive extrapolations) and round-off error (propagated from the individual terms)
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
     pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::Value {
-        unsafe { ffi::gsl_sum_levin_u_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr) }
+        enums::Value::from(unsafe {
+            ffi::gsl_sum_levin_u_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr)
+        })
     }
 
     pub fn sum_plain(&self) -> f64 {
@@ -148,7 +150,9 @@ impl LevinUTruncWorkspace {
     /// in abserr_trunc. To improve the reliability of the algorithm the extrapolated values are replaced by moving averages when
     /// calculating the truncation error, smoothing out any fluctuations.
     pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr_trunc: &mut f64) -> enums::Value {
-        unsafe { ffi::gsl_sum_levin_utrunc_accel(array.as_ptr(), array.len() as usize, self.w, sum_accel, abserr_trunc) }
+        enums::Value::from(unsafe {
+            ffi::gsl_sum_levin_utrunc_accel(array.as_ptr(), array.len() as _, self.w, sum_accel, abserr_trunc)
+        })
     }
 
     pub fn sum_plain(&self) -> f64 {

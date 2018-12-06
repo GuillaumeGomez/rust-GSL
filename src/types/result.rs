@@ -11,7 +11,7 @@ pub struct Result {
     /// Contains the value.
     pub val: f64,
     /// Contains an estimate of the absolute error in the value.
-    pub err: f64
+    pub err: f64,
 }
 
 impl Default for Result {
@@ -24,7 +24,7 @@ impl Result {
     pub fn new() -> Result {
         Result {
             val: 0f64,
-            err: 0f64
+            err: 0f64,
         }
     }
 }

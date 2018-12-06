@@ -82,7 +82,7 @@ impl Permutation {
 
     /// This function copies the elements of the permutation src into the permutation dest. The two permutations must have the same size.
     pub fn copy(&self, dest: &mut Permutation) -> enums::Value {
-        unsafe { ffi::gsl_permutation_memcpy(dest.p, self.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_memcpy(dest.p, self.p) })
     }
 
     /// This function returns the value of the i-th element of the permutation p. If i lies outside the allowed range of 0 to n-1 then
@@ -93,7 +93,7 @@ impl Permutation {
 
     /// This function exchanges the i-th and j-th elements of the permutation p.
     pub fn swap(&mut self, i: usize, j: usize) -> enums::Value {
-        unsafe { ffi::gsl_permutation_swap(self.p, i, j) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_swap(self.p, i, j) })
     }
 
     /// This function returns the size of the permutation p.
@@ -108,7 +108,7 @@ impl Permutation {
 
     /// This function checks that the permutation p is valid. The n elements should contain each of the numbers 0 to n-1 once and only once.
     pub fn is_valid(&self) -> bool {
-        match unsafe { ffi::gsl_permutation_valid(self.p) } {
+        match unsafe { ffi::gsl_permutation_valid(self.p) }.into() {
             ::Value::Success => true,
             _ => false
         }
@@ -121,60 +121,66 @@ impl Permutation {
 
     /// This function computes the inverse of the permutation p, storing the result in inv.
     pub fn inverse(&self, inv: &mut Permutation) -> enums::Value {
-        unsafe { ffi::gsl_permutation_inverse(inv.p, self.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_inverse(inv.p, self.p) })
     }
 
     /// This function advances the permutation p to the next permutation in lexicographic order and returns GSL_SUCCESS. If no further
     /// permutations are available it returns GSL_FAILURE and leaves p unmodified. Starting with the identity permutation and repeatedly
     /// applying this function will iterate through all possible permutations of a given order.
     pub fn next(&mut self) -> enums::Value {
-        unsafe { ffi::gsl_permutation_next(self.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_next(self.p) })
     }
 
     /// This function steps backwards from the permutation p to the previous permutation in lexicographic order, returning GSL_SUCCESS.
     /// If no previous permutation is available it returns GSL_FAILURE and leaves p unmodified.
     pub fn prev(&mut self) -> enums::Value {
-        unsafe { ffi::gsl_permutation_prev(self.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_prev(self.p) })
     }
 
     /// This function applies the permutation to the array data of size n with stride stride.
     pub fn permute(&mut self, data: &mut [f64], stride: usize) -> enums::Value {
-        unsafe { ffi::gsl_permute((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize) }
+        enums::Value::from(unsafe {
+            ffi::gsl_permute((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize)
+        })
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
     pub fn permute_inverse(&mut self, data: &mut [f64], stride: usize) -> enums::Value {
-        unsafe { ffi::gsl_permute_inverse((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize) }
+        enums::Value::from(unsafe {
+            ffi::gsl_permute_inverse((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize)
+        })
     }
 
     /// This function applies the permutation p to the elements of the vector v, considered as a row-vector acted on by a permutation
     /// matrix from the right, v' = v P. The j-th column of the permutation matrix P is given by the p_j-th column of the identity matrix.
     /// The permutation p and the vector v must have the same length.
     pub fn permute_vector(&mut self, v: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_permute_vector(self.p, ffi::FFI::unwrap_unique(v)) }
+        enums::Value::from(unsafe { ffi::gsl_permute_vector(self.p, ffi::FFI::unwrap_unique(v)) })
     }
 
     /// This function applies the inverse of the permutation p to the elements of the vector v, considered as a row-vector acted on by an inverse permutation
     /// matrix from the right, v' = v P^T. Note that for permutation matrices the inverse is the same as the transpose. The j-th column of the permutation
     /// matrix P is given by the p_j-th column of the identity matrix. The permutation p and the vector v must have the same length.
     pub fn permute_vector_inverse(&self, v: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap_unique(v)) }
+        enums::Value::from(unsafe {
+            ffi::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap_unique(v))
+        })
     }
 
     /// This function combines the two permutations pa and pb into a single permutation p, where p = pa * pb. The permutation p is equivalent to applying pb
     /// first and then pa.
     pub fn mul(&mut self, pa: &Permutation, pb: &Permutation) -> enums::Value {
-        unsafe { ffi::gsl_permutation_mul(self.p, pa.p, pb.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_mul(self.p, pa.p, pb.p) })
     }
 
     /// This function computes the canonical form of the permutation self and stores it in the output argument q.
     pub fn linear_to_canonical(&self, q: &mut Permutation) -> enums::Value {
-        unsafe { ffi::gsl_permutation_linear_to_canonical(q.p, self.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_linear_to_canonical(q.p, self.p) })
     }
 
     /// This function converts the self permutation in canonical form back into linear form storing it in the output argument p.
     pub fn canonical_to_linear(&self, p: &mut Permutation) -> enums::Value {
-        unsafe { ffi::gsl_permutation_canonical_to_linear(p.p, self.p) }
+        enums::Value::from(unsafe { ffi::gsl_permutation_canonical_to_linear(p.p, self.p) })
     }
 
     /// This function counts the number of inversions in the self permutation. An inversion is any pair of elements that are not in order. For example, the

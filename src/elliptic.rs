@@ -33,7 +33,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_Kcomp_e(k, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
 
         /// This routine computes the complete elliptic integral E(k) to the accuracy specified by the mode variable mode.
@@ -48,7 +48,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_Ecomp_e(k, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
 
         /// This routine computes the complete elliptic integral \Pi(k,n) to the accuracy specified by the mode variable mode.
@@ -63,7 +63,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_Pcomp_e(k, n, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
     }
 
@@ -84,7 +84,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_F_e(phi, k, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
 
         /// This routine computes the incomplete elliptic integral E(\phi,k) to the accuracy specified by the mode variable mode.
@@ -99,7 +99,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_E_e(phi, k, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
 
         /// This routine computes the incomplete elliptic integral \Pi(\phi,k,n) to the accuracy specified by the mode variable mode.
@@ -114,7 +114,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_P_e(phi, k, n, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
         
         /// This routine computes the incomplete elliptic integral D(\phi,k) which is defined through the Carlson form RD(x,y,z) by the following relation,
@@ -144,7 +144,7 @@ pub mod legendre {
             let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
             let ret = unsafe { ::ffi::gsl_sf_ellint_D_e(phi, k, n, mode, &mut result) };
 
-            (ret, ::types::Result{val: result.val, err: result.err})
+            (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
         }
     }
 }
@@ -174,7 +174,7 @@ pub mod carlson {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RC_e(x, y, mode, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the incomplete elliptic integral RD(x,y,z) to the accuracy specified by the mode variable mode.
@@ -187,7 +187,7 @@ pub mod carlson {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RD_e(x, y, z, mode, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the incomplete elliptic integral RF(x,y,z) to the accuracy specified by the mode variable mode.
@@ -200,7 +200,7 @@ pub mod carlson {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RF_e(x, y, z, mode, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 
     /// This routine computes the incomplete elliptic integral RJ(x,y,z,p) to the accuracy specified by the mode variable mode.
@@ -213,6 +213,6 @@ pub mod carlson {
         let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
         let ret = unsafe { ::ffi::gsl_sf_ellint_RJ_e(x, y, z, p, mode, &mut result) };
 
-        (ret, ::types::Result{val: result.val, err: result.err})
+        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
 }

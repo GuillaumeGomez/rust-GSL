@@ -20,19 +20,25 @@ pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::Inter
 /// This function returns the interpolated value of y for a given point x, using the interpolation object interp, data arrays xa and ya and
 /// the accelerator acc. When x is outside the range of xa, the error code ::Dom is returned with a value of rgsl::NAN for y.
 pub fn eval_e(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel, y: &mut f64) -> enums::Value {
-    unsafe { ffi::gsl_interp_eval_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc, y) }
+    enums::Value::from(unsafe {
+        ffi::gsl_interp_eval_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc, y)
+    })
 }
 
 /// This function returns the derivative d of an interpolated function for a given point x, using the interpolation object interp, data
 /// arrays xa and ya and the accelerator acc.
 pub fn eval_deriv(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel) -> f64 {
-    unsafe { ffi::gsl_interp_eval_deriv(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc) }
+    unsafe {
+        ffi::gsl_interp_eval_deriv(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc)
+    }
 }
 
 /// This function returns the derivative d of an interpolated function for a given point x, using the interpolation object interp, data
 /// arrays xa and ya and the accelerator acc.
 pub fn eval_deriv_e(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel, d: &mut f64) -> enums::Value {
-    unsafe { ffi::gsl_interp_eval_deriv_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc, d) }
+    enums::Value::from(unsafe {
+        ffi::gsl_interp_eval_deriv_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc, d)
+    })
 }
 
 /// This function returns the second derivative d2 of an interpolated function for a given point x, using the interpolation object interp,
@@ -44,17 +50,23 @@ pub fn eval_deriv2(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut 
 /// This function returns the second derivative d2 of an interpolated function for a given point x, using the interpolation object interp,
 /// data arrays xa and ya and the accelerator acc.
 pub fn eval_deriv2_e(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel, d2: &mut f64) -> enums::Value {
-    unsafe { ffi::gsl_interp_eval_deriv2_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc, d2) }
+    enums::Value::from(unsafe {
+        ffi::gsl_interp_eval_deriv2_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), x, acc, d2)
+    })
 }
 
 /// This function returns the numerical integral result of an interpolated function over the range [a, b], using the interpolation object
 /// interp, data arrays xa and ya and the accelerator acc.
 pub fn eval_integ(interp: &::Interp, xa: &[f64], ya: &[f64], a: f64, b: f64, acc: &mut ::InterpAccel) -> f64 {
-    unsafe { ffi::gsl_interp_eval_integ(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), a, b, acc) }
+    unsafe {
+        ffi::gsl_interp_eval_integ(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), a, b, acc)
+    }
 }
 
 /// This function returns the numerical integral result of an interpolated function over the range [a, b], using the interpolation object
 /// interp, data arrays xa and ya and the accelerator acc.
 pub fn eval_integ_e(interp: &::Interp, xa: &[f64], ya: &[f64], a: f64, b: f64, acc: &mut ::InterpAccel, result: &mut f64) -> enums::Value {
-    unsafe { ffi::gsl_interp_eval_integ_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), a, b, acc, result) }
+    enums::Value::from(unsafe {
+        ffi::gsl_interp_eval_integ_e(ffi::FFI::unwrap_shared(interp), xa.as_ptr(), ya.as_ptr(), a, b, acc, result)
+    })
 }

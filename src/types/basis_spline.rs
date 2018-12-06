@@ -80,14 +80,14 @@ impl BSpLineWorkspace {
     /// This function computes the knots associated with the given breakpoints and stores them
     /// internally in w->knots.
     pub fn knots(&mut self, breakpts: &VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_bspline_knots(ffi::FFI::unwrap_shared(breakpts), self.w) }
+        enums::Value::from(unsafe { ffi::gsl_bspline_knots(ffi::FFI::unwrap_shared(breakpts), self.w) })
     }
 
     /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding
     /// knot vector using the previously specified nbreak parameter.
     /// The knots are stored in w->knots.
     pub fn knots_uniform(&mut self, a: f64, b: f64) -> enums::Value {
-        unsafe { ffi::gsl_bspline_knots_uniform(a, b, self.w) }
+        enums::Value::from(unsafe { ffi::gsl_bspline_knots_uniform(a, b, self.w) })
     }
 
     /// This function evaluates all B-spline basis functions at the position x and stores them in
@@ -99,7 +99,7 @@ impl BSpLineWorkspace {
     /// Computing all the basis functions at once is more efficient than computing them
     /// individually, due to the nature of the defining recurrence relation.
     pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> enums::Value {
-        unsafe { ffi::gsl_bspline_eval(x, ffi::FFI::unwrap_unique(B), self.w) }
+        enums::Value::from(unsafe { ffi::gsl_bspline_eval(x, ffi::FFI::unwrap_unique(B), self.w) })
     }
 
     /// This function evaluates all potentially nonzero B-spline basis functions at the position x
@@ -111,7 +111,7 @@ impl BSpLineWorkspace {
     /// combinations occur, for example, when evaluating an interpolated function).
     pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64, istart: &mut usize,
                          iend: &mut usize) -> enums::Value {
-        unsafe { ffi::gsl_bspline_eval_nonzero(x, ffi::FFI::unwrap_unique(Bk), istart, iend, self.w) }
+        enums::Value::from(unsafe { ffi::gsl_bspline_eval_nonzero(x, ffi::FFI::unwrap_unique(Bk), istart, iend, self.w) })
     }
 
     /// This function returns the number of B-spline coefficients given by n = nbreak + k - 2.
@@ -196,8 +196,9 @@ impl BSpLineDerivWorkspace {
     /// individually, due to the nature of the defining recurrence relation.
     pub fn eval(&mut self, x: f64, nderiv: usize, dB: &mut MatrixF64,
                 w: &mut BSpLineWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_bspline_deriv_eval(x, nderiv, ffi::FFI::unwrap_unique(dB), ffi::FFI::unwrap_unique(w),
-                                             self.w) }
+        enums::Value::from(unsafe {
+            ffi::gsl_bspline_deriv_eval(x, nderiv, ffi::FFI::unwrap_unique(dB),
+                                        ffi::FFI::unwrap_unique(w), self.w) })
     }
 
     /// This function evaluates all potentially nonzero B-spline basis function derivatives of
@@ -214,8 +215,9 @@ impl BSpLineDerivWorkspace {
     /// terms.
     pub fn eval_non_zero(&mut self, x: f64, nderiv: usize, dB: &mut MatrixF64, istart: &mut usize,
                          iend: &mut usize, w: &mut BSpLineWorkspace) -> enums::Value {
-        unsafe { ffi::gsl_bspline_deriv_eval_nonzero(x, nderiv, ffi::FFI::unwrap_unique(dB), istart, iend,
-                                                     ffi::FFI::unwrap_unique(w), self.w) }
+        enums::Value::from(unsafe {
+            ffi::gsl_bspline_deriv_eval_nonzero(x, nderiv, ffi::FFI::unwrap_unique(dB), istart,
+                                                iend, ffi::FFI::unwrap_unique(w), self.w) })
     }
 }
 

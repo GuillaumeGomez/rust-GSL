@@ -23,80 +23,124 @@ impl ::std::convert::From<Value> for GSLResult<()> {
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 pub enum Value {
-    Success = 0,
-    Failure = -1,
+    Success,
+    Failure,
     /// iteration has not converged
-    Continue = -2,
+    Continue,
     /// input domain error, e.g sqrt(-1)
-    Domain = 1,
+    Domain,
     /// output range error, e.g. exp(1e100)
-    Range = 2,
+    Range,
     /// invalid pointer
-    Fault = 3,
+    Fault,
     /// invalid argument supplied by user
-    Invalid = 4,
+    Invalid,
     /// generic failure
-    Failed = 5,
+    Failed,
     /// factorization failed
-    Factorization = 6,
+    Factorization,
     /// sanity check failed - shouldn't happen
-    Sanity = 7,
+    Sanity,
     /// malloc failed
-    NoMemory = 8,
+    NoMemory,
     /// problem with user-supplied function
-    BadFunction = 9,
+    BadFunction,
     /// iterative process is out of control
-    RunAway = 10,
+    RunAway,
     /// exceeded max number of iterations
-    MaxIteration = 11,
+    MaxIteration,
     /// tried to divide by zero
-    ZeroDiv = 12,
+    ZeroDiv,
     /// user specified an invalid tolerance
-    BadTolerance = 13,
+    BadTolerance,
     /// failed to reach the specified tolerance
-    Tolerance = 14,
+    Tolerance,
     /// underflow
-    UnderFlow = 15,
+    UnderFlow,
     /// overflow
-    OverFlow = 16,
+    OverFlow,
     /// loss of accuracy
-    Loss = 17,
+    Loss,
     /// failed because of roundoff error
-    Round = 18,
+    Round,
     /// matrix, vector lengths are not conformant
-    BadLength = 19,
+    BadLength,
     /// matrix not square
-    NotSquare = 20,
+    NotSquare,
     /// apparent singularity detected
-    Singularity = 21,
+    Singularity,
     /// integral or series is divergent
-    Diverge = 22,
+    Diverge,
     /// requested feature is not supported by the hardware
-    Unsupported = 23,
+    Unsupported,
     /// requested feature not (yet) implemented
-    Unimplemented = 24,
+    Unimplemented,
     /// cache limit exceeded
-    Cache = 25,
+    Cache,
     /// table limit exceeded
-    Table = 26,
+    Table,
     /// iteration is not making progress towards solution
-    NoProgress = 27,
+    NoProgress,
     /// jacobian evaluations are not improving the solution
-    NoProgressJacobian = 28,
+    NoProgressJacobian,
     /// cannot reach the specified tolerance in F
-    ToleranceF = 29,
+    ToleranceF,
     /// cannot reach the specified tolerance in X
-    ToleranceX = 30,
+    ToleranceX,
     /// cannot reach the specified tolerance in gradient
-    ToleranceG = 31,
+    ToleranceG,
     /// cannot reach the specified tolerance in gradient
-    EOF = 32,
+    EOF,
+    /// Unknown value.
+    Unknown(i32),
 }
 
-impl Value {
-    pub fn wrap(v: i32) -> Value {
+impl Into<libc::c_int> for Value {
+    fn into(self) -> libc::c_int {
+        match self {
+            Value::Success => 0,
+            Value::Failure => -1,
+            Value::Continue => -2,
+            Value::Domain => 1,
+            Value::Range => 2,
+            Value::Fault => 3,
+            Value::Invalid => 4,
+            Value::Failed => 5,
+            Value::Factorization => 6,
+            Value::Sanity => 7,
+            Value::NoMemory => 8,
+            Value::BadFunction => 9,
+            Value::RunAway => 10,
+            Value::MaxIteration => 11,
+            Value::ZeroDiv => 12,
+            Value::BadTolerance => 13,
+            Value::Tolerance => 14,
+            Value::UnderFlow => 15,
+            Value::OverFlow => 16,
+            Value::Loss => 17,
+            Value::Round => 18,
+            Value::BadLength => 19,
+            Value::NotSquare => 20,
+            Value::Singularity => 21,
+            Value::Diverge => 22,
+            Value::Unsupported => 23,
+            Value::Unimplemented => 24,
+            Value::Cache => 25,
+            Value::Table => 26,
+            Value::NoProgress => 27,
+            Value::NoProgressJacobian => 28,
+            Value::ToleranceF => 29,
+            Value::ToleranceX => 30,
+            Value::ToleranceG => 31,
+            Value::EOF => 32,
+            Value::Unknown(x) => x,
+        }
+    }
+}
+
+impl From<libc::c_int> for Value {
+    fn from(v: libc::c_int) -> Value {
         match v {
             -2 => Value::Continue,
             -1 => Value::Failure,
@@ -133,13 +177,12 @@ impl Value {
             30 => Value::ToleranceX,
             31 => Value::ToleranceG,
             32 => Value::EOF,
-            x  => panic!("Unknow value for Value enum: '{}'", x),
+            x  => Value::Unknown(x),
         }
     }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 pub enum EigenSort {
     /// ascending order in numerical value
     ValAsc,
@@ -151,46 +194,132 @@ pub enum EigenSort {
     AbsDesc,
 }
 
+impl Into<libc::c_int> for EigenSort {
+    fn into(self) -> libc::c_int {
+        match self {
+            EigenSort::ValAsc => 0,
+            EigenSort::ValDesc => 1,
+            EigenSort::AbsAsc => 2,
+            EigenSort::AbsDesc => 3,
+        }
+    }
+}
+
+impl From<libc::c_int> for EigenSort {
+    fn from(v: libc::c_int) -> EigenSort {
+        match v {
+            0 => EigenSort::ValAsc,
+            1 => EigenSort::ValDesc,
+            2 => EigenSort::AbsAsc,
+            3 => EigenSort::AbsDesc,
+            _ => panic!("Unknown EigenSort value"),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 /// this gives the sign in the formula
 ///
+/// ```text
 /// h(f) = \sum x(t) exp(+/- 2 pi i f t)
+/// ```
 ///
 /// where - is the forward transform direction and + the inverse direction
 pub enum FftDirection {
-    Forward = -1,
-    Backward = 1,
+    Forward,
+    Backward,
+}
+
+impl Into<libc::c_int> for FftDirection {
+    fn into(self) -> libc::c_int {
+        match self {
+            FftDirection::Forward => -1,
+            FftDirection::Backward => 1,
+        }
+    }
+}
+
+impl From<libc::c_int> for FftDirection {
+    fn from(v: libc::c_int) -> FftDirection {
+        match v {
+            -1 => FftDirection::Forward,
+            1 => FftDirection::Backward,
+            _ => panic!("Unknown FftDirection value"),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 /// The low-level integration rules in QUADPACK are identified by small integers (1-6). We'll use symbolic constants to refer to them.
 pub enum GaussKonrodRule {
     /// 15 point Gauss-Kronrod rule
-    Gauss15 = 1,
+    Gauss15,
     /// 21 point Gauss-Kronrod rule
-    Gauss21 = 2,
+    Gauss21,
     /// 31 point Gauss-Kronrod rule
-    Gauss31 = 3,
+    Gauss31,
     /// 41 point Gauss-Kronrod rule
-    Gauss41 = 4,
+    Gauss41,
     /// 51 point Gauss-Kronrod rule
-    Gauss51 = 5,
+    Gauss51,
     /// 61 point Gauss-Kronrod rule
-    Gauss61 = 6,
+    Gauss61,
+}
+
+impl Into<libc::c_int> for GaussKonrodRule {
+    fn into(self) -> libc::c_int {
+        match self {
+            GaussKonrodRule::Gauss15 => 1,
+            GaussKonrodRule::Gauss21 => 2,
+            GaussKonrodRule::Gauss31 => 3,
+            GaussKonrodRule::Gauss41 => 4,
+            GaussKonrodRule::Gauss51 => 5,
+            GaussKonrodRule::Gauss61 => 6,
+        }
+    }
+}
+
+impl From<libc::c_int> for GaussKonrodRule {
+    fn from(v: libc::c_int) -> GaussKonrodRule {
+        match v {
+            1 => GaussKonrodRule::Gauss15,
+            2 => GaussKonrodRule::Gauss21,
+            3 => GaussKonrodRule::Gauss31,
+            4 => GaussKonrodRule::Gauss41,
+            5 => GaussKonrodRule::Gauss51,
+            6 => GaussKonrodRule::Gauss61,
+            _ => panic!("Unknown GaussKonrodRule value"),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 /// Used by workspace for QAWO integrator
 pub enum IntegrationQawo {
     Cosine,
     Sine,
 }
 
+impl Into<libc::c_int> for IntegrationQawo {
+    fn into(self) -> libc::c_int {
+        match self {
+            IntegrationQawo::Cosine => 0,
+            IntegrationQawo::Sine => 1,
+        }
+    }
+}
+
+impl From<libc::c_int> for IntegrationQawo {
+    fn from(v: libc::c_int) -> IntegrationQawo {
+        match v {
+            0 => IntegrationQawo::Cosine,
+            1 => IntegrationQawo::Sine,
+            _ => panic!("Unknown IntegrationQawo value"),
+        }
+    }
+}
+
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 /// Used by VegasMonteCarlo struct
 ///
 /// The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_
@@ -199,35 +328,116 @@ pub enum IntegrationQawo {
 /// its own. In low dimensions vegas uses strict stratified sampling (more precisely,
 /// stratified sampling is chosen if there are fewer than 2 bins per box).
 pub enum VegasMode {
-    Importance = 1,
-    ImportanceOnly = 0,
-    Stratified = -1,
+    Importance,
+    ImportanceOnly,
+    Stratified,
+}
+
+impl Into<libc::c_int> for VegasMode {
+    fn into(self) -> libc::c_int {
+        match self {
+            VegasMode::Importance => 1,
+            VegasMode::ImportanceOnly => 0,
+            VegasMode::Stratified => -1,
+        }
+    }
+}
+
+impl From<libc::c_int> for VegasMode {
+    fn from(v: libc::c_int) -> VegasMode {
+        match v {
+            1 => VegasMode::Importance,
+            0 => VegasMode::ImportanceOnly,
+            -1 => VegasMode::Stratified,
+            _ => panic!("Unknown VegasMode value"),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 /// Possible return values for an hadjust() evolution method for ordinary differential equations
 pub enum ODEiv {
     /// step was increased
-    Inc = 1,
+    Inc,
     /// step unchanged
-    Nil = 0,
+    Nil,
     /// step decreased
-    Dec = -1,
+    Dec,
+}
+
+impl Into<libc::c_int> for ODEiv {
+    fn into(self) -> libc::c_int {
+        match self {
+            ODEiv::Inc => 1,
+            ODEiv::Nil => 0,
+            ODEiv::Dec => -1,
+        }
+    }
+}
+
+impl From<libc::c_int> for ODEiv {
+    fn from(v: libc::c_int) -> ODEiv {
+        match v {
+            1 => ODEiv::Inc,
+            0 => ODEiv::Nil,
+            -1 => ODEiv::Dec,
+            _ => panic!("Unknown ODEiv value"),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 pub enum WaveletDirection {
-    Forward = 1,
-    Backward = -1,
+    Forward,
+    Backward,
+}
+
+impl Into<libc::c_int> for WaveletDirection {
+    fn into(self) -> libc::c_int {
+        match self {
+            WaveletDirection::Forward => 1,
+            WaveletDirection::Backward => -1,
+        }
+    }
+}
+
+impl From<libc::c_int> for WaveletDirection {
+    fn from(v: libc::c_int) -> WaveletDirection {
+        match v {
+            1 => WaveletDirection::Forward,
+            -1 => WaveletDirection::Backward,
+            _ => panic!("Unknown WaveletDirection value"),
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-#[repr(C)]
 pub enum SfLegendreNorm {
     Schmidt,
     SphericalHarmonic,
     Full,
     None,
+}
+
+impl Into<libc::c_int> for SfLegendreNorm {
+    fn into(self) -> libc::c_int {
+        match self {
+            SfLegendreNorm::Schmidt => 0,
+            SfLegendreNorm::SphericalHarmonic => 1,
+            SfLegendreNorm::Full => 2,
+            SfLegendreNorm::None => 3,
+        }
+    }
+}
+
+impl From<libc::c_int> for SfLegendreNorm {
+    fn from(v: libc::c_int) -> SfLegendreNorm {
+        match v {
+            0 => SfLegendreNorm::Schmidt,
+            1 => SfLegendreNorm::SphericalHarmonic,
+            2 => SfLegendreNorm::Full,
+            3 => SfLegendreNorm::None,
+            _ => panic!("Unknown SfLegendreNorm value"),
+        }
+    }
 }

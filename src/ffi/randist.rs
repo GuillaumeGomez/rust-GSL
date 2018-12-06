@@ -1,10 +1,8 @@
 //! Random distributions
 
-use libc::{c_double, c_uint, c_void, size_t};
+use libc::{c_double, c_uint, c_void, size_t, c_int};
 
 use super::{gsl_rng, gsl_ran_discrete_t};
-
-use enums;
 
 extern "C" {
     // Random Number Distributions
@@ -249,12 +247,12 @@ extern "C" {
                           src: *mut c_void,
                           n: size_t,
                           size: size_t)
-                          -> enums::Value;
+                          -> c_int;
     pub fn gsl_ran_sample(r: *mut gsl_rng,
                           dest: *mut c_void,
                           k: size_t,
                           src: *mut c_void,
                           n: size_t,
                           size: size_t)
-                          -> enums::Value;
+                          -> c_int;
 }

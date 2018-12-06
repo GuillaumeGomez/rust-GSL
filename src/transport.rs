@@ -18,7 +18,7 @@ pub fn transport_2_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_transport_2_e(x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the transport function J(3,x).
@@ -31,7 +31,7 @@ pub fn transport_3_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_transport_3_e(x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the transport function J(4,x).
@@ -44,7 +44,7 @@ pub fn transport_4_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_transport_4_e(x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }
 
 /// This routine computes the transport function J(5,x).
@@ -57,5 +57,5 @@ pub fn transport_5_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_transport_5_e(x, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }

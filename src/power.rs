@@ -18,7 +18,7 @@ use ffi;
 /// double y = gsl_sf_pow_int(3.0, 12);
 /// ```
 pub fn pow_int(x: f64, n: i32) -> f64 {
-	unsafe { ffi::gsl_sf_pow_int(x, n) }
+    unsafe { ffi::gsl_sf_pow_int(x, n) }
 }
 
 /// This routine computes the power x^n for integer n. The power is computed using the minimum number of multiplications.
@@ -34,5 +34,5 @@ pub fn pow_int_e(x: f64, n: i32) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_pow_int_e(x, n, &mut result) };
 
-    (ret, ::types::Result{val: result.val, err: result.err})
+    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
 }
