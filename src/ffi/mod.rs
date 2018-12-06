@@ -603,7 +603,8 @@ extern "C" {
     // Error functions
     pub fn gsl_sf_erf(x: c_double) -> c_double;
     pub fn gsl_sf_erf_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_set_error_handler(x: fn(*const c_char, *const c_char, c_int, c_int));
+    pub fn gsl_set_error_handler(x: Option<extern "C" fn(*const c_char, *const c_char, c_int, c_int)>);
+    pub fn gsl_set_error_handler_off();
     // Complementary Error functions
     pub fn gsl_sf_erfc(x: c_double) -> c_double;
     pub fn gsl_sf_erfc_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
