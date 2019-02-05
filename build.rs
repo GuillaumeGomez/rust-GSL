@@ -7,14 +7,11 @@ fn main() {
         return;
     }
 
-    match pkg_config::probe_library("gsl") {
-        Ok(lib) => {
+    pkg_config::probe_library("gsl")
+        .map(|lib| {
             if lib.version.starts_with("2.") {
                 println!(r#"cargo:rustc-cfg=feature="v2""#);
             }
-        }
-        Err(e) => {
-            println!("GSL library not found: {:?}", e);
-        }
-    }
+        })
+        .expect("GSL library not found");
 }
