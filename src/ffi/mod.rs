@@ -1460,7 +1460,7 @@ extern "C" {
                           cov00: *mut c_double,
                           cov01: *mut c_double,
                           cov11: *mut c_double,
-                          sumsq: c_double)
+                          sumsq: *mut c_double)
                           -> c_int;
     pub fn gsl_fit_wlinear(x: *const c_double,
                            xstride: size_t,
