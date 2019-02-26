@@ -14,7 +14,7 @@ use enums;
 /// The errors on y are assumed unknown so the variance-covariance matrix for the parameters (c0, c1) is estimated from the scatter of the points around the best-fit line and returned via the parameters (cov00, cov01, cov11).
 /// The sum of squares of the residuals from the best-fit line is returned in sumsq. Note: the correlation coefficient of the data can be computed using gsl_stats_correlation (see [`Correlation`](http://www.gnu.org/software/gsl/manual/html_node/Correlation.html#Correlation)), it does not depend on the fit.
 pub fn linear(x: &[f64], xstride: usize, y: &[f64], ystride: usize, n: usize, c0: &mut f64, c1: &mut f64, cov00: &mut f64,
-    cov01: &mut f64, cov11: &mut f64, sumsq: f64) -> enums::Value {
+    cov01: &mut f64, cov11: &mut f64, sumsq: &mut f64) -> enums::Value {
     enums::Value::from(unsafe { ::ffi::gsl_fit_linear(x.as_ptr(), xstride, y.as_ptr(), ystride, n, c0, c1, cov00, cov01, cov11, sumsq) })
 }
 
