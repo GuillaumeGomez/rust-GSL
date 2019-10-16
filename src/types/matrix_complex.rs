@@ -140,7 +140,7 @@ impl MatrixComplexF64 {
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF64, enums::Value)> {
-        let dest = unsafe { ffi::gsl_matrix_complex_alloc((*self.mat).size1, (*self.mat).size2) };
+        let dest = unsafe { ffi::gsl_matrix_complex_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
             None
@@ -432,7 +432,7 @@ impl MatrixComplexF32 {
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF32, enums::Value)> {
-        let dest = unsafe { ffi::gsl_matrix_complex_float_alloc((*self.mat).size1, (*self.mat).size2) };
+        let dest = unsafe { ffi::gsl_matrix_complex_float_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
             None
