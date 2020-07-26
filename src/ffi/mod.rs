@@ -1212,8 +1212,8 @@ extern "C" {
     pub fn gsl_sf_mathieu_alloc(n: size_t, qmax: c_double) -> *mut gsl_sf_mathieu_workspace;
     pub fn gsl_sf_mathieu_free(work: *mut gsl_sf_mathieu_workspace);
     // Mathieu functions Characteristic Values
-    pub fn gsl_sf_mathieu_a(n: c_int, q: c_double, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_mathieu_b(n: c_int, q: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_mathieu_a_e(n: c_int, q: c_double, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_mathieu_b_e(n: c_int, q: c_double, result: *mut gsl_sf_result) -> c_int;
     pub fn gsl_sf_mathieu_a_array(order_min: c_int,
                                   order_max: c_int,
                                   q: c_double,
@@ -1227,12 +1227,12 @@ extern "C" {
                                   result_array: *mut c_double)
                                   -> c_int;
     // Angular Mathieu functions
-    pub fn gsl_sf_mathieu_ce(n: c_int,
+    pub fn gsl_sf_mathieu_ce_e(n: c_int,
                              q: c_double,
                              x: c_double,
                              result: *mut gsl_sf_result)
                              -> c_int;
-    pub fn gsl_sf_mathieu_se(n: c_int,
+    pub fn gsl_sf_mathieu_se_e(n: c_int,
                              q: c_double,
                              x: c_double,
                              result: *mut gsl_sf_result)
@@ -1252,13 +1252,13 @@ extern "C" {
                                    result_array: *mut c_double)
                                    -> c_int;
     // Radial Mathieu functions
-    pub fn gsl_sf_mathieu_Mc(j: c_int,
+    pub fn gsl_sf_mathieu_Mc_e(j: c_int,
                              n: c_int,
                              q: c_double,
                              x: c_double,
                              result: *mut gsl_sf_result)
                              -> c_int;
-    pub fn gsl_sf_mathieu_Ms(j: c_int,
+    pub fn gsl_sf_mathieu_Ms_e(j: c_int,
                              n: c_int,
                              q: c_double,
                              x: c_double,

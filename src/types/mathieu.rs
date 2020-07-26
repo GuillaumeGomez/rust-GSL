@@ -44,7 +44,7 @@ impl MathieuWorkspace {
     /// This routine computes the characteristic values a_n(q), b_n(q) of the Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_a(n: i32, q: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_a(n, q, &mut result) };
+        let ret = unsafe { ffi::gsl_sf_mathieu_a_e(n, q, &mut result) };
 
         (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
@@ -52,7 +52,7 @@ impl MathieuWorkspace {
     /// This routine computes the characteristic values a_n(q), b_n(q) of the Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_b(n: i32, q: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_b(n, q, &mut result) };
+        let ret = unsafe { ffi::gsl_sf_mathieu_b_e(n, q, &mut result) };
 
         (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
@@ -74,7 +74,7 @@ impl MathieuWorkspace {
     /// This routine computes the angular Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_ce(n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_ce(n, q, x, &mut result) };
+        let ret = unsafe { ffi::gsl_sf_mathieu_ce_e(n, q, x, &mut result) };
 
         (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
@@ -82,7 +82,7 @@ impl MathieuWorkspace {
     /// This routine computes the angular Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_se(n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_se(n, q, x, &mut result) };
+        let ret = unsafe { ffi::gsl_sf_mathieu_se_e(n, q, x, &mut result) };
 
         (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
@@ -106,7 +106,7 @@ impl MathieuWorkspace {
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
     pub fn mathieu_Mc(j: i32, n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_Mc(j, n, q, x, &mut result) };
+        let ret = unsafe { ffi::gsl_sf_mathieu_Mc_e(j, n, q, x, &mut result) };
 
         (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
@@ -116,7 +116,7 @@ impl MathieuWorkspace {
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
     pub fn mathieu_Ms(j: i32, n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_Ms(j, n, q, x, &mut result) };
+        let ret = unsafe { ffi::gsl_sf_mathieu_Ms_e(j, n, q, x, &mut result) };
 
         (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
     }
