@@ -4,6 +4,7 @@
 
 #![macro_use]
 
+#[doc(hidden)]
 macro_rules! rgsl_error(
     ($msg:expr, $err_value:expr) => (
         {
@@ -20,6 +21,7 @@ macro_rules! rgsl_error(
     );
 );
 
+#[doc(hidden)]
 #[macro_export]
 macro_rules! ffi_wrap {
     ($name:tt, $cast:tt) => {
