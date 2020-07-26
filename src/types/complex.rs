@@ -4,10 +4,10 @@
 
 // TODO : port to Rust type : http://doc.rust-lang.org/num/complex/struct.Complex.html
 
-use std::fmt::{Formatter, Debug};
-use std::fmt;
-use std::default::Default;
 use ffi;
+use std::default::Default;
+use std::fmt;
+use std::fmt::{Debug, Formatter};
 
 #[doc(hidden)]
 pub trait CFFI<T> {
@@ -24,7 +24,7 @@ pub trait FFFI<T> {
 #[repr(C)]
 #[derive(Copy, PartialEq)]
 pub struct ComplexF64 {
-    pub dat: [f64; 2]
+    pub dat: [f64; 2],
 }
 
 impl ComplexF64 {
@@ -106,7 +106,7 @@ impl ComplexF64 {
     pub fn div_real(&self, x: f64) -> ComplexF64 {
         unsafe { ::ffi::gsl_complex_div_real(self.unwrap(), x).wrap() }
     }
-    
+
     /// This function returns the sum of the complex number a and the imaginary number iy, z=a+iy.
     pub fn add_imag(&self, x: f64) -> ComplexF64 {
         unsafe { ::ffi::gsl_complex_add_imag(self.unwrap(), x).wrap() }
@@ -148,7 +148,7 @@ impl ComplexF64 {
 
     /// This function returns the square root of the complex number z, \sqrt z.
     ///
-    /// The branch cut is the negative real axis. The result always lies in the right half of the 
+    /// The branch cut is the negative real axis. The result always lies in the right half of the
     /// omplex plane.
     pub fn sqrt(&self) -> ComplexF64 {
         unsafe { ::ffi::gsl_complex_sqrt(self.unwrap()).wrap() }
@@ -234,7 +234,7 @@ impl ComplexF64 {
     }
 
     /// This function returns the complex arcsine of the real number z, \arcsin(z).
-    /// 
+    ///
     /// * For z between -1 and 1, the function returns a real value in the range [-\pi/2,\pi/2].
     /// * For z less than -1 the result has a real part of -\pi/2 and a positive imaginary part.
     /// * For z greater than 1 the result has a real part of \pi/2 and a negative imaginary part.
@@ -249,7 +249,7 @@ impl ComplexF64 {
     }
 
     /// This function returns the complex arccosine of the real number z, \arccos(z).
-    /// 
+    ///
     /// * For z between -1 and 1, the function returns a real value in the range [0,\pi].
     /// * For z less than -1 the result has a real part of \pi and a negative imaginary part.
     /// * For z greater than 1 the result is purely imaginary and positive.
@@ -388,16 +388,14 @@ impl Debug for ComplexF64 {
 impl Clone for ComplexF64 {
     fn clone(&self) -> ComplexF64 {
         ComplexF64 {
-            dat: [self.dat[0], self.dat[1]]
+            dat: [self.dat[0], self.dat[1]],
         }
     }
 }
 
 impl Default for ComplexF64 {
     fn default() -> ComplexF64 {
-        ComplexF64 {
-            dat: [0f64, 0f64]
-        }
+        ComplexF64 { dat: [0f64, 0f64] }
     }
 }
 
@@ -452,7 +450,7 @@ impl FFFI<ComplexF64> for ffi::gsl_complex {
 #[repr(C)]
 #[derive(Copy, PartialEq)]
 pub struct ComplexF32 {
-    pub dat: [f32; 2]
+    pub dat: [f32; 2],
 }
 
 impl ComplexF32 {
@@ -533,7 +531,7 @@ impl ComplexF32 {
     pub fn div_real(&self, x: f32) -> ComplexF32 {
         unsafe { ::ffi::gsl_complex_div_real(self.unwrap(), x as f64).wrap() }
     }
-    
+
     /// This function returns the sum of the complex number a and the imaginary number iy, z=a+iy.
     pub fn add_imag(&self, x: f32) -> ComplexF32 {
         unsafe { ::ffi::gsl_complex_add_imag(self.unwrap(), x as f64).wrap() }
@@ -657,7 +655,7 @@ impl ComplexF32 {
     }
 
     /// This function returns the complex arcsine of the real number z, \arcsin(z).
-    /// 
+    ///
     /// * For z between -1 and 1, the function returns a real value in the range [-\pi/2,\pi/2].
     /// * For z less than -1 the result has a real part of -\pi/2 and a positive imaginary part.
     /// * For z greater than 1 the result has a real part of \pi/2 and a negative imaginary part.
@@ -672,7 +670,7 @@ impl ComplexF32 {
     }
 
     /// This function returns the complex arccosine of the real number z, \arccos(z).
-    /// 
+    ///
     /// * For z between -1 and 1, the function returns a real value in the range [0,\pi].
     /// * For z less than -1 the result has a real part of \pi and a negative imaginary part.
     /// * For z greater than 1 the result is purely imaginary and positive.
@@ -686,7 +684,7 @@ impl ComplexF32 {
         unsafe { ::ffi::gsl_complex_arctan(self.unwrap()).wrap() }
     }
 
-    /// This function returns the complex arcsecant of the complex number z, \arcsec(z) = 
+    /// This function returns the complex arcsecant of the complex number z, \arcsec(z) =
     /// \arccos(1/z).
     pub fn arcsec(&self) -> ComplexF32 {
         unsafe { ::ffi::gsl_complex_arcsec(self.unwrap()).wrap() }
@@ -772,7 +770,7 @@ impl ComplexF32 {
         unsafe { ::ffi::gsl_complex_arccosh_real(z as f64).wrap() }
     }
 
-    /// This function returns the complex hyperbolic arctangent of the complex number z, 
+    /// This function returns the complex hyperbolic arctangent of the complex number z,
     /// arctanh(z).
     ///
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
@@ -813,16 +811,14 @@ impl Debug for ComplexF32 {
 impl Clone for ComplexF32 {
     fn clone(&self) -> ComplexF32 {
         ComplexF32 {
-            dat: [self.dat[0], self.dat[1]]
+            dat: [self.dat[0], self.dat[1]],
         }
     }
 }
 
 impl Default for ComplexF32 {
     fn default() -> ComplexF32 {
-        ComplexF32 {
-            dat: [0f32, 0f32]
-        }
+        ComplexF32 { dat: [0f32, 0f32] }
     }
 }
 
@@ -1106,7 +1102,10 @@ fn complex_f64() {
     let v2 = ComplexF64::rect(1., -1.);
     assert_eq!(v2, ComplexF64 { dat: [1., -1.] });
     let v = ComplexF64::polar(5., 7.);
-    assert_eq!(format!("{:.4} {:.4}", v.dat[0], v.dat[1]), "3.7695 3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v.dat[0], v.dat[1]),
+        "3.7695 3.2849".to_owned()
+    );
 
     let arg = v.arg();
     assert_eq!(format!("{:.4}", arg), "0.7168".to_owned());
@@ -1118,115 +1117,274 @@ fn complex_f64() {
     assert_eq!(format!("{:.4}", arg), "1.6094".to_owned());
 
     let v3 = v.add(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "4.7695 2.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "4.7695 2.2849".to_owned()
+    );
     let v3 = v.sub(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.7695 4.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.7695 4.2849".to_owned()
+    );
     let v3 = v.mul(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "7.0544 -0.4846".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "7.0544 -0.4846".to_owned()
+    );
     let v3 = v.div(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.2423 3.5272".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.2423 3.5272".to_owned()
+    );
     let v3 = v.add_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "8.7695 3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "8.7695 3.2849".to_owned()
+    );
     let v3 = v.sub_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-1.2305 3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-1.2305 3.2849".to_owned()
+    );
     let v3 = v.mul_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "18.8476 16.4247".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "18.8476 16.4247".to_owned()
+    );
     let v3 = v.div_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.7539 0.6570".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.7539 0.6570".to_owned()
+    );
 
     let v3 = v.add_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "3.7695 8.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "3.7695 8.2849".to_owned()
+    );
     let v3 = v.sub_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "3.7695 -1.7151".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "3.7695 -1.7151".to_owned()
+    );
     let v3 = v.mul_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-16.4247 18.8476".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-16.4247 18.8476".to_owned()
+    );
     let v3 = v.div_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.6570 -0.7539".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.6570 -0.7539".to_owned()
+    );
 
     let v3 = v.conjugate();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "3.7695 -3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "3.7695 -3.2849".to_owned()
+    );
     let v3 = v.inverse();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1508 -0.1314".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1508 -0.1314".to_owned()
+    );
     let v3 = v.negative();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-3.7695 -3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-3.7695 -3.2849".to_owned()
+    );
     let v3 = v.sqrt();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.0940 0.7844".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.0940 0.7844".to_owned()
+    );
     let v3 = ComplexF64::sqrt_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.2361 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.2361 0.0000".to_owned()
+    );
 
     let v3 = v.pow(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "6.4240 -7.9737".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "6.4240 -7.9737".to_owned()
+    );
     let v3 = v.pow_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-2824.0381 -1338.0708".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-2824.0381 -1338.0708".to_owned()
+    );
     let v3 = v.exp();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-42.9142 -6.1938".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-42.9142 -6.1938".to_owned()
+    );
     let v3 = v.log();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.6094 0.7168".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.6094 0.7168".to_owned()
+    );
     let v3 = v.log10();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.6990 0.3113".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.6990 0.3113".to_owned()
+    );
     let v3 = v.log_b(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0071 2.0523".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0071 2.0523".to_owned()
+    );
     let v3 = v.sin();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-7.8557 -10.7913".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-7.8557 -10.7913".to_owned()
+    );
     let v3 = v.cos();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-10.8216 7.8337".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-10.8216 7.8337".to_owned()
+    );
     let v3 = v.tan();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.0027 0.9991".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.0027 0.9991".to_owned()
+    );
 
     let v3 = v.sec();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0606 -0.0439".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0606 -0.0439".to_owned()
+    );
     let v3 = v.csc();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0441 0.0606".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0441 0.0606".to_owned()
+    );
     let v3 = v.cot();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.0027 -1.0009".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.0027 -1.0009".to_owned()
+    );
     let v3 = v.arcsin();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.8440 2.3014".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.8440 2.3014".to_owned()
+    );
     let v3 = ComplexF64::arcsin_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.5708 -2.2924".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.5708 -2.2924".to_owned()
+    );
     let v3 = v.arccos();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.7268 -2.3014".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.7268 -2.3014".to_owned()
+    );
     let v3 = ComplexF64::arccos_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.0000 2.2924".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.0000 2.2924".to_owned()
+    );
     let v3 = v.arctan();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.4186 0.1291".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.4186 0.1291".to_owned()
+    );
     let v3 = v.arcsec();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.4208 0.1325".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.4208 0.1325".to_owned()
+    );
     let v3 = ComplexF64::arcsec_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.3694 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.3694 0.0000".to_owned()
+    );
     let v3 = v.arccsc();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1500 -0.1325".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1500 -0.1325".to_owned()
+    );
     let v3 = ComplexF64::arccsc_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.2014 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.2014 0.0000".to_owned()
+    );
     let v3 = v.arccot();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1522 -0.1291".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1522 -0.1291".to_owned()
+    );
     let v3 = v.sinh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-21.4457 -3.0986".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-21.4457 -3.0986".to_owned()
+    );
     let v3 = v.cosh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-21.4685 -3.0953".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-21.4685 -3.0953".to_owned()
+    );
     let v3 = v.tanh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.9990 0.0003".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.9990 0.0003".to_owned()
+    );
     let v3 = v.sech();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0456 0.0066".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0456 0.0066".to_owned()
+    );
     let v3 = v.csch();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0457 0.0066".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0457 0.0066".to_owned()
+    );
     let v3 = v.coth();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.0010 -0.0003".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.0010 -0.0003".to_owned()
+    );
     let v3 = v.arcsinh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.3041 0.7070".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.3041 0.7070".to_owned()
+    );
     let v3 = v.arccosh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.3014 0.7268".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.3014 0.7268".to_owned()
+    );
     let v3 = ComplexF64::arccosh_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.2924 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.2924 0.0000".to_owned()
+    );
     let v3 = v.arctanh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1493 1.4372".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1493 1.4372".to_owned()
+    );
     let v3 = ComplexF64::arctanh_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.2027 -1.5708".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.2027 -1.5708".to_owned()
+    );
     let v3 = v.arcsech();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1325 -1.4208".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1325 -1.4208".to_owned()
+    );
     let v3 = v.arccsch();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1515 -0.1303".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1515 -0.1303".to_owned()
+    );
     let v3 = v.arccoth();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1493 -0.1336".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1493 -0.1336".to_owned()
+    );
 }
 
 #[test]
@@ -1236,7 +1394,10 @@ fn complex_f32() {
     let v2 = ComplexF32::rect(1., -1.);
     assert_eq!(v2, ComplexF32 { dat: [1., -1.] });
     let v = ComplexF32::polar(5., 7.);
-    assert_eq!(format!("{:.4} {:.4}", v.dat[0], v.dat[1]), "3.7695 3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v.dat[0], v.dat[1]),
+        "3.7695 3.2849".to_owned()
+    );
 
     let arg = v.arg();
     assert_eq!(format!("{:.4}", arg), "0.7168".to_owned());
@@ -1248,113 +1409,272 @@ fn complex_f32() {
     assert_eq!(format!("{:.4}", arg), "1.6094".to_owned());
 
     let v3 = v.add(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "4.7695 2.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "4.7695 2.2849".to_owned()
+    );
     let v3 = v.sub(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.7695 4.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.7695 4.2849".to_owned()
+    );
     let v3 = v.mul(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "7.0544 -0.4846".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "7.0544 -0.4846".to_owned()
+    );
     let v3 = v.div(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.2423 3.5272".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.2423 3.5272".to_owned()
+    );
     let v3 = v.add_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "8.7695 3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "8.7695 3.2849".to_owned()
+    );
     let v3 = v.sub_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-1.2305 3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-1.2305 3.2849".to_owned()
+    );
     let v3 = v.mul_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "18.8476 16.4247".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "18.8476 16.4247".to_owned()
+    );
     let v3 = v.div_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.7539 0.6570".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.7539 0.6570".to_owned()
+    );
 
     let v3 = v.add_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "3.7695 8.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "3.7695 8.2849".to_owned()
+    );
     let v3 = v.sub_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "3.7695 -1.7151".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "3.7695 -1.7151".to_owned()
+    );
     let v3 = v.mul_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-16.4247 18.8476".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-16.4247 18.8476".to_owned()
+    );
     let v3 = v.div_imag(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.6570 -0.7539".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.6570 -0.7539".to_owned()
+    );
 
     let v3 = v.conjugate();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "3.7695 -3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "3.7695 -3.2849".to_owned()
+    );
     let v3 = v.inverse();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1508 -0.1314".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1508 -0.1314".to_owned()
+    );
     let v3 = v.negative();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-3.7695 -3.2849".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-3.7695 -3.2849".to_owned()
+    );
     let v3 = v.sqrt();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.0940 0.7844".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.0940 0.7844".to_owned()
+    );
     let v3 = ComplexF32::sqrt_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.2361 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.2361 0.0000".to_owned()
+    );
 
     let v3 = v.pow(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "6.4240 -7.9737".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "6.4240 -7.9737".to_owned()
+    );
     let v3 = v.pow_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-2824.0381 -1338.0712".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-2824.0381 -1338.0712".to_owned()
+    );
     let v3 = v.exp();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-42.9142 -6.1938".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-42.9142 -6.1938".to_owned()
+    );
     let v3 = v.log();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.6094 0.7168".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.6094 0.7168".to_owned()
+    );
     let v3 = v.log10();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.6990 0.3113".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.6990 0.3113".to_owned()
+    );
     let v3 = v.log_b(&v2);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0071 2.0523".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0071 2.0523".to_owned()
+    );
     let v3 = v.sin();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-7.8557 -10.7913".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-7.8557 -10.7913".to_owned()
+    );
     let v3 = v.cos();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-10.8216 7.8337".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-10.8216 7.8337".to_owned()
+    );
     let v3 = v.tan();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.0027 0.9991".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.0027 0.9991".to_owned()
+    );
 
     let v3 = v.sec();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0606 -0.0439".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0606 -0.0439".to_owned()
+    );
     let v3 = v.csc();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0441 0.0606".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0441 0.0606".to_owned()
+    );
     let v3 = v.cot();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.0027 -1.0009".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.0027 -1.0009".to_owned()
+    );
     let v3 = v.arcsin();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.8440 2.3014".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.8440 2.3014".to_owned()
+    );
     let v3 = ComplexF32::arcsin_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.5708 -2.2924".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.5708 -2.2924".to_owned()
+    );
     let v3 = v.arccos();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.7268 -2.3014".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.7268 -2.3014".to_owned()
+    );
     let v3 = ComplexF32::arccos_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.0000 2.2924".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.0000 2.2924".to_owned()
+    );
     let v3 = v.arctan();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.4186 0.1291".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.4186 0.1291".to_owned()
+    );
     let v3 = v.arcsec();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.4208 0.1325".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.4208 0.1325".to_owned()
+    );
     let v3 = ComplexF32::arcsec_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.3694 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.3694 0.0000".to_owned()
+    );
     let v3 = v.arccsc();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1500 -0.1325".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1500 -0.1325".to_owned()
+    );
     let v3 = ComplexF32::arccsc_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.2014 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.2014 0.0000".to_owned()
+    );
     let v3 = v.arccot();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1522 -0.1291".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1522 -0.1291".to_owned()
+    );
     let v3 = v.sinh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-21.4457 -3.0986".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-21.4457 -3.0986".to_owned()
+    );
     let v3 = v.cosh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-21.4685 -3.0953".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-21.4685 -3.0953".to_owned()
+    );
     let v3 = v.tanh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.9990 0.0003".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.9990 0.0003".to_owned()
+    );
     let v3 = v.sech();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0456 0.0066".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0456 0.0066".to_owned()
+    );
     let v3 = v.csch();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "-0.0457 0.0066".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "-0.0457 0.0066".to_owned()
+    );
     let v3 = v.coth();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "1.0010 -0.0003".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "1.0010 -0.0003".to_owned()
+    );
     let v3 = v.arcsinh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.3041 0.7070".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.3041 0.7070".to_owned()
+    );
     let v3 = v.arccosh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.3014 0.7268".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.3014 0.7268".to_owned()
+    );
     let v3 = ComplexF32::arccosh_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "2.2924 0.0000".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "2.2924 0.0000".to_owned()
+    );
     let v3 = v.arctanh();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1493 1.4372".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1493 1.4372".to_owned()
+    );
     let v3 = ComplexF32::arctanh_real(5.);
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.2027 -1.5708".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.2027 -1.5708".to_owned()
+    );
     let v3 = v.arcsech();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1325 -1.4208".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1325 -1.4208".to_owned()
+    );
     let v3 = v.arccsch();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1515 -0.1303".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1515 -0.1303".to_owned()
+    );
     let v3 = v.arccoth();
-    assert_eq!(format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]), "0.1493 -0.1336".to_owned());
+    assert_eq!(
+        format!("{:.4} {:.4}", v3.dat[0], v3.dat[1]),
+        "0.1493 -0.1336".to_owned()
+    );
 }

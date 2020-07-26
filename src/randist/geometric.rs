@@ -7,9 +7,9 @@ use types::Rng;
 
 /// This function returns a random integer from the geometric distribution, the number of independent trials with probability p until the first success.
 /// The probability distribution for geometric variates is,
-/// 
+///
 /// p(k) =  p (1-p)^(k-1)
-/// 
+///
 /// for k >= 1. Note that the distribution begins with k=1 with this definition. There is another convention in which the exponent k-1 is replaced by k.
 pub fn geometric(r: &mut Rng, p: f64) -> u32 {
     unsafe { ffi::gsl_ran_geometric(ffi::FFI::unwrap_unique(r), p) }

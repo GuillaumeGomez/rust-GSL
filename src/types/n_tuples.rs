@@ -5,20 +5,20 @@
 /*!
 #N-tuples
 
-This chapter describes functions for creating and manipulating ntuples, sets of values associated with events. The ntuples are stored in 
+This chapter describes functions for creating and manipulating ntuples, sets of values associated with events. The ntuples are stored in
 files. Their values can be extracted in any combination and booked in a histogram using a selection function.
 
-The values to be stored are held in a user-defined data structure, and an ntuple is created associating this data structure with a file. 
+The values to be stored are held in a user-defined data structure, and an ntuple is created associating this data structure with a file.
 The values are then written to the file (normally inside a loop) using the ntuple functions described below.
 
-A histogram can be created from ntuple data by providing a selection function and a value function. The selection function specifies 
-whether an event should be included in the subset to be analyzed or not. The value function computes the entry to be added to the histogram 
+A histogram can be created from ntuple data by providing a selection function and a value function. The selection function specifies
+whether an event should be included in the subset to be analyzed or not. The value function computes the entry to be added to the histogram
 for each event.
 
 ##Histogramming ntuple values
 
-Once an ntuple has been created its contents can be histogrammed in various ways using the function gsl_ntuple_project. Two user-defined 
-functions must be provided, a function to select events and a function to compute scalar values. The selection function and the value 
+Once an ntuple has been created its contents can be histogrammed in various ways using the function gsl_ntuple_project. Two user-defined
+functions must be provided, a function to select events and a function to compute scalar values. The selection function and the value
 function both accept the ntuple row as a first argument and other parameters as a second argument.
 
 The selection function determines which ntuple rows are selected for histogramming.
@@ -28,16 +28,16 @@ The selection function determines which ntuple rows are selected for histogrammi
 Further information on the use of ntuples can be found in the documentation for the CERN packages PAW and HBOOK (available online).
 !*/
 
-use ffi;
 use enums;
+use ffi;
 use libc::{feof, fread};
-use std::marker::PhantomData;
 use std::ffi::CString;
+use std::marker::PhantomData;
 use std::os::raw::c_char;
 
 pub struct NTuples<T> {
     n: *mut ffi::gsl_ntuple,
-    p: PhantomData<T>
+    p: PhantomData<T>,
 }
 
 impl<T> NTuples<T> {
@@ -48,7 +48,11 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_create(c_str.as_ptr() as *mut c_char, t_data, ::std::mem::size_of::<T>() as usize)
+            ffi::gsl_ntuple_create(
+                c_str.as_ptr() as *mut c_char,
+                t_data,
+                ::std::mem::size_of::<T>() as usize,
+            )
         };
 
         if tmp.is_null() {
@@ -56,7 +60,7 @@ impl<T> NTuples<T> {
         } else {
             Some(NTuples {
                 n: tmp,
-                p: PhantomData
+                p: PhantomData,
             })
         }
     }
@@ -68,7 +72,11 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_open(c_str.as_ptr() as *mut c_char, t_data, ::std::mem::size_of::<T>() as usize)
+            ffi::gsl_ntuple_open(
+                c_str.as_ptr() as *mut c_char,
+                t_data,
+                ::std::mem::size_of::<T>() as usize,
+            )
         };
 
         if tmp.is_null() {
@@ -76,7 +84,7 @@ impl<T> NTuples<T> {
         } else {
             Some(NTuples {
                 n: tmp,
-                p: PhantomData
+                p: PhantomData,
             })
         }
     }
@@ -96,8 +104,14 @@ impl<T> NTuples<T> {
         enums::Value::from(unsafe { ffi::gsl_ntuple_read(self.n) })
     }
 
-    pub fn project<U, V>(&self, h: &mut ::Histogram, value_func: ::value_function<T, U>, value_arg: &mut U,
-        select_func: ::select_function<T, V>, select_arg: &mut V) -> enums::Value {
+    pub fn project<U, V>(
+        &self,
+        h: &mut ::Histogram,
+        value_func: ::value_function<T, U>,
+        value_arg: &mut U,
+        select_func: ::select_function<T, V>,
+        select_arg: &mut V,
+    ) -> enums::Value {
         unsafe {
             loop {
                 let nread = fread((*self.n).ntuple_data, (*self.n).size, 1, (*self.n).file);
@@ -105,13 +119,16 @@ impl<T> NTuples<T> {
                 if nread == 0 && feof((*self.n).file) != 0 {
                     break;
                 }
-              
+
                 if nread != 1 {
                     rgsl_error!("failed to read ntuple for projection", ::Value::Failed);
                 }
 
                 if select_func(::std::mem::transmute((*self.n).ntuple_data), select_arg) {
-                    ffi::gsl_histogram_increment(ffi::FFI::unwrap_unique(h), value_func(::std::mem::transmute((*self.n).ntuple_data), value_arg));
+                    ffi::gsl_histogram_increment(
+                        ffi::FFI::unwrap_unique(h),
+                        value_func(::std::mem::transmute((*self.n).ntuple_data), value_arg),
+                    );
                 }
             }
 
@@ -131,7 +148,7 @@ impl<T> ffi::FFI<ffi::gsl_ntuple> for NTuples<T> {
     fn wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
         NTuples {
             n: n,
-            p: PhantomData
+            p: PhantomData,
         }
     }
 

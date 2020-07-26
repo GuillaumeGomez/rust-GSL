@@ -11,10 +11,10 @@ After N terms the error in the sum is O(1/N), making direct summation of the ser
 
 extern crate rgsl;
 
-pub static N : usize = 20usize;
+pub static N: usize = 20usize;
 
 fn main() {
-    let mut t : [f64; 20] = [0f64; 20];
+    let mut t: [f64; 20] = [0f64; 20];
     let mut sum_accel = 0f64;
     let mut err = 0f64;
     let mut sum = 0f64;
@@ -36,10 +36,18 @@ fn main() {
 
     println!("term-by-term sum = {:.16} using {} terms", sum, N);
 
-    println!("term-by-term sum = {:.16} using {} terms", w.sum_plain(), w.terms_used());
+    println!(
+        "term-by-term sum = {:.16} using {} terms",
+        w.sum_plain(),
+        w.terms_used()
+    );
 
     println!("exact value      = {:.16}", zeta_2);
-    println!("accelerated sum  = {:.16} using {} terms", sum_accel, w.terms_used());
+    println!(
+        "accelerated sum  = {:.16} using {} terms",
+        sum_accel,
+        w.terms_used()
+    );
 
     println!("estimated error  = {:.16}", err);
     println!("actual error     = {:.16}", sum_accel - zeta_2);

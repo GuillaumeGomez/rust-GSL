@@ -4,9 +4,9 @@
 
 //! Hypergeometric functions are described in Abramowitz & Stegun, Chapters 13 and 15.
 
+use enums;
 use ffi;
 use std::mem::zeroed;
-use enums;
 
 /// This routine computes the hypergeometric function 0F1(c,x).
 pub fn hyperg_0F1(c: f64, x: f64) -> f64 {
@@ -18,7 +18,13 @@ pub fn hyperg_0F1_e(c: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_0F1_e(c, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the confluent hypergeometric function 1F1(m,n,x) = M(m,n,x) for integer parameters m, n.
@@ -31,7 +37,13 @@ pub fn hyperg_1F1_int_e(m: i32, n: i32, x: f64) -> (enums::Value, ::types::Resul
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_1F1_int_e(m, n, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the confluent hypergeometric function 1F1(a,b,x) = M(a,b,x) for general parameters a, b.
@@ -44,7 +56,13 @@ pub fn hyperg_1F1_e(a: f64, b: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_1F1_e(a, b, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the confluent hypergeometric function U(m,n,x) for integer parameters m, n.
@@ -57,7 +75,13 @@ pub fn hyperg_1F1_U_int_e(m: i32, n: i32, x: f64) -> (enums::Value, ::types::Res
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_U_int_e(m, n, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the confluent hypergeometric function U(m,n,x) for integer parameters m, n using the
@@ -66,7 +90,14 @@ pub fn hyperg_1F1_U_int_e10_e(m: i32, n: i32, x: f64) -> (enums::Value, ::types:
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result_e10>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_U_int_e10_e(m, n, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::ResultE10{val: result.val, err: result.err, e10: result.e10})
+    (
+        enums::Value::from(ret),
+        ::types::ResultE10 {
+            val: result.val,
+            err: result.err,
+            e10: result.e10,
+        },
+    )
 }
 
 /// This routine computes the confluent hypergeometric function U(a,b,x).
@@ -79,7 +110,13 @@ pub fn hyperg_U_e(a: f64, b: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_U_e(a, b, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the confluent hypergeometric function U(a,b,x) using the
@@ -88,11 +125,18 @@ pub fn hyperg_U_e10_e(a: f64, b: f64, x: f64) -> (enums::Value, ::types::ResultE
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result_e10>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_U_e10_e(a, b, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::ResultE10{val: result.val, err: result.err, e10: result.e10})
+    (
+        enums::Value::from(ret),
+        ::types::ResultE10 {
+            val: result.val,
+            err: result.err,
+            e10: result.e10,
+        },
+    )
 }
 
 /// This routine computes the Gauss hypergeometric function 2F1(a,b,c,x) = F(a,b,c,x) for |x| < 1.
-/// 
+///
 /// If the arguments (a,b,c,x) are too close to a singularity then the function can return the error code
 /// [`MaxIter`](enums/type.Value.html) when the series approximation converges too slowly.
 /// This occurs in the region of x=1, c - a - b = m for integer m.
@@ -101,7 +145,7 @@ pub fn hyperg_2F1(a: f64, b: f64, c: f64, x: f64) -> f64 {
 }
 
 /// This routine computes the Gauss hypergeometric function 2F1(a,b,c,x) = F(a,b,c,x) for |x| < 1.
-/// 
+///
 /// If the arguments (a,b,c,x) are too close to a singularity then the function can return the error code
 /// [`MaxIter`](enums/type.Value.html) when the series approximation converges too slowly.
 /// This occurs in the region of x=1, c - a - b = m for integer m.
@@ -109,7 +153,13 @@ pub fn hyperg_2F1_e(a: f64, b: f64, c: f64, x: f64) -> (enums::Value, ::types::R
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_2F1_e(a, b, c, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the Gauss hypergeometric function 2F1(a_R + i a_I, a_R - i a_I, c, x) with complex parameters for |x| < 1.
@@ -122,7 +172,13 @@ pub fn hyperg_2F1_conj_e(aR: f64, aI: f64, c: f64, x: f64) -> (enums::Value, ::t
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_2F1_conj_e(aR, aI, c, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the renormalized Gauss hypergeometric function 2F1(a,b,c,x) / \Gamma(c) for |x| < 1.
@@ -135,7 +191,13 @@ pub fn hyperg_2F1_renorm_e(a: f64, b: f64, c: f64, x: f64) -> (enums::Value, ::t
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_2F1_renorm_e(a, b, c, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the renormalized Gauss hypergeometric function 2F1(a_R + i a_I, a_R - i a_I, c, x) / \Gamma(c) for |x| < 1.
@@ -144,11 +206,22 @@ pub fn hyperg_2F1_conj_renorm(aR: f64, aI: f64, c: f64, x: f64) -> f64 {
 }
 
 /// This routine computes the renormalized Gauss hypergeometric function 2F1(a_R + i a_I, a_R - i a_I, c, x) / \Gamma(c) for |x| < 1.
-pub fn hyperg_2F1_conj_renorm_e(aR: f64, aI: f64, c: f64, x: f64) -> (enums::Value, ::types::Result) {
+pub fn hyperg_2F1_conj_renorm_e(
+    aR: f64,
+    aI: f64,
+    c: f64,
+    x: f64,
+) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_2F1_conj_renorm_e(aR, aI, c, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the hypergeometric function 2F0(a,b,x). The series representation is a divergent hypergeometric series.
@@ -163,5 +236,11 @@ pub fn hyperg_2F0_e(a: f64, b: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
     let ret = unsafe { ::ffi::gsl_sf_hyperg_2F0_e(a, b, x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }

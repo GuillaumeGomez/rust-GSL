@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the tail of the Rayleigh distribution with scale parameter sigma and a lower limit of a. The distribution is,
-/// 
+///
 /// p(x) dx = {x \over \sigma^2} \exp ((a^2 - x^2) /(2 \sigma^2)) dx
-/// 
+///
 /// for x > a.
 pub fn rayleigh_tail(r: &mut Rng, a: f64, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_rayleigh_tail(ffi::FFI::unwrap_unique(r), a, sigma) }

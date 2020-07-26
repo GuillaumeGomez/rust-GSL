@@ -38,7 +38,7 @@ pub struct ResultE10 {
     /// Contains an estimate of the absolute error in the value.
     pub err: f64,
     /// Exponent field such that the actual result is obtained as result * 10^(e10).
-    pub e10: i32
+    pub e10: i32,
 }
 
 impl Default for ResultE10 {
@@ -52,7 +52,7 @@ impl ResultE10 {
         ResultE10 {
             val: 0f64,
             err: 0f64,
-            e10: 0i32
+            e10: 0i32,
         }
     }
 }

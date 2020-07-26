@@ -7,18 +7,18 @@
 
 extern crate rgsl;
 
+use rgsl::{sort, wavelet_transforms};
 use std::fs::File;
 use std::io::Read;
-use rgsl::{wavelet_transforms, sort};
 
-pub const N : usize = 256;
-pub const NC : usize = 20;
+pub const N: usize = 256;
+pub const NC: usize = 20;
 
 #[allow(unused_must_use)]
 fn main() {
-    let mut data : [f64; 256] = [0f64; 256];
-    let mut abscoeff : [f64; 256] = [0f64; 256];
-    let mut p : [usize; 256] = [0usize; 256];
+    let mut data: [f64; 256] = [0f64; 256];
+    let mut abscoeff: [f64; 256] = [0f64; 256];
+    let mut p: [usize; 256] = [0usize; 256];
     let mut args = Vec::new();
 
     for entry in std::env::args() {
@@ -37,12 +37,15 @@ fn main() {
         };
         for i in 0usize..N {
             // read 8 bytes and parse them as a f64
-            let mut b = [0u8;8];
+            let mut b = [0u8; 8];
             match f.read(&mut b) {
                 Ok(8) => {
                     data[i] = unsafe { ::std::mem::transmute(b) };
                 }
-                Ok(_) => { /* premature EOF, abort */ break },
+                Ok(_) => {
+                    /* premature EOF, abort */
+                    break;
+                }
                 Err(e) => panic!("Read error : {}", e),
             }
         }

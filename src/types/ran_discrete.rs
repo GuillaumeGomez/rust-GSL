@@ -7,7 +7,7 @@ Given K discrete events with different probabilities P[k], produce a random valu
 
 The obvious way to do this is to preprocess the probability list by generating a cumulative probability array with K+1 elements:
 
-  C[0] = 0 
+  C[0] = 0
 C[k+1] = C[k]+P[k].
 
 Note that this construction produces C[K]=1. Now choose a uniform deviate u between 0 and 1, and find the value of k such that C[k] <= u < C[k+1]. Although this in principle requires of order \log K steps per random number generation, they are fast steps, and if you use something like \lfloor uK \rfloor as a starting point, you can often do pretty well.
@@ -23,7 +23,7 @@ use ffi;
 use types::Rng;
 
 pub struct RanDiscrete {
-    ran: *mut ffi::gsl_ran_discrete_t
+    ran: *mut ffi::gsl_ran_discrete_t,
 }
 
 impl RanDiscrete {
@@ -36,9 +36,7 @@ impl RanDiscrete {
         if tmp.is_null() {
             None
         } else {
-            Some(RanDiscrete {
-                ran: tmp
-            })
+            Some(RanDiscrete { ran: tmp })
         }
     }
 
@@ -63,9 +61,7 @@ impl Drop for RanDiscrete {
 
 impl ffi::FFI<ffi::gsl_ran_discrete_t> for RanDiscrete {
     fn wrap(r: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {
-        RanDiscrete {
-            ran: r
-        }
+        RanDiscrete { ran: r }
     }
 
     fn soft_wrap(v: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {

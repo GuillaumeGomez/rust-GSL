@@ -10,7 +10,7 @@ fn main() {
     let q = rgsl::QRng::new(&rgsl::QRngType::sobol(), 2).unwrap();
 
     for i in 0usize..1024usize {
-        let mut v : [f64; 2] = [0f64, 0f64];
+        let mut v: [f64; 2] = [0f64, 0f64];
 
         q.get(&mut v);
         println!("{}: {:.5} {:.5}", i, v[0], v[1]);

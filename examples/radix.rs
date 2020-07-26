@@ -12,7 +12,7 @@ extern crate rgsl;
 fn main() {
     /* Part 1 */
     println!("=== PART 1 ===");
-    let mut data : [f64; 256] = [0f64; 256];
+    let mut data: [f64; 256] = [0f64; 256];
 
     data[0] = 1f64;
     for i in 1usize..11usize {
@@ -25,12 +25,17 @@ fn main() {
     println!("");
     rgsl::fft::radix2::forward(&mut data, 1, 128);
     for i in 0usize..128usize {
-        println!("{} {:.6} {:.6}", i, data[2 * i] / 128f64.sqrt(), data[2 * i + 1] / 128f64.sqrt());
+        println!(
+            "{} {:.6} {:.6}",
+            i,
+            data[2 * i] / 128f64.sqrt(),
+            data[2 * i + 1] / 128f64.sqrt()
+        );
     }
 
     /* Part 2 */
     println!("\n=== PART 2 ===");
-    let mut data2 : [f64; 1260] = [0f64; 1260];
+    let mut data2: [f64; 1260] = [0f64; 1260];
     let n = 630;
 
     for i in 1usize..11usize {

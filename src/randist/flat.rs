@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the flat (uniform) distribution from a to b. The distribution is,
-/// 
+///
 /// p(x) dx = {1 \over (b-a)} dx
-/// 
+///
 /// if a <= x < b and 0 otherwise.
 pub fn flat(r: &mut Rng, a: f64, b: f64) -> f64 {
     unsafe { ffi::gsl_ran_flat(ffi::FFI::unwrap_unique(r), a, b) }

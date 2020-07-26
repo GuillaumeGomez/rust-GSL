@@ -4,8 +4,8 @@
 
 #![allow(non_snake_case)]
 
-extern crate rgsl;
 extern crate libc;
+extern crate rgsl;
 
 use libc::c_void;
 
@@ -57,13 +57,15 @@ fn func_solver() {
             println!("Converged:");
             stop = true;
         }
-        println!("{:4} | [{x_lo:.4} , {x_hi:.4}] | {r:.4} | {e:+.4} | {err:.4}",
-                 i + 1,
-                 x_lo = x_lo,
-                 x_hi = x_hi,
-                 r = r,
-                 e = r - r_expected,
-                 err = x_hi - x_lo);
+        println!(
+            "{:4} | [{x_lo:.4} , {x_hi:.4}] | {r:.4} | {e:+.4} | {err:.4}",
+            i + 1,
+            x_lo = x_lo,
+            x_hi = x_hi,
+            r = r,
+            e = r - r_expected,
+            err = x_hi - x_lo
+        );
         if stop {
             break;
         }
@@ -118,11 +120,13 @@ fn derivative_solver() {
             println!("Converged:");
             stop = true;
         }
-        println!("{:4} | {r:.4} | {e:+.4} | {err:.4}",
-                 i + 1,
-                 r = x,
-                 e = x - r_expected,
-                 err = x - x0);
+        println!(
+            "{:4} | {r:.4} | {e:+.4} | {err:.4}",
+            i + 1,
+            r = x,
+            e = x - r_expected,
+            err = x - x0
+        );
         if stop {
             break;
         }

@@ -2,14 +2,14 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use std::fmt;
-use std::fmt::{Formatter, Debug};
-use types::{ComplexF32, ComplexF64};
-use ffi;
 use enums;
+use ffi;
+use std::fmt;
+use std::fmt::{Debug, Formatter};
+use types::{ComplexF32, ComplexF64};
 
 pub struct VectorComplexF64 {
-    vec: *mut ffi::gsl_vector_complex
+    vec: *mut ffi::gsl_vector_complex,
 }
 
 impl VectorComplexF64 {
@@ -25,9 +25,7 @@ impl VectorComplexF64 {
         if tmp.is_null() {
             None
         } else {
-            Some(VectorComplexF64 {
-                vec: tmp
-            })
+            Some(VectorComplexF64 { vec: tmp })
         }
     }
 
@@ -37,9 +35,7 @@ impl VectorComplexF64 {
         if tmp.is_null() {
             None
         } else {
-            let mut v = VectorComplexF64 {
-                vec: tmp
-            };
+            let mut v = VectorComplexF64 { vec: tmp };
             let mut pos = 0usize;
 
             for tmp in slice.iter() {
@@ -154,7 +150,7 @@ impl VectorComplexF64 {
     pub fn is_null(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_isnull(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -162,7 +158,7 @@ impl VectorComplexF64 {
     pub fn is_pos(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_ispos(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -170,7 +166,7 @@ impl VectorComplexF64 {
     pub fn is_neg(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_isneg(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -178,14 +174,14 @@ impl VectorComplexF64 {
     pub fn is_non_neg(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_isnonneg(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
     pub fn equal(&self, other: &VectorComplexF64) -> bool {
         match unsafe { ffi::gsl_vector_complex_equal(self.vec, other.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -214,7 +210,7 @@ impl VectorComplexF64 {
                         v.copy_from(self);
                         Some(v)
                     }
-                    None => None
+                    None => None,
                 }
             }
         }
@@ -247,9 +243,7 @@ impl Debug for VectorComplexF64 {
 
 impl ffi::FFI<ffi::gsl_vector_complex> for VectorComplexF64 {
     fn wrap(r: *mut ffi::gsl_vector_complex) -> VectorComplexF64 {
-        VectorComplexF64 {
-            vec: r
-        }
+        VectorComplexF64 { vec: r }
     }
 
     fn soft_wrap(r: *mut ffi::gsl_vector_complex) -> VectorComplexF64 {
@@ -266,7 +260,7 @@ impl ffi::FFI<ffi::gsl_vector_complex> for VectorComplexF64 {
 }
 
 pub struct VectorComplexF32 {
-    vec: *mut ffi::gsl_vector_complex_float
+    vec: *mut ffi::gsl_vector_complex_float,
 }
 
 impl VectorComplexF32 {
@@ -282,9 +276,7 @@ impl VectorComplexF32 {
         if tmp.is_null() {
             None
         } else {
-            Some(VectorComplexF32 {
-                vec: tmp
-            })
+            Some(VectorComplexF32 { vec: tmp })
         }
     }
 
@@ -294,9 +286,7 @@ impl VectorComplexF32 {
         if tmp.is_null() {
             None
         } else {
-            let mut v = VectorComplexF32 {
-                vec: tmp
-            };
+            let mut v = VectorComplexF32 { vec: tmp };
             let mut pos = 0usize;
 
             for tmp in slice.iter() {
@@ -411,7 +401,7 @@ impl VectorComplexF32 {
     pub fn is_null(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_float_isnull(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -419,7 +409,7 @@ impl VectorComplexF32 {
     pub fn is_pos(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_float_ispos(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -427,7 +417,7 @@ impl VectorComplexF32 {
     pub fn is_neg(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_float_isneg(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -435,15 +425,14 @@ impl VectorComplexF32 {
     pub fn is_non_neg(&self) -> bool {
         match unsafe { ffi::gsl_vector_complex_float_isnonneg(self.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
     pub fn equal(&self, other: &VectorComplexF32) -> bool {
-        match unsafe { ffi::gsl_vector_complex_float_equal(self.vec,
-            other.vec) } {
+        match unsafe { ffi::gsl_vector_complex_float_equal(self.vec, other.vec) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -472,7 +461,7 @@ impl VectorComplexF32 {
                         v.copy_from(self);
                         Some(v)
                     }
-                    None => None
+                    None => None,
                 }
             }
         }
@@ -505,9 +494,7 @@ impl Debug for VectorComplexF32 {
 
 impl ffi::FFI<ffi::gsl_vector_complex_float> for VectorComplexF32 {
     fn wrap(r: *mut ffi::gsl_vector_complex_float) -> VectorComplexF32 {
-        VectorComplexF32 {
-            vec: r
-        }
+        VectorComplexF32 { vec: r }
     }
 
     fn soft_wrap(r: *mut ffi::gsl_vector_complex_float) -> VectorComplexF32 {

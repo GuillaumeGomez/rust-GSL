@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the Pareto distribution of order a. The distribution function is,
-/// 
+///
 /// p(x) dx = (a/b) / (x/b)^{a+1} dx
-/// 
+///
 /// for x >= b.
 pub fn pareto(r: &mut Rng, a: f64, b: f64) -> f64 {
     unsafe { ffi::gsl_ran_pareto(ffi::FFI::unwrap_unique(r), a, b) }

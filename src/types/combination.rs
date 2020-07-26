@@ -18,15 +18,15 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 1998, CRC Press LLC, ISBN 084933988X
 !*/
 
-use ffi;
-use enums;
-use std::fmt;
-use std::fmt::{Formatter, Debug};
 use c_vec::CSlice;
+use enums;
+use ffi;
+use std::fmt;
+use std::fmt::{Debug, Formatter};
 
 pub struct Combination {
     c: *mut ffi::gsl_combination,
-    data: CSlice<usize>
+    data: CSlice<usize>,
 }
 
 impl Combination {
@@ -45,12 +45,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut usize, 0usize)
+                        data: CSlice::new(tmp as *mut usize, 0usize),
                     })
                 }
             }
@@ -70,12 +70,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut usize, 0usize)
+                        data: CSlice::new(tmp as *mut usize, 0usize),
                     })
                 }
             }
@@ -160,7 +160,7 @@ impl ffi::FFI<ffi::gsl_combination> for Combination {
         unsafe {
             Combination {
                 c: c,
-                data: CSlice::new((*c).data, (*c).k as usize)
+                data: CSlice::new((*c).data, (*c).k as usize),
             }
         }
     }

@@ -80,8 +80,8 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 (2010), Issue 3, Article 26.
 !*/
 
-use ffi;
 use enums;
+use ffi;
 use std::ffi::CString;
 
 fn rescale_error(err: f64, result_abs: f64, result_asc: f64) -> f64 {
@@ -136,59 +136,67 @@ pub fn qng<T>(
         //to avoid the dead_code warning on gsl_error
         unsafe {
             let file = file!();
-            let c_str = CString::new("tolerance cannot be achieved with given eps_abs and eps_rel".as_bytes()).unwrap();
+            let c_str = CString::new(
+                "tolerance cannot be achieved with given eps_abs and eps_rel".as_bytes(),
+            )
+            .unwrap();
             let c_file = CString::new(file.as_bytes()).unwrap();
 
             unsafe {
-                ffi::gsl_error(c_str.as_ptr(), c_file.as_ptr(), line!() as i32, ::Value::BadTolerance.into());
+                ffi::gsl_error(
+                    c_str.as_ptr(),
+                    c_file.as_ptr(),
+                    line!() as i32,
+                    ::Value::BadTolerance.into(),
+                );
             }
         }
         return ::Value::BadTolerance;
     }
 
     // w21b, weights of the 21-point formula for abscissae x2
-    let w21b : [f64; 6] = [
+    let w21b: [f64; 6] = [
         0.011694638867371874278064396062192f64,
         0.054755896574351996031381300244580f64,
         0.093125454583697605535065465083366f64,
         0.123491976262065851077958109831074f64,
         0.142775938577060080797094273138717f64,
-        0.149445554002916905664936468389821f64
+        0.149445554002916905664936468389821f64,
     ];
     // w10, weights of the 10-point formula
-    let w10 : [f64; 5] = [
+    let w10: [f64; 5] = [
         0.066671344308688137593568809893332f64,
         0.149451349150580593145776339657697f64,
         0.219086362515982043995534934228163f64,
         0.269266719309996355091226921569469f64,
-        0.295524224714752870173892994651338f64
+        0.295524224714752870173892994651338f64,
     ];
     // w21a, weights of the 21-point formula for abscissae x1 */
-    let w21a : [f64; 5] = [
+    let w21a: [f64; 5] = [
         0.032558162307964727478818972459390f64,
         0.075039674810919952767043140916190f64,
         0.109387158802297641899210590325805f64,
         0.134709217311473325928054001771707f64,
-        0.147739104901338491374841515972068f64
+        0.147739104901338491374841515972068f64,
     ];
     // x1, abscissae common to the 10-, 21-, 43- and 87-point rule */
-    let x1 : [f64; 5] = [
+    let x1: [f64; 5] = [
         0.973906528517171720077964012084452f64,
         0.865063366688984510732096688423493f64,
         0.679409568299024406234327365114874f64,
         0.433395394129247190799265943165784f64,
-        0.148874338981631210884826001129720f64
+        0.148874338981631210884826001129720f64,
     ];
     // x2, abscissae common to the 21-, 43- and 87-point rule
-    let x2 : [f64; 5] = [
+    let x2: [f64; 5] = [
         0.995657163025808080735527280689003f64,
         0.930157491355708226001207180059508f64,
         0.780817726586416897063717578345042f64,
         0.562757134668604683339000099272694f64,
-        0.294392862701460198131126603103866f64
+        0.294392862701460198131126603103866f64,
     ];
     // x3, abscissae common to the 43- and 87-point rule */
-    let x3 : [f64; 11] = [
+    let x3: [f64; 11] = [
         0.999333360901932081394099323919911f64,
         0.987433402908088869795961478381209f64,
         0.954807934814266299257919200290473f64,
@@ -199,10 +207,10 @@ pub fn qng<T>(
         0.499479574071056499952214885499755f64,
         0.364901661346580768043989548502644f64,
         0.222254919776601296498260928066212f64,
-        0.074650617461383322043914435796506f64
+        0.074650617461383322043914435796506f64,
     ];
     // x4, abscissae of the 87-point rule */
-    let x4 : [f64; 22] = [
+    let x4: [f64; 22] = [
         0.999902977262729234490529830591582f64,
         0.997989895986678745427496322365960f64,
         0.992175497860687222808523352251425f64,
@@ -224,10 +232,10 @@ pub fn qng<T>(
         0.258503559202161551802280975429025f64,
         0.185695396568346652015917141167606f64,
         0.111842213179907468172398359241362f64,
-        0.037352123394619870814998165437704f64
+        0.037352123394619870814998165437704f64,
     ];
     // w43a, weights of the 43-point formula for abscissae x1, x3 */
-    let w43a : [f64; 10] = [
+    let w43a: [f64; 10] = [
         0.016296734289666564924281974617663f64,
         0.037522876120869501461613795898115f64,
         0.054694902058255442147212685465005f64,
@@ -237,10 +245,10 @@ pub fn qng<T>(
         0.027371890593248842081276069289151f64,
         0.046560826910428830743339154433824f64,
         0.061744995201442564496240336030883f64,
-        0.071387267268693397768559114425516f64
+        0.071387267268693397768559114425516f64,
     ];
     // w43b, weights of the 43-point formula for abscissae x3 */
-    let w43b : [f64; 12] = [
+    let w43b: [f64; 12] = [
         0.001844477640212414100389106552965f64,
         0.010798689585891651740465406741293f64,
         0.021895363867795428102523123075149f64,
@@ -252,10 +260,10 @@ pub fn qng<T>(
         0.069566197912356484528633315038405f64,
         0.072824441471833208150939535192842f64,
         0.074507751014175118273571813842889f64,
-        0.074722147517403005594425168280423f64
+        0.074722147517403005594425168280423f64,
     ];
     // w87a, weights of the 87-point formula for abscissae x1, x2, x3
-    let w87a : [f64; 21] = [
+    let w87a: [f64; 21] = [
         0.008148377384149172900002878448190f64,
         0.018761438201562822243935059003794f64,
         0.027347451050052286161582829741283f64,
@@ -276,10 +284,10 @@ pub fn qng<T>(
         0.032373202467202789685788194889595f64,
         0.034783098950365142750781997949596f64,
         0.036412220731351787562801163687577f64,
-        0.037253875503047708539592001191226f64
+        0.037253875503047708539592001191226f64,
     ];
     // w87b, weights of the 87-point formula for abscissae x4
-    let w87b : [f64; 23] = [
+    let w87b: [f64; 23] = [
         0.000274145563762072350016527092881f64,
         0.001807124155057942948341311753254f64,
         0.004096869282759164864458070683480f64,
@@ -302,18 +310,18 @@ pub fn qng<T>(
         0.036698604498456094498018047441094f64,
         0.037120549269832576114119958413599f64,
         0.037334228751935040321235449094698f64,
-        0.037361073762679023410321241766599f64
+        0.037361073762679023410321241766599f64,
     ];
 
     // Compute the integral using the 10- and 21-point formula.
     let mut res10 = 0f64;
     let mut res21 = w21b[5] * f_center;
     let mut resabs = unsafe { w21b[5] * f_center.abs() };
-    let mut savfun : [f64; 21] = [0f64; 21];
-    let mut fv1 : [f64; 5] = [0f64; 5];
-    let mut fv2 : [f64; 5] = [0f64; 5];
-    let mut fv3 : [f64; 5] = [0f64; 5];
-    let mut fv4 : [f64; 5] = [0f64; 5];
+    let mut savfun: [f64; 21] = [0f64; 21];
+    let mut fv1: [f64; 5] = [0f64; 5];
+    let mut fv2: [f64; 5] = [0f64; 5];
+    let mut fv3: [f64; 5] = [0f64; 5];
+    let mut fv4: [f64; 5] = [0f64; 5];
 
     for k in 0usize..5usize {
         let abscissa = half_length * x1[k];
@@ -347,7 +355,10 @@ pub fn qng<T>(
     let mut resasc = unsafe { w21b[5] * (f_center - mean).abs() };
 
     for k in 0usize..5usize {
-        resasc += unsafe { (w21a[k] * ((fv1[k] - mean).abs() + (fv2[k] - mean).abs()) + w21b[k] * ((fv3[k] - mean).abs() + (fv4[k] - mean).abs())) };
+        resasc += unsafe {
+            (w21a[k] * ((fv1[k] - mean).abs() + (fv2[k] - mean).abs())
+                + w21b[k] * ((fv3[k] - mean).abs() + (fv4[k] - mean).abs()))
+        };
     }
     resasc *= abs_half_length;
     let mut result_kronrod = res21 * half_length;
@@ -400,7 +411,7 @@ pub fn qng<T>(
     }
 
     // test for convergence
-    result_kronrod = res87 * half_length ;
+    result_kronrod = res87 * half_length;
     err = rescale_error((res87 - res43) * half_length, resabs, resasc);
 
     if err < eps_abs || err < eps_rel * unsafe { result_kronrod.abs() } {
@@ -414,15 +425,27 @@ pub fn qng<T>(
     *result = result_kronrod;
     *abs_err = err;
     *n_eval = 87;
-    rgsl_error!("failed to reach tolerance with highest-order rule", ::Value::Tolerance);
+    rgsl_error!(
+        "failed to reach tolerance with highest-order rule",
+        ::Value::Tolerance
+    );
     ::Value::Tolerance
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80 decimal digit arithmetic by L. W.
 /// Fullerton, Bell Labs, Nov. 1981.
-pub fn qk15<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk15<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     // abscissae of the 15-point kronrod rule
-    let xgk : [f64; 8] = [
+    let xgk: [f64; 8] = [
         0.991455371120812639206854697526329f64,
         0.949107912342758524526189684047851f64,
         0.864864423359769072789712788640926f64,
@@ -430,22 +453,22 @@ pub fn qk15<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.586087235467691130294144838258730f64,
         0.405845151377397166906606412076961f64,
         0.207784955007898467600689403773245f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // xgk[1], xgk[3], ... abscissae of the 7-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 7-point gauss rule
 
     // weights of the 7-point gauss rule
-    let wg : [f64; 4] = [
+    let wg: [f64; 4] = [
         0.129484966168869693270611432679082f64,
         0.279705391489276667901467771423780f64,
         0.381830050505118944950369775488975f64,
-        0.417959183673469387755102040816327f64
+        0.417959183673469387755102040816327f64,
     ];
 
     // weights of the 15-point kronrod rule
-    let wgk : [f64; 8] = [
+    let wgk: [f64; 8] = [
         0.022935322010529224963732008058970f64,
         0.063092092629978553290700663189204f64,
         0.104790010322250183839876322541518f64,
@@ -453,18 +476,29 @@ pub fn qk15<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.169004726639267902826583426598550f64,
         0.190350578064785409913256402421014f64,
         0.204432940075298892414161999234649f64,
-        0.209482141084727828012999174891714f64
+        0.209482141084727828012999174891714f64,
     ];
 
-    let mut fv1 : [f64; 8] = [0f64; 8];
-    let mut fv2 : [f64; 8] = [0f64; 8];
+    let mut fv1: [f64; 8] = [0f64; 8];
+    let mut fv2: [f64; 8] = [0f64; 8];
 
-    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(
+        &xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc,
+    );
 }
 
-pub fn qk21<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk21<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     // abscissae of the 21-point kronrod rule
-    let xgk : [f64; 11] = [
+    let xgk: [f64; 11] = [
         0.995657163025808080735527280689003f64,
         0.973906528517171720077964012084452f64,
         0.930157491355708226001207180059508f64,
@@ -475,23 +509,23 @@ pub fn qk21<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.433395394129247190799265943165784f64,
         0.294392862701460198131126603103866f64,
         0.148874338981631210884826001129720f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // xgk[1], xgk[3], ... abscissae of the 10-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 10-point gauss rule
 
     // weights of the 10-point gauss rule
-    let wg : [f64; 5] = [
+    let wg: [f64; 5] = [
         0.066671344308688137593568809893332f64,
         0.149451349150580593145776339657697f64,
         0.219086362515982043995534934228163f64,
         0.269266719309996355091226921569469f64,
-        0.295524224714752870173892994651338f64
+        0.295524224714752870173892994651338f64,
     ];
 
     // weights of the 21-point kronrod rule
-    let wgk : [f64; 11] = [
+    let wgk: [f64; 11] = [
         0.011694638867371874278064396062192f64,
         0.032558162307964727478818972459390f64,
         0.054755896574351996031381300244580f64,
@@ -502,18 +536,29 @@ pub fn qk21<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.134709217311473325928054001771707f64,
         0.142775938577060080797094273138717f64,
         0.147739104901338491374841515972068f64,
-        0.149445554002916905664936468389821f64
+        0.149445554002916905664936468389821f64,
     ];
 
-    let mut fv1 : [f64; 11] = [0f64; 11];
-    let mut fv2 : [f64; 11] = [0f64; 11];
+    let mut fv1: [f64; 11] = [0f64; 11];
+    let mut fv2: [f64; 11] = [0f64; 11];
 
-    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(
+        &xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc,
+    );
 }
 
-pub fn qk31<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk31<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     // abscissae of the 31-point kronrod rule
-    let xgk : [f64; 16] = [
+    let xgk: [f64; 16] = [
         0.998002298693397060285172840152271f64,
         0.987992518020485428489565718586613f64,
         0.967739075679139134257347978784337f64,
@@ -529,14 +574,14 @@ pub fn qk31<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.299180007153168812166780024266389f64,
         0.201194093997434522300628303394596f64,
         0.101142066918717499027074231447392f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // xgk[1], xgk[3], ... abscissae of the 15-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 15-point gauss rule
 
     // weights of the 15-point gauss rule
-    let wg : [f64; 8] = [
+    let wg: [f64; 8] = [
         0.030753241996117268354628393577204f64,
         0.070366047488108124709267416450667f64,
         0.107159220467171935011869546685869f64,
@@ -544,11 +589,11 @@ pub fn qk31<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.166269205816993933553200860481209f64,
         0.186161000015562211026800561866423f64,
         0.198431485327111576456118326443839f64,
-        0.202578241925561272880620199967519f64
+        0.202578241925561272880620199967519f64,
     ];
 
     // weights of the 31-point kronrod rule
-    let wgk : [f64; 16] = [
+    let wgk: [f64; 16] = [
         0.005377479872923348987792051430128f64,
         0.015007947329316122538374763075807f64,
         0.025460847326715320186874001019653f64,
@@ -564,18 +609,29 @@ pub fn qk31<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.096642726983623678505179907627589f64,
         0.099173598721791959332393173484603f64,
         0.100769845523875595044946662617570f64,
-        0.101330007014791549017374792767493f64
+        0.101330007014791549017374792767493f64,
     ];
 
-    let mut fv1 : [f64; 16] = [0f64; 16];
-    let mut fv2 : [f64; 16] = [0f64; 16];
+    let mut fv1: [f64; 16] = [0f64; 16];
+    let mut fv2: [f64; 16] = [0f64; 16];
 
-    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(
+        &xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc,
+    );
 }
 
-pub fn qk41<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk41<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     // abscissae of the 41-point kronrod rule
-    let xgk : [f64; 21] = [
+    let xgk: [f64; 21] = [
         0.998859031588277663838315576545863f64,
         0.993128599185094924786122388471320f64,
         0.981507877450250259193342994720217f64,
@@ -596,14 +652,14 @@ pub fn qk41<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.227785851141645078080496195368575f64,
         0.152605465240922675505220241022678f64,
         0.076526521133497333754640409398838f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // xgk[1], xgk[3], ... abscissae of the 20-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 20-point gauss rule
 
     // weights of the 20-point gauss rule
-    let wg : [f64; 11] = [
+    let wg: [f64; 11] = [
         0.017614007139152118311861962351853f64,
         0.040601429800386941331039952274932f64,
         0.062672048334109063569506535187042f64,
@@ -614,11 +670,11 @@ pub fn qk41<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.142096109318382051329298325067165f64,
         0.149172986472603746787828737001969f64,
         0.152753387130725850698084331955098f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // weights of the 41-point kronrod rule
-    let wgk : [f64; 21] = [
+    let wgk: [f64; 21] = [
         0.003073583718520531501218293246031f64,
         0.008600269855642942198661787950102f64,
         0.014626169256971252983787960308868f64,
@@ -639,18 +695,29 @@ pub fn qk41<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.074582875400499188986581418362488f64,
         0.075704497684556674659542775376617f64,
         0.076377867672080736705502835038061f64,
-        0.076600711917999656445049901530102f64
+        0.076600711917999656445049901530102f64,
     ];
 
-    let mut fv1 : [f64; 21] = [0f64; 21];
-    let mut fv2 : [f64; 21] = [0f64; 21];
+    let mut fv1: [f64; 21] = [0f64; 21];
+    let mut fv2: [f64; 21] = [0f64; 21];
 
-    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(
+        &xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc,
+    );
 }
 
-pub fn qk51<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk51<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     // abscissae of the 51-point kronrod rule
-    let xgk : [f64; 26] = [
+    let xgk: [f64; 26] = [
         0.999262104992609834193457486540341f64,
         0.995556969790498097908784946893902f64,
         0.988035794534077247637331014577406f64,
@@ -676,14 +743,14 @@ pub fn qk51<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.183718939421048892015969888759528f64,
         0.122864692610710396387359818808037f64,
         0.061544483005685078886546392366797f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // xgk[1], xgk[3], ... abscissae of the 25-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 25-point gauss rule
 
     // weights of the 25-point gauss rule
-    let wg : [f64; 13] = [
+    let wg: [f64; 13] = [
         0.011393798501026287947902964113235f64,
         0.026354986615032137261901815295299f64,
         0.040939156701306312655623487711646f64,
@@ -696,11 +763,11 @@ pub fn qk51<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.114858259145711648339325545869556f64,
         0.119455763535784772228178126512901f64,
         0.122242442990310041688959518945852f64,
-        0.123176053726715451203902873079050f64
+        0.123176053726715451203902873079050f64,
     ];
 
     // weights of the 51-point kronrod rule
-    let wgk : [f64; 26] = [
+    let wgk: [f64; 26] = [
         0.001987383892330315926507851882843f64,
         0.005561932135356713758040236901066f64,
         0.009473973386174151607207710523655f64,
@@ -726,19 +793,29 @@ pub fn qk51<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.060539455376045862945360267517565f64,
         0.061128509717053048305859030416293f64,
         0.061471189871425316661544131965264f64,
-        0.061580818067832935078759824240066f64
+        0.061580818067832935078759824240066f64,
     ];
 
-    let mut fv1 : [f64; 26] = [0f64; 26];
-    let mut fv2 : [f64; 26] = [0f64; 26];
+    let mut fv1: [f64; 26] = [0f64; 26];
+    let mut fv2: [f64; 26] = [0f64; 26];
 
-    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(
+        &xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc,
+    );
 }
 
-
-pub fn qk61<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk61<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     // abscissae of the 61-point kronrod rule
-    let xgk : [f64; 31] = [
+    let xgk: [f64; 31] = [
         0.999484410050490637571325895705811f64,
         0.996893484074649540271630050918695f64,
         0.991630996870404594858628366109486f64,
@@ -769,14 +846,14 @@ pub fn qk61<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.153869913608583546963794672743256f64,
         0.102806937966737030147096751318001f64,
         0.051471842555317695833025213166723f64,
-        0.000000000000000000000000000000000f64
+        0.000000000000000000000000000000000f64,
     ];
 
     // xgk[1], xgk[3], ... abscissae of the 30-point gauss rule.
     // xgk[0], xgk[2], ... abscissae to optimally extend the 30-point gauss rule
 
     // weights of the 30-point gauss rule
-    let wg : [f64; 15] = [
+    let wg: [f64; 15] = [
         0.007968192496166605615465883474674f64,
         0.018466468311090959142302131912047f64,
         0.028784707883323369349719179611292f64,
@@ -791,11 +868,11 @@ pub fn qk61<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.096368737174644259639468626351810f64,
         0.099593420586795267062780282103569f64,
         0.101762389748405504596428952168554f64,
-        0.102852652893558840341285636705415f64
+        0.102852652893558840341285636705415f64,
     ];
 
     // weights of the 61-point kronrod rule
-    let wgk : [f64; 31] = [
+    let wgk: [f64; 31] = [
         0.001389013698677007624551591226760f64,
         0.003890461127099884051267201844516f64,
         0.006630703915931292173319826369750f64,
@@ -826,17 +903,32 @@ pub fn qk61<T>(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, 
         0.050881795898749606492297473049805f64,
         0.051221547849258772170656282604944f64,
         0.051426128537459025933862879215781f64,
-        0.051494729429451567558340433647099f64
+        0.051494729429451567558340433647099f64,
     ];
 
-    let mut fv1 : [f64; 31] = [0f64; 31];
-    let mut fv2 : [f64; 31] = [0f64; 31];
+    let mut fv1: [f64; 31] = [0f64; 31];
+    let mut fv2: [f64; 31] = [0f64; 31];
 
-    qk(&xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc);
+    qk(
+        &xgk, &wg, &wgk, &mut fv1, &mut fv2, f, arg, a, b, result, abserr, resabs, resasc,
+    );
 }
 
-pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f64], f: ::function<T>, arg: &mut T, a: f64, b: f64,
-    result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64) {
+pub fn qk<T>(
+    xgk: &[f64],
+    wg: &[f64],
+    wgk: &[f64],
+    fv1: &mut [f64],
+    fv2: &mut [f64],
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+) {
     let n = fv1.len();
 
     let center = 0.5f64 * (a + b);
@@ -936,15 +1028,25 @@ pub fn qk<T>(xgk: &[f64], wg: &[f64], wgk: &[f64], fv1: &mut [f64], fv2: &mut [f
 /// The subintervals and their results are stored in the memory provided by workspace. The maximum number of subintervals is given by limit,
 /// which may not exceed the allocated size of the workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.
-pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize, workspace: &mut ::IntegrationWorkspace,
-    cycle_workspace: &mut ::IntegrationWorkspace, wf: &mut ::IntegrationQawoTable, result: &mut f64, abserr: &mut f64) -> enums::Value {
+pub fn qawf<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    epsabs: f64,
+    limit: usize,
+    workspace: &mut ::IntegrationWorkspace,
+    cycle_workspace: &mut ::IntegrationWorkspace,
+    wf: &mut ::IntegrationQawoTable,
+    result: &mut f64,
+    abserr: &mut f64,
+) -> enums::Value {
     let mut total_error = 0f64;
 
     let mut ktmin = 0usize;
     let mut iteration = 0usize;
 
     unsafe {
-        let mut table : ffi::extrapolation_table = ::std::mem::zeroed();
+        let mut table: ffi::extrapolation_table = ::std::mem::zeroed();
 
         let omega = (*ffi::FFI::unwrap_shared(wf)).omega;
 
@@ -959,12 +1061,18 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
         *abserr = 0f64;
 
         if limit > (*ffi::FFI::unwrap_shared(workspace)).limit {
-            rgsl_error!("iteration limit exceeds available workspace", ::Value::Invalid);
+            rgsl_error!(
+                "iteration limit exceeds available workspace",
+                ::Value::Invalid
+            );
         }
 
         /* Test on accuracy */
         if epsabs <= 0f64 {
-            rgsl_error!("absolute tolerance epsabs must be positive", ::Value::BadTolerance);
+            rgsl_error!(
+                "absolute tolerance epsabs must be positive",
+                ::Value::BadTolerance
+            );
         }
 
         if omega == 0f64 {
@@ -1012,7 +1120,17 @@ pub fn qawf<T>(f: ::function<T>, arg: &mut T, a: f64, epsabs: f64, limit: usize,
 
             let epsabs1 = eps * factor;
 
-            let status = wf.qawo(f, arg, a1, epsabs1, 0f64, limit as usize, cycle_workspace, &mut area1, &mut error1);
+            let status = wf.qawo(
+                f,
+                arg,
+                a1,
+                epsabs1,
+                0f64,
+                limit as usize,
+                cycle_workspace,
+                &mut area1,
+                &mut error1,
+            );
 
             ::types::integration::append_interval(workspace, a1, b1, area1, error1);
 

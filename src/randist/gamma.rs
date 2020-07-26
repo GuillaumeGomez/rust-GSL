@@ -6,13 +6,13 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the gamma distribution. The distribution function is,
-/// 
+///
 /// p(x) dx = {1 over Gamma(a) b^a} x^{a-1} e^{-x/b} dx
-/// 
+///
 /// for x > 0.
-/// 
+///
 /// The gamma distribution with an integer parameter a is known as the Erlang distribution.
-/// 
+///
 /// The variates are computed using the Marsaglia-Tsang fast gamma method. This function for this method was previously called gsl_ran_gamma_mt and can still be accessed using this name.
 pub fn gamma(r: &mut Rng, a: f64, b: f64) -> f64 {
     unsafe { ffi::gsl_ran_gamma(ffi::FFI::unwrap_unique(r), a, b) }

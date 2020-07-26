@@ -48,97 +48,29 @@
 #![crate_name = "rgsl"]
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
-
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
 
-extern crate libc;
 extern crate c_vec;
+extern crate libc;
 
 pub use types::{
-    ComplexF32,
-    ComplexF64,
-    Result,
-    ResultE10,
-    MatrixF64,
-    MatrixF32,
-    MatrixView,
-    MatrixComplexF64,
-    MatrixComplexF32,
-    VectorF64,
-    VectorF32,
-    VectorView,
-    VectorComplexF64,
-    VectorComplexF32,
-    Rng,
-    RngType,
-    Permutation,
-    ChebSeries,
-    Combination,
-    PolyComplex,
-    DiscreteHankel,
-    EigenSymmetricWorkspace,
-    EigenSymmetricVWorkspace,
-    EigenHermitianWorkspace,
-    EigenHermitianVWorkspace,
-    EigenNonSymmWorkspace,
-    EigenNonSymmVWorkspace,
-    EigenGenSymmWorkspace,
-    EigenGenSymmVWorkspace,
-    EigenGenHermWorkspace,
-    EigenGenHermVWorkspace,
-    EigenGenWorkspace,
-    EigenGenVWorkspace,
-    FftComplexWaveTable,
-    FftComplexWorkspace,
-    Histogram,
-    HistogramPdf,
-    Histogram2D,
-    Histogram2DPdf,
-    IntegrationWorkspace,
-    IntegrationQawsTable,
-    IntegrationQawoTable,
-    CquadWorkspace,
-    GLFixedTable,
-    InterpAccel,
-    Interp,
-    InterpType,
-    Spline,
-    Minimizer,
-    MinimizerType,
-    PlainMonteCarlo,
-    MiserMonteCarlo,
-    MiserParams,
-    VegasMonteCarlo,
-    VegasParams,
-    NTuples,
-    MultiSet,
-    ODEiv2System,
-    ODEiv2Step,
-    ODEiv2StepType,
-    ODEiv2Control,
-    ODEiv2Evolve,
-    ODEiv2Driver,
-    QRng,
-    QRngType,
-    LevinUWorkspace,
-    LevinUTruncWorkspace,
-    Wavelet,
-    WaveletType,
-    WaveletWorkspace,
-    MultiFitFdfSolver,
-    MultiFitFunction,
-    MultiFitFdfSolverType,
-    MultiFitFunctionFdf,
-    RootFdfSolver,
-    RootFdfSolverType,
-    RootFSolver,
-    RootFSolverType,
-    RootFunction,
-    RootFunctionFdf,
-    SimAnnealing,
-    SimAnnealingParams, 
+    ChebSeries, Combination, ComplexF32, ComplexF64, CquadWorkspace, DiscreteHankel,
+    EigenGenHermVWorkspace, EigenGenHermWorkspace, EigenGenSymmVWorkspace, EigenGenSymmWorkspace,
+    EigenGenVWorkspace, EigenGenWorkspace, EigenHermitianVWorkspace, EigenHermitianWorkspace,
+    EigenNonSymmVWorkspace, EigenNonSymmWorkspace, EigenSymmetricVWorkspace,
+    EigenSymmetricWorkspace, FftComplexWaveTable, FftComplexWorkspace, GLFixedTable, Histogram,
+    Histogram2D, Histogram2DPdf, HistogramPdf, IntegrationQawoTable, IntegrationQawsTable,
+    IntegrationWorkspace, Interp, InterpAccel, InterpType, LevinUTruncWorkspace, LevinUWorkspace,
+    MatrixComplexF32, MatrixComplexF64, MatrixF32, MatrixF64, MatrixView, Minimizer, MinimizerType,
+    MiserMonteCarlo, MiserParams, MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction,
+    MultiFitFunctionFdf, MultiSet, NTuples, ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step,
+    ODEiv2StepType, ODEiv2System, Permutation, PlainMonteCarlo, PolyComplex, QRng, QRngType,
+    Result, ResultE10, Rng, RngType, RootFSolver, RootFSolverType, RootFdfSolver,
+    RootFdfSolverType, RootFunction, RootFunctionFdf, SimAnnealing, SimAnnealingParams, Spline,
+    VectorComplexF32, VectorComplexF64, VectorF32, VectorF64, VectorView, VegasMonteCarlo,
+    VegasParams, Wavelet, WaveletType, WaveletWorkspace,
 };
 
 pub use elementary::Elementary;
@@ -149,22 +81,13 @@ pub use utilities::IOStream;
 
 // enums part
 pub use self::enums::{
-    Mode,
-    Value,
-    GSLResult,
-    EigenSort,
-    FftDirection,
-    GaussKonrodRule,
-    IntegrationQawo,
-    VegasMode,
-    ODEiv,
-    WaveletDirection,
-    SfLegendreNorm,
+    EigenSort, FftDirection, GSLResult, GaussKonrodRule, IntegrationQawo, Mode, ODEiv,
+    SfLegendreNorm, Value, VegasMode, WaveletDirection,
 };
 
+mod enums;
 mod ffi;
 mod macros;
-mod enums;
 mod utilities;
 
 pub mod randist;
@@ -221,43 +144,52 @@ pub mod zeta;
 
 pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
 pub type function<T> = fn(x: f64, p: &mut T) -> f64;
-pub type integration_function<T> = fn(f: ::function<T>, arg: &mut T, a: f64, b: f64, result: &mut f64, abserr: &mut f64, resabs: &mut f64, resasc: &mut f64);
+pub type integration_function<T> = fn(
+    f: ::function<T>,
+    arg: &mut T,
+    a: f64,
+    b: f64,
+    result: &mut f64,
+    abserr: &mut f64,
+    resabs: &mut f64,
+    resasc: &mut f64,
+);
 pub type monte_function<T> = fn(x: &mut [f64], params: &mut T) -> f64;
 pub type select_function<T, U> = fn(ntuple_data: &mut T, params: &mut U) -> bool;
 pub type value_function<T, U> = fn(ntuple_data: &mut T, params: &mut U) -> f64;
 //pub type ComplexPackedPtr = &mut [f64];
 
 /// The maximum x such that gamma(x) is not considered an overflow.
-pub static SF_GAMMA_XMAX : f64 = 171.0;
+pub static SF_GAMMA_XMAX: f64 = 171.0;
 /// The maximum n such that gsl_sf_fact(n) does not give an overflow.
-pub static SF_FACT_NMAX : f64 = 170.0;
+pub static SF_FACT_NMAX: f64 = 170.0;
 /// The maximum n such that gsl_sf_doublefact(n) does not give an overflow.
-pub static SF_DOUBLEFACT_NMAX : f64 = 297.0;
+pub static SF_DOUBLEFACT_NMAX: f64 = 297.0;
 
-pub static SF_MATHIEU_COEFF : u32 = 100;
+pub static SF_MATHIEU_COEFF: u32 = 100;
 
-pub static DBL_EPSILON       : f64 = 2.2204460492503131e-16;
-pub static SQRT_DBL_EPSILON  : f64 = 1.4901161193847656e-08;
-pub static ROOT3_DBL_EPSILON : f64 = 6.0554544523933429e-06;
-pub static ROOT4_DBL_EPSILON : f64 = 1.2207031250000000e-04;
-pub static ROOT5_DBL_EPSILON : f64 = 7.4009597974140505e-04;
-pub static ROOT6_DBL_EPSILON : f64 = 2.4607833005759251e-03;
+pub static DBL_EPSILON: f64 = 2.2204460492503131e-16;
+pub static SQRT_DBL_EPSILON: f64 = 1.4901161193847656e-08;
+pub static ROOT3_DBL_EPSILON: f64 = 6.0554544523933429e-06;
+pub static ROOT4_DBL_EPSILON: f64 = 1.2207031250000000e-04;
+pub static ROOT5_DBL_EPSILON: f64 = 7.4009597974140505e-04;
+pub static ROOT6_DBL_EPSILON: f64 = 2.4607833005759251e-03;
 
-pub static DBL_MIN           : f64 = 2.2250738585072014e-308;
-pub static SQRT_DBL_MIN      : f64 = 1.4916681462400413e-154;
-pub static ROOT3_DBL_MIN     : f64 = 2.8126442852362996e-103;
-pub static ROOT4_DBL_MIN     : f64 = 1.2213386697554620e-77;
-pub static ROOT5_DBL_MIN     : f64 = 2.9476022969691763e-62;
-pub static ROOT6_DBL_MIN     : f64 = 5.3034368905798218e-52;
+pub static DBL_MIN: f64 = 2.2250738585072014e-308;
+pub static SQRT_DBL_MIN: f64 = 1.4916681462400413e-154;
+pub static ROOT3_DBL_MIN: f64 = 2.8126442852362996e-103;
+pub static ROOT4_DBL_MIN: f64 = 1.2213386697554620e-77;
+pub static ROOT5_DBL_MIN: f64 = 2.9476022969691763e-62;
+pub static ROOT6_DBL_MIN: f64 = 5.3034368905798218e-52;
 
-pub static DBL_MAX           : f64 = ::std::f64::MAX;//1.7976931348623156e+308;
-pub static SQRT_DBL_MAX      : f64 = 1.3407807929942596e+154;
-pub static ROOT3_DBL_MAX     : f64 = 5.6438030941222897e+102;
-pub static ROOT4_DBL_MAX     : f64 = 1.1579208923731620e+77;
-pub static ROOT5_DBL_MAX     : f64 = 4.4765466227572707e+61;
-pub static ROOT6_DBL_MAX     : f64 = 2.3756689782295612e+51;
-pub static LOG_DBL_MAX       : f64 = 7.0978271289338397e+02;
+pub static DBL_MAX: f64 = ::std::f64::MAX; //1.7976931348623156e+308;
+pub static SQRT_DBL_MAX: f64 = 1.3407807929942596e+154;
+pub static ROOT3_DBL_MAX: f64 = 5.6438030941222897e+102;
+pub static ROOT4_DBL_MAX: f64 = 1.1579208923731620e+77;
+pub static ROOT5_DBL_MAX: f64 = 4.4765466227572707e+61;
+pub static ROOT6_DBL_MAX: f64 = 2.3756689782295612e+51;
+pub static LOG_DBL_MAX: f64 = 7.0978271289338397e+02;
 
-pub static NAN               : f64 = 0f64 / 0f64;
-pub static POSINF            : f64 = 1f64 / 0f64;
-pub static NEGINF            : f64 = -1f64 / 0f64;
+pub static NAN: f64 = 0f64 / 0f64;
+pub static POSINF: f64 = 1f64 / 0f64;
+pub static NEGINF: f64 = -1f64 / 0f64;

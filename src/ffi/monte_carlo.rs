@@ -7,56 +7,64 @@ extern "C" {
     pub fn gsl_monte_plain_alloc(dim: size_t) -> *mut gsl_monte_plain_state;
     pub fn gsl_monte_plain_init(s: *mut gsl_monte_plain_state) -> c_int;
     pub fn gsl_monte_plain_free(s: *mut gsl_monte_plain_state);
-    pub fn gsl_monte_plain_integrate(f: *mut c_void,
-                                     xl: *const c_double,
-                                     xu: *const c_double,
-                                     dim: size_t,
-                                     calls: size_t,
-                                     r: *mut gsl_rng,
-                                     s: *mut gsl_monte_plain_state,
-                                     result: *mut c_double,
-                                     abserr: *mut c_double)
-                                     -> c_int;
+    pub fn gsl_monte_plain_integrate(
+        f: *mut c_void,
+        xl: *const c_double,
+        xu: *const c_double,
+        dim: size_t,
+        calls: size_t,
+        r: *mut gsl_rng,
+        s: *mut gsl_monte_plain_state,
+        result: *mut c_double,
+        abserr: *mut c_double,
+    ) -> c_int;
     // MISER
     pub fn gsl_monte_miser_alloc(dim: size_t) -> *mut gsl_monte_miser_state;
     pub fn gsl_monte_miser_init(s: *mut gsl_monte_miser_state) -> c_int;
     pub fn gsl_monte_miser_free(s: *mut gsl_monte_miser_state);
-    pub fn gsl_monte_miser_integrate(f: *mut c_void,
-                                     xl: *const c_double,
-                                     xu: *const c_double,
-                                     dim: size_t,
-                                     calls: size_t,
-                                     r: *mut gsl_rng,
-                                     s: *mut gsl_monte_miser_state,
-                                     result: *mut c_double,
-                                     abserr: *mut c_double)
-                                     -> c_int;
+    pub fn gsl_monte_miser_integrate(
+        f: *mut c_void,
+        xl: *const c_double,
+        xu: *const c_double,
+        dim: size_t,
+        calls: size_t,
+        r: *mut gsl_rng,
+        s: *mut gsl_monte_miser_state,
+        result: *mut c_double,
+        abserr: *mut c_double,
+    ) -> c_int;
     pub fn gsl_monte_miser_params_get(s: *mut gsl_monte_miser_state, m: *mut ::MiserParams);
     pub fn gsl_monte_miser_params_set(s: *mut gsl_monte_miser_state, m: *const ::MiserParams);
     // VEGAS
     pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
     pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> c_int;
     pub fn gsl_monte_vegas_free(s: *mut gsl_monte_vegas_state);
-    pub fn gsl_monte_vegas_integrate(f: *mut c_void,
-                                     xl: *const c_double,
-                                     xu: *const c_double,
-                                     dim: size_t,
-                                     calls: size_t,
-                                     r: *mut gsl_rng,
-                                     s: *mut gsl_monte_vegas_state,
-                                     result: *mut c_double,
-                                     abserr: *mut c_double)
-                                     -> c_int;
+    pub fn gsl_monte_vegas_integrate(
+        f: *mut c_void,
+        xl: *const c_double,
+        xu: *const c_double,
+        dim: size_t,
+        calls: size_t,
+        r: *mut gsl_rng,
+        s: *mut gsl_monte_vegas_state,
+        result: *mut c_double,
+        abserr: *mut c_double,
+    ) -> c_int;
     pub fn gsl_monte_vegas_chisq(s: *const gsl_monte_vegas_state) -> c_double;
-    pub fn gsl_monte_vegas_runval(s: *const gsl_monte_vegas_state,
-                                  result: *mut c_double,
-                                  sigma: *mut c_double);
-    pub fn gsl_monte_vegas_params_get(s: *const gsl_monte_vegas_state,
-                                      params: *mut gsl_monte_vegas_params);
-    pub fn gsl_monte_vegas_params_set(s: *mut gsl_monte_vegas_state,
-                                      params: *const gsl_monte_vegas_params);
+    pub fn gsl_monte_vegas_runval(
+        s: *const gsl_monte_vegas_state,
+        result: *mut c_double,
+        sigma: *mut c_double,
+    );
+    pub fn gsl_monte_vegas_params_get(
+        s: *const gsl_monte_vegas_state,
+        params: *mut gsl_monte_vegas_params,
+    );
+    pub fn gsl_monte_vegas_params_set(
+        s: *mut gsl_monte_vegas_state,
+        params: *const gsl_monte_vegas_params,
+    );
 }
-
 
 #[repr(C)]
 pub struct gsl_monte_plain_state {

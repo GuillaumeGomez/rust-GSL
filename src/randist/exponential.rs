@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the exponential distribution with mean mu. The distribution is,
-/// 
+///
 /// p(x) dx = {1 \over \mu} \exp(-x/\mu) dx
-/// 
+///
 /// for x >= 0.
 pub fn exponential(r: &mut Rng, mu: f64) -> f64 {
     unsafe { ffi::gsl_ran_exponential(ffi::FFI::unwrap_unique(r), mu) }

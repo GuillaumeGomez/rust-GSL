@@ -6,7 +6,7 @@ use ffi;
 use types::Rng;
 
 /// This function returns either 0 or 1, the result of a Bernoulli trial with probability p. The probability distribution for a Bernoulli trial is,
-/// 
+///
 /// p(0) = 1 - p
 /// p(1) = p
 pub fn bernoulli(r: &mut Rng, p: f64) -> u32 {

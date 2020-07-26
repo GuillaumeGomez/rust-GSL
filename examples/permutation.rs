@@ -11,7 +11,7 @@ fn main() {
 
     let mut p = Permutation::new(10).unwrap();
     let mut q = Permutation::new(10).unwrap();
-    let t : RngType = rgsl::rng::default();
+    let t: RngType = rgsl::rng::default();
     let mut r = rgsl::Rng::new(&t).unwrap();
 
     println!("initial permutation :");

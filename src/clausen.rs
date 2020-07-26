@@ -7,11 +7,11 @@ The Clausen function is defined by the following integral,
 
 Cl_2(x) = - \int_0^x dt \log(2 \sin(t/2))
 
-It is related to the dilogarithm by Cl_2(\theta) = \Im Li_2(\exp(i\theta)). 
+It is related to the dilogarithm by Cl_2(\theta) = \Im Li_2(\exp(i\theta)).
 !*/
 
-use ffi;
 use enums;
+use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the Clausen integral Cl_2(x).
@@ -24,5 +24,11 @@ pub fn clausen_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_clausen_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }

@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random integer from the Poisson distribution with mean mu. The probability distribution for Poisson variates is,
-/// 
+///
 /// p(k) = {\mu^k \over k!} \exp(-\mu)
-/// 
+///
 /// for k >= 0.
 pub fn poisson(r: &mut Rng, mu: f64) -> u32 {
     unsafe { ffi::gsl_ran_poisson(ffi::FFI::unwrap_unique(r), mu) }

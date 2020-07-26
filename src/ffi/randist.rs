@@ -1,8 +1,8 @@
 //! Random distributions
 
-use libc::{c_double, c_uint, c_void, size_t, c_int};
+use libc::{c_double, c_int, c_uint, c_void, size_t};
 
-use super::{gsl_rng, gsl_ran_discrete_t};
+use super::{gsl_ran_discrete_t, gsl_rng};
 
 extern "C" {
     // Random Number Distributions
@@ -28,18 +28,21 @@ extern "C" {
     pub fn gsl_ran_ugaussian_tail(r: *mut gsl_rng, a: c_double) -> c_double;
     pub fn gsl_ran_ugaussian_tail_pdf(x: c_double, a: c_double) -> c_double;
     // The Bivariate Gaussian Distribution
-    pub fn gsl_ran_bivariate_gaussian(r: *mut gsl_rng,
-                                      sigma_x: c_double,
-                                      sigma_y: c_double,
-                                      rho: c_double,
-                                      x: *mut c_double,
-                                      y: *mut c_double);
-    pub fn gsl_ran_bivariate_gaussian_pdf(x: c_double,
-                                          y: c_double,
-                                          sigma_x: c_double,
-                                          sigma_y: c_double,
-                                          rho: c_double)
-                                          -> c_double;
+    pub fn gsl_ran_bivariate_gaussian(
+        r: *mut gsl_rng,
+        sigma_x: c_double,
+        sigma_y: c_double,
+        rho: c_double,
+        x: *mut c_double,
+        y: *mut c_double,
+    );
+    pub fn gsl_ran_bivariate_gaussian_pdf(
+        x: c_double,
+        y: c_double,
+        sigma_x: c_double,
+        sigma_y: c_double,
+        rho: c_double,
+    ) -> c_double;
     // The Exponential Distribution
     pub fn gsl_ran_exponential(r: *mut gsl_rng, mu: c_double) -> c_double;
     pub fn gsl_ran_exponential_pdf(x: c_double, mu: c_double) -> c_double;
@@ -82,11 +85,12 @@ extern "C" {
     // The Levy alpha-Stable Distributions
     pub fn gsl_ran_levy(r: *mut gsl_rng, c: c_double, alpha: c_double) -> c_double;
     // The Levy skew alpha-Stable Distribution
-    pub fn gsl_ran_levy_skew(r: *mut gsl_rng,
-                             c: c_double,
-                             alpha: c_double,
-                             beta: c_double)
-                             -> c_double;
+    pub fn gsl_ran_levy_skew(
+        r: *mut gsl_rng,
+        c: c_double,
+        alpha: c_double,
+        beta: c_double,
+    ) -> c_double;
     // The Gamma Distribution
     pub fn gsl_ran_gamma(r: *mut gsl_rng, a: c_double, b: c_double) -> c_double;
     pub fn gsl_ran_gamma_knuth(r: *mut gsl_rng, a: c_double, b: c_double) -> c_double;
@@ -178,18 +182,22 @@ extern "C" {
     pub fn gsl_cdf_gumbel2_Pinv(P: c_double, a: c_double, b: c_double) -> c_double;
     pub fn gsl_cdf_gumbel2_Qinv(Q: c_double, a: c_double, b: c_double) -> c_double;
     // The Dirichlet Distribution
-    pub fn gsl_ran_dirichlet(r: *mut gsl_rng,
-                             K: size_t,
-                             alpha: *const c_double,
-                             theta: *mut c_double);
-    pub fn gsl_ran_dirichlet_pdf(K: size_t,
-                                 alpha: *const c_double,
-                                 theta: *const c_double)
-                                 -> c_double;
-    pub fn gsl_ran_dirichlet_lnpdf(K: size_t,
-                                   alpha: *const c_double,
-                                   theta: *const c_double)
-                                   -> c_double;
+    pub fn gsl_ran_dirichlet(
+        r: *mut gsl_rng,
+        K: size_t,
+        alpha: *const c_double,
+        theta: *mut c_double,
+    );
+    pub fn gsl_ran_dirichlet_pdf(
+        K: size_t,
+        alpha: *const c_double,
+        theta: *const c_double,
+    ) -> c_double;
+    pub fn gsl_ran_dirichlet_lnpdf(
+        K: size_t,
+        alpha: *const c_double,
+        theta: *const c_double,
+    ) -> c_double;
     // General Discrete Distributions
     pub fn gsl_ran_discrete_preproc(K: size_t, P: *const c_double) -> *mut gsl_ran_discrete_t;
     pub fn gsl_ran_discrete(r: *mut gsl_rng, g: *const gsl_ran_discrete_t) -> size_t;
@@ -209,11 +217,13 @@ extern "C" {
     pub fn gsl_cdf_binomial_P(k: c_uint, p: c_double, n: c_uint) -> c_double;
     pub fn gsl_cdf_binomial_Q(k: c_uint, p: c_double, n: c_uint) -> c_double;
     // The Multinomial Distribution
-    pub fn gsl_ran_multinomial(r: *mut gsl_rng,
-                               K: size_t,
-                               N: c_uint,
-                               p: *const c_double,
-                               n: *mut c_uint);
+    pub fn gsl_ran_multinomial(
+        r: *mut gsl_rng,
+        K: size_t,
+        N: c_uint,
+        p: *const c_double,
+        n: *mut c_uint,
+    );
     pub fn gsl_ran_multinomial_pdf(K: size_t, p: *const c_double, n: *const c_uint) -> c_double;
     pub fn gsl_ran_multinomial_lnpdf(K: size_t, p: *const c_double, n: *const c_uint) -> c_double;
     // The Negative Binomial Distribution
@@ -241,18 +251,20 @@ extern "C" {
     pub fn gsl_ran_logarithmic_pdf(k: c_uint, p: c_double) -> c_double;
     // Shuffling and Sampling
     pub fn gsl_ran_shuffle(r: *mut gsl_rng, base: *mut c_void, n: size_t, size: size_t);
-    pub fn gsl_ran_choose(r: *mut gsl_rng,
-                          dest: *mut c_void,
-                          k: size_t,
-                          src: *mut c_void,
-                          n: size_t,
-                          size: size_t)
-                          -> c_int;
-    pub fn gsl_ran_sample(r: *mut gsl_rng,
-                          dest: *mut c_void,
-                          k: size_t,
-                          src: *mut c_void,
-                          n: size_t,
-                          size: size_t)
-                          -> c_int;
+    pub fn gsl_ran_choose(
+        r: *mut gsl_rng,
+        dest: *mut c_void,
+        k: size_t,
+        src: *mut c_void,
+        n: size_t,
+        size: size_t,
+    ) -> c_int;
+    pub fn gsl_ran_sample(
+        r: *mut gsl_rng,
+        dest: *mut c_void,
+        k: size_t,
+        src: *mut c_void,
+        n: size_t,
+        size: size_t,
+    ) -> c_int;
 }

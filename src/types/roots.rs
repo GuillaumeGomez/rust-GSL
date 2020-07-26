@@ -84,7 +84,9 @@ impl RootFSolverType {
     ///
     /// At any time the current estimate of the root is taken as the midpoint of the interval.
     pub fn bisection() -> RootFSolverType {
-        RootFSolverType { s: unsafe { ffi::gsl_root_fsolver_bisection } }
+        RootFSolverType {
+            s: unsafe { ffi::gsl_root_fsolver_bisection },
+        }
     }
 
     /// The false position algorithm is a method of finding roots based on linear interpolation.
@@ -100,7 +102,9 @@ impl RootFSolverType {
     /// The best estimate of the root is taken from the linear interpolation of the interval on
     /// the current iteration.
     pub fn brent() -> RootFSolverType {
-        RootFSolverType { s: unsafe { ffi::gsl_root_fsolver_brent } }
+        RootFSolverType {
+            s: unsafe { ffi::gsl_root_fsolver_brent },
+        }
     }
 
     /// The Brent-Dekker method (referred to here as Brent’s method) combines an interpo-
@@ -118,7 +122,9 @@ impl RootFSolverType {
     ///
     /// The best estimate of the root is taken from the most recent interpolation or bisection.
     pub fn falsepos() -> RootFSolverType {
-        RootFSolverType { s: unsafe { ffi::gsl_root_fsolver_falsepos } }
+        RootFSolverType {
+            s: unsafe { ffi::gsl_root_fsolver_falsepos },
+        }
     }
 }
 
@@ -127,7 +133,6 @@ pub use ffi::gsl_function as RootFunction;
 pub struct RootFSolver {
     s: *mut ffi::gsl_root_fsolver,
 }
-
 
 impl RootFSolver {
     /// This function returns a pointer to a newly allocated instance of a solver of type T.
@@ -236,19 +241,25 @@ impl RootFdfSolverType {
     /// the function f is drawn at that position. The point where this line crosses the x-axis
     /// becomes the new guess.
     pub fn newton() -> RootFdfSolverType {
-        RootFdfSolverType { s: unsafe { ffi::gsl_root_fdfsolver_newton } }
+        RootFdfSolverType {
+            s: unsafe { ffi::gsl_root_fdfsolver_newton },
+        }
     }
 
     /// The secant method is a simplified version of Newton’s method which does not require
     /// the computation of the derivative on every step.
     pub fn secant() -> RootFdfSolverType {
-        RootFdfSolverType { s: unsafe { ffi::gsl_root_fdfsolver_secant } }
+        RootFdfSolverType {
+            s: unsafe { ffi::gsl_root_fdfsolver_secant },
+        }
     }
 
     /// The Steffenson Method 1 provides the fastest convergence of all the routines. It com-
     /// bines the basic Newton algorithm with an Aitken “delta-squared” acceleration.
     pub fn steffenson() -> RootFdfSolverType {
-        RootFdfSolverType { s: unsafe { ffi::gsl_root_fdfsolver_steffenson } }
+        RootFdfSolverType {
+            s: unsafe { ffi::gsl_root_fdfsolver_steffenson },
+        }
     }
 }
 

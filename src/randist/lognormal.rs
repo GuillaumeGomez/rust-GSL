@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the lognormal distribution. The distribution function is,
-/// 
+///
 /// p(x) dx = {1 \over x \sqrt{2 \pi \sigma^2} } \exp(-(\ln(x) - \zeta)^2/2 \sigma^2) dx
-/// 
+///
 /// for x > 0.
 pub fn lognormal(r: &mut Rng, zeta: f64, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_lognormal(ffi::FFI::unwrap_unique(r), zeta, sigma) }

@@ -16,7 +16,7 @@ fn main() {
     println!("All multisets of {{0,1,2,3}} by size:");
     for i in 0..5 {
         let mut c = rgsl::MultiSet::new_init(4, i).unwrap();
-      
+
         loop {
             write!(stdio, "{{");
             c.print(stdio);

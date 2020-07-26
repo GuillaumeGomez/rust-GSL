@@ -5,7 +5,7 @@
 /*!
 #Numerical Differentiation
 
-The functions described in this chapter compute numerical derivatives by finite differencing. An adaptive algorithm is used to find the 
+The functions described in this chapter compute numerical derivatives by finite differencing. An adaptive algorithm is used to find the
 best choice of finite difference and to estimate the error in the derivative.
 
 ##References and Further Reading
@@ -56,7 +56,7 @@ fn central_deriv<T>(
 
 /// This function computes the numerical derivative of the function f at the point x using an adaptive central difference algorithm with a step-size
 /// of h. The derivative is returned in result and an estimate of its absolute error is returned in abserr.
-/// 
+///
 /// The initial value of h is used to estimate an optimal step-size, based on the scaling of the truncation error and round-off error in the
 /// derivative calculation. The derivative is computed using a 5-point rule for equally spaced abscissae at x-h, x-h/2, x, x+h/2, x+h, with
 /// an error estimate taken from the difference between the 5-point rule and the corresponding 3-point rule x-h, x, x+h. Note that the value
@@ -82,7 +82,15 @@ pub fn deriv_central<T>(
         let mut trunc_opt = 0f64;
 
         let h_opt = unsafe { h * (round / (2f64 * trunc)).powf(1f64 / 3f64) };
-        central_deriv(f, param, x, h_opt, &mut r_opt, &mut round_opt, &mut trunc_opt);
+        central_deriv(
+            f,
+            param,
+            x,
+            h_opt,
+            &mut r_opt,
+            &mut round_opt,
+            &mut trunc_opt,
+        );
         let error_opt = round_opt + trunc_opt;
 
         if error_opt < error && unsafe { (r_opt - r_0).abs() } < 4f64 * error {
@@ -112,7 +120,8 @@ fn forward_deriv<T>(
     let r2 = 2f64 * (f4 - f2);
     let r4 = (22f64 / 3f64) * (f4 - f3) - (62f64 / 3f64) * (f3 - f2) + (52f64 / 3f64) * (f2 - f1);
 
-    let e4 = unsafe { 2f64 * 20.67f64 * (f4.abs() + f3.abs() + f2.abs() + f1.abs()) * ::DBL_EPSILON };
+    let e4 =
+        unsafe { 2f64 * 20.67f64 * (f4.abs() + f3.abs() + f2.abs() + f1.abs()) * ::DBL_EPSILON };
 
     let dy = unsafe { my_max((r2 / h).abs(), (r4 / h).abs()) * (x.abs() / h) * ::DBL_EPSILON };
 
@@ -125,7 +134,7 @@ fn forward_deriv<T>(
 /// of h. The function is evaluated only at points greater than x, and never at x itself. The derivative is returned in result and an estimate
 /// of its absolute error is returned in abserr. This function should be used if f(x) has a discontinuity at x, or is undefined for values less
 /// than x.
-/// 
+///
 /// The initial value of h is used to estimate an optimal step-size, based on the scaling of the truncation error and round-off error in the
 /// derivative calculation. The derivative at x is computed using an “open” 4-point rule for equally spaced abscissae at x+h/4, x+h/2, x+3h/4,
 /// x+h, with an error estimate taken from the difference between the 4-point rule and the corresponding 2-point rule x+h/2, x+h.
@@ -150,7 +159,15 @@ pub fn deriv_forward<T>(
         let mut trunc_opt = 0f64;
 
         let h_opt = unsafe { h * (round / trunc).powf(1f64 / 2f64) };
-        forward_deriv(f, param, x, h_opt, &mut r_opt, &mut round_opt, &mut trunc_opt);
+        forward_deriv(
+            f,
+            param,
+            x,
+            h_opt,
+            &mut r_opt,
+            &mut round_opt,
+            &mut trunc_opt,
+        );
         let error_opt = round_opt + trunc_opt;
 
         if error_opt < error && unsafe { (r_opt - r_0).abs() } < 4f64 * error {
@@ -167,7 +184,7 @@ pub fn deriv_forward<T>(
 /// step-size of h. The function is evaluated only at points less than x, and never at x itself. The derivative is returned in result and an
 /// estimate of its absolute error is returned in abserr. This function should be used if f(x) has a discontinuity at x, or is undefined for
 /// values greater than x.
-/// 
+///
 /// This function is equivalent to calling gsl_deriv_forward with a negative step-size.
 pub fn deriv_backward<T>(
     f: ::function<T>,
