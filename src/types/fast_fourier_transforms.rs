@@ -2,12 +2,12 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use ffi;
 use c_vec::CSlice;
+use ffi;
 
 pub struct FftComplexWaveTable {
     w: *mut ffi::gsl_fft_complex_wavetable,
-    f: CSlice<usize>
+    f: CSlice<usize>,
 }
 
 impl FftComplexWaveTable {
@@ -16,7 +16,7 @@ impl FftComplexWaveTable {
     /// of subtransforms, and the factors and their trigonometric coefficients are stored in the wavetable. The trigonometric coefficients are
     /// computed using direct calls to sin and cos, for accuracy. Recursion relations could be used to compute the lookup table faster, but if
     /// an application performs many FFTs of the same length then this computation is a one-off overhead which does not affect the final throughput.
-    /// 
+    ///
     /// The wavetable structure can be used repeatedly for any transform of the same length. The table is not modified by calls to any of the other
     /// FFT functions. The same wavetable can be used for both forward and backward (or inverse) transforms of a given length.
     pub fn new(n: usize) -> Option<FftComplexWaveTable> {
@@ -28,7 +28,7 @@ impl FftComplexWaveTable {
             unsafe {
                 Some(FftComplexWaveTable {
                     w: tmp,
-                    f: CSlice::new((*tmp).factor.as_mut_ptr(), 64usize)
+                    f: CSlice::new((*tmp).factor.as_mut_ptr(), 64usize),
                 })
             }
         }
@@ -51,7 +51,7 @@ impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
         unsafe {
             FftComplexWaveTable {
                 w: w,
-                f: CSlice::new((*w).factor.as_mut_ptr(), 64usize)
+                f: CSlice::new((*w).factor.as_mut_ptr(), 64usize),
             }
         }
     }
@@ -70,7 +70,7 @@ impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
 }
 
 pub struct FftComplexWorkspace {
-    w: *mut ffi::gsl_fft_complex_workspace
+    w: *mut ffi::gsl_fft_complex_workspace,
 }
 
 impl FftComplexWorkspace {
@@ -81,9 +81,7 @@ impl FftComplexWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(FftComplexWorkspace {
-                w: tmp
-            })
+            Some(FftComplexWorkspace { w: tmp })
         }
     }
 }
@@ -97,9 +95,7 @@ impl Drop for FftComplexWorkspace {
 
 impl ffi::FFI<ffi::gsl_fft_complex_workspace> for FftComplexWorkspace {
     fn wrap(w: *mut ffi::gsl_fft_complex_workspace) -> FftComplexWorkspace {
-        FftComplexWorkspace {
-            w: w
-        }
+        FftComplexWorkspace { w: w }
     }
 
     fn soft_wrap(w: *mut ffi::gsl_fft_complex_workspace) -> FftComplexWorkspace {

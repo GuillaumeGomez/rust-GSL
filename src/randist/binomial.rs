@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random integer from the binomial distribution, the number of successes in n independent trials with probability p. The probability distribution for binomial variates is,
-/// 
+///
 /// p(k) = {n! \over k! (n-k)! } p^k (1-p)^{n-k}
-/// 
+///
 /// for 0 <= k <= n.
 pub fn binomial(r: &mut Rng, p: f64, n: u32) -> u32 {
     unsafe { ffi::gsl_ran_binomial(ffi::FFI::unwrap_unique(r), p, n) }

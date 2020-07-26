@@ -79,24 +79,35 @@ somewhere in the interval. If a valid initial interval is used then these algori
 !*/
 
 use ffi;
-use libc::{c_void, malloc, free};
+use libc::{c_void, free, malloc};
 
-static REL_ERR_VAL    : f64 = 1.0e-06f64;
-static ABS_ERR_VAL    : f64 = 1.0e-10f64;
+static REL_ERR_VAL: f64 = 1.0e-06f64;
+static ABS_ERR_VAL: f64 = 1.0e-10f64;
 /* (3 - sqrt(5))/2 */
-static GOLDEN_MEAN    : f64 = 0.3819660112501052f64;
+static GOLDEN_MEAN: f64 = 0.3819660112501052f64;
 /* (1 + sqrt(5))/2 */
 //static GOLDEN_RATIO   : f64 = 1.6180339887498950f64;
 
 fn safe_func_call<T>(f: ::function<T>, arg: &mut T, x: f64, yp: &mut f64) {
     *yp = f(x, arg);
     if !yp.is_finite() {
-        rgsl_error!("computed function value is infinite or NaN", ::Value::BadFunction);
+        rgsl_error!(
+            "computed function value is infinite or NaN",
+            ::Value::BadFunction
+        );
     }
 }
 
-fn compute_f_values<T>(f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: &mut f64, x_lower: f64, f_lower: &mut f64,
-    x_upper: f64, f_upper: &mut f64) -> ::Value {
+fn compute_f_values<T>(
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: f64,
+    f_minimum: &mut f64,
+    x_lower: f64,
+    f_lower: &mut f64,
+    x_upper: f64,
+    f_upper: &mut f64,
+) -> ::Value {
     safe_func_call(f, arg, x_lower, f_lower);
     safe_func_call(f, arg, x_upper, f_upper);
     safe_func_call(f, arg, x_minimum, f_minimum);
@@ -114,7 +125,7 @@ pub struct Minimizer<T> {
     f_minimum: f64,
     f_lower: f64,
     f_upper: f64,
-    state: *mut c_void
+    state: *mut c_void,
 }
 
 impl<T> Minimizer<T> {
@@ -146,7 +157,7 @@ impl<T> Minimizer<T> {
                 f_minimum: 0f64,
                 f_lower: 0f64,
                 f_upper: 0f64,
-                state: state
+                state: state,
             })
         }
     }
@@ -155,25 +166,51 @@ impl<T> Minimizer<T> {
     /// a guess for the location of the minimum x_minimum.
     ///
     /// If the interval given does not contain a minimum, then the function returns an error code of ::Value::Invalid.
-    pub fn set(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, x_lower: f64, x_upper: f64) -> ::Value {
+    pub fn set(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        x_minimum: f64,
+        x_lower: f64,
+        x_upper: f64,
+    ) -> ::Value {
         let mut f_minimum = 0f64;
         let mut f_lower = 0f64;
         let mut f_upper = 0f64;
 
-        let status = ::Value::from(compute_f_values(f, arg, x_minimum, &mut f_minimum, x_lower,
-                                                    &mut f_lower, x_upper, &mut f_upper));
+        let status = ::Value::from(compute_f_values(
+            f,
+            arg,
+            x_minimum,
+            &mut f_minimum,
+            x_lower,
+            &mut f_lower,
+            x_upper,
+            &mut f_upper,
+        ));
 
         if status != ::Value::Success {
             status
         } else {
-            self.set_with_values(f, arg, x_minimum, f_minimum, x_lower, f_lower, x_upper, f_upper)
+            self.set_with_values(
+                f, arg, x_minimum, f_minimum, x_lower, f_lower, x_upper, f_upper,
+            )
         }
     }
 
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower and f_upper instead of computing
     /// f(x_minimum), f(x_lower) and f(x_upper).
-    pub fn set_with_values(&mut self, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64,
-        x_upper: f64, f_upper: f64) -> ::Value {
+    pub fn set_with_values(
+        &mut self,
+        f: ::function<T>,
+        arg: &mut T,
+        x_minimum: f64,
+        f_minimum: f64,
+        x_lower: f64,
+        f_lower: f64,
+        x_upper: f64,
+        f_upper: f64,
+    ) -> ::Value {
         self.function = Some(f);
         self.arg = unsafe { Some(::std::mem::transmute(arg)) };
         self.x_minimum = x_minimum;
@@ -185,7 +222,10 @@ impl<T> Minimizer<T> {
         }
 
         if x_minimum >= x_upper || x_minimum <= x_lower {
-            rgsl_error!("x_minimum must lie inside interval (lower < x < upper)", ::Value::Invalid);
+            rgsl_error!(
+                "x_minimum must lie inside interval (lower < x < upper)",
+                ::Value::Invalid
+            );
         }
 
         self.f_upper = f_upper;
@@ -197,9 +237,17 @@ impl<T> Minimizer<T> {
         }
 
         ::Value::from(unsafe {
-            (self.type_.set)(self.state, self.function.unwrap(),
-                             ::std::mem::transmute(self.arg.unwrap()), x_minimum, f_minimum, x_lower,
-                f_lower, x_upper, f_upper)
+            (self.type_.set)(
+                self.state,
+                self.function.unwrap(),
+                ::std::mem::transmute(self.arg.unwrap()),
+                x_minimum,
+                f_minimum,
+                x_lower,
+                f_lower,
+                x_upper,
+                f_upper,
+            )
         })
     }
 
@@ -260,8 +308,17 @@ impl<T> Minimizer<T> {
     /// minimum. This information can be accessed with the following auxiliary functions,
     pub fn iterate(&mut self) -> ::Value {
         ::Value::from(unsafe {
-            (self.type_.iterate)(self.state, self.function.unwrap(), ::std::mem::transmute(self.arg.unwrap()), &mut self.x_minimum,
-                &mut self.f_minimum, &mut self.x_lower, &mut self.f_lower, &mut self.x_upper, &mut self.f_upper)
+            (self.type_.iterate)(
+                self.state,
+                self.function.unwrap(),
+                ::std::mem::transmute(self.arg.unwrap()),
+                &mut self.x_minimum,
+                &mut self.f_minimum,
+                &mut self.x_lower,
+                &mut self.f_lower,
+                &mut self.x_upper,
+                &mut self.f_upper,
+            )
         })
     }
 }
@@ -276,10 +333,28 @@ impl<T> Drop for Minimizer<T> {
 pub struct MinimizerType<T> {
     pub name: String,
     size: usize,
-    set: fn(state: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
-        f_upper: f64) -> ::Value,
-    iterate: fn(state: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-        f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value
+    set: fn(
+        state: *mut c_void,
+        f: ::function<T>,
+        arg: &mut T,
+        x_minimum: f64,
+        f_minimum: f64,
+        x_lower: f64,
+        f_lower: f64,
+        x_upper: f64,
+        f_upper: f64,
+    ) -> ::Value,
+    iterate: fn(
+        state: *mut c_void,
+        f: ::function<T>,
+        arg: &mut T,
+        x_minimum: &mut f64,
+        f_minimum: &mut f64,
+        x_lower: &mut f64,
+        f_lower: &mut f64,
+        x_upper: &mut f64,
+        f_upper: &mut f64,
+    ) -> ::Value,
 }
 
 impl<T> MinimizerType<T> {
@@ -296,7 +371,7 @@ impl<T> MinimizerType<T> {
             name: "goldensection".to_string(),
             size: ::std::mem::size_of::<goldensection_state_t>() as usize,
             set: goldensection_init,
-            iterate: goldensection_iterate
+            iterate: goldensection_iterate,
         }
     }
 
@@ -313,7 +388,7 @@ impl<T> MinimizerType<T> {
             name: "brent".to_string(),
             size: ::std::mem::size_of::<brent_state_t>() as usize,
             set: brent_init,
-            iterate: brent_iterate
+            iterate: brent_iterate,
         }
     }
 
@@ -323,7 +398,7 @@ impl<T> MinimizerType<T> {
             name: "quad-golden".to_string(),
             size: ::std::mem::size_of::<quad_golden_state_t>() as usize,
             set: quad_golden_init,
-            iterate: quad_golden_iterate
+            iterate: quad_golden_iterate,
         }
     }
 }
@@ -334,27 +409,45 @@ impl<T> Clone for MinimizerType<T> {
             name: self.name.clone(),
             size: self.size,
             set: self.set,
-            iterate: self.iterate
+            iterate: self.iterate,
         }
     }
 }
 
 struct goldensection_state_t {
-    dummy: f64
+    dummy: f64,
 }
 
 #[allow(unused_variables)]
-fn goldensection_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64,
-    x_upper: f64, f_upper: f64) -> ::Value {
-    let state : &mut goldensection_state_t = unsafe { ::std::mem::transmute(vstate) };
+fn goldensection_init<T>(
+    vstate: *mut c_void,
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: f64,
+    f_minimum: f64,
+    x_lower: f64,
+    f_lower: f64,
+    x_upper: f64,
+    f_upper: f64,
+) -> ::Value {
+    let state: &mut goldensection_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     state.dummy = 0f64;
     ::Value::Success
 }
 
 #[allow(unused_variables)]
-fn goldensection_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value {
+fn goldensection_iterate<T>(
+    vstate: *mut c_void,
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: &mut f64,
+    f_minimum: &mut f64,
+    x_lower: &mut f64,
+    f_lower: &mut f64,
+    x_upper: &mut f64,
+    f_upper: &mut f64,
+) -> ::Value {
     let x_center = *x_minimum;
     let x_left = *x_lower;
     let x_right = *x_upper;
@@ -396,13 +489,22 @@ struct brent_state_t {
     v: f64,
     w: f64,
     f_v: f64,
-    f_w: f64
+    f_w: f64,
 }
 
 #[allow(unused_variables)]
-fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
-    f_upper: f64) -> ::Value {
-    let state : &mut brent_state_t = unsafe { ::std::mem::transmute(vstate) };
+fn brent_init<T>(
+    vstate: *mut c_void,
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: f64,
+    f_minimum: f64,
+    x_lower: f64,
+    f_lower: f64,
+    x_upper: f64,
+    f_upper: f64,
+) -> ::Value {
+    let state: &mut brent_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     /* golden = (3 - sqrt(5))/2 */
     let golden = 0.3819660f64;
@@ -424,10 +526,19 @@ fn brent_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: 
 }
 
 #[allow(unused_assignments)]
-fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value {
+fn brent_iterate<T>(
+    vstate: *mut c_void,
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: &mut f64,
+    f_minimum: &mut f64,
+    x_lower: &mut f64,
+    f_lower: &mut f64,
+    x_upper: &mut f64,
+    f_upper: &mut f64,
+) -> ::Value {
     unsafe {
-        let state : &mut brent_state_t = ::std::mem::transmute(vstate);
+        let state: &mut brent_state_t = ::std::mem::transmute(vstate);
 
         let x_left = *x_lower;
         let x_right = *x_upper;
@@ -485,10 +596,13 @@ fn brent_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimu
                 d = if z < midpoint { tolerance } else { -tolerance };
             }
         } else {
-            e = if z < midpoint { x_right - z } else { -(z - x_left) };
+            e = if z < midpoint {
+                x_right - z
+            } else {
+                -(z - x_left)
+            };
             d = golden * e;
         }
-
 
         if d.abs() >= tolerance {
             u = z + d;
@@ -554,17 +668,26 @@ struct quad_golden_state_t {
     f_prev_small: f64,
     x_small: f64,
     f_small: f64,
-    num_iter: i32
+    num_iter: i32,
 }
 
 #[allow(unused_variables)]
-fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: f64, f_minimum: f64, x_lower: f64, f_lower: f64, x_upper: f64,
-    f_upper: f64) -> ::Value {
-    let state : &mut quad_golden_state_t = unsafe { ::std::mem::transmute(vstate) };
+fn quad_golden_init<T>(
+    vstate: *mut c_void,
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: f64,
+    f_minimum: f64,
+    x_lower: f64,
+    f_lower: f64,
+    x_upper: f64,
+    f_upper: f64,
+) -> ::Value {
+    let state: &mut quad_golden_state_t = unsafe { ::std::mem::transmute(vstate) };
 
     /* For the original behavior, the first value for x_minimum_minimum
-     passed in by the user should be a golden section step but we
-     don't enforce this here. */
+    passed in by the user should be a golden section step but we
+    don't enforce this here. */
 
     state.x_prev_small = x_minimum;
     state.x_small = x_minimum;
@@ -581,10 +704,19 @@ fn quad_golden_init<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_min
 }
 
 #[allow(unused_assignments)]
-fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_minimum: &mut f64, f_minimum: &mut f64, x_lower: &mut f64,
-    f_lower: &mut f64, x_upper: &mut f64, f_upper: &mut f64) -> ::Value {
+fn quad_golden_iterate<T>(
+    vstate: *mut c_void,
+    f: ::function<T>,
+    arg: &mut T,
+    x_minimum: &mut f64,
+    f_minimum: &mut f64,
+    x_lower: &mut f64,
+    f_lower: &mut f64,
+    x_upper: &mut f64,
+    f_upper: &mut f64,
+) -> ::Value {
     unsafe {
-        let state : &mut quad_golden_state_t = ::std::mem::transmute(vstate);
+        let state: &mut quad_golden_state_t = ::std::mem::transmute(vstate);
 
         let x_m = *x_minimum;
         let f_m = *f_minimum;
@@ -633,7 +765,7 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
             } else {
                 /* Handle case where c2 ~=~ 0  */
                 /* Insure that the line search will NOT take a quadratic
-                    interpolation step in this iteration */
+                interpolation step in this iteration */
                 quad_step_size = stored_step;
             }
 
@@ -643,7 +775,10 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
 
         let x_trial = x_m + quad_step_size;
 
-        if quad_step_size.abs() < (0.5f64 * prev_stored_step).abs() && x_trial > x_l && x_trial < x_u {
+        if quad_step_size.abs() < (0.5f64 * prev_stored_step).abs()
+            && x_trial > x_l
+            && x_trial < x_u
+        {
             /* Take quadratic interpolation step */
             step_size = quad_step_size;
 
@@ -652,11 +787,11 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
                 step_size = if x_midpoint >= x_m { 1f64 } else { -1f64 } * tol.abs();
             }
 
-            // This line is supposed to do nothing
-            //DEBUG_PRINTF(("quadratic step: %g\n", step_size));
-        }
-        else if (x_small != x_prev_small && x_small < x_m && x_prev_small < x_m) ||
-            (x_small != x_prev_small && x_small > x_m && x_prev_small > x_m) {
+        // This line is supposed to do nothing
+        //DEBUG_PRINTF(("quadratic step: %g\n", step_size));
+        } else if (x_small != x_prev_small && x_small < x_m && x_prev_small < x_m)
+            || (x_small != x_prev_small && x_small > x_m && x_prev_small > x_m)
+        {
             /* Take safeguarded function comparison step */
             let mut outside_interval = 0f64;
             let mut inside_interval = 0f64;
@@ -691,8 +826,8 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
                 step_size = scale_factor * step;
             }
 
-            // This line is supposed to do nothing
-            //DEBUG_PRINTF(("safeguard step: %g\n", step_size));
+        // This line is supposed to do nothing
+        //DEBUG_PRINTF(("safeguard step: %g\n", step_size));
         } else {
             /* Take golden section step */
             let step = if x_m < x_midpoint {
@@ -728,14 +863,14 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
                 *f_upper = f_m;
             }
 
-          state.x_prev_small = x_small;
-          state.f_prev_small = f_small;
+            state.x_prev_small = x_small;
+            state.f_prev_small = f_small;
 
-          state.x_small = x_m;
-          state.f_small = f_m;
+            state.x_small = x_m;
+            state.f_small = f_m;
 
-          *x_minimum = x_eval;
-          *f_minimum = f_eval;
+            *x_minimum = x_eval;
+            *f_minimum = f_eval;
         } else {
             if x_eval < x_m {
                 *x_lower = x_eval;
@@ -751,8 +886,10 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
 
                 state.x_small = x_eval;
                 state.f_small = f_eval;
-            } else if f_eval <= f_prev_small || (x_prev_small - x_m).abs() < 2f64 * ::DBL_EPSILON ||
-               (x_prev_small - x_small).abs() < 2f64 * ::DBL_EPSILON {
+            } else if f_eval <= f_prev_small
+                || (x_prev_small - x_m).abs() < 2f64 * ::DBL_EPSILON
+                || (x_prev_small - x_small).abs() < 2f64 * ::DBL_EPSILON
+            {
                 state.x_prev_small = x_eval;
                 state.f_prev_small = f_eval;
             }
@@ -763,7 +900,6 @@ fn quad_golden_iterate<T>(vstate: *mut c_void, f: ::function<T>, arg: &mut T, x_
         state.prev_stored_step = prev_stored_step;
         state.step_size = step_size;
         state.num_iter += 1;
-
 
         // This line is supposed to do nothing
         //DEBUG_PRINTF(("[%d] Final State: %g  %g  %g\n", state->num_iter, x_l, x_m, x_u));

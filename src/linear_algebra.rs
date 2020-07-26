@@ -5,8 +5,8 @@
 /*!
 #Linear Algebra
 
-This chapter describes functions for solving linear systems. The library provides linear algebra operations which operate directly on the 
-gsl_vector and gsl_matrix objects. These routines use the standard algorithms from Golub & Van Loan’s Matrix Computations with Level-1 and 
+This chapter describes functions for solving linear systems. The library provides linear algebra operations which operate directly on the
+gsl_vector and gsl_matrix objects. These routines use the standard algorithms from Golub & Van Loan’s Matrix Computations with Level-1 and
 Level-2 BLAS calls for efficiency.
 
 ##LU Decomposition
@@ -14,18 +14,18 @@ Level-2 BLAS calls for efficiency.
 A general square matrix A has an LU decomposition into upper and lower triangular matrices,
 
 P A = L U
-where P is a permutation matrix, L is unit lower triangular matrix and U is upper triangular matrix. For square matrices this decomposition 
-can be used to convert the linear system A x = b into a pair of triangular systems (L y = P b, U x = y), which can be solved by forward and 
+where P is a permutation matrix, L is unit lower triangular matrix and U is upper triangular matrix. For square matrices this decomposition
+can be used to convert the linear system A x = b into a pair of triangular systems (L y = P b, U x = y), which can be solved by forward and
 back-substitution. Note that the LU decomposition is valid for singular matrices.
 
 ##QR Decomposition
 
-A general rectangular M-by-N matrix A has a QR decomposition into the product of an orthogonal M-by-M square matrix Q (where Q^T Q = I) and 
+A general rectangular M-by-N matrix A has a QR decomposition into the product of an orthogonal M-by-M square matrix Q (where Q^T Q = I) and
 an M-by-N right-triangular matrix R,
 
 A = Q R
-This decomposition can be used to convert the linear system A x = b into the triangular system R x = Q^T b, which can be solved by back-substitution. 
-Another use of the QR decomposition is to compute an orthonormal basis for a set of vectors. The first N columns of Q form an orthonormal 
+This decomposition can be used to convert the linear system A x = b into the triangular system R x = Q^T b, which can be solved by back-substitution.
+Another use of the QR decomposition is to compute an orthonormal basis for a set of vectors. The first N columns of Q form an orthonormal
 basis for the range of A, ran(A), when A has full column rank.
 
 ##QR Decomposition with Column Pivoting
@@ -33,30 +33,30 @@ basis for the range of A, ran(A), when A has full column rank.
 The QR decomposition can be extended to the rank deficient case by introducing a column permutation P,
 
 A P = Q R
-The first r columns of Q form an orthonormal basis for the range of A for a matrix with column rank r. This decomposition can also be used 
-to convert the linear system A x = b into the triangular system R y = Q^T b, x = P y, which can be solved by back-substitution and permutation. 
+The first r columns of Q form an orthonormal basis for the range of A for a matrix with column rank r. This decomposition can also be used
+to convert the linear system A x = b into the triangular system R y = Q^T b, x = P y, which can be solved by back-substitution and permutation.
 We denote the QR decomposition with column pivoting by QRP^T since A = Q R P^T.
 
 ##Singular Value Decomposition
 
-A general rectangular M-by-N matrix A has a singular value decomposition (SVD) into the product of an M-by-N orthogonal matrix U, an N-by-N 
+A general rectangular M-by-N matrix A has a singular value decomposition (SVD) into the product of an M-by-N orthogonal matrix U, an N-by-N
 diagonal matrix of singular values S and the transpose of an N-by-N orthogonal square matrix V,
 
 A = U S V^T
 
-The singular values \sigma_i = S_{ii} are all non-negative and are generally chosen to form a non-increasing sequence \sigma_1 >= \sigma_2 >= 
+The singular values \sigma_i = S_{ii} are all non-negative and are generally chosen to form a non-increasing sequence \sigma_1 >= \sigma_2 >=
 ... >= \sigma_N >= 0.
 
-The singular value decomposition of a matrix has many practical uses. The condition number of the matrix is given by the ratio of the largest 
-singular value to the smallest singular value. The presence of a zero singular value indicates that the matrix is singular. The number of 
-non-zero singular values indicates the rank of the matrix. In practice singular value decomposition of a rank-deficient matrix will not produce 
+The singular value decomposition of a matrix has many practical uses. The condition number of the matrix is given by the ratio of the largest
+singular value to the smallest singular value. The presence of a zero singular value indicates that the matrix is singular. The number of
+non-zero singular values indicates the rank of the matrix. In practice singular value decomposition of a rank-deficient matrix will not produce
 exact zeroes for singular values, due to finite numerical precision. Small singular values should be edited by choosing a suitable tolerance.
 
-For a rank-deficient matrix, the null space of A is given by the columns of V corresponding to the zero singular values. Similarly, the range 
+For a rank-deficient matrix, the null space of A is given by the columns of V corresponding to the zero singular values. Similarly, the range
 of A is given by columns of U corresponding to the non-zero singular values.
 
-Note that the routines here compute the “thin” version of the SVD with U as M-by-N orthogonal matrix. This allows in-place computation and is 
-the most commonly-used form in practice. Mathematically, the “full” SVD is defined with U as an M-by-M orthogonal matrix and S as an M-by-N 
+Note that the routines here compute the “thin” version of the SVD with U as M-by-N orthogonal matrix. This allows in-place computation and is
+the most commonly-used form in practice. Mathematically, the “full” SVD is defined with U as an M-by-M orthogonal matrix and S as an M-by-N
 diagonal matrix (with additional rows of zeros).
 
 ##Cholesky Decomposition
@@ -65,8 +65,8 @@ A symmetric, positive definite square matrix A has a Cholesky decomposition into
 
 A = L L^T
 
-This is sometimes referred to as taking the square-root of a matrix. The Cholesky decomposition can only be carried out when all the eigenvalues 
-of the matrix are positive. This decomposition can be used to convert the linear system A x = b into a pair of triangular systems (L y = b, 
+This is sometimes referred to as taking the square-root of a matrix. The Cholesky decomposition can only be carried out when all the eigenvalues
+of the matrix are positive. This decomposition can be used to convert the linear system A x = b into a pair of triangular systems (L y = b,
 L^T x = y), which can be solved by forward and back-substitution.
 
 ##Tridiagonal Decomposition of Real Symmetric Matrices
@@ -91,7 +91,7 @@ A general real matrix A can be decomposed by orthogonal similarity transformatio
 
 A = U H U^T
 
-where U is orthogonal and H is an upper Hessenberg matrix, meaning that it has zeros below the first subdiagonal. The Hessenberg reduction 
+where U is orthogonal and H is an upper Hessenberg matrix, meaning that it has zeros below the first subdiagonal. The Hessenberg reduction
 is the first step in the Schur decomposition for the nonsymmetric eigenvalue problem, but has applications in other areas as well.
 
 ##Hessenberg-Triangular Decomposition of Real Matrices
@@ -101,7 +101,7 @@ A general real matrix pair (A, B) can be decomposed by orthogonal similarity tra
 A = U H V^T
 B = U R V^T
 
-where U and V are orthogonal, H is an upper Hessenberg matrix, and R is upper triangular. The Hessenberg-Triangular reduction is the first 
+where U and V are orthogonal, H is an upper Hessenberg matrix, and R is upper triangular. The Hessenberg-Triangular reduction is the first
 step in the generalized Schur decomposition for the generalized eigenvalue problem.
 
 ##Bidiagonalization
@@ -109,28 +109,28 @@ step in the generalized Schur decomposition for the generalized eigenvalue probl
 A general matrix A can be factorized by similarity transformations into the form,
 
 A = U B V^T
-where U and V are orthogonal matrices and B is a N-by-N bidiagonal matrix with non-zero entries only on the diagonal and superdiagonal. The 
+where U and V are orthogonal matrices and B is a N-by-N bidiagonal matrix with non-zero entries only on the diagonal and superdiagonal. The
 size of U is M-by-N and the size of V is N-by-N.
 
 ##Householder Transformations
 
-A Householder transformation is a rank-1 modification of the identity matrix which can be used to zero out selected elements of a vector. 
+A Householder transformation is a rank-1 modification of the identity matrix which can be used to zero out selected elements of a vector.
 A Householder matrix P takes the form,
 
 P = I - \tau v v^T
 
-where v is a vector (called the Householder vector) and \tau = 2/(v^T v). The functions described in this section use the rank-1 structure 
+where v is a vector (called the Householder vector) and \tau = 2/(v^T v). The functions described in this section use the rank-1 structure
 of the Householder matrix to create and apply Householder transformations efficiently.
 
 ##Tridiagonal Systems
 
-The functions described in this section efficiently solve symmetric, non-symmetric and cyclic tridiagonal systems with minimal storage. Note 
-that the current implementations of these functions use a variant of Cholesky decomposition, so the tridiagonal matrix must be positive definite. 
+The functions described in this section efficiently solve symmetric, non-symmetric and cyclic tridiagonal systems with minimal storage. Note
+that the current implementations of these functions use a variant of Cholesky decomposition, so the tridiagonal matrix must be positive definite.
 For non-positive definite matrices, the functions return the error code ::Sing.
 
 ##Balancing
 
-The process of balancing a matrix applies similarity transformations to make the rows and columns have comparable norms. This is useful, for 
+The process of balancing a matrix applies similarity transformations to make the rows and columns have comparable norms. This is useful, for
 example, to reduce roundoff errors in the solution of eigenvalue problems. Balancing a matrix A consists of replacing A with a similar matrix
 
 A' = D^(-1) A D
@@ -154,15 +154,15 @@ The Modified Golub-Reinsch algorithm is described in the following paper,
 T.F. Chan, “An Improved Algorithm for Computing the Singular Value Decomposition”, ACM Transactions on Mathematical Software, 8 (1982), pp 72–83.
 The Jacobi algorithm for singular value decomposition is described in the following papers,
 
-J.C. Nash, “A one-sided transformation method for the singular value decomposition and algebraic eigenproblem”, Computer Journal, Volume 18, Number 
+J.C. Nash, “A one-sided transformation method for the singular value decomposition and algebraic eigenproblem”, Computer Journal, Volume 18, Number
 1 (1975), p 74–76
 J.C. Nash and S. Shlien “Simple algorithms for the partial singular value decomposition”, Computer Journal, Volume 30 (1987), p 268–275.
-James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR”, Lapack Working Note 15 (LAWN-15), October 1989. Available from netlib, 
+James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR”, Lapack Working Note 15 (LAWN-15), October 1989. Available from netlib,
 http://www.netlib.org/lapack/ in the lawns or lawnspdf directories.
 !*/
 
-use ffi;
 use enums;
+use ffi;
 
 use types::complex::FFFI;
 
@@ -183,9 +183,11 @@ use types::complex::FFFI;
 /// See Golub & Van Loan, Matrix Computations, Algorithm 3.4.1 (Gauss Elimination with Partial Pivoting).
 pub fn LU_decomp(a: &mut ::MatrixF64, p: &mut ::Permutation, signum: &mut i32) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_LU_decomp(ffi::FFI::unwrap_unique(a),
-                                  ffi::FFI::unwrap_unique(p),
-                                  signum)
+        ffi::gsl_linalg_LU_decomp(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(p),
+            signum,
+        )
     })
 }
 
@@ -210,9 +212,11 @@ pub fn complex_LU_decomp(
     signum: &mut i32,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_LU_decomp(ffi::FFI::unwrap_unique(a),
-                                          ffi::FFI::unwrap_unique(p),
-                                          signum)
+        ffi::gsl_linalg_complex_LU_decomp(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(p),
+            signum,
+        )
     })
 }
 
@@ -224,10 +228,12 @@ pub fn LU_solve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_LU_solve(ffi::FFI::unwrap_shared(lu),
-                                 ffi::FFI::unwrap_shared(p),
-                                 ffi::FFI::unwrap_shared(b),
-                                 ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_LU_solve(
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -239,10 +245,12 @@ pub fn complex_LU_solve(
     x: &mut ::VectorComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_LU_solve(ffi::FFI::unwrap_shared(lu),
-                                         ffi::FFI::unwrap_shared(p),
-                                         ffi::FFI::unwrap_shared(b),
-                                         ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_complex_LU_solve(
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -250,60 +258,71 @@ pub fn complex_LU_solve(
 /// the right-hand side b, which is replaced by the solution on output.
 pub fn LU_svx(lu: &::MatrixF64, p: &::Permutation, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_LU_svx(ffi::FFI::unwrap_shared(lu),
-                               ffi::FFI::unwrap_shared(p),
-                               ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_LU_svx(
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
 /// This function solves the square system A x = b in-place using the precomputed LU decomposition of A into (LU,p). On input x should contain
 /// the right-hand side b, which is replaced by the solution on output.
-pub fn complex_LU_svx(lu: &::MatrixComplexF64,
-                      p: &::Permutation,
-                      x: &mut ::VectorComplexF64)
-                      -> enums::Value {
+pub fn complex_LU_svx(
+    lu: &::MatrixComplexF64,
+    p: &::Permutation,
+    x: &mut ::VectorComplexF64,
+) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_LU_svx(ffi::FFI::unwrap_shared(lu),
-                                       ffi::FFI::unwrap_shared(p),
-                                       ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_complex_LU_svx(
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
 /// This function applies an iterative improvement to x, the solution of A x = b, from the precomputed LU decomposition of A into (LU,p). The
 /// initial residual r = A x - b is also computed and stored in residual.
-pub fn LU_refine(a: &::MatrixF64,
-                 lu: &::MatrixF64,
-                 p: &::Permutation,
-                 b: &::VectorF64,
-                 x: &mut ::VectorF64,
-                 residual: &mut ::VectorF64)
-                 -> enums::Value {
+pub fn LU_refine(
+    a: &::MatrixF64,
+    lu: &::MatrixF64,
+    p: &::Permutation,
+    b: &::VectorF64,
+    x: &mut ::VectorF64,
+    residual: &mut ::VectorF64,
+) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_LU_refine(ffi::FFI::unwrap_shared(a),
-                                  ffi::FFI::unwrap_shared(lu),
-                                  ffi::FFI::unwrap_shared(p),
-                                  ffi::FFI::unwrap_shared(b),
-                                  ffi::FFI::unwrap_unique(x),
-                                  ffi::FFI::unwrap_unique(residual))
+        ffi::gsl_linalg_LU_refine(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+            ffi::FFI::unwrap_unique(residual),
+        )
     })
 }
 
 /// This function applies an iterative improvement to x, the solution of A x = b, from the precomputed LU decomposition of A into (LU,p). The
 /// initial residual r = A x - b is also computed and stored in residual.
-pub fn complex_LU_refine(a: &mut ::MatrixComplexF64,
-                         lu: &::MatrixComplexF64,
-                         p: &::Permutation,
-                         b: &::VectorComplexF64,
-                         x: &mut ::VectorComplexF64,
-                         residual: &mut ::VectorComplexF64)
-                         -> enums::Value {
+pub fn complex_LU_refine(
+    a: &mut ::MatrixComplexF64,
+    lu: &::MatrixComplexF64,
+    p: &::Permutation,
+    b: &::VectorComplexF64,
+    x: &mut ::VectorComplexF64,
+    residual: &mut ::VectorComplexF64,
+) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_LU_refine(ffi::FFI::unwrap_unique(a),
-                                          ffi::FFI::unwrap_shared(lu),
-                                          ffi::FFI::unwrap_shared(p),
-                                          ffi::FFI::unwrap_shared(b),
-                                          ffi::FFI::unwrap_unique(x),
-                                          ffi::FFI::unwrap_unique(residual))
+        ffi::gsl_linalg_complex_LU_refine(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+            ffi::FFI::unwrap_unique(residual),
+        )
     })
 }
 
@@ -313,9 +332,11 @@ pub fn complex_LU_refine(a: &mut ::MatrixComplexF64,
 /// textbook on numerical linear algebra for details).
 pub fn LU_invert(lu: &::MatrixF64, p: &::Permutation, inverse: &mut ::MatrixF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_LU_invert(ffi::FFI::unwrap_shared(lu),
-                                  ffi::FFI::unwrap_shared(p),
-                                  ffi::FFI::unwrap_unique(inverse))
+        ffi::gsl_linalg_LU_invert(
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(inverse),
+        )
     })
 }
 
@@ -329,9 +350,11 @@ pub fn complex_LU_invert(
     inverse: &mut ::MatrixComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_LU_invert(ffi::FFI::unwrap_shared(lu),
-                                          ffi::FFI::unwrap_shared(p),
-                                          ffi::FFI::unwrap_unique(inverse))
+        ffi::gsl_linalg_complex_LU_invert(
+            ffi::FFI::unwrap_shared(lu),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(inverse),
+        )
     })
 }
 
@@ -391,10 +414,12 @@ pub fn QR_solve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_solve(ffi::FFI::unwrap_shared(qr),
-                                 ffi::FFI::unwrap_shared(tau),
-                                 ffi::FFI::unwrap_shared(b),
-                                 ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QR_solve(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -402,9 +427,11 @@ pub fn QR_solve(
 /// previously by gsl_linalg_QR_decomp. On input x should contain the right-hand side b, which is replaced by the solution on output.
 pub fn QR_svx(qr: &::MatrixF64, tau: &::VectorF64, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_svx(ffi::FFI::unwrap_shared(qr),
-                               ffi::FFI::unwrap_shared(tau),
-                               ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QR_svx(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -412,18 +439,21 @@ pub fn QR_svx(qr: &::MatrixF64, tau: &::VectorF64, x: &mut ::VectorF64) -> enums
 /// least squares solution minimizes the Euclidean norm of the residual, ||Ax - b||.The routine requires as input the QR decomposition of
 /// A into (QR, tau) given by gsl_linalg_QR_decomp. The solution is returned in x. The residual is computed as a by-product and stored in
 /// residual.
-pub fn QR_lssolve(qr: &::MatrixF64,
-                  tau: &::VectorF64,
-                  b: &::VectorF64,
-                  x: &mut ::VectorF64,
-                  residual: &mut ::VectorF64)
-                  -> enums::Value {
+pub fn QR_lssolve(
+    qr: &::MatrixF64,
+    tau: &::VectorF64,
+    b: &::VectorF64,
+    x: &mut ::VectorF64,
+    residual: &mut ::VectorF64,
+) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_lssolve(ffi::FFI::unwrap_shared(qr),
-                                   ffi::FFI::unwrap_shared(tau),
-                                   ffi::FFI::unwrap_shared(b),
-                                   ffi::FFI::unwrap_unique(x),
-                                   ffi::FFI::unwrap_unique(residual))
+        ffi::gsl_linalg_QR_lssolve(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+            ffi::FFI::unwrap_unique(residual),
+        )
     })
 }
 
@@ -431,9 +461,11 @@ pub fn QR_lssolve(qr: &::MatrixF64,
 /// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q^T.
 pub fn QR_QTvec(qr: &::MatrixF64, tau: &::VectorF64, v: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_QTvec(ffi::FFI::unwrap_shared(qr),
-                                 ffi::FFI::unwrap_shared(tau),
-                                 ffi::FFI::unwrap_unique(v))
+        ffi::gsl_linalg_QR_QTvec(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(v),
+        )
     })
 }
 
@@ -441,9 +473,11 @@ pub fn QR_QTvec(qr: &::MatrixF64, tau: &::VectorF64, v: &mut ::VectorF64) -> enu
 /// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q.
 pub fn QR_Qvec(qr: &::MatrixF64, tau: &::VectorF64, v: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_Qvec(ffi::FFI::unwrap_shared(qr),
-                                ffi::FFI::unwrap_shared(tau),
-                                ffi::FFI::unwrap_unique(v))
+        ffi::gsl_linalg_QR_Qvec(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(v),
+        )
     })
 }
 
@@ -451,9 +485,11 @@ pub fn QR_Qvec(qr: &::MatrixF64, tau: &::VectorF64, v: &mut ::VectorF64) -> enum
 /// multiplication is carried out directly using the encoding of the Householder vectors without needing to form the full matrix Q^T.
 pub fn QR_QTmat(qr: &::MatrixF64, tau: &::VectorF64, v: &mut ::MatrixF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_QTmat(ffi::FFI::unwrap_shared(qr),
-                                 ffi::FFI::unwrap_shared(tau),
-                                 ffi::FFI::unwrap_unique(v))
+        ffi::gsl_linalg_QR_QTmat(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(v),
+        )
     })
 }
 
@@ -461,9 +497,11 @@ pub fn QR_QTmat(qr: &::MatrixF64, tau: &::VectorF64, v: &mut ::MatrixF64) -> enu
 /// gsl_linalg_QR_QTvec.
 pub fn QR_Rsolve(qr: &::MatrixF64, b: &::VectorF64, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_Rsolve(ffi::FFI::unwrap_shared(qr),
-                                  ffi::FFI::unwrap_shared(b),
-                                  ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QR_Rsolve(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -483,10 +521,12 @@ pub fn QR_unpack(
     r: &mut ::MatrixF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_unpack(ffi::FFI::unwrap_shared(qr),
-                                  ffi::FFI::unwrap_shared(tau),
-                                  ffi::FFI::unwrap_unique(q),
-                                  ffi::FFI::unwrap_unique(r))
+        ffi::gsl_linalg_QR_unpack(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(q),
+            ffi::FFI::unwrap_unique(r),
+        )
     })
 }
 
@@ -499,10 +539,12 @@ pub fn QR_QRsolve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_QRsolve(ffi::FFI::unwrap_unique(q),
-                                   ffi::FFI::unwrap_unique(r),
-                                   ffi::FFI::unwrap_shared(b),
-                                   ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QR_QRsolve(
+            ffi::FFI::unwrap_unique(q),
+            ffi::FFI::unwrap_unique(r),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -515,19 +557,23 @@ pub fn QR_update(
     v: &::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QR_update(ffi::FFI::unwrap_unique(q),
-                                  ffi::FFI::unwrap_unique(r),
-                                  ffi::FFI::unwrap_unique(&mut w),
-                                  ffi::FFI::unwrap_shared(v))
+        ffi::gsl_linalg_QR_update(
+            ffi::FFI::unwrap_unique(q),
+            ffi::FFI::unwrap_unique(r),
+            ffi::FFI::unwrap_unique(&mut w),
+            ffi::FFI::unwrap_shared(v),
+        )
     })
 }
 
 /// This function solves the triangular system R x = b for the N-by-N matrix R.
 pub fn R_solve(r: &::MatrixF64, b: &::VectorF64, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_R_solve(ffi::FFI::unwrap_shared(r),
-                                ffi::FFI::unwrap_shared(b),
-                                ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_R_solve(
+            ffi::FFI::unwrap_shared(r),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -556,11 +602,13 @@ pub fn QRPT_decomp(
     norm: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_decomp(ffi::FFI::unwrap_unique(a),
-                                    ffi::FFI::unwrap_unique(tau),
-                                    ffi::FFI::unwrap_unique(p),
-                                    signum,
-                                    ffi::FFI::unwrap_unique(norm))
+        ffi::gsl_linalg_QRPT_decomp(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(tau),
+            ffi::FFI::unwrap_unique(p),
+            signum,
+            ffi::FFI::unwrap_unique(norm),
+        )
     })
 }
 
@@ -576,13 +624,15 @@ pub fn QRPT_decomp2(
     norm: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_decomp2(ffi::FFI::unwrap_shared(a),
-                                     ffi::FFI::unwrap_unique(q),
-                                     ffi::FFI::unwrap_unique(r),
-                                     ffi::FFI::unwrap_unique(tau),
-                                     ffi::FFI::unwrap_unique(p),
-                                     signum,
-                                     ffi::FFI::unwrap_unique(norm))
+        ffi::gsl_linalg_QRPT_decomp2(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_unique(q),
+            ffi::FFI::unwrap_unique(r),
+            ffi::FFI::unwrap_unique(tau),
+            ffi::FFI::unwrap_unique(p),
+            signum,
+            ffi::FFI::unwrap_unique(norm),
+        )
     })
 }
 
@@ -596,11 +646,13 @@ pub fn QRPT_solve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_solve(ffi::FFI::unwrap_shared(qr),
-                                   ffi::FFI::unwrap_shared(tau),
-                                   ffi::FFI::unwrap_shared(p),
-                                   ffi::FFI::unwrap_shared(b),
-                                   ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QRPT_solve(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -613,10 +665,12 @@ pub fn QRPT_svx(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_svx(ffi::FFI::unwrap_shared(qr),
-                                 ffi::FFI::unwrap_shared(tau),
-                                 ffi::FFI::unwrap_shared(p),
-                                 ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QRPT_svx(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -630,11 +684,13 @@ pub fn QRPT_QRsolve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_QRsolve(ffi::FFI::unwrap_shared(q),
-                                     ffi::FFI::unwrap_shared(r),
-                                     ffi::FFI::unwrap_shared(p),
-                                     ffi::FFI::unwrap_shared(b),
-                                     ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QRPT_QRsolve(
+            ffi::FFI::unwrap_shared(q),
+            ffi::FFI::unwrap_shared(r),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -648,11 +704,13 @@ pub fn QRPT_update(
     v: &::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_update(ffi::FFI::unwrap_shared(q),
-                                    ffi::FFI::unwrap_shared(r),
-                                    ffi::FFI::unwrap_shared(p),
-                                    ffi::FFI::unwrap_unique(w),
-                                    ffi::FFI::unwrap_shared(v))
+        ffi::gsl_linalg_QRPT_update(
+            ffi::FFI::unwrap_shared(q),
+            ffi::FFI::unwrap_shared(r),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(w),
+            ffi::FFI::unwrap_shared(v),
+        )
     })
 }
 
@@ -664,10 +722,12 @@ pub fn QRPT_Rsolve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_Rsolve(ffi::FFI::unwrap_shared(qr),
-                                    ffi::FFI::unwrap_shared(p),
-                                    ffi::FFI::unwrap_shared(b),
-                                    ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QRPT_Rsolve(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -675,9 +735,11 @@ pub fn QRPT_Rsolve(
 /// right-hand side b, which is replaced by the solution on output.
 pub fn QRPT_Rsvx(qr: &::MatrixF64, p: &::Permutation, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_QRPT_Rsvx(ffi::FFI::unwrap_shared(qr),
-                                  ffi::FFI::unwrap_shared(p),
-                                  ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_QRPT_Rsvx(
+            ffi::FFI::unwrap_shared(qr),
+            ffi::FFI::unwrap_shared(p),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -694,10 +756,12 @@ pub fn SV_decomp(
     work: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_SV_decomp(ffi::FFI::unwrap_unique(a),
-                                  ffi::FFI::unwrap_unique(v),
-                                  ffi::FFI::unwrap_unique(s),
-                                  ffi::FFI::unwrap_unique(work))
+        ffi::gsl_linalg_SV_decomp(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(v),
+            ffi::FFI::unwrap_unique(s),
+            ffi::FFI::unwrap_unique(work),
+        )
     })
 }
 
@@ -711,21 +775,29 @@ pub fn SV_decomp_mod(
     work: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_SV_decomp_mod(ffi::FFI::unwrap_unique(a),
-                                      ffi::FFI::unwrap_unique(x),
-                                      ffi::FFI::unwrap_unique(v),
-                                      ffi::FFI::unwrap_unique(s),
-                                      ffi::FFI::unwrap_unique(work))
+        ffi::gsl_linalg_SV_decomp_mod(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(x),
+            ffi::FFI::unwrap_unique(v),
+            ffi::FFI::unwrap_unique(s),
+            ffi::FFI::unwrap_unique(work),
+        )
     })
 }
 
 /// This function computes the SVD of the M-by-N matrix A using one-sided Jacobi orthogonalization for M >= N. The Jacobi method can compute
 /// singular values to higher relative accuracy than Golub-Reinsch algorithms (see references for details).
-pub fn SV_decomp_jacobi(a: &mut ::MatrixF64, v: &mut ::MatrixF64, s: &mut ::VectorF64) -> enums::Value {
+pub fn SV_decomp_jacobi(
+    a: &mut ::MatrixF64,
+    v: &mut ::MatrixF64,
+    s: &mut ::VectorF64,
+) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_SV_decomp_jacobi(ffi::FFI::unwrap_unique(a),
-                                         ffi::FFI::unwrap_unique(v),
-                                         ffi::FFI::unwrap_unique(s))
+        ffi::gsl_linalg_SV_decomp_jacobi(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(v),
+            ffi::FFI::unwrap_unique(s),
+        )
     })
 }
 
@@ -745,11 +817,13 @@ pub fn SV_solve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_SV_solve(ffi::FFI::unwrap_shared(u),
-                                 ffi::FFI::unwrap_shared(v),
-                                 ffi::FFI::unwrap_shared(s),
-                                 ffi::FFI::unwrap_shared(b),
-                                 ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_SV_solve(
+            ffi::FFI::unwrap_shared(u),
+            ffi::FFI::unwrap_shared(v),
+            ffi::FFI::unwrap_shared(s),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -794,9 +868,11 @@ pub fn cholesky_solve(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_cholesky_solve(ffi::FFI::unwrap_shared(cholesky),
-                                       ffi::FFI::unwrap_shared(b),
-                                       ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_cholesky_solve(
+            ffi::FFI::unwrap_shared(cholesky),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -808,9 +884,11 @@ pub fn complex_cholesky_solve(
     x: &mut ::VectorComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_cholesky_solve(ffi::FFI::unwrap_shared(cholesky),
-                                               ffi::FFI::unwrap_shared(b),
-                                               ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_complex_cholesky_solve(
+            ffi::FFI::unwrap_shared(cholesky),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -819,18 +897,25 @@ pub fn complex_cholesky_solve(
 /// b, which is replaced by the solution on output.
 pub fn cholesky_svx(cholesky: &::MatrixF64, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_cholesky_svx(ffi::FFI::unwrap_shared(cholesky),
-                                     ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_cholesky_svx(
+            ffi::FFI::unwrap_shared(cholesky),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
 /// This function solves the system A x = b in-place using the Cholesky decomposition of A held in the matrix cholesky which must have been
 /// previously computed by gsl_linalg_cholesky_decomp or gsl_linalg_complex_cholesky_decomp. On input x should contain the right-hand side
 /// b, which is replaced by the solution on output.
-pub fn complex_cholesky_svx(cholesky: &::MatrixComplexF64, x: &mut ::VectorComplexF64) -> enums::Value {
+pub fn complex_cholesky_svx(
+    cholesky: &::MatrixComplexF64,
+    x: &mut ::VectorComplexF64,
+) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_cholesky_svx(ffi::FFI::unwrap_shared(cholesky),
-                                             ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_complex_cholesky_svx(
+            ffi::FFI::unwrap_shared(cholesky),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -870,11 +955,13 @@ pub fn symmtd_unpack(
     subdiag: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_symmtd_unpack(ffi::FFI::unwrap_shared(a),
-                                      ffi::FFI::unwrap_shared(tau),
-                                      ffi::FFI::unwrap_unique(q),
-                                      ffi::FFI::unwrap_unique(diag),
-                                      ffi::FFI::unwrap_unique(subdiag))
+        ffi::gsl_linalg_symmtd_unpack(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(q),
+            ffi::FFI::unwrap_unique(diag),
+            ffi::FFI::unwrap_unique(subdiag),
+        )
     })
 }
 
@@ -886,9 +973,11 @@ pub fn symmtd_unpack_T(
     subdiag: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_symmtd_unpack_T(ffi::FFI::unwrap_shared(a),
-                                        ffi::FFI::unwrap_unique(diag),
-                                        ffi::FFI::unwrap_unique(subdiag))
+        ffi::gsl_linalg_symmtd_unpack_T(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_unique(diag),
+            ffi::FFI::unwrap_unique(subdiag),
+        )
     })
 }
 
@@ -912,11 +1001,13 @@ pub fn hermtd_unpack(
     subdiag: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_hermtd_unpack(ffi::FFI::unwrap_shared(a),
-                                      ffi::FFI::unwrap_shared(tau),
-                                      ffi::FFI::unwrap_unique(u),
-                                      ffi::FFI::unwrap_unique(diag),
-                                      ffi::FFI::unwrap_unique(subdiag))
+        ffi::gsl_linalg_hermtd_unpack(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_shared(tau),
+            ffi::FFI::unwrap_unique(u),
+            ffi::FFI::unwrap_unique(diag),
+            ffi::FFI::unwrap_unique(subdiag),
+        )
     })
 }
 
@@ -928,9 +1019,11 @@ pub fn hermtd_unpack_T(
     subdiag: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_hermtd_unpack_T(ffi::FFI::unwrap_shared(a),
-                                        ffi::FFI::unwrap_unique(diag),
-                                        ffi::FFI::unwrap_unique(subdiag))
+        ffi::gsl_linalg_hermtd_unpack_T(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_unique(diag),
+            ffi::FFI::unwrap_unique(subdiag),
+        )
     })
 }
 
@@ -952,9 +1045,11 @@ pub fn hessenberg_unpack(
     u: &mut ::MatrixF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_hessenberg_unpack(ffi::FFI::unwrap_unique(h),
-                                          ffi::FFI::unwrap_unique(tau),
-                                          ffi::FFI::unwrap_unique(u))
+        ffi::gsl_linalg_hessenberg_unpack(
+            ffi::FFI::unwrap_unique(h),
+            ffi::FFI::unwrap_unique(tau),
+            ffi::FFI::unwrap_unique(u),
+        )
     })
 }
 
@@ -967,9 +1062,11 @@ pub fn hessenberg_unpack_accum(
     v: &mut ::MatrixF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_hessenberg_unpack_accum(ffi::FFI::unwrap_unique(h),
-                                                ffi::FFI::unwrap_unique(tau),
-                                                ffi::FFI::unwrap_unique(v))
+        ffi::gsl_linalg_hessenberg_unpack_accum(
+            ffi::FFI::unwrap_unique(h),
+            ffi::FFI::unwrap_unique(tau),
+            ffi::FFI::unwrap_unique(v),
+        )
     })
 }
 
@@ -990,11 +1087,13 @@ pub fn hesstri_decomp(
     work: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_hesstri_decomp(ffi::FFI::unwrap_unique(a),
-                                       ffi::FFI::unwrap_unique(b),
-                                       ffi::FFI::unwrap_unique(u),
-                                       ffi::FFI::unwrap_unique(v),
-                                       ffi::FFI::unwrap_unique(work))
+        ffi::gsl_linalg_hesstri_decomp(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(b),
+            ffi::FFI::unwrap_unique(u),
+            ffi::FFI::unwrap_unique(v),
+            ffi::FFI::unwrap_unique(work),
+        )
     })
 }
 
@@ -1008,9 +1107,11 @@ pub fn bidiag_decomp(
     tau_v: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_bidiag_decomp(ffi::FFI::unwrap_unique(a),
-                                      ffi::FFI::unwrap_unique(tau_u),
-                                      ffi::FFI::unwrap_unique(tau_v))
+        ffi::gsl_linalg_bidiag_decomp(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(tau_u),
+            ffi::FFI::unwrap_unique(tau_v),
+        )
     })
 }
 
@@ -1027,13 +1128,15 @@ pub fn bidiag_unpack(
     superdiag: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_bidiag_unpack(ffi::FFI::unwrap_unique(a),
-                                      ffi::FFI::unwrap_shared(tau_u),
-                                      ffi::FFI::unwrap_unique(u),
-                                      ffi::FFI::unwrap_shared(tau_v),
-                                      ffi::FFI::unwrap_unique(v),
-                                      ffi::FFI::unwrap_unique(diag),
-                                      ffi::FFI::unwrap_unique(superdiag))
+        ffi::gsl_linalg_bidiag_unpack(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_shared(tau_u),
+            ffi::FFI::unwrap_unique(u),
+            ffi::FFI::unwrap_shared(tau_v),
+            ffi::FFI::unwrap_unique(v),
+            ffi::FFI::unwrap_unique(diag),
+            ffi::FFI::unwrap_unique(superdiag),
+        )
     })
 }
 
@@ -1046,10 +1149,12 @@ pub fn bidiag_unpack2(
     v: &mut ::MatrixF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_bidiag_unpack2(ffi::FFI::unwrap_unique(a),
-                                       ffi::FFI::unwrap_unique(tau_u),
-                                       ffi::FFI::unwrap_unique(tau_v),
-                                       ffi::FFI::unwrap_unique(v))
+        ffi::gsl_linalg_bidiag_unpack2(
+            ffi::FFI::unwrap_unique(a),
+            ffi::FFI::unwrap_unique(tau_u),
+            ffi::FFI::unwrap_unique(tau_v),
+            ffi::FFI::unwrap_unique(v),
+        )
     })
 }
 
@@ -1061,9 +1166,11 @@ pub fn bidiag_unpack_B(
     superdiag: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_bidiag_unpack_B(ffi::FFI::unwrap_shared(a),
-                                        ffi::FFI::unwrap_unique(diag),
-                                        ffi::FFI::unwrap_unique(superdiag))
+        ffi::gsl_linalg_bidiag_unpack_B(
+            ffi::FFI::unwrap_shared(a),
+            ffi::FFI::unwrap_unique(diag),
+            ffi::FFI::unwrap_unique(superdiag),
+        )
     })
 }
 
@@ -1077,7 +1184,9 @@ pub fn householder_transform(v: &mut ::VectorF64) -> f64 {
 /// the first. On output the transformation is stored in the vector v and the scalar \tau is returned.
 pub fn complex_householder_transform(v: &mut ::VectorComplexF64) -> ::ComplexF64 {
     unsafe {
-        ::std::mem::transmute(ffi::gsl_linalg_complex_householder_transform(ffi::FFI::unwrap_unique(v)))
+        ::std::mem::transmute(ffi::gsl_linalg_complex_householder_transform(
+            ffi::FFI::unwrap_unique(v),
+        ))
     }
 }
 
@@ -1097,9 +1206,11 @@ pub fn complex_householder_hm(
     a: &mut ::MatrixComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_householder_hm(::std::mem::transmute(*tau),
-                                               ffi::FFI::unwrap_shared(v),
-                                               ffi::FFI::unwrap_unique(a))
+        ffi::gsl_linalg_complex_householder_hm(
+            ::std::mem::transmute(*tau),
+            ffi::FFI::unwrap_shared(v),
+            ffi::FFI::unwrap_unique(a),
+        )
     })
 }
 
@@ -1119,9 +1230,11 @@ pub fn complex_householder_mh(
     a: &mut ::MatrixComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_householder_mh(::std::mem::transmute(*tau),
-                                               ffi::FFI::unwrap_shared(v),
-                                               ffi::FFI::unwrap_unique(a))
+        ffi::gsl_linalg_complex_householder_mh(
+            ::std::mem::transmute(*tau),
+            ffi::FFI::unwrap_shared(v),
+            ffi::FFI::unwrap_unique(a),
+        )
     })
 }
 
@@ -1141,9 +1254,11 @@ pub fn complex_householder_hv(
     w: &mut ::MatrixComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_complex_householder_hv(::std::mem::transmute(*tau),
-                                               ffi::FFI::unwrap_shared(v),
-                                               ffi::FFI::unwrap_unique(w))
+        ffi::gsl_linalg_complex_householder_hv(
+            ::std::mem::transmute(*tau),
+            ffi::FFI::unwrap_shared(v),
+            ffi::FFI::unwrap_unique(w),
+        )
     })
 }
 
@@ -1151,9 +1266,11 @@ pub fn complex_householder_hv(
 /// modified. The matrix A is destroyed by the Householder transformations.
 pub fn HH_solve(mut a: ::MatrixF64, b: &::VectorF64, x: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_HH_solve(ffi::FFI::unwrap_unique(&mut a),
-                                 ffi::FFI::unwrap_shared(b),
-                                 ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_HH_solve(
+            ffi::FFI::unwrap_unique(&mut a),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -1182,11 +1299,13 @@ pub fn solve_tridiag(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_solve_tridiag(ffi::FFI::unwrap_shared(diag),
-                                      ffi::FFI::unwrap_shared(e),
-                                      ffi::FFI::unwrap_shared(f),
-                                      ffi::FFI::unwrap_shared(b),
-                                      ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_solve_tridiag(
+            ffi::FFI::unwrap_shared(diag),
+            ffi::FFI::unwrap_shared(e),
+            ffi::FFI::unwrap_shared(f),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -1206,10 +1325,12 @@ pub fn solve_symm_tridiag(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_solve_symm_tridiag(ffi::FFI::unwrap_shared(diag),
-                                           ffi::FFI::unwrap_shared(e),
-                                           ffi::FFI::unwrap_shared(b),
-                                           ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_solve_symm_tridiag(
+            ffi::FFI::unwrap_shared(diag),
+            ffi::FFI::unwrap_shared(e),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -1230,11 +1351,13 @@ pub fn solve_cyc_tridiag(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_solve_cyc_tridiag(ffi::FFI::unwrap_shared(diag),
-                                          ffi::FFI::unwrap_shared(e),
-                                          ffi::FFI::unwrap_shared(f),
-                                          ffi::FFI::unwrap_shared(b),
-                                          ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_solve_cyc_tridiag(
+            ffi::FFI::unwrap_shared(diag),
+            ffi::FFI::unwrap_shared(e),
+            ffi::FFI::unwrap_shared(f),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 
@@ -1254,10 +1377,12 @@ pub fn solve_symm_cyc_tridiag(
     x: &mut ::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_linalg_solve_symm_cyc_tridiag(ffi::FFI::unwrap_shared(diag),
-                                               ffi::FFI::unwrap_shared(e),
-                                               ffi::FFI::unwrap_shared(b),
-                                               ffi::FFI::unwrap_unique(x))
+        ffi::gsl_linalg_solve_symm_cyc_tridiag(
+            ffi::FFI::unwrap_shared(diag),
+            ffi::FFI::unwrap_shared(e),
+            ffi::FFI::unwrap_shared(b),
+            ffi::FFI::unwrap_unique(x),
+        )
     })
 }
 

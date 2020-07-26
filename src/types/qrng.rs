@@ -5,27 +5,27 @@
 /*!
 #Quasi-Random Sequences
 
-This chapter describes functions for generating quasi-random sequences in arbitrary dimensions. A quasi-random sequence progressively 
-covers a d-dimensional space with a set of points that are uniformly distributed. Quasi-random sequences are also known as low-discrepancy 
-sequences. The quasi-random sequence generators use an interface that is similar to the interface for random number generators, except 
+This chapter describes functions for generating quasi-random sequences in arbitrary dimensions. A quasi-random sequence progressively
+covers a d-dimensional space with a set of points that are uniformly distributed. Quasi-random sequences are also known as low-discrepancy
+sequences. The quasi-random sequence generators use an interface that is similar to the interface for random number generators, except
 that seeding is not required—each generator produces a single sequence.
 
 ##References
 
 The implementations of the quasi-random sequence routines are based on the algorithms described in the following paper,
 
-P. Bratley and B.L. Fox and H. Niederreiter, “Algorithm 738: Programs to Generate Niederreiter’s Low-discrepancy Sequences”, ACM 
+P. Bratley and B.L. Fox and H. Niederreiter, “Algorithm 738: Programs to Generate Niederreiter’s Low-discrepancy Sequences”, ACM
 Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–495.
 !*/
 
-use ffi;
-use enums;
 use c_vec::CSlice;
+use enums;
+use ffi;
 use std::os::raw::c_char;
 
 pub struct QRng {
     q: *mut ffi::gsl_qrng,
-    data: CSlice<c_char>
+    data: CSlice<c_char>,
 }
 
 impl QRng {
@@ -40,7 +40,7 @@ impl QRng {
         } else {
             Some(QRng {
                 q: tmp,
-                data: unsafe { CSlice::new(tmp as *mut c_char, 0) }
+                data: unsafe { CSlice::new(tmp as *mut c_char, 0) },
             })
         }
     }
@@ -64,7 +64,11 @@ impl QRng {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()) }
+            unsafe {
+                Some(
+                    String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string(),
+                )
+            }
         }
     }
 
@@ -108,7 +112,7 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
     fn wrap(q: *mut ffi::gsl_qrng) -> QRng {
         QRng {
             q: q,
-            data: unsafe { CSlice::new(q as *mut c_char, 0) }
+            data: unsafe { CSlice::new(q as *mut c_char, 0) },
         }
     }
 
@@ -127,7 +131,7 @@ impl ffi::FFI<ffi::gsl_qrng> for QRng {
 
 #[derive(Clone, Copy)]
 pub struct QRngType {
-    t: *const ffi::gsl_qrng_type
+    t: *const ffi::gsl_qrng_type,
 }
 
 impl QRngType {
@@ -136,7 +140,7 @@ impl QRngType {
     pub fn niederreiter_2() -> QRngType {
         unsafe {
             QRngType {
-                t: ffi::gsl_qrng_niederreiter_2
+                t: ffi::gsl_qrng_niederreiter_2,
             }
         }
     }
@@ -146,7 +150,7 @@ impl QRngType {
     pub fn sobol() -> QRngType {
         unsafe {
             QRngType {
-                t: ffi::gsl_qrng_sobol
+                t: ffi::gsl_qrng_sobol,
             }
         }
     }
@@ -156,7 +160,7 @@ impl QRngType {
     pub fn halton() -> QRngType {
         unsafe {
             QRngType {
-                t: ffi::gsl_qrng_halton
+                t: ffi::gsl_qrng_halton,
             }
         }
     }
@@ -164,7 +168,7 @@ impl QRngType {
     pub fn reversehalton() -> QRngType {
         unsafe {
             QRngType {
-                t: ffi::gsl_qrng_reversehalton
+                t: ffi::gsl_qrng_reversehalton,
             }
         }
     }
@@ -172,9 +176,7 @@ impl QRngType {
 
 impl ffi::FFI<ffi::gsl_qrng_type> for QRngType {
     fn wrap(t: *mut ffi::gsl_qrng_type) -> QRngType {
-        QRngType {
-            t: t
-        }
+        QRngType { t: t }
     }
 
     fn soft_wrap(t: *mut ffi::gsl_qrng_type) -> QRngType {

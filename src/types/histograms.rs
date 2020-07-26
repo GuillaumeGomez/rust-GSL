@@ -5,31 +5,31 @@
 /*!
 #Histograms
 
-This chapter describes functions for creating histograms. Histograms provide a convenient way of summarizing the distribution of a set of data. 
-A histogram consists of a set of bins which count the number of events falling into a given range of a continuous variable x. In GSL the bins 
-of a histogram contain floating-point numbers, so they can be used to record both integer and non-integer distributions. The bins can use arbitrary 
+This chapter describes functions for creating histograms. Histograms provide a convenient way of summarizing the distribution of a set of data.
+A histogram consists of a set of bins which count the number of events falling into a given range of a continuous variable x. In GSL the bins
+of a histogram contain floating-point numbers, so they can be used to record both integer and non-integer distributions. The bins can use arbitrary
 sets of ranges (uniformly spaced bins are the default). Both one and two-dimensional histograms are supported.
 
-Once a histogram has been created it can also be converted into a probability distribution function. The library provides efficient routines 
+Once a histogram has been created it can also be converted into a probability distribution function. The library provides efficient routines
 for selecting random samples from probability distributions. This can be useful for generating simulations based on real data.
 
 ##Resampling from histograms
 
-A histogram made by counting events can be regarded as a measurement of a probability distribution. Allowing for statistical error, the height 
-of each bin represents the probability of an event where the value of x falls in the range of that bin. The probability distribution function 
+A histogram made by counting events can be regarded as a measurement of a probability distribution. Allowing for statistical error, the height
+of each bin represents the probability of an event where the value of x falls in the range of that bin. The probability distribution function
 has the one-dimensional form p(x)dx where,
 
 p(x) = n_i/ (N w_i)
-In this equation n_i is the number of events in the bin which contains x, w_i is the width of the bin and N is the total number of events. 
+In this equation n_i is the number of events in the bin which contains x, w_i is the width of the bin and N is the total number of events.
 The distribution of events within each bin is assumed to be uniform.
 !*/
 
-use ffi;
 use enums;
+use ffi;
 use std::io::Write;
 
 pub struct Histogram {
-    h: *mut ffi::gsl_histogram
+    h: *mut ffi::gsl_histogram,
 }
 
 impl Histogram {
@@ -42,39 +42,39 @@ impl Histogram {
         if tmp.is_null() {
             None
         } else {
-            Some(Histogram {
-                h: tmp
-            })
+            Some(Histogram { h: tmp })
         }
     }
 
     /// This function sets the ranges of the existing histogram h using the array range of size size. The values of the histogram bins are reset
     /// to zero. The range array should contain the desired bin limits. The ranges can be arbitrary, subject to the restriction that they are
     /// monotonically increasing.
-    /// 
+    ///
     /// The following example shows how to create a histogram with logarithmic bins with ranges [1,10), [10,100) and [100,1000).
     ///
     /// ```C
     /// gsl_histogram * h = gsl_histogram_alloc (3);
-    /// 
+    ///
     /// /* bin[0] covers the range 1 <= x < 10 */
     /// /* bin[1] covers the range 10 <= x < 100 */
     /// /* bin[2] covers the range 100 <= x < 1000 */
-    /// 
+    ///
     /// double range[4] = { 1.0, 10.0, 100.0, 1000.0 };
-    /// 
+    ///
     /// gsl_histogram_set_ranges (h, range, 4);
     /// ```
-    /// 
+    ///
     /// Note that the size of the range array should be defined to be one element bigger than the number of bins. The additional element is
     /// required for the upper value of the final bin.
     pub fn set_ranges(&mut self, range: &[f64]) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_set_ranges(self.h, range.as_ptr(), range.len() as usize) })
+        enums::Value::from(unsafe {
+            ffi::gsl_histogram_set_ranges(self.h, range.as_ptr(), range.len() as usize)
+        })
     }
 
     /// This function sets the ranges of the existing histogram h to cover the range xmin to xmax uniformly. The values of the histogram bins
     /// are reset to zero. The bin ranges are shown in the table below,
-    /// 
+    ///
     /// bin[0] corresponds to xmin <= x < xmin + d
     /// bin[1] corresponds to xmin + d <= x < xmin + 2 d
     /// ......
@@ -97,14 +97,12 @@ impl Histogram {
         if tmp.is_null() {
             None
         } else {
-            Some(Histogram {
-                h: tmp
-            })
+            Some(Histogram { h: tmp })
         }
     }
 
     /// This function updates the self histogram by adding one (1.0) to the bin whose range contains the coordinate x.
-    /// 
+    ///
     /// If x lies in the valid range of the histogram then the function returns zero to indicate success. If x is less than the lower limit of
     /// the histogram then the function returns Value::Dom, and none of bins are modified. Similarly, if the value of x is greater than or equal
     /// to the upper limit of the histogram then the function returns Value::Dom, and none of the bins are modified. The error handler is not
@@ -209,7 +207,7 @@ impl Histogram {
     pub fn equal_bins_p(&self, other: &Histogram) -> bool {
         match unsafe { ffi::gsl_histogram_equal_bins_p(self.h, other.h) } {
             0i32 => false,
-            _ => true
+            _ => true,
         }
     }
 
@@ -248,7 +246,10 @@ impl Histogram {
     }
 
     #[allow(unused_must_use)]
-    pub fn print(&self, stream: &mut Write/*, range_format: &str, bin_format: &str*/) -> enums::Value {
+    pub fn print(
+        &self,
+        stream: &mut Write, /*, range_format: &str, bin_format: &str*/
+    ) -> enums::Value {
         unsafe {
             let n = (*self.h).n as isize;
 
@@ -275,9 +276,7 @@ impl Drop for Histogram {
 
 impl ffi::FFI<ffi::gsl_histogram> for Histogram {
     fn wrap(h: *mut ffi::gsl_histogram) -> Histogram {
-        Histogram {
-            h: h
-        }
+        Histogram { h: h }
     }
 
     fn soft_wrap(h: *mut ffi::gsl_histogram) -> Histogram {
@@ -300,7 +299,7 @@ impl ffi::FFI<ffi::gsl_histogram> for Histogram {
 /// random number in this range and finding its corresponding coordinate in the cumulative probability distribution we obtain samples with the
 /// desired probability distribution.
 pub struct HistogramPdf {
-    h: *mut ffi::gsl_histogram_pdf
+    h: *mut ffi::gsl_histogram_pdf,
 }
 
 impl HistogramPdf {
@@ -312,9 +311,7 @@ impl HistogramPdf {
         if tmp.is_null() {
             None
         } else {
-            Some(HistogramPdf {
-                h: tmp
-            })
+            Some(HistogramPdf { h: tmp })
         }
     }
 
@@ -326,9 +323,9 @@ impl HistogramPdf {
 
     /// This function uses r, a uniform random number between zero and one, to compute a single random sample from the probability distribution
     /// self. The algorithm used to compute the sample s is given by the following formula,
-    /// 
+    ///
     /// s = range[i] + delta * (range[i+1] - range[i])
-    /// 
+    ///
     /// where i is the index which satisfies sum[i] <= r < sum[i+1] and delta is (r - sum[i])/(sum[i+1] - sum[i]).
     pub fn sample(&self, r: f64) -> f64 {
         unsafe { ffi::gsl_histogram_pdf_sample(self.h, r) }
@@ -344,9 +341,7 @@ impl Drop for HistogramPdf {
 
 impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
     fn wrap(h: *mut ffi::gsl_histogram_pdf) -> HistogramPdf {
-        HistogramPdf {
-            h: h
-        }
+        HistogramPdf { h: h }
     }
 
     fn soft_wrap(h: *mut ffi::gsl_histogram_pdf) -> HistogramPdf {
@@ -367,7 +362,7 @@ impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
 /// distribution by recording related variables. For example a detector might record both the position of an event (x) and the amount of energy
 /// it deposited E. These could be histogrammed as the joint distribution n(x,E).
 pub struct Histogram2D {
-    h: *mut ffi::gsl_histogram2d
+    h: *mut ffi::gsl_histogram2d,
 }
 
 impl Histogram2D {
@@ -381,24 +376,33 @@ impl Histogram2D {
         if tmp.is_null() {
             None
         } else {
-            Some(Histogram2D {
-                h: tmp
-            })
+            Some(Histogram2D { h: tmp })
         }
     }
 
     /// This function sets the ranges of the existing histogram h using the arrays xrange and yrange of size xsize and ysize respectively.
     /// The values of the histogram bins are reset to zero.
     pub fn set_ranges(&mut self, xrange: &[f64], yrange: &[f64]) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_set_ranges(self.h, xrange.as_ptr(),
-                                                                    xrange.len() as _,
-                                                                    yrange.as_ptr(),
-                                                                    yrange.len() as _) })
+        enums::Value::from(unsafe {
+            ffi::gsl_histogram2d_set_ranges(
+                self.h,
+                xrange.as_ptr(),
+                xrange.len() as _,
+                yrange.as_ptr(),
+                yrange.len() as _,
+            )
+        })
     }
 
     /// This function sets the ranges of the existing histogram h to cover the ranges xmin to xmax and ymin to ymax uniformly. The values
     /// of the histogram bins are reset to zero.
-    pub fn set_ranges_uniform(&mut self, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> enums::Value {
+    pub fn set_ranges_uniform(
+        &mut self,
+        xmin: f64,
+        xmax: f64,
+        ymin: f64,
+        ymax: f64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
             ffi::gsl_histogram2d_set_ranges_uniform(self.h, xmin, xmax, ymin, ymax)
         })
@@ -417,14 +421,12 @@ impl Histogram2D {
         if tmp.is_null() {
             None
         } else {
-            Some(Histogram2D {
-                h: tmp
-            })
+            Some(Histogram2D { h: tmp })
         }
     }
 
     /// This function updates the histogram h by adding one (1.0) to the bin whose x and y ranges contain the coordinates (x,y).
-    /// 
+    ///
     /// If the point (x,y) lies inside the valid ranges of the histogram then the function returns zero to indicate success. If (x,y) lies
     /// outside the limits of the histogram then the function returns Value::Dom, and none of the bins are modified. The error handler is not
     /// called, since it is often necessary to compute histograms for a small range of a larger dataset, ignoring any coordinates outside the
@@ -573,7 +575,7 @@ impl Histogram2D {
     pub fn equal_bins_p(&self, other: &Histogram2D) -> bool {
         match unsafe { ffi::gsl_histogram2d_equal_bins_p(self.h, other.h) } {
             0 => false,
-            _ => true
+            _ => true,
         }
     }
 
@@ -621,9 +623,7 @@ impl Drop for Histogram2D {
 
 impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
     fn wrap(h: *mut ffi::gsl_histogram2d) -> Histogram2D {
-        Histogram2D {
-            h: h
-        }
+        Histogram2D { h: h }
     }
 
     fn soft_wrap(h: *mut ffi::gsl_histogram2d) -> Histogram2D {
@@ -642,13 +642,13 @@ impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
 /// As in the one-dimensional case, a two-dimensional histogram made by counting events can be regarded as a measurement of a probability distribution.
 /// Allowing for statistical error, the height of each bin represents the probability of an event where (x,y) falls in the range of that bin. For a
 /// two-dimensional histogram the probability distribution takes the form p(x,y) dx dy where,
-/// 
+///
 /// p(x,y) = n_{ij}/ (N A_{ij})
-/// 
+///
 /// In this equation n_{ij} is the number of events in the bin which contains (x,y), A_{ij} is the area of the bin and N is the total number of
 /// events. The distribution of events within each bin is assumed to be uniform.
 pub struct Histogram2DPdf {
-    h: *mut ffi::gsl_histogram2d_pdf
+    h: *mut ffi::gsl_histogram2d_pdf,
 }
 
 impl Histogram2DPdf {
@@ -661,9 +661,7 @@ impl Histogram2DPdf {
         if tmp.is_null() {
             None
         } else {
-            Some(Histogram2DPdf {
-                h: tmp
-            })
+            Some(Histogram2DPdf { h: tmp })
         }
     }
 
@@ -690,9 +688,7 @@ impl Drop for Histogram2DPdf {
 
 impl ffi::FFI<ffi::gsl_histogram2d_pdf> for Histogram2DPdf {
     fn wrap(h: *mut ffi::gsl_histogram2d_pdf) -> Histogram2DPdf {
-        Histogram2DPdf {
-            h: h
-        }
+        Histogram2DPdf { h: h }
     }
 
     fn soft_wrap(h: *mut ffi::gsl_histogram2d_pdf) -> Histogram2DPdf {

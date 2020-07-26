@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the Laplace distribution with width a. The distribution is,
-/// 
+///
 /// p(x) dx = {1 \over 2 a}  \exp(-|x/a|) dx
-/// 
+///
 /// for -\infty < x < \infty.
 pub fn laplace(r: &mut Rng, a: f64) -> f64 {
     unsafe { ffi::gsl_ran_laplace(ffi::FFI::unwrap_unique(r), a) }

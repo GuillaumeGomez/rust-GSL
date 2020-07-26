@@ -30,14 +30,14 @@ R. Broucke, “Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Al
 Communications of the ACM 16(4), 254–256 (1973)
 !*/
 
-use ffi;
-use enums;
-use std::f64::consts::PI;
 use c_vec::CSlice;
+use enums;
+use ffi;
+use std::f64::consts::PI;
 
 pub struct ChebSeries {
     c: *mut ffi::gsl_cheb_series,
-    data: CSlice<f64>
+    data: CSlice<f64>,
 }
 
 impl ChebSeries {
@@ -50,7 +50,7 @@ impl ChebSeries {
             unsafe {
                 Some(ChebSeries {
                     c: tmp,
-                    data: CSlice::new((*tmp).c, (*tmp).order as usize + 1)
+                    data: CSlice::new((*tmp).c, (*tmp).order as usize + 1),
                 })
             }
         }
@@ -82,8 +82,9 @@ impl ChebSeries {
                     let mut sum = 0f64;
 
                     for k in 0..((*self.c).order + 1) {
-                        sum += tmp_vec.as_ref()[k as usize] * (PI * j as f64 * (k as f64 + 0.5) /
-                               ((*self.c).order as f64 + 1f64)).cos();
+                        sum += tmp_vec.as_ref()[k as usize]
+                            * (PI * j as f64 * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64))
+                                .cos();
                     }
                     self.data.as_mut()[j as usize] = fac * sum;
                 }
@@ -136,8 +137,13 @@ impl ChebSeries {
     /// This function evaluates a Chebyshev series cs at a given point x, estimating both the series
     /// result and its absolute error abserr, to (at most) the given order order. The error estimate
     /// is made from the first neglected term in the series.
-    pub fn eval_n_err(&self, order: usize, x: f64, result: &mut f64,
-                      abs_err: &mut f64) -> enums::Value {
+    pub fn eval_n_err(
+        &self,
+        order: usize,
+        x: f64,
+        result: &mut f64,
+        abs_err: &mut f64,
+    ) -> enums::Value {
         enums::Value::from(unsafe { ffi::gsl_cheb_eval_n_err(self.c, order, x, result, abs_err) })
     }
 
@@ -169,7 +175,7 @@ impl ffi::FFI<ffi::gsl_cheb_series> for ChebSeries {
         unsafe {
             ChebSeries {
                 c: c,
-                data: CSlice::new((*c).c, (*c).order as usize + 1)
+                data: CSlice::new((*c).c, (*c).order as usize + 1),
             }
         }
     }

@@ -3,7 +3,7 @@
 //
 
 /// Running the program without any environment variables uses the initial defaults, an mt19937 generator with a seed of 0,
-/// 
+///
 /// ```Shell
 /// > ./a.out
 /// generator type: mt19937
@@ -11,23 +11,22 @@
 /// first value = 4293858116
 /// ```
 /// By setting the two variables on the command line we can change the default generator and the seed,
-/// 
+///
 /// ```Shell
-/// > GSL_RNG_TYPE="taus" GSL_RNG_SEED=123 ./a.out 
+/// > GSL_RNG_TYPE="taus" GSL_RNG_SEED=123 ./a.out
 /// GSL_RNG_TYPE=taus
 /// GSL_RNG_SEED=123
 /// generator type: taus
 /// seed = 123
 /// first value = 2720986350
 /// ```
-
 extern crate rgsl;
 
-use rgsl::{RngType};
+use rgsl::RngType;
 
 fn main() {
     rgsl::RngType::env_setup();
-    let t : RngType = rgsl::rng::default();
+    let t: RngType = rgsl::rng::default();
     let mut r = rgsl::Rng::new(&t).unwrap();
 
     println!("=== DEFAULT ===");

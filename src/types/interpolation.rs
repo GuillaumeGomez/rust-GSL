@@ -37,8 +37,8 @@ C.W. Ueberhuber, Numerical Computation (Volume 1), Chapter 9 “Interpolation”
 D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6.8, Dover (1988), ISBN 0-486-65691-8.
 !*/
 
-use ffi;
 use enums;
+use ffi;
 
 /// evaluation accelerator
 #[repr(C)]
@@ -48,7 +48,7 @@ pub struct InterpAccel {
     pub cache: usize,
     /// keep statistics
     pub miss_count: usize,
-    pub hit_count: usize
+    pub hit_count: usize,
 }
 
 impl InterpAccel {
@@ -58,7 +58,7 @@ impl InterpAccel {
         InterpAccel {
             cache: 0usize,
             miss_count: 0usize,
-            hit_count: 0usize
+            hit_count: 0usize,
         }
     }
 
@@ -78,7 +78,7 @@ impl InterpAccel {
 }
 
 pub struct Interp {
-    interp: *mut ffi::gsl_interp
+    interp: *mut ffi::gsl_interp,
 }
 
 impl Interp {
@@ -89,9 +89,7 @@ impl Interp {
         if tmp.is_null() {
             None
         } else {
-            Some(Interp {
-                interp: tmp
-            })
+            Some(Interp { interp: tmp })
         }
     }
 
@@ -121,7 +119,9 @@ impl Interp {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string() }
+            unsafe {
+                String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            }
         }
     }
 
@@ -141,9 +141,7 @@ impl Drop for Interp {
 
 impl ffi::FFI<ffi::gsl_interp> for Interp {
     fn wrap(interp: *mut ffi::gsl_interp) -> Interp {
-        Interp {
-            interp: interp
-        }
+        Interp { interp: interp }
     }
 
     fn soft_wrap(interp: *mut ffi::gsl_interp) -> Interp {
@@ -161,7 +159,7 @@ impl ffi::FFI<ffi::gsl_interp> for Interp {
 
 #[derive(Clone, Copy)]
 pub struct InterpType {
-    t: *const ffi::gsl_interp_type
+    t: *const ffi::gsl_interp_type,
 }
 
 impl InterpType {
@@ -210,9 +208,7 @@ impl InterpType {
 
 impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
     fn wrap(t: *mut ffi::gsl_interp_type) -> InterpType {
-        InterpType {
-            t: t
-        }
+        InterpType { t: t }
     }
 
     fn soft_wrap(t: *mut ffi::gsl_interp_type) -> InterpType {
@@ -230,7 +226,7 @@ impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
 
 /// general interpolation object
 pub struct Spline {
-    spline: *mut ffi::gsl_spline
+    spline: *mut ffi::gsl_spline,
 }
 
 impl Spline {
@@ -240,9 +236,7 @@ impl Spline {
         if tmp.is_null() {
             None
         } else {
-            Some(Spline {
-                spline: tmp
-            })
+            Some(Spline { spline: tmp })
         }
     }
 
@@ -258,7 +252,9 @@ impl Spline {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe { String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string() }
+            unsafe {
+                String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            }
         }
     }
 
@@ -294,7 +290,13 @@ impl Spline {
         unsafe { ffi::gsl_spline_eval_integ(self.spline, a, b, acc) }
     }
 
-    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> enums::Value {
+    pub fn eval_integ_e(
+        &self,
+        a: f64,
+        b: f64,
+        acc: &mut InterpAccel,
+        result: &mut f64,
+    ) -> enums::Value {
         enums::Value::from(unsafe { ffi::gsl_spline_eval_integ_e(self.spline, a, b, acc, result) })
     }
 }
@@ -308,9 +310,7 @@ impl Drop for Spline {
 
 impl ffi::FFI<ffi::gsl_spline> for Spline {
     fn wrap(spline: *mut ffi::gsl_spline) -> Spline {
-        Spline {
-            spline: spline
-        }
+        Spline { spline: spline }
     }
 
     fn soft_wrap(spline: *mut ffi::gsl_spline) -> Spline {

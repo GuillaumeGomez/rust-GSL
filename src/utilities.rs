@@ -1,11 +1,10 @@
 /// Utilities for interfacing with GSL/C
-
 use std::ffi::CString;
-use std::path::Path;
 use std::fs::File;
 use std::os::raw::c_char;
+use std::path::Path;
 
-use libc::{FILE, fopen, fclose};
+use libc::{fclose, fopen, FILE};
 
 /// A wrapper to handle I/O operations between GSL and rust
 pub struct IOStream {

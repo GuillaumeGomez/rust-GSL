@@ -19,13 +19,13 @@ fn compare_func(a: &f64, b: &f64) -> i32 {
 fn main() {
     rgsl::RngType::env_setup();
 
-    let t : RngType = rgsl::rng::default();
+    let t: RngType = rgsl::rng::default();
     let mut r = rgsl::Rng::new(&t).unwrap();
     let k = 5;
     let n = 100000;
-    let mut x : [f64; 100000] = [0f64; 100000];
-    let mut small : [f64; 5] = [0f64; 5];
-    let mut p : [usize; 5] = [0usize; 5];
+    let mut x: [f64; 100000] = [0f64; 100000];
+    let mut small: [f64; 5] = [0f64; 5];
+    let mut p: [usize; 5] = [0usize; 5];
 
     for tmp in 0..n {
         x[tmp] = r.uniform();
@@ -45,13 +45,13 @@ fn main() {
 
     small.swap(2, 3);
     rgsl::sort::objects::heapsort_index(&mut p, &small, compare_func);
-    println!("\nheapsort_index :", );
+    println!("\nheapsort_index :",);
     for tmp in 0..(k as usize) {
         println!("{}: {}", k, p[tmp]);
     }
 
     rgsl::sort::objects::heapsort(&mut small, compare_func);
-    println!("\nheapsort :", );
+    println!("\nheapsort :",);
     for tmp in 0..(k as usize) {
         println!("{}: {}", k, small[tmp]);
     }

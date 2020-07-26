@@ -7,9 +7,9 @@ pub mod type_1 {
     use types::Rng;
 
     /// This function returns a random variate from the Type-1 Gumbel distribution. The Type-1 Gumbel distribution function is,
-    /// 
+    ///
     /// p(x) dx = a b \exp(-(b \exp(-ax) + ax)) dx
-    /// 
+    ///
     /// for -\infty < x < \infty.
     pub fn gumbel1(r: &mut Rng, a: f64, b: f64) -> f64 {
         unsafe { ffi::gsl_ran_gumbel1(ffi::FFI::unwrap_unique(r), a, b) }
@@ -46,9 +46,9 @@ pub mod type_2 {
     use types::Rng;
 
     /// This function returns a random variate from the Type-2 Gumbel distribution. The Type-2 Gumbel distribution function is,
-    /// 
+    ///
     /// p(x) dx = a b x^{-a-1} \exp(-b x^{-a}) dx
-    /// 
+    ///
     /// for 0 < x < \infty.
     pub fn gumbel2(r: &mut Rng, a: f64, b: f64) -> f64 {
         unsafe { ffi::gsl_ran_gumbel2(ffi::FFI::unwrap_unique(r), a, b) }

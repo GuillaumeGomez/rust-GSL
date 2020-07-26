@@ -95,9 +95,9 @@ the generalized Schur form whose diagonal elements give the \alpha and \beta val
 used is the QZ method due to Moler and Stewart (see references).
 !*/
 
-use ffi;
 use enums;
-use types::{MatrixF64, MatrixComplexF64, VectorF64, VectorComplexF64};
+use ffi;
+use types::{MatrixComplexF64, MatrixF64, VectorComplexF64, VectorF64};
 
 pub struct EigenSymmetricWorkspace {
     w: *mut ffi::gsl_eigen_symm_workspace,
@@ -122,9 +122,11 @@ impl EigenSymmetricWorkspace {
     /// unordered.
     pub fn symm(&self, A: &mut MatrixF64, eval: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_symm(ffi::FFI::unwrap_unique(A),
-                                ffi::FFI::unwrap_unique(eval),
-                                self.w)
+            ffi::gsl_eigen_symm(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                self.w,
+            )
         })
     }
 }
@@ -178,16 +180,19 @@ impl EigenSymmetricVWorkspace {
     /// matrix `evec`. For example, the eigenvector in the first column corresponds to the first
     /// eigenvalue. The eigenvectors are guaranteed to be mutually orthogonal and normalised to unit
     /// magnitude.
-    pub fn symmv(&self,
-                 A: &mut MatrixF64,
-                 eval: &mut VectorF64,
-                 evec: &mut MatrixF64)
-                 -> enums::Value {
+    pub fn symmv(
+        &self,
+        A: &mut MatrixF64,
+        eval: &mut VectorF64,
+        evec: &mut MatrixF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_symmv(ffi::FFI::unwrap_unique(A),
-                                 ffi::FFI::unwrap_unique(eval),
-                                 ffi::FFI::unwrap_unique(evec),
-                                 self.w)
+            ffi::gsl_eigen_symmv(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(evec),
+                self.w,
+            )
         })
     }
 }
@@ -241,9 +246,11 @@ impl EigenHermitianWorkspace {
     /// not referenced. The eigenvalues are stored in the vector `eval` and are unordered.
     pub fn herm(&mut self, A: &mut MatrixComplexF64, eval: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_herm(ffi::FFI::unwrap_unique(A),
-                                ffi::FFI::unwrap_unique(eval),
-                                self.w)
+            ffi::gsl_eigen_herm(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                self.w,
+            )
         })
     }
 }
@@ -299,16 +306,19 @@ impl EigenHermitianVWorkspace {
     /// `evec`. For example, the eigenvector in the first column corresponds to the first
     /// eigenvalue. The eigenvectors are guaranteed to be mutually orthogonal and normalised to unit
     /// magnitude.
-    pub fn hermv(&mut self,
-                 A: &mut MatrixComplexF64,
-                 eval: &mut VectorF64,
-                 evec: &mut MatrixComplexF64)
-                 -> enums::Value {
+    pub fn hermv(
+        &mut self,
+        A: &mut MatrixComplexF64,
+        eval: &mut VectorF64,
+        evec: &mut MatrixComplexF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_hermv(ffi::FFI::unwrap_unique(A),
-                                 ffi::FFI::unwrap_unique(eval),
-                                 ffi::FFI::unwrap_unique(evec),
-                                 self.w)
+            ffi::gsl_eigen_hermv(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(evec),
+                self.w,
+            )
         })
     }
 }
@@ -394,24 +404,29 @@ impl EigenNonSymmWorkspace {
     /// eigenvalues are stored in the beginning of `eval`.
     pub fn nonsymm(&mut self, A: &mut MatrixF64, eval: &mut VectorComplexF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_nonsymm(ffi::FFI::unwrap_unique(A),
-                                   ffi::FFI::unwrap_unique(eval),
-                                   self.w)
+            ffi::gsl_eigen_nonsymm(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                self.w,
+            )
         })
     }
 
     /// This function is identical to gsl_eigen_nonsymm except that it also computes the Schur
     /// vectors and stores them into `Z`.
-    pub fn nonsymm_Z(&mut self,
-                     A: &mut MatrixF64,
-                     eval: &mut VectorComplexF64,
-                     Z: &mut MatrixF64)
-                     -> enums::Value {
+    pub fn nonsymm_Z(
+        &mut self,
+        A: &mut MatrixF64,
+        eval: &mut VectorComplexF64,
+        Z: &mut MatrixF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_nonsymm_Z(ffi::FFI::unwrap_unique(A),
-                                     ffi::FFI::unwrap_unique(eval),
-                                     ffi::FFI::unwrap_unique(Z),
-                                     self.w)
+            ffi::gsl_eigen_nonsymm_Z(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(Z),
+                self.w,
+            )
         })
     }
 
@@ -477,33 +492,39 @@ impl EigenNonSymmVWorkspace {
     /// gsl_eigen_nonsymmv_Z. The computed eigenvectors are normalized to have unit magnitude. On
     /// output, the upper portion of `A` contains the Schur form T. If gsl_eigen_nonsymm fails, no
     /// eigenvectors are computed, and an error code is returned.
-    pub fn nonsymmv(&mut self,
-                    A: &mut MatrixF64,
-                    eval: &mut VectorComplexF64,
-                    evec: &mut MatrixComplexF64)
-                    -> enums::Value {
+    pub fn nonsymmv(
+        &mut self,
+        A: &mut MatrixF64,
+        eval: &mut VectorComplexF64,
+        evec: &mut MatrixComplexF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_nonsymmv(ffi::FFI::unwrap_unique(A),
-                                    ffi::FFI::unwrap_unique(eval),
-                                    ffi::FFI::unwrap_unique(evec),
-                                    self.w)
+            ffi::gsl_eigen_nonsymmv(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(evec),
+                self.w,
+            )
         })
     }
 
     /// This function is identical to gsl_eigen_nonsymmv except that it also saves the Schur vectors
     /// into `Z`.
-    pub fn nonsymmv_Z(&mut self,
-                      A: &mut MatrixF64,
-                      eval: &mut VectorComplexF64,
-                      evec: &mut MatrixComplexF64,
-                      Z: &mut MatrixF64)
-                      -> enums::Value {
+    pub fn nonsymmv_Z(
+        &mut self,
+        A: &mut MatrixF64,
+        eval: &mut VectorComplexF64,
+        evec: &mut MatrixComplexF64,
+        Z: &mut MatrixF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_nonsymmv_Z(ffi::FFI::unwrap_unique(A),
-                                      ffi::FFI::unwrap_unique(eval),
-                                      ffi::FFI::unwrap_unique(evec),
-                                      ffi::FFI::unwrap_unique(Z),
-                                      self.w)
+            ffi::gsl_eigen_nonsymmv_Z(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(evec),
+                ffi::FFI::unwrap_unique(Z),
+                self.w,
+            )
         })
     }
 }
@@ -553,16 +574,19 @@ impl EigenGenSymmWorkspace {
     /// This function computes the eigenvalues of the real generalized symmetric-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
-    pub fn gensymm(&mut self,
-                   mut A: MatrixF64,
-                   B: &mut MatrixF64,
-                   eval: &mut VectorF64)
-                   -> enums::Value {
+    pub fn gensymm(
+        &mut self,
+        mut A: MatrixF64,
+        B: &mut MatrixF64,
+        eval: &mut VectorF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_gensymm(ffi::FFI::unwrap_unique(&mut A),
-                                   ffi::FFI::unwrap_unique(B),
-                                   ffi::FFI::unwrap_unique(eval),
-                                   self.w)
+            ffi::gsl_eigen_gensymm(
+                ffi::FFI::unwrap_unique(&mut A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(eval),
+                self.w,
+            )
         })
     }
 }
@@ -613,18 +637,21 @@ impl EigenGenSymmVWorkspace {
     /// symmetric-definite matrix pair (A, B), and stores them in `eval` and `evec` respectively.
     /// The computed eigenvectors are normalized to have unit magnitude. On output, `B` contains its
     /// Cholesky decomposition and `A` is destroyed.
-    pub fn gensymmv(&mut self,
-                    mut A: MatrixF64,
-                    B: &mut MatrixF64,
-                    eval: &mut VectorF64,
-                    evec: &mut MatrixF64)
-                    -> enums::Value {
+    pub fn gensymmv(
+        &mut self,
+        mut A: MatrixF64,
+        B: &mut MatrixF64,
+        eval: &mut VectorF64,
+        evec: &mut MatrixF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_gensymmv(ffi::FFI::unwrap_unique(&mut A),
-                                    ffi::FFI::unwrap_unique(B),
-                                    ffi::FFI::unwrap_unique(eval),
-                                    ffi::FFI::unwrap_unique(evec),
-                                    self.w)
+            ffi::gsl_eigen_gensymmv(
+                ffi::FFI::unwrap_unique(&mut A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(evec),
+                self.w,
+            )
         })
     }
 }
@@ -674,16 +701,19 @@ impl EigenGenHermWorkspace {
     /// This function computes the eigenvalues of the complex generalized hermitian-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
-    pub fn genherm(&mut self,
-                   mut A: MatrixComplexF64,
-                   B: &mut MatrixComplexF64,
-                   eval: &mut VectorF64)
-                   -> enums::Value {
+    pub fn genherm(
+        &mut self,
+        mut A: MatrixComplexF64,
+        B: &mut MatrixComplexF64,
+        eval: &mut VectorF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_genherm(ffi::FFI::unwrap_unique(&mut A),
-                                   ffi::FFI::unwrap_unique(B),
-                                   ffi::FFI::unwrap_unique(eval),
-                                   self.w)
+            ffi::gsl_eigen_genherm(
+                ffi::FFI::unwrap_unique(&mut A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(eval),
+                self.w,
+            )
         })
     }
 }
@@ -733,18 +763,21 @@ impl EigenGenHermVWorkspace {
     /// This function computes the eigenvalues of the complex generalized hermitian-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
-    pub fn genhermv(&mut self,
-                    mut A: MatrixComplexF64,
-                    B: &mut MatrixComplexF64,
-                    eval: &mut VectorF64,
-                    evec: &mut MatrixComplexF64)
-                    -> enums::Value {
+    pub fn genhermv(
+        &mut self,
+        mut A: MatrixComplexF64,
+        B: &mut MatrixComplexF64,
+        eval: &mut VectorF64,
+        evec: &mut MatrixComplexF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_genhermv(ffi::FFI::unwrap_unique(&mut A),
-                                    ffi::FFI::unwrap_unique(B),
-                                    ffi::FFI::unwrap_unique(eval),
-                                    ffi::FFI::unwrap_unique(evec),
-                                    self.w)
+            ffi::gsl_eigen_genhermv(
+                ffi::FFI::unwrap_unique(&mut A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(eval),
+                ffi::FFI::unwrap_unique(evec),
+                self.w,
+            )
         })
     }
 }
@@ -820,39 +853,45 @@ impl EigenGenWorkspace {
     /// The ordering of eigenvalues in (alpha, beta) follows the ordering of the diagonal blocks in
     /// the Schur forms S and T. In rare cases, this function may fail to find all eigenvalues. If
     /// this occurs, an error code is returned.
-    pub fn gen(&mut self,
-               A: &mut MatrixF64,
-               B: &mut MatrixF64,
-               alpha: &mut VectorComplexF64,
-               beta: &mut VectorF64)
-               -> enums::Value {
+    pub fn gen(
+        &mut self,
+        A: &mut MatrixF64,
+        B: &mut MatrixF64,
+        alpha: &mut VectorComplexF64,
+        beta: &mut VectorF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_gen(ffi::FFI::unwrap_unique(A),
-                               ffi::FFI::unwrap_unique(B),
-                               ffi::FFI::unwrap_unique(alpha),
-                               ffi::FFI::unwrap_unique(beta),
-                               self.w)
+            ffi::gsl_eigen_gen(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(alpha),
+                ffi::FFI::unwrap_unique(beta),
+                self.w,
+            )
         })
     }
 
     /// This function is identical to gsl_eigen_gen except that it also computes the left and right
     /// Schur vectors and stores them into `Q` and `Z` respectively.
-    pub fn gen_QZ(&mut self,
-                  A: &mut MatrixF64,
-                  B: &mut MatrixF64,
-                  alpha: &mut VectorComplexF64,
-                  beta: &mut VectorF64,
-                  Q: &mut MatrixF64,
-                  Z: &mut MatrixF64)
-                  -> enums::Value {
+    pub fn gen_QZ(
+        &mut self,
+        A: &mut MatrixF64,
+        B: &mut MatrixF64,
+        alpha: &mut VectorComplexF64,
+        beta: &mut VectorF64,
+        Q: &mut MatrixF64,
+        Z: &mut MatrixF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_gen_QZ(ffi::FFI::unwrap_unique(A),
-                                  ffi::FFI::unwrap_unique(B),
-                                  ffi::FFI::unwrap_unique(alpha),
-                                  ffi::FFI::unwrap_unique(beta),
-                                  ffi::FFI::unwrap_unique(Q),
-                                  ffi::FFI::unwrap_unique(Z),
-                                  self.w)
+            ffi::gsl_eigen_gen_QZ(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(alpha),
+                ffi::FFI::unwrap_unique(beta),
+                ffi::FFI::unwrap_unique(Q),
+                ffi::FFI::unwrap_unique(Z),
+                self.w,
+            )
         })
     }
 }
@@ -907,43 +946,49 @@ impl EigenGenVWorkspace {
     /// but can be saved by using gsl_eigen_genv_QZ. The computed eigenvectors are normalized to
     /// have unit magnitude. On output, (A, B) contains the generalized Schur form (S, T). If
     /// gsl_eigen_gen fails, no eigenvectors are computed, and an error code is returned.
-    pub fn genv(&mut self,
-                A: &mut MatrixF64,
-                B: &mut MatrixF64,
-                alpha: &mut VectorComplexF64,
-                beta: &mut VectorF64,
-                evec: &mut MatrixComplexF64)
-                -> enums::Value {
+    pub fn genv(
+        &mut self,
+        A: &mut MatrixF64,
+        B: &mut MatrixF64,
+        alpha: &mut VectorComplexF64,
+        beta: &mut VectorF64,
+        evec: &mut MatrixComplexF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_genv(ffi::FFI::unwrap_unique(A),
-                                ffi::FFI::unwrap_unique(B),
-                                ffi::FFI::unwrap_unique(alpha),
-                                ffi::FFI::unwrap_unique(beta),
-                                ffi::FFI::unwrap_unique(evec),
-                                self.w)
+            ffi::gsl_eigen_genv(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(alpha),
+                ffi::FFI::unwrap_unique(beta),
+                ffi::FFI::unwrap_unique(evec),
+                self.w,
+            )
         })
     }
 
     /// This function is identical to gsl_eigen_genv except that it also computes the left and right
     /// Schur vectors and stores them into `Q` and `Z` respectively.
-    pub fn genv_QZ(&mut self,
-                   A: &mut MatrixF64,
-                   B: &mut MatrixF64,
-                   alpha: &mut VectorComplexF64,
-                   beta: &mut VectorF64,
-                   evec: &mut MatrixComplexF64,
-                   Q: &mut MatrixF64,
-                   Z: &mut MatrixF64)
-                   -> enums::Value {
+    pub fn genv_QZ(
+        &mut self,
+        A: &mut MatrixF64,
+        B: &mut MatrixF64,
+        alpha: &mut VectorComplexF64,
+        beta: &mut VectorF64,
+        evec: &mut MatrixComplexF64,
+        Q: &mut MatrixF64,
+        Z: &mut MatrixF64,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_eigen_genv_QZ(ffi::FFI::unwrap_unique(A),
-                                   ffi::FFI::unwrap_unique(B),
-                                   ffi::FFI::unwrap_unique(alpha),
-                                   ffi::FFI::unwrap_unique(beta),
-                                   ffi::FFI::unwrap_unique(evec),
-                                   ffi::FFI::unwrap_unique(Q),
-                                   ffi::FFI::unwrap_unique(Z),
-                                   self.w)
+            ffi::gsl_eigen_genv_QZ(
+                ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_unique(alpha),
+                ffi::FFI::unwrap_unique(beta),
+                ffi::FFI::unwrap_unique(evec),
+                ffi::FFI::unwrap_unique(Q),
+                ffi::FFI::unwrap_unique(Z),
+                self.w,
+            )
         })
     }
 }
@@ -1035,10 +1080,14 @@ fn eigen_symmetric_vworkspace() {
     let mut v = VectorF64::new(2).unwrap();
     e.symmv(&mut m, &mut v, &mut m2);
     assert_eq!(&format!("{:.4} {:.4}", v.get(0), v.get(1)), "4.3820 6.6180");
-    assert_eq!(&format!("{:.4} {:.4}", m2.get(0, 0), m2.get(0, 1)),
-               "0.8507 0.5257");
-    assert_eq!(&format!("{:.4} {:.4}", m2.get(1, 0), m2.get(1, 1)),
-               "-0.5257 0.8507");
+    assert_eq!(
+        &format!("{:.4} {:.4}", m2.get(0, 0), m2.get(0, 1)),
+        "0.8507 0.5257"
+    );
+    assert_eq!(
+        &format!("{:.4} {:.4}", m2.get(1, 0), m2.get(1, 1)),
+        "-0.5257 0.8507"
+    );
 }
 
 // C code:
@@ -1070,9 +1119,9 @@ fn eigen_symmetric_vworkspace() {
 // ```
 #[test]
 fn eigen_hermitian_workspace() {
+    use ComplexF64;
     use MatrixComplexF64;
     use VectorF64;
-    use ComplexF64;
 
     let mut e = EigenHermitianWorkspace::new(3).unwrap();
     let mut m = MatrixComplexF64::new(2, 2).unwrap();
@@ -1138,16 +1187,24 @@ fn eigen_hermitian_vworkspace() {
     let mut m2 = MatrixComplexF64::new(2, 2).unwrap();
     e.hermv(&mut m, &mut v, &mut m2);
     assert_eq!(&format!("{:.4} {:.4}", v.get(0), v.get(1)), "8.6056 1.3944");
-    assert_eq!(&format!("({:.4}, {:.4}) ({:.4}, {:.4})",
-                        m2.get(0, 0).dat[0],
-                        m2.get(0, 0).dat[1],
-                        m2.get(0, 1).dat[0],
-                        m2.get(0, 1).dat[1]),
-               "(0.7071, 0.0000) (0.7071, 0.0000)");
-    assert_eq!(&format!("({:.4}, {:.4}) ({:.4}, {:.4})",
-                        m2.get(1, 0).dat[0],
-                        m2.get(1, 0).dat[1],
-                        m2.get(1, 1).dat[0],
-                        m2.get(1, 1).dat[1]),
-               "(0.3922, 0.5883) (-0.3922, -0.5883)");
+    assert_eq!(
+        &format!(
+            "({:.4}, {:.4}) ({:.4}, {:.4})",
+            m2.get(0, 0).dat[0],
+            m2.get(0, 0).dat[1],
+            m2.get(0, 1).dat[0],
+            m2.get(0, 1).dat[1]
+        ),
+        "(0.7071, 0.0000) (0.7071, 0.0000)"
+    );
+    assert_eq!(
+        &format!(
+            "({:.4}, {:.4}) ({:.4}, {:.4})",
+            m2.get(1, 0).dat[0],
+            m2.get(1, 0).dat[1],
+            m2.get(1, 1).dat[0],
+            m2.get(1, 1).dat[1]
+        ),
+        "(0.3922, 0.5883) (-0.3922, -0.5883)"
+    );
 }

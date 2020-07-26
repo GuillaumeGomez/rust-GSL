@@ -17,12 +17,26 @@ fn main() {
     let mut abs_err = 0f64;
 
     println!("f(x) = x^(3/2)");
-    rgsl::numerical_differentiation::deriv_central(f, &mut 0i32, 2f64, 1e-8f64, &mut result, &mut abs_err);
+    rgsl::numerical_differentiation::deriv_central(
+        f,
+        &mut 0i32,
+        2f64,
+        1e-8f64,
+        &mut result,
+        &mut abs_err,
+    );
     println!("x = 2.0");
     println!("f'(x) = {} +/- {}", result, abs_err);
     println!("exact = {}\n", 1.5 * 2f64.sqrt());
 
-    rgsl::numerical_differentiation::deriv_central(f, &mut 0i32, 0f64, 1e-8f64, &mut result, &mut abs_err);
+    rgsl::numerical_differentiation::deriv_central(
+        f,
+        &mut 0i32,
+        0f64,
+        1e-8f64,
+        &mut result,
+        &mut abs_err,
+    );
     println!("x = 0.0");
     println!("f'(x) = {} +/- {}", result, abs_err);
     println!("exact = {}", 0f64);

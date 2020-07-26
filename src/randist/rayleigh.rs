@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the Rayleigh distribution with scale parameter sigma. The distribution is,
-/// 
+///
 /// p(x) dx = {x \over \sigma^2} \exp(- x^2/(2 \sigma^2)) dx
-/// 
+///
 /// for x > 0.
 pub fn rayleigh(r: &mut Rng, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_rayleigh(ffi::FFI::unwrap_unique(r), sigma) }

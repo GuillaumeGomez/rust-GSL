@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-// The following program uses the Brent algorithm to find the minimum of the function f(x) = \cos(x) + 1, which occurs at x = \pi. The 
+// The following program uses the Brent algorithm to find the minimum of the function f(x) = \cos(x) + 1, which occurs at x = \pi. The
 // starting interval is (0,6), with an initial guess for the minimum of 2.
 
 extern crate rgsl;
@@ -24,16 +24,27 @@ fn main() {
     let mut b = 6f64;
     let mut status = rgsl::Value::Success;
 
-    let t : rgsl::MinimizerType<f64> = rgsl::MinimizerType::brent();
-    let mut s : rgsl::Minimizer<f64> = rgsl::Minimizer::new(&t).unwrap();
+    let t: rgsl::MinimizerType<f64> = rgsl::MinimizerType::brent();
+    let mut s: rgsl::Minimizer<f64> = rgsl::Minimizer::new(&t).unwrap();
 
     s.set(fn1, &mut 0f64, m, a, b);
 
     println!("using {} method\n", s.name());
 
-    println!("{:5} [{:9}, {:9}] {:9} {:10} {:9}", "iter", "lower", "upper", "min", "err", "err(est)");
+    println!(
+        "{:5} [{:9}, {:9}] {:9} {:10} {:9}",
+        "iter", "lower", "upper", "min", "err", "err(est)"
+    );
 
-    println!("{:5} [{:.7}, {:.7}] {:.7} {:+.7} {:.7}", iter, a, b, m, m - m_expected, b - a);
+    println!(
+        "{:5} [{:.7}, {:.7}] {:.7} {:+.7} {:.7}",
+        iter,
+        a,
+        b,
+        m,
+        m - m_expected,
+        b - a
+    );
 
     loop {
         iter += 1;
@@ -49,7 +60,15 @@ fn main() {
             println!("Converged:");
         }
 
-        println!("{:5} [{:.7}, {:.7}] {:.7} {:+.7} {:.7}", iter, a, b, m, m - m_expected, b - a);
+        println!(
+            "{:5} [{:.7}, {:.7}] {:.7} {:+.7} {:.7}",
+            iter,
+            a,
+            b,
+            m,
+            m - m_expected,
+            b - a
+        );
         if status != rgsl::Value::Continue || iter >= max_iter {
             break;
         }

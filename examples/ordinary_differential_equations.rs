@@ -32,7 +32,14 @@ fn main() {
 
         let mut sys = rgsl::ODEiv2System::with_jacobian(2, &mut func, &mut jac);
 
-        let mut d = rgsl::ODEiv2Driver::alloc_y_new(&mut sys, &rgsl::ODEiv2StepType::rk8pd(), 1e-6, 1e-6, 0.).unwrap();
+        let mut d = rgsl::ODEiv2Driver::alloc_y_new(
+            &mut sys,
+            &rgsl::ODEiv2StepType::rk8pd(),
+            1e-6,
+            1e-6,
+            0.,
+        )
+        .unwrap();
 
         let mut t = 0.;
         let t1 = 100.;
@@ -45,7 +52,7 @@ fn main() {
                 Ok(()) => {}
                 Err(e) => {
                     println!("error, return value={:?}", e);
-                    break
+                    break;
                 }
             }
 
@@ -53,5 +60,8 @@ fn main() {
         }
     }
 
-    println!("\nfunc evaluated {} times, jac evaluated {} times", func_eval, jac_eval);
+    println!(
+        "\nfunc evaluated {} times, jac evaluated {} times",
+        func_eval, jac_eval
+    );
 }

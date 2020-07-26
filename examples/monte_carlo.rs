@@ -23,19 +23,19 @@ use std::f64::consts::PI;
 
 /* Computation of the integral,
 
-      I = int (dx dy dz)/(2pi)^3  1/(1-cos(x)cos(y)cos(z))
+   I = int (dx dy dz)/(2pi)^3  1/(1-cos(x)cos(y)cos(z))
 
-   over (-pi,-pi,-pi) to (+pi, +pi, +pi).  The exact answer
-   is Gamma(1/4)^4/(4 pi^3).  This example is taken from
-   C.Itzykson, J.M.Drouffe, "Statistical Field Theory -
-   Volume 1", Section 1.1, p21, which cites the original
-   paper M.L.Glasser, I.J.Zucker, Proc.Natl.Acad.Sci.USA 74
-   1800 (1977) */
+over (-pi,-pi,-pi) to (+pi, +pi, +pi).  The exact answer
+is Gamma(1/4)^4/(4 pi^3).  This example is taken from
+C.Itzykson, J.M.Drouffe, "Statistical Field Theory -
+Volume 1", Section 1.1, p21, which cites the original
+paper M.L.Glasser, I.J.Zucker, Proc.Natl.Acad.Sci.USA 74
+1800 (1977) */
 
 /* For simplicity we compute the integral over the region
-   (0,0,0) -> (pi,pi,pi) and multiply by 8 */
+(0,0,0) -> (pi,pi,pi) and multiply by 8 */
 
-const EXACT : f64 = 1.3932039296856768591842462603255f64;
+const EXACT: f64 = 1.3932039296856768591842462603255f64;
 
 fn g(k: &[f64]) -> f64 {
     let a = 1f64 / (PI * PI * PI);
@@ -48,17 +48,21 @@ fn display_results(title: &str, result: f64, error: f64) {
     println!("result = {:.6}", result);
     println!("sigma  = {:.6}", error);
     println!("exact  = {:.6}", EXACT);
-    println!("error  = {:.6} = {:.2} sigma", result - EXACT, (result - EXACT).abs() / error);
+    println!(
+        "error  = {:.6} = {:.2} sigma",
+        result - EXACT,
+        (result - EXACT).abs() / error
+    );
 }
 
 fn main() {
-    let xl : [f64; 3] = [0f64; 3];
-    let xu : [f64; 3] = [PI, PI, PI];
+    let xl: [f64; 3] = [0f64; 3];
+    let xu: [f64; 3] = [PI, PI, PI];
 
     let calls = 500000;
 
     rgsl::RngType::env_setup();
-    let t : rgsl::RngType = rgsl::rng::default();
+    let t: rgsl::RngType = rgsl::rng::default();
     let mut r = rgsl::Rng::new(&t).unwrap();
 
     {
@@ -71,11 +75,20 @@ fn main() {
     {
         let mut s = rgsl::MiserMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, |k| {
-                let a = 1f64 / (PI * PI * PI);
+        let (res, err) = s
+            .integrate(
+                3,
+                |k| {
+                    let a = 1f64 / (PI * PI * PI);
 
-                a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
-            }, &xl, &xu, calls, &mut r).unwrap();
+                    a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+                },
+                &xl,
+                &xu,
+                calls,
+                &mut r,
+            )
+            .unwrap();
         display_results("miser", res, err);
     }
 
@@ -91,7 +104,12 @@ fn main() {
             let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &mut r).unwrap();
             res = _res;
             err = _err;
-            println!("result = {:.6} sigma = {:.6} chisq/dof = {:.1}", res, err, s.chisq());
+            println!(
+                "result = {:.6} sigma = {:.6} chisq/dof = {:.1}",
+                res,
+                err,
+                s.chisq()
+            );
             if (s.chisq() - 1f64).abs() <= 0.5f64 {
                 break;
             }

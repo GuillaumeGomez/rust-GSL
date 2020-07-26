@@ -53,8 +53,8 @@ H. Fisk Johnson, Comp. Phys. Comm. 43, 181 (1987).
 D. Lemoine, J. Chem. Phys. 101, 3936 (1994).
 !*/
 
-use ffi;
 use enums;
+use ffi;
 
 pub struct DiscreteHankel {
     t: *mut ffi::gsl_dht,
@@ -68,9 +68,7 @@ impl DiscreteHankel {
         if tmp.is_null() {
             None
         } else {
-            Some(DiscreteHankel {
-                t: tmp,
-            })
+            Some(DiscreteHankel { t: tmp })
         }
     }
 
@@ -82,9 +80,7 @@ impl DiscreteHankel {
         if tmp.is_null() {
             None
         } else {
-            Some(DiscreteHankel {
-                t: tmp,
-            })
+            Some(DiscreteHankel { t: tmp })
         }
     }
 
@@ -100,10 +96,16 @@ impl DiscreteHankel {
     /// up to numerical errors.
     pub fn apply(&self, f_in: &[f64]) -> Result<Vec<f64>, enums::Value> {
         unsafe {
-            assert!((*self.t).size == f_in.len(),
-                    "f_in and f_out must have the same length as this struct");
+            assert!(
+                (*self.t).size == f_in.len(),
+                "f_in and f_out must have the same length as this struct"
+            );
             let mut f_out: Vec<f64> = ::std::iter::repeat(0.).take(f_in.len()).collect();
-            match enums::Value::from(ffi::gsl_dht_apply(self.t, f_in.as_ptr(), f_out.as_mut_ptr())) {
+            match enums::Value::from(ffi::gsl_dht_apply(
+                self.t,
+                f_in.as_ptr(),
+                f_out.as_mut_ptr(),
+            )) {
                 enums::Value::Success => Ok(f_out),
                 err => Err(err),
             }
@@ -132,9 +134,7 @@ impl Drop for DiscreteHankel {
 
 impl ffi::FFI<ffi::gsl_dht> for DiscreteHankel {
     fn wrap(t: *mut ffi::gsl_dht) -> DiscreteHankel {
-        DiscreteHankel {
-            t: t
-        }
+        DiscreteHankel { t: t }
     }
 
     fn soft_wrap(t: *mut ffi::gsl_dht) -> DiscreteHankel {
@@ -171,9 +171,15 @@ impl ffi::FFI<ffi::gsl_dht> for DiscreteHankel {
 fn discrete_hankel() {
     let mut d = DiscreteHankel::new(3).unwrap();
     assert_eq!(d.init(3., 2.), ::Value::Success);
-    assert_eq!(&format!("{:.4} {:.4}", d.x_sample(1), d.k_sample(1)), "1.2033 4.8805");
+    assert_eq!(
+        &format!("{:.4} {:.4}", d.x_sample(1), d.k_sample(1)),
+        "1.2033 4.8805"
+    );
     let v = d.apply(&[100., 2., 3.]);
     assert_eq!(true, v.is_ok());
     let v = v.unwrap();
-    assert_eq!(&format!("{:.4} {:.4} {:.4}", v[0], v[1], v[2]), "8.5259 13.9819 11.7320");
+    assert_eq!(
+        &format!("{:.4} {:.4} {:.4}", v[0], v[1], v[2]),
+        "8.5259 13.9819 11.7320"
+    );
 }

@@ -2,24 +2,24 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use std::fmt;
-use std::fmt::{Formatter, Debug};
-use types::{ComplexF32, ComplexF64};
-use types::{VectorComplexF64, VectorComplexF32};
-use ffi;
 use enums;
+use ffi;
+use std::fmt;
+use std::fmt::{Debug, Formatter};
+use types::{ComplexF32, ComplexF64};
+use types::{VectorComplexF32, VectorComplexF64};
 
 pub struct MatrixComplexF64 {
-    mat: *mut ffi::gsl_matrix_complex
+    mat: *mut ffi::gsl_matrix_complex,
 }
 
 impl MatrixComplexF64 {
     /// Creates a new MatrixF64 with all elements set to zero
-    /// 
+    ///
     /// Example with n1 = 2 and n2 = 3 :
-    /// 
+    ///
     /// XX XX XX
-    /// 
+    ///
     /// XX XX XX
     pub fn new(n1: usize, n2: usize) -> Option<MatrixComplexF64> {
         let tmp = unsafe { ffi::gsl_matrix_complex_calloc(n1, n2) };
@@ -27,9 +27,7 @@ impl MatrixComplexF64 {
         if tmp.is_null() {
             None
         } else {
-            Some(MatrixComplexF64 {
-                mat: tmp
-            })
+            Some(MatrixComplexF64 { mat: tmp })
         }
     }
 
@@ -147,7 +145,7 @@ impl MatrixComplexF64 {
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_transpose_memcpy(dest, self.mat) };
 
-            Some((MatrixComplexF64{mat: dest}, enums::Value::from(ret)))
+            Some((MatrixComplexF64 { mat: dest }, enums::Value::from(ret)))
         }
     }
 
@@ -199,7 +197,7 @@ impl MatrixComplexF64 {
     pub fn is_null(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_isnull(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -207,7 +205,7 @@ impl MatrixComplexF64 {
     pub fn is_pos(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_ispos(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -215,7 +213,7 @@ impl MatrixComplexF64 {
     pub fn is_neg(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_isneg(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -223,7 +221,7 @@ impl MatrixComplexF64 {
     pub fn is_non_neg(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_isnonneg(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -231,7 +229,7 @@ impl MatrixComplexF64 {
     pub fn equal(&self, other: &MatrixComplexF64) -> bool {
         match unsafe { ffi::gsl_matrix_complex_equal(self.mat, other.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -245,7 +243,7 @@ impl MatrixComplexF64 {
                         m.copy_from(self);
                         Some(m)
                     }
-                    None => None
+                    None => None,
                 }
             }
         }
@@ -283,9 +281,7 @@ impl Debug for MatrixComplexF64 {
 
 impl ffi::FFI<ffi::gsl_matrix_complex> for MatrixComplexF64 {
     fn wrap(r: *mut ffi::gsl_matrix_complex) -> MatrixComplexF64 {
-        MatrixComplexF64 {
-            mat: r
-        }
+        MatrixComplexF64 { mat: r }
     }
 
     fn soft_wrap(r: *mut ffi::gsl_matrix_complex) -> MatrixComplexF64 {
@@ -302,16 +298,16 @@ impl ffi::FFI<ffi::gsl_matrix_complex> for MatrixComplexF64 {
 }
 
 pub struct MatrixComplexF32 {
-    mat: *mut ffi::gsl_matrix_complex_float
+    mat: *mut ffi::gsl_matrix_complex_float,
 }
 
 impl MatrixComplexF32 {
     /// Creates a new MatrixF64 with all elements set to zero
-    /// 
+    ///
     /// Example with n1 = 2 and n2 = 3 :
-    /// 
+    ///
     /// XX XX XX
-    /// 
+    ///
     /// XX XX XX
     pub fn new(n1: usize, n2: usize) -> Option<MatrixComplexF32> {
         let tmp = unsafe { ffi::gsl_matrix_complex_float_calloc(n1, n2) };
@@ -319,9 +315,7 @@ impl MatrixComplexF32 {
         if tmp.is_null() {
             None
         } else {
-            Some(MatrixComplexF32 {
-                mat: tmp
-            })
+            Some(MatrixComplexF32 { mat: tmp })
         }
     }
 
@@ -432,14 +426,15 @@ impl MatrixComplexF32 {
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF32, enums::Value)> {
-        let dest = unsafe { ffi::gsl_matrix_complex_float_alloc((*self.mat).size2, (*self.mat).size1) };
+        let dest =
+            unsafe { ffi::gsl_matrix_complex_float_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
             None
         } else {
             let ret = unsafe { ffi::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat) };
 
-            Some((MatrixComplexF32{mat: dest}, enums::Value::from(ret)))
+            Some((MatrixComplexF32 { mat: dest }, enums::Value::from(ret)))
         }
     }
 
@@ -495,7 +490,7 @@ impl MatrixComplexF32 {
     pub fn is_null(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_float_isnull(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -503,7 +498,7 @@ impl MatrixComplexF32 {
     pub fn is_pos(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_float_ispos(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -511,7 +506,7 @@ impl MatrixComplexF32 {
     pub fn is_neg(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_float_isneg(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -519,16 +514,15 @@ impl MatrixComplexF32 {
     pub fn is_non_neg(&self) -> bool {
         match unsafe { ffi::gsl_matrix_complex_float_isnonneg(self.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixComplexF32) -> bool {
-        match unsafe { ffi::gsl_matrix_complex_float_equal(self.mat,
-            other.mat) } {
+        match unsafe { ffi::gsl_matrix_complex_float_equal(self.mat, other.mat) } {
             1 => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -542,7 +536,7 @@ impl MatrixComplexF32 {
                         m.copy_from(self);
                         Some(m)
                     }
-                    None => None
+                    None => None,
                 }
             }
         }
@@ -580,9 +574,7 @@ impl Debug for MatrixComplexF32 {
 
 impl ffi::FFI<ffi::gsl_matrix_complex_float> for MatrixComplexF32 {
     fn wrap(r: *mut ffi::gsl_matrix_complex_float) -> MatrixComplexF32 {
-        MatrixComplexF32 {
-            mat: r
-        }
+        MatrixComplexF32 { mat: r }
     }
 
     fn soft_wrap(r: *mut ffi::gsl_matrix_complex_float) -> MatrixComplexF32 {

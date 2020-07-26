@@ -7,13 +7,13 @@ use types::Rng;
 
 /// This function provides random variates from the upper tail of a Gaussian distribution with standard deviation sigma.
 /// The values returned are larger than the lower limit a, which must be positive. The method is based on Marsaglia’s famous rectangle-wedge-tail algorithm (Ann. Math. Stat. 32, 894–899 (1961)), with this aspect explained in Knuth, v2, 3rd ed, p139,586 (exercise 11).
-/// 
+///
 /// The probability distribution for Gaussian tail random variates is,
-/// 
+///
 /// p(x) dx = {1 \over N(a;\sigma) \sqrt{2 \pi \sigma^2}} \exp (- x^2/(2 \sigma^2)) dx
-/// 
+///
 /// for x > a where N(a;\sigma) is the normalization constant,
-/// 
+///
 /// N(a;\sigma) = (1/2) erfc(a / sqrt(2 sigma^2)).
 pub fn gaussian_tail(r: &mut Rng, a: f64, sigma: f64) -> f64 {
     unsafe { ffi::gsl_ran_gaussian_tail(ffi::FFI::unwrap_unique(r), a, sigma) }

@@ -2,40 +2,40 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use types::{VectorF64};
-use ffi;
-use enums;
-use std::fmt;
-use std::fmt::{Formatter, Debug};
 use c_vec::CSlice;
+use enums;
+use ffi;
+use std::fmt;
+use std::fmt::{Debug, Formatter};
+use types::VectorF64;
 
 pub struct Permutation {
     p: *mut ffi::gsl_permutation,
-    d: CSlice<usize>
+    d: CSlice<usize>,
 }
 
 ///##Permutations in cyclic form
-/// 
+///
 /// A permutation can be represented in both linear and cyclic notations. The functions described in this section convert between the two forms.
 /// The linear notation is an index mapping, and has already been described above. The cyclic notation expresses a permutation as a series of
 /// circular rearrangements of groups of elements, or cycles.
-/// 
+///
 /// For example, under the cycle (1 2 3), 1 is replaced by 2, 2 is replaced by 3 and 3 is replaced by 1 in a circular fashion. Cycles of different
 /// sets of elements can be combined independently, for example (1 2 3) (4 5) combines the cycle (1 2 3) with the cycle (4 5), which is an exchange
 /// of elements 4 and 5. A cycle of length one represents an element which is unchanged by the permutation and is referred to as a singleton.
-/// 
+///
 /// It can be shown that every permutation can be decomposed into combinations of cycles. The decomposition is not unique, but can always be
 /// rearranged into a standard canonical form by a reordering of elements. The library uses the canonical form defined in Knuth’s Art of Computer
 /// Programming (Vol 1, 3rd Ed, 1997) Section 1.3.3, p.178.
-/// 
+///
 /// The procedure for obtaining the canonical form given by Knuth is,
-/// 
+///
 /// Write all singleton cycles explicitly
 /// Within each cycle, put the smallest number first
 /// Order the cycles in decreasing order of the first number in the cycle.
 /// For example, the linear representation (2 4 3 0 1) is represented as (1 4) (0 2 3) in canonical form. The permutation corresponds to an exchange
 /// of elements 1 and 4, and rotation of elements 0, 2 and 3.
-/// 
+///
 /// The important property of the canonical form is that it can be reconstructed from the contents of each cycle without the brackets. In addition,
 /// by removing the brackets it can be considered as a linear representation of a different permutation. In the example given above the permutation
 /// (2 4 3 0 1) would become (1 4 0 2 3). This mapping has many applications in the theory of permutations.
@@ -52,7 +52,7 @@ impl Permutation {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: CSlice::new((*tmp).data, (*tmp).size as usize)
+                    d: CSlice::new((*tmp).data, (*tmp).size as usize),
                 })
             }
         }
@@ -69,7 +69,7 @@ impl Permutation {
             unsafe {
                 Some(Permutation {
                     p: tmp,
-                    d: CSlice::new((*tmp).data, (*tmp).size as usize)
+                    d: CSlice::new((*tmp).data, (*tmp).size as usize),
                 })
             }
         }
@@ -110,7 +110,7 @@ impl Permutation {
     pub fn is_valid(&self) -> bool {
         match unsafe { ffi::gsl_permutation_valid(self.p) }.into() {
             ::Value::Success => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -140,14 +140,24 @@ impl Permutation {
     /// This function applies the permutation to the array data of size n with stride stride.
     pub fn permute(&mut self, data: &mut [f64], stride: usize) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_permute((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize)
+            ffi::gsl_permute(
+                (*self.p).data,
+                data.as_mut_ptr(),
+                stride,
+                data.len() as usize,
+            )
         })
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
     pub fn permute_inverse(&mut self, data: &mut [f64], stride: usize) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_permute_inverse((*self.p).data, data.as_mut_ptr(), stride, data.len() as usize)
+            ffi::gsl_permute_inverse(
+                (*self.p).data,
+                data.as_mut_ptr(),
+                stride,
+                data.len() as usize,
+            )
         })
     }
 
@@ -212,7 +222,7 @@ impl ffi::FFI<ffi::gsl_permutation> for Permutation {
         unsafe {
             Permutation {
                 p: p,
-                d: CSlice::new((*p).data, (*p).size as usize)
+                d: CSlice::new((*p).data, (*p).size as usize),
             }
         }
     }

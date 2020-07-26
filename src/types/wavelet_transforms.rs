@@ -5,7 +5,7 @@
 /*!
 #Wavelet Transforms
 
-This chapter describes functions for performing Discrete Wavelet Transforms (DWTs). The library includes wavelets for real data in both 
+This chapter describes functions for performing Discrete Wavelet Transforms (DWTs). The library includes wavelets for real data in both
 one and two dimensions.
 
 ##Definitions
@@ -18,8 +18,8 @@ and,
 f(t) = \int \int_{-\infty}^\infty w(s, \tau) * \psi_{s,\tau}(t) d\tau ds
 where the basis functions \psi_{s,\tau} are obtained by scaling and translation from a single function, referred to as the mother wavelet.
 
-The discrete version of the wavelet transform acts on equally-spaced samples, with fixed scaling and translation steps (s, \tau). The 
-frequency and time axes are sampled dyadically on scales of 2^j through a level parameter j. The resulting family of functions 
+The discrete version of the wavelet transform acts on equally-spaced samples, with fixed scaling and translation steps (s, \tau). The
+frequency and time axes are sampled dyadically on scales of 2^j through a level parameter j. The resulting family of functions
 {\psi_{j,n}} constitutes an orthonormal basis for square-integrable signals.
 
 The discrete wavelet transform is an O(N) algorithm, and is also referred to as the fast wavelet transform.
@@ -37,18 +37,18 @@ For extensive coverage of signal analysis by wavelets, wavelet packets and local
 S. G. Mallat. A wavelet tour of signal processing (Second edition). Academic Press (1999), ISBN 012466606X.
 The concept of multiresolution analysis underlying the wavelet transform is described in,
 
-S. G. Mallat. Multiresolution Approximations and Wavelet Orthonormal Bases of L^2(R). Transactions of the American Mathematical Society, 
+S. G. Mallat. Multiresolution Approximations and Wavelet Orthonormal Bases of L^2(R). Transactions of the American Mathematical Society,
 315(1), 1989, 69–87.
-S. G. Mallat. A Theory for Multiresolution Signal Decomposition—The Wavelet Representation. IEEE Transactions on Pattern Analysis and 
+S. G. Mallat. A Theory for Multiresolution Signal Decomposition—The Wavelet Representation. IEEE Transactions on Pattern Analysis and
 Machine Intelligence, 11, 1989, 674–693.
 The coefficients for the individual wavelet families implemented by the library can be found in the following papers,
 
 I. Daubechies. Orthonormal Bases of Compactly Supported Wavelets. Communications on Pure and Applied Mathematics, 41 (1988) 909–996.
-A. Cohen, I. Daubechies, and J.-C. Feauveau. Biorthogonal Bases of Compactly Supported Wavelets. Communications on Pure and Applied 
+A. Cohen, I. Daubechies, and J.-C. Feauveau. Biorthogonal Bases of Compactly Supported Wavelets. Communications on Pure and Applied
 Mathematics, 45 (1992) 485–560.
 The PhysioNet archive of physiological datasets can be found online at http://www.physionet.org/ and is described in the following paper,
 
-Goldberger et al. PhysioBank, PhysioToolkit, and PhysioNet: Components of a New Research Resource for Complex Physiologic Signals. 
+Goldberger et al. PhysioBank, PhysioToolkit, and PhysioNet: Components of a New Research Resource for Complex Physiologic Signals.
 Circulation 101(23):e215-e220 2000.
 !*/
 
@@ -56,7 +56,7 @@ use ffi;
 
 /// The Wavelet structure contains the filter coefficients defining the wavelet and any associated offset parameters.
 pub struct Wavelet {
-    w: *mut ffi::gsl_wavelet
+    w: *mut ffi::gsl_wavelet,
 }
 
 impl Wavelet {
@@ -68,9 +68,7 @@ impl Wavelet {
         if tmp.is_null() {
             None
         } else {
-            Some(Wavelet {
-                w: tmp
-            })
+            Some(Wavelet { w: tmp })
         }
     }
 
@@ -81,7 +79,11 @@ impl Wavelet {
         if tmp.is_null() {
             None
         } else {
-            unsafe { Some(String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()) }
+            unsafe {
+                Some(
+                    String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string(),
+                )
+            }
         }
     }
 }
@@ -95,9 +97,7 @@ impl Drop for Wavelet {
 
 impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
     fn wrap(w: *mut ffi::gsl_wavelet) -> Wavelet {
-        Wavelet {
-            w: w
-        }
+        Wavelet { w: w }
     }
 
     fn soft_wrap(w: *mut ffi::gsl_wavelet) -> Wavelet {
@@ -117,7 +117,7 @@ impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
 /// coefficients of the wavelet transform in the phase plane is easier to understand.
 #[derive(Clone, Copy)]
 pub struct WaveletType {
-    t: *const ffi::gsl_wavelet_type
+    t: *const ffi::gsl_wavelet_type,
 }
 
 impl WaveletType {
@@ -126,7 +126,7 @@ impl WaveletType {
     pub fn daubechies() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_daubechies
+                t: ffi::gsl_wavelet_daubechies,
             }
         }
     }
@@ -136,7 +136,7 @@ impl WaveletType {
     pub fn daubechies_centered() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_daubechies_centered
+                t: ffi::gsl_wavelet_daubechies_centered,
             }
         }
     }
@@ -145,7 +145,7 @@ impl WaveletType {
     pub fn haar() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_haar
+                t: ffi::gsl_wavelet_haar,
             }
         }
     }
@@ -154,7 +154,7 @@ impl WaveletType {
     pub fn haar_centered() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_haar_centered
+                t: ffi::gsl_wavelet_haar_centered,
             }
         }
     }
@@ -164,7 +164,7 @@ impl WaveletType {
     pub fn bspline() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_bspline
+                t: ffi::gsl_wavelet_bspline,
             }
         }
     }
@@ -174,7 +174,7 @@ impl WaveletType {
     pub fn bspline_centered() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_bspline_centered
+                t: ffi::gsl_wavelet_bspline_centered,
             }
         }
     }
@@ -183,7 +183,7 @@ impl WaveletType {
 /// The WaveletWorkspace structure contains scratch space of the same size as the input data and is used to hold intermediate results
 /// during the transform.
 pub struct WaveletWorkspace {
-    w: *mut ffi::gsl_wavelet_workspace
+    w: *mut ffi::gsl_wavelet_workspace,
 }
 
 impl WaveletWorkspace {
@@ -197,9 +197,7 @@ impl WaveletWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(WaveletWorkspace {
-                w: tmp
-            })
+            Some(WaveletWorkspace { w: tmp })
         }
     }
 }
@@ -213,9 +211,7 @@ impl Drop for WaveletWorkspace {
 
 impl ffi::FFI<ffi::gsl_wavelet_workspace> for WaveletWorkspace {
     fn wrap(w: *mut ffi::gsl_wavelet_workspace) -> WaveletWorkspace {
-        WaveletWorkspace {
-            w: w
-        }
+        WaveletWorkspace { w: w }
     }
 
     fn soft_wrap(w: *mut ffi::gsl_wavelet_workspace) -> WaveletWorkspace {

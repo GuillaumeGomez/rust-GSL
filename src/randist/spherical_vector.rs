@@ -38,12 +38,12 @@ pub fn dir_2d_trig_method(r: &mut Rng, x: &mut f64, y: &mut f64) {
 /// The method employed is due to Robert E. Knop (CACM 13, 326 (1970)), and explained in Knuth, v2, 3rd ed, p136. It uses the surprising fact that the
 /// distribution projected along any axis is actually uniform (this is only true for 3 dimensions).
 pub fn dir_3d(r: &mut Rng, x: &mut f64, y: &mut f64, z: &mut f64) {
-	unsafe { ffi::gsl_ran_dir_3d(ffi::FFI::unwrap_unique(r), x, y, z) }
+    unsafe { ffi::gsl_ran_dir_3d(ffi::FFI::unwrap_unique(r), x, y, z) }
 }
 
 /// This function returns a random direction vector v = (x_1,x_2,...,x_n) in n dimensions. The vector is normalized such that |v|^2 = x_1^2 + x_2^2 + ... + x_n^2 = 1.
 /// The method uses the fact that a multivariate Gaussian distribution is spherically symmetric. Each component is generated to have a Gaussian distribution, and then
 /// the components are normalized. The method is described by Knuth, v2, 3rd ed, p135–136, and attributed to G. W. Brown, Modern Mathematics for the Engineer (1956).
 pub fn dir_nd(r: &mut Rng, x: &mut [f64]) {
-	unsafe { ffi::gsl_ran_dir_nd(ffi::FFI::unwrap_unique(r), x.len() as usize, x.as_mut_ptr()) }
+    unsafe { ffi::gsl_ran_dir_nd(ffi::FFI::unwrap_unique(r), x.len() as usize, x.as_mut_ptr()) }
 }

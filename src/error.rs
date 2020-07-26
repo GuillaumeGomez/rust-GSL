@@ -4,11 +4,11 @@
 
 //! The error function is described in Abramowitz & Stegun, Chapter 7.
 
-use std::mem::zeroed;
 use enums;
 use ffi;
 use libc;
 use std::ffi::CStr;
+use std::mem::zeroed;
 
 /// This routine computes the error function erf(x), where erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
 pub fn erf(x: f64) -> f64 {
@@ -20,7 +20,13 @@ pub fn erf_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_erf_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the complementary error function erfc(x) = 1 - erf(x) = (2/\sqrt(\pi)) \int_x^\infty \exp(-t^2).
@@ -33,7 +39,13 @@ pub fn erfc_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_erfc_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the logarithm of the complementary error function \log(\erfc(x)).
@@ -46,7 +58,13 @@ pub fn log_erfc_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_log_erfc_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the Gaussian probability density function Z(x) = (1/\sqrt{2\pi}) \exp(-x^2/2).
@@ -59,32 +77,44 @@ pub fn erf_Z_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_erf_Z_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the upper tail of the Gaussian probability function Q(x) = (1/\sqrt{2\pi}) \int_x^\infty dt \exp(-t^2/2).
-/// 
+///
 /// The hazard function for the normal distribution, also known as the inverse Mills’ ratio, is defined as,
-/// 
+///
 /// h(x) = Z(x)/Q(x) = \sqrt{2/\pi} \exp(-x^2 / 2) / \erfc(x/\sqrt 2)
-/// 
+///
 /// It decreases rapidly as x approaches -\infty and asymptotes to h(x) \sim x as x approaches +\infty.
 pub fn erf_Q(x: f64) -> f64 {
     unsafe { ::ffi::gsl_sf_erf_Q(x) }
 }
 
 /// This routine computes the upper tail of the Gaussian probability function Q(x) = (1/\sqrt{2\pi}) \int_x^\infty dt \exp(-t^2/2).
-/// 
+///
 /// The hazard function for the normal distribution, also known as the inverse Mills’ ratio, is defined as,
-/// 
+///
 /// h(x) = Z(x)/Q(x) = \sqrt{2/\pi} \exp(-x^2 / 2) / \erfc(x/\sqrt 2)
-/// 
+///
 /// It decreases rapidly as x approaches -\infty and asymptotes to h(x) \sim x as x approaches +\infty.
 pub fn erf_Q_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_erf_Q_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 /// This routine computes the hazard function for the normal distribution.
@@ -97,7 +127,13 @@ pub fn hazard_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
     let ret = unsafe { ffi::gsl_sf_hazard_e(x, &mut result) };
 
-    (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+    (
+        enums::Value::from(ret),
+        ::types::Result {
+            val: result.val,
+            err: result.err,
+        },
+    )
 }
 
 pub fn str_error(error: ::Value) -> &'static str {
@@ -217,20 +253,23 @@ extern "C" fn inner_error_handler(
     line: libc::c_int,
     gsl_errno: libc::c_int,
 ) {
-    unsafe { 
+    unsafe {
         if let Some(ref call) = CALLBACK {
             let s = CStr::from_ptr(reason);
             let f = CStr::from_ptr(file);
-            call(s.to_str().unwrap_or_else(|_| "Unknown"),
-                 f.to_str().unwrap_or_else(|_| "Unknown"),
-                 line as _, ::Value::from(gsl_errno));
+            call(
+                s.to_str().unwrap_or_else(|_| "Unknown"),
+                f.to_str().unwrap_or_else(|_| "Unknown"),
+                line as _,
+                ::Value::from(gsl_errno),
+            );
         }
     }
 }
 
 #[test]
 fn test_error_handler() {
-    use ::{bessel, Value};
+    use {bessel, Value};
 
     set_error_handler_off();
     match bessel::K0_e(1e3) {

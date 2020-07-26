@@ -5,26 +5,26 @@
 /*!
 #Multisets
 
-This chapter describes functions for creating and manipulating multisets. A multiset c is represented by an array of k integers in the 
-range 0 to n-1, where each value c_i may occur more than once. The multiset c corresponds to indices of k elements chosen from an n element 
-vector with replacement. In mathematical terms, n is the cardinality of the multiset while k is the maximum multiplicity of any value. 
+This chapter describes functions for creating and manipulating multisets. A multiset c is represented by an array of k integers in the
+range 0 to n-1, where each value c_i may occur more than once. The multiset c corresponds to indices of k elements chosen from an n element
+vector with replacement. In mathematical terms, n is the cardinality of the multiset while k is the maximum multiplicity of any value.
 Multisets are useful, for example, when iterating over the indices of a k-th order symmetric tensor in n-space.
 !*/
 
-use ffi;
-use enums;
-use std::io::Result as IoResult;
 use c_vec::CSlice;
+use enums;
+use ffi;
+use std::io::Result as IoResult;
 use std::io::Write;
 
 pub struct MultiSet {
     c: *mut ffi::gsl_multiset,
-    data: CSlice<usize>
+    data: CSlice<usize>,
 }
 
 impl MultiSet {
-    /// This function allocates memory for a new multiset with parameters n, k. The multiset is not initialized and its elements are 
-    /// undefined. Use the function gsl_multiset_calloc if you want to create a multiset which is initialized to the lexicographically 
+    /// This function allocates memory for a new multiset with parameters n, k. The multiset is not initialized and its elements are
+    /// undefined. Use the function gsl_multiset_calloc if you want to create a multiset which is initialized to the lexicographically
     /// first multiset element. A null pointer is returned if insufficient memory is available to create the multiset.
     pub fn new(n: usize, k: usize) -> Option<MultiSet> {
         let tmp = unsafe { ffi::gsl_multiset_alloc(n, k) };
@@ -37,12 +37,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CSlice::new(tmp as *mut usize, 0usize)
+                        data: CSlice::new(tmp as *mut usize, 0usize),
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
                     })
                 }
             }
@@ -62,12 +62,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CSlice::new(tmp as *mut usize, 0usize)
+                        data: CSlice::new(tmp as *mut usize, 0usize),
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize)
+                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
                     })
                 }
             }
@@ -132,7 +132,7 @@ impl MultiSet {
     pub fn print(&self, writer: &mut Write) -> IoResult<()> {
         for value in self.data.as_ref().iter() {
             match write!(writer, " {}", *value) {
-                Ok(_) => {},
+                Ok(_) => {}
                 Err(e) => return Err(e),
             }
         }
@@ -154,12 +154,12 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
                 MultiSet {
                     c: c,
                     // dirty trick to avoid a failure
-                    data: CSlice::new(c as *mut usize, 0usize)
+                    data: CSlice::new(c as *mut usize, 0usize),
                 }
             } else {
                 MultiSet {
                     c: c,
-                    data: CSlice::new((*c).data, (*c).k as usize)
+                    data: CSlice::new((*c).data, (*c).k as usize),
                 }
             }
         }

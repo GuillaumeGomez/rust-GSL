@@ -14,7 +14,6 @@
 // where x_0 = A, x_1 = \lambda and x_2 = b.
 //
 // expfit.c -- model functions for exponential + background */
-
 /*
 The iteration terminates when the change in x is smaller than 0.0001, as both an absolute and relative change. Here are the results of
 running the program:
@@ -51,8 +50,8 @@ the range of validity for Gaussian errors.
 
 extern crate rgsl;
 
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 macro_rules! clone {
     (@param _) => ( _ );
@@ -115,15 +114,21 @@ fn exp_df(x: &rgsl::VectorF64, J: &mut rgsl::MatrixF64, data: &Data) -> rgsl::Va
 }
 
 fn print_state(iter: usize, s: &rgsl::MultiFitFdfSolver) {
-    println!("iter: {} x = {} {} {} |f(x)| = {}", iter,
-             s.x().get(0), s.x().get(1), s.x().get(2), rgsl::blas::level1::dnrm2(&s.f()));
+    println!(
+        "iter: {} x = {} {} {} |f(x)| = {}",
+        iter,
+        s.x().get(0),
+        s.x().get(1),
+        s.x().get(2),
+        rgsl::blas::level1::dnrm2(&s.f())
+    );
 }
 
 // The main part of the program sets up a Levenberg-Marquardt solver and some simulated random data. The data uses the known parameters
 // (1.0,5.0,0.1) combined with Gaussian noise (standard deviation = 0.1) over a range of 40 timesteps. The initial guess for the
 // parameters is chosen as (0.0, 1.0, 0.0).
 
-static N : usize = 40usize;
+static N: usize = 40usize;
 
 #[allow(unused_mut)]
 #[allow(unused_assignments)]
@@ -136,13 +141,13 @@ fn main() {
     let mut data = Rc::new(RefCell::new(Data {
         n: n,
         y: ::std::iter::repeat(0f64).take(N).collect(),
-        sigma: ::std::iter::repeat(0f64).take(N).collect()
+        sigma: ::std::iter::repeat(0f64).take(N).collect(),
     }));
     let mut x_init: [f64; 3] = [1f64, 0f64, 0f64];
     let mut x = rgsl::VectorView::from_array(&mut x_init);
 
     rgsl::RngType::env_setup();
-    let t : rgsl::RngType = rgsl::rng::default();
+    let t: rgsl::RngType = rgsl::rng::default();
     let mut r = rgsl::Rng::new(&t).unwrap();
     let T = rgsl::MultiFitFdfSolverType::lmsder();
 
@@ -170,8 +175,8 @@ fn main() {
         let t = i as f64;
         let mut data = data.borrow_mut();
 
-        data.y[i] = 1f64 + 5f64 * (-0.1f64 * t).exp()
-            + rgsl::randist::gaussian::gaussian(&mut r, 0.1f64);
+        data.y[i] =
+            1f64 + 5f64 * (-0.1f64 * t).exp() + rgsl::randist::gaussian::gaussian(&mut r, 0.1f64);
         data.sigma[i] = 0.1f64;
         println!("data: {:2} {:.5} {:.5}", i, data.y[i], data.sigma[i]);
     }
@@ -205,11 +210,23 @@ fn main() {
         let dof = n as f64 - p as f64;
         let c = 1f64.max(chi / dof.sqrt());
 
-        println!("chisq/dof = {}",  chi.powf(2f64) / dof);
+        println!("chisq/dof = {}", chi.powf(2f64) / dof);
 
-        println!("A      = {:.5} +/- {:.5}", s.x().get(0), c * covar.get(0, 0).sqrt());
-        println!("lambda = {:.5} +/- {:.5}", s.x().get(1), c * covar.get(1, 1).sqrt());
-        println!("b      = {:.5} +/- {:.5}", s.x().get(2), c * covar.get(2, 2).sqrt());
+        println!(
+            "A      = {:.5} +/- {:.5}",
+            s.x().get(0),
+            c * covar.get(0, 0).sqrt()
+        );
+        println!(
+            "lambda = {:.5} +/- {:.5}",
+            s.x().get(1),
+            c * covar.get(1, 1).sqrt()
+        );
+        println!(
+            "b      = {:.5} +/- {:.5}",
+            s.x().get(2),
+            c * covar.get(2, 2).sqrt()
+        );
     }
 
     println!("status = {}", rgsl::error::str_error(status));

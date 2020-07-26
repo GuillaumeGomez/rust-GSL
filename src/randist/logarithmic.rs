@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random integer from the logarithmic distribution. The probability distribution for logarithmic random variates is,
-/// 
+///
 /// p(k) = {-1 \over \log(1-p)} {(p^k \over k)}
-/// 
+///
 /// for k >= 1.
 pub fn logarithmic(r: &mut Rng, p: f64) -> u32 {
     unsafe { ffi::gsl_ran_logarithmic(ffi::FFI::unwrap_unique(r), p) }

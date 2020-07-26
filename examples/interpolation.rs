@@ -5,8 +5,8 @@
 extern crate rgsl;
 
 fn main() {
-    let mut x : [f64; 10] = [0f64; 10];
-    let mut y : [f64; 10] = [0f64; 10];
+    let mut x: [f64; 10] = [0f64; 10];
+    let mut y: [f64; 10] = [0f64; 10];
 
     println!("#m=0,S=2");
 

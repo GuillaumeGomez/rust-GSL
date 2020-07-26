@@ -24,5 +24,5 @@ macro_rules! rgsl_error(
 macro_rules! ffi_wrap {
     ($name:tt, $cast:tt) => {
         unsafe { ffi::FFI::wrap(ffi::$name as *mut ffi::$cast) }
-    }
+    };
 }

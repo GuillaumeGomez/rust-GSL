@@ -4,7 +4,7 @@
 
 // The following program demonstrates the use of the physical constants in a calculation. In this case, the goal is to calculate the range
 // of light-travel times from Earth to Mars.
-// 
+//
 // The required data is the average distance of each planet from the Sun in astronomical units (the eccentricities and inclinations of the
 // orbits will be neglected for the purposes of this calculation). The average radius of the orbit of Mars is 1.52 astronomical units, and
 // for the orbit of Earth it is 1 astronomical unit (by definition). These values are combined with the MKSA values of the constants for
@@ -14,13 +14,13 @@
 extern crate rgsl;
 
 fn main() {
-    let c  = rgsl::physical_constant::MKSA_SPEED_OF_LIGHT;
+    let c = rgsl::physical_constant::MKSA_SPEED_OF_LIGHT;
     let au = rgsl::physical_constant::MKSA_ASTRONOMICAL_UNIT;
     let minutes = rgsl::physical_constant::MKSA_MINUTE;
 
     /* distance stored in meters */
-    let r_earth = 1f64 * au;  
-    let r_mars  = 1.52f64 * au;
+    let r_earth = 1f64 * au;
+    let r_mars = 1.52f64 * au;
 
     let t_min = (r_mars - r_earth) / c;
     let t_max = (r_mars + r_earth) / c;

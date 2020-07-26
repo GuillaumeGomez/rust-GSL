@@ -9,7 +9,6 @@
 // The second part analyses the ntuple data in the file test.dat. The analysis procedure is to compute the squared-magnitude of each
 // event, E^2=x^2+y^2+z^2, and select only those which exceed a lower limit of 1.5. The selected events are then histogrammed using their E^2 values.
 
-
 extern crate rgsl;
 
 //use std::io::Write;
@@ -17,7 +16,7 @@ extern crate rgsl;
 struct Data {
     x: f64,
     y: f64,
-    z: f64
+    z: f64,
 }
 
 fn sel_func(data: &mut Data, scale: &mut f64) -> bool {
@@ -40,7 +39,11 @@ fn val_func(data: &mut Data, params: &mut i32) -> f64 {
 }
 
 fn first_part(r: &mut rgsl::Rng) {
-    let mut ntuple_row = Data { x: 0f64, y: 0f64, z: 0f64};
+    let mut ntuple_row = Data {
+        x: 0f64,
+        y: 0f64,
+        z: 0f64,
+    };
     let ntuple = rgsl::NTuples::create("test.dat", &mut ntuple_row).unwrap();
 
     for _ in 0usize..10000usize {
@@ -53,7 +56,11 @@ fn first_part(r: &mut rgsl::Rng) {
 }
 
 fn second_part() {
-    let mut ntuple_row = Data { x: 0f64, y: 0f64, z: 0f64};
+    let mut ntuple_row = Data {
+        x: 0f64,
+        y: 0f64,
+        z: 0f64,
+    };
 
     let ntuple = rgsl::NTuples::open("test.dat", &mut ntuple_row).unwrap();
     let mut lower = 1.5f64;
@@ -68,7 +75,7 @@ fn second_part() {
 
 fn main() {
     rgsl::RngType::env_setup();
-    let t : rgsl::RngType = rgsl::rng::default();
+    let t: rgsl::RngType = rgsl::rng::default();
     let mut r = rgsl::Rng::new(&t).unwrap();
 
     first_part(&mut r);

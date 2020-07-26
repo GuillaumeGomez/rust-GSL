@@ -6,9 +6,9 @@
 
 /// The Riemann zeta function is defined by the infinite sum \zeta(s) = \sum_{k=1}^\infty k^{-s}.
 pub mod riemann {
+    use enums;
     use ffi;
     use std::mem::zeroed;
-    use enums;
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
     pub fn zeta_int(n: i32) -> f64 {
@@ -20,7 +20,13 @@ pub mod riemann {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_zeta_int_e(n, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 
     /// This routine computes the Riemann zeta function \zeta(s) for arbitrary s, s \ne 1.
@@ -33,16 +39,22 @@ pub mod riemann {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_zeta_e(x, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 }
 
 /// For large positive argument, the Riemann zeta function approaches one.
 /// In this region the fractional part is interesting, and therefore we need a function to evaluate it explicitly.
 pub mod riemann_mins_one {
+    use enums;
     use ffi;
     use std::mem::zeroed;
-    use enums;
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
     pub fn zetam1_int(n: i32) -> f64 {
@@ -54,7 +66,13 @@ pub mod riemann_mins_one {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_zetam1_int_e(n, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 
     /// This routine computes \zeta(s) - 1 for arbitrary s, s \ne 1.
@@ -67,15 +85,21 @@ pub mod riemann_mins_one {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_zetam1_e(x, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 }
 
 /// The Hurwitz zeta function is defined by \zeta(s,q) = \sum_0^\infty (k+q)^{-s}.
 pub mod hurwitz {
+    use enums;
     use ffi;
     use std::mem::zeroed;
-    use enums;
 
     /// This routine computes the Hurwitz zeta function \zeta(s,q) for s > 1, q > 0.
     pub fn hzeta(s: f64, q: f64) -> f64 {
@@ -87,15 +111,21 @@ pub mod hurwitz {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_hzeta_e(s, q, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 }
 
 /// The eta function is defined by \eta(s) = (1-2^{1-s}) \zeta(s).
 pub mod eta {
+    use enums;
     use ffi;
     use std::mem::zeroed;
-    use enums;
 
     /// This routine computes the eta function \eta(n) for integer n.
     pub fn eta_int(n: i32) -> f64 {
@@ -107,7 +137,13 @@ pub mod eta {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_eta_int_e(n, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 
     /// This routine computes the eta function \eta(s) for arbitrary s.
@@ -120,6 +156,12 @@ pub mod eta {
         let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
         let ret = unsafe { ffi::gsl_sf_eta_e(s, &mut result) };
 
-        (enums::Value::from(ret), ::types::Result{val: result.val, err: result.err})
+        (
+            enums::Value::from(ret),
+            ::types::Result {
+                val: result.val,
+                err: result.err,
+            },
+        )
     }
 }

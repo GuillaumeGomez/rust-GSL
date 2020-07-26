@@ -17,7 +17,7 @@ impl ::std::convert::From<Value> for GSLResult<()> {
     fn from(v: Value) -> Self {
         match v {
             Value::Success => Ok(()),
-            e => { Err(e) },
+            e => Err(e),
         }
     }
 }
@@ -144,16 +144,16 @@ impl From<libc::c_int> for Value {
         match v {
             -2 => Value::Continue,
             -1 => Value::Failure,
-            0  => Value::Success,
-            1  => Value::Domain,
-            2  => Value::Range,
-            3  => Value::Fault,
-            4  => Value::Invalid,
-            5  => Value::Failed,
-            6  => Value::Factorization,
-            7  => Value::Sanity,
-            8  => Value::NoMemory,
-            9  => Value::BadFunction,
+            0 => Value::Success,
+            1 => Value::Domain,
+            2 => Value::Range,
+            3 => Value::Fault,
+            4 => Value::Invalid,
+            5 => Value::Failed,
+            6 => Value::Factorization,
+            7 => Value::Sanity,
+            8 => Value::NoMemory,
+            9 => Value::BadFunction,
             10 => Value::RunAway,
             11 => Value::MaxIteration,
             12 => Value::ZeroDiv,
@@ -177,7 +177,7 @@ impl From<libc::c_int> for Value {
             30 => Value::ToleranceX,
             31 => Value::ToleranceG,
             32 => Value::EOF,
-            x  => Value::Unknown(x),
+            x => Value::Unknown(x),
         }
     }
 }

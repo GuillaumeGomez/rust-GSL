@@ -6,9 +6,9 @@ use ffi;
 use types::Rng;
 
 /// This function returns a random variate from the Weibull distribution. The distribution function is,
-/// 
+///
 /// p(x) dx = {b \over a^b} x^{b-1}  \exp(-(x/a)^b) dx
-/// 
+///
 /// for x >= 0.
 pub fn weibull(r: &mut Rng, a: f64, b: f64) -> f64 {
     unsafe { ffi::gsl_ran_weibull(ffi::FFI::unwrap_unique(r), a, b) }

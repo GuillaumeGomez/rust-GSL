@@ -54,19 +54,25 @@ type gsl_siman_print_t<T> = fn(&T);
 fn boltzmann(E: f64, new_E: f64, T: f64, params: &SimAnnealingParams) -> f64 {
     let x = -(new_E - E) / (params.k * T);
     // avoid underflow errors for large uphill steps
-    if x < GSL_LOG_DBL_MIN { 0.0 } else { x.exp() }
+    if x < GSL_LOG_DBL_MIN {
+        0.0
+    } else {
+        x.exp()
+    }
 }
 
 impl<T> SimAnnealing<T>
-    where T: Clone
+where
+    T: Clone,
 {
-    pub fn new(x0_p: T,
-               ef: gsl_siman_Efunc_t<T>,
-               take_step: gsl_siman_step_t<T>,
-               distance: gsl_siman_metric_t<T>,
-               print_pos: Option<gsl_siman_print_t<T>>,
-               params: SimAnnealingParams)
-               -> SimAnnealing<T> {
+    pub fn new(
+        x0_p: T,
+        ef: gsl_siman_Efunc_t<T>,
+        take_step: gsl_siman_step_t<T>,
+        distance: gsl_siman_metric_t<T>,
+        print_pos: Option<gsl_siman_print_t<T>>,
+        params: SimAnnealingParams,
+    ) -> SimAnnealing<T> {
         SimAnnealing {
             x0_p: x0_p,
             params: params,
@@ -80,7 +86,7 @@ impl<T> SimAnnealing<T>
     /*
     /* implementation of a basic simulated annealing algorithm */
 
-    void 
+    void
     gsl_siman_solve (const gsl_rng * r, void *x0_p, gsl_siman_Efunc_t Ef,
                     gsl_siman_step_t take_step,
                     gsl_siman_metric_t distance,
@@ -238,12 +244,14 @@ impl<T> SimAnnealing<T>
         let Temp_factor = 1.0 / self.params.mu_t;
 
         if self.print_t.is_some() {
-            println!("{i:^6} | {e:^7} | {t:^12} | {p:^15} | {E:^13}",
-                     i = "#-iter",
-                     e = "#-evals",
-                     t = "temperature",
-                     p = "position",
-                     E = "energy");
+            println!(
+                "{i:^6} | {e:^7} | {t:^12} | {p:^15} | {E:^13}",
+                i = "#-iter",
+                e = "#-evals",
+                t = "temperature",
+                p = "position",
+                E = "energy"
+            );
         }
 
         let mut iter = 0;
@@ -274,7 +282,7 @@ impl<T> SimAnnealing<T>
                     // yay! take a step
                     x = new_x.clone();
                     E = new_E;
-                    //n_eless += 1;
+                //n_eless += 1;
                 } else if rng.uniform() < boltzmann(E, new_E, Temp, &self.params) {
                     // yay! take a step
                     x = new_x.clone();
@@ -299,11 +307,10 @@ impl<T> SimAnnealing<T>
         best_x
     }
 
-
     /*
     /* implementation of a simulated annealing algorithm with many tries */
 
-    void 
+    void
     gsl_siman_solve_many (const gsl_rng * r, void *x0_p, gsl_siman_Efunc_t Ef,
                         gsl_siman_step_t take_step,
                         gsl_siman_metric_t distance,
@@ -408,12 +415,14 @@ impl<T> SimAnnealing<T>
         let Temp_factor = 1.0 / self.params.mu_t;
 
         if self.print_t.is_some() {
-            println!("{i:^6} | {t:^12} | {p:^15} | {d:^15} | {E:^13}",
-                     i = "#-iter",
-                     t = "temperature",
-                     p = "position",
-                     d = "delta_pos",
-                     E = "energy");
+            println!(
+                "{i:^6} | {t:^12} | {p:^15} | {d:^15} | {E:^13}",
+                i = "#-iter",
+                t = "temperature",
+                p = "position",
+                d = "delta_pos",
+                E = "energy"
+            );
         }
 
         let mut iter = 0;
@@ -432,7 +441,12 @@ impl<T> SimAnnealing<T>
             // now add in the old value of "x", so it is a contendor
             new_x.push(x.clone());
             energies.push(Ex);
-            probs.push(boltzmann(Ex, energies[self.params.n_tries - 2], Temp, &self.params));
+            probs.push(boltzmann(
+                Ex,
+                energies[self.params.n_tries - 2],
+                Temp,
+                &self.params,
+            ));
             sum_probs.push(0.0);
 
             // now throw biased die to see which new_x[i] we choose
@@ -451,9 +465,11 @@ impl<T> SimAnnealing<T>
             if let Some(ref printf) = self.print_t {
                 print!("{:>06} | {:>12.10} | ", iter, Temp);
                 printf(&x);
-                println!(" | {: >15.12} | {: >13.12}",
-                         (self.metric_t)(&x, &self.x0_p),
-                         Ex);
+                println!(
+                    " | {: >15.12} | {: >13.12}",
+                    (self.metric_t)(&x, &self.x0_p),
+                    Ex
+                );
             }
 
             Temp *= Temp_factor;
@@ -486,14 +502,15 @@ impl SimAnnealingParams {
     /// - step_size: The maximum step size in the random walk.
     /// - k, t_initial, mu_t, t_min: The parameters of the Boltzmann distribution and
     ///   cooling schedule.
-    pub fn new(n_tries: usize,
-               iters: usize,
-               step_size: f64,
-               k: f64,
-               t_initial: f64,
-               mut_t: f64,
-               t_min: f64)
-               -> SimAnnealingParams {
+    pub fn new(
+        n_tries: usize,
+        iters: usize,
+        step_size: f64,
+        k: f64,
+        t_initial: f64,
+        mut_t: f64,
+        t_min: f64,
+    ) -> SimAnnealingParams {
         SimAnnealingParams {
             n_tries: n_tries,
             iters_fixed_T: iters,
