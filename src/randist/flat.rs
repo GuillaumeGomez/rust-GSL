@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// if a <= x < b and 0 otherwise.
 pub fn flat(r: &mut Rng, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_flat(ffi::FFI::unwrap_unique(r), a, b) }
+    unsafe { ffi::randist::gsl_ran_flat(ffi::FFI::unwrap_unique(r), a, b) }
 }
 
 /// This function computes the probability density p(x) at x for a uniform distribution from a to b, using the formula given above.
 pub fn flat_pdf(x: f64, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_flat_pdf(x, a, b) }
+    unsafe { ffi::randist::gsl_ran_flat_pdf(x, a, b) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for a uniform distribution from a to b.

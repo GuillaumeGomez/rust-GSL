@@ -16,20 +16,20 @@ use types::Rng;
 ///
 /// N(a;\sigma) = (1/2) erfc(a / sqrt(2 sigma^2)).
 pub fn gaussian_tail(r: &mut Rng, a: f64, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_gaussian_tail(ffi::FFI::unwrap_unique(r), a, sigma) }
+    unsafe { ffi::randist::gsl_ran_gaussian_tail(ffi::FFI::unwrap_unique(r), a, sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a Gaussian tail distribution with standard deviation sigma and lower limit a, using the formula given above.
 pub fn gaussian_tail_pdf(x: f64, a: f64, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_gaussian_tail_pdf(x, a, sigma) }
+    unsafe { ffi::randist::gsl_ran_gaussian_tail_pdf(x, a, sigma) }
 }
 
 /// This function computes results for the tail of a unit Gaussian distribution. They are equivalent to the functions above with a standard deviation of one, sigma = 1.
 pub fn ugaussian_tail(r: &mut Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_ugaussian_tail(ffi::FFI::unwrap_unique(r), a) }
+    unsafe { ffi::randist::gsl_ran_ugaussian_tail(ffi::FFI::unwrap_unique(r), a) }
 }
 
 /// This function computes results for the tail of a unit Gaussian distribution. They are equivalent to the functions above with a standard deviation of one, sigma = 1.
 pub fn ugaussian_tail_pdf(x: f64, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_ugaussian_tail_pdf(x, a) }
+    unsafe { ffi::randist::gsl_ran_ugaussian_tail_pdf(x, a) }
 }

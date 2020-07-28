@@ -239,6 +239,16 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver_type> for MultiFitFSolverType {
     }
 }
 
+// pub struct MultiFitFunction<F: Fn(x: &::VectorF64, f: &mut ::VectorF64)> {
+//     pub f: Box<F>,
+//     /// Number of functions.
+//     pub n: u64,
+//     /// Number of independent variables.
+//     pub p,
+// }
+
+pub struct MultiFitFunction(pub gsl_multifit_function);
+
 pub struct MultiFitFSolver {
     s: *mut ffi::gsl_multifit_fsolver,
 }
@@ -261,8 +271,14 @@ impl MultiFitFSolver {
     }
 
     pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> ::Value {
+        // unsafe {
+        //     let func = (*self.0).function;
+        //     if !func.is_null() {
+        //         Box::from_raw((*func).params);
+        //     }
+        // }
         ::Value::from(unsafe {
-            ffi::gsl_multifit_fsolver_set(self.s, f, ffi::FFI::unwrap_shared(x))
+            ffi::gsl_multifit_fsolver_set(self.s, f.0, ffi::FFI::unwrap_shared(x))
         })
     }
 
@@ -306,22 +322,6 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver> for MultiFitFSolver {
     fn unwrap_unique(s: &mut MultiFitFSolver) -> *mut ffi::gsl_multifit_fsolver {
         s.s
     }
-}
-
-#[repr(C)]
-pub struct MultiFitFunction {
-    pub f: Option<
-        extern "C" fn(
-            x: *const ffi::gsl_vector,
-            params: *mut c_void,
-            f: *mut ffi::gsl_vector,
-        ) -> ::Value,
-    >,
-    /// number of functions
-    pub n: usize,
-    /// number of independent variables
-    pub p: usize,
-    pub params: *mut c_void,
 }
 
 pub struct MultiFitFdfSolver {
@@ -494,9 +494,9 @@ impl MultiFitFunctionFdf {
 }
 
 extern "C" fn f(
-    x: *mut ffi::gsl_vector,
+    x: *mut ffi::linalg::gsl_vector,
     params: *mut c_void,
-    pf: *mut ffi::gsl_vector,
+    pf: *mut ffi::linalg::gsl_vector,
 ) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
@@ -509,9 +509,9 @@ extern "C" fn f(
 }
 
 extern "C" fn df(
-    x: *mut ffi::gsl_vector,
+    x: *mut ffi::linalg::gsl_vector,
     params: *mut c_void,
-    pdf: *mut ffi::gsl_matrix,
+    pdf: *mut ffi::linalg::gsl_matrix,
 ) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
@@ -524,10 +524,10 @@ extern "C" fn df(
 }
 
 extern "C" fn fdf(
-    x: *mut ffi::gsl_vector,
+    x: *mut ffi::linalg::gsl_vector,
     params: *mut c_void,
-    pf: *mut ffi::gsl_vector,
-    pdf: *mut ffi::gsl_matrix,
+    pf: *mut ffi::linalg::gsl_vector,
+    pdf: *mut ffi::linalg::gsl_matrix,
 ) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;

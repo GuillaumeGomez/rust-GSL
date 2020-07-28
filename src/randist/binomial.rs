@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// for 0 <= k <= n.
 pub fn binomial(r: &mut Rng, p: f64, n: u32) -> u32 {
-    unsafe { ffi::gsl_ran_binomial(ffi::FFI::unwrap_unique(r), p, n) }
+    unsafe { ffi::randist::gsl_ran_binomial(ffi::FFI::unwrap_unique(r), p, n) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a binomial distribution with parameters p and n, using the formula given above.
 pub fn binomial_pdf(k: u32, p: f64, n: u32) -> f64 {
-    unsafe { ffi::gsl_ran_binomial_pdf(k, p, n) }
+    unsafe { ffi::randist::gsl_ran_binomial_pdf(k, p, n) }
 }
 
 /// This function computes the cumulative distribution functions P(k), Q(k) for the binomial distribution with parameters p and n.

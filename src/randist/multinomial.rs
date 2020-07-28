@@ -16,7 +16,7 @@ use types::Rng;
 /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
 pub fn multinomial(r: &mut Rng, N: u32, p: &[f64], n: &mut [u32]) {
     unsafe {
-        ffi::gsl_ran_multinomial(
+        ffi::randist::gsl_ran_multinomial(
             ffi::FFI::unwrap_unique(r),
             p.len() as usize,
             N,
@@ -28,10 +28,10 @@ pub fn multinomial(r: &mut Rng, N: u32, p: &[f64], n: &mut [u32]) {
 
 /// This function computes the probability P(n_1, n_2, ..., n_K) of sampling n[K] from a multinomial distribution with parameters p[K], using the formula given above.
 pub fn multinomial_pdf(p: &[f64], n: &[u32]) -> f64 {
-    unsafe { ffi::gsl_ran_multinomial_pdf(p.len() as usize, p.as_ptr(), n.as_ptr()) }
+    unsafe { ffi::randist::gsl_ran_multinomial_pdf(p.len() as usize, p.as_ptr(), n.as_ptr()) }
 }
 
 /// This function returns the logarithm of the probability for the multinomial distribution P(n_1, n_2, ..., n_K) with parameters p[K].
 pub fn multinomial_lnpdf(p: &[f64], n: &[u32]) -> f64 {
-    unsafe { ffi::gsl_ran_multinomial_lnpdf(p.len() as usize, p.as_ptr(), n.as_ptr()) }
+    unsafe { ffi::randist::gsl_ran_multinomial_lnpdf(p.len() as usize, p.as_ptr(), n.as_ptr()) }
 }

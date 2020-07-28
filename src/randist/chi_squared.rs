@@ -19,12 +19,12 @@ use types::Rng;
 ///
 /// for x >= 0.
 pub fn chisq(r: &mut Rng, nu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_chisq(ffi::FFI::unwrap_unique(r), nu) }
+    unsafe { ffi::randist::gsl_ran_chisq(ffi::FFI::unwrap_unique(r), nu) }
 }
 
 /// This function computes the probability density p(x) at x for a chi-squared distribution with nu degrees of freedom, using the formula given above.
 pub fn chisq_pdf(x: f64, nu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_chisq_pdf(x, nu) }
+    unsafe { ffi::randist::gsl_ran_chisq_pdf(x, nu) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the chi-squared distribution with nu degrees of freedom.

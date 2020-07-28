@@ -1,25 +1,30 @@
 //
-// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+// FFI binding for the GSL library
 //
 
 #![allow(improper_ctypes)]
+#![allow(non_camel_case_types)]
+#![allow(non_snake_case)]
+
+extern crate libc;
 
 use libc::{c_char, c_double, c_float, c_int, c_uint, c_ulong, c_void, size_t, FILE};
 
-mod blas;
-mod linalg;
-mod monte_carlo;
-mod randist;
-mod solvers;
+pub mod blas;
+pub mod linalg;
+pub mod monte_carlo;
+pub mod randist;
+pub mod solvers;
 
-pub use self::blas::*;
-pub use self::linalg::*;
-pub use self::monte_carlo::*;
-pub use self::randist::*;
-pub use self::solvers::*;
+pub use blas::*;
+pub use linalg::*;
+pub use monte_carlo::*;
+pub use randist::*;
+pub use solvers::*;
 
 pub type gsl_complex_packed_ptr = *mut c_double;
 pub type gsl_complex_packed_array = *mut c_double;
+pub type gsl_mode_t = c_uint;
 #[allow(dead_code)]
 pub type coord = c_int;
 
@@ -29,6 +34,8 @@ pub trait FFI<T> {
     fn unwrap_shared(&Self) -> *const T;
     fn unwrap_unique(&mut Self) -> *mut T;
 }
+
+use linalg::{gsl_eigen_symmv_workspace, gsl_matrix, gsl_vector};
 
 extern "C" {
     pub static gsl_rng_mt19937: *const gsl_rng_type;
@@ -112,29 +119,29 @@ extern "C" {
     pub static gsl_wavelet_bspline_centered: *const gsl_wavelet_type;
 
     // Airy functions
-    pub fn gsl_sf_airy_Ai(x: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_airy_Ai_e(x: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_airy_Bi(x: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_airy_Bi_e(x: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_airy_Ai_scaled(x: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_airy_Ai_scaled_e(x: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_airy_Bi_scaled(x: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_airy_Bi_scaled_e(x: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Ai(x: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_airy_Ai_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Bi(x: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_airy_Bi_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Ai_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_airy_Ai_scaled_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Bi_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_airy_Bi_scaled_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
     // Derivatives of Airy Functions
-    pub fn gsl_sf_airy_Ai_deriv(x: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_airy_Ai_deriv_e(x: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_airy_Bi_deriv(x: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_airy_Bi_deriv_e(x: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_airy_Ai_deriv_scaled(x: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_airy_Ai_deriv(x: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_airy_Ai_deriv_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Bi_deriv(x: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_airy_Bi_deriv_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Ai_deriv_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_airy_Ai_deriv_scaled_e(
         x: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
-    pub fn gsl_sf_airy_Bi_deriv_scaled(x: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_airy_Bi_deriv_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_airy_Bi_deriv_scaled_e(
         x: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
     //  Zeros of Airy Functions
@@ -230,7 +237,7 @@ extern "C" {
     pub fn gsl_sf_bessel_Jnu_e(nu: c_double, x: c_double, result: *mut gsl_sf_result) -> c_int;
     pub fn gsl_sf_bessel_sequence_Jnu_e(
         nu: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         size: i64,
         v: *mut c_double,
     ) -> c_int;
@@ -585,7 +592,7 @@ extern "C" {
     pub fn gsl_sf_erf(x: c_double) -> c_double;
     pub fn gsl_sf_erf_e(x: c_double, result: *mut gsl_sf_result) -> c_int;
     pub fn gsl_set_error_handler(
-        x: Option<extern "C" fn(*const c_char, *const c_char, c_int, c_int)>,
+        x: Option<unsafe extern "C" fn(*const c_char, *const c_char, c_int, c_int)>,
     );
     pub fn gsl_set_error_handler_off();
     // Complementary Error functions
@@ -1068,73 +1075,73 @@ extern "C" {
 
     // Elliptic Integrals
     // Legendre Form of Complete Elliptic Integrals
-    pub fn gsl_sf_ellint_Kcomp(k: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_ellint_Kcomp_e(k: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_ellint_Ecomp(k: c_double, mode: ::Mode) -> c_double;
-    pub fn gsl_sf_ellint_Ecomp_e(k: c_double, mode: ::Mode, result: *mut gsl_sf_result) -> c_int;
-    pub fn gsl_sf_ellint_Pcomp(k: c_double, n: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_Kcomp(k: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_ellint_Kcomp_e(k: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_ellint_Ecomp(k: c_double, mode: gsl_mode_t) -> c_double;
+    pub fn gsl_sf_ellint_Ecomp_e(k: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_ellint_Pcomp(k: c_double, n: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_Pcomp_e(
         k: c_double,
         n: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
     // Legendre Form of Incomplete Elliptic Integrals
-    pub fn gsl_sf_ellint_F(phi: c_double, k: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_F(phi: c_double, k: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_F_e(
         phi: c_double,
         k: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
-    pub fn gsl_sf_ellint_E(phi: c_double, k: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_E(phi: c_double, k: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_E_e(
         phi: c_double,
         k: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
-    pub fn gsl_sf_ellint_P(phi: c_double, k: c_double, n: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_P(phi: c_double, k: c_double, n: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_P_e(
         phi: c_double,
         k: c_double,
         n: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
     #[cfg(feature = "v2")]
-    pub fn gsl_sf_ellint_D(phi: c_double, k: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_D(phi: c_double, k: c_double, mode: gsl_mode_t) -> c_double;
     #[cfg(not(feature = "v2"))]
-    pub fn gsl_sf_ellint_D(phi: c_double, k: c_double, n: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_D(phi: c_double, k: c_double, n: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_D_e(
         phi: c_double,
         k: c_double,
         n: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
     // Carlson Forms
-    pub fn gsl_sf_ellint_RC(x: c_double, y: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RC(x: c_double, y: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_RC_e(
         x: c_double,
         y: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
-    pub fn gsl_sf_ellint_RD(x: c_double, y: c_double, z: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RD(x: c_double, y: c_double, z: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_RD_e(
         x: c_double,
         y: c_double,
         z: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
-    pub fn gsl_sf_ellint_RF(x: c_double, y: c_double, z: c_double, mode: ::Mode) -> c_double;
+    pub fn gsl_sf_ellint_RF(x: c_double, y: c_double, z: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_RF_e(
         x: c_double,
         y: c_double,
         z: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
     pub fn gsl_sf_ellint_RJ(
@@ -1142,14 +1149,14 @@ extern "C" {
         y: c_double,
         z: c_double,
         p: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
     ) -> c_double;
     pub fn gsl_sf_ellint_RJ_e(
         x: c_double,
         y: c_double,
         z: c_double,
         p: c_double,
-        mode: ::Mode,
+        mode: gsl_mode_t,
         result: *mut gsl_sf_result,
     ) -> c_int;
 
@@ -2093,7 +2100,7 @@ extern "C" {
     pub fn gsl_interp_type_min_size(t: *const gsl_interp_type) -> c_uint;
     // Index Look-up and Acceleration
     pub fn gsl_interp_accel_find(
-        a: *mut ::InterpAccel,
+        a: *mut gsl_interp_accel,
         x_array: *const c_double,
         size: size_t,
         x: c_double,
@@ -2110,14 +2117,14 @@ extern "C" {
         xa: *const c_double,
         ya: *const c_double,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_interp_eval_e(
         interp: *const gsl_interp,
         xa: *const c_double,
         ya: *const c_double,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         y: *mut c_double,
     ) -> c_int;
     pub fn gsl_interp_eval_deriv(
@@ -2125,14 +2132,14 @@ extern "C" {
         xa: *const c_double,
         ya: *const c_double,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_interp_eval_deriv_e(
         interp: *const gsl_interp,
         xa: *const c_double,
         ya: *const c_double,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         d: *mut c_double,
     ) -> c_int;
     pub fn gsl_interp_eval_deriv2(
@@ -2140,14 +2147,14 @@ extern "C" {
         xa: *const c_double,
         ya: *const c_double,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_interp_eval_deriv2_e(
         interp: *const gsl_interp,
         xa: *const c_double,
         ya: *const c_double,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         d2: *mut c_double,
     ) -> c_int;
     pub fn gsl_interp_eval_integ(
@@ -2156,7 +2163,7 @@ extern "C" {
         ya: *const c_double,
         a: c_double,
         b: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_interp_eval_integ_e(
         interp: *const gsl_interp,
@@ -2164,7 +2171,7 @@ extern "C" {
         ya: *const c_double,
         a: c_double,
         b: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         result: *mut c_double,
     ) -> c_int;
     // Higher-level Interface
@@ -2181,47 +2188,47 @@ extern "C" {
     pub fn gsl_spline_eval(
         spline: *const gsl_spline,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_spline_eval_e(
         spline: *const gsl_spline,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         y: *mut c_double,
     ) -> c_int;
     pub fn gsl_spline_eval_deriv(
         spline: *const gsl_spline,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_spline_eval_deriv_e(
         spline: *const gsl_spline,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         d: *mut c_double,
     ) -> c_int;
     pub fn gsl_spline_eval_deriv2(
         spline: *const gsl_spline,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_spline_eval_deriv2_e(
         spline: *const gsl_spline,
         x: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         d2: *mut c_double,
     ) -> c_int;
     pub fn gsl_spline_eval_integ(
         spline: *const gsl_spline,
         a: c_double,
         b: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
     ) -> c_double;
     pub fn gsl_spline_eval_integ_e(
         spline: *const gsl_spline,
         a: c_double,
         b: c_double,
-        acc: *mut ::InterpAccel,
+        acc: *mut gsl_interp_accel,
         result: *mut c_double,
     ) -> c_int;
     pub fn gsl_min_test_interval(
@@ -2411,7 +2418,7 @@ extern "C" {
     ) -> *mut gsl_odeiv2_driver;
     pub fn gsl_odeiv2_driver_set_hmin(d: *mut gsl_odeiv2_driver, hmin: c_double) -> c_int;
     pub fn gsl_odeiv2_driver_set_hmax(d: *mut gsl_odeiv2_driver, hmax: c_double) -> c_int;
-    pub fn gsl_odeiv2_driver_set_nmax(d: *mut gsl_odeiv2_driver, nmax: usize) -> c_int;
+    pub fn gsl_odeiv2_driver_set_nmax(d: *mut gsl_odeiv2_driver, nmax: c_ulong) -> c_int;
     pub fn gsl_odeiv2_driver_apply(
         d: *mut gsl_odeiv2_driver,
         t: *mut c_double,
@@ -2422,7 +2429,7 @@ extern "C" {
         d: *mut gsl_odeiv2_driver,
         t: *mut c_double,
         h: c_double,
-        n: usize,
+        n: c_ulong,
         y: *mut c_double,
     ) -> c_int;
     pub fn gsl_odeiv2_driver_reset(d: *mut gsl_odeiv2_driver) -> c_int;
@@ -2835,12 +2842,24 @@ extern "C" {
     ) -> c_int;
 }
 
+#[derive(Clone, Debug)]
+#[repr(C)]
+pub struct gsl_interp_accel {
+    /// cache of index
+    pub cache: size_t,
+    /// keep statistics
+    pub miss_count: size_t,
+    pub hit_count: size_t,
+}
+
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct gsl_sf_result {
     pub val: c_double,
     pub err: c_double,
 }
 
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct gsl_sf_result_e10 {
     pub val: c_double,
@@ -2848,16 +2867,19 @@ pub struct gsl_sf_result_e10 {
     pub e10: c_int,
 }
 
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct gsl_complex {
     pub dat: [c_double; 2],
 }
 
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct gsl_complex_float {
     pub dat: [c_float; 2],
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_sf_mathieu_workspace {
     pub size: size_t,
@@ -2878,6 +2900,7 @@ pub struct gsl_sf_mathieu_workspace {
     pub wmat: *mut gsl_eigen_symmv_workspace,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_bspline_workspace {
     pub k: size_t,               // spline order
@@ -2891,6 +2914,7 @@ pub struct gsl_bspline_workspace {
     pub B: *mut gsl_vector,      // temporary spline results
 }
 
+#[derive(Debug)]
 #[repr(C)]
 #[cfg(not(feature = "v2"))]
 pub struct gsl_bspline_deriv_workspace {
@@ -2899,10 +2923,11 @@ pub struct gsl_bspline_deriv_workspace {
     pub dB: *mut gsl_matrix, // temporary derivative results
 }
 
-pub type rng_set = Option<extern "C" fn(state: *mut c_void, seed: c_ulong)>;
-pub type rng_get = Option<extern "C" fn(state: *mut c_void) -> c_ulong>;
-pub type rng_get_double = Option<extern "C" fn(state: *mut c_void) -> c_double>;
+pub type rng_set = Option<unsafe extern "C" fn(state: *mut c_void, seed: c_ulong)>;
+pub type rng_get = Option<unsafe extern "C" fn(state: *mut c_void) -> c_ulong>;
+pub type rng_get_double = Option<unsafe extern "C" fn(state: *mut c_void) -> c_double>;
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_rng_type {
     pub name: *const c_char,
@@ -2914,12 +2939,14 @@ pub struct gsl_rng_type {
     pub get_double: rng_get_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_rng {
     pub _type: *const gsl_rng_type,
     pub state: *mut c_void,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_ran_discrete_t {
     pub K: size_t,
@@ -2927,12 +2954,14 @@ pub struct gsl_ran_discrete_t {
     pub F: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_permutation {
     pub size: size_t,
     pub data: *mut size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_cheb_series {
     pub c: *mut c_double, // coefficients
@@ -2943,6 +2972,7 @@ pub struct gsl_cheb_series {
     pub f: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_combination {
     pub n: size_t,
@@ -2950,12 +2980,14 @@ pub struct gsl_combination {
     pub data: *mut size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_poly_complex_workspace {
     pub nc: size_t,
     pub matrix: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_dht {
     pub size: size_t,       // size of the sample arrays to be transformed
@@ -2976,54 +3008,88 @@ pub struct gsl_fft_complex_wavetable {
     pub trig: *mut gsl_complex,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_fft_complex_workspace {
     pub n: size_t,
     pub scratch: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_histogram {
-    pub n: size_t,            // This is the number of histogram bins
-    pub range: *mut c_double, // The ranges of the bins are stored in an array of n+1 elements pointed to by range.
-    pub bin: *mut c_double, /* The counts for each bin are stored in an array of n elements pointed to by bin. The bins are floating-point numbers, so you can increment them by non-integer values if necessary.
-
-                            The range for bin[i] is given by range[i] to range[i+1]. For n bins there are n+1 entries in the array range. Each bin is inclusive at the lower end and exclusive at the upper end. Mathematically this means that the bins are defined by the following inequality,
-
-                            bin[i] corresponds to range[i] <= x < range[i+1]
-                            Here is a diagram of the correspondence between ranges and bins on the number-line for x,
-
-                                 [ bin[0] )[ bin[1] )[ bin[2] )[ bin[3] )[ bin[4] )
-                              ---|---------|---------|---------|---------|---------|---  x
-                               r[0]      r[1]      r[2]      r[3]      r[4]      r[5]
-
-                            In this picture the values of the range array are denoted by r. On the left-hand side of each bin the square bracket ‘[’ denotes an inclusive lower bound (r <= x), and the round parentheses ‘)’ on the right-hand side denote an exclusive upper bound (x < r). Thus any samples which fall on the upper end of the histogram are excluded. If you want to include this value for the last bin you will need to add an extra bin to your histogram.
-                            */
+    /// This is the number of histogram bins
+    pub n: size_t,
+    /// The ranges of the bins are stored in an array of n+1 elements pointed to by range.
+    pub range: *mut c_double,
+    /// The counts for each bin are stored in an array of n elements pointed to by bin. The bins
+    /// are floating-point numbers, so you can increment them by non-integer values if necessary.
+    ///
+    /// The range for `bin[i]` is given by `range[i]` to `range[i+1]`. For n bins there are n+1
+    /// entries in the array range. Each bin is inclusive at the lower end and exclusive at the
+    /// upper end. Mathematically this means that the bins are defined by the following inequality,
+    ///
+    /// `bin[i]` corresponds to `range[i] <= x < range[i+1]`
+    /// Here is a diagram of the correspondence between ranges and bins on the number-line for x,
+    ///
+    /// ```
+    /// [ bin[0] )[ bin[1] )[ bin[2] )[ bin[3] )[ bin[4] )
+    /// ---|---------|---------|---------|---------|---------|---  x
+    ///  r[0]      r[1]      r[2]      r[3]      r[4]      r[5]
+    /// ```
+    ///
+    /// In this picture the values of the range array are denoted by r. On the left-hand side of
+    /// each bin the square bracket ‘[’ denotes an inclusive lower bound (r <= x), and the round
+    /// parentheses ‘)’ on the right-hand side denote an exclusive upper bound (x < r). Thus any
+    /// samples which fall on the upper end of the histogram are excluded. If you want to include
+    /// this value for the last bin you will need to add an extra bin to your histogram.
+    pub bin: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_histogram_pdf {
-    pub n: size_t, // This is the number of bins used to approximate the probability distribution function.
-    pub range: *mut c_double, // The ranges of the bins are stored in an array of n+1 elements pointed to by range.
-    pub sum: *mut c_double, // The cumulative probability for the bins is stored in an array of n elements pointed to by sum.
+    /// This is the number of bins used to approximate the probability distribution function.
+    pub n: size_t,
+    /// The ranges of the bins are stored in an array of n+1 elements pointed to by range.
+    pub range: *mut c_double,
+    /// The cumulative probability for the bins is stored in an array of n elements pointed to
+    /// by sum.
+    pub sum: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_histogram2d {
-    pub nx: size_t,            // This is the number of histogram bins in the x direction.
-    pub ny: size_t,            // This is the number of histogram bins in the y direction.
-    pub xrange: *mut c_double, // The ranges of the bins in the x-direction are stored in an array of nx + 1 elements pointed to by xrange.
-    pub yrange: *mut c_double, // The ranges of the bins in the y-direction are stored in an array of ny + 1 elements pointed to by yrange.
-    pub bin: *mut c_double, /*The counts for each bin are stored in an array pointed to by bin. The bins are floating-point numbers, so you can increment them by non-integer values if necessary. The array bin stores the two dimensional array of bins in a single block of memory according to the mapping bin(i,j) = bin[i * ny + j].
-
-                            The range for bin(i,j) is given by xrange[i] to xrange[i+1] in the x-direction and yrange[j] to yrange[j+1] in the y-direction. Each bin is inclusive at the lower end and exclusive at the upper end. Mathematically this means that the bins are defined by the following inequality,
-
-                            bin(i,j) corresponds to xrange[i] <= x < xrange[i+1]
-                                                and yrange[j] <= y < yrange[j+1]
-                            Note that any samples which fall on the upper sides of the histogram are excluded. If you want to include these values for the side bins you will need to add an extra row or column to your histogram.
-                            */
+    /// This is the number of histogram bins in the x direction.
+    pub nx: size_t,
+    /// This is the number of histogram bins in the y direction.
+    pub ny: size_t,
+    /// The ranges of the bins in the x-direction are stored in an array of nx + 1 elements pointed
+    /// to by xrange.
+    pub xrange: *mut c_double,
+    /// The ranges of the bins in the y-direction are stored in an array of ny + 1 elements pointed
+    /// to by yrange.
+    pub yrange: *mut c_double,
+    /// The counts for each bin are stored in an array pointed to by bin. The bins are
+    /// floating-point numbers, so you can increment them by non-integer values if necessary. The
+    /// array bin stores the two dimensional array of bins in a single block of memory according to
+    /// the mapping `bin(i,j) = bin[i * ny + j]`.
+    ///
+    /// The range for bin(i,j) is given by `xrange[i]` to `xrange[i+1]` in the x-direction and
+    /// `yrange[j]` to `yrange[j+1]` in the y-direction. Each bin is inclusive at the lower end and
+    /// exclusive at the upper end. Mathematically this means that the bins are defined by the
+    /// following inequality,
+    ///
+    /// bin(i,j) corresponds to `xrange[i] <= x < xrange[i+1]` and `yrange[j] <= y < yrange[j+1]`.
+    ///
+    /// Note that any samples which fall on the upper sides of the histogram are excluded. If you
+    /// want to include these values for the side bins you will need to add an extra row or column
+    /// to your histogram.
+    pub bin: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_histogram2d_pdf {
     pub nx: size_t, // This is the number of histogram bins used to approximate the probability distribution function in the x direction.
@@ -3033,6 +3099,7 @@ pub struct gsl_histogram2d_pdf {
     pub sum: *mut c_double, // The cumulative probability for the bins is stored in an array of nx*ny elements pointed to by sum.
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_integration_workspace {
     pub limit: size_t,
@@ -3048,6 +3115,7 @@ pub struct gsl_integration_workspace {
     pub level: *mut size_t,
 }
 
+#[derive(Clone)]
 #[repr(C)]
 pub struct extrapolation_table {
     pub n: size_t,
@@ -3056,6 +3124,7 @@ pub struct extrapolation_table {
     pub res3la: [c_double; 3],
 }
 
+#[derive(Clone, Debug)]
 #[repr(C)]
 pub struct gsl_integration_qaws_table {
     pub alpha: c_double,
@@ -3068,6 +3137,7 @@ pub struct gsl_integration_qaws_table {
     pub rh: [c_double; 25],
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_integration_qawo_table {
     pub n: size_t,
@@ -3079,6 +3149,7 @@ pub struct gsl_integration_qawo_table {
 }
 
 /* Data of a single interval */
+#[derive(Clone)]
 #[repr(C)]
 pub struct gsl_integration_cquad_ival {
     pub a: c_double,
@@ -3093,6 +3164,7 @@ pub struct gsl_integration_cquad_ival {
 }
 
 /* The workspace is just a collection of intervals */
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_integration_cquad_workspace {
     pub size: size_t,
@@ -3101,6 +3173,7 @@ pub struct gsl_integration_cquad_workspace {
 }
 
 /* Workspace for fixed-order Gauss-Legendre integration */
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_integration_glfixed_table {
     pub n: size_t,          /* number of points */
@@ -3110,62 +3183,64 @@ pub struct gsl_integration_glfixed_table {
 }
 
 /* interpolation object type */
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_interp_type {
     pub name: *const c_char,
     pub min_size: c_uint,
-    pub alloc: Option<extern "C" fn(size_t) -> *mut c_void>,
-    pub init: Option<extern "C" fn(*mut c_void, *const c_double, *const c_double, size_t) -> c_int>,
+    pub alloc: Option<unsafe extern "C" fn(size_t) -> *mut c_void>,
+    pub init: Option<unsafe extern "C" fn(*mut c_void, *const c_double, *const c_double, size_t) -> c_int>,
     pub eval: Option<
-        extern "C" fn(
+        unsafe extern "C" fn(
             *const c_void,
             *const c_double,
             *const c_double,
             size_t,
             c_double,
-            *mut ::InterpAccel,
+            *mut gsl_interp,
             *mut c_double,
         ) -> c_int,
     >,
     pub eval_deriv: Option<
-        extern "C" fn(
+        unsafe extern "C" fn(
             *const c_void,
             *const c_double,
             *const c_double,
             size_t,
             c_double,
-            *mut ::InterpAccel,
+            *mut gsl_interp,
             *mut c_double,
         ) -> c_int,
     >,
     pub eval_deriv2: Option<
-        extern "C" fn(
+        unsafe extern "C" fn(
             *const c_void,
             *const c_double,
             *const c_double,
             size_t,
             c_double,
-            *mut ::InterpAccel,
+            *mut gsl_interp,
             *mut c_double,
         ) -> c_int,
     >,
     pub eval_integ: Option<
-        extern "C" fn(
+        unsafe extern "C" fn(
             *const c_void,
             *const c_double,
             *const c_double,
             size_t,
             c_double,
-            *mut ::InterpAccel,
+            *mut gsl_interp,
             c_double,
             c_double,
             *mut c_double,
         ) -> c_int,
     >,
-    pub free: Option<extern "C" fn(*mut c_void)>,
+    pub free: Option<unsafe extern "C" fn(*mut c_void)>,
 }
 
 /* general interpolation object */
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_interp {
     pub _type: *const gsl_interp_type,
@@ -3176,6 +3251,7 @@ pub struct gsl_interp {
 }
 
 /* general interpolation object */
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_spline {
     pub interp: *mut gsl_interp,
@@ -3184,6 +3260,7 @@ pub struct gsl_spline {
     pub size: size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_ntuple {
     pub file: *mut FILE,
@@ -3191,6 +3268,7 @@ pub struct gsl_ntuple {
     pub size: size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_multiset {
     pub n: size_t,
@@ -3198,11 +3276,12 @@ pub struct gsl_multiset {
     pub data: *mut size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_system {
-    pub function: extern "C" fn(t: c_double, *const c_double, *mut c_double, *mut c_void) -> c_int,
+    pub function: unsafe extern "C" fn(t: c_double, *const c_double, *mut c_double, *mut c_void) -> c_int,
     pub jacobian: Option<
-        extern "C" fn(
+        unsafe extern "C" fn(
             t: c_double,
             *const c_double,
             *mut c_double,
@@ -3210,10 +3289,11 @@ pub struct gsl_odeiv2_system {
             *mut c_void,
         ) -> c_int,
     >,
-    pub dimension: usize,
+    pub dimension: size_t,
     pub params: *mut c_void,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_driver {
     // ODE system
@@ -3231,11 +3311,12 @@ pub struct gsl_odeiv2_driver {
     // maximum step size allowed
     pub hmax: c_double,
     // number of steps taken
-    pub n: usize,
+    pub n: c_ulong,
     // Maximum number of steps allowed
-    pub nmax: usize,
+    pub nmax: c_ulong,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_evolve {
     pub dimension: size_t,
@@ -3244,17 +3325,19 @@ pub struct gsl_odeiv2_evolve {
     pub dydt_in: *mut c_double,
     pub dydt_out: *mut c_double,
     pub last_step: c_double,
-    pub count: usize,
-    pub failed_steps: usize,
+    pub count: c_ulong,
+    pub failed_steps: c_ulong,
     pub driver: *const gsl_odeiv2_driver,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_control {
     pub type_: *const gsl_odeiv2_control_type,
     pub state: *mut c_void,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_control_type {
     pub name: *const c_char,
@@ -3287,6 +3370,7 @@ pub struct gsl_odeiv2_control_type {
     pub free: fn(state: *mut c_void),
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_step {
     pub type_: *const gsl_odeiv2_step_type,
@@ -3294,6 +3378,7 @@ pub struct gsl_odeiv2_step {
     pub state: *mut c_void,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_step_type {
     pub name: *const c_char,
@@ -3318,6 +3403,7 @@ pub struct gsl_odeiv2_step_type {
 }
 
 // Structure describing a generator instance of a specified type, with generator-specific state info and dimension-specific info.
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_qrng {
     pub type_: *const gsl_qrng_type,
@@ -3327,14 +3413,15 @@ pub struct gsl_qrng {
 }
 
 // Structure describing a type of generator.
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_qrng_type {
     pub name: *const c_char,
     pub max_dimension: c_uint,
-    pub state_size: Option<extern "C" fn(dimension: c_uint) -> size_t>,
-    pub init_state: Option<extern "C" fn(state: *mut c_void, dimension: c_uint) -> c_int>,
+    pub state_size: Option<unsafe extern "C" fn(dimension: c_uint) -> size_t>,
+    pub init_state: Option<unsafe extern "C" fn(state: *mut c_void, dimension: c_uint) -> c_int>,
     pub get:
-        Option<extern "C" fn(state: *mut c_void, dimension: c_uint, x: *mut c_double) -> c_int>,
+        Option<unsafe extern "C" fn(state: *mut c_void, dimension: c_uint, x: *mut c_double) -> c_int>,
 }
 
 /*
@@ -3346,6 +3433,7 @@ pub struct gsl_qrng_type {
  * dq_den      = table of denominator derivatives; length = size**2
  * dsum        = derivative of sum wrt term i; length = size
 */
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_sum_levin_u_workspace {
     pub size: size_t,
@@ -3361,6 +3449,7 @@ pub struct gsl_sum_levin_u_workspace {
     pub dsum: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_sum_levin_utrunc_workspace {
     pub size: size_t,
@@ -3374,12 +3463,14 @@ pub struct gsl_sum_levin_utrunc_workspace {
     pub dsum: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_wavelet_workspace {
     pub scratch: *mut c_double,
     pub n: size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_wavelet {
     pub type_: *const gsl_wavelet_type,
@@ -3391,11 +3482,12 @@ pub struct gsl_wavelet {
     pub offset: size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_wavelet_type {
     pub name: *const c_char,
     pub init: Option<
-        extern "C" fn(
+        unsafe extern "C" fn(
             h1: *const *const c_double,
             g1: *const *const c_double,
             h2: *const *const c_double,

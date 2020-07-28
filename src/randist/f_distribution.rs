@@ -28,12 +28,12 @@ use types::Rng;
 ///
 /// for x >= 0.
 pub fn fdist(r: &mut Rng, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_ran_fdist(ffi::FFI::unwrap_unique(r), nu1, nu2) }
+    unsafe { ffi::randist::gsl_ran_fdist(ffi::FFI::unwrap_unique(r), nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.
 pub fn fdist_pdf(x: f64, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_ran_fdist_pdf(x, nu1, nu2) }
+    unsafe { ffi::randist::gsl_ran_fdist_pdf(x, nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.

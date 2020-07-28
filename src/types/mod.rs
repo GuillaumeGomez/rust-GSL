@@ -45,7 +45,7 @@ pub use self::ran_discrete::RanDiscrete;
 pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
 pub use self::roots::{
-    RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType, RootFunction, RootFunctionFdf,
+    RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType,
 };
 pub use self::series_acceleration::{LevinUTruncWorkspace, LevinUWorkspace};
 pub use self::siman::{SimAnnealing, SimAnnealingParams};

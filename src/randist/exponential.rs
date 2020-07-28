@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// for x >= 0.
 pub fn exponential(r: &mut Rng, mu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_exponential(ffi::FFI::unwrap_unique(r), mu) }
+    unsafe { ffi::randist::gsl_ran_exponential(ffi::FFI::unwrap_unique(r), mu) }
 }
 
 /// This function computes the probability density p(x) at x for an exponential distribution with mean mu, using the formula given above.
 pub fn exponential_pdf(x: f64, mu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_exponential_pdf(x, mu) }
+    unsafe { ffi::randist::gsl_ran_exponential_pdf(x, mu) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the exponential distribution with mean mu.

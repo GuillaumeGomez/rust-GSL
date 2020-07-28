@@ -40,40 +40,35 @@ D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6
 use enums;
 use ffi;
 
-/// evaluation accelerator
-#[repr(C)]
-#[derive(Clone, Copy)]
-pub struct InterpAccel {
-    /// cache of index
-    pub cache: usize,
-    /// keep statistics
-    pub miss_count: usize,
-    pub hit_count: usize,
-}
+/// Evaluation accelerator.
+#[derive(Clone)]
+pub struct InterpAccel(pub ffi::gsl_interp_accel);
 
 impl InterpAccel {
-    /// This function returns a pointer to an accelerator object, which is a kind of iterator for interpolation lookups. It tracks the state
-    /// of lookups, thus allowing for application of various acceleration strategies.
+    /// This function returns a pointer to an accelerator object, which is a kind of iterator for
+    /// interpolation lookups. It tracks the state of lookups, thus allowing for application of
+    /// various acceleration strategies.
     pub fn new() -> InterpAccel {
-        InterpAccel {
-            cache: 0usize,
-            miss_count: 0usize,
-            hit_count: 0usize,
-        }
+        InterpAccel(ffi::gsl_interp_accel {
+            cache: 0,
+            miss_count: 0,
+            hit_count: 0,
+        })
     }
 
-    /// This function reinitializes the accelerator object acc. It should be used when the cached information is no longer applicable—for
-    /// example, when switching to a new dataset.
+    /// This function reinitializes the accelerator object acc. It should be used when the cached
+    /// information is no longer applicable-for example, when switching to a new dataset.
     pub fn reset(&mut self) {
-        self.cache = 0usize;
-        self.miss_count = 0usize;
-        self.hit_count = 0usize;
+        self.0.cache = 0;
+        self.0.miss_count = 0;
+        self.0.hit_count = 0;
     }
 
-    /// This function performs a lookup action on the data array x_array of size size, using the given accelerator a. This is how lookups
-    /// are performed during evaluation of an interpolation. The function returns an index i such that x_array[i] <= x < x_array[i+1].
+    /// This function performs a lookup action on the data array x_array of size size, using the
+    /// given accelerator a. This is how lookups are performed during evaluation of an
+    /// interpolation. The function returns an index i such that `x_array[i] <= x < x_array[i+1]`.
     pub fn find(&mut self, x_array: &[f64], x: f64) -> usize {
-        unsafe { ffi::gsl_interp_accel_find(self, x_array.as_ptr(), x_array.len() as usize, x) }
+        unsafe { ffi::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as usize, x) }
     }
 }
 
@@ -93,9 +88,11 @@ impl Interp {
         }
     }
 
-    /// This function initializes the interpolation object interp for the data (xa,ya) where xa and ya are arrays of size size. The interpolation
-    /// object (gsl_interp) does not save the data arrays xa and ya and only stores the static state computed from the data. The xa data array
-    /// is always assumed to be strictly ordered, with increasing x values; the behavior for other arrangements is not defined.
+    /// This function initializes the interpolation object interp for the data (xa,ya) where xa and
+    /// ya are arrays of size size. The interpolation object (gsl_interp) does not save the data
+    /// arrays xa and ya and only stores the static state computed from the data. The xa data array
+    /// is always assumed to be strictly ordered, with increasing x values; the behavior for other
+    /// arrangements is not defined.
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
             ffi::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
@@ -104,7 +101,7 @@ impl Interp {
 
     /// This function returns the name of the interpolation type used by interp. For example,
     ///
-    /// ```Rust
+    /// ```
     /// println!("interp uses '{}' interpolation.", interp.name());
     /// ```
     ///
@@ -125,8 +122,9 @@ impl Interp {
         }
     }
 
-    /// This function returns the minimum number of points required by the interpolation object interp or interpolation type T. For example,
-    /// Akima spline interpolation requires a minimum of 5 points.
+    /// This function returns the minimum number of points required by the interpolation object
+    /// interp or interpolation type T. For example, Akima spline interpolation requires a minimum
+    /// of 5 points.
     pub fn min_size(&self) -> u32 {
         unsafe { ffi::gsl_interp_min_size(self.interp) }
     }
@@ -163,8 +161,9 @@ pub struct InterpType {
 }
 
 impl InterpType {
-    /// This function returns the minimum number of points required by the interpolation object interp or interpolation type T. For example,
-    /// Akima spline interpolation requires a minimum of 5 points.
+    /// This function returns the minimum number of points required by the interpolation object
+    /// interp or interpolation type T. For example, Akima spline interpolation requires a minimum
+    /// of 5 points.
     pub fn min_size(&self) -> u32 {
         unsafe { ffi::gsl_interp_type_min_size(self.t) }
     }
@@ -174,33 +173,38 @@ impl InterpType {
         ffi_wrap!(gsl_interp_linear, gsl_interp_type)
     }
 
-    /// Polynomial interpolation. This method should only be used for interpolating small numbers of points because polynomial interpolation
-    /// introduces large oscillations, even for well-behaved datasets. The number of terms in the interpolating polynomial is equal to the
+    /// Polynomial interpolation. This method should only be used for interpolating small numbers
+    /// of points because polynomial interpolation introduces large oscillations, even for
+    /// well-behaved datasets. The number of terms in the interpolating polynomial is equal to the
     /// number of points.
     pub fn polynomial() -> InterpType {
         ffi_wrap!(gsl_interp_polynomial, gsl_interp_type)
     }
 
-    /// Cubic spline with natural boundary conditions. The resulting curve is piecewise cubic on each interval, with matching first and second
-    /// derivatives at the supplied data-points. The second derivative is chosen to be zero at the first point and last point.
+    /// Cubic spline with natural boundary conditions. The resulting curve is piecewise cubic on
+    /// each interval, with matching first and second derivatives at the supplied data-points. The
+    /// second derivative is chosen to be zero at the first point and last point.
     pub fn cspline() -> InterpType {
         ffi_wrap!(gsl_interp_cspline, gsl_interp_type)
     }
 
-    /// Cubic spline with periodic boundary conditions. The resulting curve is piecewise cubic on each interval, with matching first and second
-    /// derivatives at the supplied data-points. The derivatives at the first and last points are also matched. Note that the last point in
-    /// the data must have the same y-value as the first point, otherwise the resulting periodic interpolation will have a discontinuity at
-    /// the boundary.
+    /// Cubic spline with periodic boundary conditions. The resulting curve is piecewise cubic on
+    /// each interval, with matching first and second derivatives at the supplied data-points. The
+    /// derivatives at the first and last points are also matched. Note that the last point in the
+    /// data must have the same y-value as the first point, otherwise the resulting periodic
+    /// interpolation will have a discontinuity at the boundary.
     pub fn cspline_periodic() -> InterpType {
         ffi_wrap!(gsl_interp_cspline_periodic, gsl_interp_type)
     }
 
-    /// Non-rounded Akima spline with natural boundary conditions. This method uses the non-rounded corner algorithm of Wodicka.
+    /// Non-rounded Akima spline with natural boundary conditions. This method uses the non-rounded
+    /// corner algorithm of Wodicka.
     pub fn akima() -> InterpType {
         ffi_wrap!(gsl_interp_akima, gsl_interp_type)
     }
 
-    /// Non-rounded Akima spline with periodic boundary conditions. This method uses the non-rounded corner algorithm of Wodicka.
+    /// Non-rounded Akima spline with periodic boundary conditions. This method uses the non-rounded
+    /// corner algorithm of Wodicka.
     pub fn akima_periodic() -> InterpType {
         ffi_wrap!(gsl_interp_akima_periodic, gsl_interp_type)
     }
@@ -263,31 +267,31 @@ impl Spline {
     }
 
     pub fn eval(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval(self.spline, x, acc) }
+        unsafe { ffi::gsl_spline_eval(self.spline, x, &mut acc.0) }
     }
 
     pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_e(self.spline, x, acc, y) })
+        enums::Value::from(unsafe { ffi::gsl_spline_eval_e(self.spline, x, &mut acc.0, y) })
     }
 
     pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_deriv(self.spline, x, acc) }
+        unsafe { ffi::gsl_spline_eval_deriv(self.spline, x, &mut acc.0) }
     }
 
     pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_deriv_e(self.spline, x, acc, d) })
+        enums::Value::from(unsafe { ffi::gsl_spline_eval_deriv_e(self.spline, x, &mut acc.0, d) })
     }
 
     pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_deriv2(self.spline, x, acc) }
+        unsafe { ffi::gsl_spline_eval_deriv2(self.spline, x, &mut acc.0) }
     }
 
     pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline, x, acc, d2) })
+        enums::Value::from(unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline, x, &mut acc.0, d2) })
     }
 
     pub fn eval_integ(&self, a: f64, b: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_integ(self.spline, a, b, acc) }
+        unsafe { ffi::gsl_spline_eval_integ(self.spline, a, b, &mut acc.0) }
     }
 
     pub fn eval_integ_e(
@@ -297,7 +301,7 @@ impl Spline {
         acc: &mut InterpAccel,
         result: &mut f64,
     ) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_integ_e(self.spline, a, b, acc, result) })
+        enums::Value::from(unsafe { ffi::gsl_spline_eval_integ_e(self.spline, a, b, &mut acc.0, result) })
     }
 }
 

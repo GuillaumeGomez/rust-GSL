@@ -1,18 +1,67 @@
 //! BLAS and CBLAS support
 
-use cblas;
+/// Indicates whether a matrix is in Row Major or Column Major order.
+/// Row major order is the native order for C programs, while Column major order is native for Fortran.
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
+#[repr(C)]
+pub enum CBLAS_ORDER {
+    RowMajor = 101,
+    ColMajoyr,
+}
+
+/// Used to indicate the order of a matrix-matrix multiply.
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
+#[repr(C)]
+pub enum CBLAS_SIDE {
+    /// Means __A__ __B__
+    Left = 141,
+    /// Means __B__ __A__
+    Right,
+}
+
+/// Used to represent transpose operations on a matrix.
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
+#[repr(C)]
+pub enum CBLAS_TRANSPOSE {
+    /// Represents __X__
+    NoTrans = 111,
+    /// Represents __X^T__
+    Trans,
+    /// Represents __X^H__
+    ConjTrans,
+}
+
+/// Used to indicate which part of a symmetric matrix to use.
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
+#[repr(C)]
+pub enum CBLAS_UPLO {
+    /// Means user the upper triagle of the matrix.
+    Upper = 121,
+    /// Means use the lower triange of the matrix.
+    Lower,
+}
+
+#[derive(PartialEq, PartialOrd, Debug, Clone, Copy)]
+#[repr(C)]
+pub enum CBLAS_DIAG {
+    NonUnit = 131,
+    Unit,
+}
 
 pub type CBLAS_INDEX = c_uint;
+
 pub type CBLAS_INDEX_t = CBLAS_INDEX;
-pub type CBLAS_TRANSPOSE_t = cblas::Transpose;
-pub type CBLAS_UPLO_t = cblas::Uplo;
-pub type CBLAS_DIAG_t = cblas::Diag;
-pub type CBLAS_SIDE_t = cblas::Side;
+pub type CBLAS_TRANSPOSE_t = CBLAS_TRANSPOSE;
+pub type CBLAS_UPLO_t = CBLAS_UPLO;
+pub type CBLAS_DIAG_t = CBLAS_DIAG;
+pub type CBLAS_SIDE_t = CBLAS_SIDE;
+pub type CBLAS_ORDER_t = CBLAS_ORDER;
 
 use libc::{c_double, c_float, c_int, c_uint, c_void};
 
-use super::{
-    gsl_complex, gsl_complex_float, gsl_matrix, gsl_matrix_complex, gsl_matrix_complex_float,
+use crate::{gsl_complex, gsl_complex_float};
+use crate::linalg::{
+    gsl_matrix, gsl_matrix_complex, gsl_matrix_complex_float,
     gsl_matrix_float, gsl_vector, gsl_vector_complex, gsl_vector_complex_float, gsl_vector_float,
 };
 
@@ -190,8 +239,8 @@ extern "C" {
 
     // Level 2 CBLAS functions
     pub fn cblas_sgemv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         alpha: c_float,
@@ -204,8 +253,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_sgbmv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         KL: c_int,
@@ -220,10 +269,10 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_strmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_float,
         lda: c_int,
@@ -231,10 +280,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_stbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_float,
@@ -243,20 +292,20 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_stpmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_float,
         x: *mut c_float,
         incx: c_int,
     );
     pub fn cblas_strsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_float,
         lda: c_int,
@@ -264,10 +313,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_stbsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_float,
@@ -276,18 +325,18 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_stpsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_float,
         x: *mut c_float,
         incx: c_int,
     );
     pub fn cblas_dgemv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         alpha: c_double,
@@ -300,8 +349,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_dgbmv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         KL: c_int,
@@ -316,10 +365,10 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_dtrmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_double,
         lda: c_int,
@@ -327,10 +376,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_dtbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_double,
@@ -339,20 +388,20 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_dtpmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_double,
         x: *mut c_double,
         incx: c_int,
     );
     pub fn cblas_dtrsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_double,
         lda: c_int,
@@ -360,10 +409,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_dtbsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_double,
@@ -372,18 +421,18 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_dtpsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_double,
         x: *mut c_double,
         incx: c_int,
     );
     pub fn cblas_cgemv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -396,8 +445,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_cgbmv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         KL: c_int,
@@ -412,10 +461,10 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_ctrmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_void,
         lda: c_int,
@@ -423,10 +472,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ctbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_void,
@@ -435,20 +484,20 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ctpmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_void,
         x: *mut c_void,
         incx: c_int,
     );
     pub fn cblas_ctrsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_void,
         lda: c_int,
@@ -456,10 +505,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ctbsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_void,
@@ -468,18 +517,18 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ctpsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_void,
         x: *mut c_void,
         incx: c_int,
     );
     pub fn cblas_zgemv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -492,8 +541,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zgbmv(
-        order: cblas::Order,
-        transA: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         KL: c_int,
@@ -508,10 +557,10 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_ztrmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_void,
         lda: c_int,
@@ -519,10 +568,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ztbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_void,
@@ -531,20 +580,20 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ztpmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_void,
         x: *mut c_void,
         incx: c_int,
     );
     pub fn cblas_ztrsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         A: *const c_void,
         lda: c_int,
@@ -552,10 +601,10 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ztbsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         K: c_int,
         A: *const c_void,
@@ -564,18 +613,18 @@ extern "C" {
         incx: c_int,
     );
     pub fn cblas_ztpsv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         N: c_int,
         Ap: *const c_void,
         x: *mut c_void,
         incx: c_int,
     );
     pub fn cblas_ssymv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_float,
         A: *const c_float,
@@ -587,8 +636,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_ssbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         K: c_int,
         alpha: c_float,
@@ -601,8 +650,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_sspmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_float,
         Ap: *const c_float,
@@ -613,7 +662,7 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_sger(
-        order: cblas::Order,
+        order: CBLAS_ORDER_t,
         M: c_int,
         N: c_int,
         alpha: c_float,
@@ -625,8 +674,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_ssyr(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_float,
         x: *const c_float,
@@ -635,8 +684,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_sspr(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_float,
         x: *const c_float,
@@ -644,8 +693,8 @@ extern "C" {
         Ap: *mut c_float,
     );
     pub fn cblas_ssyr2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_float,
         x: *const c_float,
@@ -656,8 +705,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_sspr2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_float,
         x: *const c_float,
@@ -667,8 +716,8 @@ extern "C" {
         A: *mut c_float,
     );
     pub fn cblas_dsymv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_double,
         A: *const c_double,
@@ -680,8 +729,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_dsbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         K: c_int,
         alpha: c_double,
@@ -694,8 +743,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_dspmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_double,
         Ap: *const c_double,
@@ -706,7 +755,7 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_dger(
-        order: cblas::Order,
+        order: CBLAS_ORDER_t,
         M: c_int,
         N: c_int,
         alpha: c_double,
@@ -718,8 +767,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_dsyr(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_double,
         x: *const c_double,
@@ -728,8 +777,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_dspr(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_double,
         x: *const c_double,
@@ -737,8 +786,8 @@ extern "C" {
         Ap: *mut c_double,
     );
     pub fn cblas_dsyr2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_double,
         x: *const c_double,
@@ -749,8 +798,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_dspr2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: c_double,
         x: *const c_double,
@@ -760,8 +809,8 @@ extern "C" {
         A: *mut c_double,
     );
     pub fn cblas_chemv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         A: *const c_void,
@@ -773,8 +822,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_chbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -787,8 +836,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_chpmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         Ap: *const c_void,
@@ -799,8 +848,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_csymv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         A: *const c_void,
@@ -812,8 +861,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_csbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -826,8 +875,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_cspmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         Ap: *const c_void,
@@ -838,7 +887,7 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_cgeru(
-        order: cblas::Order,
+        order: CBLAS_ORDER_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -850,7 +899,7 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_cgerc(
-        order: cblas::Order,
+        order: CBLAS_ORDER_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -862,8 +911,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_cher(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -872,8 +921,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_chpr(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -881,8 +930,8 @@ extern "C" {
         Ap: *mut c_void,
     );
     pub fn cblas_cher2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -893,8 +942,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_chpr2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -904,8 +953,8 @@ extern "C" {
         Ap: *mut c_void,
     );
     pub fn cblas_zhemv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         A: *const c_void,
@@ -917,8 +966,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zhbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -931,8 +980,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zhpmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         Ap: *const c_void,
@@ -943,8 +992,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zsymv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         A: *const c_void,
@@ -956,8 +1005,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zsbmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -970,8 +1019,8 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zspmv(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         Ap: *const c_void,
@@ -982,7 +1031,7 @@ extern "C" {
         incy: c_int,
     );
     pub fn cblas_zgeru(
-        order: cblas::Order,
+        order: CBLAS_ORDER_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -994,7 +1043,7 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_zgerc(
-        order: cblas::Order,
+        order: CBLAS_ORDER_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1006,8 +1055,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_zher(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -1016,8 +1065,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_zhpr(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -1025,8 +1074,8 @@ extern "C" {
         Ap: *mut c_void,
     );
     pub fn cblas_zher2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -1037,8 +1086,8 @@ extern "C" {
         lda: c_int,
     );
     pub fn cblas_zhpr2(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
         N: c_int,
         alpha: *const c_void,
         x: *const c_void,
@@ -1050,9 +1099,9 @@ extern "C" {
 
     // Level 3 CBLAS functions
     pub fn cblas_sgemm(
-        order: cblas::Order,
-        transA: cblas::Transpose,
-        transB: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
+        transB: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         K: c_int,
@@ -1066,9 +1115,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_ssymm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
         M: c_int,
         N: c_int,
         alpha: c_float,
@@ -1081,9 +1130,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_ssyrk(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: c_float,
@@ -1094,9 +1143,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_ssyr2k(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: c_float,
@@ -1109,11 +1158,11 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_strmm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: c_float,
@@ -1123,11 +1172,11 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_strsm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: c_float,
@@ -1137,9 +1186,9 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_dgemm(
-        order: cblas::Order,
-        transA: cblas::Transpose,
-        transB: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
+        transB: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         K: c_int,
@@ -1153,9 +1202,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_dsymm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
         M: c_int,
         N: c_int,
         alpha: c_double,
@@ -1168,9 +1217,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_dsyrk(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: c_double,
@@ -1181,9 +1230,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_dsyr2k(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: c_double,
@@ -1196,11 +1245,11 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_dtrmm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: c_double,
@@ -1210,11 +1259,11 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_dtrsm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: c_double,
@@ -1224,9 +1273,9 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_cgemm(
-        order: cblas::Order,
-        transA: cblas::Transpose,
-        transB: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
+        transB: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         K: c_int,
@@ -1240,9 +1289,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_csymm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1255,9 +1304,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_csyrk(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -1268,9 +1317,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_csyr2k(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -1283,11 +1332,11 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_ctrmm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1297,11 +1346,11 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_ctrsm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1311,9 +1360,9 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_zgemm(
-        order: cblas::Order,
-        transA: cblas::Transpose,
-        transB: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        transA: CBLAS_TRANSPOSE_t,
+        transB: CBLAS_TRANSPOSE_t,
         M: c_int,
         N: c_int,
         K: c_int,
@@ -1327,9 +1376,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_zsymm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1342,9 +1391,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_zsyrk(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -1355,9 +1404,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_zsyr2k(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -1370,11 +1419,11 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_ztrmm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1384,11 +1433,11 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_ztrsm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
-        transA: cblas::Transpose,
-        diag: cblas::Diag,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
+        transA: CBLAS_TRANSPOSE_t,
+        diag: CBLAS_DIAG_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1398,9 +1447,9 @@ extern "C" {
         ldb: c_int,
     );
     pub fn cblas_chemm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1413,9 +1462,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_cherk(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -1426,9 +1475,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_cher2k(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,
@@ -1441,9 +1490,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_zhemm(
-        order: cblas::Order,
-        side: cblas::Side,
-        uplo: cblas::Uplo,
+        order: CBLAS_ORDER_t,
+        side: CBLAS_SIDE_t,
+        uplo: CBLAS_UPLO_t,
         M: c_int,
         N: c_int,
         alpha: *const c_void,
@@ -1456,9 +1505,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_zherk(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: c_double,
@@ -1469,9 +1518,9 @@ extern "C" {
         ldc: c_int,
     );
     pub fn cblas_zher2k(
-        order: cblas::Order,
-        uplo: cblas::Uplo,
-        trans: cblas::Transpose,
+        order: CBLAS_ORDER_t,
+        uplo: CBLAS_UPLO_t,
+        trans: CBLAS_TRANSPOSE_t,
         N: c_int,
         K: c_int,
         alpha: *const c_void,

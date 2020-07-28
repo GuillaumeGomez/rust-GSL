@@ -30,7 +30,7 @@ use types::Rng;
 /// ```
 pub fn shuffle<T>(r: &mut Rng, base: &mut [T]) {
     unsafe {
-        ffi::gsl_ran_shuffle(
+        ffi::randist::gsl_ran_shuffle(
             ffi::FFI::unwrap_unique(r),
             base.as_mut_ptr() as *mut c_void,
             base.len() as usize,
@@ -59,7 +59,7 @@ pub fn shuffle<T>(r: &mut Rng, base: &mut [T]) {
 /// ```
 pub fn choose<T>(r: &mut Rng, dest: &mut [T], src: &[T]) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_ran_choose(
+        ffi::randist::gsl_ran_choose(
             ffi::FFI::unwrap_unique(r),
             dest.as_mut_ptr() as *mut c_void,
             dest.len() as usize,
@@ -74,7 +74,7 @@ pub fn choose<T>(r: &mut Rng, dest: &mut [T], src: &[T]) -> enums::Value {
 /// than once in the output sequence dest. There is no requirement that k be less than n in this case.
 pub fn sample<T>(r: &mut Rng, dest: &mut [T], src: &[T]) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_ran_sample(
+        ffi::randist::gsl_ran_sample(
             ffi::FFI::unwrap_unique(r),
             dest.as_mut_ptr() as *mut c_void,
             dest.len() as usize,

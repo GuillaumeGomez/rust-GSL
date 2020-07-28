@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// for x > 0.
 pub fn rayleigh(r: &mut Rng, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_rayleigh(ffi::FFI::unwrap_unique(r), sigma) }
+    unsafe { ffi::randist::gsl_ran_rayleigh(ffi::FFI::unwrap_unique(r), sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a Rayleigh distribution with scale parameter sigma, using the formula given above.
 pub fn rayleigh_pdf(x: f64, sigma: f64) -> f64 {
-    unsafe { ffi::gsl_ran_rayleigh_pdf(x, sigma) }
+    unsafe { ffi::randist::gsl_ran_rayleigh_pdf(x, sigma) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the Rayleigh distribution with scale parameter sigma.

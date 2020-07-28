@@ -6,16 +6,16 @@ use std::path::Path;
 
 use libc::{fclose, fopen, FILE};
 
-/// A wrapper to handle I/O operations between GSL and rust
-pub struct IOStream {
-    inner: *mut FILE,
-    mode: Mode,
-}
-
 #[allow(dead_code)]
 enum Mode {
     Write,
     Read,
+}
+
+/// A wrapper to handle I/O operations between GSL and rust
+pub struct IOStream {
+    inner: *mut FILE,
+    mode: Mode,
 }
 
 impl IOStream {

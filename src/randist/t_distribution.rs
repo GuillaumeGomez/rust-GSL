@@ -21,12 +21,12 @@ use types::Rng;
 ///
 /// for -\infty < x < +\infty.
 pub fn tdist(r: &mut Rng, nu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_tdist(ffi::FFI::unwrap_unique(r), nu) }
+    unsafe { ffi::randist::gsl_ran_tdist(ffi::FFI::unwrap_unique(r), nu) }
 }
 
 /// This function computes the probability density p(x) at x for a t-distribution with nu degrees of freedom, using the formula given above.
 pub fn tdist_pdf(x: f64, nu: f64) -> f64 {
-    unsafe { ffi::gsl_ran_tdist_pdf(x, nu) }
+    unsafe { ffi::randist::gsl_ran_tdist_pdf(x, nu) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the t-distribution with nu degrees of freedom.

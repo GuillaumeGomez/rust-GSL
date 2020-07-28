@@ -932,7 +932,7 @@ impl<'a> ODEiv2Driver<'a> {
     }
 
     /// The function sets a maximum for allowed number of steps nmax for driver self. Default value of 0 sets no limit for steps.
-    pub fn set_nmax(&mut self, nmax: usize) -> GSLResult<()> {
+    pub fn set_nmax(&mut self, nmax: u64) -> GSLResult<()> {
         GSLResult::from(enums::Value::from(unsafe {
             ffi::gsl_odeiv2_driver_set_nmax(self.d, nmax)
         }))
@@ -958,7 +958,7 @@ impl<'a> ODEiv2Driver<'a> {
         &mut self,
         t: &mut f64,
         h: f64,
-        n: usize,
+        n: u64,
         y: &mut [f64],
     ) -> GSLResult<()> {
         GSLResult::from(enums::Value::from(unsafe {

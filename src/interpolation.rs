@@ -20,7 +20,7 @@ pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::Inter
             xa.as_ptr(),
             ya.as_ptr(),
             x,
-            acc,
+            &mut acc.0,
         )
     }
 }
@@ -41,7 +41,7 @@ pub fn eval_e(
             xa.as_ptr(),
             ya.as_ptr(),
             x,
-            acc,
+            &mut acc.0,
             y,
         )
     })
@@ -62,7 +62,7 @@ pub fn eval_deriv(
             xa.as_ptr(),
             ya.as_ptr(),
             x,
-            acc,
+            &mut acc.0,
         )
     }
 }
@@ -83,7 +83,7 @@ pub fn eval_deriv_e(
             xa.as_ptr(),
             ya.as_ptr(),
             x,
-            acc,
+            &mut acc.0,
             d,
         )
     })
@@ -104,7 +104,7 @@ pub fn eval_deriv2(
             xa.as_ptr(),
             ya.as_ptr(),
             x,
-            acc,
+            &mut acc.0,
         )
     }
 }
@@ -125,7 +125,7 @@ pub fn eval_deriv2_e(
             xa.as_ptr(),
             ya.as_ptr(),
             x,
-            acc,
+            &mut acc.0,
             d2,
         )
     })
@@ -148,7 +148,7 @@ pub fn eval_integ(
             ya.as_ptr(),
             a,
             b,
-            acc,
+            &mut acc.0,
         )
     }
 }
@@ -171,7 +171,7 @@ pub fn eval_integ_e(
             ya.as_ptr(),
             a,
             b,
-            acc,
+            &mut acc.0,
             result,
         )
     })

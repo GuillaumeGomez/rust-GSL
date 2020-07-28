@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// for -\infty < x < +\infty.
 pub fn logistic(r: &mut Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_logistic(ffi::FFI::unwrap_unique(r), a) }
+    unsafe { ffi::randist::gsl_ran_logistic(ffi::FFI::unwrap_unique(r), a) }
 }
 
 /// This function computes the probability density p(x) at x for a logistic distribution with scale parameter a, using the formula given above.
 pub fn logistic_pdf(x: f64, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_logistic_pdf(x, a) }
+    unsafe { ffi::randist::gsl_ran_logistic_pdf(x, a) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the logistic distribution with scale parameter a.

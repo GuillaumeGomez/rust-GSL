@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// for -\infty < x < \infty.
 pub fn laplace(r: &mut Rng, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_laplace(ffi::FFI::unwrap_unique(r), a) }
+    unsafe { ffi::randist::gsl_ran_laplace(ffi::FFI::unwrap_unique(r), a) }
 }
 
 /// This function computes the probability density p(x) at x for a Laplace distribution with width a, using the formula given above.
 pub fn laplace_pdf(x: f64, a: f64) -> f64 {
-    unsafe { ffi::gsl_ran_laplace_pdf(x, a) }
+    unsafe { ffi::randist::gsl_ran_laplace_pdf(x, a) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the Laplace distribution with width a.

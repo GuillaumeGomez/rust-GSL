@@ -11,12 +11,12 @@ use types::Rng;
 ///
 /// for 0 <= x <= 1.
 pub fn beta(r: &mut Rng, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_beta(ffi::FFI::unwrap_unique(r), a, b) }
+    unsafe { ffi::randist::gsl_ran_beta(ffi::FFI::unwrap_unique(r), a, b) }
 }
 
 /// This function computes the probability density p(x) at x for a beta distribution with parameters a and b, using the formula given above.
 pub fn beta_pdf(x: f64, a: f64, b: f64) -> f64 {
-    unsafe { ffi::gsl_ran_beta_pdf(x, a, b) }
+    unsafe { ffi::randist::gsl_ran_beta_pdf(x, a, b) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the beta distribution with parameters a and b.

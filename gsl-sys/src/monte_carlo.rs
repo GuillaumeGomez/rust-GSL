@@ -33,8 +33,8 @@ extern "C" {
         result: *mut c_double,
         abserr: *mut c_double,
     ) -> c_int;
-    pub fn gsl_monte_miser_params_get(s: *mut gsl_monte_miser_state, m: *mut ::MiserParams);
-    pub fn gsl_monte_miser_params_set(s: *mut gsl_monte_miser_state, m: *const ::MiserParams);
+    pub fn gsl_monte_miser_params_get(s: *mut gsl_monte_miser_state, m: *mut gsl_monte_miser_params);
+    pub fn gsl_monte_miser_params_set(s: *mut gsl_monte_miser_state, m: *const gsl_monte_miser_params);
     // VEGAS
     pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
     pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> c_int;
@@ -66,12 +66,48 @@ extern "C" {
     );
 }
 
+#[derive(Debug, Clone)]
+#[repr(C)]
+pub struct gsl_monte_miser_params {
+    /// This parameter specifies the fraction of the currently available number of function calls which
+    /// are allocated to estimating the variance at each recursive step. The default value is 0.1.
+    pub estimate_frac: c_double,
+    /// This parameter specifies the minimum number of function calls required for each estimate of the
+    /// variance. If the number of function calls allocated to the estimate using estimate_frac falls
+    /// below min_calls then min_calls are used instead. This ensures that each estimate maintains a
+    /// reasonable level of accuracy. The default value of min_calls is 16 * dim.
+    pub min_calls: size_t,
+    /// This parameter specifies the minimum number of function calls required to proceed with a bisection
+    /// step. When a recursive step has fewer calls available than min_calls_per_bisection it performs
+    /// a plain Monte Carlo estimate of the current sub-region and terminates its branch of the recursion.
+    /// The default value of this parameter is 32 * min_calls.
+    pub min_calls_per_bisection: size_t,
+    /// This parameter controls how the estimated variances for the two sub-regions of a bisection are
+    /// combined when allocating points. With recursive sampling the overall variance should scale better
+    /// than 1/N, since the values from the sub-regions will be obtained using a procedure which explicitly
+    /// minimizes their variance. To accommodate this behavior the MISER algorithm allows the total variance
+    /// to depend on a scaling parameter \alpha,
+    ///
+    /// \Var(f) = {\sigma_a \over N_a^\alpha} + {\sigma_b \over N_b^\alpha}.
+    ///
+    /// The authors of the original paper describing MISER recommend the value \alpha = 2 as a good choice,
+    /// obtained from numerical experiments, and this is used as the default value in this implementation.
+    pub alpha: c_double,
+    /// This parameter introduces a random fractional variation of size dither into each bisection, which
+    /// can be used to break the symmetry of integrands which are concentrated near the exact center of
+    /// the hypercubic integration region. The default value of dither is zero, so no variation is introduced.
+    /// If needed, a typical value of dither is 0.1.
+    pub dither: c_double,
+}
+
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_monte_plain_state {
     pub dim: size_t,
     pub x: *mut c_double,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_monte_function {
     pub f: *mut c_void,
@@ -79,6 +115,7 @@ pub struct gsl_monte_function {
     pub params: *mut c_void,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_monte_miser_state {
     pub min_calls: size_t,
@@ -106,6 +143,7 @@ pub struct gsl_monte_miser_state {
     pub hits_r: *mut size_t,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_monte_vegas_state {
     /* grid */
@@ -151,6 +189,7 @@ pub struct gsl_monte_vegas_state {
     pub ostream: *mut FILE,
 }
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct gsl_monte_vegas_params {
     pub alpha: c_double,

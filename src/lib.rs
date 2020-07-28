@@ -54,6 +54,7 @@
 
 extern crate c_vec;
 extern crate libc;
+extern crate gsl_sys as ffi;
 
 pub use types::{
     ChebSeries, Combination, ComplexF32, ComplexF64, CquadWorkspace, DiscreteHankel,
@@ -68,7 +69,7 @@ pub use types::{
     MultiFitFunctionFdf, MultiSet, NTuples, ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step,
     ODEiv2StepType, ODEiv2System, Permutation, PlainMonteCarlo, PolyComplex, QRng, QRngType,
     Result, ResultE10, Rng, RngType, RootFSolver, RootFSolverType, RootFdfSolver,
-    RootFdfSolverType, RootFunction, RootFunctionFdf, SimAnnealing, SimAnnealingParams, Spline,
+    RootFdfSolverType, SimAnnealing, SimAnnealingParams, Spline,
     VectorComplexF32, VectorComplexF64, VectorF32, VectorF64, VectorView, VegasMonteCarlo,
     VegasParams, Wavelet, WaveletType, WaveletWorkspace,
 };
@@ -86,7 +87,6 @@ pub use self::enums::{
 };
 
 mod enums;
-mod ffi;
 mod macros;
 mod utilities;
 
