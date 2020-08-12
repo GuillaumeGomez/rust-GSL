@@ -26,7 +26,7 @@ The distribution of events within each bin is assumed to be uniform.
 
 use enums;
 use ffi;
-use std::io::Write;
+use std::io::{self, Write};
 
 pub struct Histogram {
     h: *mut ffi::gsl_histogram,
@@ -246,23 +246,23 @@ impl Histogram {
     }
 
     #[allow(unused_must_use)]
-    pub fn print(
+    pub fn print<W: Write>(
         &self,
-        stream: &mut Write, /*, range_format: &str, bin_format: &str*/
-    ) -> enums::Value {
+        stream: &mut W, /*, range_format: &str, bin_format: &str*/
+    ) -> io::Result<enums::Value> {
         unsafe {
             let n = (*self.h).n as isize;
 
             for i in 0isize..n {
-                write!(stream, "{}", *(*self.h).range.offset(i));
-                write!(stream, " ");
-                write!(stream, "{}", *(*self.h).range.offset(i + 1));
-                write!(stream, " ");
-                write!(stream, "{}", *(*self.h).range.offset(i));
-                write!(stream, "\n");
+                write!(
+                    stream, "{} {} {}\n",
+                    *(*self.h).range.offset(i),
+                    *(*self.h).range.offset(i + 1),
+                    *(*self.h).range.offset(i),
+                )?;
             }
 
-            ::Value::Success
+            Ok(::Value::Success)
         }
     }
 }

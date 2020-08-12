@@ -5788,7 +5788,7 @@ impl CquadWorkspace {
                     (*iv).igral = 2f64 * h * w * (*iv).c[idx[d as usize] as usize];
 
                     /* Split the interval prematurely? */
-                    (nc > 0f64 && ncdiff / nc > 0.1f64)
+                    nc > 0f64 && ncdiff / nc > 0.1f64
                 } else {
                     /* Maximum degree reached, just split. */
                     true
@@ -6581,7 +6581,7 @@ pub unsafe fn intern_qelg(
 }
 
 unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
-    (result.abs() >= (1f64 - 50f64 * ::DBL_EPSILON) * resabs)
+    result.abs() >= (1f64 - 50f64 * ::DBL_EPSILON) * resabs
 }
 
 #[allow(unused_variables)]
