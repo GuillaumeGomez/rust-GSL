@@ -356,8 +356,8 @@ pub fn qng<T>(
 
     for k in 0usize..5usize {
         resasc += unsafe {
-            (w21a[k] * ((fv1[k] - mean).abs() + (fv2[k] - mean).abs())
-                + w21b[k] * ((fv3[k] - mean).abs() + (fv4[k] - mean).abs()))
+            w21a[k] * ((fv1[k] - mean).abs() + (fv2[k] - mean).abs())
+                + w21b[k] * ((fv3[k] - mean).abs() + (fv4[k] - mean).abs())
         };
     }
     resasc *= abs_half_length;

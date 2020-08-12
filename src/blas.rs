@@ -2,8 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use ffi;
-
 pub use ffi::blas::CBLAS_INDEX_t as Index;
 pub use ffi::blas::CBLAS_TRANSPOSE_t as Transpose;
 pub use ffi::blas::CBLAS_UPLO_t as Uplo;
@@ -22,10 +20,10 @@ pub mod level1 {
         result: &mut f32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_sdsdot(
+            ffi::blas::gsl_blas_sdsdot(
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 result,
             )
         })
@@ -34,9 +32,9 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
     pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32, result: &mut f32) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_sdot(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_sdot(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 result,
             )
         })
@@ -45,9 +43,9 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
     pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32, result: &mut f64) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsdot(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_dsdot(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 result,
             )
         })
@@ -56,9 +54,9 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
     pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64, result: &mut f64) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ddot(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_ddot(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 result,
             )
         })
@@ -71,9 +69,9 @@ pub mod level1 {
         dotu: &mut ::types::ComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cdotu(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_cdotu(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotu),
             )
         })
@@ -86,9 +84,9 @@ pub mod level1 {
         dotu: &mut ::types::ComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zdotu(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_zdotu(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotu),
             )
         })
@@ -101,9 +99,9 @@ pub mod level1 {
         dotc: &mut ::types::ComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cdotc(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_cdotc(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotc),
             )
         })
@@ -116,9 +114,9 @@ pub mod level1 {
         dotc: &mut ::types::ComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zdotc(
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
+            ffi::blas::gsl_blas_zdotc(
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotc),
             )
         })
@@ -126,87 +124,87 @@ pub mod level1 {
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
     pub fn snrm2(x: &::types::VectorF32) -> f32 {
-        unsafe { ::ffi::blas::gsl_blas_snrm2(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_snrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
     pub fn dnrm2(x: &::types::VectorF64) -> f64 {
-        unsafe { ::ffi::blas::gsl_blas_dnrm2(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_dnrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the Euclidean norm of the complex vector x,
     ///
     /// ||x||_2 = \sqrt {\sum (\Re(x_i)^2 + \Im(x_i)^2)}.
     pub fn scnrm2(x: &::types::VectorComplexF32) -> f32 {
-        unsafe { ::ffi::blas::gsl_blas_scnrm2(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_scnrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the Euclidean norm of the complex vector x,
     ///
     /// ||x||_2 = \sqrt {\sum (\Re(x_i)^2 + \Im(x_i)^2)}.
     pub fn dznrm2(x: &::types::VectorComplexF64) -> f64 {
-        unsafe { ::ffi::blas::gsl_blas_dznrm2(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_dznrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the absolute sum \sum |x_i| of the elements of the vector x.
     pub fn sasum(x: &::types::VectorF32) -> f32 {
-        unsafe { ::ffi::blas::gsl_blas_sasum(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_sasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the absolute sum \sum |x_i| of the elements of the vector x.
     pub fn dasum(x: &::types::VectorF64) -> f64 {
-        unsafe { ::ffi::blas::gsl_blas_dasum(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_dasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the sum of the magnitudes of the real and imaginary parts of the complex vector x, \sum |\Re(x_i)| + |\Im(x_i)|.
     pub fn scasum(x: &::types::VectorComplexF32) -> f32 {
-        unsafe { ::ffi::blas::gsl_blas_scasum(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_scasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the sum of the magnitudes of the real and imaginary parts of the complex vector x, \sum |\Re(x_i)| + |\Im(x_i)|.
     pub fn dzasum(x: &::types::VectorComplexF64) -> f64 {
-        unsafe { ::ffi::blas::gsl_blas_dzasum(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_dzasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn isamax(x: &::types::VectorF32) -> u32 {
-        unsafe { ::ffi::blas::gsl_blas_isamax(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_isamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn idamax(x: &::types::VectorF64) -> u32 {
-        unsafe { ::ffi::blas::gsl_blas_idamax(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_idamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn icamax(x: &::types::VectorComplexF32) -> u32 {
-        unsafe { ::ffi::blas::gsl_blas_icamax(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_icamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn izamax(x: &::types::VectorComplexF64) -> u32 {
-        unsafe { ::ffi::blas::gsl_blas_izamax(::ffi::FFI::unwrap_shared(x)) }
+        unsafe { ffi::blas::gsl_blas_izamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function exchanges the elements of the vectors x and y.
     pub fn sswap(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_sswap(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_sswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function exchanges the elements of the vectors x and y.
     pub fn dswap(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dswap(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_dswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -216,7 +214,7 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cswap(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_cswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -226,21 +224,21 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zswap(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_zswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function copy the elements of the vector x into the vector y.
     pub fn scopy(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_scopy(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_scopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function copy the elements of the vector x into the vector y.
     pub fn dcopy(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dcopy(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_dcopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -250,7 +248,7 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ccopy(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_ccopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -260,17 +258,17 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zcopy(::ffi::FFI::unwrap_unique(x), ::ffi::FFI::unwrap_unique(y))
+            ffi::blas::gsl_blas_zcopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     pub fn saxpy(alpha: f32, x: &::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_saxpy(
+            ffi::blas::gsl_blas_saxpy(
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -278,10 +276,10 @@ pub mod level1 {
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     pub fn daxpy(alpha: f64, x: &::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_daxpy(
+            ffi::blas::gsl_blas_daxpy(
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -293,10 +291,10 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_caxpy(
+            ffi::blas::gsl_blas_caxpy(
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -308,46 +306,46 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zaxpy(
+            ffi::blas::gsl_blas_zaxpy(
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn sscal(alpha: f32, x: &mut ::types::VectorF32) {
-        unsafe { ::ffi::blas::gsl_blas_sscal(alpha, ::ffi::FFI::unwrap_unique(x)) }
+        unsafe { ffi::blas::gsl_blas_sscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn dscal(alpha: f64, x: &mut ::types::VectorF64) {
-        unsafe { ::ffi::blas::gsl_blas_dscal(alpha, ::ffi::FFI::unwrap_unique(x)) }
+        unsafe { ffi::blas::gsl_blas_dscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn cscal(alpha: &::types::ComplexF32, x: &mut ::types::VectorComplexF32) {
         unsafe {
-            ::ffi::blas::gsl_blas_cscal(::std::mem::transmute(*alpha), ::ffi::FFI::unwrap_unique(x))
+            ffi::blas::gsl_blas_cscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
         }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn zscal(alpha: &::types::ComplexF64, x: &mut ::types::VectorComplexF64) {
         unsafe {
-            ::ffi::blas::gsl_blas_zscal(::std::mem::transmute(*alpha), ::ffi::FFI::unwrap_unique(x))
+            ffi::blas::gsl_blas_zscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
         }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn csscal(alpha: f32, x: &mut ::types::VectorComplexF32) {
-        unsafe { ::ffi::blas::gsl_blas_csscal(alpha, ::ffi::FFI::unwrap_unique(x)) }
+        unsafe { ffi::blas::gsl_blas_csscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn zdscal(alpha: f64, x: &mut ::types::VectorComplexF64) {
-        unsafe { ::ffi::blas::gsl_blas_zdscal(alpha, ::ffi::FFI::unwrap_unique(x)) }
+        unsafe { ffi::blas::gsl_blas_zdscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function computes a Givens rotation (c,s) which zeroes the vector (a,b),
@@ -359,7 +357,7 @@ pub mod level1 {
     /// The variables a and b are overwritten by the routine.
     pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], d: &mut [f32]) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_srotg(
+            ffi::blas::gsl_blas_srotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
                 c.as_mut_ptr(),
@@ -377,7 +375,7 @@ pub mod level1 {
     /// The variables a and b are overwritten by the routine.
     pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], d: &mut [f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_drotg(
+            ffi::blas::gsl_blas_drotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
                 c.as_mut_ptr(),
@@ -394,9 +392,9 @@ pub mod level1 {
         d: f32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_srot(
-                ::ffi::FFI::unwrap_unique(a),
-                ::ffi::FFI::unwrap_unique(b),
+            ffi::blas::gsl_blas_srot(
+                ffi::FFI::unwrap_unique(a),
+                ffi::FFI::unwrap_unique(b),
                 c,
                 d,
             )
@@ -411,9 +409,9 @@ pub mod level1 {
         d: f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_drot(
-                ::ffi::FFI::unwrap_unique(a),
-                ::ffi::FFI::unwrap_unique(b),
+            ffi::blas::gsl_blas_drot(
+                ffi::FFI::unwrap_unique(a),
+                ffi::FFI::unwrap_unique(b),
                 c,
                 d,
             )
@@ -430,7 +428,7 @@ pub mod level1 {
         P: &mut [f32],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_srotmg(
+            ffi::blas::gsl_blas_srotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
@@ -450,7 +448,7 @@ pub mod level1 {
         P: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_drotmg(
+            ffi::blas::gsl_blas_drotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
@@ -467,9 +465,9 @@ pub mod level1 {
         P: &mut [f32],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_srotm(
-                ::ffi::FFI::unwrap_unique(x),
-                ::ffi::FFI::unwrap_unique(y),
+            ffi::blas::gsl_blas_srotm(
+                ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_unique(y),
                 P.as_mut_ptr(),
             )
         })
@@ -482,9 +480,9 @@ pub mod level1 {
         P: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_drotm(
-                ::ffi::FFI::unwrap_unique(x),
-                ::ffi::FFI::unwrap_unique(y),
+            ffi::blas::gsl_blas_drotm(
+                ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_unique(y),
                 P.as_mut_ptr(),
             )
         })
@@ -504,13 +502,13 @@ pub mod level2 {
         y: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_sgemv(
+            ffi::blas::gsl_blas_sgemv(
                 transA,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 beta,
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -525,13 +523,13 @@ pub mod level2 {
         y: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dgemv(
+            ffi::blas::gsl_blas_dgemv(
                 transA,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 beta,
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -546,13 +544,13 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cgemv(
+            ffi::blas::gsl_blas_cgemv(
                 transA,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -567,13 +565,13 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zgemv(
+            ffi::blas::gsl_blas_zgemv(
                 transA,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -589,12 +587,12 @@ pub mod level2 {
         x: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_strmv(
+            ffi::blas::gsl_blas_strmv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -610,12 +608,12 @@ pub mod level2 {
         x: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dtrmv(
+            ffi::blas::gsl_blas_dtrmv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -631,12 +629,12 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ctrmv(
+            ffi::blas::gsl_blas_ctrmv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -652,12 +650,12 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ztrmv(
+            ffi::blas::gsl_blas_ztrmv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -673,12 +671,12 @@ pub mod level2 {
         x: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_strsv(
+            ffi::blas::gsl_blas_strsv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -694,12 +692,12 @@ pub mod level2 {
         x: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dtrsv(
+            ffi::blas::gsl_blas_dtrsv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -715,12 +713,12 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ctrsv(
+            ffi::blas::gsl_blas_ctrsv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -736,12 +734,12 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ztrsv(
+            ffi::blas::gsl_blas_ztrsv(
                 uplo,
                 transA,
                 diag,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(x),
             )
         })
     }
@@ -758,13 +756,13 @@ pub mod level2 {
         y: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ssymv(
+            ffi::blas::gsl_blas_ssymv(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 beta,
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -781,13 +779,13 @@ pub mod level2 {
         y: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsymv(
+            ffi::blas::gsl_blas_dsymv(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 beta,
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -804,13 +802,13 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_chemv(
+            ffi::blas::gsl_blas_chemv(
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -827,13 +825,13 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zhemv(
+            ffi::blas::gsl_blas_zhemv(
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(x),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(y),
+                ffi::FFI::unwrap_unique(y),
             )
         })
     }
@@ -846,11 +844,11 @@ pub mod level2 {
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_sger(
+            ffi::blas::gsl_blas_sger(
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -863,11 +861,11 @@ pub mod level2 {
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dger(
+            ffi::blas::gsl_blas_dger(
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -880,11 +878,11 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cgeru(
+            ffi::blas::gsl_blas_cgeru(
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -897,11 +895,11 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zgeru(
+            ffi::blas::gsl_blas_zgeru(
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -914,11 +912,11 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cgerc(
+            ffi::blas::gsl_blas_cgerc(
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -931,11 +929,11 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zgerc(
+            ffi::blas::gsl_blas_zgerc(
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -949,11 +947,11 @@ pub mod level2 {
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ssyr(
+            ffi::blas::gsl_blas_ssyr(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -967,11 +965,11 @@ pub mod level2 {
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsyr(
+            ffi::blas::gsl_blas_dsyr(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -987,11 +985,11 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cher(
+            ffi::blas::gsl_blas_cher(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -1007,11 +1005,11 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zher(
+            ffi::blas::gsl_blas_zher(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -1027,12 +1025,12 @@ pub mod level2 {
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ssyr2(
+            ffi::blas::gsl_blas_ssyr2(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -1048,12 +1046,12 @@ pub mod level2 {
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsyr2(
+            ffi::blas::gsl_blas_dsyr2(
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -1070,12 +1068,12 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cher2(
+            ffi::blas::gsl_blas_cher2(
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -1092,12 +1090,12 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zher2(
+            ffi::blas::gsl_blas_zher2(
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(x),
-                ::ffi::FFI::unwrap_shared(y),
-                ::ffi::FFI::unwrap_unique(A),
+                ffi::FFI::unwrap_shared(x),
+                ffi::FFI::unwrap_shared(y),
+                ffi::FFI::unwrap_unique(A),
             )
         })
     }
@@ -1117,14 +1115,14 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_sgemm(
+            ffi::blas::gsl_blas_sgemm(
                 transA,
                 transB,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1140,14 +1138,14 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dgemm(
+            ffi::blas::gsl_blas_dgemm(
                 transA,
                 transB,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1163,14 +1161,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cgemm(
+            ffi::blas::gsl_blas_cgemm(
                 transA,
                 transB,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1186,14 +1184,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zgemm(
+            ffi::blas::gsl_blas_zgemm(
                 transA,
                 transB,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1210,14 +1208,14 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ssymm(
+            ffi::blas::gsl_blas_ssymm(
                 side,
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1234,14 +1232,14 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsymm(
+            ffi::blas::gsl_blas_dsymm(
                 side,
                 uplo,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1258,14 +1256,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_csymm(
+            ffi::blas::gsl_blas_csymm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1282,14 +1280,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zsymm(
+            ffi::blas::gsl_blas_zsymm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1307,14 +1305,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_chemm(
+            ffi::blas::gsl_blas_chemm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1332,14 +1330,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zhemm(
+            ffi::blas::gsl_blas_zhemm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1358,14 +1356,14 @@ pub mod level3 {
         B: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_strmm(
+            ffi::blas::gsl_blas_strmm(
                 side,
                 uplo,
                 transA,
                 diag,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1384,14 +1382,14 @@ pub mod level3 {
         B: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dtrmm(
+            ffi::blas::gsl_blas_dtrmm(
                 side,
                 uplo,
                 transA,
                 diag,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1410,14 +1408,14 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ctrmm(
+            ffi::blas::gsl_blas_ctrmm(
                 side,
                 uplo,
                 transA,
                 diag,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1436,14 +1434,14 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ztrmm(
+            ffi::blas::gsl_blas_ztrmm(
                 side,
                 uplo,
                 transA,
                 diag,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1462,14 +1460,14 @@ pub mod level3 {
         B: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_strsm(
+            ffi::blas::gsl_blas_strsm(
                 side,
                 uplo,
                 transA,
                 diag,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1488,14 +1486,14 @@ pub mod level3 {
         B: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dtrsm(
+            ffi::blas::gsl_blas_dtrsm(
                 side,
                 uplo,
                 transA,
                 diag,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1514,14 +1512,14 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ctrsm(
+            ffi::blas::gsl_blas_ctrsm(
                 side,
                 uplo,
                 transA,
                 diag,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1540,14 +1538,14 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ztrsm(
+            ffi::blas::gsl_blas_ztrsm(
                 side,
                 uplo,
                 transA,
                 diag,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_unique(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_unique(B),
             )
         })
     }
@@ -1564,13 +1562,13 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ssyrk(
+            ffi::blas::gsl_blas_ssyrk(
                 uplo,
                 trans,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(A),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1587,13 +1585,13 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsyrk(
+            ffi::blas::gsl_blas_dsyrk(
                 uplo,
                 trans,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(A),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1610,13 +1608,13 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_csyrk(
+            ffi::blas::gsl_blas_csyrk(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(A),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1633,13 +1631,13 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zsyrk(
+            ffi::blas::gsl_blas_zsyrk(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(A),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1657,13 +1655,13 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cherk(
+            ffi::blas::gsl_blas_cherk(
                 uplo,
                 trans,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(A),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1681,13 +1679,13 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zherk(
+            ffi::blas::gsl_blas_zherk(
                 uplo,
                 trans,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(A),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1705,14 +1703,14 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_ssyr2k(
+            ffi::blas::gsl_blas_ssyr2k(
                 uplo,
                 trans,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1730,14 +1728,14 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_dsyr2k(
+            ffi::blas::gsl_blas_dsyr2k(
                 uplo,
                 trans,
                 alpha,
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1755,14 +1753,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_csyr2k(
+            ffi::blas::gsl_blas_csyr2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1780,14 +1778,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zsyr2k(
+            ffi::blas::gsl_blas_zsyr2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 ::std::mem::transmute(*beta),
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1806,14 +1804,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_cher2k(
+            ffi::blas::gsl_blas_cher2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }
@@ -1832,14 +1830,14 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ::ffi::blas::gsl_blas_zher2k(
+            ffi::blas::gsl_blas_zher2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
-                ::ffi::FFI::unwrap_shared(A),
-                ::ffi::FFI::unwrap_shared(B),
+                ffi::FFI::unwrap_shared(A),
+                ffi::FFI::unwrap_shared(B),
                 beta,
-                ::ffi::FFI::unwrap_unique(C),
+                ffi::FFI::unwrap_unique(C),
             )
         })
     }

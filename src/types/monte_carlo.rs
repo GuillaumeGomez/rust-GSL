@@ -291,16 +291,14 @@ impl MiserMonteCarlo {
             dither: 0f64,
         };
 
-        unsafe {
-            ffi::gsl_monte_miser_params_get(self.s, &mut m as *mut MiserParams);
-        }
+        unsafe { ffi::gsl_monte_miser_params_get(self.s, &mut m); }
         MiserParams(m)
     }
 
     /// This function sets the integrator parameters based on values provided in the params structure.
     pub fn set_params(&mut self, params: &MiserParams) {
         unsafe {
-            ffi::gsl_monte_miser_params_set(self.s, &params.0 as *const MiserParams);
+            ffi::gsl_monte_miser_params_set(self.s, &params.0 as *const _);
         }
     }
 }

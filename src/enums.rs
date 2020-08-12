@@ -10,7 +10,7 @@ pub enum Mode {
 }
 
 impl Into<ffi::gsl_mode_t> for Mode {
-    fn into(self) -> libc::gsl_mode_t {
+    fn into(self) -> ffi::gsl_mode_t {
         match self {
             Mode::PrecDouble => 0,
             Mode::PrecSingle => 1,
@@ -20,7 +20,7 @@ impl Into<ffi::gsl_mode_t> for Mode {
 }
 
 impl From<ffi::gsl_mode_t> for Mode {
-    fn from(v: libc::gsl_mode_t) -> Mode {
+    fn from(v: ffi::gsl_mode_t) -> Mode {
         match v {
             0 => Mode::PrecDouble,
             1 => Mode::PrecSingle,

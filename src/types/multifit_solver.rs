@@ -247,7 +247,7 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver_type> for MultiFitFSolverType {
 //     pub p,
 // }
 
-pub struct MultiFitFunction(pub gsl_multifit_function);
+pub struct MultiFitFunction(pub ffi::gsl_multifit_function);
 
 pub struct MultiFitFSolver {
     s: *mut ffi::gsl_multifit_fsolver,
@@ -278,7 +278,7 @@ impl MultiFitFSolver {
         //     }
         // }
         ::Value::from(unsafe {
-            ffi::gsl_multifit_fsolver_set(self.s, f.0, ffi::FFI::unwrap_shared(x))
+            ffi::gsl_multifit_fsolver_set(self.s, &mut f.0, ffi::FFI::unwrap_shared(x))
         })
     }
 

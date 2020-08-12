@@ -23,7 +23,7 @@ use ffi;
 use types::Rng;
 
 pub struct RanDiscrete {
-    ran: *mut ffi::randist::gsl_ran_discrete_t,
+    ran: *mut ffi::gsl_ran_discrete_t,
 }
 
 impl RanDiscrete {
@@ -59,20 +59,20 @@ impl Drop for RanDiscrete {
     }
 }
 
-impl ffi::FFI<ffi::randist::gsl_ran_discrete_t> for RanDiscrete {
-    fn wrap(r: *mut ffi::randist::gsl_ran_discrete_t) -> RanDiscrete {
+impl ffi::FFI<ffi::gsl_ran_discrete_t> for RanDiscrete {
+    fn wrap(r: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {
         RanDiscrete { ran: r }
     }
 
-    fn soft_wrap(v: *mut ffi::randist::gsl_ran_discrete_t) -> RanDiscrete {
+    fn soft_wrap(v: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {
         Self::wrap(v)
     }
 
-    fn unwrap_shared(v: &RanDiscrete) -> *const ffi::randist::gsl_ran_discrete_t {
+    fn unwrap_shared(v: &RanDiscrete) -> *const ffi::gsl_ran_discrete_t {
         v.ran as *const _
     }
 
-    fn unwrap_unique(v: &mut RanDiscrete) -> *mut ffi::randist::gsl_ran_discrete_t {
+    fn unwrap_unique(v: &mut RanDiscrete) -> *mut ffi::gsl_ran_discrete_t {
         v.ran
     }
 }
