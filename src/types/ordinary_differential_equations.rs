@@ -72,8 +72,8 @@ use libc::c_void;
 /// Some methods require the jacobian function, which calculates the matrix dfdy and the vector dfdt. The matrix dfdy conforms
 /// to the GSL standard, being a continuous range of floating point values, in row-order.
 pub struct ODEiv2System<'a> {
-    function: &'a mut FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
-    jacobian: Option<&'a mut FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>>,
+    function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
+    jacobian: Option<&'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>>,
     dimension: usize,
 }
 
@@ -81,7 +81,7 @@ impl<'a> ODEiv2System<'a> {
     /// Returns a new ODEiv2System with a given dimension and right-hand side.
     pub fn new(
         dimension: usize,
-        function: &'a mut FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
+        function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
     ) -> ODEiv2System<'a> {
         ODEiv2System {
             function: function,
@@ -93,8 +93,8 @@ impl<'a> ODEiv2System<'a> {
     /// Returns a new ODEiv2System with a jacobian function provided.
     pub fn with_jacobian(
         dimension: usize,
-        function: &'a mut FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
-        jacobian: &'a mut FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>,
+        function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
+        jacobian: &'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>,
     ) -> ODEiv2System<'a> {
         ODEiv2System {
             function: function,

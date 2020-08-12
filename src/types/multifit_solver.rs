@@ -458,9 +458,9 @@ impl MultiFitFdfSolverType {
 }
 
 pub struct MultiFitFunctionFdf {
-    pub f: Option<Box<Fn(::VectorF64, ::VectorF64) -> ::Value>>,
-    pub df: Option<Box<Fn(::VectorF64, ::MatrixF64) -> ::Value>>,
-    pub fdf: Option<Box<Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> ::Value>>,
+    pub f: Option<Box<dyn Fn(::VectorF64, ::VectorF64) -> ::Value>>,
+    pub df: Option<Box<dyn Fn(::VectorF64, ::MatrixF64) -> ::Value>>,
+    pub fdf: Option<Box<dyn Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> ::Value>>,
     pub n: usize,
     pub p: usize,
     intern: ffi::gsl_multifit_function_fdf,

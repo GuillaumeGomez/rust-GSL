@@ -135,9 +135,9 @@ impl PlainMonteCarlo {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
-            let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
+            let f: Box<Box<F>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
-                f: transmute(monte_trampoline as usize),
+                f: transmute(monte_trampoline::<F> as usize),
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
@@ -255,9 +255,9 @@ impl MiserMonteCarlo {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
-            let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
+            let f: Box<Box<F>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
-                f: transmute(monte_trampoline as usize),
+                f: transmute(monte_trampoline::<F> as usize),
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
@@ -437,9 +437,9 @@ impl VegasMonteCarlo {
             assert!(xl.len() == xu.len());
             let mut result = 0f64;
             let mut abserr = 0f64;
-            let f: Box<Box<FnMut(&[f64]) -> f64>> = Box::new(Box::new(f));
+            let f: Box<Box<F>> = Box::new(Box::new(f));
             let mut func = ffi::gsl_monte_function {
-                f: transmute(monte_trampoline as usize),
+                f: transmute(monte_trampoline::<F> as usize),
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
@@ -639,12 +639,12 @@ impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
     }
 }
 
-unsafe extern "C" fn monte_trampoline(
+unsafe extern "C" fn monte_trampoline<F: FnMut(&[f64]) -> f64>(
     x: *mut c_double,
     dim: size_t,
     param: *mut c_void,
 ) -> c_double {
-    let f: &mut Box<FnMut(&[f64]) -> f64> = transmute(param);
+    let f: &mut Box<F> = transmute(param);
     f(slice::from_raw_parts(x, dim as usize))
 }
 

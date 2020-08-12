@@ -129,12 +129,9 @@ impl MultiSet {
         enums::Value::from(unsafe { ffi::gsl_multiset_prev(self.c) })
     }
 
-    pub fn print(&self, writer: &mut Write) -> IoResult<()> {
+    pub fn print<W: Write>(&self, writer: &mut W) -> IoResult<()> {
         for value in self.data.as_ref().iter() {
-            match write!(writer, " {}", *value) {
-                Ok(_) => {}
-                Err(e) => return Err(e),
-            }
+            write!(writer, " {}", *value)?;
         }
         Ok(())
     }
