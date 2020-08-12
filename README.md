@@ -1,4 +1,4 @@
-rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL) [![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/GuillaumeGomez/rust-GSL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL)
 ========
 
 A __Rust__ binding for the [GSL library] (the GNU Scientific Library).
@@ -88,6 +88,7 @@ v2 = ["GSL/v2"]
 ```
 
 If you always want to run the v2 features you can, instead, use the following in your `Cargo.toml`: 
+
 ```toml
 [features]
 default = ["GSL/v2"]
@@ -112,6 +113,7 @@ If you appreciate my work and want to support me, you can do it here:
 [![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/GuillaumeGomez)
 
 ## License
+
 __rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL license](http://www.gnu.org/copyleft/gpl.html).
 
 [crates.io]: https://crates.io/crates/GSL
