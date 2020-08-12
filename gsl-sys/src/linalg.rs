@@ -239,7 +239,10 @@ extern "C" {
     pub fn gsl_matrix_swap_rows(m: *mut gsl_matrix, i: size_t, j: size_t) -> c_int;
     pub fn gsl_matrix_swap_columns(m: *mut gsl_matrix, i: size_t, j: size_t) -> c_int;
     pub fn gsl_matrix_swap_rowcol(m: *mut gsl_matrix, i: size_t, j: size_t) -> c_int;
-    pub fn gsl_matrix_CBLAS_TRANSPOSE_t_memcpy(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
+    pub fn gsl_matrix_CBLAS_TRANSPOSE_t_memcpy(
+        dest: *mut gsl_matrix,
+        src: *const gsl_matrix,
+    ) -> c_int;
     pub fn gsl_matrix_CBLAS_TRANSPOSE_t(m: *mut gsl_matrix) -> c_int;
     pub fn gsl_matrix_add(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_sub(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
@@ -375,7 +378,10 @@ extern "C" {
     pub fn gsl_matrix_float_isneg(m: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_isnonneg(m: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_equal(u: *const gsl_matrix_float, v: *const gsl_matrix_float) -> c_int;
-    pub fn gsl_matrix_float_transpose_memcpy(dest: *mut gsl_matrix_float, src: *const gsl_matrix_float) -> c_int;
+    pub fn gsl_matrix_float_transpose_memcpy(
+        dest: *mut gsl_matrix_float,
+        src: *const gsl_matrix_float,
+    ) -> c_int;
     pub fn gsl_matrix_float_transpose(m: *mut gsl_matrix_float) -> c_int;
 
     // MatrixComplex functions
@@ -459,7 +465,10 @@ extern "C" {
         u: *const gsl_matrix_complex,
         v: *const gsl_matrix_complex,
     ) -> c_int;
-    pub fn gsl_matrix_complex_transpose_memcpy(dest: *mut gsl_matrix_complex, src: *const gsl_matrix_complex) -> c_int;
+    pub fn gsl_matrix_complex_transpose_memcpy(
+        dest: *mut gsl_matrix_complex,
+        src: *const gsl_matrix_complex,
+    ) -> c_int;
     pub fn gsl_matrix_complex_transpose(m: *mut gsl_matrix_complex) -> c_int;
 
     // MatrixComplexFloat functions
@@ -566,7 +575,10 @@ extern "C" {
         u: *const gsl_matrix_complex_float,
         v: *const gsl_matrix_complex_float,
     ) -> c_int;
-    pub fn gsl_matrix_complex_float_transpose_memcpy(dest: *mut gsl_matrix_complex_float, src: *const gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_matrix_complex_float_transpose_memcpy(
+        dest: *mut gsl_matrix_complex_float,
+        src: *const gsl_matrix_complex_float,
+    ) -> c_int;
     pub fn gsl_matrix_complex_float_transpose(m: *mut gsl_matrix_complex_float) -> c_int;
 
     // Real Symmetric Matrices

@@ -33,8 +33,14 @@ extern "C" {
         result: *mut c_double,
         abserr: *mut c_double,
     ) -> c_int;
-    pub fn gsl_monte_miser_params_get(s: *mut gsl_monte_miser_state, m: *mut gsl_monte_miser_params);
-    pub fn gsl_monte_miser_params_set(s: *mut gsl_monte_miser_state, m: *const gsl_monte_miser_params);
+    pub fn gsl_monte_miser_params_get(
+        s: *mut gsl_monte_miser_state,
+        m: *mut gsl_monte_miser_params,
+    );
+    pub fn gsl_monte_miser_params_set(
+        s: *mut gsl_monte_miser_state,
+        m: *const gsl_monte_miser_params,
+    );
     // VEGAS
     pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
     pub fn gsl_monte_vegas_init(s: *mut gsl_monte_vegas_state) -> c_int;

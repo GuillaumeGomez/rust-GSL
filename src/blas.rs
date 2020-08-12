@@ -2,12 +2,12 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+pub use ffi::blas::CBLAS_DIAG_t as Diag;
 pub use ffi::blas::CBLAS_INDEX_t as Index;
+pub use ffi::blas::CBLAS_ORDER_t as Order;
+pub use ffi::blas::CBLAS_SIDE_t as Side;
 pub use ffi::blas::CBLAS_TRANSPOSE_t as Transpose;
 pub use ffi::blas::CBLAS_UPLO_t as Uplo;
-pub use ffi::blas::CBLAS_DIAG_t as Diag;
-pub use ffi::blas::CBLAS_SIDE_t as Side;
-pub use ffi::blas::CBLAS_ORDER_t as Order;
 
 pub mod level1 {
     use enums;
@@ -392,12 +392,7 @@ pub mod level1 {
         d: f32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_srot(
-                ffi::FFI::unwrap_unique(a),
-                ffi::FFI::unwrap_unique(b),
-                c,
-                d,
-            )
+            ffi::blas::gsl_blas_srot(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(b), c, d)
         })
     }
 
@@ -409,12 +404,7 @@ pub mod level1 {
         d: f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_drot(
-                ffi::FFI::unwrap_unique(a),
-                ffi::FFI::unwrap_unique(b),
-                c,
-                d,
-            )
+            ffi::blas::gsl_blas_drot(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(b), c, d)
         })
     }
 

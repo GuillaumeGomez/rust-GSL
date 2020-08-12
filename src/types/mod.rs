@@ -44,9 +44,7 @@ pub use self::qrng::{QRng, QRngType};
 pub use self::ran_discrete::RanDiscrete;
 pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
-pub use self::roots::{
-    RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType,
-};
+pub use self::roots::{RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType};
 pub use self::series_acceleration::{LevinUTruncWorkspace, LevinUWorkspace};
 pub use self::siman::{SimAnnealing, SimAnnealingParams};
 pub use self::vector::{VectorF32, VectorF64, VectorView};

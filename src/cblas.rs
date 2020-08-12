@@ -115,11 +115,15 @@ pub mod level1 {
     }
 
     pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::ffi::blas::cblas_icamax(N, x.as_ptr() as *const ::libc::c_void, incx) })
+        ::cblas::Index(unsafe {
+            ::ffi::blas::cblas_icamax(N, x.as_ptr() as *const ::libc::c_void, incx)
+        })
     }
 
     pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::ffi::blas::cblas_izamax(N, x.as_ptr() as *const ::libc::c_void, incx) })
+        ::cblas::Index(unsafe {
+            ::ffi::blas::cblas_izamax(N, x.as_ptr() as *const ::libc::c_void, incx)
+        })
     }
 
     pub fn sswap(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32) {
@@ -248,7 +252,9 @@ pub mod level1 {
     }
 
     pub fn srotm(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, p: &[f32]) {
-        unsafe { ::ffi::blas::cblas_srotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
+        unsafe {
+            ::ffi::blas::cblas_srotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr())
+        }
     }
 
     pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], s: &mut [f64]) {
@@ -279,7 +285,9 @@ pub mod level1 {
     }
 
     pub fn drotm(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, p: &[f64]) {
-        unsafe { ::ffi::blas::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
+        unsafe {
+            ::ffi::blas::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr())
+        }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
@@ -1379,7 +1387,9 @@ pub mod level2 {
         A: &mut [f32],
         lda: i32,
     ) {
-        unsafe { ::ffi::blas::cblas_ssyr(order, uplo, N, alpha, x.as_ptr(), incx, A.as_mut_ptr(), lda) }
+        unsafe {
+            ::ffi::blas::cblas_ssyr(order, uplo, N, alpha, x.as_ptr(), incx, A.as_mut_ptr(), lda)
+        }
     }
 
     pub fn sspr(
@@ -1576,7 +1586,9 @@ pub mod level2 {
         A: &mut [f64],
         lda: i32,
     ) {
-        unsafe { ::ffi::blas::cblas_dsyr(order, uplo, N, alpha, x.as_ptr(), incx, A.as_mut_ptr(), lda) }
+        unsafe {
+            ::ffi::blas::cblas_dsyr(order, uplo, N, alpha, x.as_ptr(), incx, A.as_mut_ptr(), lda)
+        }
     }
 
     pub fn dspr(

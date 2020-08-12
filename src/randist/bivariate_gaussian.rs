@@ -13,7 +13,14 @@ use types::Rng;
 /// for x,y in the range -\infty to +\infty. The correlation coefficient rho should lie between 1 and -1.
 pub fn gaussian_tail(r: &mut Rng, sigma_x: f64, sigma_y: f64, rho: f64, x: &mut f64, y: &mut f64) {
     unsafe {
-        ffi::randist::gsl_ran_bivariate_gaussian(ffi::FFI::unwrap_unique(r), sigma_x, sigma_y, rho, x, y)
+        ffi::randist::gsl_ran_bivariate_gaussian(
+            ffi::FFI::unwrap_unique(r),
+            sigma_x,
+            sigma_y,
+            rho,
+            x,
+            y,
+        )
     }
 }
 

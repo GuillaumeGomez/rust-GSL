@@ -154,7 +154,10 @@ impl RootFSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial search interval [x lower, x upper].
     pub fn set<F: Fn(f64) -> f64>(&mut self, f: F, x_lower: f64, x_upper: f64) -> ::Value {
-        unsafe extern "C" fn inner<F: Fn(f64) -> f64>(x: c_double, params: *mut c_void) -> c_double {
+        unsafe extern "C" fn inner<F: Fn(f64) -> f64>(
+            x: c_double,
+            params: *mut c_void,
+        ) -> c_double {
             let params: &F = &*(params as *const F);
             params(x)
         }
@@ -163,9 +166,10 @@ impl RootFSolver {
             let params = Box::into_raw(f);
 
             let mut func = ffi::solvers::gsl_function {
-                function: Some(transmute::<_, unsafe extern "C" fn(c_double, *mut c_void) -> c_double>(
-                    inner::<F> as *const (),
-                )),
+                function: Some(transmute::<
+                    _,
+                    unsafe extern "C" fn(c_double, *mut c_void) -> c_double,
+                >(inner::<F> as *const ())),
                 params: params as *mut _,
             };
             let r = ffi::solvers::gsl_root_fsolver_set(self.s, &mut func, x_lower, x_upper);
@@ -310,18 +314,32 @@ impl RootFdfSolver {
         fdf: FDF,
         root: f64,
     ) -> ::Value {
-        unsafe extern "C" fn inner_f<F: Fn(f64) -> f64>(x: c_double, params: *mut c_void) -> c_double {
-            let params: &(*const F, *const (), *const ()) = &*(params as *const (*const F, *const (), *const ()));
+        unsafe extern "C" fn inner_f<F: Fn(f64) -> f64>(
+            x: c_double,
+            params: *mut c_void,
+        ) -> c_double {
+            let params: &(*const F, *const (), *const ()) =
+                &*(params as *const (*const F, *const (), *const ()));
             let f = &*params.0;
             f(x)
         }
-        unsafe extern "C" fn inner_df<DF: Fn(f64) -> f64>(x: c_double, params: *mut c_void) -> c_double {
-            let params: &(*const (), *const DF, *const ()) = &*(params as *const (*const (), *const DF, *const ()));
+        unsafe extern "C" fn inner_df<DF: Fn(f64) -> f64>(
+            x: c_double,
+            params: *mut c_void,
+        ) -> c_double {
+            let params: &(*const (), *const DF, *const ()) =
+                &*(params as *const (*const (), *const DF, *const ()));
             let df = &*params.1;
             df(x)
         }
-        unsafe extern "C" fn inner_fdf<FDF: Fn(f64, &mut f64, &mut f64)>(x: c_double, params: *mut c_void, y: *mut c_double, dy: *mut c_double) {
-            let params: &(*const (), *const (), *const FDF) = &*(params as *const (*const (), *const (), *const FDF));
+        unsafe extern "C" fn inner_fdf<FDF: Fn(f64, &mut f64, &mut f64)>(
+            x: c_double,
+            params: *mut c_void,
+            y: *mut c_double,
+            dy: *mut c_double,
+        ) {
+            let params: &(*const (), *const (), *const FDF) =
+                &*(params as *const (*const (), *const (), *const FDF));
             let fdf = &*params.2;
             fdf(x, &mut *y, &mut *dy);
         }
@@ -338,15 +356,18 @@ impl RootFdfSolver {
             let params = Box::into_raw(params);
 
             let mut func = ffi::solvers::gsl_function_fdf {
-                f: Some(transmute::<_, unsafe extern "C" fn(c_double, *mut c_void) -> c_double>(
-                    inner_f::<F> as *const (),
-                )),
-                df: Some(transmute::<_, unsafe extern "C" fn(c_double, *mut c_void) -> c_double>(
-                    inner_df::<DF> as *const (),
-                )),
-                fdf: Some(transmute::<_, unsafe extern "C" fn(c_double, *mut c_void, *mut c_double, *mut c_double)>(
-                    inner_fdf::<FDF> as *const (),
-                )),
+                f: Some(transmute::<
+                    _,
+                    unsafe extern "C" fn(c_double, *mut c_void) -> c_double,
+                >(inner_f::<F> as *const ())),
+                df: Some(transmute::<
+                    _,
+                    unsafe extern "C" fn(c_double, *mut c_void) -> c_double,
+                >(inner_df::<DF> as *const ())),
+                fdf: Some(transmute::<
+                    _,
+                    unsafe extern "C" fn(c_double, *mut c_void, *mut c_double, *mut c_double),
+                >(inner_fdf::<FDF> as *const ())),
                 params: params as *mut _,
             };
             let r = ffi::solvers::gsl_root_fdfsolver_set(self.s, &mut func, root);

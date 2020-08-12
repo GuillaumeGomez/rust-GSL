@@ -32,7 +32,9 @@ extern "C" {
     pub fn gsl_multifit_fdfsolver_iterate(s: *mut gsl_multifit_fdfsolver) -> c_int;
     pub fn gsl_multifit_fdfsolver_free(s: *mut gsl_multifit_fdfsolver);
     pub fn gsl_multifit_fdfsolver_name(s: *const gsl_multifit_fdfsolver) -> *const c_char;
-    pub fn gsl_multifit_fdfsolver_position(s: *const gsl_multifit_fdfsolver) -> *mut ::linalg::gsl_vector;
+    pub fn gsl_multifit_fdfsolver_position(
+        s: *const gsl_multifit_fdfsolver,
+    ) -> *mut ::linalg::gsl_vector;
 
     pub fn gsl_multifit_fsolver_alloc(
         T: *const gsl_multifit_fsolver_type,
@@ -47,7 +49,9 @@ extern "C" {
     ) -> c_int;
     pub fn gsl_multifit_fsolver_iterate(s: *mut gsl_multifit_fsolver) -> c_int;
     pub fn gsl_multifit_fsolver_name(s: *const gsl_multifit_fsolver) -> *const c_char;
-    pub fn gsl_multifit_fsolver_position(s: *const gsl_multifit_fsolver) -> *mut ::linalg::gsl_vector;
+    pub fn gsl_multifit_fsolver_position(
+        s: *const gsl_multifit_fsolver,
+    ) -> *mut ::linalg::gsl_vector;
 
     //pub fn gsl_multifit_robust_weight();
     //pub fn gsl_multifit_robust_residuals();
@@ -163,10 +167,19 @@ pub struct gsl_multifit_fsolver {
 
 #[repr(C)]
 pub struct gsl_multifit_function_fdf {
-    pub f:
-        Option<unsafe extern "C" fn(x: *mut ::linalg::gsl_vector, params: *mut c_void, f: *mut ::linalg::gsl_vector) -> c_int>,
+    pub f: Option<
+        unsafe extern "C" fn(
+            x: *mut ::linalg::gsl_vector,
+            params: *mut c_void,
+            f: *mut ::linalg::gsl_vector,
+        ) -> c_int,
+    >,
     pub df: Option<
-        unsafe extern "C" fn(x: *mut ::linalg::gsl_vector, params: *mut c_void, df: *mut ::linalg::gsl_matrix) -> c_int,
+        unsafe extern "C" fn(
+            x: *mut ::linalg::gsl_vector,
+            params: *mut c_void,
+            df: *mut ::linalg::gsl_matrix,
+        ) -> c_int,
     >,
     pub fdf: Option<
         unsafe extern "C" fn(

@@ -124,14 +124,30 @@ extern "C" {
     pub fn gsl_sf_airy_Bi(x: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_airy_Bi_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
     pub fn gsl_sf_airy_Ai_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Ai_scaled_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Ai_scaled_e(
+        x: c_double,
+        mode: gsl_mode_t,
+        result: *mut gsl_sf_result,
+    ) -> c_int;
     pub fn gsl_sf_airy_Bi_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Bi_scaled_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Bi_scaled_e(
+        x: c_double,
+        mode: gsl_mode_t,
+        result: *mut gsl_sf_result,
+    ) -> c_int;
     // Derivatives of Airy Functions
     pub fn gsl_sf_airy_Ai_deriv(x: c_double, mode: gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Ai_deriv_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Ai_deriv_e(
+        x: c_double,
+        mode: gsl_mode_t,
+        result: *mut gsl_sf_result,
+    ) -> c_int;
     pub fn gsl_sf_airy_Bi_deriv(x: c_double, mode: gsl_mode_t) -> c_double;
-    pub fn gsl_sf_airy_Bi_deriv_e(x: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_airy_Bi_deriv_e(
+        x: c_double,
+        mode: gsl_mode_t,
+        result: *mut gsl_sf_result,
+    ) -> c_int;
     pub fn gsl_sf_airy_Ai_deriv_scaled(x: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_airy_Ai_deriv_scaled_e(
         x: c_double,
@@ -1076,9 +1092,17 @@ extern "C" {
     // Elliptic Integrals
     // Legendre Form of Complete Elliptic Integrals
     pub fn gsl_sf_ellint_Kcomp(k: c_double, mode: gsl_mode_t) -> c_double;
-    pub fn gsl_sf_ellint_Kcomp_e(k: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_ellint_Kcomp_e(
+        k: c_double,
+        mode: gsl_mode_t,
+        result: *mut gsl_sf_result,
+    ) -> c_int;
     pub fn gsl_sf_ellint_Ecomp(k: c_double, mode: gsl_mode_t) -> c_double;
-    pub fn gsl_sf_ellint_Ecomp_e(k: c_double, mode: gsl_mode_t, result: *mut gsl_sf_result) -> c_int;
+    pub fn gsl_sf_ellint_Ecomp_e(
+        k: c_double,
+        mode: gsl_mode_t,
+        result: *mut gsl_sf_result,
+    ) -> c_int;
     pub fn gsl_sf_ellint_Pcomp(k: c_double, n: c_double, mode: gsl_mode_t) -> c_double;
     pub fn gsl_sf_ellint_Pcomp_e(
         k: c_double,
@@ -3189,7 +3213,9 @@ pub struct gsl_interp_type {
     pub name: *const c_char,
     pub min_size: c_uint,
     pub alloc: Option<unsafe extern "C" fn(size_t) -> *mut c_void>,
-    pub init: Option<unsafe extern "C" fn(*mut c_void, *const c_double, *const c_double, size_t) -> c_int>,
+    pub init: Option<
+        unsafe extern "C" fn(*mut c_void, *const c_double, *const c_double, size_t) -> c_int,
+    >,
     pub eval: Option<
         unsafe extern "C" fn(
             *const c_void,
@@ -3279,7 +3305,8 @@ pub struct gsl_multiset {
 #[derive(Debug)]
 #[repr(C)]
 pub struct gsl_odeiv2_system {
-    pub function: unsafe extern "C" fn(t: c_double, *const c_double, *mut c_double, *mut c_void) -> c_int,
+    pub function:
+        unsafe extern "C" fn(t: c_double, *const c_double, *mut c_double, *mut c_void) -> c_int,
     pub jacobian: Option<
         unsafe extern "C" fn(
             t: c_double,
@@ -3420,8 +3447,9 @@ pub struct gsl_qrng_type {
     pub max_dimension: c_uint,
     pub state_size: Option<unsafe extern "C" fn(dimension: c_uint) -> size_t>,
     pub init_state: Option<unsafe extern "C" fn(state: *mut c_void, dimension: c_uint) -> c_int>,
-    pub get:
-        Option<unsafe extern "C" fn(state: *mut c_void, dimension: c_uint, x: *mut c_double) -> c_int>,
+    pub get: Option<
+        unsafe extern "C" fn(state: *mut c_void, dimension: c_uint, x: *mut c_double) -> c_int,
+    >,
 }
 
 /*

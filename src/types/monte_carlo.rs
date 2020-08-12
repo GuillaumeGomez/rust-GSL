@@ -291,7 +291,9 @@ impl MiserMonteCarlo {
             dither: 0f64,
         };
 
-        unsafe { ffi::gsl_monte_miser_params_get(self.s, &mut m); }
+        unsafe {
+            ffi::gsl_monte_miser_params_get(self.s, &mut m);
+        }
         MiserParams(m)
     }
 

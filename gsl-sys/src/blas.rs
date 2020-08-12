@@ -59,11 +59,11 @@ pub type CBLAS_ORDER_t = CBLAS_ORDER;
 
 use libc::{c_double, c_float, c_int, c_uint, c_void};
 
-use crate::{gsl_complex, gsl_complex_float};
 use crate::linalg::{
-    gsl_matrix, gsl_matrix_complex, gsl_matrix_complex_float,
-    gsl_matrix_float, gsl_vector, gsl_vector_complex, gsl_vector_complex_float, gsl_vector_float,
+    gsl_matrix, gsl_matrix_complex, gsl_matrix_complex_float, gsl_matrix_float, gsl_vector,
+    gsl_vector_complex, gsl_vector_complex_float, gsl_vector_float,
 };
+use crate::{gsl_complex, gsl_complex_float};
 
 extern "C" {
     // Level 1 CBLAS functions
