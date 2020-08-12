@@ -20,4 +20,4 @@ name = "rgsl"
 crate-type = ["dylib", "rlib"]
 
 [features]
-v2 = []
+v2 = ["GSL-sys/v2"]
