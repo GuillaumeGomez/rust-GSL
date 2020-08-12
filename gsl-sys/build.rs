@@ -8,10 +8,10 @@ fn main() {
     }
 
     pkg_config::probe_library("gsl")
-        .map(|lib| {
-            if lib.version.starts_with("2.") {
-                println!(r#"cargo:rustc-cfg=feature="v2""#);
-            }
-        })
+        // .map(|lib| {
+        //     if lib.version.starts_with("2.") && ::std::env::var_os("IGNORE_VERSION").is_none() {
+        //         println!(r#"cargo:rustc-cfg=feature="v2""#);
+        //     }
+        // })
         .expect("GSL library not found");
 }
