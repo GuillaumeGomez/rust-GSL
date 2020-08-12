@@ -11,8 +11,6 @@
 
 extern crate rgsl;
 
-//use std::io::Write;
-
 struct Data {
     x: f64,
     y: f64,
@@ -70,7 +68,7 @@ fn second_part() {
 
     ntuple.project(&mut h, val_func, &mut 0i32, sel_func, &mut lower);
     //gsl_histogram_fprintf(stdout, h, "%f", "%f");
-    h.print(&mut ::std::io::stdout());
+    h.print(&mut ::std::io::stdout()).expect("Failed to print");
 }
 
 fn main() {

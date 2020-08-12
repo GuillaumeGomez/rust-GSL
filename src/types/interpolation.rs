@@ -79,7 +79,15 @@ pub struct Interp {
 }
 
 impl Interp {
-    /// This function returns a pointer to a newly allocated interpolation object of type T for size data-points.
+    /// This function returns a pointer to a newly allocated interpolation object of type T for
+    /// size data-points.
+    ///
+    /// ```
+    /// use rgsl::{Interp, InterpType};
+    ///
+    /// let interp_type = InterpType::linear();
+    /// let interp = Interp::new(&interp_type, 2).expect("Failed to initialize `Interp`...");
+    /// ```
     pub fn new(t: &InterpType, size: usize) -> Option<Interp> {
         let tmp = unsafe { ffi::gsl_interp_alloc(t.t, size) };
 
@@ -104,6 +112,10 @@ impl Interp {
     /// This function returns the name of the interpolation type used by interp. For example,
     ///
     /// ```
+    /// use rgsl::{Interp, InterpType};
+    ///
+    /// let interp_type = InterpType::linear();
+    /// let interp = Interp::new(&interp_type, 2).expect("Failed to initialize `Interp`...");
     /// println!("interp uses '{}' interpolation.", interp.name());
     /// ```
     ///
