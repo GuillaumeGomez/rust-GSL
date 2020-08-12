@@ -264,6 +264,8 @@ extern "C" {
     pub fn gsl_matrix_isneg(m: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_isnonneg(m: *const gsl_matrix) -> c_int;
     pub fn gsl_matrix_equal(u: *const gsl_matrix, v: *const gsl_matrix) -> c_int;
+    pub fn gsl_matrix_transpose_memcpy(dest: *mut gsl_matrix, src: *const gsl_matrix) -> c_int;
+    pub fn gsl_matrix_transpose(m: *mut gsl_matrix) -> c_int;
 
     // Matrix views
     pub fn gsl_matrix_submatrix(
@@ -373,6 +375,8 @@ extern "C" {
     pub fn gsl_matrix_float_isneg(m: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_isnonneg(m: *const gsl_matrix_float) -> c_int;
     pub fn gsl_matrix_float_equal(u: *const gsl_matrix_float, v: *const gsl_matrix_float) -> c_int;
+    pub fn gsl_matrix_float_transpose_memcpy(dest: *mut gsl_matrix_float, src: *const gsl_matrix_float) -> c_int;
+    pub fn gsl_matrix_float_transpose(m: *mut gsl_matrix_float) -> c_int;
 
     // MatrixComplex functions
     pub fn gsl_matrix_complex_alloc(size1: size_t, size2: size_t) -> *mut gsl_matrix_complex;
@@ -455,6 +459,8 @@ extern "C" {
         u: *const gsl_matrix_complex,
         v: *const gsl_matrix_complex,
     ) -> c_int;
+    pub fn gsl_matrix_complex_transpose_memcpy(dest: *mut gsl_matrix_complex, src: *const gsl_matrix_complex) -> c_int;
+    pub fn gsl_matrix_complex_transpose(m: *mut gsl_matrix_complex) -> c_int;
 
     // MatrixComplexFloat functions
     pub fn gsl_matrix_complex_float_alloc(
@@ -560,6 +566,8 @@ extern "C" {
         u: *const gsl_matrix_complex_float,
         v: *const gsl_matrix_complex_float,
     ) -> c_int;
+    pub fn gsl_matrix_complex_float_transpose_memcpy(dest: *mut gsl_matrix_complex_float, src: *const gsl_matrix_complex_float) -> c_int;
+    pub fn gsl_matrix_complex_float_transpose(m: *mut gsl_matrix_complex_float) -> c_int;
 
     // Real Symmetric Matrices
     pub fn gsl_eigen_symm_alloc(n: size_t) -> *mut gsl_eigen_symm_workspace;
