@@ -18,6 +18,3 @@ GSL-sys = { path = "gsl-sys" }
 [lib]
 name = "rgsl"
 crate-type = ["dylib", "rlib"]
-
-[features]
-v2 = ["GSL-sys/v2"]

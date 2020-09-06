@@ -12,15 +12,9 @@ license = "GPL-3.0+"
 
 build = "build.rs"
 
-[dependencies]
-libc = "~0.2"
-
 [build-dependencies]
 pkg-config = "0.3"
 
 [lib]
 name = "gsl_sys"
 crate-type = ["dylib", "rlib"]
-
-[features]
-v2 = []
