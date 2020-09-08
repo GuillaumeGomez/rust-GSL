@@ -14,3 +14,5 @@ Cargo.lock
 # IntelliJ
 /.idea
 /rust-GSL.iml
+
+**/wrapper.h
