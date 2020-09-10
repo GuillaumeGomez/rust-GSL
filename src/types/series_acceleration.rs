@@ -54,13 +54,13 @@ use ffi;
 
 /// Workspace for Levin U Transform with error estimation
 pub struct LevinUWorkspace {
-    w: *mut ffi::gsl_sum_levin_u_workspace,
+    w: *mut sys::gsl_sum_levin_u_workspace,
 }
 
 impl LevinUWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms. The size of the workspace is O(2n^2 + 3n).
     pub fn new(n: usize) -> Option<LevinUWorkspace> {
-        let tmp = unsafe { ffi::gsl_sum_levin_u_alloc(n) };
+        let tmp = unsafe { sys::gsl_sum_levin_u_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -76,7 +76,7 @@ impl LevinUWorkspace {
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
     pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sum_levin_u_accel(
+            sys::gsl_sum_levin_u_accel(
                 array.as_ptr(),
                 array.len() as usize,
                 self.w,
@@ -101,25 +101,25 @@ impl LevinUWorkspace {
 
 impl Drop for LevinUWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_sum_levin_u_free(self.w) };
+        unsafe { sys::gsl_sum_levin_u_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_sum_levin_u_workspace> for LevinUWorkspace {
-    fn wrap(w: *mut ffi::gsl_sum_levin_u_workspace) -> LevinUWorkspace {
+impl ffi::FFI<sys::gsl_sum_levin_u_workspace> for LevinUWorkspace {
+    fn wrap(w: *mut sys::gsl_sum_levin_u_workspace) -> LevinUWorkspace {
         LevinUWorkspace { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_sum_levin_u_workspace) -> LevinUWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_sum_levin_u_workspace) -> LevinUWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &LevinUWorkspace) -> *const ffi::gsl_sum_levin_u_workspace {
+    fn unwrap_shared(w: &LevinUWorkspace) -> *const sys::gsl_sum_levin_u_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut LevinUWorkspace) -> *mut ffi::gsl_sum_levin_u_workspace {
+    fn unwrap_unique(w: &mut LevinUWorkspace) -> *mut sys::gsl_sum_levin_u_workspace {
         w.w
     }
 }
@@ -128,13 +128,13 @@ impl ffi::FFI<ffi::gsl_sum_levin_u_workspace> for LevinUWorkspace {
 /// This may be useful for summing many similar series where the size of the error has already been estimated reliably and is not
 /// expected to change.
 pub struct LevinUTruncWorkspace {
-    w: *mut ffi::gsl_sum_levin_utrunc_workspace,
+    w: *mut sys::gsl_sum_levin_utrunc_workspace,
 }
 
 impl LevinUTruncWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms, without error estimation. The size of the workspace is O(3n).
     pub fn new(n: usize) -> Option<LevinUTruncWorkspace> {
-        let tmp = unsafe { ffi::gsl_sum_levin_utrunc_alloc(n) };
+        let tmp = unsafe { sys::gsl_sum_levin_utrunc_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -156,7 +156,7 @@ impl LevinUTruncWorkspace {
         abserr_trunc: &mut f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sum_levin_utrunc_accel(
+            sys::gsl_sum_levin_utrunc_accel(
                 array.as_ptr(),
                 array.len() as _,
                 self.w,
@@ -181,25 +181,25 @@ impl LevinUTruncWorkspace {
 
 impl Drop for LevinUTruncWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_sum_levin_utrunc_free(self.w) };
+        unsafe { sys::gsl_sum_levin_utrunc_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_sum_levin_utrunc_workspace> for LevinUTruncWorkspace {
-    fn wrap(w: *mut ffi::gsl_sum_levin_utrunc_workspace) -> LevinUTruncWorkspace {
+impl ffi::FFI<sys::gsl_sum_levin_utrunc_workspace> for LevinUTruncWorkspace {
+    fn wrap(w: *mut sys::gsl_sum_levin_utrunc_workspace) -> LevinUTruncWorkspace {
         LevinUTruncWorkspace { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_sum_levin_utrunc_workspace) -> LevinUTruncWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_sum_levin_utrunc_workspace) -> LevinUTruncWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &LevinUTruncWorkspace) -> *const ffi::gsl_sum_levin_utrunc_workspace {
+    fn unwrap_shared(w: &LevinUTruncWorkspace) -> *const sys::gsl_sum_levin_utrunc_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut LevinUTruncWorkspace) -> *mut ffi::gsl_sum_levin_utrunc_workspace {
+    fn unwrap_unique(w: &mut LevinUTruncWorkspace) -> *mut sys::gsl_sum_levin_utrunc_workspace {
         w.w
     }
 }

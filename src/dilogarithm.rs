@@ -10,7 +10,7 @@ use std::mem::zeroed;
 ///
 /// Note that Abramowitz & Stegun refer to the Spence integral S(x)=Li_2(1-x) as the dilogarithm rather than Li_2(x).
 pub fn dilog(x: f64) -> f64 {
-    unsafe { ::ffi::gsl_sf_dilog(x) }
+    unsafe { ::sys::gsl_sf_dilog(x) }
 }
 
 /// These routines compute the dilogarithm for a real argument. In Lewin’s notation this is Li_2(x), the real part of the dilogarithm of a real x.
@@ -18,8 +18,8 @@ pub fn dilog(x: f64) -> f64 {
 ///
 /// Note that Abramowitz & Stegun refer to the Spence integral S(x)=Li_2(1-x) as the dilogarithm rather than Li_2(x).
 pub fn dilog_e(x: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-    let ret = unsafe { ::ffi::gsl_sf_dilog_e(x, &mut result) };
+    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+    let ret = unsafe { ::sys::gsl_sf_dilog_e(x, &mut result) };
 
     (
         enums::Value::from(ret),
@@ -33,9 +33,9 @@ pub fn dilog_e(x: f64) -> (enums::Value, ::types::Result) {
 /// This function computes the full complex-valued dilogarithm for the complex argument z = r \exp(i \theta).
 /// The real and imaginary parts of the result are returned in result_re, result_im.
 pub fn complex_dilog_e(r: f64, theta: f64) -> (enums::Value, ::types::Result, ::types::Result) {
-    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-    let mut result_im = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-    let ret = unsafe { ::ffi::gsl_sf_complex_dilog_e(r, theta, &mut result, &mut result_im) };
+    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+    let mut result_im = unsafe { zeroed::<::sys::gsl_sf_result>() };
+    let ret = unsafe { ::sys::gsl_sf_complex_dilog_e(r, theta, &mut result, &mut result_im) };
 
     (
         enums::Value::from(ret),

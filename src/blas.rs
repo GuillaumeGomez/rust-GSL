@@ -2,15 +2,16 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-pub use ffi::blas::CBLAS_DIAG_t as Diag;
-pub use ffi::blas::CBLAS_INDEX_t as Index;
-pub use ffi::blas::CBLAS_ORDER_t as Order;
-pub use ffi::blas::CBLAS_SIDE_t as Side;
-pub use ffi::blas::CBLAS_TRANSPOSE_t as Transpose;
-pub use ffi::blas::CBLAS_UPLO_t as Uplo;
+pub use sys::CBLAS_DIAG_t as Diag;
+pub use sys::CBLAS_INDEX_t as Index;
+pub use sys::CBLAS_ORDER_t as Order;
+pub use sys::CBLAS_SIDE_t as Side;
+pub use sys::CBLAS_TRANSPOSE_t as Transpose;
+pub use sys::CBLAS_UPLO_t as Uplo;
 
 pub mod level1 {
     use enums;
+    use ffi;
 
     /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result in result.
     pub fn sdsdot(
@@ -20,7 +21,7 @@ pub mod level1 {
         result: &mut f32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_sdsdot(
+            sys::gsl_blas_sdsdot(
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -32,7 +33,7 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
     pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32, result: &mut f32) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_sdot(
+            sys::gsl_blas_sdot(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 result,
@@ -43,7 +44,7 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
     pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32, result: &mut f64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsdot(
+            sys::gsl_blas_dsdot(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 result,
@@ -54,7 +55,7 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
     pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64, result: &mut f64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ddot(
+            sys::gsl_blas_ddot(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 result,
@@ -69,7 +70,7 @@ pub mod level1 {
         dotu: &mut ::types::ComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cdotu(
+            sys::gsl_blas_cdotu(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotu),
@@ -84,7 +85,7 @@ pub mod level1 {
         dotu: &mut ::types::ComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zdotu(
+            sys::gsl_blas_zdotu(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotu),
@@ -99,7 +100,7 @@ pub mod level1 {
         dotc: &mut ::types::ComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cdotc(
+            sys::gsl_blas_cdotc(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotc),
@@ -114,7 +115,7 @@ pub mod level1 {
         dotc: &mut ::types::ComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zdotc(
+            sys::gsl_blas_zdotc(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
                 ::std::mem::transmute(dotc),
@@ -124,87 +125,87 @@ pub mod level1 {
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
     pub fn snrm2(x: &::types::VectorF32) -> f32 {
-        unsafe { ffi::blas::gsl_blas_snrm2(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_snrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
     pub fn dnrm2(x: &::types::VectorF64) -> f64 {
-        unsafe { ffi::blas::gsl_blas_dnrm2(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_dnrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the Euclidean norm of the complex vector x,
     ///
     /// ||x||_2 = \sqrt {\sum (\Re(x_i)^2 + \Im(x_i)^2)}.
     pub fn scnrm2(x: &::types::VectorComplexF32) -> f32 {
-        unsafe { ffi::blas::gsl_blas_scnrm2(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_scnrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the Euclidean norm of the complex vector x,
     ///
     /// ||x||_2 = \sqrt {\sum (\Re(x_i)^2 + \Im(x_i)^2)}.
     pub fn dznrm2(x: &::types::VectorComplexF64) -> f64 {
-        unsafe { ffi::blas::gsl_blas_dznrm2(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_dznrm2(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the absolute sum \sum |x_i| of the elements of the vector x.
     pub fn sasum(x: &::types::VectorF32) -> f32 {
-        unsafe { ffi::blas::gsl_blas_sasum(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_sasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the absolute sum \sum |x_i| of the elements of the vector x.
     pub fn dasum(x: &::types::VectorF64) -> f64 {
-        unsafe { ffi::blas::gsl_blas_dasum(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_dasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the sum of the magnitudes of the real and imaginary parts of the complex vector x, \sum |\Re(x_i)| + |\Im(x_i)|.
     pub fn scasum(x: &::types::VectorComplexF32) -> f32 {
-        unsafe { ffi::blas::gsl_blas_scasum(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_scasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function computes the sum of the magnitudes of the real and imaginary parts of the complex vector x, \sum |\Re(x_i)| + |\Im(x_i)|.
     pub fn dzasum(x: &::types::VectorComplexF64) -> f64 {
-        unsafe { ffi::blas::gsl_blas_dzasum(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_dzasum(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn isamax(x: &::types::VectorF32) -> u32 {
-        unsafe { ffi::blas::gsl_blas_isamax(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_isamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn idamax(x: &::types::VectorF64) -> u32 {
-        unsafe { ffi::blas::gsl_blas_idamax(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_idamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn icamax(x: &::types::VectorComplexF32) -> u32 {
-        unsafe { ffi::blas::gsl_blas_icamax(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_icamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
     pub fn izamax(x: &::types::VectorComplexF64) -> u32 {
-        unsafe { ffi::blas::gsl_blas_izamax(ffi::FFI::unwrap_shared(x)) }
+        unsafe { sys::gsl_blas_izamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function exchanges the elements of the vectors x and y.
     pub fn sswap(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_sswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_sswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function exchanges the elements of the vectors x and y.
     pub fn dswap(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_dswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -214,7 +215,7 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_cswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -224,21 +225,21 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_zswap(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function copy the elements of the vector x into the vector y.
     pub fn scopy(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_scopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_scopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function copy the elements of the vector x into the vector y.
     pub fn dcopy(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dcopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_dcopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -248,7 +249,7 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ccopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_ccopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
@@ -258,14 +259,14 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zcopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
+            sys::gsl_blas_zcopy(ffi::FFI::unwrap_unique(x), ffi::FFI::unwrap_unique(y))
         })
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     pub fn saxpy(alpha: f32, x: &::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_saxpy(
+            sys::gsl_blas_saxpy(
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(y),
@@ -276,7 +277,7 @@ pub mod level1 {
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     pub fn daxpy(alpha: f64, x: &::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_daxpy(
+            sys::gsl_blas_daxpy(
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(y),
@@ -291,7 +292,7 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_caxpy(
+            sys::gsl_blas_caxpy(
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(y),
@@ -306,7 +307,7 @@ pub mod level1 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zaxpy(
+            sys::gsl_blas_zaxpy(
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(y),
@@ -316,36 +317,36 @@ pub mod level1 {
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn sscal(alpha: f32, x: &mut ::types::VectorF32) {
-        unsafe { ffi::blas::gsl_blas_sscal(alpha, ffi::FFI::unwrap_unique(x)) }
+        unsafe { sys::gsl_blas_sscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn dscal(alpha: f64, x: &mut ::types::VectorF64) {
-        unsafe { ffi::blas::gsl_blas_dscal(alpha, ffi::FFI::unwrap_unique(x)) }
+        unsafe { sys::gsl_blas_dscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn cscal(alpha: &::types::ComplexF32, x: &mut ::types::VectorComplexF32) {
         unsafe {
-            ffi::blas::gsl_blas_cscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
+            sys::gsl_blas_cscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
         }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn zscal(alpha: &::types::ComplexF64, x: &mut ::types::VectorComplexF64) {
         unsafe {
-            ffi::blas::gsl_blas_zscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
+            sys::gsl_blas_zscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
         }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn csscal(alpha: f32, x: &mut ::types::VectorComplexF32) {
-        unsafe { ffi::blas::gsl_blas_csscal(alpha, ffi::FFI::unwrap_unique(x)) }
+        unsafe { sys::gsl_blas_csscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn zdscal(alpha: f64, x: &mut ::types::VectorComplexF64) {
-        unsafe { ffi::blas::gsl_blas_zdscal(alpha, ffi::FFI::unwrap_unique(x)) }
+        unsafe { sys::gsl_blas_zdscal(alpha, ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function computes a Givens rotation (c,s) which zeroes the vector (a,b),
@@ -357,7 +358,7 @@ pub mod level1 {
     /// The variables a and b are overwritten by the routine.
     pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], d: &mut [f32]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_srotg(
+            sys::gsl_blas_srotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
                 c.as_mut_ptr(),
@@ -375,7 +376,7 @@ pub mod level1 {
     /// The variables a and b are overwritten by the routine.
     pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], d: &mut [f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_drotg(
+            sys::gsl_blas_drotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
                 c.as_mut_ptr(),
@@ -392,7 +393,7 @@ pub mod level1 {
         d: f32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_srot(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(b), c, d)
+            sys::gsl_blas_srot(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(b), c, d)
         })
     }
 
@@ -404,7 +405,7 @@ pub mod level1 {
         d: f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_drot(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(b), c, d)
+            sys::gsl_blas_drot(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(b), c, d)
         })
     }
 
@@ -418,7 +419,7 @@ pub mod level1 {
         P: &mut [f32],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_srotmg(
+            sys::gsl_blas_srotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
@@ -438,7 +439,7 @@ pub mod level1 {
         P: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_drotmg(
+            sys::gsl_blas_drotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
@@ -455,7 +456,7 @@ pub mod level1 {
         P: &mut [f32],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_srotm(
+            sys::gsl_blas_srotm(
                 ffi::FFI::unwrap_unique(x),
                 ffi::FFI::unwrap_unique(y),
                 P.as_mut_ptr(),
@@ -470,7 +471,7 @@ pub mod level1 {
         P: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_drotm(
+            sys::gsl_blas_drotm(
                 ffi::FFI::unwrap_unique(x),
                 ffi::FFI::unwrap_unique(y),
                 P.as_mut_ptr(),
@@ -481,6 +482,7 @@ pub mod level1 {
 
 pub mod level2 {
     use enums;
+    use ffi;
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
     pub fn sgemv(
@@ -492,7 +494,7 @@ pub mod level2 {
         y: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_sgemv(
+            sys::gsl_blas_sgemv(
                 transA,
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -513,7 +515,7 @@ pub mod level2 {
         y: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dgemv(
+            sys::gsl_blas_dgemv(
                 transA,
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -534,7 +536,7 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cgemv(
+            sys::gsl_blas_cgemv(
                 transA,
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -555,7 +557,7 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zgemv(
+            sys::gsl_blas_zgemv(
                 transA,
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -577,7 +579,7 @@ pub mod level2 {
         x: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_strmv(
+            sys::gsl_blas_strmv(
                 uplo,
                 transA,
                 diag,
@@ -598,7 +600,7 @@ pub mod level2 {
         x: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dtrmv(
+            sys::gsl_blas_dtrmv(
                 uplo,
                 transA,
                 diag,
@@ -619,7 +621,7 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ctrmv(
+            sys::gsl_blas_ctrmv(
                 uplo,
                 transA,
                 diag,
@@ -640,7 +642,7 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ztrmv(
+            sys::gsl_blas_ztrmv(
                 uplo,
                 transA,
                 diag,
@@ -661,7 +663,7 @@ pub mod level2 {
         x: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_strsv(
+            sys::gsl_blas_strsv(
                 uplo,
                 transA,
                 diag,
@@ -682,7 +684,7 @@ pub mod level2 {
         x: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dtrsv(
+            sys::gsl_blas_dtrsv(
                 uplo,
                 transA,
                 diag,
@@ -703,7 +705,7 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ctrsv(
+            sys::gsl_blas_ctrsv(
                 uplo,
                 transA,
                 diag,
@@ -724,7 +726,7 @@ pub mod level2 {
         x: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ztrsv(
+            sys::gsl_blas_ztrsv(
                 uplo,
                 transA,
                 diag,
@@ -746,7 +748,7 @@ pub mod level2 {
         y: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ssymv(
+            sys::gsl_blas_ssymv(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -769,7 +771,7 @@ pub mod level2 {
         y: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsymv(
+            sys::gsl_blas_dsymv(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -792,7 +794,7 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_chemv(
+            sys::gsl_blas_chemv(
                 uplo,
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -815,7 +817,7 @@ pub mod level2 {
         y: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zhemv(
+            sys::gsl_blas_zhemv(
                 uplo,
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -834,7 +836,7 @@ pub mod level2 {
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_sger(
+            sys::gsl_blas_sger(
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -851,7 +853,7 @@ pub mod level2 {
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dger(
+            sys::gsl_blas_dger(
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -868,7 +870,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cgeru(
+            sys::gsl_blas_cgeru(
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -885,7 +887,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zgeru(
+            sys::gsl_blas_zgeru(
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -902,7 +904,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cgerc(
+            sys::gsl_blas_cgerc(
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -919,7 +921,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zgerc(
+            sys::gsl_blas_zgerc(
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -937,7 +939,7 @@ pub mod level2 {
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ssyr(
+            sys::gsl_blas_ssyr(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(x),
@@ -955,7 +957,7 @@ pub mod level2 {
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsyr(
+            sys::gsl_blas_dsyr(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(x),
@@ -975,7 +977,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cher(
+            sys::gsl_blas_cher(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(x),
@@ -995,7 +997,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zher(
+            sys::gsl_blas_zher(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(x),
@@ -1015,7 +1017,7 @@ pub mod level2 {
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ssyr2(
+            sys::gsl_blas_ssyr2(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(x),
@@ -1036,7 +1038,7 @@ pub mod level2 {
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsyr2(
+            sys::gsl_blas_dsyr2(
                 uplo,
                 alpha,
                 ffi::FFI::unwrap_shared(x),
@@ -1058,7 +1060,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cher2(
+            sys::gsl_blas_cher2(
                 uplo,
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
@@ -1080,7 +1082,7 @@ pub mod level2 {
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zher2(
+            sys::gsl_blas_zher2(
                 uplo,
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
@@ -1093,6 +1095,7 @@ pub mod level2 {
 
 pub mod level3 {
     use enums;
+    use ffi;
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
     pub fn sgemm(
@@ -1105,7 +1108,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_sgemm(
+            sys::gsl_blas_sgemm(
                 transA,
                 transB,
                 alpha,
@@ -1128,7 +1131,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dgemm(
+            sys::gsl_blas_dgemm(
                 transA,
                 transB,
                 alpha,
@@ -1151,7 +1154,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cgemm(
+            sys::gsl_blas_cgemm(
                 transA,
                 transB,
                 ::std::mem::transmute(*alpha),
@@ -1174,7 +1177,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zgemm(
+            sys::gsl_blas_zgemm(
                 transA,
                 transB,
                 ::std::mem::transmute(*alpha),
@@ -1198,7 +1201,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ssymm(
+            sys::gsl_blas_ssymm(
                 side,
                 uplo,
                 alpha,
@@ -1222,7 +1225,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsymm(
+            sys::gsl_blas_dsymm(
                 side,
                 uplo,
                 alpha,
@@ -1246,7 +1249,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_csymm(
+            sys::gsl_blas_csymm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
@@ -1270,7 +1273,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zsymm(
+            sys::gsl_blas_zsymm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
@@ -1295,7 +1298,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_chemm(
+            sys::gsl_blas_chemm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
@@ -1320,7 +1323,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zhemm(
+            sys::gsl_blas_zhemm(
                 side,
                 uplo,
                 ::std::mem::transmute(*alpha),
@@ -1346,7 +1349,7 @@ pub mod level3 {
         B: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_strmm(
+            sys::gsl_blas_strmm(
                 side,
                 uplo,
                 transA,
@@ -1372,7 +1375,7 @@ pub mod level3 {
         B: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dtrmm(
+            sys::gsl_blas_dtrmm(
                 side,
                 uplo,
                 transA,
@@ -1398,7 +1401,7 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ctrmm(
+            sys::gsl_blas_ctrmm(
                 side,
                 uplo,
                 transA,
@@ -1424,7 +1427,7 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ztrmm(
+            sys::gsl_blas_ztrmm(
                 side,
                 uplo,
                 transA,
@@ -1450,7 +1453,7 @@ pub mod level3 {
         B: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_strsm(
+            sys::gsl_blas_strsm(
                 side,
                 uplo,
                 transA,
@@ -1476,7 +1479,7 @@ pub mod level3 {
         B: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dtrsm(
+            sys::gsl_blas_dtrsm(
                 side,
                 uplo,
                 transA,
@@ -1502,7 +1505,7 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ctrsm(
+            sys::gsl_blas_ctrsm(
                 side,
                 uplo,
                 transA,
@@ -1528,7 +1531,7 @@ pub mod level3 {
         B: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ztrsm(
+            sys::gsl_blas_ztrsm(
                 side,
                 uplo,
                 transA,
@@ -1552,7 +1555,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ssyrk(
+            sys::gsl_blas_ssyrk(
                 uplo,
                 trans,
                 alpha,
@@ -1575,7 +1578,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsyrk(
+            sys::gsl_blas_dsyrk(
                 uplo,
                 trans,
                 alpha,
@@ -1598,7 +1601,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_csyrk(
+            sys::gsl_blas_csyrk(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
@@ -1621,7 +1624,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zsyrk(
+            sys::gsl_blas_zsyrk(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
@@ -1645,7 +1648,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cherk(
+            sys::gsl_blas_cherk(
                 uplo,
                 trans,
                 alpha,
@@ -1669,7 +1672,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zherk(
+            sys::gsl_blas_zherk(
                 uplo,
                 trans,
                 alpha,
@@ -1693,7 +1696,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_ssyr2k(
+            sys::gsl_blas_ssyr2k(
                 uplo,
                 trans,
                 alpha,
@@ -1718,7 +1721,7 @@ pub mod level3 {
         C: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_dsyr2k(
+            sys::gsl_blas_dsyr2k(
                 uplo,
                 trans,
                 alpha,
@@ -1743,7 +1746,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_csyr2k(
+            sys::gsl_blas_csyr2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
@@ -1768,7 +1771,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zsyr2k(
+            sys::gsl_blas_zsyr2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
@@ -1794,7 +1797,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_cher2k(
+            sys::gsl_blas_cher2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),
@@ -1820,7 +1823,7 @@ pub mod level3 {
         C: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::blas::gsl_blas_zher2k(
+            sys::gsl_blas_zher2k(
                 uplo,
                 trans,
                 ::std::mem::transmute(*alpha),

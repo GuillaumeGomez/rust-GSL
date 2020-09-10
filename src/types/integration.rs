@@ -3872,7 +3872,7 @@ static Tright: [f64; 1089] = [
 /// around local difficulties in the integrand. These subintervals are managed by a gsl_integration_workspace struct, which handles the memory
 /// for the subinterval ranges, results and error estimates.
 pub struct IntegrationWorkspace {
-    w: *mut ffi::gsl_integration_workspace,
+    w: *mut sys::gsl_integration_workspace,
 }
 
 struct InternParam<'r, T: 'r> {
@@ -3885,7 +3885,7 @@ impl IntegrationWorkspace {
     /// This function allocates a workspace sufficient to hold n double precision intervals, their integration results and error estimates. One
     /// workspace may be used multiple times as all necessary reinitialization is performed automatically by the integration routines.
     pub fn new(n: usize) -> Option<IntegrationWorkspace> {
-        let tmp = unsafe { ffi::gsl_integration_workspace_alloc(n) };
+        let tmp = unsafe { sys::gsl_integration_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -4011,7 +4011,7 @@ impl IntegrationWorkspace {
                    let file = file!();
                    "value of key does specify a known integration rule".with_c_str(|c_str|{
                        file.with_c_str(|c_file|{
-                           unsafe { ffi::gsl_error(c_str, c_file, line!() as i32, ::Value::Invalid as i32) }
+                           unsafe { sys::gsl_error(c_str, c_file, line!() as i32, ::Value::Invalid as i32) }
                        });
                    });
                    // this line is not used but just for compilation...
@@ -4714,25 +4714,25 @@ impl IntegrationWorkspace {
 
 impl Drop for IntegrationWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_integration_workspace_free(self.w) };
+        unsafe { sys::gsl_integration_workspace_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
-    fn wrap(w: *mut ffi::gsl_integration_workspace) -> IntegrationWorkspace {
+impl ffi::FFI<sys::gsl_integration_workspace> for IntegrationWorkspace {
+    fn wrap(w: *mut sys::gsl_integration_workspace) -> IntegrationWorkspace {
         IntegrationWorkspace { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_integration_workspace) -> IntegrationWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_integration_workspace) -> IntegrationWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationWorkspace) -> *const ffi::gsl_integration_workspace {
+    fn unwrap_shared(w: &IntegrationWorkspace) -> *const sys::gsl_integration_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut IntegrationWorkspace) -> *mut ffi::gsl_integration_workspace {
+    fn unwrap_unique(w: &mut IntegrationWorkspace) -> *mut sys::gsl_integration_workspace {
         w.w
     }
 }
@@ -4740,7 +4740,7 @@ impl ffi::FFI<ffi::gsl_integration_workspace> for IntegrationWorkspace {
 /// The QAWS algorithm is designed for integrands with algebraic-logarithmic singularities at the end-points of an integration region. In order
 /// to work efficiently the algorithm requires a precomputed table of Chebyshev moments.
 pub struct IntegrationQawsTable {
-    w: *mut ffi::gsl_integration_qaws_table,
+    w: *mut sys::gsl_integration_qaws_table,
 }
 
 impl IntegrationQawsTable {
@@ -4763,7 +4763,7 @@ impl IntegrationQawsTable {
     /// The function returns a pointer to the newly allocated table gsl_integration_qaws_table if no errors were detected, and 0 in the case
     /// of error.
     pub fn new(alpha: f64, beta: f64, mu: i32, nu: i32) -> Option<IntegrationQawsTable> {
-        let tmp = unsafe { ffi::gsl_integration_qaws_table_alloc(alpha, beta, mu, nu) };
+        let tmp = unsafe { sys::gsl_integration_qaws_table_alloc(alpha, beta, mu, nu) };
 
         if tmp.is_null() {
             None
@@ -4774,7 +4774,7 @@ impl IntegrationQawsTable {
 
     /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
     pub fn set(&mut self, alpha: f64, beta: f64, mu: i32, nu: i32) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu) })
+        ::Value::from(unsafe { sys::gsl_integration_qaws_table_set(self.w, alpha, beta, mu, nu) })
     }
 
     /// This function computes the integral of the function f(x) over the interval (a,b) with the singular weight function (x-a)^\alpha
@@ -5028,25 +5028,25 @@ impl IntegrationQawsTable {
 
 impl Drop for IntegrationQawsTable {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_integration_qaws_table_free(self.w) };
+        unsafe { sys::gsl_integration_qaws_table_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
-    fn wrap(w: *mut ffi::gsl_integration_qaws_table) -> IntegrationQawsTable {
+impl ffi::FFI<sys::gsl_integration_qaws_table> for IntegrationQawsTable {
+    fn wrap(w: *mut sys::gsl_integration_qaws_table) -> IntegrationQawsTable {
         IntegrationQawsTable { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_integration_qaws_table) -> IntegrationQawsTable {
+    fn soft_wrap(w: *mut sys::gsl_integration_qaws_table) -> IntegrationQawsTable {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationQawsTable) -> *const ffi::gsl_integration_qaws_table {
+    fn unwrap_shared(w: &IntegrationQawsTable) -> *const sys::gsl_integration_qaws_table {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut IntegrationQawsTable) -> *mut ffi::gsl_integration_qaws_table {
+    fn unwrap_unique(w: &mut IntegrationQawsTable) -> *mut sys::gsl_integration_qaws_table {
         w.w
     }
 }
@@ -5054,7 +5054,7 @@ impl ffi::FFI<ffi::gsl_integration_qaws_table> for IntegrationQawsTable {
 /// The QAWO algorithm is designed for integrands with an oscillatory factor, \sin(\omega x) or \cos(\omega x). In order to work efficiently
 /// the algorithm requires a table of Chebyshev moments which must be pre-computed with calls to the functions below.
 pub struct IntegrationQawoTable {
-    w: *mut ffi::gsl_integration_qawo_table,
+    w: *mut sys::gsl_integration_qawo_table,
 }
 
 impl IntegrationQawoTable {
@@ -5080,7 +5080,7 @@ impl IntegrationQawoTable {
         sine: ::IntegrationQawo,
         n: usize,
     ) -> Option<IntegrationQawoTable> {
-        let tmp = unsafe { ffi::gsl_integration_qawo_table_alloc(omega, l, sine.into(), n) };
+        let tmp = unsafe { sys::gsl_integration_qawo_table_alloc(omega, l, sine.into(), n) };
 
         if tmp.is_null() {
             None
@@ -5091,12 +5091,12 @@ impl IntegrationQawoTable {
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
     pub fn set(&mut self, omega: f64, l: f64, sine: ::IntegrationQawo) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_integration_qawo_table_set(self.w, omega, l, sine.into()) })
+        ::Value::from(unsafe { sys::gsl_integration_qawo_table_set(self.w, omega, l, sine.into()) })
     }
 
     /// This function allows the length parameter l of the self workspace to be changed.
     pub fn set_length(&mut self, l: f64) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_integration_qawo_table_set_length(self.w, l) })
+        ::Value::from(unsafe { sys::gsl_integration_qawo_table_set_length(self.w, l) })
     }
 
     /// This function uses an adaptive algorithm to compute the integral of f over (a,b) with the weight function \sin(\omega x) or \cos(\omega x)
@@ -5512,25 +5512,25 @@ impl IntegrationQawoTable {
 
 impl Drop for IntegrationQawoTable {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_integration_qawo_table_free(self.w) };
+        unsafe { sys::gsl_integration_qawo_table_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
-    fn wrap(w: *mut ffi::gsl_integration_qawo_table) -> IntegrationQawoTable {
+impl ffi::FFI<sys::gsl_integration_qawo_table> for IntegrationQawoTable {
+    fn wrap(w: *mut sys::gsl_integration_qawo_table) -> IntegrationQawoTable {
         IntegrationQawoTable { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_integration_qawo_table) -> IntegrationQawoTable {
+    fn soft_wrap(w: *mut sys::gsl_integration_qawo_table) -> IntegrationQawoTable {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationQawoTable) -> *const ffi::gsl_integration_qawo_table {
+    fn unwrap_shared(w: &IntegrationQawoTable) -> *const sys::gsl_integration_qawo_table {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut IntegrationQawoTable) -> *mut ffi::gsl_integration_qawo_table {
+    fn unwrap_unique(w: &mut IntegrationQawoTable) -> *mut sys::gsl_integration_qawo_table {
         w.w
     }
 }
@@ -5544,7 +5544,7 @@ impl ffi::FFI<ffi::gsl_integration_qawo_table> for IntegrationQawoTable {
 /// is used as an error estimate. The interval is subdivided if the difference between two successive rules is too large or a rule of maximum
 /// degree has been reached.
 pub struct CquadWorkspace {
-    w: *mut ffi::gsl_integration_cquad_workspace,
+    w: *mut sys::gsl_integration_cquad_workspace,
 }
 
 impl CquadWorkspace {
@@ -5552,7 +5552,7 @@ impl CquadWorkspace {
     /// that will be evaluated. If the workspace is full, intervals with smaller error estimates will be discarded. A minimum of 3 intervals
     /// is required and for most functions, a workspace of size 100 is sufficient.
     pub fn new(n: usize) -> Option<CquadWorkspace> {
-        let tmp = unsafe { ffi::gsl_integration_cquad_workspace_alloc(n) };
+        let tmp = unsafe { sys::gsl_integration_cquad_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -5682,7 +5682,7 @@ impl CquadWorkspace {
             let mut ivals = Vec::with_capacity((*self.w).size as usize + 1usize);
 
             for v in t_ivals.iter() {
-                ivals.push(ffi::gsl_integration_cquad_ival {
+                ivals.push(sys::gsl_integration_cquad_ival {
                     a: v.a,
                     b: v.b,
                     c: v.c,
@@ -6086,25 +6086,25 @@ impl CquadWorkspace {
 
 impl Drop for CquadWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_integration_cquad_workspace_free(self.w) };
+        unsafe { sys::gsl_integration_cquad_workspace_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_integration_cquad_workspace> for CquadWorkspace {
-    fn wrap(w: *mut ffi::gsl_integration_cquad_workspace) -> CquadWorkspace {
+impl ffi::FFI<sys::gsl_integration_cquad_workspace> for CquadWorkspace {
+    fn wrap(w: *mut sys::gsl_integration_cquad_workspace) -> CquadWorkspace {
         CquadWorkspace { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_integration_cquad_workspace) -> CquadWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_integration_cquad_workspace) -> CquadWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &CquadWorkspace) -> *const ffi::gsl_integration_cquad_workspace {
+    fn unwrap_shared(w: &CquadWorkspace) -> *const sys::gsl_integration_cquad_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut CquadWorkspace) -> *mut ffi::gsl_integration_cquad_workspace {
+    fn unwrap_unique(w: &mut CquadWorkspace) -> *mut sys::gsl_integration_cquad_workspace {
         w.w
     }
 }
@@ -6114,7 +6114,7 @@ impl ffi::FFI<ffi::gsl_integration_cquad_workspace> for CquadWorkspace {
 /// basis functions to form mass matrices for the Galerkin method. Unlike other numerical integration routines within the library, these
 /// routines do not accept absolute or relative error bounds.
 pub struct GLFixedTable {
-    w: *mut ffi::gsl_integration_glfixed_table,
+    w: *mut sys::gsl_integration_glfixed_table,
 }
 
 impl GLFixedTable {
@@ -6122,7 +6122,7 @@ impl GLFixedTable {
     /// high precision precomputed coefficients are used. If precomputed weights are not available, lower precision coefficients are computed
     /// on the fly.
     pub fn new(n: usize) -> Option<GLFixedTable> {
-        let tmp = unsafe { ffi::gsl_integration_glfixed_table_alloc(n) };
+        let tmp = unsafe { sys::gsl_integration_glfixed_table_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -6134,7 +6134,7 @@ impl GLFixedTable {
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight wi on the interval [a,b]. The points
     /// and weights are ordered by increasing point value. A function f may be integrated on [a,b] by summing wi * f(xi) over i.
     pub fn point(&self, a: f64, b: f64, i: usize, xi: &mut f64, wi: &mut f64) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) })
+        ::Value::from(unsafe { sys::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) })
     }
 
     /// This function applies the Gauss-Legendre integration rule contained in table self and returns the result.
@@ -6173,25 +6173,25 @@ impl GLFixedTable {
 
 impl Drop for GLFixedTable {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_integration_glfixed_table_free(self.w) };
+        unsafe { sys::gsl_integration_glfixed_table_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_integration_glfixed_table> for GLFixedTable {
-    fn wrap(w: *mut ffi::gsl_integration_glfixed_table) -> GLFixedTable {
+impl ffi::FFI<sys::gsl_integration_glfixed_table> for GLFixedTable {
+    fn wrap(w: *mut sys::gsl_integration_glfixed_table) -> GLFixedTable {
         GLFixedTable { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_integration_glfixed_table) -> GLFixedTable {
+    fn soft_wrap(w: *mut sys::gsl_integration_glfixed_table) -> GLFixedTable {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &GLFixedTable) -> *const ffi::gsl_integration_glfixed_table {
+    fn unwrap_shared(w: &GLFixedTable) -> *const sys::gsl_integration_glfixed_table {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut GLFixedTable) -> *mut ffi::gsl_integration_glfixed_table {
+    fn unwrap_unique(w: &mut GLFixedTable) -> *mut sys::gsl_integration_glfixed_table {
         w.w
     }
 }
@@ -6585,7 +6585,7 @@ unsafe fn test_positivity(result: f64, resabs: f64) -> bool {
 }
 
 #[allow(unused_variables)]
-unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool {
+unsafe fn increase_nrmax(workspace: *mut sys::gsl_integration_workspace) -> bool {
     let id = (*workspace).nrmax;
 
     let t_order = CSlice::new((*workspace).order, (*workspace).nrmax as usize + 1usize);
@@ -6617,7 +6617,7 @@ unsafe fn increase_nrmax(workspace: *mut ffi::gsl_integration_workspace) -> bool
     false
 }
 
-unsafe fn large_interval(workspace: *mut ffi::gsl_integration_workspace) -> bool {
+unsafe fn large_interval(workspace: *mut sys::gsl_integration_workspace) -> bool {
     let i = (*workspace).i;
     let level = CSlice::new((*workspace).level, i as usize + 1usize);
 
@@ -6628,7 +6628,7 @@ unsafe fn large_interval(workspace: *mut ffi::gsl_integration_workspace) -> bool
     }
 }
 
-unsafe fn reset_nrmax(workspace: *mut ffi::gsl_integration_workspace) {
+unsafe fn reset_nrmax(workspace: *mut sys::gsl_integration_workspace) {
     (*workspace).nrmax = 0;
     (*workspace).i = *(*workspace).order;
 }
@@ -7744,7 +7744,7 @@ struct fn_qaws_params<'r, T: 'r> {
     function: ::function<T>,
     a: f64,
     b: f64,
-    table: *mut ffi::gsl_integration_qaws_table,
+    table: *mut sys::gsl_integration_qaws_table,
     arg: &'r mut T,
 }
 
@@ -7755,7 +7755,7 @@ unsafe fn qc25s<T>(
     b: f64,
     a1: f64,
     b1: f64,
-    t: *mut ffi::gsl_integration_qaws_table,
+    t: *mut sys::gsl_integration_qaws_table,
     result: &mut f64,
     abserr: &mut f64,
     err_reliable: &mut bool,
@@ -7955,7 +7955,7 @@ unsafe fn qc25f<T>(
     arg: &mut T,
     a: f64,
     b: f64,
-    wf: *mut ffi::gsl_integration_qawo_table,
+    wf: *mut sys::gsl_integration_qawo_table,
     level: usize,
     result: &mut f64,
     abserr: &mut f64,

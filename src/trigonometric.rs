@@ -69,12 +69,12 @@ pub trait Trigonometric {
 
 impl Trigonometric for f64 {
     fn sin(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_sin(*self) }
+        unsafe { ::sys::gsl_sf_sin(*self) }
     }
 
     fn sin_e(&self) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_sin_e(*self, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_sin_e(*self, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -86,12 +86,12 @@ impl Trigonometric for f64 {
     }
 
     fn cos(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_cos(*self) }
+        unsafe { ::sys::gsl_sf_cos(*self) }
     }
 
     fn cos_e(&self) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_cos_e(*self, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_cos_e(*self, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -102,30 +102,29 @@ impl Trigonometric for f64 {
         )
     }
 
-    fn sf_hypot(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_hypot(*self) }
+    fn sf_hypot(&self, y: f64) -> f64 {
+        unsafe { ::sys::gsl_sf_hypot(*self, y) }
     }
 
-    fn sf_hypot_e(&self) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_hypot_e(*self, &mut result) };
+    fn sf_hypot_e(&self, y: f64) -> Result<f64, enums::Value> {
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_hypot_e(*self, y, &mut result) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(result.val)
+        } else {
+            Err(ret)
+        }
     }
 
     fn sinc(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_sinc(*self) }
+        unsafe { ::sys::gsl_sf_sinc(*self) }
     }
 
     fn sinc_e(&self) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_sinc_e(*self, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_sinc_e(*self, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -137,9 +136,9 @@ impl Trigonometric for f64 {
     }
 
     fn complex_sin_e(&self, zi: f64) -> (enums::Value, ::types::Result, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_complex_sin_e(*self, zi, &mut result, &mut result2) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_complex_sin_e(*self, zi, &mut result, &mut result2) };
 
         (
             enums::Value::from(ret),
@@ -155,9 +154,9 @@ impl Trigonometric for f64 {
     }
 
     fn complex_cos_e(&self, zi: f64) -> (enums::Value, ::types::Result, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_complex_cos_e(*self, zi, &mut result, &mut result2) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_complex_cos_e(*self, zi, &mut result, &mut result2) };
 
         (
             enums::Value::from(ret),
@@ -173,9 +172,9 @@ impl Trigonometric for f64 {
     }
 
     fn complex_logsin_e(&self, zi: f64) -> (enums::Value, ::types::Result, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_complex_logsin_e(*self, zi, &mut result, &mut result2) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_complex_logsin_e(*self, zi, &mut result, &mut result2) };
 
         (
             enums::Value::from(ret),
@@ -191,12 +190,12 @@ impl Trigonometric for f64 {
     }
 
     fn lnsinh(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_lnsinh(*self) }
+        unsafe { ::sys::gsl_sf_lnsinh(*self) }
     }
 
     fn lnsinh_e(&self) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_lnsinh_e(*self, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_lnsinh_e(*self, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -208,12 +207,12 @@ impl Trigonometric for f64 {
     }
 
     fn lncosh(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_lncosh(*self) }
+        unsafe { ::sys::gsl_sf_lncosh(*self) }
     }
 
     fn lncosh_e(&self) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_lncosh_e(*self, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_lncosh_e(*self, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -225,9 +224,9 @@ impl Trigonometric for f64 {
     }
 
     fn polar_to_rect(&self, theta: f64) -> (enums::Value, ::types::Result, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_polar_to_rect(*self, theta, &mut result, &mut result2) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_polar_to_rect(*self, theta, &mut result, &mut result2) };
 
         (
             enums::Value::from(ret),
@@ -243,9 +242,9 @@ impl Trigonometric for f64 {
     }
 
     fn rect_to_polar(&self, y: f64) -> (enums::Value, ::types::Result, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_rect_to_polar(*self, y, &mut result, &mut result2) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_rect_to_polar(*self, y, &mut result, &mut result2) };
 
         (
             enums::Value::from(ret),
@@ -261,24 +260,24 @@ impl Trigonometric for f64 {
     }
 
     fn angle_restrict_symm(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_angle_restrict_symm(*self) }
+        unsafe { ::sys::gsl_sf_angle_restrict_symm(*self) }
     }
 
     fn angle_restrict_symm_e(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { ::ffi::gsl_sf_angle_restrict_symm_e(self) })
+        enums::Value::from(unsafe { ::sys::gsl_sf_angle_restrict_symm_e(self) })
     }
 
     fn angle_restrict_pos(&self) -> f64 {
-        unsafe { ::ffi::gsl_sf_angle_restrict_pos(*self) }
+        unsafe { ::sys::gsl_sf_angle_restrict_pos(*self) }
     }
 
     fn angle_restrict_pos_e(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { ::ffi::gsl_sf_angle_restrict_pos_e(self) })
+        enums::Value::from(unsafe { ::sys::gsl_sf_angle_restrict_pos_e(self) })
     }
 
     fn sin_err_e(&self, dx: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_sin_err_e(*self, dx, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_sin_err_e(*self, dx, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -290,8 +289,8 @@ impl Trigonometric for f64 {
     }
 
     fn cos_err_e(&self, dx: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_cos_err_e(*self, dx, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_cos_err_e(*self, dx, &mut result) };
 
         (
             enums::Value::from(ret),

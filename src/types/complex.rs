@@ -31,29 +31,29 @@ impl ComplexF64 {
     /// This function uses the rectangular Cartesian components (x,y) to return the complex number
     /// z = x + i y.
     pub fn rect(x: f64, y: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_rect(x, y).wrap() }
+        unsafe { ::sys::gsl_complex_rect(x, y).wrap() }
     }
 
     /// This function returns the complex number z = r \exp(i \theta) = r (\cos(\theta) + i
     /// \sin(\theta)) from the polar representation (r,theta).
     pub fn polar(r: f64, theta: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_polar(r, theta).wrap() }
+        unsafe { ::sys::gsl_complex_polar(r, theta).wrap() }
     }
 
     /// This function returns the argument of the complex number z, \arg(z), where -\pi < \arg(z)
     /// <= \pi.
     pub fn arg(&self) -> f64 {
-        unsafe { ::ffi::gsl_complex_arg(self.unwrap()) }
+        unsafe { ::sys::gsl_complex_arg(self.unwrap()) }
     }
 
     /// This function returns the magnitude of the complex number z, |z|.
     pub fn abs(&self) -> f64 {
-        unsafe { ::ffi::gsl_complex_abs(self.unwrap()) }
+        unsafe { ::sys::gsl_complex_abs(self.unwrap()) }
     }
 
     /// This function returns the squared magnitude of the complex number z, |z|^2.
     pub fn abs2(&self) -> f64 {
-        unsafe { ::ffi::gsl_complex_abs2(self.unwrap()) }
+        unsafe { ::sys::gsl_complex_abs2(self.unwrap()) }
     }
 
     /// This function returns the natural logarithm of the magnitude of the complex number z,
@@ -64,86 +64,86 @@ impl ComplexF64 {
     /// The direct evaluation of log(gsl_complex_abs(z)) would lead to a loss of precision in this
     /// case.
     pub fn logabs(&self) -> f64 {
-        unsafe { ::ffi::gsl_complex_logabs(self.unwrap()) }
+        unsafe { ::sys::gsl_complex_logabs(self.unwrap()) }
     }
 
     /// This function returns the sum of the complex numbers a and b, z=a+b.
     pub fn add(&self, other: &ComplexF64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_add(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_add(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the difference of the complex numbers a and b, z=a-b.
     pub fn sub(&self, other: &ComplexF64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sub(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sub(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the product of the complex numbers a and b, z=ab.
     pub fn mul(&self, other: &ComplexF64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_mul(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_mul(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the quotient of the complex numbers a and b, z=a/b.
     pub fn div(&self, other: &ComplexF64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_div(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_div(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the sum of the complex number a and the real number x, z=a+x.
     pub fn add_real(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_add_real(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_add_real(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the difference of the complex number a and the real number x, z=a-x.
     pub fn sub_real(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sub_real(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_sub_real(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the product of the complex number a and the real number x, z=ax.
     pub fn mul_real(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_mul_real(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_mul_real(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the quotient of the complex number a and the real number x, z=a/x.
     pub fn div_real(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_div_real(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_div_real(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the sum of the complex number a and the imaginary number iy, z=a+iy.
     pub fn add_imag(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_add_imag(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_add_imag(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the difference of the complex number a and the imaginary number iy,
     /// z=a-iy.
     pub fn sub_imag(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sub_imag(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_sub_imag(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the product of the complex number a and the imaginary number iy,
     /// z=a*(iy).
     pub fn mul_imag(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_mul_imag(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_mul_imag(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the quotient of the complex number a and the imaginary number iy,
     /// z=a/(iy).
     pub fn div_imag(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_div_imag(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_div_imag(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the complex conjugate of the complex number z, z^* = x - i y.
     pub fn conjugate(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_conjugate(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_conjugate(self.unwrap()).wrap() }
     }
 
     /// This function returns the inverse, or reciprocal, of the complex number z, 1/z = (x - i y)/
     /// (x^2 + y^2).
     pub fn inverse(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_inverse(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_inverse(self.unwrap()).wrap() }
     }
 
     /// This function returns the negative of the complex number z, -z = (-x) + i(-y).
     pub fn negative(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_negative(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_negative(self.unwrap()).wrap() }
     }
 
     /// This function returns the square root of the complex number z, \sqrt z.
@@ -151,28 +151,28 @@ impl ComplexF64 {
     /// The branch cut is the negative real axis. The result always lies in the right half of the
     /// omplex plane.
     pub fn sqrt(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sqrt(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sqrt(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex square root of the real number x, where x may be negative.
     pub fn sqrt_real(x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sqrt_real(x).wrap() }
+        unsafe { ::sys::gsl_complex_sqrt_real(x).wrap() }
     }
 
     /// The function returns the complex number z raised to the complex power a, z^a.
     /// This is computed as \exp(\log(z)*a) using complex logarithms and complex exponentials.
     pub fn pow(&self, other: &ComplexF64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_pow(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_pow(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the complex number z raised to the real power x, z^x.
     pub fn pow_real(&self, x: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_pow_real(self.unwrap(), x).wrap() }
+        unsafe { ::sys::gsl_complex_pow_real(self.unwrap(), x).wrap() }
     }
 
     /// This function returns the complex exponential of the complex number z, \exp(z).
     pub fn exp(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_exp(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_exp(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex natural logarithm (base e) of the complex number z,
@@ -180,57 +180,57 @@ impl ComplexF64 {
     ///
     /// The branch cut is the negative real axis.
     pub fn log(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_log(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_log(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex base-10 logarithm of the complex number z, \log_10 (z).
     pub fn log10(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_log10(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_log10(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex base-b logarithm of the complex number z, \log_b(z).
     /// This quantity is computed as the ratio \log(z)/\log(b).
     pub fn log_b(&self, other: &ComplexF64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_log_b(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_log_b(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the complex sine of the complex number z, \sin(z) = (\exp(iz) -
     /// \exp(-iz))/(2i).
     pub fn sin(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sin(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sin(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex cosine of the complex number z, \cos(z) = (\exp(iz) +
     /// \exp(-iz))/2.
     pub fn cos(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_cos(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_cos(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex tangent of the complex number z, \tan(z) =
     /// \sin(z)/\cos(z).
     pub fn tan(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_tan(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_tan(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex secant of the complex number z, \sec(z) = 1/\cos(z).
     pub fn sec(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sec(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sec(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex cosecant of the complex number z, \csc(z) = 1/\sin(z).
     pub fn csc(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_csc(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_csc(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex cotangent of the complex number z, \cot(z) = 1/\tan(z).
     pub fn cot(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_cot(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_cot(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsine of the complex number z, \arcsin(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     pub fn arcsin(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arcsin(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsin(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsine of the real number z, \arcsin(z).
@@ -239,13 +239,13 @@ impl ComplexF64 {
     /// * For z less than -1 the result has a real part of -\pi/2 and a positive imaginary part.
     /// * For z greater than 1 the result has a real part of \pi/2 and a negative imaginary part.
     pub fn arcsin_real(z: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arcsin_real(z).wrap() }
+        unsafe { ::sys::gsl_complex_arcsin_real(z).wrap() }
     }
 
     /// This function returns the complex arccosine of the complex number z, \arccos(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     pub fn arccos(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccos(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccos(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arccosine of the real number z, \arccos(z).
@@ -254,84 +254,84 @@ impl ComplexF64 {
     /// * For z less than -1 the result has a real part of \pi and a negative imaginary part.
     /// * For z greater than 1 the result is purely imaginary and positive.
     pub fn arccos_real(z: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccos_real(z).wrap() }
+        unsafe { ::sys::gsl_complex_arccos_real(z).wrap() }
     }
 
     /// This function returns the complex arctangent of the complex number z, \arctan(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
     pub fn arctan(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arctan(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arctan(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsecant of the complex number z, \arcsec(z) =
     /// \arccos(1/z).
     pub fn arcsec(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arcsec(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsec(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsecant of the real number z, \arcsec(z) = \arccos(1/z).
     pub fn arcsec_real(z: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arcsec_real(z).wrap() }
+        unsafe { ::sys::gsl_complex_arcsec_real(z).wrap() }
     }
 
     /// This function returns the complex arccosecant of the complex number z, \arccsc(z) =
     /// \arcsin(1/z).
     pub fn arccsc(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccsc(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccsc(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arccosecant of the real number z, \arccsc(z) =
     /// \arcsin(1/z).
     pub fn arccsc_real(z: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccsc_real(z).wrap() }
+        unsafe { ::sys::gsl_complex_arccsc_real(z).wrap() }
     }
 
     /// This function returns the complex arccotangent of the complex number z, \arccot(z) =
     /// \arctan(1/z).
     pub fn arccot(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccot(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccot(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic sine of the complex number z, \sinh(z) =
     /// (\exp(z) - \exp(-z))/2.
     pub fn sinh(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sinh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sinh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic cosine of the complex number z, \cosh(z) =
     /// (\exp(z) + \exp(-z))/2.
     pub fn cosh(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_cosh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_cosh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic tangent of the complex number z, \tanh(z) =
     /// \sinh(z)/\cosh(z).
     pub fn tanh(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_tanh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_tanh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic secant of the complex number z, \sech(z) =
     /// 1/\cosh(z).
     pub fn sech(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_sech(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sech(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic cosecant of the complex number z, \csch(z) =
     /// 1/\sinh(z).
     pub fn csch(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_csch(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_csch(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic cotangent of the complex number z, \coth(z) =
     /// 1/\tanh(z).
     pub fn coth(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_coth(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_coth(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arcsine of the complex number z, \arcsinh(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
     pub fn arcsinh(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arcsinh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsinh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccosine of the complex number z, \arccosh(z).
@@ -339,12 +339,12 @@ impl ComplexF64 {
     /// Note that in this case we use the negative square root in formula 4.6.21 of Abramowitz &
     /// Stegun giving \arccosh(z)=\log(z-\sqrt{z^2-1}).
     pub fn arccosh(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccosh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccosh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccosine of the real number z, \arccosh(z).
     pub fn arccosh_real(z: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccosh_real(z).wrap() }
+        unsafe { ::sys::gsl_complex_arccosh_real(z).wrap() }
     }
 
     /// This function returns the complex hyperbolic arctangent of the complex number z,
@@ -352,30 +352,30 @@ impl ComplexF64 {
     ///
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     pub fn arctanh(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arctanh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arctanh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arctangent of the real number z, \arctanh(z).
     pub fn arctanh_real(z: f64) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arctanh_real(z).wrap() }
+        unsafe { ::sys::gsl_complex_arctanh_real(z).wrap() }
     }
 
     /// This function returns the complex hyperbolic arcsecant of the complex number z, \arcsech(z)
     /// = \arccosh(1/z).
     pub fn arcsech(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arcsech(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsech(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccosecant of the complex number z,
     /// \arccsch(z) = \arcsin(1/z).
     pub fn arccsch(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccsch(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccsch(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccotangent of the complex number z,
     /// \arccoth(z) = \arctanh(1/z).
     pub fn arccoth(&self) -> ComplexF64 {
-        unsafe { ::ffi::gsl_complex_arccoth(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccoth(self.unwrap()).wrap() }
     }
 }
 
@@ -399,50 +399,50 @@ impl Default for ComplexF64 {
     }
 }
 
-impl CFFI<ffi::gsl_complex> for ComplexF64 {
-    fn wrap(t: ffi::gsl_complex) -> ComplexF64 {
+impl CFFI<sys::gsl_complex> for ComplexF64 {
+    fn wrap(t: sys::gsl_complex) -> ComplexF64 {
         unsafe { ::std::mem::transmute(t) }
     }
 
-    fn unwrap(self) -> ffi::gsl_complex {
+    fn unwrap(self) -> sys::gsl_complex {
         unsafe { ::std::mem::transmute(self) }
     }
 }
 
-impl CFFI<ffi::gsl_complex_float> for ComplexF64 {
-    fn wrap(t: ffi::gsl_complex_float) -> ComplexF64 {
+impl CFFI<sys::gsl_complex_float> for ComplexF64 {
+    fn wrap(t: sys::gsl_complex_float) -> ComplexF64 {
         ComplexF64 {
             dat: [t.dat[0] as f64, t.dat[1] as f64],
         }
     }
 
-    fn unwrap(self) -> ffi::gsl_complex_float {
-        ffi::gsl_complex_float {
+    fn unwrap(self) -> sys::gsl_complex_float {
+        sys::gsl_complex_float {
             dat: [self.dat[0] as f32, self.dat[1] as f32],
         }
     }
 }
 
-impl FFFI<ComplexF32> for ffi::gsl_complex {
+impl FFFI<ComplexF32> for sys::gsl_complex {
     fn wrap(self) -> ComplexF32 {
         ComplexF32 {
             dat: [self.dat[0] as f32, self.dat[1] as f32],
         }
     }
 
-    fn unwrap(t: ComplexF32) -> ffi::gsl_complex {
-        ffi::gsl_complex {
+    fn unwrap(t: ComplexF32) -> sys::gsl_complex {
+        sys::gsl_complex {
             dat: [t.dat[0] as f64, t.dat[1] as f64],
         }
     }
 }
 
-impl FFFI<ComplexF64> for ffi::gsl_complex {
+impl FFFI<ComplexF64> for sys::gsl_complex {
     fn wrap(self) -> ComplexF64 {
         unsafe { ::std::mem::transmute(self) }
     }
 
-    fn unwrap(t: ComplexF64) -> ffi::gsl_complex {
+    fn unwrap(t: ComplexF64) -> sys::gsl_complex {
         unsafe { ::std::mem::transmute(t) }
     }
 }
@@ -457,29 +457,29 @@ impl ComplexF32 {
     /// This function uses the rectangular Cartesian components (x,y) to return the complex number
     /// z = x + i y.
     pub fn rect(x: f32, y: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_rect(x as f64, y as f64).wrap() }
+        unsafe { ::sys::gsl_complex_rect(x as f64, y as f64).wrap() }
     }
 
     /// This function returns the complex number z = r \exp(i \theta) = r (\cos(\theta) + i
     /// \sin(\theta)) from the polar representation (r,theta).
     pub fn polar(r: f32, theta: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_polar(r as f64, theta as f64).wrap() }
+        unsafe { ::sys::gsl_complex_polar(r as f64, theta as f64).wrap() }
     }
 
     /// This function returns the argument of the complex number z, \arg(z), where -\pi < \arg(z)
     /// <= \pi.
     pub fn arg(&self) -> f32 {
-        unsafe { ::ffi::gsl_complex_arg(self.unwrap()) as f32 }
+        unsafe { ::sys::gsl_complex_arg(self.unwrap()) as f32 }
     }
 
     /// This function returns the magnitude of the complex number z, |z|.
     pub fn abs(&self) -> f32 {
-        unsafe { ::ffi::gsl_complex_abs(self.unwrap()) as f32 }
+        unsafe { ::sys::gsl_complex_abs(self.unwrap()) as f32 }
     }
 
     /// This function returns the squared magnitude of the complex number z, |z|^2.
     pub fn abs2(&self) -> f32 {
-        unsafe { ::ffi::gsl_complex_abs2(self.unwrap()) as f32 }
+        unsafe { ::sys::gsl_complex_abs2(self.unwrap()) as f32 }
     }
 
     /// This function returns the natural logarithm of the magnitude of the complex number z,
@@ -489,83 +489,83 @@ impl ComplexF32 {
     /// The direct evaluation of log(gsl_complex_abs(z)) would lead to a loss of precision in
     /// this case.
     pub fn logabs(&self) -> f32 {
-        unsafe { ::ffi::gsl_complex_logabs(self.unwrap()) as f32 }
+        unsafe { ::sys::gsl_complex_logabs(self.unwrap()) as f32 }
     }
 
     /// This function returns the sum of the complex numbers a and b, z=a+b.
     pub fn add(&self, other: &ComplexF32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_add(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_add(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the difference of the complex numbers a and b, z=a-b.
     pub fn sub(&self, other: &ComplexF32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sub(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sub(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the product of the complex numbers a and b, z=ab.
     pub fn mul(&self, other: &ComplexF32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_mul(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_mul(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the quotient of the complex numbers a and b, z=a/b.
     pub fn div(&self, other: &ComplexF32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_div(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_div(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the sum of the complex number a and the real number x, z=a+x.
     pub fn add_real(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_add_real(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_add_real(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the difference of the complex number a and the real number x, z=a-x.
     pub fn sub_real(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sub_real(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_sub_real(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the product of the complex number a and the real number x, z=ax.
     pub fn mul_real(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_mul_real(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_mul_real(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the quotient of the complex number a and the real number x, z=a/x.
     pub fn div_real(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_div_real(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_div_real(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the sum of the complex number a and the imaginary number iy, z=a+iy.
     pub fn add_imag(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_add_imag(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_add_imag(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the difference of the complex number a and the imaginary number iy, z=a-iy.
     pub fn sub_imag(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sub_imag(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_sub_imag(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the product of the complex number a and the imaginary number iy, z=a*(iy).
     pub fn mul_imag(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_mul_imag(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_mul_imag(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the quotient of the complex number a and the imaginary number iy, z=a/(iy).
     pub fn div_imag(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_div_imag(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_div_imag(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the complex conjugate of the complex number z, z^* = x - i y.
     pub fn conjugate(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_conjugate(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_conjugate(self.unwrap()).wrap() }
     }
 
     /// This function returns the inverse, or reciprocal, of the complex number z, 1/z = (x - i y)/
     /// (x^2 + y^2).
     pub fn inverse(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_inverse(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_inverse(self.unwrap()).wrap() }
     }
 
     /// This function returns the negative of the complex number z, -z = (-x) + i(-y).
     pub fn negative(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_negative(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_negative(self.unwrap()).wrap() }
     }
 
     /// This function returns the square root of the complex number z, \sqrt z.
@@ -573,85 +573,85 @@ impl ComplexF32 {
     /// The branch cut is the negative real axis. The result always lies in the right half of the
     /// complex plane.
     pub fn sqrt(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sqrt(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sqrt(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex square root of the real number x, where x may be negative.
     pub fn sqrt_real(x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sqrt_real(x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_sqrt_real(x as f64).wrap() }
     }
 
     /// The function returns the complex number z raised to the complex power a, z^a.
     ///
     /// This is computed as \exp(\log(z)*a) using complex logarithms and complex exponentials.
     pub fn pow(&self, other: &ComplexF32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_pow(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_pow(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the complex number z raised to the real power x, z^x.
     pub fn pow_real(&self, x: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_pow_real(self.unwrap(), x as f64).wrap() }
+        unsafe { ::sys::gsl_complex_pow_real(self.unwrap(), x as f64).wrap() }
     }
 
     /// This function returns the complex exponential of the complex number z, \exp(z).
     pub fn exp(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_exp(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_exp(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex natural logarithm (base e) of the complex number z, \log(z).
     /// The branch cut is the negative real axis.
     pub fn log(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_log(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_log(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex base-10 logarithm of the complex number z, \log_10 (z).
     pub fn log10(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_log10(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_log10(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex base-b logarithm of the complex number z, \log_b(z).
     /// This quantity is computed as the ratio \log(z)/\log(b).
     pub fn log_b(&self, other: &ComplexF32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_log_b(self.unwrap(), other.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_log_b(self.unwrap(), other.unwrap()).wrap() }
     }
 
     /// This function returns the complex sine of the complex number z, \sin(z) = (\exp(iz) -
     /// \exp(-iz))/(2i).
     pub fn sin(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sin(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sin(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex cosine of the complex number z, \cos(z) = (\exp(iz) +
     /// \exp(-iz))/2.
     pub fn cos(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_cos(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_cos(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex tangent of the complex number z, \tan(z) =
     /// \sin(z)/\cos(z).
     pub fn tan(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_tan(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_tan(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex secant of the complex number z, \sec(z) = 1/\cos(z).
     pub fn sec(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sec(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sec(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex cosecant of the complex number z, \csc(z) = 1/\sin(z).
     pub fn csc(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_csc(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_csc(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex cotangent of the complex number z, \cot(z) = 1/\tan(z).
     pub fn cot(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_cot(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_cot(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsine of the complex number z, \arcsin(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     pub fn arcsin(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arcsin(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsin(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsine of the real number z, \arcsin(z).
@@ -660,13 +660,13 @@ impl ComplexF32 {
     /// * For z less than -1 the result has a real part of -\pi/2 and a positive imaginary part.
     /// * For z greater than 1 the result has a real part of \pi/2 and a negative imaginary part.
     pub fn arcsin_real(z: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arcsin_real(z as f64).wrap() }
+        unsafe { ::sys::gsl_complex_arcsin_real(z as f64).wrap() }
     }
 
     /// This function returns the complex arccosine of the complex number z, \arccos(z).
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     pub fn arccos(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccos(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccos(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arccosine of the real number z, \arccos(z).
@@ -675,84 +675,84 @@ impl ComplexF32 {
     /// * For z less than -1 the result has a real part of \pi and a negative imaginary part.
     /// * For z greater than 1 the result is purely imaginary and positive.
     pub fn arccos_real(z: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccos_real(z as f64).wrap() }
+        unsafe { ::sys::gsl_complex_arccos_real(z as f64).wrap() }
     }
 
     /// This function returns the complex arctangent of the complex number z, \arctan(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
     pub fn arctan(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arctan(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arctan(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsecant of the complex number z, \arcsec(z) =
     /// \arccos(1/z).
     pub fn arcsec(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arcsec(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsec(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arcsecant of the real number z, \arcsec(z) = \arccos(1/z).
     pub fn arcsec_real(z: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arcsec_real(z as f64).wrap() }
+        unsafe { ::sys::gsl_complex_arcsec_real(z as f64).wrap() }
     }
 
     /// This function returns the complex arccosecant of the complex number z, \arccsc(z) =
     /// \arcsin(1/z).
     pub fn arccsc(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccsc(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccsc(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex arccosecant of the real number z, \arccsc(z) =
     /// \arcsin(1/z).
     pub fn arccsc_real(z: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccsc_real(z as f64).wrap() }
+        unsafe { ::sys::gsl_complex_arccsc_real(z as f64).wrap() }
     }
 
     /// This function returns the complex arccotangent of the complex number z, \arccot(z) =
     /// \arctan(1/z).
     pub fn arccot(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccot(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccot(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic sine of the complex number z, \sinh(z) =
     /// (\exp(z) - \exp(-z))/2.
     pub fn sinh(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sinh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sinh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic cosine of the complex number z, \cosh(z) =
     /// (\exp(z) + \exp(-z))/2.
     pub fn cosh(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_cosh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_cosh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic tangent of the complex number z, \tanh(z) =
     /// \sinh(z)/\cosh(z).
     pub fn tanh(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_tanh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_tanh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic secant of the complex number z, \sech(z) =
     /// 1/\cosh(z).
     pub fn sech(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_sech(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_sech(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic cosecant of the complex number z, \csch(z) =
     /// 1/\sinh(z).
     pub fn csch(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_csch(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_csch(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic cotangent of the complex number z, \coth(z) =
     /// 1/\tanh(z).
     pub fn coth(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_coth(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_coth(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arcsine of the complex number z, \arcsinh(z).
     /// The branch cuts are on the imaginary axis, below -i and above i.
     pub fn arcsinh(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arcsinh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsinh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccosine of the complex number z, \arccosh(z).
@@ -762,12 +762,12 @@ impl ComplexF32 {
     /// Note that in this case we use the negative square root in formula 4.6.21 of Abramowitz &
     /// Stegun giving \arccosh(z)=\log(z-\sqrt{z^2-1}).
     pub fn arccosh(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccosh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccosh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccosine of the real number z, \arccosh(z).
     pub fn arccosh_real(z: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccosh_real(z as f64).wrap() }
+        unsafe { ::sys::gsl_complex_arccosh_real(z as f64).wrap() }
     }
 
     /// This function returns the complex hyperbolic arctangent of the complex number z,
@@ -775,30 +775,30 @@ impl ComplexF32 {
     ///
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     pub fn arctanh(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arctanh(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arctanh(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arctangent of the real number z, \arctanh(z).
     pub fn arctanh_real(z: f32) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arctanh_real(z as f64).wrap() }
+        unsafe { ::sys::gsl_complex_arctanh_real(z as f64).wrap() }
     }
 
     /// This function returns the complex hyperbolic arcsecant of the complex number z, \arcsech(z)
     /// = \arccosh(1/z).
     pub fn arcsech(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arcsech(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arcsech(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccosecant of the complex number z,
     /// \arccsch(z) = \arcsin(1/z).
     pub fn arccsch(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccsch(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccsch(self.unwrap()).wrap() }
     }
 
     /// This function returns the complex hyperbolic arccotangent of the complex number z,
     /// \arccoth(z) = \arctanh(1/z).
     pub fn arccoth(&self) -> ComplexF32 {
-        unsafe { ::ffi::gsl_complex_arccoth(self.unwrap()).wrap() }
+        unsafe { ::sys::gsl_complex_arccoth(self.unwrap()).wrap() }
     }
 }
 
@@ -822,26 +822,26 @@ impl Default for ComplexF32 {
     }
 }
 
-impl CFFI<ffi::gsl_complex> for ComplexF32 {
-    fn wrap(s: ffi::gsl_complex) -> ComplexF32 {
+impl CFFI<sys::gsl_complex> for ComplexF32 {
+    fn wrap(s: sys::gsl_complex) -> ComplexF32 {
         ComplexF32 {
             dat: [s.dat[0] as f32, s.dat[1] as f32],
         }
     }
 
-    fn unwrap(self) -> ffi::gsl_complex {
-        ffi::gsl_complex {
+    fn unwrap(self) -> sys::gsl_complex {
+        sys::gsl_complex {
             dat: [self.dat[0] as f64, self.dat[1] as f64],
         }
     }
 }
 
-impl CFFI<ffi::gsl_complex_float> for ComplexF32 {
-    fn wrap(s: ffi::gsl_complex_float) -> ComplexF32 {
+impl CFFI<sys::gsl_complex_float> for ComplexF32 {
+    fn wrap(s: sys::gsl_complex_float) -> ComplexF32 {
         unsafe { ::std::mem::transmute(s) }
     }
 
-    fn unwrap(self) -> ffi::gsl_complex_float {
+    fn unwrap(self) -> sys::gsl_complex_float {
         unsafe { ::std::mem::transmute(self) }
     }
 }

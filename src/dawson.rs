@@ -12,13 +12,13 @@ use std::mem::zeroed;
 
 /// This routine computes the value of Dawson’s integral for x.
 pub fn dawson(x: f64) -> f64 {
-    unsafe { ::ffi::gsl_sf_dawson(x) }
+    unsafe { ::sys::gsl_sf_dawson(x) }
 }
 
 /// This routine computes the value of Dawson’s integral for x.
 pub fn dawson_e(x: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-    let ret = unsafe { ::ffi::gsl_sf_dawson_e(x, &mut result) };
+    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+    let ret = unsafe { ::sys::gsl_sf_dawson_e(x, &mut result) };
 
     (
         enums::Value::from(ret),

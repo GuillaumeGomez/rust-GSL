@@ -23,14 +23,14 @@ use std::mem::zeroed;
 /// The Mathieu functions can be computed for a single order or for multiple orders, using array-based routines.
 /// The array-based routines require a preallocated workspace.
 pub struct MathieuWorkspace {
-    work: *mut ffi::gsl_sf_mathieu_workspace,
+    work: *mut sys::gsl_sf_mathieu_workspace,
 }
 
 impl MathieuWorkspace {
     /// This function returns a workspace for the array versions of the Mathieu routines.
     /// The arguments n and qmax specify the maximum order and q-value of Mathieu functions which can be computed with this workspace.
     pub fn new(n: usize, qmax: f64) -> Option<MathieuWorkspace> {
-        let tmp = unsafe { ffi::gsl_sf_mathieu_alloc(n, qmax) };
+        let tmp = unsafe { sys::gsl_sf_mathieu_alloc(n, qmax) };
 
         if tmp.is_null() {
             None
@@ -41,8 +41,8 @@ impl MathieuWorkspace {
 
     /// This routine computes the characteristic values a_n(q), b_n(q) of the Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_a(n: i32, q: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_a_e(n, q, &mut result) };
+        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+        let ret = unsafe { sys::gsl_sf_mathieu_a_e(n, q, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -55,8 +55,8 @@ impl MathieuWorkspace {
 
     /// This routine computes the characteristic values a_n(q), b_n(q) of the Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_b(n: i32, q: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_b_e(n, q, &mut result) };
+        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+        let ret = unsafe { sys::gsl_sf_mathieu_b_e(n, q, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -76,7 +76,7 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sf_mathieu_a_array(
+            sys::gsl_sf_mathieu_a_array(
                 order_min,
                 order_max,
                 q,
@@ -95,7 +95,7 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sf_mathieu_b_array(
+            sys::gsl_sf_mathieu_b_array(
                 order_min,
                 order_max,
                 q,
@@ -107,8 +107,8 @@ impl MathieuWorkspace {
 
     /// This routine computes the angular Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_ce(n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_ce_e(n, q, x, &mut result) };
+        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+        let ret = unsafe { sys::gsl_sf_mathieu_ce_e(n, q, x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -121,8 +121,8 @@ impl MathieuWorkspace {
 
     /// This routine computes the angular Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     pub fn mathieu_se(n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_se_e(n, q, x, &mut result) };
+        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+        let ret = unsafe { sys::gsl_sf_mathieu_se_e(n, q, x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -143,7 +143,7 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sf_mathieu_ce_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_ce_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
         })
     }
 
@@ -157,7 +157,7 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sf_mathieu_se_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_se_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
         })
     }
 
@@ -165,8 +165,8 @@ impl MathieuWorkspace {
     ///
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
     pub fn mathieu_Mc(j: i32, n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_Mc_e(j, n, q, x, &mut result) };
+        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+        let ret = unsafe { sys::gsl_sf_mathieu_Mc_e(j, n, q, x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -181,8 +181,8 @@ impl MathieuWorkspace {
     ///
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
     pub fn mathieu_Ms(j: i32, n: i32, q: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-        let ret = unsafe { ffi::gsl_sf_mathieu_Ms_e(j, n, q, x, &mut result) };
+        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+        let ret = unsafe { sys::gsl_sf_mathieu_Ms_e(j, n, q, x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -204,7 +204,7 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sf_mathieu_Mc_array(j, nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_Mc_array(j, nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
         })
     }
 
@@ -219,32 +219,32 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_sf_mathieu_Ms_array(j, nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_Ms_array(j, nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
         })
     }
 }
 
 impl Drop for MathieuWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_sf_mathieu_free(self.work) };
+        unsafe { sys::gsl_sf_mathieu_free(self.work) };
         self.work = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_sf_mathieu_workspace> for MathieuWorkspace {
-    fn wrap(r: *mut ffi::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
+impl ffi::FFI<sys::gsl_sf_mathieu_workspace> for MathieuWorkspace {
+    fn wrap(r: *mut sys::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
         MathieuWorkspace { work: r }
     }
 
-    fn soft_wrap(r: *mut ffi::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
+    fn soft_wrap(r: *mut sys::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(v: &MathieuWorkspace) -> *const ffi::gsl_sf_mathieu_workspace {
+    fn unwrap_shared(v: &MathieuWorkspace) -> *const sys::gsl_sf_mathieu_workspace {
         v.work as *const _
     }
 
-    fn unwrap_unique(v: &mut MathieuWorkspace) -> *mut ffi::gsl_sf_mathieu_workspace {
+    fn unwrap_unique(v: &mut MathieuWorkspace) -> *mut sys::gsl_sf_mathieu_workspace {
         v.work
     }
 }

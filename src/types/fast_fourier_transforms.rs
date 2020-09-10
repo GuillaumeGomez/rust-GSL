@@ -6,7 +6,7 @@ use c_vec::CSlice;
 use ffi;
 
 pub struct FftComplexWaveTable {
-    w: *mut ffi::gsl_fft_complex_wavetable,
+    w: *mut sys::gsl_fft_complex_wavetable,
     f: CSlice<usize>,
 }
 
@@ -20,7 +20,7 @@ impl FftComplexWaveTable {
     /// The wavetable structure can be used repeatedly for any transform of the same length. The table is not modified by calls to any of the other
     /// FFT functions. The same wavetable can be used for both forward and backward (or inverse) transforms of a given length.
     pub fn new(n: usize) -> Option<FftComplexWaveTable> {
-        let tmp = unsafe { ffi::gsl_fft_complex_wavetable_alloc(n) };
+        let tmp = unsafe { sys::gsl_fft_complex_wavetable_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -41,13 +41,13 @@ impl FftComplexWaveTable {
 
 impl Drop for FftComplexWaveTable {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_fft_complex_wavetable_free(self.w) };
+        unsafe { sys::gsl_fft_complex_wavetable_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
-    fn wrap(w: *mut ffi::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
+impl ffi::FFI<sys::gsl_fft_complex_wavetable> for FftComplexWaveTable {
+    fn wrap(w: *mut sys::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
         unsafe {
             FftComplexWaveTable {
                 w: w,
@@ -56,27 +56,27 @@ impl ffi::FFI<ffi::gsl_fft_complex_wavetable> for FftComplexWaveTable {
         }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
+    fn soft_wrap(w: *mut sys::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &FftComplexWaveTable) -> *const ffi::gsl_fft_complex_wavetable {
+    fn unwrap_shared(w: &FftComplexWaveTable) -> *const sys::gsl_fft_complex_wavetable {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut FftComplexWaveTable) -> *mut ffi::gsl_fft_complex_wavetable {
+    fn unwrap_unique(w: &mut FftComplexWaveTable) -> *mut sys::gsl_fft_complex_wavetable {
         w.w
     }
 }
 
 pub struct FftComplexWorkspace {
-    w: *mut ffi::gsl_fft_complex_workspace,
+    w: *mut sys::gsl_fft_complex_workspace,
 }
 
 impl FftComplexWorkspace {
     /// This function allocates a workspace for a complex transform of length n.
     pub fn new(n: usize) -> Option<FftComplexWorkspace> {
-        let tmp = unsafe { ffi::gsl_fft_complex_workspace_alloc(n) };
+        let tmp = unsafe { sys::gsl_fft_complex_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -88,25 +88,25 @@ impl FftComplexWorkspace {
 
 impl Drop for FftComplexWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_fft_complex_workspace_free(self.w) };
+        unsafe { sys::gsl_fft_complex_workspace_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_fft_complex_workspace> for FftComplexWorkspace {
-    fn wrap(w: *mut ffi::gsl_fft_complex_workspace) -> FftComplexWorkspace {
+impl ffi::FFI<sys::gsl_fft_complex_workspace> for FftComplexWorkspace {
+    fn wrap(w: *mut sys::gsl_fft_complex_workspace) -> FftComplexWorkspace {
         FftComplexWorkspace { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_fft_complex_workspace) -> FftComplexWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_fft_complex_workspace) -> FftComplexWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &FftComplexWorkspace) -> *const ffi::gsl_fft_complex_workspace {
+    fn unwrap_shared(w: &FftComplexWorkspace) -> *const sys::gsl_fft_complex_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut FftComplexWorkspace) -> *mut ffi::gsl_fft_complex_workspace {
+    fn unwrap_unique(w: &mut FftComplexWorkspace) -> *mut sys::gsl_fft_complex_workspace {
         w.w
     }
 }

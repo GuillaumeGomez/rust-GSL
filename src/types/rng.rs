@@ -75,7 +75,7 @@ use ffi;
 use libc::c_ulong;
 
 pub struct Rng {
-    r: *mut ffi::gsl_rng,
+    r: *mut sys::gsl_rng,
 }
 
 impl Rng {
@@ -90,7 +90,7 @@ impl Rng {
     /// The generator is automatically initialized with the default seed, gsl_rng_default_seed. This is zero by default but can be changed either directly or by using the environment variable
     /// GSL_RNG_SEED (see [`Random number environment variables`](https://www.gnu.org/software/gsl/manual/html_node/Random-number-environment-variables.html#Random-number-environment-variables)).
     pub fn new(T: &RngType) -> Option<Rng> {
-        let tmp = unsafe { ffi::gsl_rng_alloc(ffi::FFI::unwrap_shared(T)) };
+        let tmp = unsafe { sys::gsl_rng_alloc(ffi::FFI::unwrap_shared(T)) };
 
         if tmp.is_null() {
             None
@@ -107,27 +107,27 @@ impl Rng {
     ///
     /// Note that the most generators only accept 32-bit seeds, with higher values being reduced modulo 2^32. For generators with smaller ranges the maximum seed value will typically be lower.
     pub fn set(&mut self, s: usize) {
-        unsafe { ffi::gsl_rng_set(self.r, s as c_ulong) }
+        unsafe { sys::gsl_rng_set(self.r, s as c_ulong) }
     }
 
     /// This function returns a random integer from the generator r. The minimum and maximum values depend on the algorithm used, but all integers in the range [min,max] are equally likely.
     /// The values of min and max can be determined using the auxiliary functions gsl_rng_max (r) and gsl_rng_min (r).
     pub fn get(&mut self) -> usize {
-        unsafe { ffi::gsl_rng_get(self.r) as usize }
+        unsafe { sys::gsl_rng_get(self.r) as usize }
     }
 
     /// This function returns a double precision floating point number uniformly distributed in the range [0,1). The range includes 0.0 but excludes 1.0.
     /// The value is typically obtained by dividing the result of gsl_rng_get(r) by gsl_rng_max(r) + 1.0 in double precision.
     /// Some generators compute this ratio internally so that they can provide floating point numbers with more than 32 bits of randomness (the maximum number of bits that can be portably represented in a single unsigned long int).
     pub fn uniform(&mut self) -> f64 {
-        unsafe { ffi::gsl_rng_uniform(self.r) }
+        unsafe { sys::gsl_rng_uniform(self.r) }
     }
 
     /// This function returns a positive double precision floating point number uniformly distributed in the range (0,1), excluding both 0.0 and 1.0.
     /// The number is obtained by sampling the generator with the algorithm of gsl_rng_uniform until a non-zero value is obtained.
     /// You can use this function if you need to avoid a singularity at 0.0.
     pub fn uniform_pos(&mut self) -> f64 {
-        unsafe { ffi::gsl_rng_uniform_pos(self.r) }
+        unsafe { sys::gsl_rng_uniform_pos(self.r) }
     }
 
     /// This function returns a random integer from 0 to n-1 inclusive by scaling down and/or discarding samples from the generator r.
@@ -139,7 +139,7 @@ impl Rng {
     /// In particular, this function is not intended for generating the full range of unsigned integer values [0,2^32-1].
     /// Instead choose a generator with the maximal integer range and zero minimum value, such as gsl_rng_ranlxd1, gsl_rng_mt19937 or gsl_rng_taus, and sample it directly using gsl_rng_get. The range of each generator can be found using the auxiliary functions described in the next section.
     pub fn uniform_int(&mut self, n: usize) -> usize {
-        unsafe { ffi::gsl_rng_uniform_int(self.r, n as c_ulong) as usize }
+        unsafe { sys::gsl_rng_uniform_int(self.r, n as c_ulong) as usize }
     }
 
     /// This function returns a pointer to the name of the generator. For example,
@@ -151,7 +151,7 @@ impl Rng {
     /// would print something like "r is a 'taus' generator".
     pub fn get_name(&self) -> String {
         unsafe {
-            let tmp = ffi::gsl_rng_name(self.r);
+            let tmp = sys::gsl_rng_name(self.r);
 
             String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
@@ -159,13 +159,13 @@ impl Rng {
 
     /// This function returns the largest value that the get function can return.
     pub fn max(&self) -> usize {
-        unsafe { ffi::gsl_rng_max(self.r) as usize }
+        unsafe { sys::gsl_rng_max(self.r) as usize }
     }
 
     /// This function returns the smallest value that gsl_rng_get can return. Usually this value is zero.
     /// There are some generators with algorithms that cannot return zero, and for these generators the minimum value is 1.
     pub fn min(&self) -> usize {
-        unsafe { ffi::gsl_rng_min(self.r) as usize }
+        unsafe { sys::gsl_rng_min(self.r) as usize }
     }
 
     /// This function returns a pointer to the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,
@@ -176,12 +176,12 @@ impl Rng {
     /// fwrite (state, n, 1, stream);
     /// ```
     pub fn state<'r, T>(&self) -> &'r mut T {
-        unsafe { ::std::mem::transmute(ffi::gsl_rng_state(self.r)) }
+        unsafe { ::std::mem::transmute(sys::gsl_rng_state(self.r)) }
     }
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
     pub fn copy(&self, other: &mut Rng) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_rng_memcpy(other.r, self.r) })
+        enums::Value::from(unsafe { sys::gsl_rng_memcpy(other.r, self.r) })
     }
 
     /// This function returns the size of the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,
@@ -192,50 +192,50 @@ impl Rng {
     /// fwrite (state, n, 1, stream);
     /// ```
     pub fn size(&self) -> usize {
-        unsafe { ffi::gsl_rng_size(self.r) }
+        unsafe { sys::gsl_rng_size(self.r) }
     }
 
     /// Equivalent to DefaultRngSeed
     pub fn default_seed() -> usize {
-        unsafe { ffi::gsl_rng_default_seed as usize }
+        unsafe { sys::gsl_rng_default_seed as usize }
     }
 }
 
 impl Clone for Rng {
     /// This function returns a pointer to a newly created generator which is an exact copy of the generator r.
     fn clone(&self) -> Rng {
-        unsafe { ffi::FFI::wrap(ffi::gsl_rng_clone(self.r)) }
+        unsafe { ffi::FFI::wrap(sys::gsl_rng_clone(self.r)) }
     }
 }
 
 impl Drop for Rng {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_rng_free(self.r) };
+        unsafe { sys::gsl_rng_free(self.r) };
         self.r = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_rng> for Rng {
-    fn wrap(r: *mut ffi::gsl_rng) -> Rng {
+impl ffi::FFI<sys::gsl_rng> for Rng {
+    fn wrap(r: *mut sys::gsl_rng) -> Rng {
         Rng { r: r }
     }
 
-    fn soft_wrap(r: *mut ffi::gsl_rng) -> Rng {
+    fn soft_wrap(r: *mut sys::gsl_rng) -> Rng {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(m: &Rng) -> *const ffi::gsl_rng {
+    fn unwrap_shared(m: &Rng) -> *const sys::gsl_rng {
         m.r as *const _
     }
 
-    fn unwrap_unique(m: &mut Rng) -> *mut ffi::gsl_rng {
+    fn unwrap_unique(m: &mut Rng) -> *mut sys::gsl_rng {
         m.r
     }
 }
 
 #[derive(Clone, Copy)]
 pub struct RngType {
-    ptr: *mut ffi::gsl_rng_type,
+    ptr: *mut sys::gsl_rng_type,
 }
 
 impl RngType {
@@ -290,7 +290,7 @@ impl RngType {
     /// }
     /// ```
     pub fn types_setup() -> Vec<RngType> {
-        let ptr = unsafe { ffi::gsl_rng_types_setup() };
+        let ptr = unsafe { sys::gsl_rng_types_setup() };
         let mut ret = Vec::new();
 
         if !ptr.is_null() {
@@ -323,30 +323,30 @@ impl RngType {
     /// If you don’t specify a generator for GSL_RNG_TYPE then gsl_rng_mt19937 is used as the default. The initial value of gsl_rng_default_seed is zero.
     /// See rng example in examples folder for more details.
     pub fn env_setup() -> Option<RngType> {
-        let tmp = unsafe { ffi::gsl_rng_env_setup() };
+        let tmp = unsafe { sys::gsl_rng_env_setup() };
 
         if tmp.is_null() {
             None
         } else {
-            Some(ffi::FFI::wrap(tmp as *mut ffi::gsl_rng_type))
+            Some(ffi::FFI::wrap(tmp as *mut sys::gsl_rng_type))
         }
     }
 }
 
-impl ffi::FFI<ffi::gsl_rng_type> for RngType {
-    fn wrap(r: *mut ffi::gsl_rng_type) -> RngType {
+impl ffi::FFI<sys::gsl_rng_type> for RngType {
+    fn wrap(r: *mut sys::gsl_rng_type) -> RngType {
         RngType { ptr: r }
     }
 
-    fn soft_wrap(r: *mut ffi::gsl_rng_type) -> RngType {
+    fn soft_wrap(r: *mut sys::gsl_rng_type) -> RngType {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(m: &RngType) -> *const ffi::gsl_rng_type {
+    fn unwrap_shared(m: &RngType) -> *const sys::gsl_rng_type {
         m.ptr as *const _
     }
 
-    fn unwrap_unique(m: &mut RngType) -> *mut ffi::gsl_rng_type {
+    fn unwrap_unique(m: &mut RngType) -> *mut sys::gsl_rng_type {
         m.ptr
     }
 }

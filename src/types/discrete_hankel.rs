@@ -57,13 +57,13 @@ use enums;
 use ffi;
 
 pub struct DiscreteHankel {
-    t: *mut ffi::gsl_dht,
+    t: *mut sys::gsl_dht,
 }
 
 impl DiscreteHankel {
     /// This function allocates a Discrete Hankel transform object of size `size`.
     pub fn new(size: usize) -> Option<DiscreteHankel> {
-        let tmp = unsafe { ffi::gsl_dht_alloc(size) };
+        let tmp = unsafe { sys::gsl_dht_alloc(size) };
 
         if tmp.is_null() {
             None
@@ -75,7 +75,7 @@ impl DiscreteHankel {
     /// This function allocates a Discrete Hankel transform object of size `size` and initializes it
     /// for the given values of `nu` and `xmax`.
     pub fn new_with_init(size: usize, nu: f64, xmax: f64) -> Option<DiscreteHankel> {
-        let tmp = unsafe { ffi::gsl_dht_new(size, nu, xmax) };
+        let tmp = unsafe { sys::gsl_dht_new(size, nu, xmax) };
 
         if tmp.is_null() {
             None
@@ -86,7 +86,7 @@ impl DiscreteHankel {
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
     pub fn init(&mut self, nu: f64, xmax: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_dht_init(self.t, nu, xmax) })
+        enums::Value::from(unsafe { sys::gsl_dht_init(self.t, nu, xmax) })
     }
 
     /// This function applies the transform t to the array f_in whose size is equal to the size of
@@ -101,7 +101,7 @@ impl DiscreteHankel {
                 "f_in and f_out must have the same length as this struct"
             );
             let mut f_out: Vec<f64> = ::std::iter::repeat(0.).take(f_in.len()).collect();
-            match enums::Value::from(ffi::gsl_dht_apply(
+            match enums::Value::from(sys::gsl_dht_apply(
                 self.t,
                 f_in.as_ptr(),
                 f_out.as_mut_ptr(),
@@ -116,36 +116,36 @@ impl DiscreteHankel {
     /// (j_{\nu,n+1}/j_{\nu,M}) X. These are the points where the function f(t) is assumed to be
     /// sampled.
     pub fn x_sample(&self, n: i32) -> f64 {
-        unsafe { ffi::gsl_dht_x_sample(self.t, n) }
+        unsafe { sys::gsl_dht_x_sample(self.t, n) }
     }
 
     /// This function returns the value of the n-th sample point in “k-space”, j_{\nu,n+1}/X.
     pub fn k_sample(&self, n: i32) -> f64 {
-        unsafe { ffi::gsl_dht_k_sample(self.t, n) }
+        unsafe { sys::gsl_dht_k_sample(self.t, n) }
     }
 }
 
 impl Drop for DiscreteHankel {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_dht_free(self.t) };
+        unsafe { sys::gsl_dht_free(self.t) };
         self.t = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_dht> for DiscreteHankel {
-    fn wrap(t: *mut ffi::gsl_dht) -> DiscreteHankel {
+impl ffi::FFI<sys::gsl_dht> for DiscreteHankel {
+    fn wrap(t: *mut sys::gsl_dht) -> DiscreteHankel {
         DiscreteHankel { t: t }
     }
 
-    fn soft_wrap(t: *mut ffi::gsl_dht) -> DiscreteHankel {
+    fn soft_wrap(t: *mut sys::gsl_dht) -> DiscreteHankel {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &DiscreteHankel) -> *const ffi::gsl_dht {
+    fn unwrap_shared(t: &DiscreteHankel) -> *const sys::gsl_dht {
         t.t as *const _
     }
 
-    fn unwrap_unique(t: &mut DiscreteHankel) -> *mut ffi::gsl_dht {
+    fn unwrap_unique(t: &mut DiscreteHankel) -> *mut sys::gsl_dht {
         t.t
     }
 }

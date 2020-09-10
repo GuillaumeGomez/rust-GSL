@@ -56,14 +56,14 @@ use ffi;
 
 /// The Wavelet structure contains the filter coefficients defining the wavelet and any associated offset parameters.
 pub struct Wavelet {
-    w: *mut ffi::gsl_wavelet,
+    w: *mut sys::gsl_wavelet,
 }
 
 impl Wavelet {
     /// This function allocates and initializes a wavelet object of type T. The parameter k selects the specific member of the wavelet
     /// family. A null pointer is returned if insufficient memory is available or if a unsupported member is selected.
     pub fn new(t: &WaveletType, k: usize) -> Option<Wavelet> {
-        let tmp = unsafe { ffi::gsl_wavelet_alloc(t.t, k) };
+        let tmp = unsafe { sys::gsl_wavelet_alloc(t.t, k) };
 
         if tmp.is_null() {
             None
@@ -74,7 +74,7 @@ impl Wavelet {
 
     /// This function returns a pointer to the name of the wavelet family for w.
     pub fn name(&self) -> Option<String> {
-        let tmp = unsafe { ffi::gsl_wavelet_name(self.w) };
+        let tmp = unsafe { sys::gsl_wavelet_name(self.w) };
 
         if tmp.is_null() {
             None
@@ -90,25 +90,25 @@ impl Wavelet {
 
 impl Drop for Wavelet {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_wavelet_free(self.w) };
+        unsafe { sys::gsl_wavelet_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
-    fn wrap(w: *mut ffi::gsl_wavelet) -> Wavelet {
+impl ffi::FFI<sys::gsl_wavelet> for Wavelet {
+    fn wrap(w: *mut sys::gsl_wavelet) -> Wavelet {
         Wavelet { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_wavelet) -> Wavelet {
+    fn soft_wrap(w: *mut sys::gsl_wavelet) -> Wavelet {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &Wavelet) -> *const ffi::gsl_wavelet {
+    fn unwrap_shared(w: &Wavelet) -> *const sys::gsl_wavelet {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut Wavelet) -> *mut ffi::gsl_wavelet {
+    fn unwrap_unique(w: &mut Wavelet) -> *mut sys::gsl_wavelet {
         w.w
     }
 }
@@ -117,7 +117,7 @@ impl ffi::FFI<ffi::gsl_wavelet> for Wavelet {
 /// coefficients of the wavelet transform in the phase plane is easier to understand.
 #[derive(Clone, Copy)]
 pub struct WaveletType {
-    t: *const ffi::gsl_wavelet_type,
+    t: *const sys::gsl_wavelet_type,
 }
 
 impl WaveletType {
@@ -126,7 +126,7 @@ impl WaveletType {
     pub fn daubechies() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_daubechies,
+                t: sys::gsl_wavelet_daubechies,
             }
         }
     }
@@ -136,7 +136,7 @@ impl WaveletType {
     pub fn daubechies_centered() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_daubechies_centered,
+                t: sys::gsl_wavelet_daubechies_centered,
             }
         }
     }
@@ -145,7 +145,7 @@ impl WaveletType {
     pub fn haar() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_haar,
+                t: sys::gsl_wavelet_haar,
             }
         }
     }
@@ -154,7 +154,7 @@ impl WaveletType {
     pub fn haar_centered() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_haar_centered,
+                t: sys::gsl_wavelet_haar_centered,
             }
         }
     }
@@ -164,7 +164,7 @@ impl WaveletType {
     pub fn bspline() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_bspline,
+                t: sys::gsl_wavelet_bspline,
             }
         }
     }
@@ -174,7 +174,7 @@ impl WaveletType {
     pub fn bspline_centered() -> WaveletType {
         unsafe {
             WaveletType {
-                t: ffi::gsl_wavelet_bspline_centered,
+                t: sys::gsl_wavelet_bspline_centered,
             }
         }
     }
@@ -183,7 +183,7 @@ impl WaveletType {
 /// The WaveletWorkspace structure contains scratch space of the same size as the input data and is used to hold intermediate results
 /// during the transform.
 pub struct WaveletWorkspace {
-    w: *mut ffi::gsl_wavelet_workspace,
+    w: *mut sys::gsl_wavelet_workspace,
 }
 
 impl WaveletWorkspace {
@@ -192,7 +192,7 @@ impl WaveletWorkspace {
     /// of size n, since the transform operates on individual rows and columns. A null pointer is returned if insufficient memory is
     /// available.
     pub fn new(n: usize) -> Option<WaveletWorkspace> {
-        let tmp = unsafe { ffi::gsl_wavelet_workspace_alloc(n) };
+        let tmp = unsafe { sys::gsl_wavelet_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -204,25 +204,25 @@ impl WaveletWorkspace {
 
 impl Drop for WaveletWorkspace {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_wavelet_workspace_free(self.w) };
+        unsafe { sys::gsl_wavelet_workspace_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_wavelet_workspace> for WaveletWorkspace {
-    fn wrap(w: *mut ffi::gsl_wavelet_workspace) -> WaveletWorkspace {
+impl ffi::FFI<sys::gsl_wavelet_workspace> for WaveletWorkspace {
+    fn wrap(w: *mut sys::gsl_wavelet_workspace) -> WaveletWorkspace {
         WaveletWorkspace { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_wavelet_workspace) -> WaveletWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_wavelet_workspace) -> WaveletWorkspace {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &WaveletWorkspace) -> *const ffi::gsl_wavelet_workspace {
+    fn unwrap_shared(w: &WaveletWorkspace) -> *const sys::gsl_wavelet_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut WaveletWorkspace) -> *mut ffi::gsl_wavelet_workspace {
+    fn unwrap_unique(w: &mut WaveletWorkspace) -> *mut sys::gsl_wavelet_workspace {
         w.w
     }
 }

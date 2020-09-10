@@ -12,20 +12,20 @@ use types::Rng;
 ///
 /// Note that n is not required to be an integer.
 pub fn negative_binomial(r: &mut Rng, p: f64, n: f64) -> u32 {
-    unsafe { ffi::randist::gsl_ran_negative_binomial(ffi::FFI::unwrap_unique(r), p, n) }
+    unsafe { sys::gsl_ran_negative_binomial(ffi::FFI::unwrap_unique(r), p, n) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a negative binomial distribution with parameters p and n, using the formula given above.
 pub fn negative_binomial_pdf(k: u32, p: f64, n: f64) -> f64 {
-    unsafe { ffi::randist::gsl_ran_negative_binomial_pdf(k, p, n) }
+    unsafe { sys::gsl_ran_negative_binomial_pdf(k, p, n) }
 }
 
 /// This function computes the cumulative distribution functions P(k), Q(k) for the negative binomial distribution with parameters p and n.
 pub fn negative_binomial_P(k: u32, p: f64, n: f64) -> f64 {
-    unsafe { ffi::gsl_cdf_negative_binomial_P(k, p, n) }
+    unsafe { sys::gsl_cdf_negative_binomial_P(k, p, n) }
 }
 
 /// This function computes the cumulative distribution functions P(k), Q(k) for the negative binomial distribution with parameters p and n.
 pub fn negative_binomial_Q(k: u32, p: f64, n: f64) -> f64 {
-    unsafe { ffi::gsl_cdf_negative_binomial_Q(k, p, n) }
+    unsafe { sys::gsl_cdf_negative_binomial_Q(k, p, n) }
 }

@@ -23,7 +23,7 @@ use ffi;
 use types::Rng;
 
 pub struct RanDiscrete {
-    ran: *mut ffi::gsl_ran_discrete_t,
+    ran: *mut sys::gsl_ran_discrete_t,
 }
 
 impl RanDiscrete {
@@ -31,7 +31,7 @@ impl RanDiscrete {
     /// these array elements must all be positive, but they needn’t add up to one (so you can think of them more generally as “weights”)—the preprocessor will normalize appropriately.
     /// This return value is used as an argument for the gsl_ran_discrete function below.
     pub fn new(P: &[f64]) -> Option<RanDiscrete> {
-        let tmp = unsafe { ffi::randist::gsl_ran_discrete_preproc(P.len() as usize, P.as_ptr()) };
+        let tmp = unsafe { sys::gsl_ran_discrete_preproc(P.len() as usize, P.as_ptr()) };
 
         if tmp.is_null() {
             None
@@ -42,37 +42,37 @@ impl RanDiscrete {
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
     pub fn discrete(&self, r: &mut Rng) -> usize {
-        unsafe { ffi::randist::gsl_ran_discrete(ffi::FFI::unwrap_unique(r), self.ran) }
+        unsafe { sys::gsl_ran_discrete(ffi::FFI::unwrap_unique(r), self.ran) }
     }
 
     /// Returns the probability P[k] of observing the variable k. Since P[k] is not stored as part of the lookup table, it must be recomputed; this computation takes O(K),
     /// so if K is large and you care about the original array P[k] used to create the lookup table, then you should just keep this original array P[k] around.
     pub fn discrete_pdf(&self, k: usize) -> f64 {
-        unsafe { ffi::randist::gsl_ran_discrete_pdf(k, self.ran) }
+        unsafe { sys::gsl_ran_discrete_pdf(k, self.ran) }
     }
 }
 
 impl Drop for RanDiscrete {
     fn drop(&mut self) {
-        unsafe { ffi::randist::gsl_ran_discrete_free(self.ran) };
+        unsafe { sys::gsl_ran_discrete_free(self.ran) };
         self.ran = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_ran_discrete_t> for RanDiscrete {
-    fn wrap(r: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {
+impl ffi::FFI<sys::gsl_ran_discrete_t> for RanDiscrete {
+    fn wrap(r: *mut sys::gsl_ran_discrete_t) -> RanDiscrete {
         RanDiscrete { ran: r }
     }
 
-    fn soft_wrap(v: *mut ffi::gsl_ran_discrete_t) -> RanDiscrete {
+    fn soft_wrap(v: *mut sys::gsl_ran_discrete_t) -> RanDiscrete {
         Self::wrap(v)
     }
 
-    fn unwrap_shared(v: &RanDiscrete) -> *const ffi::gsl_ran_discrete_t {
+    fn unwrap_shared(v: &RanDiscrete) -> *const sys::gsl_ran_discrete_t {
         v.ran as *const _
     }
 
-    fn unwrap_unique(v: &mut RanDiscrete) -> *mut ffi::gsl_ran_discrete_t {
+    fn unwrap_unique(v: &mut RanDiscrete) -> *mut sys::gsl_ran_discrete_t {
         v.ran
     }
 }

@@ -29,7 +29,7 @@ use ffi;
 use std::io::{self, Write};
 
 pub struct Histogram {
-    h: *mut ffi::gsl_histogram,
+    h: *mut sys::gsl_histogram,
 }
 
 impl Histogram {
@@ -37,7 +37,7 @@ impl Histogram {
     /// memory is available a null pointer is returned and the error handler is invoked with an error code of Value::NoMem. The bins and ranges are
     /// not initialized, and should be prepared using one of the range-setting functions below in order to make the histogram ready for use.
     pub fn new(n: usize) -> Option<Histogram> {
-        let tmp = unsafe { ffi::gsl_histogram_alloc(n) };
+        let tmp = unsafe { sys::gsl_histogram_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -68,7 +68,7 @@ impl Histogram {
     /// required for the upper value of the final bin.
     pub fn set_ranges(&mut self, range: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_histogram_set_ranges(self.h, range.as_ptr(), range.len() as usize)
+            sys::gsl_histogram_set_ranges(self.h, range.as_ptr(), range.len() as usize)
         })
     }
 
@@ -81,18 +81,18 @@ impl Histogram {
     /// bin[n-1] corresponds to xmin + (n-1)d <= x < xmax
     /// where d is the bin spacing, d = (xmax-xmin)/n.
     pub fn set_ranges_uniform(&mut self, xmin: f64, xmax: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_set_ranges_uniform(self.h, xmin, xmax) })
+        enums::Value::from(unsafe { sys::gsl_histogram_set_ranges_uniform(self.h, xmin, xmax) })
     }
 
     /// This function copies the self histogram into the pre-existing histogram dest, making dest into an exact copy of self. The two histograms
     /// must be of the same size.
     pub fn copy(&self, dest: &mut Histogram) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_memcpy(dest.h, self.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram_memcpy(dest.h, self.h) })
     }
 
     /// This function returns a pointer to a newly created histogram which is an exact copy of the self histogram.
     pub fn clone(&self) -> Option<Histogram> {
-        let tmp = unsafe { ffi::gsl_histogram_clone(self.h) };
+        let tmp = unsafe { sys::gsl_histogram_clone(self.h) };
 
         if tmp.is_null() {
             None
@@ -109,19 +109,19 @@ impl Histogram {
     /// called, however, since it is often necessary to compute histograms for a small range of a larger dataset, ignoring the values outside
     /// the range of interest.
     pub fn increment(&mut self, x: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_increment(self.h, x) })
+        enums::Value::from(unsafe { sys::gsl_histogram_increment(self.h, x) })
     }
 
     /// This function is similar to gsl_histogram_increment but increases the value of the appropriate bin in the histogram h by the floating-point
     /// number weight.
     pub fn accumulate(&mut self, x: f64, weight: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_accumulate(self.h, x, weight) })
+        enums::Value::from(unsafe { sys::gsl_histogram_accumulate(self.h, x, weight) })
     }
 
     /// This function returns the contents of the i-th bin of the histogram h. If i lies outside the valid range of indices for the histogram then
     /// the error handler is called with an error code of Value::Dom and the function returns 0.
     pub fn get(&self, i: usize) -> f64 {
-        unsafe { ffi::gsl_histogram_get(self.h, i) }
+        unsafe { sys::gsl_histogram_get(self.h, i) }
     }
 
     /// This function finds the upper and lower range limits of the i-th bin of the self histogram. If the index i is valid then the corresponding
@@ -130,30 +130,30 @@ impl Histogram {
     /// if it exists). The function returns 0 to indicate success. If i lies outside the valid range of indices for the histogram then
     /// the error handler is called and the function returns an error code of Value::Dom.
     pub fn get_range(&self, i: usize, lower: &mut f64, upper: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_get_range(self.h, i, lower, upper) })
+        enums::Value::from(unsafe { sys::gsl_histogram_get_range(self.h, i, lower, upper) })
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins of the self histogram. They provide a way
     /// of determining these values without accessing the gsl_histogram struct directly.
     pub fn max(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_max(self.h) }
+        unsafe { sys::gsl_histogram_max(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins of the self histogram. They provide a way
     /// of determining these values without accessing the gsl_histogram struct directly.
     pub fn min(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_min(self.h) }
+        unsafe { sys::gsl_histogram_min(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins of the self histogram. They provide a way
     /// of determining these values without accessing the gsl_histogram struct directly.
     pub fn bins(&self) -> usize {
-        unsafe { ffi::gsl_histogram_bins(self.h) }
+        unsafe { sys::gsl_histogram_bins(self.h) }
     }
 
     /// This function resets all the bins in the self histogram to zero.
     pub fn reset(&mut self) {
-        unsafe { ffi::gsl_histogram_reset(self.h) }
+        unsafe { sys::gsl_histogram_reset(self.h) }
     }
 
     /// This function finds and sets the index i to the bin number which covers the coordinate x in the self histogram. The bin is located using
@@ -161,51 +161,51 @@ impl Histogram {
     /// this case. If x is found in the range of the histogram then the function sets the index i and returns ::Value::Success. If x lies outside
     /// the valid range of the histogram then the function returns Value::Dom and the error handler is invoked.
     pub fn find(&self, x: f64, i: &mut usize) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_find(self.h, x, i) })
+        enums::Value::from(unsafe { sys::gsl_histogram_find(self.h, x, i) })
     }
 
     /// This function returns the maximum value contained in the histogram bins.
     pub fn max_val(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_max_val(self.h) }
+        unsafe { sys::gsl_histogram_max_val(self.h) }
     }
 
     /// This function returns the index of the bin containing the maximum value. In the case where several bins contain the same maximum value
     /// the smallest index is returned.
     pub fn max_bin(&self) -> usize {
-        unsafe { ffi::gsl_histogram_max_bin(self.h) }
+        unsafe { sys::gsl_histogram_max_bin(self.h) }
     }
 
     /// This function returns the minimum value contained in the histogram bins.
     pub fn min_val(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_min_val(self.h) }
+        unsafe { sys::gsl_histogram_min_val(self.h) }
     }
 
     /// This function returns the index of the bin containing the minimum value. In the case where several bins contain the same maximum value
     /// the smallest index is returned.
     pub fn min_bin(&self) -> usize {
-        unsafe { ffi::gsl_histogram_min_bin(self.h) }
+        unsafe { sys::gsl_histogram_min_bin(self.h) }
     }
 
     /// This function returns the mean of the histogrammed variable, where the histogram is regarded as a probability distribution. Negative
     /// bin values are ignored for the purposes of this calculation. The accuracy of the result is limited by the bin width.
     pub fn mean(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_mean(self.h) }
+        unsafe { sys::gsl_histogram_mean(self.h) }
     }
 
     /// This function returns the standard deviation of the histogrammed variable, where the histogram is regarded as a probability distribution.
     /// Negative bin values are ignored for the purposes of this calculation. The accuracy of the result is limited by the bin width.
     pub fn sigma(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_sigma(self.h) }
+        unsafe { sys::gsl_histogram_sigma(self.h) }
     }
 
     /// This function returns the sum of all bin values. Negative bin values are included in the sum.
     pub fn sum(&self) -> f64 {
-        unsafe { ffi::gsl_histogram_sum(self.h) }
+        unsafe { sys::gsl_histogram_sum(self.h) }
     }
 
     /// This function returns true if the all of the individual bin ranges of the two histograms are identical, and false otherwise.
     pub fn equal_bins_p(&self, other: &Histogram) -> bool {
-        match unsafe { ffi::gsl_histogram_equal_bins_p(self.h, other.h) } {
+        match unsafe { sys::gsl_histogram_equal_bins_p(self.h, other.h) } {
             0i32 => false,
             _ => true,
         }
@@ -214,35 +214,35 @@ impl Histogram {
     /// This function adds the contents of the bins in histogram other to the corresponding bins of self histogram, i.e. h'_1(i) = h_1(i) + h_2(i).
     /// The two histograms must have identical bin ranges.
     pub fn add(&mut self, other: &Histogram) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_add(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram_add(self.h, other.h) })
     }
 
     /// This function subtracts the contents of the bins in histogram other from the corresponding bins of self histogram, i.e. h'_1(i) = h_1(i) - h_2(i).
     /// The two histograms must have identical bin ranges.
     pub fn sub(&mut self, other: &Histogram) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_sub(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram_sub(self.h, other.h) })
     }
 
     /// This function multiplies the contents of the bins of self histogram by the contents of the corresponding bins in other histogram, i.e. h'_1(i) =
     /// h_1(i) * h_2(i). The two histograms must have identical bin ranges.
     pub fn mul(&mut self, other: &Histogram) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_mul(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram_mul(self.h, other.h) })
     }
 
     /// This function divides the contents of the bins of self histogram by the contents of the corresponding bins in other histogram, i.e. h'_1(i) = h_1(i)
     /// / h_2(i). The two histograms must have identical bin ranges.
     pub fn div(&mut self, other: &Histogram) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_div(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram_div(self.h, other.h) })
     }
 
     /// This function multiplies the contents of the bins of self histogram by the constant scale, i.e. h'_1(i) = h_1(i) * scale.
     pub fn scale(&mut self, scale: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_scale(self.h, scale) })
+        enums::Value::from(unsafe { sys::gsl_histogram_scale(self.h, scale) })
     }
 
     /// This function shifts the contents of the bins of self histogram by the constant offset, i.e. h'_1(i) = h_1(i) + offset.
     pub fn shift(&mut self, offset: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_shift(self.h, offset) })
+        enums::Value::from(unsafe { sys::gsl_histogram_shift(self.h, offset) })
     }
 
     #[allow(unused_must_use)]
@@ -269,25 +269,25 @@ impl Histogram {
 
 impl Drop for Histogram {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_histogram_free(self.h) };
+        unsafe { sys::gsl_histogram_free(self.h) };
         self.h = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_histogram> for Histogram {
-    fn wrap(h: *mut ffi::gsl_histogram) -> Histogram {
+impl ffi::FFI<sys::gsl_histogram> for Histogram {
+    fn wrap(h: *mut sys::gsl_histogram) -> Histogram {
         Histogram { h: h }
     }
 
-    fn soft_wrap(h: *mut ffi::gsl_histogram) -> Histogram {
+    fn soft_wrap(h: *mut sys::gsl_histogram) -> Histogram {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &Histogram) -> *const ffi::gsl_histogram {
+    fn unwrap_shared(h: &Histogram) -> *const sys::gsl_histogram {
         h.h as *const _
     }
 
-    fn unwrap_unique(h: &mut Histogram) -> *mut ffi::gsl_histogram {
+    fn unwrap_unique(h: &mut Histogram) -> *mut sys::gsl_histogram {
         h.h
     }
 }
@@ -299,14 +299,14 @@ impl ffi::FFI<ffi::gsl_histogram> for Histogram {
 /// random number in this range and finding its corresponding coordinate in the cumulative probability distribution we obtain samples with the
 /// desired probability distribution.
 pub struct HistogramPdf {
-    h: *mut ffi::gsl_histogram_pdf,
+    h: *mut sys::gsl_histogram_pdf,
 }
 
 impl HistogramPdf {
     /// This function allocates memory for a probability distribution with n bins and returns a pointer to a newly initialized gsl_histogram_pdf
     /// struct. If insufficient memory is available a null pointer is returned and the error handler is invoked with an error code of Value::NoMem.
     pub fn new(n: usize) -> Option<HistogramPdf> {
-        let tmp = unsafe { ffi::gsl_histogram_pdf_alloc(n) };
+        let tmp = unsafe { sys::gsl_histogram_pdf_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -318,7 +318,7 @@ impl HistogramPdf {
     /// This function initializes the probability distribution self with the contents of the histogram h. If any of the bins of h are negative then
     /// the error handler is invoked with an error code of Value::Dom because a probability distribution cannot contain negative values.
     pub fn init(&mut self, h: &Histogram) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram_pdf_init(self.h, h.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram_pdf_init(self.h, h.h) })
     }
 
     /// This function uses r, a uniform random number between zero and one, to compute a single random sample from the probability distribution
@@ -328,31 +328,31 @@ impl HistogramPdf {
     ///
     /// where i is the index which satisfies sum[i] <= r < sum[i+1] and delta is (r - sum[i])/(sum[i+1] - sum[i]).
     pub fn sample(&self, r: f64) -> f64 {
-        unsafe { ffi::gsl_histogram_pdf_sample(self.h, r) }
+        unsafe { sys::gsl_histogram_pdf_sample(self.h, r) }
     }
 }
 
 impl Drop for HistogramPdf {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_histogram_pdf_free(self.h) };
+        unsafe { sys::gsl_histogram_pdf_free(self.h) };
         self.h = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
-    fn wrap(h: *mut ffi::gsl_histogram_pdf) -> HistogramPdf {
+impl ffi::FFI<sys::gsl_histogram_pdf> for HistogramPdf {
+    fn wrap(h: *mut sys::gsl_histogram_pdf) -> HistogramPdf {
         HistogramPdf { h: h }
     }
 
-    fn soft_wrap(h: *mut ffi::gsl_histogram_pdf) -> HistogramPdf {
+    fn soft_wrap(h: *mut sys::gsl_histogram_pdf) -> HistogramPdf {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &HistogramPdf) -> *const ffi::gsl_histogram_pdf {
+    fn unwrap_shared(h: &HistogramPdf) -> *const sys::gsl_histogram_pdf {
         h.h as *const _
     }
 
-    fn unwrap_unique(h: &mut HistogramPdf) -> *mut ffi::gsl_histogram_pdf {
+    fn unwrap_unique(h: &mut HistogramPdf) -> *mut sys::gsl_histogram_pdf {
         h.h
     }
 }
@@ -362,7 +362,7 @@ impl ffi::FFI<ffi::gsl_histogram_pdf> for HistogramPdf {
 /// distribution by recording related variables. For example a detector might record both the position of an event (x) and the amount of energy
 /// it deposited E. These could be histogrammed as the joint distribution n(x,E).
 pub struct Histogram2D {
-    h: *mut ffi::gsl_histogram2d,
+    h: *mut sys::gsl_histogram2d,
 }
 
 impl Histogram2D {
@@ -371,7 +371,7 @@ impl Histogram2D {
     /// and the error handler is invoked with an error code of Value::NoMem. The bins and ranges must be initialized with one of the
     /// functions below before the histogram is ready for use.
     pub fn new(nx: usize, ny: usize) -> Option<Histogram2D> {
-        let tmp = unsafe { ffi::gsl_histogram2d_alloc(nx, ny) };
+        let tmp = unsafe { sys::gsl_histogram2d_alloc(nx, ny) };
 
         if tmp.is_null() {
             None
@@ -384,7 +384,7 @@ impl Histogram2D {
     /// The values of the histogram bins are reset to zero.
     pub fn set_ranges(&mut self, xrange: &[f64], yrange: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_histogram2d_set_ranges(
+            sys::gsl_histogram2d_set_ranges(
                 self.h,
                 xrange.as_ptr(),
                 xrange.len() as _,
@@ -404,19 +404,19 @@ impl Histogram2D {
         ymax: f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_histogram2d_set_ranges_uniform(self.h, xmin, xmax, ymin, ymax)
+            sys::gsl_histogram2d_set_ranges_uniform(self.h, xmin, xmax, ymin, ymax)
         })
     }
 
     /// This function copies the histogram src into the pre-existing histogram dest, making dest into an exact copy of src. The two histograms
     /// must be of the same size.
     pub fn copy(&self, dest: &mut Histogram2D) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_memcpy(dest.h, self.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_memcpy(dest.h, self.h) })
     }
 
     /// his function returns a pointer to a newly created histogram which is an exact copy of the histogram self.
     pub fn clone(&self) -> Option<Histogram2D> {
-        let tmp = unsafe { ffi::gsl_histogram2d_clone(self.h) };
+        let tmp = unsafe { sys::gsl_histogram2d_clone(self.h) };
 
         if tmp.is_null() {
             None
@@ -432,19 +432,19 @@ impl Histogram2D {
     /// called, since it is often necessary to compute histograms for a small range of a larger dataset, ignoring any coordinates outside the
     /// range of interest.
     pub fn increment(&mut self, x: f64, y: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_increment(self.h, x, y) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_increment(self.h, x, y) })
     }
 
     /// This function is similar to gsl_histogram2d_increment but increases the value of the appropriate bin in the histogram h by the floating-point
     /// number weight.
     pub fn accumulate(&mut self, x: f64, y: f64, weight: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_accumulate(self.h, x, y, weight) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_accumulate(self.h, x, y, weight) })
     }
 
     /// This function returns the contents of the (i,j)-th bin of the histogram h. If (i,j) lies outside the valid range of indices for the
     /// histogram then the error handler is called with an error code of Value::Dom and the function returns 0.
     pub fn get(&self, i: usize, j: usize) -> f64 {
-        unsafe { ffi::gsl_histogram2d_get(self.h, i, j) }
+        unsafe { sys::gsl_histogram2d_get(self.h, i, j) }
     }
 
     /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and y directions of the histogram h. The range
@@ -453,7 +453,7 @@ impl Histogram2D {
     /// higher bin, if it exists). The functions return 0 to indicate success. If i or j lies outside the valid range of indices for the histogram
     /// then the error handler is called with an error code of Value::Dom.
     pub fn get_xrange(&self, i: usize, xlower: &mut f64, xupper: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_get_xrange(self.h, i, xlower, xupper) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_get_xrange(self.h, i, xlower, xupper) })
     }
 
     /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and y directions of the histogram h. The range
@@ -462,48 +462,48 @@ impl Histogram2D {
     /// higher bin, if it exists). The functions return 0 to indicate success. If i or j lies outside the valid range of indices for the histogram
     /// then the error handler is called with an error code of Value::Dom.
     pub fn get_yrange(&self, j: usize, ylower: &mut f64, yupper: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_get_yrange(self.h, j, ylower, yupper) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_get_yrange(self.h, j, ylower, yupper) })
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
     /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
     pub fn xmax(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_xmax(self.h) }
+        unsafe { sys::gsl_histogram2d_xmax(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
     /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
     pub fn xmin(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_xmin(self.h) }
+        unsafe { sys::gsl_histogram2d_xmin(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
     /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
     pub fn nx(&self) -> usize {
-        unsafe { ffi::gsl_histogram2d_nx(self.h) }
+        unsafe { sys::gsl_histogram2d_nx(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
     /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
     pub fn ymax(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_ymax(self.h) }
+        unsafe { sys::gsl_histogram2d_ymax(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
     /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
     pub fn ymin(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_ymin(self.h) }
+        unsafe { sys::gsl_histogram2d_ymin(self.h) }
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
     /// They provide a way of determining these values without accessing the gsl_histogram2d struct directly.
     pub fn ny(&self) -> usize {
-        unsafe { ffi::gsl_histogram2d_ny(self.h) }
+        unsafe { sys::gsl_histogram2d_ny(self.h) }
     }
 
     /// This function resets all the bins of the histogram h to zero.
     pub fn reset(&mut self) {
-        unsafe { ffi::gsl_histogram2d_reset(self.h) }
+        unsafe { sys::gsl_histogram2d_reset(self.h) }
     }
 
     /// This function finds and sets the indices i and j to the bin which covers the coordinates (x,y). The bin is located using a binary search.
@@ -511,69 +511,69 @@ impl Histogram2D {
     /// (x,y) is found then the function sets the indices (i,j) and returns ::Value::Success. If (x,y) lies outside the valid range of the histogram
     /// then the function returns Value::Dom and the error handler is invoked.
     pub fn find(&self, x: f64, y: f64, i: &mut usize, j: &mut usize) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_find(self.h, x, y, i, j) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_find(self.h, x, y, i, j) })
     }
 
     /// This function returns the maximum value contained in the histogram bins.
     pub fn max_val(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_max_val(self.h) }
+        unsafe { sys::gsl_histogram2d_max_val(self.h) }
     }
 
     /// This function finds the indices of the bin containing the maximum value in the histogram h and stores the result in (i,j). In the case
     /// where several bins contain the same maximum value the first bin found is returned.
     pub fn max_bin(&self, i: &mut usize, j: &mut usize) {
-        unsafe { ffi::gsl_histogram2d_max_bin(self.h, i, j) }
+        unsafe { sys::gsl_histogram2d_max_bin(self.h, i, j) }
     }
 
     /// This function returns the minimum value contained in the histogram bins.
     pub fn min_val(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_min_val(self.h) }
+        unsafe { sys::gsl_histogram2d_min_val(self.h) }
     }
 
     /// This function finds the indices of the bin containing the minimum value in the histogram h and stores the result in (i,j). In the case
     /// where several bins contain the same maximum value the first bin found is returned.
     pub fn min_bin(&self, i: &mut usize, j: &mut usize) {
-        unsafe { ffi::gsl_histogram2d_min_bin(self.h, i, j) }
+        unsafe { sys::gsl_histogram2d_min_bin(self.h, i, j) }
     }
 
     /// This function returns the mean of the histogrammed x variable, where the histogram is regarded as a probability distribution. Negative
     /// bin values are ignored for the purposes of this calculation.
     pub fn xmean(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_xmean(self.h) }
+        unsafe { sys::gsl_histogram2d_xmean(self.h) }
     }
 
     /// This function returns the mean of the histogrammed y variable, where the histogram is regarded as a probability distribution. Negative
     /// bin values are ignored for the purposes of this calculation.
     pub fn ymean(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_ymean(self.h) }
+        unsafe { sys::gsl_histogram2d_ymean(self.h) }
     }
 
     /// This function returns the standard deviation of the histogrammed x variable, where the histogram is regarded as a probability
     /// distribution. Negative bin values are ignored for the purposes of this calculation.
     pub fn xsigma(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_xsigma(self.h) }
+        unsafe { sys::gsl_histogram2d_xsigma(self.h) }
     }
 
     /// This function returns the standard deviation of the histogrammed y variable, where the histogram is regarded as a probability
     /// distribution. Negative bin values are ignored for the purposes of this calculation.
     pub fn ysigma(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_ysigma(self.h) }
+        unsafe { sys::gsl_histogram2d_ysigma(self.h) }
     }
 
     /// This function returns the covariance of the histogrammed x and y variables, where the histogram is regarded as a probability
     /// distribution. Negative bin values are ignored for the purposes of this calculation.
     pub fn cov(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_cov(self.h) }
+        unsafe { sys::gsl_histogram2d_cov(self.h) }
     }
 
     /// This function returns the sum of all bin values. Negative bin values are included in the sum.
     pub fn sum(&self) -> f64 {
-        unsafe { ffi::gsl_histogram2d_sum(self.h) }
+        unsafe { sys::gsl_histogram2d_sum(self.h) }
     }
 
     /// This function returns 1 if all the individual bin ranges of the two histograms are identical, and 0 otherwise.
     pub fn equal_bins_p(&self, other: &Histogram2D) -> bool {
-        match unsafe { ffi::gsl_histogram2d_equal_bins_p(self.h, other.h) } {
+        match unsafe { sys::gsl_histogram2d_equal_bins_p(self.h, other.h) } {
             0 => false,
             _ => true,
         }
@@ -582,59 +582,59 @@ impl Histogram2D {
     /// This function adds the contents of the bins in histogram h2 to the corresponding bins of histogram h1, i.e. h'_1(i,j) = h_1(i,j)
     /// + h_2(i,j). The two histograms must have identical bin ranges.
     pub fn add(&mut self, other: &Histogram2D) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_add(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_add(self.h, other.h) })
     }
 
     /// This function subtracts the contents of the bins in histogram h2 from the corresponding bins of histogram h1, i.e. h'_1(i,j) = h_1(i,j)
     /// - h_2(i,j). The two histograms must have identical bin ranges.
     pub fn sub(&mut self, other: &Histogram2D) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_sub(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_sub(self.h, other.h) })
     }
 
     /// This function multiplies the contents of the bins of histogram h1 by the contents of the corresponding bins in histogram h2, i.e. h'_1(i,j)
     /// = h_1(i,j) * h_2(i,j). The two histograms must have identical bin ranges.
     pub fn mul(&mut self, other: &Histogram2D) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_mul(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_mul(self.h, other.h) })
     }
 
     /// This function divides the contents of the bins of histogram h1 by the contents of the corresponding bins in histogram h2, i.e. h'_1(i,j) =
     /// h_1(i,j) / h_2(i,j). The two histograms must have identical bin ranges.
     pub fn div(&mut self, other: &Histogram2D) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_div(self.h, other.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_div(self.h, other.h) })
     }
 
     /// This function multiplies the contents of the bins of histogram h by the constant scale, i.e. h'_1(i,j) = h_1(i,j) scale.
     pub fn scale(&mut self, scale: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_scale(self.h, scale) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_scale(self.h, scale) })
     }
 
     /// This function shifts the contents of the bins of histogram h by the constant offset, i.e. h'_1(i,j) = h_1(i,j) + offset.
     pub fn shift(&mut self, offset: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_shift(self.h, offset) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_shift(self.h, offset) })
     }
 }
 
 impl Drop for Histogram2D {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_histogram2d_free(self.h) };
+        unsafe { sys::gsl_histogram2d_free(self.h) };
         self.h = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
-    fn wrap(h: *mut ffi::gsl_histogram2d) -> Histogram2D {
+impl ffi::FFI<sys::gsl_histogram2d> for Histogram2D {
+    fn wrap(h: *mut sys::gsl_histogram2d) -> Histogram2D {
         Histogram2D { h: h }
     }
 
-    fn soft_wrap(h: *mut ffi::gsl_histogram2d) -> Histogram2D {
+    fn soft_wrap(h: *mut sys::gsl_histogram2d) -> Histogram2D {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &Histogram2D) -> *const ffi::gsl_histogram2d {
+    fn unwrap_shared(h: &Histogram2D) -> *const sys::gsl_histogram2d {
         h.h as *const _
     }
 
-    fn unwrap_unique(h: &mut Histogram2D) -> *mut ffi::gsl_histogram2d {
+    fn unwrap_unique(h: &mut Histogram2D) -> *mut sys::gsl_histogram2d {
         h.h
     }
 }
@@ -648,7 +648,7 @@ impl ffi::FFI<ffi::gsl_histogram2d> for Histogram2D {
 /// In this equation n_{ij} is the number of events in the bin which contains (x,y), A_{ij} is the area of the bin and N is the total number of
 /// events. The distribution of events within each bin is assumed to be uniform.
 pub struct Histogram2DPdf {
-    h: *mut ffi::gsl_histogram2d_pdf,
+    h: *mut sys::gsl_histogram2d_pdf,
 }
 
 impl Histogram2DPdf {
@@ -656,7 +656,7 @@ impl Histogram2DPdf {
     /// gsl_histogram2d_pdf struct. If insufficient memory is available a null pointer is returned and the error handler is invoked with an error
     /// code of Value::NoMem.
     pub fn new(nx: usize, ny: usize) -> Option<Histogram2DPdf> {
-        let tmp = unsafe { ffi::gsl_histogram2d_pdf_alloc(nx, ny) };
+        let tmp = unsafe { sys::gsl_histogram2d_pdf_alloc(nx, ny) };
 
         if tmp.is_null() {
             None
@@ -669,37 +669,37 @@ impl Histogram2DPdf {
     /// negative then the error handler is invoked with an error code of GSL_EDOM because a probability distribution cannot contain negative
     /// values.
     pub fn init(&mut self, h: &Histogram2D) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_pdf_init(self.h, h.h) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_pdf_init(self.h, h.h) })
     }
 
     /// This function uses two uniform random numbers between zero and one, r1 and r2, to compute a single random sample from the two-dimensional
     /// probability distribution p.
     pub fn sample(&self, r1: f64, r2: f64, x: &mut f64, y: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_histogram2d_pdf_sample(self.h, r1, r2, x, y) })
+        enums::Value::from(unsafe { sys::gsl_histogram2d_pdf_sample(self.h, r1, r2, x, y) })
     }
 }
 
 impl Drop for Histogram2DPdf {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_histogram2d_pdf_free(self.h) };
+        unsafe { sys::gsl_histogram2d_pdf_free(self.h) };
         self.h = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_histogram2d_pdf> for Histogram2DPdf {
-    fn wrap(h: *mut ffi::gsl_histogram2d_pdf) -> Histogram2DPdf {
+impl ffi::FFI<sys::gsl_histogram2d_pdf> for Histogram2DPdf {
+    fn wrap(h: *mut sys::gsl_histogram2d_pdf) -> Histogram2DPdf {
         Histogram2DPdf { h: h }
     }
 
-    fn soft_wrap(h: *mut ffi::gsl_histogram2d_pdf) -> Histogram2DPdf {
+    fn soft_wrap(h: *mut sys::gsl_histogram2d_pdf) -> Histogram2DPdf {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &Histogram2DPdf) -> *const ffi::gsl_histogram2d_pdf {
+    fn unwrap_shared(h: &Histogram2DPdf) -> *const sys::gsl_histogram2d_pdf {
         h.h as *const _
     }
 
-    fn unwrap_unique(h: &mut Histogram2DPdf) -> *mut ffi::gsl_histogram2d_pdf {
+    fn unwrap_unique(h: &mut Histogram2DPdf) -> *mut sys::gsl_histogram2d_pdf {
         h.h
     }
 }

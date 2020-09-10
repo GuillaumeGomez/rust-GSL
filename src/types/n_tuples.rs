@@ -36,7 +36,7 @@ use std::marker::PhantomData;
 use std::os::raw::c_char;
 
 pub struct NTuples<T> {
-    n: *mut ffi::gsl_ntuple,
+    n: *mut sys::gsl_ntuple,
     p: PhantomData<T>,
 }
 
@@ -48,7 +48,7 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_create(
+            sys::gsl_ntuple_create(
                 c_str.as_ptr() as *mut c_char,
                 t_data,
                 ::std::mem::size_of::<T>() as usize,
@@ -72,7 +72,7 @@ impl<T> NTuples<T> {
         let t_data = unsafe { ::std::mem::transmute(data) };
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_open(
+            sys::gsl_ntuple_open(
                 c_str.as_ptr() as *mut c_char,
                 t_data,
                 ::std::mem::size_of::<T>() as usize,
@@ -91,17 +91,17 @@ impl<T> NTuples<T> {
 
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the corresponding file.
     pub fn write(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_ntuple_write(self.n) })
+        enums::Value::from(unsafe { sys::gsl_ntuple_write(self.n) })
     }
 
     /// This function is a synonym for NTuples::write.
     pub fn bookdata(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_ntuple_bookdata(self.n) })
+        enums::Value::from(unsafe { sys::gsl_ntuple_bookdata(self.n) })
     }
 
     /// This function reads the current row of the ntuple file for ntuple and stores the values in ntuple->data.
     pub fn read(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_ntuple_read(self.n) })
+        enums::Value::from(unsafe { sys::gsl_ntuple_read(self.n) })
     }
 
     pub fn project<U, V>(
@@ -125,7 +125,7 @@ impl<T> NTuples<T> {
                 }
 
                 if select_func(::std::mem::transmute((*self.n).ntuple_data), select_arg) {
-                    ffi::gsl_histogram_increment(
+                    sys::gsl_histogram_increment(
                         ffi::FFI::unwrap_unique(h),
                         value_func(::std::mem::transmute((*self.n).ntuple_data), value_arg),
                     );
@@ -139,28 +139,28 @@ impl<T> NTuples<T> {
 
 impl<T> Drop for NTuples<T> {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_ntuple_close(self.n) };
+        unsafe { sys::gsl_ntuple_close(self.n) };
         self.n = ::std::ptr::null_mut();
     }
 }
 
-impl<T> ffi::FFI<ffi::gsl_ntuple> for NTuples<T> {
-    fn wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
+impl<T> ffi::FFI<sys::gsl_ntuple> for NTuples<T> {
+    fn wrap(n: *mut sys::gsl_ntuple) -> NTuples<T> {
         NTuples {
             n: n,
             p: PhantomData,
         }
     }
 
-    fn soft_wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
+    fn soft_wrap(n: *mut sys::gsl_ntuple) -> NTuples<T> {
         Self::wrap(n)
     }
 
-    fn unwrap_shared(n: &NTuples<T>) -> *const ffi::gsl_ntuple {
+    fn unwrap_shared(n: &NTuples<T>) -> *const sys::gsl_ntuple {
         n.n as *const _
     }
 
-    fn unwrap_unique(n: &mut NTuples<T>) -> *mut ffi::gsl_ntuple {
+    fn unwrap_unique(n: &mut NTuples<T>) -> *mut sys::gsl_ntuple {
         n.n
     }
 }

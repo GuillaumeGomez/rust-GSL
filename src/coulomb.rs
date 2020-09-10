@@ -8,13 +8,13 @@ use std::mem::zeroed;
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
 pub fn hydrogenicR_1(Z: f64, r: f64) -> f64 {
-    unsafe { ffi::gsl_sf_hydrogenicR_1(Z, r) }
+    unsafe { sys::gsl_sf_hydrogenicR_1(Z, r) }
 }
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
 pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_hydrogenicR_1_e(Z, r, &mut result) };
+    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let ret = unsafe { sys::gsl_sf_hydrogenicR_1_e(Z, r, &mut result) };
 
     (
         enums::Value::from(ret),
@@ -33,7 +33,7 @@ pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (enums::Value, ::types::Result) {
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
 pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
-    unsafe { ffi::gsl_sf_hydrogenicR(n, l, Z, r) }
+    unsafe { sys::gsl_sf_hydrogenicR(n, l, Z, r) }
 }
 
 /// This routine computes the n-th normalized hydrogenic bound state radial wavefunction,
@@ -44,8 +44,8 @@ pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
 pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_hydrogenicR_e(n, l, Z, r, &mut result) };
+    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let ret = unsafe { sys::gsl_sf_hydrogenicR_e(n, l, Z, r, &mut result) };
 
     (
         enums::Value::from(ret),
@@ -72,12 +72,12 @@ pub fn wave_FG_e(
     ::types::Result,
     ::types::Result,
 ) {
-    let mut F = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let mut Fp = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let mut G = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let mut Gp = unsafe { zeroed::<ffi::gsl_sf_result>() };
+    let mut F = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let mut Fp = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let mut G = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let mut Gp = unsafe { zeroed::<sys::gsl_sf_result>() };
     let ret = unsafe {
-        ffi::gsl_sf_coulomb_wave_FG_e(
+        sys::gsl_sf_coulomb_wave_FG_e(
             eta, x, L_F, k, &mut F, &mut Fp, &mut G, &mut Gp, exp_F, exp_G,
         )
     };
@@ -113,7 +113,7 @@ pub fn wave_F_array(
     F_exponent: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_sf_coulomb_wave_F_array(
+        sys::gsl_sf_coulomb_wave_F_array(
             L_min,
             fc_array.len() as i32,
             eta,
@@ -136,7 +136,7 @@ pub fn wave_FG_array(
     G_exponent: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_sf_coulomb_wave_FG_array(
+        sys::gsl_sf_coulomb_wave_FG_array(
             L_min,
             fc_array.len() as i32,
             eta,
@@ -163,7 +163,7 @@ pub fn wave_FGp_array(
     G_exponent: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_sf_coulomb_wave_FGp_array(
+        sys::gsl_sf_coulomb_wave_FGp_array(
             L_min,
             fc_array.len() as i32,
             eta,
@@ -188,7 +188,7 @@ pub fn wave_sphF_array(
     F_exponent: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_sf_coulomb_wave_sphF_array(
+        sys::gsl_sf_coulomb_wave_sphF_array(
             L_min,
             fc_array.len() as i32,
             eta,
@@ -201,8 +201,8 @@ pub fn wave_sphF_array(
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L > -1.
 pub fn CL_e(L: f64, eta: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_coulomb_CL_e(L, eta, &mut result) };
+    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let ret = unsafe { sys::gsl_sf_coulomb_CL_e(L, eta, &mut result) };
 
     (
         enums::Value::from(ret),
@@ -216,6 +216,6 @@ pub fn CL_e(L: f64, eta: f64) -> (enums::Value, ::types::Result) {
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L = Lmin \dots Lmin + kmax, Lmin > -1.
 pub fn CL_array(Lmin: f64, eta: f64, cl: &mut [f64]) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_sf_coulomb_CL_array(Lmin, cl.len() as i32, eta, cl.as_mut_ptr())
+        sys::gsl_sf_coulomb_CL_array(Lmin, cl.len() as i32, eta, cl.as_mut_ptr())
     })
 }

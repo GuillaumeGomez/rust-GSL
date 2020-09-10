@@ -28,38 +28,38 @@ pub trait Elementary {
 
 impl Elementary for f64 {
     fn log1p(&self) -> f64 {
-        unsafe { ffi::gsl_log1p(*self) }
+        unsafe { sys::gsl_log1p(*self) }
     }
 
     fn expm1(&self) -> f64 {
-        unsafe { ffi::gsl_expm1(*self) }
+        unsafe { sys::gsl_expm1(*self) }
     }
 
     fn hypot(&self, y: f64) -> f64 {
-        unsafe { ffi::gsl_hypot(*self, y) }
+        unsafe { sys::gsl_hypot(*self, y) }
     }
 
     fn hypot3(&self, y: f64, z: f64) -> f64 {
-        unsafe { ffi::gsl_hypot3(*self, y, z) }
+        unsafe { sys::gsl_hypot3(*self, y, z) }
     }
 
     fn acosh(&self) -> f64 {
-        unsafe { ffi::gsl_acosh(*self) }
+        unsafe { sys::gsl_acosh(*self) }
     }
 
     fn asinh(&self) -> f64 {
-        unsafe { ffi::gsl_asinh(*self) }
+        unsafe { sys::gsl_asinh(*self) }
     }
 
     fn atanh(&self) -> f64 {
-        unsafe { ffi::gsl_atanh(*self) }
+        unsafe { sys::gsl_atanh(*self) }
     }
 
     fn ldexp(&self, e: i32) -> f64 {
-        unsafe { ffi::gsl_ldexp(*self, e) }
+        unsafe { sys::gsl_ldexp(*self, e) }
     }
 
     fn frexp(&self, e: &mut i32) -> f64 {
-        unsafe { ffi::gsl_frexp(*self, e) }
+        unsafe { sys::gsl_frexp(*self, e) }
     }
 }

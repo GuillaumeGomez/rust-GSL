@@ -9,8 +9,8 @@ pub enum Mode {
     PrecApprox,
 }
 
-impl Into<ffi::gsl_mode_t> for Mode {
-    fn into(self) -> ffi::gsl_mode_t {
+impl Into<sys::gsl_mode_t> for Mode {
+    fn into(self) -> sys::gsl_mode_t {
         match self {
             Mode::PrecDouble => 0,
             Mode::PrecSingle => 1,
@@ -19,8 +19,8 @@ impl Into<ffi::gsl_mode_t> for Mode {
     }
 }
 
-impl From<ffi::gsl_mode_t> for Mode {
-    fn from(v: ffi::gsl_mode_t) -> Mode {
+impl From<sys::gsl_mode_t> for Mode {
+    fn from(v: sys::gsl_mode_t) -> Mode {
         match v {
             0 => Mode::PrecDouble,
             1 => Mode::PrecSingle,
@@ -114,6 +114,12 @@ pub enum Value {
     EOF,
     /// Unknown value.
     Unknown(i32),
+}
+
+impl Value {
+    pub fn is_success(self) -> bool {
+        self == Self::Success
+    }
 }
 
 impl Into<libc::c_int> for Value {

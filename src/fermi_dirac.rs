@@ -15,14 +15,14 @@ pub mod complete_integrals {
     /// This routine computes the complete Fermi-Dirac integral with an index of -1.
     /// This integral is given by F_{-1}(x) = e^x / (1 + e^x).
     pub fn fermi_dirac_m1(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_m1(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_m1(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral with an index of -1.
     /// This integral is given by F_{-1}(x) = e^x / (1 + e^x).
     pub fn fermi_dirac_m1_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_m1_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_m1_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -36,14 +36,14 @@ pub mod complete_integrals {
     /// This routine computes the complete Fermi-Dirac integral with an index of 0.
     /// This integral is given by F_0(x) = \ln(1 + e^x).
     pub fn fermi_dirac_0(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_0(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_0(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral with an index of 0.
     /// This integral is given by F_0(x) = \ln(1 + e^x).
     pub fn fermi_dirac_0_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_0_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_0_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -56,13 +56,13 @@ pub mod complete_integrals {
 
     /// This routine computes the complete Fermi-Dirac integral with an index of 1, F_1(x) = \int_0^\infty dt (t /(\exp(t-x)+1)).
     pub fn fermi_dirac_1(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_1(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_1(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral with an index of 1, F_1(x) = \int_0^\infty dt (t /(\exp(t-x)+1)).
     pub fn fermi_dirac_1_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_1_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_1_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -75,13 +75,13 @@ pub mod complete_integrals {
 
     /// This routine computes the complete Fermi-Dirac integral with an index of 2, F_2(x) = (1/2) \int_0^\infty dt (t^2 /(\exp(t-x)+1)).
     pub fn fermi_dirac_2(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_2(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_2(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral with an index of 2, F_2(x) = (1/2) \int_0^\infty dt (t^2 /(\exp(t-x)+1)).
     pub fn fermi_dirac_2_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_2_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_2_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -94,13 +94,13 @@ pub mod complete_integrals {
 
     /// This routine computes the complete Fermi-Dirac integral with an integer index of j, F_j(x) = (1/\Gamma(j+1)) \int_0^\infty dt (t^j /(\exp(t-x)+1)).
     pub fn fermi_dirac_int(j: i32, x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_int(j, x) }
+        unsafe { sys::gsl_sf_fermi_dirac_int(j, x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral with an integer index of j, F_j(x) = (1/\Gamma(j+1)) \int_0^\infty dt (t^j /(\exp(t-x)+1)).
     pub fn fermi_dirac_int_e(j: i32, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_int_e(j, x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_int_e(j, x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -113,13 +113,13 @@ pub mod complete_integrals {
 
     /// This routine computes the complete Fermi-Dirac integral F_{-1/2}(x).
     pub fn fermi_dirac_mhalf(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_mhalf(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_mhalf(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral F_{-1/2}(x).
     pub fn fermi_dirac_mhalf_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_mhalf_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_mhalf_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -132,13 +132,13 @@ pub mod complete_integrals {
 
     /// This routine computes the complete Fermi-Dirac integral F_{1/2}(x).
     pub fn fermi_dirac_half(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_half(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_half(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral F_{1/2}(x).
     pub fn fermi_dirac_half_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_half_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_half_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -151,13 +151,13 @@ pub mod complete_integrals {
 
     /// This routine computes the complete Fermi-Dirac integral F_{3/2}(x).
     pub fn fermi_dirac_3half(x: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_3half(x) }
+        unsafe { sys::gsl_sf_fermi_dirac_3half(x) }
     }
 
     /// This routine computes the complete Fermi-Dirac integral F_{3/2}(x).
     pub fn fermi_dirac_3half_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_3half_e(x, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_3half_e(x, &mut result) };
 
         (
             enums::Value::from(ret),
@@ -179,13 +179,13 @@ pub mod incomplete_integrals {
 
     /// This routine computes the incomplete Fermi-Dirac integral with an index of zero, F_0(x,b) = \ln(1 + e^{b-x}) - (b-x).
     pub fn fermi_dirac_inc_0(x: f64, b: f64) -> f64 {
-        unsafe { ffi::gsl_sf_fermi_dirac_inc_0(x, b) }
+        unsafe { sys::gsl_sf_fermi_dirac_inc_0(x, b) }
     }
 
     /// This routine computes the incomplete Fermi-Dirac integral with an index of zero, F_0(x,b) = \ln(1 + e^{b-x}) - (b-x).
     pub fn fermi_dirac_inc_0_e(x: f64, b: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
-        let ret = unsafe { ::ffi::gsl_sf_fermi_dirac_inc_0_e(x, b, &mut result) };
+        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_inc_0_e(x, b, &mut result) };
 
         (
             enums::Value::from(ret),

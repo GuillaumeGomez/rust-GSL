@@ -13,7 +13,7 @@ use enums;
 use ffi;
 
 pub struct PolyComplex {
-    w: *mut ffi::gsl_poly_complex_workspace,
+    w: *mut sys::gsl_poly_complex_workspace,
 }
 
 impl PolyComplex {
@@ -23,7 +23,7 @@ impl PolyComplex {
     /// The function returns a pointer to the newly allocated gsl_poly_complex_workspace if no errors were detected, and a null pointer in the case
     /// of error.
     pub fn new(n: usize) -> Option<PolyComplex> {
-        let tmp = unsafe { ffi::gsl_poly_complex_workspace_alloc(n) };
+        let tmp = unsafe { sys::gsl_poly_complex_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
@@ -43,32 +43,32 @@ impl PolyComplex {
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
     pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_poly_complex_solve(a.as_ptr(), a.len() as usize, self.w, z.as_mut_ptr())
+            sys::gsl_poly_complex_solve(a.as_ptr(), a.len() as usize, self.w, z.as_mut_ptr())
         })
     }
 }
 
 impl Drop for PolyComplex {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_poly_complex_workspace_free(self.w) };
+        unsafe { sys::gsl_poly_complex_workspace_free(self.w) };
         self.w = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_poly_complex_workspace> for PolyComplex {
-    fn wrap(w: *mut ffi::gsl_poly_complex_workspace) -> PolyComplex {
+impl ffi::FFI<sys::gsl_poly_complex_workspace> for PolyComplex {
+    fn wrap(w: *mut sys::gsl_poly_complex_workspace) -> PolyComplex {
         PolyComplex { w: w }
     }
 
-    fn soft_wrap(w: *mut ffi::gsl_poly_complex_workspace) -> PolyComplex {
+    fn soft_wrap(w: *mut sys::gsl_poly_complex_workspace) -> PolyComplex {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &PolyComplex) -> *const ffi::gsl_poly_complex_workspace {
+    fn unwrap_shared(w: &PolyComplex) -> *const sys::gsl_poly_complex_workspace {
         w.w as *const _
     }
 
-    fn unwrap_unique(w: &mut PolyComplex) -> *mut ffi::gsl_poly_complex_workspace {
+    fn unwrap_unique(w: &mut PolyComplex) -> *mut sys::gsl_poly_complex_workspace {
         w.w
     }
 }

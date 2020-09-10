@@ -143,7 +143,7 @@ pub fn qng<T>(
             let c_file = CString::new(file.as_bytes()).unwrap();
 
             unsafe {
-                ffi::gsl_error(
+                sys::gsl_error(
                     c_str.as_ptr(),
                     c_file.as_ptr(),
                     line!() as i32,

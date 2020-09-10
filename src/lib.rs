@@ -53,7 +53,7 @@
 #![allow(unused_unsafe)]
 
 extern crate c_vec;
-extern crate gsl_sys as ffi;
+extern crate gsl_sys as sys;
 extern crate libc;
 
 pub use types::{
@@ -89,6 +89,9 @@ pub use self::enums::{
 mod enums;
 mod macros;
 mod utilities;
+
+#[doc(hidden)]
+pub mod ffi;
 
 pub mod randist;
 pub mod types;

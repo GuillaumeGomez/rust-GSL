@@ -218,23 +218,23 @@ use libc::c_void;
 use VectorF64;
 
 pub struct MultiFitFSolverType {
-    s: *mut ffi::gsl_multifit_fsolver_type,
+    s: *mut sys::gsl_multifit_fsolver_type,
 }
 
-impl ffi::FFI<ffi::gsl_multifit_fsolver_type> for MultiFitFSolverType {
-    fn wrap(r: *mut ffi::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
+impl ffi::FFI<sys::gsl_multifit_fsolver_type> for MultiFitFSolverType {
+    fn wrap(r: *mut sys::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
         MultiFitFSolverType { s: r }
     }
 
-    fn soft_wrap(r: *mut ffi::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
+    fn soft_wrap(r: *mut sys::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(s: &MultiFitFSolverType) -> *const ffi::gsl_multifit_fsolver_type {
+    fn unwrap_shared(s: &MultiFitFSolverType) -> *const sys::gsl_multifit_fsolver_type {
         s.s as *const _
     }
 
-    fn unwrap_unique(s: &mut MultiFitFSolverType) -> *mut ffi::gsl_multifit_fsolver_type {
+    fn unwrap_unique(s: &mut MultiFitFSolverType) -> *mut sys::gsl_multifit_fsolver_type {
         s.s
     }
 }
@@ -247,10 +247,10 @@ impl ffi::FFI<ffi::gsl_multifit_fsolver_type> for MultiFitFSolverType {
 //     pub p,
 // }
 
-pub struct MultiFitFunction(pub ffi::gsl_multifit_function);
+pub struct MultiFitFunction(pub sys::gsl_multifit_function);
 
 pub struct MultiFitFSolver {
-    s: *mut ffi::gsl_multifit_fsolver,
+    s: *mut sys::gsl_multifit_fsolver,
 }
 
 impl MultiFitFSolver {
@@ -261,7 +261,7 @@ impl MultiFitFSolver {
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
-        let tmp = unsafe { ffi::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap_shared(t), n, p) };
+        let tmp = unsafe { sys::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap_shared(t), n, p) };
 
         if tmp.is_null() {
             None
@@ -278,54 +278,54 @@ impl MultiFitFSolver {
         //     }
         // }
         ::Value::from(unsafe {
-            ffi::gsl_multifit_fsolver_set(self.s, &mut f.0, ffi::FFI::unwrap_shared(x))
+            sys::gsl_multifit_fsolver_set(self.s, &mut f.0, ffi::FFI::unwrap_shared(x))
         })
     }
 
     pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_multifit_fsolver_iterate(self.s) })
+        ::Value::from(unsafe { sys::gsl_multifit_fsolver_iterate(self.s) })
     }
 
     pub fn name(&self) -> String {
         unsafe {
-            let tmp = ffi::gsl_multifit_fsolver_name(self.s);
+            let tmp = sys::gsl_multifit_fsolver_name(self.s);
 
             String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
     }
 
     pub fn position(&self) -> VectorF64 {
-        unsafe { ffi::FFI::wrap(ffi::gsl_multifit_fsolver_position(self.s)) }
+        unsafe { ffi::FFI::wrap(sys::gsl_multifit_fsolver_position(self.s)) }
     }
 }
 
 impl Drop for MultiFitFSolver {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_multifit_fsolver_free(self.s) };
+        unsafe { sys::gsl_multifit_fsolver_free(self.s) };
         self.s = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_multifit_fsolver> for MultiFitFSolver {
-    fn wrap(s: *mut ffi::gsl_multifit_fsolver) -> MultiFitFSolver {
+impl ffi::FFI<sys::gsl_multifit_fsolver> for MultiFitFSolver {
+    fn wrap(s: *mut sys::gsl_multifit_fsolver) -> MultiFitFSolver {
         MultiFitFSolver { s: s }
     }
 
-    fn soft_wrap(s: *mut ffi::gsl_multifit_fsolver) -> MultiFitFSolver {
+    fn soft_wrap(s: *mut sys::gsl_multifit_fsolver) -> MultiFitFSolver {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &MultiFitFSolver) -> *const ffi::gsl_multifit_fsolver {
+    fn unwrap_shared(s: &MultiFitFSolver) -> *const sys::gsl_multifit_fsolver {
         s.s as *const _
     }
 
-    fn unwrap_unique(s: &mut MultiFitFSolver) -> *mut ffi::gsl_multifit_fsolver {
+    fn unwrap_unique(s: &mut MultiFitFSolver) -> *mut sys::gsl_multifit_fsolver {
         s.s
     }
 }
 
 pub struct MultiFitFdfSolver {
-    intern: *mut ffi::gsl_multifit_fdfsolver,
+    intern: *mut sys::gsl_multifit_fdfsolver,
 }
 
 impl MultiFitFdfSolver {
@@ -334,8 +334,8 @@ impl MultiFitFdfSolver {
     /// to parameters p.
     pub fn new(_type: &MultiFitFdfSolverType, n: usize, p: usize) -> Option<MultiFitFdfSolver> {
         let s = unsafe {
-            ffi::gsl_multifit_fdfsolver_alloc(
-                _type.intern as *const ffi::gsl_multifit_fdfsolver_type,
+            sys::gsl_multifit_fdfsolver_alloc(
+                _type.intern as *const sys::gsl_multifit_fdfsolver_type,
                 n,
                 p,
             )
@@ -351,7 +351,7 @@ impl MultiFitFdfSolver {
     /// the initial guess x.
     pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &::VectorF64) -> ::Value {
         ::Value::from(unsafe {
-            ffi::gsl_multifit_fdfsolver_set(self.intern, f.to_raw(), ffi::FFI::unwrap_shared(x))
+            sys::gsl_multifit_fdfsolver_set(self.intern, f.to_raw(), ffi::FFI::unwrap_shared(x))
         })
     }
 
@@ -373,7 +373,7 @@ impl MultiFitFdfSolver {
 
     pub fn name(&self) -> String {
         unsafe {
-            let tmp = ffi::gsl_multifit_fdfsolver_name(self.intern);
+            let tmp = sys::gsl_multifit_fdfsolver_name(self.intern);
 
             String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
@@ -383,12 +383,12 @@ impl MultiFitFdfSolver {
     /// unexpected problem then an error code will be returned. The solver maintains a current
     /// estimate of the best-fit parameters at all times.
     pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_multifit_fdfsolver_iterate(self.intern) })
+        ::Value::from(unsafe { sys::gsl_multifit_fdfsolver_iterate(self.intern) })
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
     pub fn position(&self) -> ::VectorF64 {
-        unsafe { ffi::FFI::wrap(ffi::gsl_multifit_fdfsolver_position(self.intern)) }
+        unsafe { ffi::FFI::wrap(sys::gsl_multifit_fdfsolver_position(self.intern)) }
     }
 
     /// These functions iterate the solver s for a maximum of maxiter iterations. After each
@@ -409,7 +409,7 @@ impl MultiFitFdfSolver {
 
                 /* test for convergence */
                 status = ::Value::from(unsafe {
-                    ffi::gsl_multifit_test_delta(
+                    sys::gsl_multifit_test_delta(
                         (*self.intern).dx,
                         (*self.intern).x,
                         epsabs,
@@ -431,7 +431,7 @@ impl Drop for MultiFitFdfSolver {
     fn drop(&mut self) {
         if !self.intern.is_null() {
             unsafe {
-                ffi::gsl_multifit_fdfsolver_free(self.intern);
+                sys::gsl_multifit_fdfsolver_free(self.intern);
             }
             self.intern = ::std::ptr::null_mut();
         }
@@ -440,19 +440,19 @@ impl Drop for MultiFitFdfSolver {
 
 #[allow(dead_code)]
 pub struct MultiFitFdfSolverType {
-    intern: *mut ffi::gsl_multifit_fdfsolver_type,
+    intern: *mut sys::gsl_multifit_fdfsolver_type,
 }
 
 impl MultiFitFdfSolverType {
     pub fn lmder() -> MultiFitFdfSolverType {
         MultiFitFdfSolverType {
-            intern: unsafe { ffi::gsl_multifit_fdfsolver_lmder },
+            intern: unsafe { sys::gsl_multifit_fdfsolver_lmder },
         }
     }
 
     pub fn lmsder() -> MultiFitFdfSolverType {
         MultiFitFdfSolverType {
-            intern: unsafe { ffi::gsl_multifit_fdfsolver_lmsder },
+            intern: unsafe { sys::gsl_multifit_fdfsolver_lmsder },
         }
     }
 }
@@ -463,7 +463,7 @@ pub struct MultiFitFunctionFdf {
     pub fdf: Option<Box<dyn Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> ::Value>>,
     pub n: usize,
     pub p: usize,
-    intern: ffi::gsl_multifit_function_fdf,
+    intern: sys::gsl_multifit_function_fdf,
 }
 
 impl MultiFitFunctionFdf {
@@ -474,7 +474,7 @@ impl MultiFitFunctionFdf {
             fdf: None,
             n: n,
             p: p,
-            intern: ffi::gsl_multifit_function_fdf {
+            intern: sys::gsl_multifit_function_fdf {
                 f: Some(f),
                 df: Some(df),
                 fdf: Some(fdf),
@@ -485,7 +485,7 @@ impl MultiFitFunctionFdf {
         }
     }
 
-    fn to_raw(&mut self) -> *mut ffi::gsl_multifit_function_fdf {
+    fn to_raw(&mut self) -> *mut sys::gsl_multifit_function_fdf {
         self.intern.n = self.n;
         self.intern.p = self.p;
         self.intern.params = self as *mut MultiFitFunctionFdf as *mut c_void;
@@ -494,9 +494,9 @@ impl MultiFitFunctionFdf {
 }
 
 extern "C" fn f(
-    x: *mut ffi::linalg::gsl_vector,
+    x: *mut sys::gsl_vector,
     params: *mut c_void,
-    pf: *mut ffi::linalg::gsl_vector,
+    pf: *mut sys::gsl_vector,
 ) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
@@ -509,9 +509,9 @@ extern "C" fn f(
 }
 
 extern "C" fn df(
-    x: *mut ffi::linalg::gsl_vector,
+    x: *mut sys::gsl_vector,
     params: *mut c_void,
-    pdf: *mut ffi::linalg::gsl_matrix,
+    pdf: *mut sys::gsl_matrix,
 ) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
@@ -524,10 +524,10 @@ extern "C" fn df(
 }
 
 extern "C" fn fdf(
-    x: *mut ffi::linalg::gsl_vector,
+    x: *mut sys::gsl_vector,
     params: *mut c_void,
-    pf: *mut ffi::linalg::gsl_vector,
-    pdf: *mut ffi::linalg::gsl_matrix,
+    pf: *mut sys::gsl_vector,
+    pdf: *mut sys::gsl_matrix,
 ) -> libc::c_int {
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;

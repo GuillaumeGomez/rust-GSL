@@ -14,20 +14,20 @@ use types::Rng;
 /// If a population contains n_1 elements of “type 1” and n_2 elements of “type 2” then the hypergeometric distribution gives the probability of obtaining
 /// k elements of “type 1” in t samples from the population without replacement.
 pub fn hypergeometric(r: &mut Rng, n1: u32, n2: u32, t: u32) -> u32 {
-    unsafe { ffi::randist::gsl_ran_hypergeometric(ffi::FFI::unwrap_unique(r), n1, n2, t) }
+    unsafe { sys::gsl_ran_hypergeometric(ffi::FFI::unwrap_unique(r), n1, n2, t) }
 }
 
 /// This function computes the probability p(k) of obtaining k from a hypergeometric distribution with parameters n1, n2, t, using the formula given above.
 pub fn hypergeometric_pdf(k: u32, n1: u32, n2: u32, t: u32) -> f64 {
-    unsafe { ffi::randist::gsl_ran_hypergeometric_pdf(k, n1, n2, t) }
+    unsafe { sys::gsl_ran_hypergeometric_pdf(k, n1, n2, t) }
 }
 
 /// This function computes the cumulative distribution functions P(k), Q(k) for the hypergeometric distribution with parameters n1, n2 and t.
 pub fn hypergeometric_P(k: u32, n1: u32, n2: u32, t: u32) -> f64 {
-    unsafe { ffi::gsl_cdf_hypergeometric_P(k, n1, n2, t) }
+    unsafe { sys::gsl_cdf_hypergeometric_P(k, n1, n2, t) }
 }
 
 /// This function computes the cumulative distribution functions P(k), Q(k) for the hypergeometric distribution with parameters n1, n2 and t.
 pub fn hypergeometric_Q(k: u32, n1: u32, n2: u32, t: u32) -> f64 {
-    unsafe { ffi::gsl_cdf_hypergeometric_Q(k, n1, n2, t) }
+    unsafe { sys::gsl_cdf_hypergeometric_Q(k, n1, n2, t) }
 }

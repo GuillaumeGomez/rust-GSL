@@ -27,7 +27,7 @@ pub fn linear(
     sumsq: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ::ffi::gsl_fit_linear(
+        ::sys::gsl_fit_linear(
             x.as_ptr(),
             xstride,
             y.as_ptr(),
@@ -65,7 +65,7 @@ pub fn wlinear(
     chisq: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ::ffi::gsl_fit_wlinear(
+        ::sys::gsl_fit_wlinear(
             x.as_ptr(),
             xstride,
             w.as_ptr(),
@@ -95,7 +95,7 @@ pub fn linear_est(
     y_err: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ::ffi::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, y, y_err)
+        ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, y, y_err)
     })
 }
 
@@ -113,7 +113,7 @@ pub fn mul(
     sumsq: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ::ffi::gsl_fit_mul(
+        ::sys::gsl_fit_mul(
             x.as_ptr(),
             xstride,
             y.as_ptr(),
@@ -145,7 +145,7 @@ pub fn wmul(
     sumsq: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ::ffi::gsl_fit_wmul(
+        ::sys::gsl_fit_wmul(
             x.as_ptr(),
             xstride,
             w.as_ptr(),
@@ -162,5 +162,5 @@ pub fn wmul(
 
 /// This function uses the best-fit linear regression coefficient c1 and its covariance cov11 to compute the fitted function y and its standard deviation y_err for the model Y = c_1 X at the point x.
 pub fn mul_est(x: f64, c1: f64, cov11: f64, y: &mut f64, y_err: &mut f64) -> enums::Value {
-    enums::Value::from(unsafe { ::ffi::gsl_fit_mul_est(x, c1, cov11, y, y_err) })
+    enums::Value::from(unsafe { ::sys::gsl_fit_mul_est(x, c1, cov11, y, y_err) })
 }

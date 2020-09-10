@@ -11,10 +11,10 @@ use types::Rng;
 ///
 /// for x > a.
 pub fn rayleigh_tail(r: &mut Rng, a: f64, sigma: f64) -> f64 {
-    unsafe { ffi::randist::gsl_ran_rayleigh_tail(ffi::FFI::unwrap_unique(r), a, sigma) }
+    unsafe { sys::gsl_ran_rayleigh_tail(ffi::FFI::unwrap_unique(r), a, sigma) }
 }
 
 /// This function computes the probability density p(x) at x for a Rayleigh tail distribution with scale parameter sigma and lower limit a, using the formula given above.
 pub fn rayleigh_tail_pdf(x: f64, a: f64, sigma: f64) -> f64 {
-    unsafe { ffi::randist::gsl_ran_rayleigh_tail_pdf(x, a, sigma) }
+    unsafe { sys::gsl_ran_rayleigh_tail_pdf(x, a, sigma) }
 }

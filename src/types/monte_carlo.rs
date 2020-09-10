@@ -91,13 +91,13 @@ use std::slice;
 /// The error estimate itself should decrease as \sigma(f)/\sqrt{N}. The familiar law of errors decreasing as 1/\sqrt{N} applies—to reduce the
 /// error by a factor of 10 requires a 100-fold increase in the number of sample points.
 pub struct PlainMonteCarlo {
-    s: *mut ffi::gsl_monte_plain_state,
+    s: *mut sys::gsl_monte_plain_state,
 }
 
 impl PlainMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
     pub fn new(dim: usize) -> Option<PlainMonteCarlo> {
-        let tmp = unsafe { ffi::gsl_monte_plain_alloc(dim) };
+        let tmp = unsafe { sys::gsl_monte_plain_alloc(dim) };
 
         if tmp.is_null() {
             None
@@ -109,7 +109,7 @@ impl PlainMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
     pub fn init(&mut self) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_monte_plain_init(self.s) })
+        ::Value::from(unsafe { sys::gsl_monte_plain_init(self.s) })
     }
 
     /// This routines uses the plain Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined
@@ -136,12 +136,12 @@ impl PlainMonteCarlo {
             let mut result = 0f64;
             let mut abserr = 0f64;
             let f: Box<Box<F>> = Box::new(Box::new(f));
-            let mut func = ffi::gsl_monte_function {
+            let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ::Value::from(ffi::gsl_monte_plain_integrate(
+            let ret = ::Value::from(sys::gsl_monte_plain_integrate(
                 &mut func as *mut _ as *mut c_void,
                 xl.as_ptr(),
                 xu.as_ptr(),
@@ -164,25 +164,25 @@ impl PlainMonteCarlo {
 
 impl Drop for PlainMonteCarlo {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_monte_plain_free(self.s) };
+        unsafe { sys::gsl_monte_plain_free(self.s) };
         self.s = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
-    fn wrap(s: *mut ffi::gsl_monte_plain_state) -> PlainMonteCarlo {
+impl ffi::FFI<sys::gsl_monte_plain_state> for PlainMonteCarlo {
+    fn wrap(s: *mut sys::gsl_monte_plain_state) -> PlainMonteCarlo {
         PlainMonteCarlo { s: s }
     }
 
-    fn soft_wrap(s: *mut ffi::gsl_monte_plain_state) -> PlainMonteCarlo {
+    fn soft_wrap(s: *mut sys::gsl_monte_plain_state) -> PlainMonteCarlo {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &PlainMonteCarlo) -> *const ffi::gsl_monte_plain_state {
+    fn unwrap_shared(s: &PlainMonteCarlo) -> *const sys::gsl_monte_plain_state {
         s.s as *const _
     }
 
-    fn unwrap_unique(s: &mut PlainMonteCarlo) -> *mut ffi::gsl_monte_plain_state {
+    fn unwrap_unique(s: &mut PlainMonteCarlo) -> *mut sys::gsl_monte_plain_state {
         s.s
     }
 }
@@ -211,14 +211,14 @@ impl ffi::FFI<ffi::gsl_monte_plain_state> for PlainMonteCarlo {
 /// where each sub-region is integrated using a plain Monte Carlo estimate. These individual values and their error estimates are then combined
 /// upwards to give an overall result and an estimate of its error.
 pub struct MiserMonteCarlo {
-    s: *mut ffi::gsl_monte_miser_state,
+    s: *mut sys::gsl_monte_miser_state,
 }
 
 impl MiserMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
     /// the state of the integration.
     pub fn new(dim: usize) -> Option<MiserMonteCarlo> {
-        let tmp_pointer = unsafe { ffi::gsl_monte_miser_alloc(dim) };
+        let tmp_pointer = unsafe { sys::gsl_monte_miser_alloc(dim) };
 
         if tmp_pointer.is_null() {
             None
@@ -229,7 +229,7 @@ impl MiserMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
     pub fn init(&mut self) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_monte_miser_init(self.s) })
+        ::Value::from(unsafe { sys::gsl_monte_miser_init(self.s) })
     }
 
     /// This routines uses the MISER Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined by
@@ -256,12 +256,12 @@ impl MiserMonteCarlo {
             let mut result = 0f64;
             let mut abserr = 0f64;
             let f: Box<Box<F>> = Box::new(Box::new(f));
-            let mut func = ffi::gsl_monte_function {
+            let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ::Value::from(ffi::gsl_monte_miser_integrate(
+            let ret = ::Value::from(sys::gsl_monte_miser_integrate(
                 &mut func as *mut _ as *mut c_void,
                 xl.as_ptr(),
                 xu.as_ptr(),
@@ -283,7 +283,7 @@ impl MiserMonteCarlo {
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
     pub fn get_params(&self) -> MiserParams {
-        let mut m = ffi::gsl_monte_miser_params {
+        let mut m = sys::gsl_monte_miser_params {
             estimate_frac: 0f64,
             min_calls: 0,
             min_calls_per_bisection: 0,
@@ -292,7 +292,7 @@ impl MiserMonteCarlo {
         };
 
         unsafe {
-            ffi::gsl_monte_miser_params_get(self.s, &mut m);
+            sys::gsl_monte_miser_params_get(self.s, &mut m);
         }
         MiserParams(m)
     }
@@ -300,39 +300,39 @@ impl MiserMonteCarlo {
     /// This function sets the integrator parameters based on values provided in the params structure.
     pub fn set_params(&mut self, params: &MiserParams) {
         unsafe {
-            ffi::gsl_monte_miser_params_set(self.s, &params.0 as *const _);
+            sys::gsl_monte_miser_params_set(self.s, &params.0 as *const _);
         }
     }
 }
 
 impl Drop for MiserMonteCarlo {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_monte_miser_free(self.s) };
+        unsafe { sys::gsl_monte_miser_free(self.s) };
         self.s = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_monte_miser_state> for MiserMonteCarlo {
-    fn wrap(s: *mut ffi::gsl_monte_miser_state) -> MiserMonteCarlo {
+impl ffi::FFI<sys::gsl_monte_miser_state> for MiserMonteCarlo {
+    fn wrap(s: *mut sys::gsl_monte_miser_state) -> MiserMonteCarlo {
         MiserMonteCarlo { s: s }
     }
 
-    fn soft_wrap(s: *mut ffi::gsl_monte_miser_state) -> MiserMonteCarlo {
+    fn soft_wrap(s: *mut sys::gsl_monte_miser_state) -> MiserMonteCarlo {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &MiserMonteCarlo) -> *const ffi::gsl_monte_miser_state {
+    fn unwrap_shared(s: &MiserMonteCarlo) -> *const sys::gsl_monte_miser_state {
         s.s as *const _
     }
 
-    fn unwrap_unique(s: &mut MiserMonteCarlo) -> *mut ffi::gsl_monte_miser_state {
+    fn unwrap_unique(s: &mut MiserMonteCarlo) -> *mut sys::gsl_monte_miser_state {
         s.s
     }
 }
 
 #[derive(Debug, Clone)]
 #[repr(C)]
-pub struct MiserParams(pub ffi::gsl_monte_miser_params);
+pub struct MiserParams(pub sys::gsl_monte_miser_params);
 
 /// The VEGAS algorithm of Lepage is based on importance sampling. It samples points from the probability
 /// distribution described by the function |f|, so that the points are concentrated in the regions that
@@ -388,14 +388,14 @@ pub struct MiserParams(pub ffi::gsl_monte_miser_params);
 ///
 /// * The estimates are averaged using the arithmetic mean, but no error is computed.
 pub struct VegasMonteCarlo {
-    s: *mut ffi::gsl_monte_vegas_state,
+    s: *mut sys::gsl_monte_vegas_state,
 }
 
 impl VegasMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
     /// The workspace is used to maintain the state of the integration.
     pub fn new(dim: usize) -> Option<VegasMonteCarlo> {
-        let tmp_pointer = unsafe { ffi::gsl_monte_vegas_alloc(dim) };
+        let tmp_pointer = unsafe { sys::gsl_monte_vegas_alloc(dim) };
 
         if tmp_pointer.is_null() {
             None
@@ -407,7 +407,7 @@ impl VegasMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace
     /// to be reused for different integrations.
     pub fn init(&mut self) -> ::Value {
-        ::Value::from(unsafe { ffi::gsl_monte_vegas_init(self.s) })
+        ::Value::from(unsafe { sys::gsl_monte_vegas_init(self.s) })
     }
 
     /// This routines uses the VEGAS Monte Carlo algorithm to integrate the function f over the dim-dimensional
@@ -438,12 +438,12 @@ impl VegasMonteCarlo {
             let mut result = 0f64;
             let mut abserr = 0f64;
             let f: Box<Box<F>> = Box::new(Box::new(f));
-            let mut func = ffi::gsl_monte_function {
+            let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: dim,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ::Value::from(ffi::gsl_monte_vegas_integrate(
+            let ret = ::Value::from(sys::gsl_monte_vegas_integrate(
                 &mut func as *mut _ as *mut c_void,
                 xl.as_ptr(),
                 xu.as_ptr(),
@@ -468,34 +468,34 @@ impl VegasMonteCarlo {
     /// the values from different iterations are inconsistent. In this case the weighted error will be
     /// under-estimated, and further iterations of the algorithm are needed to obtain reliable results.
     pub fn chisq(&mut self) -> f64 {
-        unsafe { ffi::gsl_monte_vegas_chisq(self.s) }
+        unsafe { sys::gsl_monte_vegas_chisq(self.s) }
     }
 
     /// This function returns the raw (unaveraged) values of the integral result and its error sigma from
     /// the most recent iteration of the algorithm.
     pub fn runval(&mut self, result: &mut f64, sigma: &mut f64) {
         unsafe {
-            ffi::gsl_monte_vegas_runval(self.s, result as *mut c_double, sigma as *mut c_double)
+            sys::gsl_monte_vegas_runval(self.s, result as *mut c_double, sigma as *mut c_double)
         }
     }
 
     pub fn get_params(&self) -> VegasParams {
         let mut params = VegasParams::default();
         unsafe {
-            ffi::gsl_monte_vegas_params_get(self.s, &mut params.inner as *mut _);
+            sys::gsl_monte_vegas_params_get(self.s, &mut params.inner as *mut _);
         }
         params
     }
 
     pub fn set_params(&mut self, params: &VegasParams) {
         unsafe {
-            ffi::gsl_monte_vegas_params_set(self.s, &params.inner as *const _);
+            sys::gsl_monte_vegas_params_set(self.s, &params.inner as *const _);
         }
     }
 }
 
 pub struct VegasParams<'a> {
-    inner: ffi::gsl_monte_vegas_params,
+    inner: sys::gsl_monte_vegas_params,
     lt: PhantomData<&'a ()>,
 }
 
@@ -555,7 +555,7 @@ impl<'a> VegasParams<'a> {
             ::std::ptr::null_mut()
         };
         Ok(VegasParams {
-            inner: ffi::gsl_monte_vegas_params {
+            inner: sys::gsl_monte_vegas_params {
                 alpha: alpha,
                 iterations: iterations,
                 stage: stage,
@@ -571,7 +571,7 @@ impl<'a> VegasParams<'a> {
 impl<'a> ::std::default::Default for VegasParams<'a> {
     fn default() -> VegasParams<'a> {
         VegasParams {
-            inner: ffi::gsl_monte_vegas_params {
+            inner: sys::gsl_monte_vegas_params {
                 alpha: 1.5,
                 iterations: 5,
                 stage: 0,
@@ -616,25 +616,25 @@ impl VegasVerbosity {
 
 impl Drop for VegasMonteCarlo {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_monte_vegas_free(self.s) };
+        unsafe { sys::gsl_monte_vegas_free(self.s) };
         self.s = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_monte_vegas_state> for VegasMonteCarlo {
-    fn wrap(s: *mut ffi::gsl_monte_vegas_state) -> VegasMonteCarlo {
+impl ffi::FFI<sys::gsl_monte_vegas_state> for VegasMonteCarlo {
+    fn wrap(s: *mut sys::gsl_monte_vegas_state) -> VegasMonteCarlo {
         VegasMonteCarlo { s: s }
     }
 
-    fn soft_wrap(s: *mut ffi::gsl_monte_vegas_state) -> VegasMonteCarlo {
+    fn soft_wrap(s: *mut sys::gsl_monte_vegas_state) -> VegasMonteCarlo {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &VegasMonteCarlo) -> *const ffi::gsl_monte_vegas_state {
+    fn unwrap_shared(s: &VegasMonteCarlo) -> *const sys::gsl_monte_vegas_state {
         s.s as *const _
     }
 
-    fn unwrap_unique(s: &mut VegasMonteCarlo) -> *mut ffi::gsl_monte_vegas_state {
+    fn unwrap_unique(s: &mut VegasMonteCarlo) -> *mut sys::gsl_monte_vegas_state {
         s.s
     }
 }

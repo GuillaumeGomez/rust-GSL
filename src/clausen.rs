@@ -16,13 +16,13 @@ use std::mem::zeroed;
 
 /// This routine computes the Clausen integral Cl_2(x).
 pub fn clausen(x: f64) -> f64 {
-    unsafe { ffi::gsl_sf_clausen(x) }
+    unsafe { sys::gsl_sf_clausen(x) }
 }
 
 /// This routine computes the Clausen integral Cl_2(x).
 pub fn clausen_e(x: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<ffi::gsl_sf_result>() };
-    let ret = unsafe { ffi::gsl_sf_clausen_e(x, &mut result) };
+    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
+    let ret = unsafe { sys::gsl_sf_clausen_e(x, &mut result) };
 
     (
         enums::Value::from(ret),

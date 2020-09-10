@@ -33,13 +33,13 @@ pub mod evaluation {
 
     /// This function evaluates a polynomial with real coefficients for the real variable x.
     pub fn poly_eval(c: &[f64], x: f64) -> f64 {
-        unsafe { ffi::gsl_poly_eval(c.as_ptr(), c.len() as i32, x) }
+        unsafe { sys::gsl_poly_eval(c.as_ptr(), c.len() as i32, x) }
     }
 
     /// This function evaluates a polynomial with real coefficients for the complex variable z.
     pub fn poly_complex_eval(c: &[f64], z: &ComplexF64) -> ComplexF64 {
         unsafe {
-            transmute(ffi::gsl_poly_complex_eval(
+            transmute(sys::gsl_poly_complex_eval(
                 c.as_ptr(),
                 c.len() as i32,
                 transmute(*z),
@@ -55,7 +55,7 @@ pub mod evaluation {
             unsafe { tmp.push(transmute(*it)) };
         }
         unsafe {
-            transmute(ffi::gsl_complex_poly_complex_eval(
+            transmute(sys::gsl_complex_poly_complex_eval(
                 tmp.as_ptr(),
                 tmp.len() as i32,
                 transmute(*z),
@@ -67,7 +67,7 @@ pub mod evaluation {
     /// the values of d^k P/d x^k for the specified value of x starting with k = 0.
     pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_poly_eval_derivs(
+            sys::gsl_poly_eval_derivs(
                 c.as_ptr(),
                 c.len() as _,
                 x,
@@ -103,13 +103,13 @@ pub mod divided_difference_representation {
     /// notation above, dd[k] = [x_0,x_1,...,x_k].
     pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as _)
+            sys::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as _)
         })
     }
 
     /// This function evaluates the polynomial stored in divided-difference form in the arrays dd and xa of length size at the point x.
     pub fn poly_dd_eval(dd: &[f64], xa: &[f64], x: f64) -> f64 {
-        unsafe { ffi::gsl_poly_dd_eval(dd.as_ptr(), xa.as_ptr(), dd.len() as _, x) }
+        unsafe { sys::gsl_poly_dd_eval(dd.as_ptr(), xa.as_ptr(), dd.len() as _, x) }
     }
 
     /// This function converts the divided-difference representation of a polynomial to a Taylor expansion. The divided-difference representation
@@ -123,7 +123,7 @@ pub mod divided_difference_representation {
         w: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_poly_dd_taylor(
+            sys::gsl_poly_dd_taylor(
                 c.as_mut_ptr(),
                 xp,
                 dd.as_ptr(),
@@ -148,7 +148,7 @@ pub mod divided_difference_representation {
         dya: &[f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_poly_dd_hermite_init(
+            sys::gsl_poly_dd_hermite_init(
                 dd.as_mut_ptr(),
                 za.as_mut_ptr(),
                 xa.as_ptr(),
@@ -179,7 +179,7 @@ pub mod quadratic_equations {
     /// may cause a discrete change in the number of roots. However, for polynomials with small integer coefficients the discriminant can always
     /// be computed exactly.
     pub fn poly_solve_quadratic(a: f64, b: f64, c: f64, x0: &mut f64, x1: &mut f64) -> i32 {
-        unsafe { ffi::gsl_poly_solve_quadratic(a, b, c, x0, x1) }
+        unsafe { sys::gsl_poly_solve_quadratic(a, b, c, x0, x1) }
     }
 
     /// This function finds the complex roots of the quadratic equation,
@@ -196,7 +196,7 @@ pub mod quadratic_equations {
         z0: &mut ComplexF64,
         z1: &mut ComplexF64,
     ) -> i32 {
-        unsafe { ffi::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) }
+        unsafe { sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) }
     }
 }
 
@@ -222,7 +222,7 @@ pub mod cubic_equations {
         x1: &mut f64,
         x2: &mut f64,
     ) -> i32 {
-        unsafe { ffi::gsl_poly_solve_cubic(a, b, c, x0, x1, x2) }
+        unsafe { sys::gsl_poly_solve_cubic(a, b, c, x0, x1, x2) }
     }
 
     /// This function finds the complex roots of the cubic equation,
@@ -240,7 +240,7 @@ pub mod cubic_equations {
         z2: &mut ComplexF64,
     ) -> i32 {
         unsafe {
-            ffi::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
+            sys::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
         }
     }
 }

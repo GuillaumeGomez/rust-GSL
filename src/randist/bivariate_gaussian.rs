@@ -13,7 +13,7 @@ use types::Rng;
 /// for x,y in the range -\infty to +\infty. The correlation coefficient rho should lie between 1 and -1.
 pub fn gaussian_tail(r: &mut Rng, sigma_x: f64, sigma_y: f64, rho: f64, x: &mut f64, y: &mut f64) {
     unsafe {
-        ffi::randist::gsl_ran_bivariate_gaussian(
+        sys::gsl_ran_bivariate_gaussian(
             ffi::FFI::unwrap_unique(r),
             sigma_x,
             sigma_y,
@@ -26,5 +26,5 @@ pub fn gaussian_tail(r: &mut Rng, sigma_x: f64, sigma_y: f64, rho: f64, x: &mut 
 
 /// This function computes the probability density p(x,y) at (x,y) for a bivariate Gaussian distribution with standard deviations sigma_x, sigma_y and correlation coefficient rho, using the formula given above.
 pub fn gaussian_tail_pdf(x: f64, y: f64, sigma_x: f64, sigma_y: f64, rho: f64) -> f64 {
-    unsafe { ffi::randist::gsl_ran_bivariate_gaussian_pdf(x, y, sigma_x, sigma_y, rho) }
+    unsafe { sys::gsl_ran_bivariate_gaussian_pdf(x, y, sigma_x, sigma_y, rho) }
 }

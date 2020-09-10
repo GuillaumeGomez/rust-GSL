@@ -42,14 +42,14 @@ use ffi;
 
 /// Evaluation accelerator.
 #[derive(Clone)]
-pub struct InterpAccel(pub ffi::gsl_interp_accel);
+pub struct InterpAccel(pub sys::gsl_interp_accel);
 
 impl InterpAccel {
     /// This function returns a pointer to an accelerator object, which is a kind of iterator for
     /// interpolation lookups. It tracks the state of lookups, thus allowing for application of
     /// various acceleration strategies.
     pub fn new() -> InterpAccel {
-        InterpAccel(ffi::gsl_interp_accel {
+        InterpAccel(sys::gsl_interp_accel {
             cache: 0,
             miss_count: 0,
             hit_count: 0,
@@ -69,13 +69,13 @@ impl InterpAccel {
     /// interpolation. The function returns an index i such that `x_array[i] <= x < x_array[i+1]`.
     pub fn find(&mut self, x_array: &[f64], x: f64) -> usize {
         unsafe {
-            ffi::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as usize, x)
+            sys::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as usize, x)
         }
     }
 }
 
 pub struct Interp {
-    interp: *mut ffi::gsl_interp,
+    interp: *mut sys::gsl_interp,
 }
 
 impl Interp {
@@ -89,7 +89,7 @@ impl Interp {
     /// let interp = Interp::new(&interp_type, 2).expect("Failed to initialize `Interp`...");
     /// ```
     pub fn new(t: &InterpType, size: usize) -> Option<Interp> {
-        let tmp = unsafe { ffi::gsl_interp_alloc(t.t, size) };
+        let tmp = unsafe { sys::gsl_interp_alloc(t.t, size) };
 
         if tmp.is_null() {
             None
@@ -105,7 +105,7 @@ impl Interp {
     /// arrangements is not defined.
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
+            sys::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
         })
     }
 
@@ -125,7 +125,7 @@ impl Interp {
     /// interp uses 'cspline' interpolation.
     /// ```
     pub fn name(&self) -> String {
-        let tmp = unsafe { ffi::gsl_interp_name(self.interp) };
+        let tmp = unsafe { sys::gsl_interp_name(self.interp) };
 
         if tmp.is_null() {
             String::new()
@@ -140,38 +140,38 @@ impl Interp {
     /// interp or interpolation type T. For example, Akima spline interpolation requires a minimum
     /// of 5 points.
     pub fn min_size(&self) -> u32 {
-        unsafe { ffi::gsl_interp_min_size(self.interp) }
+        unsafe { sys::gsl_interp_min_size(self.interp) }
     }
 }
 
 impl Drop for Interp {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_interp_free(self.interp) };
+        unsafe { sys::gsl_interp_free(self.interp) };
         self.interp = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_interp> for Interp {
-    fn wrap(interp: *mut ffi::gsl_interp) -> Interp {
+impl ffi::FFI<sys::gsl_interp> for Interp {
+    fn wrap(interp: *mut sys::gsl_interp) -> Interp {
         Interp { interp: interp }
     }
 
-    fn soft_wrap(interp: *mut ffi::gsl_interp) -> Interp {
+    fn soft_wrap(interp: *mut sys::gsl_interp) -> Interp {
         Self::wrap(interp)
     }
 
-    fn unwrap_shared(interp: &Interp) -> *const ffi::gsl_interp {
+    fn unwrap_shared(interp: &Interp) -> *const sys::gsl_interp {
         interp.interp as *const _
     }
 
-    fn unwrap_unique(interp: &mut Interp) -> *mut ffi::gsl_interp {
+    fn unwrap_unique(interp: &mut Interp) -> *mut sys::gsl_interp {
         interp.interp
     }
 }
 
 #[derive(Clone, Copy)]
 pub struct InterpType {
-    t: *const ffi::gsl_interp_type,
+    t: *const sys::gsl_interp_type,
 }
 
 impl InterpType {
@@ -179,7 +179,7 @@ impl InterpType {
     /// interp or interpolation type T. For example, Akima spline interpolation requires a minimum
     /// of 5 points.
     pub fn min_size(&self) -> u32 {
-        unsafe { ffi::gsl_interp_type_min_size(self.t) }
+        unsafe { sys::gsl_interp_type_min_size(self.t) }
     }
 
     /// Linear interpolation. This interpolation method does not require any additional memory.
@@ -224,32 +224,32 @@ impl InterpType {
     }
 }
 
-impl ffi::FFI<ffi::gsl_interp_type> for InterpType {
-    fn wrap(t: *mut ffi::gsl_interp_type) -> InterpType {
+impl ffi::FFI<sys::gsl_interp_type> for InterpType {
+    fn wrap(t: *mut sys::gsl_interp_type) -> InterpType {
         InterpType { t: t }
     }
 
-    fn soft_wrap(t: *mut ffi::gsl_interp_type) -> InterpType {
+    fn soft_wrap(t: *mut sys::gsl_interp_type) -> InterpType {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &InterpType) -> *const ffi::gsl_interp_type {
-        t.t as *const ffi::gsl_interp_type
+    fn unwrap_shared(t: &InterpType) -> *const sys::gsl_interp_type {
+        t.t as *const sys::gsl_interp_type
     }
 
-    fn unwrap_unique(t: &mut InterpType) -> *mut ffi::gsl_interp_type {
-        t.t as *mut ffi::gsl_interp_type
+    fn unwrap_unique(t: &mut InterpType) -> *mut sys::gsl_interp_type {
+        t.t as *mut sys::gsl_interp_type
     }
 }
 
 /// general interpolation object
 pub struct Spline {
-    spline: *mut ffi::gsl_spline,
+    spline: *mut sys::gsl_spline,
 }
 
 impl Spline {
     pub fn new(t: &InterpType, size: usize) -> Option<Spline> {
-        let tmp = unsafe { ffi::gsl_spline_alloc(t.t, size) };
+        let tmp = unsafe { sys::gsl_spline_alloc(t.t, size) };
 
         if tmp.is_null() {
             None
@@ -260,12 +260,12 @@ impl Spline {
 
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
+            sys::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
         })
     }
 
     pub fn name(&self) -> String {
-        let tmp = unsafe { ffi::gsl_spline_name(self.spline) };
+        let tmp = unsafe { sys::gsl_spline_name(self.spline) };
 
         if tmp.is_null() {
             String::new()
@@ -277,35 +277,35 @@ impl Spline {
     }
 
     pub fn min_size(&self) -> u32 {
-        unsafe { ffi::gsl_spline_min_size(self.spline) }
+        unsafe { sys::gsl_spline_min_size(self.spline) }
     }
 
     pub fn eval(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval(self.spline, x, &mut acc.0) }
+        unsafe { sys::gsl_spline_eval(self.spline, x, &mut acc.0) }
     }
 
     pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_e(self.spline, x, &mut acc.0, y) })
+        enums::Value::from(unsafe { sys::gsl_spline_eval_e(self.spline, x, &mut acc.0, y) })
     }
 
     pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_deriv(self.spline, x, &mut acc.0) }
+        unsafe { sys::gsl_spline_eval_deriv(self.spline, x, &mut acc.0) }
     }
 
     pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_deriv_e(self.spline, x, &mut acc.0, d) })
+        enums::Value::from(unsafe { sys::gsl_spline_eval_deriv_e(self.spline, x, &mut acc.0, d) })
     }
 
     pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_deriv2(self.spline, x, &mut acc.0) }
+        unsafe { sys::gsl_spline_eval_deriv2(self.spline, x, &mut acc.0) }
     }
 
     pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_spline_eval_deriv2_e(self.spline, x, &mut acc.0, d2) })
+        enums::Value::from(unsafe { sys::gsl_spline_eval_deriv2_e(self.spline, x, &mut acc.0, d2) })
     }
 
     pub fn eval_integ(&self, a: f64, b: f64, acc: &mut InterpAccel) -> f64 {
-        unsafe { ffi::gsl_spline_eval_integ(self.spline, a, b, &mut acc.0) }
+        unsafe { sys::gsl_spline_eval_integ(self.spline, a, b, &mut acc.0) }
     }
 
     pub fn eval_integ_e(
@@ -316,32 +316,32 @@ impl Spline {
         result: &mut f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            ffi::gsl_spline_eval_integ_e(self.spline, a, b, &mut acc.0, result)
+            sys::gsl_spline_eval_integ_e(self.spline, a, b, &mut acc.0, result)
         })
     }
 }
 
 impl Drop for Spline {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_spline_free(self.spline) };
+        unsafe { sys::gsl_spline_free(self.spline) };
         self.spline = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_spline> for Spline {
-    fn wrap(spline: *mut ffi::gsl_spline) -> Spline {
+impl ffi::FFI<sys::gsl_spline> for Spline {
+    fn wrap(spline: *mut sys::gsl_spline) -> Spline {
         Spline { spline: spline }
     }
 
-    fn soft_wrap(spline: *mut ffi::gsl_spline) -> Spline {
+    fn soft_wrap(spline: *mut sys::gsl_spline) -> Spline {
         Self::wrap(spline)
     }
 
-    fn unwrap_shared(spline: &Spline) -> *const ffi::gsl_spline {
+    fn unwrap_shared(spline: &Spline) -> *const sys::gsl_spline {
         spline.spline as *const _
     }
 
-    fn unwrap_unique(spline: &mut Spline) -> *mut ffi::gsl_spline {
+    fn unwrap_unique(spline: &mut Spline) -> *mut sys::gsl_spline {
         spline.spline
     }
 }

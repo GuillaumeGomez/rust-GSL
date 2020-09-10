@@ -31,7 +31,7 @@ pub fn symmv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::linalg::gsl_eigen_symmv_sort(
+        sys::gsl_eigen_symmv_sort(
             ffi::FFI::unwrap_unique(eval),
             ffi::FFI::unwrap_unique(evec),
             sort_type.into(),
@@ -47,7 +47,7 @@ pub fn hermv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::linalg::gsl_eigen_hermv_sort(
+        sys::gsl_eigen_hermv_sort(
             ffi::FFI::unwrap_unique(eval),
             ffi::FFI::unwrap_unique(evec),
             sort_type.into(),
@@ -64,7 +64,7 @@ pub fn nonsymmv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::linalg::gsl_eigen_nonsymmv_sort(
+        sys::gsl_eigen_nonsymmv_sort(
             ffi::FFI::unwrap_unique(eval),
             ffi::FFI::unwrap_unique(evec),
             sort_type.into(),
@@ -80,7 +80,7 @@ pub fn gensymmv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::linalg::gsl_eigen_gensymmv_sort(
+        sys::gsl_eigen_gensymmv_sort(
             ffi::FFI::unwrap_unique(eval),
             ffi::FFI::unwrap_unique(evec),
             sort_type.into(),
@@ -96,7 +96,7 @@ pub fn genhermv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::linalg::gsl_eigen_genhermv_sort(
+        sys::gsl_eigen_genhermv_sort(
             ffi::FFI::unwrap_unique(eval),
             ffi::FFI::unwrap_unique(evec),
             sort_type.into(),
@@ -114,7 +114,7 @@ pub fn genv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::linalg::gsl_eigen_genv_sort(
+        sys::gsl_eigen_genv_sort(
             ffi::FFI::unwrap_unique(alpha),
             ffi::FFI::unwrap_unique(beta),
             ffi::FFI::unwrap_unique(evec),

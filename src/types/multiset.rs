@@ -18,7 +18,7 @@ use std::io::Result as IoResult;
 use std::io::Write;
 
 pub struct MultiSet {
-    c: *mut ffi::gsl_multiset,
+    c: *mut sys::gsl_multiset,
     data: CSlice<usize>,
 }
 
@@ -27,7 +27,7 @@ impl MultiSet {
     /// undefined. Use the function gsl_multiset_calloc if you want to create a multiset which is initialized to the lexicographically
     /// first multiset element. A null pointer is returned if insufficient memory is available to create the multiset.
     pub fn new(n: usize, k: usize) -> Option<MultiSet> {
-        let tmp = unsafe { ffi::gsl_multiset_alloc(n, k) };
+        let tmp = unsafe { sys::gsl_multiset_alloc(n, k) };
 
         if tmp.is_null() {
             None
@@ -52,7 +52,7 @@ impl MultiSet {
     /// This function allocates memory for a new multiset with parameters n, k and initializes it to the lexicographically first multiset
     /// element. A null pointer is returned if insufficient memory is available to create the multiset.
     pub fn new_init(n: usize, k: usize) -> Option<MultiSet> {
-        let tmp = unsafe { ffi::gsl_multiset_calloc(n, k) };
+        let tmp = unsafe { sys::gsl_multiset_calloc(n, k) };
 
         if tmp.is_null() {
             None
@@ -76,33 +76,33 @@ impl MultiSet {
 
     /// This function initializes the multiset c to the lexicographically first multiset element, i.e. 0 repeated k times.
     pub fn init_first(&mut self) {
-        unsafe { ffi::gsl_multiset_init_first(self.c) }
+        unsafe { sys::gsl_multiset_init_first(self.c) }
     }
 
     /// This function initializes the multiset c to the lexicographically last multiset element, i.e. n-1 repeated k times.
     pub fn init_last(&mut self) {
-        unsafe { ffi::gsl_multiset_init_last(self.c) }
+        unsafe { sys::gsl_multiset_init_last(self.c) }
     }
 
     /// This function copies the elements of the multiset self into the multiset dest. The two multisets must have the same size.
     pub fn copy(&self, dest: &mut MultiSet) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_multiset_memcpy(dest.c, self.c) })
+        enums::Value::from(unsafe { sys::gsl_multiset_memcpy(dest.c, self.c) })
     }
 
     /// This function returns the value of the i-th element of the multiset c. If i lies outside the allowed range of 0 to k-1 then the
     /// error handler is invoked and 0 is returned.
     pub fn get(&self, i: usize) -> usize {
-        unsafe { ffi::gsl_multiset_get(self.c, i) }
+        unsafe { sys::gsl_multiset_get(self.c, i) }
     }
 
     /// This function returns the range (n) of the multiset self.
     pub fn n(&self) -> usize {
-        unsafe { ffi::gsl_multiset_n(self.c) }
+        unsafe { sys::gsl_multiset_n(self.c) }
     }
 
     /// This function returns the number of elements (k) in the multiset self.
     pub fn k(&self) -> usize {
-        unsafe { ffi::gsl_multiset_k(self.c) }
+        unsafe { sys::gsl_multiset_k(self.c) }
     }
 
     /// This function returns a pointer to the array of elements in the multiset self.
@@ -113,20 +113,20 @@ impl MultiSet {
     /// This function checks that the multiset self is valid. The k elements should lie in the range 0 to n-1, with each value occurring in
     /// nondecreasing order.
     pub fn valid(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_multiset_valid(self.c) })
+        enums::Value::from(unsafe { sys::gsl_multiset_valid(self.c) })
     }
 
     /// This function advances the multiset self to the next multiset element in lexicographic order and returns ::Value::Success. If no
     /// further multisets elements are available it returns enums::value::Failure and leaves self unmodified. Starting with the first multiset and
     /// repeatedly applying this function will iterate through all possible multisets of a given order.
     pub fn next(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_multiset_next(self.c) })
+        enums::Value::from(unsafe { sys::gsl_multiset_next(self.c) })
     }
 
     /// This function steps backwards from the multiset self to the previous multiset element in lexicographic order, returning ::Value::Success.
     /// If no previous multiset is available it returns enums::value::Failure and leaves self unmodified.
     pub fn prev(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_multiset_prev(self.c) })
+        enums::Value::from(unsafe { sys::gsl_multiset_prev(self.c) })
     }
 
     pub fn print<W: Write>(&self, writer: &mut W) -> IoResult<()> {
@@ -139,13 +139,13 @@ impl MultiSet {
 
 impl Drop for MultiSet {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_multiset_free(self.c) };
+        unsafe { sys::gsl_multiset_free(self.c) };
         self.c = ::std::ptr::null_mut();
     }
 }
 
-impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
-    fn wrap(c: *mut ffi::gsl_multiset) -> MultiSet {
+impl ffi::FFI<sys::gsl_multiset> for MultiSet {
+    fn wrap(c: *mut sys::gsl_multiset) -> MultiSet {
         unsafe {
             if (*c).data.is_null() {
                 MultiSet {
@@ -162,15 +162,15 @@ impl ffi::FFI<ffi::gsl_multiset> for MultiSet {
         }
     }
 
-    fn soft_wrap(c: *mut ffi::gsl_multiset) -> MultiSet {
+    fn soft_wrap(c: *mut sys::gsl_multiset) -> MultiSet {
         Self::wrap(c)
     }
 
-    fn unwrap_shared(c: &MultiSet) -> *const ffi::gsl_multiset {
+    fn unwrap_shared(c: &MultiSet) -> *const sys::gsl_multiset {
         c.c as *const _
     }
 
-    fn unwrap_unique(c: &mut MultiSet) -> *mut ffi::gsl_multiset {
+    fn unwrap_unique(c: &mut MultiSet) -> *mut sys::gsl_multiset {
         c.c
     }
 }

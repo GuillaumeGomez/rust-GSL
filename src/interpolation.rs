@@ -8,14 +8,14 @@ use ffi;
 /// This function returns the index i of the array x_array such that x_array[i] <= x < x_array[i+1]. The index is searched for in the
 /// range [index_lo,index_hi].
 pub fn bsearch(x_array: &[f64], x: f64, index_lo: usize, index_hi: usize) -> usize {
-    unsafe { ffi::gsl_interp_bsearch(x_array.as_ptr(), x, index_lo, index_hi) }
+    unsafe { sys::gsl_interp_bsearch(x_array.as_ptr(), x, index_lo, index_hi) }
 }
 
 /// This function returns the interpolated value of y for a given point x, using the interpolation object interp, data arrays xa and ya and
 /// the accelerator acc. When x is outside the range of xa, the error code ::Dom is returned with a value of rgsl::NAN for y.
 pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel) -> f64 {
     unsafe {
-        ffi::gsl_interp_eval(
+        sys::gsl_interp_eval(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -36,7 +36,7 @@ pub fn eval_e(
     y: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_interp_eval_e(
+        sys::gsl_interp_eval_e(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -57,7 +57,7 @@ pub fn eval_deriv(
     acc: &mut ::InterpAccel,
 ) -> f64 {
     unsafe {
-        ffi::gsl_interp_eval_deriv(
+        sys::gsl_interp_eval_deriv(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -78,7 +78,7 @@ pub fn eval_deriv_e(
     d: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_interp_eval_deriv_e(
+        sys::gsl_interp_eval_deriv_e(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -99,7 +99,7 @@ pub fn eval_deriv2(
     acc: &mut ::InterpAccel,
 ) -> f64 {
     unsafe {
-        ffi::gsl_interp_eval_deriv2(
+        sys::gsl_interp_eval_deriv2(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -120,7 +120,7 @@ pub fn eval_deriv2_e(
     d2: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_interp_eval_deriv2_e(
+        sys::gsl_interp_eval_deriv2_e(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -142,7 +142,7 @@ pub fn eval_integ(
     acc: &mut ::InterpAccel,
 ) -> f64 {
     unsafe {
-        ffi::gsl_interp_eval_integ(
+        sys::gsl_interp_eval_integ(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
@@ -165,7 +165,7 @@ pub fn eval_integ_e(
     result: &mut f64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        ffi::gsl_interp_eval_integ_e(
+        sys::gsl_interp_eval_integ_e(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
