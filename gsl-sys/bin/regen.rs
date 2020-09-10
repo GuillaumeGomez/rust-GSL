@@ -66,7 +66,7 @@ fn run_bindgen(folder: &Path, commit_hash: String) {
             }
         }
         let should_remove = if let Some(fn_name) = content[pos].trim_start().split("(").next().unwrap().split("pub fn ").skip(1).next() {
-            !fn_name.starts_with("gsl_")
+            !fn_name.starts_with("gsl_") && !fn_name.starts_with("cblas_")
         } else {
             false
         };

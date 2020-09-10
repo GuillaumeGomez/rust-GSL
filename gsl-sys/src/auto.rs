@@ -2563,6 +2563,1783 @@ pub type CBLAS_DIAG = ::std::os::raw::c_uint;
 pub const CBLAS_SIDE_CblasLeft: CBLAS_SIDE = 141;
 pub const CBLAS_SIDE_CblasRight: CBLAS_SIDE = 142;
 pub type CBLAS_SIDE = ::std::os::raw::c_uint;
+extern "C" {
+    pub fn cblas_sdsdot(
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *const f32,
+        incY: ::std::os::raw::c_int,
+    ) -> f32;
+}
+extern "C" {
+    pub fn cblas_dsdot(
+        N: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *const f32,
+        incY: ::std::os::raw::c_int,
+    ) -> f64;
+}
+extern "C" {
+    pub fn cblas_sdot(
+        N: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *const f32,
+        incY: ::std::os::raw::c_int,
+    ) -> f32;
+}
+extern "C" {
+    pub fn cblas_ddot(
+        N: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Y: *const f64,
+        incY: ::std::os::raw::c_int,
+    ) -> f64;
+}
+extern "C" {
+    pub fn cblas_cdotu_sub(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        dotu: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_cdotc_sub(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        dotc: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_zdotu_sub(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        dotu: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_zdotc_sub(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        dotc: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_snrm2(N: ::std::os::raw::c_int, X: *const f32, incX: ::std::os::raw::c_int)
+        -> f32;
+}
+extern "C" {
+    pub fn cblas_sasum(N: ::std::os::raw::c_int, X: *const f32, incX: ::std::os::raw::c_int)
+        -> f32;
+}
+extern "C" {
+    pub fn cblas_dnrm2(N: ::std::os::raw::c_int, X: *const f64, incX: ::std::os::raw::c_int)
+        -> f64;
+}
+extern "C" {
+    pub fn cblas_dasum(N: ::std::os::raw::c_int, X: *const f64, incX: ::std::os::raw::c_int)
+        -> f64;
+}
+extern "C" {
+    pub fn cblas_scnrm2(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    ) -> f32;
+}
+extern "C" {
+    pub fn cblas_scasum(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    ) -> f32;
+}
+extern "C" {
+    pub fn cblas_dznrm2(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    ) -> f64;
+}
+extern "C" {
+    pub fn cblas_dzasum(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    ) -> f64;
+}
+extern "C" {
+    pub fn cblas_isamax(
+        N: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+    ) -> size_t;
+}
+extern "C" {
+    pub fn cblas_idamax(
+        N: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+    ) -> size_t;
+}
+extern "C" {
+    pub fn cblas_icamax(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    ) -> size_t;
+}
+extern "C" {
+    pub fn cblas_izamax(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    ) -> size_t;
+}
+extern "C" {
+    pub fn cblas_sswap(
+        N: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_scopy(
+        N: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_saxpy(
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dswap(
+        N: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dcopy(
+        N: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_daxpy(
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cswap(
+        N: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ccopy(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_caxpy(
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zswap(
+        N: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zcopy(
+        N: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zaxpy(
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_srotg(a: *mut f32, b: *mut f32, c: *mut f32, s: *mut f32);
+}
+extern "C" {
+    pub fn cblas_srotmg(d1: *mut f32, d2: *mut f32, b1: *mut f32, b2: f32, P: *mut f32);
+}
+extern "C" {
+    pub fn cblas_srot(
+        N: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+        c: f32,
+        s: f32,
+    );
+}
+extern "C" {
+    pub fn cblas_srotm(
+        N: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+        P: *const f32,
+    );
+}
+extern "C" {
+    pub fn cblas_drotg(a: *mut f64, b: *mut f64, c: *mut f64, s: *mut f64);
+}
+extern "C" {
+    pub fn cblas_drotmg(d1: *mut f64, d2: *mut f64, b1: *mut f64, b2: f64, P: *mut f64);
+}
+extern "C" {
+    pub fn cblas_drot(
+        N: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+        c: f64,
+        s: f64,
+    );
+}
+extern "C" {
+    pub fn cblas_drotm(
+        N: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+        P: *const f64,
+    );
+}
+extern "C" {
+    pub fn cblas_sscal(
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dscal(
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cscal(
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zscal(
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_csscal(
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zdscal(
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_sgemv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        beta: f32,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_sgbmv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        KL: ::std::os::raw::c_int,
+        KU: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        beta: f32,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_strmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_stbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_stpmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const f32,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_strsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_stbsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_stpsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const f32,
+        X: *mut f32,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dgemv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        beta: f64,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dgbmv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        KL: ::std::os::raw::c_int,
+        KU: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        beta: f64,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtrmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtpmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const f64,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtrsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtbsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtpsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const f64,
+        X: *mut f64,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cgemv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cgbmv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        KL: ::std::os::raw::c_int,
+        KU: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctrmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctpmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const ::std::os::raw::c_void,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctrsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctbsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctpsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const ::std::os::raw::c_void,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zgemv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zgbmv(
+        order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        KL: ::std::os::raw::c_int,
+        KU: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztrmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztpmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const ::std::os::raw::c_void,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztrsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztbsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztpsv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        N: ::std::os::raw::c_int,
+        Ap: *const ::std::os::raw::c_void,
+        X: *mut ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ssymv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        beta: f32,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ssbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        beta: f32,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_sspmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        Ap: *const f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        beta: f32,
+        Y: *mut f32,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_sger(
+        order: CBLAS_ORDER,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *const f32,
+        incY: ::std::os::raw::c_int,
+        A: *mut f32,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ssyr(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        A: *mut f32,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_sspr(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Ap: *mut f32,
+    );
+}
+extern "C" {
+    pub fn cblas_ssyr2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *const f32,
+        incY: ::std::os::raw::c_int,
+        A: *mut f32,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_sspr2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const f32,
+        incX: ::std::os::raw::c_int,
+        Y: *const f32,
+        incY: ::std::os::raw::c_int,
+        A: *mut f32,
+    );
+}
+extern "C" {
+    pub fn cblas_dsymv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        beta: f64,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dsbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        beta: f64,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dspmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        Ap: *const f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        beta: f64,
+        Y: *mut f64,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dger(
+        order: CBLAS_ORDER,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Y: *const f64,
+        incY: ::std::os::raw::c_int,
+        A: *mut f64,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dsyr(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        A: *mut f64,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dspr(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Ap: *mut f64,
+    );
+}
+extern "C" {
+    pub fn cblas_dsyr2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Y: *const f64,
+        incY: ::std::os::raw::c_int,
+        A: *mut f64,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dspr2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const f64,
+        incX: ::std::os::raw::c_int,
+        Y: *const f64,
+        incY: ::std::os::raw::c_int,
+        A: *mut f64,
+    );
+}
+extern "C" {
+    pub fn cblas_chemv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_chbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_chpmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        Ap: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cgeru(
+        order: CBLAS_ORDER,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cgerc(
+        order: CBLAS_ORDER,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cher(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_chpr(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_cher2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_chpr2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        Ap: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_zhemv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zhbmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zhpmv(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        Ap: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        Y: *mut ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zgeru(
+        order: CBLAS_ORDER,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zgerc(
+        order: CBLAS_ORDER,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zher(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zhpr(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_zher2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        A: *mut ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zhpr2(
+        order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        X: *const ::std::os::raw::c_void,
+        incX: ::std::os::raw::c_int,
+        Y: *const ::std::os::raw::c_void,
+        incY: ::std::os::raw::c_int,
+        Ap: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn cblas_sgemm(
+        Order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        TransB: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        B: *const f32,
+        ldb: ::std::os::raw::c_int,
+        beta: f32,
+        C: *mut f32,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ssymm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        B: *const f32,
+        ldb: ::std::os::raw::c_int,
+        beta: f32,
+        C: *mut f32,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ssyrk(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        beta: f32,
+        C: *mut f32,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ssyr2k(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        B: *const f32,
+        ldb: ::std::os::raw::c_int,
+        beta: f32,
+        C: *mut f32,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_strmm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        B: *mut f32,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_strsm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const f32,
+        lda: ::std::os::raw::c_int,
+        B: *mut f32,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dgemm(
+        Order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        TransB: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        B: *const f64,
+        ldb: ::std::os::raw::c_int,
+        beta: f64,
+        C: *mut f64,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dsymm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        B: *const f64,
+        ldb: ::std::os::raw::c_int,
+        beta: f64,
+        C: *mut f64,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dsyrk(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        beta: f64,
+        C: *mut f64,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dsyr2k(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        B: *const f64,
+        ldb: ::std::os::raw::c_int,
+        beta: f64,
+        C: *mut f64,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtrmm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        B: *mut f64,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_dtrsm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const f64,
+        lda: ::std::os::raw::c_int,
+        B: *mut f64,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cgemm(
+        Order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        TransB: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_csymm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_csyrk(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_csyr2k(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctrmm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *mut ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ctrsm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *mut ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zgemm(
+        Order: CBLAS_ORDER,
+        TransA: CBLAS_TRANSPOSE,
+        TransB: CBLAS_TRANSPOSE,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zsymm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zsyrk(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zsyr2k(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztrmm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *mut ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_ztrsm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        TransA: CBLAS_TRANSPOSE,
+        Diag: CBLAS_DIAG,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *mut ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_chemm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cherk(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f32,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        beta: f32,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_cher2k(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: f32,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zhemm(
+        Order: CBLAS_ORDER,
+        Side: CBLAS_SIDE,
+        Uplo: CBLAS_UPLO,
+        M: ::std::os::raw::c_int,
+        N: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: *const ::std::os::raw::c_void,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zherk(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: f64,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        beta: f64,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_zher2k(
+        Order: CBLAS_ORDER,
+        Uplo: CBLAS_UPLO,
+        Trans: CBLAS_TRANSPOSE,
+        N: ::std::os::raw::c_int,
+        K: ::std::os::raw::c_int,
+        alpha: *const ::std::os::raw::c_void,
+        A: *const ::std::os::raw::c_void,
+        lda: ::std::os::raw::c_int,
+        B: *const ::std::os::raw::c_void,
+        ldb: ::std::os::raw::c_int,
+        beta: f64,
+        C: *mut ::std::os::raw::c_void,
+        ldc: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    pub fn cblas_xerbla(
+        p: ::std::os::raw::c_int,
+        rout: *const ::std::os::raw::c_char,
+        form: *const ::std::os::raw::c_char,
+        ...
+    );
+}
 pub type CBLAS_INDEX_t = size_t;
 pub use self::CBLAS_DIAG as CBLAS_DIAG_t;
 pub use self::CBLAS_ORDER as CBLAS_ORDER_t;
