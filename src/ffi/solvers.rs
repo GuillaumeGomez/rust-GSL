@@ -165,6 +165,8 @@ pub struct gsl_multifit_function_fdf {
     pub n: size_t,
     pub p: size_t,
     pub params: *mut c_void,
+    pub nevalf: size_t,
+    pub nevaldf: size_t,
 }
 
 #[repr(C)]
@@ -175,21 +177,33 @@ pub struct gsl_multifit_fdfsolver_type {
     pub set: Option<
         extern "C" fn(
             state: *mut c_void,
+            wts: *const gsl_vector,
             fdf: *mut gsl_multifit_function_fdf,
             x: *mut gsl_vector,
             f: *mut gsl_vector,
-            J: *mut gsl_matrix,
             dx: *mut gsl_vector,
         ) -> c_int,
     >,
     pub iterate: Option<
         extern "C" fn(
             state: *mut c_void,
+            wts: *const gsl_vector,
             fdf: *mut gsl_multifit_function_fdf,
             x: *mut gsl_vector,
             f: *mut gsl_vector,
-            J: *mut gsl_matrix,
             dx: *mut gsl_vector,
+        ) -> c_int,
+    >,
+    pub gradient: ::std::option::Option<
+        extern "C" fn(
+            state: *mut c_void,
+            g: *mut gsl_vector,
+        ) -> c_int,
+    >,
+    pub jac: ::std::option::Option<
+        extern "C" fn(
+            state: *mut c_void,
+            J: *mut gsl_matrix,
         ) -> c_int,
     >,
     pub free: Option<extern "C" fn(state: *mut c_void)>,
@@ -201,8 +215,10 @@ pub struct gsl_multifit_fdfsolver {
     pub fdf: *mut gsl_multifit_function_fdf,
     pub x: *mut gsl_vector,
     pub f: *mut gsl_vector,
-    pub J: *mut gsl_matrix,
     pub dx: *mut gsl_vector,
+    pub g: *mut gsl_vector,
+    pub sqrt_wts: *mut gsl_vector,
+    pub niter: size_t,
     pub state: *mut c_void,
 }
 
@@ -222,7 +238,7 @@ pub struct gsl_root_fsolver_type {
         extern "C" fn(
             state: *mut c_void,
             f: *mut gsl_function,
-            root: c_double,
+            root: *mut c_double,
             x_lower: c_double,
             x_upper: c_double,
         ) -> c_int,
@@ -231,9 +247,9 @@ pub struct gsl_root_fsolver_type {
         extern "C" fn(
             state: *mut c_void,
             f: *mut gsl_function,
-            root: c_double,
-            x_lower: c_double,
-            x_upper: c_double,
+            root: *mut c_double,
+            x_lower: *mut c_double,
+            x_upper: *mut c_double,
         ) -> c_int,
     >,
 }
@@ -260,13 +276,13 @@ pub struct gsl_function_fdf {
 
 #[repr(C)]
 pub struct gsl_root_fdfsolver_type {
-    pub name: c_char,
+    pub name: *const c_char,
     pub size: size_t,
     pub set: Option<
-        extern "C" fn(state: *mut c_void, f: *mut gsl_function_fdf, root: c_double) -> c_int,
+        extern "C" fn(state: *mut c_void, f: *mut gsl_function_fdf, root: *mut c_double) -> c_int,
     >,
     pub iterate: Option<
-        extern "C" fn(state: *mut c_void, f: *mut gsl_function_fdf, root: c_double) -> c_int,
+        extern "C" fn(state: *mut c_void, f: *mut gsl_function_fdf, root: *mut c_double) -> c_int,
     >,
 }
 
