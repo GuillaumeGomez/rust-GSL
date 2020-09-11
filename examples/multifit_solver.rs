@@ -203,7 +203,7 @@ fn main() {
         }
     }
 
-    rgsl::multifit::covar(&s.J(), 0f64, &mut covar);
+    rgsl::multifit::covar(&s.J().unwrap(), 0f64, &mut covar);
 
     {
         let chi = rgsl::blas::level1::dnrm2(&s.f());

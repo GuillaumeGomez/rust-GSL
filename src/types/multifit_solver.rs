@@ -326,6 +326,8 @@ pub struct MultiFitFunction {
 
 pub struct MultiFitFdfSolver {
     intern: *mut ffi::gsl_multifit_fdfsolver,
+    n: usize,
+    p: usize,
 }
 
 impl MultiFitFdfSolver {
@@ -343,7 +345,7 @@ impl MultiFitFdfSolver {
         if s.is_null() {
             None
         } else {
-            Some(MultiFitFdfSolver { intern: s })
+            Some(MultiFitFdfSolver { intern: s, n, p, })
         }
     }
 
@@ -363,8 +365,10 @@ impl MultiFitFdfSolver {
         unsafe { ffi::FFI::soft_wrap((*self.intern).f) }
     }
 
-    pub fn J(&self) -> ::MatrixF64 {
-        unsafe { ffi::FFI::soft_wrap((*self.intern).J) }
+    pub fn J(&self) -> Option<::MatrixF64> {
+        let mut matrix = ::MatrixF64::new(self.n, self.p)?;
+        unsafe{ (*(*self.intern).type_).jac?((*self.intern).state, ffi::FFI::unwrap_unique(&mut matrix)); }
+        Some(matrix)
     }
 
     pub fn dx(&self) -> ::VectorF64 {
@@ -481,6 +485,8 @@ impl MultiFitFunctionFdf {
                 n: n,
                 p: p,
                 params: ::std::ptr::null_mut(),
+                nevalf: 0,
+                nevaldf: 0,
             },
         }
     }
@@ -490,6 +496,14 @@ impl MultiFitFunctionFdf {
         self.intern.p = self.p;
         self.intern.params = self as *mut MultiFitFunctionFdf as *mut c_void;
         &mut self.intern
+    }
+
+    pub fn nevalf(&self) -> usize {
+        self.intern.nevalf
+    }
+
+    pub fn nevaldf(&self) -> usize {
+        self.intern.nevaldf
     }
 }
 
