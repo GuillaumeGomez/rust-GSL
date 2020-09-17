@@ -8,6 +8,20 @@ use std::process::Command;
 
 const HEADER_FILE: &str = "wrapper.h";
 const GSL_REPOSITORY: &str = "git://git.savannah.gnu.org/gsl.git";
+const STRUCTS_TO_IGNORE: &[&str] = &[
+    "pub struct _IO_",
+    "pub struct _G_"
+];
+const TYPES_TO_IGNORE: &[&str] = &[
+    "pub type _IO_lock_t ",
+];
+const STATICS_TO_IGNORE: &[&str] = &[
+    "pub static mut stdin:",
+    "pub static mut stderr:",
+    "pub static mut stdout:",
+    "pub static mut sys_nerr:",
+    "pub static mut sys_errlist:",
+];
 
 fn get_all_headers(folder: &Path, extra: &mut Vec<String>, headers: &mut Vec<String>) {
     println!("=> Entering `{:?}`", folder);
@@ -46,6 +60,9 @@ fn run_bindgen(folder: &Path, commit_hash: String) {
         .header(HEADER_FILE)
         .layout_tests(false)
         .clang_args(&[format!("-I{}", folder.display())])
+        .whitelist_function("(gsl|cblas)_.*")
+        .whitelist_type("(gsl|cblas)_.*")
+        .whitelist_var("(GSL|CBLAS|gsl|cblas)_.*")
         .generate()
         .expect("Unable to generate bindings");
 
@@ -64,19 +81,9 @@ fn run_bindgen(folder: &Path, commit_hash: String) {
                 content.remove(pos);
                 continue;
             }
-        }
-        let should_remove = if let Some(fn_name) = content[pos].trim_start().split("(").next().unwrap().split("pub fn ").skip(1).next() {
-            !fn_name.starts_with("gsl_") && !fn_name.starts_with("cblas_")
-        } else {
-            false
-        };
-        if should_remove {
-            while !content[pos].starts_with("extern \"C\" {") {
-                if pos > 0 {
-                    pos -= 1;
-                } else {
-                    break;
-                }
+        } else if STRUCTS_TO_IGNORE.iter().any(|s| content[pos].starts_with(s)) {
+            while pos > 1 && content[pos - 1].starts_with("#[") {
+                pos -= 1;
             }
             while !content[pos].starts_with("}") && pos < content.len() {
                 content.remove(pos);
@@ -84,7 +91,34 @@ fn run_bindgen(folder: &Path, commit_hash: String) {
             if pos < content.len() {
                 content.remove(pos);
             }
-            continue
+            continue;
+        } else if content[pos].starts_with("pub type FILE = ") {
+            content[pos] = "pub type FILE = libc::FILE;";
+        } else if TYPES_TO_IGNORE.iter().any(|s| content[pos].starts_with(s)) {
+            content.remove(pos);
+            continue;
+        } else {
+            let should_remove = if let Some(fn_name) = content[pos].trim_start().split("(").next().unwrap().split("pub fn ").skip(1).next() {
+                !fn_name.starts_with("gsl_") && !fn_name.starts_with("cblas_")
+            } else {
+                false
+            };
+            if should_remove {
+                while !content[pos].starts_with("extern \"C\" {") {
+                    if pos > 0 {
+                        pos -= 1;
+                    } else {
+                        break;
+                    }
+                }
+                while !content[pos].starts_with("}") && pos < content.len() {
+                    content.remove(pos);
+                }
+                if pos < content.len() {
+                    content.remove(pos);
+                }
+                continue
+            }
         }
         pos += 1;
     }
