@@ -56,23 +56,23 @@ use std::mem::transmute;
 /// Note that a bracketing algorithm cannot find roots of even degree, since these do not
 /// cross the x-axis.
 pub struct RootFSolverType {
-    s: *mut sys::gsl_root_fsolver_type,
+    s: *const sys::gsl_root_fsolver_type,
 }
 
 impl ffi::FFI<sys::gsl_root_fsolver_type> for RootFSolverType {
-    fn wrap(r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
+    fn wrap(r: *const sys::gsl_root_fsolver_type) -> RootFSolverType {
         RootFSolverType { s: r }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
-        Self::wrap(r)
+    fn soft_wrap(r: *const sys::gsl_root_fsolver_type) -> RootFSolverType {
+        RootFSolverType { s: r }
     }
 
     fn unwrap_shared(s: &RootFSolverType) -> *const sys::gsl_root_fsolver_type {
-        s.s as *const _
+        s.s
     }
 
-    fn unwrap_unique(s: &mut RootFSolverType) -> *mut sys::gsl_root_fsolver_type {
+    fn unwrap_unique(s: &mut RootFSolverType) -> *const sys::gsl_root_fsolver_type {
         s.s
     }
 }
@@ -236,23 +236,23 @@ impl Drop for RootFSolver {
 ///
 /// These algorithms make use of both the function and its derivative.
 pub struct RootFdfSolverType {
-    s: *mut sys::gsl_root_fdfsolver_type,
+    s: *const sys::gsl_root_fdfsolver_type,
 }
 
 impl ffi::FFI<sys::gsl_root_fdfsolver_type> for RootFdfSolverType {
-    fn wrap(r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
+    fn wrap(r: *const sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
         RootFdfSolverType { s: r }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
-        Self::wrap(r)
+    fn soft_wrap(r: *const sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
+        RootFdfSolverType { s: r }
     }
 
     fn unwrap_shared(s: &RootFdfSolverType) -> *const sys::gsl_root_fdfsolver_type {
-        s.s as *const _
+        s.s
     }
 
-    fn unwrap_unique(s: &mut RootFdfSolverType) -> *mut sys::gsl_root_fdfsolver_type {
+    fn unwrap_unique(s: &mut RootFdfSolverType) -> *const sys::gsl_root_fdfsolver_type {
         s.s
     }
 }

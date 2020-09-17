@@ -15,10 +15,10 @@ use enums;
 /// The sum of squares of the residuals from the best-fit line is returned in sumsq. Note: the correlation coefficient of the data can be computed using gsl_stats_correlation (see [`Correlation`](http://www.gnu.org/software/gsl/manual/html_node/Correlation.html#Correlation)), it does not depend on the fit.
 pub fn linear(
     x: &[f64],
-    xstride: usize,
+    xstride: u64,
     y: &[f64],
-    ystride: usize,
-    n: usize,
+    ystride: u64,
+    n: u64,
     c0: &mut f64,
     c1: &mut f64,
     cov00: &mut f64,
@@ -51,12 +51,12 @@ pub fn linear(
 /// The weighted sum of squares of the residuals from the best-fit line, \chi^2, is returned in chisq.
 pub fn wlinear(
     x: &[f64],
-    xstride: usize,
+    xstride: u64,
     w: &[f64],
-    wstride: usize,
+    wstride: u64,
     y: &[f64],
-    ystride: usize,
-    n: usize,
+    ystride: u64,
+    n: u64,
     c0: &mut f64,
     c1: &mut f64,
     cov00: &mut f64,
@@ -104,10 +104,10 @@ pub fn linear_est(
 /// The sum of squares of the residuals from the best-fit line is returned in sumsq.
 pub fn mul(
     x: &[f64],
-    xstride: usize,
+    xstride: u64,
     y: &[f64],
-    ystride: usize,
-    n: usize,
+    ystride: u64,
+    n: u64,
     c1: &mut f64,
     cov11: &mut f64,
     sumsq: &mut f64,
@@ -134,12 +134,12 @@ pub fn mul(
 /// The weighted sum of squares of the residuals from the best-fit line, \chi^2, is returned in chisq.
 pub fn wmul(
     x: &[f64],
-    xstride: usize,
+    xstride: u64,
     w: &[f64],
-    wstride: usize,
+    wstride: u64,
     y: &[f64],
-    ystride: usize,
-    n: usize,
+    ystride: u64,
+    n: u64,
     c1: &mut f64,
     cov11: &mut f64,
     sumsq: &mut f64,

@@ -19,14 +19,14 @@ use std::io::Write;
 
 pub struct MultiSet {
     c: *mut sys::gsl_multiset,
-    data: CSlice<usize>,
+    data: CSlice<u64>,
 }
 
 impl MultiSet {
     /// This function allocates memory for a new multiset with parameters n, k. The multiset is not initialized and its elements are
     /// undefined. Use the function gsl_multiset_calloc if you want to create a multiset which is initialized to the lexicographically
     /// first multiset element. A null pointer is returned if insufficient memory is available to create the multiset.
-    pub fn new(n: usize, k: usize) -> Option<MultiSet> {
+    pub fn new(n: u64, k: u64) -> Option<MultiSet> {
         let tmp = unsafe { sys::gsl_multiset_alloc(n, k) };
 
         if tmp.is_null() {
@@ -37,12 +37,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CSlice::new(tmp as *mut usize, 0usize),
+                        data: CSlice::new(tmp as *mut _, 0),
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
+                        data: CSlice::new((*tmp).data, (*tmp).k as _),
                     })
                 }
             }
@@ -51,7 +51,7 @@ impl MultiSet {
 
     /// This function allocates memory for a new multiset with parameters n, k and initializes it to the lexicographically first multiset
     /// element. A null pointer is returned if insufficient memory is available to create the multiset.
-    pub fn new_init(n: usize, k: usize) -> Option<MultiSet> {
+    pub fn new_init(n: u64, k: u64) -> Option<MultiSet> {
         let tmp = unsafe { sys::gsl_multiset_calloc(n, k) };
 
         if tmp.is_null() {
@@ -62,12 +62,12 @@ impl MultiSet {
                     Some(MultiSet {
                         c: tmp,
                         // dirty trick to avoid a failure
-                        data: CSlice::new(tmp as *mut usize, 0usize),
+                        data: CSlice::new(tmp as *mut _, 0),
                     })
                 } else {
                     Some(MultiSet {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
+                        data: CSlice::new((*tmp).data, (*tmp).k as _),
                     })
                 }
             }
@@ -91,22 +91,22 @@ impl MultiSet {
 
     /// This function returns the value of the i-th element of the multiset c. If i lies outside the allowed range of 0 to k-1 then the
     /// error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> usize {
+    pub fn get(&self, i: u64) -> u64 {
         unsafe { sys::gsl_multiset_get(self.c, i) }
     }
 
     /// This function returns the range (n) of the multiset self.
-    pub fn n(&self) -> usize {
+    pub fn n(&self) -> u64 {
         unsafe { sys::gsl_multiset_n(self.c) }
     }
 
     /// This function returns the number of elements (k) in the multiset self.
-    pub fn k(&self) -> usize {
+    pub fn k(&self) -> u64 {
         unsafe { sys::gsl_multiset_k(self.c) }
     }
 
     /// This function returns a pointer to the array of elements in the multiset self.
-    pub fn data<'r>(&'r mut self) -> &'r mut [usize] {
+    pub fn data<'r>(&'r mut self) -> &'r mut [u64] {
         self.data.as_mut()
     }
 
@@ -151,12 +151,12 @@ impl ffi::FFI<sys::gsl_multiset> for MultiSet {
                 MultiSet {
                     c: c,
                     // dirty trick to avoid a failure
-                    data: CSlice::new(c as *mut usize, 0usize),
+                    data: CSlice::new(c as *mut _, 0),
                 }
             } else {
                 MultiSet {
                     c: c,
-                    data: CSlice::new((*c).data, (*c).k as usize),
+                    data: CSlice::new((*c).data, (*c).k as _),
                 }
             }
         }

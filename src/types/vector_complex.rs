@@ -19,7 +19,7 @@ impl VectorComplexF64 {
     }
 
     /// create a new VectorComplexF64 with all elements set to zero
-    pub fn new(size: usize) -> Option<VectorComplexF64> {
+    pub fn new(size: u64) -> Option<VectorComplexF64> {
         let tmp = unsafe { sys::gsl_vector_complex_calloc(size) };
 
         if tmp.is_null() {
@@ -30,37 +30,35 @@ impl VectorComplexF64 {
     }
 
     pub fn from_slice(slice: &[ComplexF64]) -> Option<VectorComplexF64> {
-        let tmp = unsafe { sys::gsl_vector_complex_alloc(slice.len() as usize) };
+        let tmp = unsafe { sys::gsl_vector_complex_alloc(slice.len() as u64) };
 
         if tmp.is_null() {
             None
         } else {
             let mut v = VectorComplexF64 { vec: tmp };
-            let mut pos = 0usize;
 
-            for tmp in slice.iter() {
-                v.set(pos, tmp);
-                pos += 1;
+            for (pos, tmp) in slice.iter().enumerate() {
+                v.set(pos as _, tmp);
             }
             Some(v)
         }
     }
 
-    pub fn len(&self) -> usize {
+    pub fn len(&self) -> u64 {
         if self.vec.is_null() {
-            0usize
+            0
         } else {
             unsafe { (*self.vec).size }
         }
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> ComplexF64 {
+    pub fn get(&self, i: u64) -> ComplexF64 {
         unsafe { ::std::mem::transmute(sys::gsl_vector_complex_get(self.vec, i)) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&mut self, i: usize, x: &ComplexF64) -> &VectorComplexF64 {
+    pub fn set(&mut self, i: u64, x: &ComplexF64) -> &VectorComplexF64 {
         unsafe { sys::gsl_vector_complex_set(self.vec, i, ::std::mem::transmute(*x)) };
         self
     }
@@ -78,7 +76,7 @@ impl VectorComplexF64 {
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&mut self, i: usize) -> &VectorComplexF64 {
+    pub fn set_basis(&mut self, i: u64) -> &VectorComplexF64 {
         unsafe { sys::gsl_vector_complex_set_basis(self.vec, i) };
         self
     }
@@ -99,7 +97,7 @@ impl VectorComplexF64 {
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_elements(&mut self, i: u64, j: u64) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_vector_complex_swap_elements(self.vec, i, j) })
     }
 
@@ -229,7 +227,7 @@ impl Debug for VectorComplexF64 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
             write!(f, "[");
-            for x in 0usize..(*self.vec).size {
+            for x in 0..(*self.vec).size {
                 if x < (*self.vec).size - 1 {
                     write!(f, "{:?}, ", self.get(x));
                 } else {
@@ -270,7 +268,7 @@ impl VectorComplexF32 {
     }
 
     /// create a new VectorComplexF32 with all elements set to zero
-    pub fn new(size: usize) -> Option<VectorComplexF32> {
+    pub fn new(size: u64) -> Option<VectorComplexF32> {
         let tmp = unsafe { sys::gsl_vector_complex_float_calloc(size) };
 
         if tmp.is_null() {
@@ -281,37 +279,35 @@ impl VectorComplexF32 {
     }
 
     pub fn from_slice(slice: &[ComplexF32]) -> Option<VectorComplexF32> {
-        let tmp = unsafe { sys::gsl_vector_complex_float_alloc(slice.len() as usize) };
+        let tmp = unsafe { sys::gsl_vector_complex_float_alloc(slice.len() as _) };
 
         if tmp.is_null() {
             None
         } else {
             let mut v = VectorComplexF32 { vec: tmp };
-            let mut pos = 0usize;
 
-            for tmp in slice.iter() {
-                v.set(pos, tmp);
-                pos += 1;
+            for (pos, tmp) in slice.iter().enumerate() {
+                v.set(pos as _, tmp);
             }
             Some(v)
         }
     }
 
-    pub fn len(&self) -> usize {
+    pub fn len(&self) -> u64 {
         if self.vec.is_null() {
-            0usize
+            0
         } else {
             unsafe { (*self.vec).size }
         }
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> ComplexF32 {
+    pub fn get(&self, i: u64) -> ComplexF32 {
         unsafe { ::std::mem::transmute(sys::gsl_vector_complex_float_get(self.vec, i)) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&mut self, i: usize, x: &ComplexF32) -> &VectorComplexF32 {
+    pub fn set(&mut self, i: u64, x: &ComplexF32) -> &VectorComplexF32 {
         unsafe {
             sys::gsl_vector_complex_float_set(self.vec, i, ::std::mem::transmute(*x))
         };
@@ -333,7 +329,7 @@ impl VectorComplexF32 {
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&mut self, i: usize) -> &VectorComplexF32 {
+    pub fn set_basis(&mut self, i: u64) -> &VectorComplexF32 {
         unsafe { sys::gsl_vector_complex_float_set_basis(self.vec, i) };
         self
     }
@@ -360,7 +356,7 @@ impl VectorComplexF32 {
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_elements(&mut self, i: u64, j: u64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_vector_complex_float_swap_elements(self.vec, i, j)
         })
@@ -500,7 +496,7 @@ impl Debug for VectorComplexF32 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
             write!(f, "[");
-            for x in 0usize..(*self.vec).size {
+            for x in 0..(*self.vec).size {
                 if x < (*self.vec).size - 1 {
                     write!(f, "{:?}, ", self.get(x));
                 } else {

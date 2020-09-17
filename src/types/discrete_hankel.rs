@@ -62,7 +62,7 @@ pub struct DiscreteHankel {
 
 impl DiscreteHankel {
     /// This function allocates a Discrete Hankel transform object of size `size`.
-    pub fn new(size: usize) -> Option<DiscreteHankel> {
+    pub fn new(size: u64) -> Option<DiscreteHankel> {
         let tmp = unsafe { sys::gsl_dht_alloc(size) };
 
         if tmp.is_null() {
@@ -74,7 +74,7 @@ impl DiscreteHankel {
 
     /// This function allocates a Discrete Hankel transform object of size `size` and initializes it
     /// for the given values of `nu` and `xmax`.
-    pub fn new_with_init(size: usize, nu: f64, xmax: f64) -> Option<DiscreteHankel> {
+    pub fn new_with_init(size: u64, nu: f64, xmax: f64) -> Option<DiscreteHankel> {
         let tmp = unsafe { sys::gsl_dht_new(size, nu, xmax) };
 
         if tmp.is_null() {
@@ -97,13 +97,13 @@ impl DiscreteHankel {
     pub fn apply(&self, f_in: &[f64]) -> Result<Vec<f64>, enums::Value> {
         unsafe {
             assert!(
-                (*self.t).size == f_in.len(),
+                (*self.t).size == f_in.len() as _,
                 "f_in and f_out must have the same length as this struct"
             );
             let mut f_out: Vec<f64> = ::std::iter::repeat(0.).take(f_in.len()).collect();
             match enums::Value::from(sys::gsl_dht_apply(
                 self.t,
-                f_in.as_ptr(),
+                f_in.as_ptr() as usize as *mut _,
                 f_out.as_mut_ptr(),
             )) {
                 enums::Value::Success => Ok(f_out),

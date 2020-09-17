@@ -96,7 +96,7 @@ pub struct PlainMonteCarlo {
 
 impl PlainMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
-    pub fn new(dim: usize) -> Option<PlainMonteCarlo> {
+    pub fn new(dim: u64) -> Option<PlainMonteCarlo> {
         let tmp = unsafe { sys::gsl_monte_plain_alloc(dim) };
 
         if tmp.is_null() {
@@ -124,11 +124,10 @@ impl PlainMonteCarlo {
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
-        dim: usize,
         f: F,
         xl: &[f64],
         xu: &[f64],
-        t_calls: usize,
+        t_calls: u64,
         r: &mut ::Rng,
     ) -> Result<(f64, f64), ::Value> {
         unsafe {
@@ -138,19 +137,19 @@ impl PlainMonteCarlo {
             let f: Box<Box<F>> = Box::new(Box::new(f));
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
-                dim: dim,
+                dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
             let ret = ::Value::from(sys::gsl_monte_plain_integrate(
-                &mut func as *mut _ as *mut c_void,
+                &mut func,
                 xl.as_ptr(),
                 xu.as_ptr(),
-                xl.len(),
+                xl.len() as _,
                 t_calls,
                 ffi::FFI::unwrap_unique(r),
                 self.s,
-                (&mut result) as *mut c_double,
-                (&mut abserr) as *mut c_double,
+                &mut result,
+                &mut abserr,
             ));
 
             if ret == ::Value::Success {
@@ -217,7 +216,7 @@ pub struct MiserMonteCarlo {
 impl MiserMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
     /// the state of the integration.
-    pub fn new(dim: usize) -> Option<MiserMonteCarlo> {
+    pub fn new(dim: u64) -> Option<MiserMonteCarlo> {
         let tmp_pointer = unsafe { sys::gsl_monte_miser_alloc(dim) };
 
         if tmp_pointer.is_null() {
@@ -244,11 +243,10 @@ impl MiserMonteCarlo {
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
-        dim: usize,
         f: F,
         xl: &[f64],
         xu: &[f64],
-        t_calls: usize,
+        t_calls: u64,
         r: &mut ::Rng,
     ) -> Result<(f64, f64), ::Value> {
         unsafe {
@@ -258,19 +256,19 @@ impl MiserMonteCarlo {
             let f: Box<Box<F>> = Box::new(Box::new(f));
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
-                dim: dim,
+                dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
             let ret = ::Value::from(sys::gsl_monte_miser_integrate(
-                &mut func as *mut _ as *mut c_void,
+                &mut func,
                 xl.as_ptr(),
                 xu.as_ptr(),
-                xl.len(),
+                xl.len() as _,
                 t_calls,
                 ffi::FFI::unwrap_unique(r),
                 self.s,
-                (&mut result) as *mut c_double,
-                (&mut abserr) as *mut c_double,
+                &mut result,
+                &mut abserr,
             ));
 
             if ret == ::Value::Success {
@@ -394,7 +392,7 @@ pub struct VegasMonteCarlo {
 impl VegasMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
     /// The workspace is used to maintain the state of the integration.
-    pub fn new(dim: usize) -> Option<VegasMonteCarlo> {
+    pub fn new(dim: u64) -> Option<VegasMonteCarlo> {
         let tmp_pointer = unsafe { sys::gsl_monte_vegas_alloc(dim) };
 
         if tmp_pointer.is_null() {
@@ -426,11 +424,10 @@ impl VegasMonteCarlo {
     /// It returns either Ok((result, abserr)) or Err(enums::Value).
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
-        dim: usize,
         f: F,
         xl: &[f64],
         xu: &[f64],
-        t_calls: usize,
+        t_calls: u64,
         r: &mut ::Rng,
     ) -> Result<(f64, f64), ::Value> {
         unsafe {
@@ -440,19 +437,19 @@ impl VegasMonteCarlo {
             let f: Box<Box<F>> = Box::new(Box::new(f));
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
-                dim: dim,
+                dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
             let ret = ::Value::from(sys::gsl_monte_vegas_integrate(
-                &mut func as *mut _ as *mut c_void,
-                xl.as_ptr(),
-                xu.as_ptr(),
-                xl.len(),
+                &mut func,
+                xl.as_ptr() as usize as *mut _,
+                xu.as_ptr() as usize as *mut _,
+                xl.len() as _,
                 t_calls,
                 ffi::FFI::unwrap_unique(r),
                 self.s,
-                (&mut result) as *mut c_double,
-                (&mut abserr) as *mut c_double,
+                &mut result,
+                &mut abserr,
             ));
 
             if ret == ::Value::Success {
@@ -526,7 +523,7 @@ impl<'a> VegasParams<'a> {
     /// verbosity + stream: These parameters set the level of information printed by vegas.
     pub fn new(
         alpha: f64,
-        iterations: usize,
+        iterations: u64,
         stage: i32,
         mode: ::VegasMode,
         verbosity: VegasVerbosity,
@@ -556,9 +553,9 @@ impl<'a> VegasParams<'a> {
         };
         Ok(VegasParams {
             inner: sys::gsl_monte_vegas_params {
-                alpha: alpha,
-                iterations: iterations,
-                stage: stage,
+                alpha,
+                iterations,
+                stage,
                 mode: mode.into(),
                 verbose: verbosity.to_int(),
                 ostream: stream,

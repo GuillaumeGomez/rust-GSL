@@ -56,7 +56,7 @@ impl VectorView {
     /// in use.
     ///
     /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be used for vectors which are declared const.
-    pub fn from_vector(v: &VectorF64, offset: usize, n: usize) -> VectorView {
+    pub fn from_vector(v: &VectorF64, offset: u64, n: u64) -> VectorView {
         unsafe {
             VectorView {
                 v: sys::gsl_vector_subvector(v.vec, offset, n),
@@ -91,9 +91,9 @@ impl VectorView {
     /// are declared const.
     pub fn from_vector_with_stride(
         v: &VectorF64,
-        offset: usize,
-        stride: usize,
-        n: usize,
+        offset: u64,
+        stride: u64,
+        n: u64,
     ) -> VectorView {
         unsafe {
             VectorView {
@@ -117,7 +117,7 @@ impl VectorView {
     pub fn from_array(base: &mut [f64]) -> VectorView {
         unsafe {
             VectorView {
-                v: sys::gsl_vector_view_array(base.as_mut_ptr(), base.len() as usize),
+                v: sys::gsl_vector_view_array(base.as_mut_ptr(), base.len() as _),
             }
         }
     }
@@ -135,13 +135,13 @@ impl VectorView {
     ///
     /// The function gsl_vector_const_view_array_with_stride is equivalent to gsl_vector_view_array_with_stride but can be used for arrays
     /// which are declared const.
-    pub fn from_array_with_stride(base: &mut [f64], stride: usize) -> VectorView {
+    pub fn from_array_with_stride(base: &mut [f64], stride: u64) -> VectorView {
         unsafe {
             VectorView {
                 v: sys::gsl_vector_view_array_with_stride(
                     base.as_mut_ptr(),
                     stride,
-                    base.len() as usize,
+                    base.len() as _,
                 ),
             }
         }
@@ -164,7 +164,7 @@ pub struct VectorF32 {
 
 impl VectorF32 {
     /// create a new VectorF32 with all elements set to zero
-    pub fn new(size: usize) -> Option<VectorF32> {
+    pub fn new(size: u64) -> Option<VectorF32> {
         let tmp = unsafe { sys::gsl_vector_float_calloc(size) };
 
         if tmp.is_null() {
@@ -178,7 +178,7 @@ impl VectorF32 {
     }
 
     pub fn from_slice(slice: &[f32]) -> Option<VectorF32> {
-        let tmp = unsafe { sys::gsl_vector_float_alloc(slice.len() as usize) };
+        let tmp = unsafe { sys::gsl_vector_float_alloc(slice.len() as _) };
 
         if tmp.is_null() {
             None
@@ -187,31 +187,29 @@ impl VectorF32 {
                 vec: tmp,
                 can_free: true,
             };
-            let mut pos = 0usize;
 
-            for tmp in slice.iter() {
-                v.set(pos, *tmp);
-                pos += 1;
+            for (pos, tmp) in slice.iter().enumerate() {
+                v.set(pos as _, *tmp);
             }
             Some(v)
         }
     }
 
-    pub fn len(&self) -> usize {
+    pub fn len(&self) -> u64 {
         if self.vec.is_null() {
-            0usize
+            0
         } else {
             unsafe { (*self.vec).size }
         }
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> f32 {
+    pub fn get(&self, i: u64) -> f32 {
         unsafe { sys::gsl_vector_float_get(self.vec, i) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&mut self, i: usize, x: f32) -> &mut VectorF32 {
+    pub fn set(&mut self, i: u64, x: f32) -> &mut VectorF32 {
         unsafe { sys::gsl_vector_float_set(self.vec, i, x) };
         self
     }
@@ -229,7 +227,7 @@ impl VectorF32 {
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&mut self, i: usize) -> &mut VectorF32 {
+    pub fn set_basis(&mut self, i: u64) -> &mut VectorF32 {
         unsafe { sys::gsl_vector_float_set_basis(self.vec, i) };
         self
     }
@@ -250,7 +248,7 @@ impl VectorF32 {
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_elements(&mut self, i: u64, j: u64) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_vector_float_swap_elements(self.vec, i, j) })
     }
 
@@ -290,7 +288,7 @@ impl VectorF32 {
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
     pub fn add_constant(&mut self, x: f32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_vector_float_add_constant(self.vec, x) })
+        enums::Value::from(unsafe { sys::gsl_vector_float_add_constant(self.vec, x as _) })
     }
 
     /// This function returns the maximum value in the self vector.
@@ -316,21 +314,21 @@ impl VectorF32 {
 
     /// This function returns the index of the maximum value in the self vector.
     /// When there are several equal maximum elements then the lowest index is returned.
-    pub fn max_index(&self) -> usize {
+    pub fn max_index(&self) -> u64 {
         unsafe { sys::gsl_vector_float_max_index(self.vec) }
     }
 
     /// This function returns the index of the minimum value in the self vector.
     /// When there are several equal minimum elements then the lowest index is returned.
-    pub fn min_index(&self) -> usize {
+    pub fn min_index(&self) -> u64 {
         unsafe { sys::gsl_vector_float_min_index(self.vec) }
     }
 
     /// This function returns the indices of the minimum and maximum values in the self vector, storing them in imin and imax.
     /// When there are several equal minimum or maximum elements then the lowest indices are returned.
-    pub fn minmax_index(&self) -> (usize, usize) {
-        let mut imin = 0usize;
-        let mut imax = 0usize;
+    pub fn minmax_index(&self) -> (u64, u64) {
+        let mut imin = 0;
+        let mut imax = 0;
 
         unsafe { sys::gsl_vector_float_minmax_index(self.vec, &mut imin, &mut imax) };
         (imin, imax)
@@ -421,7 +419,7 @@ impl Debug for VectorF32 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
             write!(f, "[");
-            for x in 0usize..(*self.vec).size {
+            for x in 0..(*self.vec).size {
                 if x < (*self.vec).size - 1 {
                     write!(f, "{}, ", self.get(x));
                 } else {
@@ -464,7 +462,7 @@ pub struct VectorF64 {
 
 impl VectorF64 {
     /// create a new VectorF64 with all elements set to zero
-    pub fn new(size: usize) -> Option<VectorF64> {
+    pub fn new(size: u64) -> Option<VectorF64> {
         let tmp = unsafe { sys::gsl_vector_calloc(size) };
 
         if tmp.is_null() {
@@ -478,7 +476,7 @@ impl VectorF64 {
     }
 
     pub fn from_slice(slice: &[f64]) -> Option<VectorF64> {
-        let tmp = unsafe { sys::gsl_vector_alloc(slice.len() as usize) };
+        let tmp = unsafe { sys::gsl_vector_alloc(slice.len() as _) };
 
         if tmp.is_null() {
             None
@@ -487,31 +485,29 @@ impl VectorF64 {
                 vec: tmp,
                 can_free: true,
             };
-            let mut pos = 0usize;
 
-            for tmp in slice.iter() {
-                v.set(pos, *tmp);
-                pos += 1;
+            for (pos, tmp) in slice.iter().enumerate() {
+                v.set(pos as _, *tmp);
             }
             Some(v)
         }
     }
 
-    pub fn len(&self) -> usize {
+    pub fn len(&self) -> u64 {
         if self.vec.is_null() {
-            0usize
+            0
         } else {
             unsafe { (*self.vec).size }
         }
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> f64 {
+    pub fn get(&self, i: u64) -> f64 {
         unsafe { sys::gsl_vector_get(self.vec, i) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&mut self, i: usize, x: f64) -> &mut VectorF64 {
+    pub fn set(&mut self, i: u64, x: f64) -> &mut VectorF64 {
         unsafe { sys::gsl_vector_set(self.vec, i, x) };
         self
     }
@@ -529,7 +525,7 @@ impl VectorF64 {
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&mut self, i: usize) -> &mut VectorF64 {
+    pub fn set_basis(&mut self, i: u64) -> &mut VectorF64 {
         unsafe { sys::gsl_vector_set_basis(self.vec, i) };
         self
     }
@@ -550,7 +546,7 @@ impl VectorF64 {
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
+    pub fn swap_elements(&mut self, i: u64, j: u64) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_vector_swap_elements(self.vec, i, j) })
     }
 
@@ -616,21 +612,21 @@ impl VectorF64 {
 
     /// This function returns the index of the maximum value in the self vector.
     /// When there are several equal maximum elements then the lowest index is returned.
-    pub fn max_index(&self) -> usize {
+    pub fn max_index(&self) -> u64 {
         unsafe { sys::gsl_vector_max_index(self.vec) }
     }
 
     /// This function returns the index of the minimum value in the self vector.
     /// When there are several equal minimum elements then the lowest index is returned.
-    pub fn min_index(&self) -> usize {
+    pub fn min_index(&self) -> u64 {
         unsafe { sys::gsl_vector_min_index(self.vec) }
     }
 
     /// This function returns the indices of the minimum and maximum values in the self vector, storing them in imin and imax.
     /// When there are several equal minimum or maximum elements then the lowest indices are returned.
-    pub fn minmax_index(&self) -> (usize, usize) {
-        let mut imin = 0usize;
-        let mut imax = 0usize;
+    pub fn minmax_index(&self) -> (u64, u64) {
+        let mut imin = 0;
+        let mut imax = 0;
 
         unsafe { sys::gsl_vector_minmax_index(self.vec, &mut imin, &mut imax) };
         (imin, imax)
@@ -721,7 +717,7 @@ impl Debug for VectorF64 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         unsafe {
             write!(f, "[");
-            for x in 0usize..(*self.vec).size {
+            for x in 0..(*self.vec).size {
                 if x < (*self.vec).size - 1 {
                     write!(f, "{}, ", self.get(x));
                 } else {

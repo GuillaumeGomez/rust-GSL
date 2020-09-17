@@ -74,13 +74,13 @@ use libc::c_void;
 pub struct ODEiv2System<'a> {
     function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
     jacobian: Option<&'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>>,
-    dimension: usize,
+    dimension: u64,
 }
 
 impl<'a> ODEiv2System<'a> {
     /// Returns a new ODEiv2System with a given dimension and right-hand side.
     pub fn new(
-        dimension: usize,
+        dimension: u64,
         function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
     ) -> ODEiv2System<'a> {
         ODEiv2System {
@@ -92,7 +92,7 @@ impl<'a> ODEiv2System<'a> {
 
     /// Returns a new ODEiv2System with a jacobian function provided.
     pub fn with_jacobian(
-        dimension: usize,
+        dimension: u64,
         function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> GSLResult<()>,
         jacobian: &'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> GSLResult<()>,
     ) -> ODEiv2System<'a> {
@@ -106,7 +106,7 @@ impl<'a> ODEiv2System<'a> {
     /// Return `sys::gsl_odeiv2_system` structure.
     fn to_raw(&mut self) -> sys::gsl_odeiv2_system {
         sys::gsl_odeiv2_system {
-            function: function_handler,
+            function: Some(function_handler),
             jacobian: if self.jacobian.is_some() {
                 Some(jacobian_handler)
             } else {
@@ -167,7 +167,7 @@ impl ODEiv2Step {
     /// This function returns a pointer to a newly allocated instance of a stepping function of type T for a system of dim dimensions.
     /// Please note that if you use a stepper method that requires access to a driver object, it is advisable to use a driver allocation
     /// method, which automatically allocates a stepper, too.
-    pub fn new(t: &ODEiv2StepType, dim: usize) -> Option<ODEiv2Step> {
+    pub fn new(t: &ODEiv2StepType, dim: u64) -> Option<ODEiv2Step> {
         let tmp = unsafe { sys::gsl_odeiv2_step_alloc(ffi::FFI::unwrap_shared(t), dim) };
 
         if tmp.is_null() {
@@ -506,7 +506,7 @@ impl ODEiv2Control {
                 a_y,
                 a_dydt,
                 scale_abs.as_ptr(),
-                scale_abs.len() as usize,
+                scale_abs.len() as _,
             )
         };
 
@@ -589,7 +589,7 @@ impl ODEiv2Control {
         y: f64,
         dydt: f64,
         h: f64,
-        ind: usize,
+        ind: u64,
         errlev: &mut f64,
     ) -> GSLResult<()> {
         GSLResult::from(enums::Value::from(unsafe {
@@ -635,23 +635,24 @@ pub struct ODEiv2ControlType {
     t: *const sys::gsl_odeiv2_control_type,
 }
 
-impl ODEiv2ControlType {
-    pub fn scaled() -> ODEiv2ControlType {
-        unsafe {
-            ODEiv2ControlType {
-                t: sys::gsl_odeiv2_control_scaled_new(),
-            }
-        }
-    }
+// TODO!!!
+// impl ODEiv2ControlType {
+//     pub fn scaled() -> ODEiv2ControlType {
+//         unsafe {
+//             ODEiv2ControlType {
+//                 t: sys::gsl_odeiv2_control_scaled_new(),
+//             }
+//         }
+//     }
 
-    pub fn standard() -> ODEiv2ControlType {
-        unsafe {
-            ODEiv2ControlType {
-                t: sys::gsl_odeiv2_control_standard_new(),
-            }
-        }
-    }
-}
+//     pub fn standard() -> ODEiv2ControlType {
+//         unsafe {
+//             ODEiv2ControlType {
+//                 t: sys::gsl_odeiv2_control_standard_new(),
+//             }
+//         }
+//     }
+// }
 
 impl ffi::FFI<sys::gsl_odeiv2_control_type> for ODEiv2ControlType {
     fn wrap(t: *mut sys::gsl_odeiv2_control_type) -> ODEiv2ControlType {
@@ -677,7 +678,7 @@ pub struct ODEiv2Evolve {
 
 impl ODEiv2Evolve {
     /// This function returns a pointer to a newly allocated instance of an evolution function for a system of dim dimensions.
-    pub fn new(dim: usize) -> Option<ODEiv2Evolve> {
+    pub fn new(dim: u64) -> Option<ODEiv2Evolve> {
         let tmp = unsafe { sys::gsl_odeiv2_evolve_alloc(dim) };
 
         if tmp.is_null() {

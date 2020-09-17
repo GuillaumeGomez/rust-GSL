@@ -26,7 +26,7 @@ use std::fmt::{Debug, Formatter};
 
 pub struct Combination {
     c: *mut sys::gsl_combination,
-    data: CSlice<usize>,
+    data: CSlice<u64>,
 }
 
 impl Combination {
@@ -35,7 +35,7 @@ impl Combination {
     /// `Combination::new_init_first` if you want to create a combination which is initialized to
     /// the lexicographically first combination. A null pointer is returned if insufficient memory
     /// is available to create the combination.
-    pub fn new(n: usize, k: usize) -> Option<Combination> {
+    pub fn new(n: u64, k: u64) -> Option<Combination> {
         let tmp = unsafe { sys::gsl_combination_alloc(n, k) };
 
         if tmp.is_null() {
@@ -45,12 +45,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
+                        data: CSlice::new((*tmp).data, (*tmp).k as _),
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut usize, 0usize),
+                        data: CSlice::new(tmp as *mut _, 0usize),
                     })
                 }
             }
@@ -60,7 +60,7 @@ impl Combination {
     /// This function allocates memory for a new combination with parameters n, k and initializes it
     /// to the lexicographically first combination. A null pointer is returned if insufficient
     /// memory is available to create the combination.
-    pub fn new_init_first(n: usize, k: usize) -> Option<Combination> {
+    pub fn new_init_first(n: u64, k: u64) -> Option<Combination> {
         let tmp = unsafe { sys::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {
@@ -70,12 +70,12 @@ impl Combination {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
+                        data: CSlice::new((*tmp).data, (*tmp).k as _),
                     })
                 } else {
                     Some(Combination {
                         c: tmp,
-                        data: CSlice::new(tmp as *mut usize, 0usize),
+                        data: CSlice::new(tmp as *mut _, 0usize),
                     })
                 }
             }
@@ -102,7 +102,7 @@ impl Combination {
 
     /// This function returns the value of the i-th element of the combination self. If i lies
     /// outside the allowed range of 0 to k-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> u64 {
+    pub fn get(&self, i: u64) -> u64 {
         unsafe { sys::gsl_combination_get(self.c, i) }
     }
 
@@ -117,12 +117,12 @@ impl Combination {
     }
 
     /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_slice<'r>(&'r self) -> &'r [usize] {
+    pub fn as_slice<'r>(&'r self) -> &'r [u64] {
         self.data.as_ref()
     }
 
     /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [usize] {
+    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [u64] {
         self.data.as_mut()
     }
 
@@ -160,7 +160,7 @@ impl ffi::FFI<sys::gsl_combination> for Combination {
         unsafe {
             Combination {
                 c: c,
-                data: CSlice::new((*c).data, (*c).k as usize),
+                data: CSlice::new((*c).data, (*c).k as _),
             }
         }
     }

@@ -3,7 +3,13 @@
 //
 
 #[derive(Clone, Copy)]
-pub struct Index(pub u32);
+pub struct Index(pub(crate) sys::CBLAS_INDEX_t);
+
+impl Index {
+    pub fn new(value: u64) -> Index {
+        Index(value)
+    }
+}
 
 pub mod level1 {
     pub fn sdsdot(N: i32, alpha: f32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
@@ -18,7 +24,7 @@ pub mod level1 {
         unsafe { ::sys::cblas_sdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
-    pub fn ddot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f64 {
+    pub fn ddot(N: i32, x: &[f64], incx: i32, y: &[f64], incy: i32) -> f64 {
         unsafe { ::sys::cblas_ddot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
@@ -235,13 +241,13 @@ pub mod level1 {
         }
     }
 
-    pub fn srotmg(d1: &mut [f32], d2: &mut [f32], b1: &mut [f32], b2: &[f32], P: &mut [f32]) {
+    pub fn srotmg(d1: &mut [f32], d2: &mut [f32], b1: &mut [f32], b2: f32, P: &mut [f32]) {
         unsafe {
             ::sys::cblas_srotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
-                b2.as_ptr(),
+                b2,
                 P.as_mut_ptr(),
             )
         }
@@ -268,13 +274,13 @@ pub mod level1 {
         }
     }
 
-    pub fn drotmg(d1: &mut [f64], d2: &mut [f64], b1: &mut [f64], b2: &[f64], P: &mut [f64]) {
+    pub fn drotmg(d1: &mut [f64], d2: &mut [f64], b1: &mut [f64], b2: f64, P: &mut [f64]) {
         unsafe {
             ::sys::cblas_drotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
-                b2.as_ptr(),
+                b2,
                 P.as_mut_ptr(),
             )
         }
@@ -1897,7 +1903,7 @@ pub mod level2 {
         order: ::blas::Order,
         uplo: ::blas::Uplo,
         N: i32,
-        alpha: &[T],
+        alpha: f32,
         x: &[T],
         incx: i32,
         A: &mut [T],
@@ -1908,7 +1914,7 @@ pub mod level2 {
                 order,
                 uplo,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
+                alpha,
                 x.as_ptr() as *const ::libc::c_void,
                 incx,
                 A.as_mut_ptr() as *mut ::libc::c_void,
@@ -1921,7 +1927,7 @@ pub mod level2 {
         order: ::blas::Order,
         uplo: ::blas::Uplo,
         N: i32,
-        alpha: &[T],
+        alpha: f32,
         x: &[T],
         incx: i32,
         Ap: &mut [T],
@@ -1931,7 +1937,7 @@ pub mod level2 {
                 order,
                 uplo,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
+                alpha,
                 x.as_ptr() as *const ::libc::c_void,
                 incx,
                 Ap.as_mut_ptr() as *mut ::libc::c_void,
@@ -2233,7 +2239,7 @@ pub mod level2 {
         order: ::blas::Order,
         uplo: ::blas::Uplo,
         N: i32,
-        alpha: &[T],
+        alpha: f64,
         x: &[T],
         incx: i32,
         A: &mut [T],
@@ -2244,7 +2250,7 @@ pub mod level2 {
                 order,
                 uplo,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
+                alpha,
                 x.as_ptr() as *const ::libc::c_void,
                 incx,
                 A.as_mut_ptr() as *mut ::libc::c_void,
@@ -2257,7 +2263,7 @@ pub mod level2 {
         order: ::blas::Order,
         uplo: ::blas::Uplo,
         N: i32,
-        alpha: &[T],
+        alpha: f64,
         x: &[T],
         incx: i32,
         Ap: &mut [T],
@@ -2267,7 +2273,7 @@ pub mod level2 {
                 order,
                 uplo,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
+                alpha,
                 x.as_ptr() as *const ::libc::c_void,
                 incx,
                 Ap.as_mut_ptr() as *mut ::libc::c_void,
@@ -3200,10 +3206,10 @@ pub mod level3 {
         trans: ::blas::Transpose,
         N: i32,
         K: i32,
-        alpha: &[T],
+        alpha: f32,
         A: &[T],
         lda: i32,
-        beta: &[T],
+        beta: f32,
         C: &mut [T],
         ldc: i32,
     ) {
@@ -3214,10 +3220,10 @@ pub mod level3 {
                 trans,
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
+                alpha,
                 A.as_ptr() as *const ::libc::c_void,
                 lda,
-                beta.as_ptr() as *const ::libc::c_void,
+                beta,
                 C.as_mut_ptr() as *mut ::libc::c_void,
                 ldc,
             )
@@ -3235,7 +3241,7 @@ pub mod level3 {
         lda: i32,
         B: &[T],
         ldb: i32,
-        beta: &[T],
+        beta: f32,
         C: &mut [T],
         ldc: i32,
     ) {
@@ -3251,7 +3257,7 @@ pub mod level3 {
                 lda,
                 B.as_ptr() as *const ::libc::c_void,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
+                beta,
                 C.as_mut_ptr() as *mut ::libc::c_void,
                 ldc,
             )
@@ -3333,7 +3339,7 @@ pub mod level3 {
         lda: i32,
         B: &[T],
         ldb: i32,
-        beta: &[T],
+        beta: f64,
         C: &mut [T],
         ldc: i32,
     ) {
@@ -3349,7 +3355,7 @@ pub mod level3 {
                 lda,
                 B.as_ptr() as *const ::libc::c_void,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
+                beta,
                 C.as_mut_ptr() as *mut ::libc::c_void,
                 ldc,
             )

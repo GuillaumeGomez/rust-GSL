@@ -3884,7 +3884,7 @@ struct InternParam<'r, T: 'r> {
 impl IntegrationWorkspace {
     /// This function allocates a workspace sufficient to hold n double precision intervals, their integration results and error estimates. One
     /// workspace may be used multiple times as all necessary reinitialization is performed automatically by the integration routines.
-    pub fn new(n: usize) -> Option<IntegrationWorkspace> {
+    pub fn new(n: u64) -> Option<IntegrationWorkspace> {
         let tmp = unsafe { sys::gsl_integration_workspace_alloc(n) };
 
         if tmp.is_null() {
@@ -3924,7 +3924,7 @@ impl IntegrationWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         key: enums::GaussKonrodRule,
         result: &mut f64,
         abserr: &mut f64,
@@ -4034,7 +4034,7 @@ impl IntegrationWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         result: &mut f64,
         abserr: &mut f64,
     ) -> ::Value {
@@ -4075,7 +4075,7 @@ impl IntegrationWorkspace {
         pts: &mut [f64],
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         result: &mut f64,
         abserr: &mut f64,
     ) -> ::Value {
@@ -4109,7 +4109,7 @@ impl IntegrationWorkspace {
         arg: &mut T,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         result: &mut f64,
         abserr: &mut f64,
     ) -> ::Value {
@@ -4150,7 +4150,7 @@ impl IntegrationWorkspace {
         a: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         result: &mut f64,
         abserr: &mut f64,
     ) -> ::Value {
@@ -4191,7 +4191,7 @@ impl IntegrationWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         result: &mut f64,
         abserr: &mut f64,
     ) -> ::Value {
@@ -4235,7 +4235,7 @@ impl IntegrationWorkspace {
         c: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         result: &mut f64,
         abserr: &mut f64,
     ) -> ::Value {
@@ -4453,13 +4453,13 @@ impl IntegrationWorkspace {
             let elist = t_elist.as_mut();
             let order = t_order.as_mut();
 
-            for i in 0usize..nint {
+            for i in 0..nint {
                 let i1 = order[i] as usize;
                 let mut e1 = elist[i1];
                 let mut i_max = i1;
 
                 for j in (i + 1)..nint {
-                    let i2 = order[j] as usize;
+                    let i2 = order[j] as _;
                     let e2 = elist[i2];
 
                     if e2 >= e1 {
@@ -4470,7 +4470,7 @@ impl IntegrationWorkspace {
 
                 if i_max != i1 {
                     order[i] = order[i_max];
-                    order[i_max] = i1 as usize;
+                    order[i_max] = i1 as _;
                 }
             }
             (*self.w).i = order[0];
@@ -4672,10 +4672,10 @@ impl IntegrationWorkspace {
             (*w).i = 0;
             alist.as_mut()[0] = a;
             blist.as_mut()[0] = b;
-            rlist.as_mut()[0] = 0f64;
-            elist.as_mut()[0] = 0f64;
-            order.as_mut()[0] = 0usize;
-            level.as_mut()[0] = 0usize;
+            rlist.as_mut()[0] = 0.;
+            elist.as_mut()[0] = 0.;
+            order.as_mut()[0] = 0;
+            level.as_mut()[0] = 0;
 
             (*w).maximum_level = 0;
         }
@@ -4685,29 +4685,29 @@ impl IntegrationWorkspace {
         unsafe {
             let w = self.w;
             let i_new = (*w).size as usize;
-            let mut alist = CSlice::new((*w).alist, i_new + 1usize);
-            let mut blist = CSlice::new((*w).blist, i_new + 1usize);
-            let mut rlist = CSlice::new((*w).rlist, i_new + 1usize);
-            let mut elist = CSlice::new((*w).elist, i_new + 1usize);
-            let mut order = CSlice::new((*w).order, i_new + 1usize);
-            let mut level = CSlice::new((*w).level, i_new + 1usize);
+            let mut alist = CSlice::new((*w).alist, i_new + 1);
+            let mut blist = CSlice::new((*w).blist, i_new + 1);
+            let mut rlist = CSlice::new((*w).rlist, i_new + 1);
+            let mut elist = CSlice::new((*w).elist, i_new + 1);
+            let mut order = CSlice::new((*w).order, i_new + 1);
+            let mut level = CSlice::new((*w).level, i_new + 1);
 
             alist.as_mut()[i_new] = a1;
             blist.as_mut()[i_new] = b1;
             rlist.as_mut()[i_new] = area1;
             elist.as_mut()[i_new] = error1;
-            order.as_mut()[i_new] = i_new as usize;
+            order.as_mut()[i_new] = i_new as _;
             level.as_mut()[i_new] = 0;
 
             (*w).size += 1;
         }
     }
 
-    pub fn limit(&self) -> usize {
+    pub fn limit(&self) -> u64 {
         unsafe { (*self.w).limit }
     }
 
-    pub fn size(&self) -> usize {
+    pub fn size(&self) -> u64 {
         unsafe { (*self.w).size }
     }
 }
@@ -4795,7 +4795,7 @@ impl IntegrationQawsTable {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         workspace: &mut IntegrationWorkspace,
         result: &mut f64,
         abserr: &mut f64,
@@ -5078,7 +5078,7 @@ impl IntegrationQawoTable {
         omega: f64,
         l: f64,
         sine: ::IntegrationQawo,
-        n: usize,
+        n: u64,
     ) -> Option<IntegrationQawoTable> {
         let tmp = unsafe { sys::gsl_integration_qawo_table_alloc(omega, l, sine.into(), n) };
 
@@ -5119,7 +5119,7 @@ impl IntegrationQawoTable {
         a: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: usize,
+        limit: u64,
         workspace: &mut IntegrationWorkspace,
         result: &mut f64,
         abserr: &mut f64,
@@ -5134,7 +5134,7 @@ impl IntegrationQawoTable {
         let mut reseps = 0f64;
         let mut abseps = 0f64;
         let mut correc = 0f64;
-        let mut ktmin = 0usize;
+        let mut ktmin = 0;
         let mut roundoff_type1 = 0i32;
         let mut roundoff_type2 = 0i32;
         let mut roundoff_type3 = 0i32;
@@ -5551,7 +5551,7 @@ impl CquadWorkspace {
     /// This function allocates a workspace sufficient to hold the data for n intervals. The number n is not the maximum number of intervals
     /// that will be evaluated. If the workspace is full, intervals with smaller error estimates will be discarded. A minimum of 3 intervals
     /// is required and for most functions, a workspace of size 100 is sufficient.
-    pub fn new(n: usize) -> Option<CquadWorkspace> {
+    pub fn new(n: u64) -> Option<CquadWorkspace> {
         let tmp = unsafe { sys::gsl_integration_cquad_workspace_alloc(n) };
 
         if tmp.is_null() {
@@ -5674,12 +5674,12 @@ impl CquadWorkspace {
             }
 
             let mut t_heap =
-                ::std::slice::from_raw_parts((*self.w).heap, (*self.w).size as usize + 1usize)
+                ::std::slice::from_raw_parts((*self.w).heap, (*self.w).size as usize + 1)
                     .to_vec();
-            let heap: &mut [usize] = t_heap.as_mut();
+            let heap: &mut [_] = t_heap.as_mut();
             let t_ivals =
-                ::std::slice::from_raw_parts((*self.w).ivals, (*self.w).size as usize + 1usize);
-            let mut ivals = Vec::with_capacity((*self.w).size as usize + 1usize);
+                ::std::slice::from_raw_parts((*self.w).ivals, (*self.w).size as usize + 1);
+            let mut ivals = Vec::with_capacity((*self.w).size as usize + 1);
 
             for v in t_ivals.iter() {
                 ivals.push(sys::gsl_integration_cquad_ival {
@@ -5696,8 +5696,8 @@ impl CquadWorkspace {
             }
 
             /* Initialize the heaps. */
-            for i in 0usize..((*self.w).size as usize) {
-                heap[i] = i;
+            for i in 0..(*self.w).size {
+                heap[i as usize] = i;
             }
 
             /* Initialize some global values. */
@@ -6121,7 +6121,7 @@ impl GLFixedTable {
     /// This function determines the Gauss-Legendre abscissae and weights necessary for an n-point fixed order integration scheme. If possible,
     /// high precision precomputed coefficients are used. If precomputed weights are not available, lower precision coefficients are computed
     /// on the fly.
-    pub fn new(n: usize) -> Option<GLFixedTable> {
+    pub fn new(n: u64) -> Option<GLFixedTable> {
         let tmp = unsafe { sys::gsl_integration_glfixed_table_alloc(n) };
 
         if tmp.is_null() {
@@ -6133,7 +6133,7 @@ impl GLFixedTable {
 
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight wi on the interval [a,b]. The points
     /// and weights are ordered by increasing point value. A function f may be integrated on [a,b] by summing wi * f(xi) over i.
-    pub fn point(&self, a: f64, b: f64, i: usize, xi: &mut f64, wi: &mut f64) -> ::Value {
+    pub fn point(&self, a: f64, b: f64, i: u64, xi: &mut f64, wi: &mut f64) -> ::Value {
         ::Value::from(unsafe { sys::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) })
     }
 
@@ -6229,7 +6229,7 @@ fn intern_qag<T>(
     b: f64,
     epsabs: f64,
     epsrel: f64,
-    limit: usize,
+    limit: u64,
     f_w: &mut IntegrationWorkspace,
     result: &mut f64,
     abserr: &mut f64,
@@ -6309,7 +6309,7 @@ fn intern_qag<T>(
     let mut area = result0;
     let mut errsum = abserr0;
 
-    let iteration = 1usize;
+    let iteration = 1;
 
     loop {
         let mut area1 = 0f64;
@@ -6447,14 +6447,14 @@ pub unsafe fn intern_qelg(
 ) {
     let epstab = &mut (*table).rlist2; //Vec::from_raw_buf((*table).rlist2 as *mut f64, (*table).n as usize + 3);
     let res3la = &mut (*table).res3la; //Vec::from_raw_buf((*table).res3la as *mut f64, 3u);
-    let n = (*table).n as usize - 1usize;
+    let n = (*table).n - 1;
 
     let current = (*epstab)[n];
 
     let mut absolute = ::DBL_MAX;
     let mut relative = 5f64 * ::DBL_EPSILON * current.abs();
 
-    let newelm = n / 2usize;
+    let newelm = n >> 1;
     let n_orig = n;
     let mut n_final = n;
 
@@ -6533,10 +6533,10 @@ pub unsafe fn intern_qelg(
 
     /* Shift the table */
     {
-        let limexp = 49usize;
+        let limexp = 49;
 
-        if n_final == limexp as usize {
-            n_final = 2usize * (limexp as usize / 2usize);
+        if n_final == limexp {
+            n_final = 2 * (limexp >> 1);
         }
     }
 
@@ -6692,7 +6692,7 @@ unsafe fn intern_qags<T>(
     b: f64,
     epsabs: f64,
     epsrel: f64,
-    limit: usize,
+    limit: u64,
     f_w: &mut IntegrationWorkspace,
     result: &mut f64,
     abserr: &mut f64,
@@ -6704,7 +6704,7 @@ unsafe fn intern_qags<T>(
     let mut reseps = 0f64;
     let mut abseps = 0f64;
     let mut correc = 0f64;
-    let mut ktmin = 0usize;
+    let mut ktmin = 0;
     let mut roundoff_type1 = 0i32;
     let mut roundoff_type2 = 0i32;
     let mut roundoff_type3 = 0i32;
@@ -6792,7 +6792,7 @@ unsafe fn intern_qags<T>(
 
     let positive_integrand = test_positivity(result0, resabs0);
 
-    let mut iteration = 1usize;
+    let mut iteration = 1;
 
     loop {
         let mut a_i = 0f64;
@@ -7033,7 +7033,7 @@ unsafe fn intern_qagp<T>(
     pts: &mut [f64],
     epsabs: f64,
     epsrel: f64,
-    limit: usize,
+    limit: u64,
     f_w: &mut IntegrationWorkspace,
     result: &mut f64,
     abserr: &mut f64,
@@ -7043,7 +7043,7 @@ unsafe fn intern_qagp<T>(
     let mut reseps = 0f64;
     let mut abseps = 0f64;
     let mut correc = 0f64;
-    let mut ktmin = 0usize;
+    let mut ktmin = 0;
     let mut roundoff_type1 = 0i32;
     let mut roundoff_type2 = 0i32;
     let mut roundoff_type3 = 0i32;
@@ -7056,11 +7056,11 @@ unsafe fn intern_qagp<T>(
     let mut table: ffi::extrapolation_table = ::std::mem::zeroed();
 
     /* number of intervals */
-    let nint = pts.len() as usize - 1usize;
+    let nint = pts.len() - 1;
 
     /* temporarily alias ndin to level */
     let mut t_ndin = ::std::slice::from_raw_parts((*w).level, pts.len()).to_vec();
-    let ndin: &mut [usize] = t_ndin.as_mut();
+    let ndin: &mut [_] = t_ndin.as_mut();
 
     /* Initialize results */
     *result = 0f64;
@@ -7074,7 +7074,7 @@ unsafe fn intern_qagp<T>(
         );
     }
 
-    if pts.len() as usize > (*w).limit {
+    if pts.len() as _ > (*w).limit {
         rgsl_error!("pts length exceeds size of workspace", ::Value::Invalid);
     }
 
@@ -7086,7 +7086,7 @@ unsafe fn intern_qagp<T>(
     }
 
     /* Check that the integration range and break points are an ascending sequence */
-    for i in 0usize..(nint as usize) {
+    for i in 0..nint {
         if pts[i + 1] < pts[i] {
             rgsl_error!("points are not in an ascending sequence", ::Value::Invalid);
         }
@@ -7099,7 +7099,7 @@ unsafe fn intern_qagp<T>(
 
     f_w.initialise(0f64, 0f64);
 
-    for i in 0usize..(nint as usize) {
+    for i in 0..nint {
         let mut area1 = 0f64;
         let mut error1 = 0f64;
         let mut resabs1 = 0f64;
@@ -7133,20 +7133,20 @@ unsafe fn intern_qagp<T>(
 
     /* Compute the initial error estimate */
     let mut errsum = 0f64;
-    let mut t_elist = CSlice::new((*w).elist, nint as usize);
+    let mut t_elist = CSlice::new((*w).elist, nint as _);
     let elist = t_elist.as_mut();
-    let mut t_level = CSlice::new((*w).level, nint as usize);
+    let mut t_level = CSlice::new((*w).level, nint as _);
     let level = t_level.as_mut();
 
-    for i in 0usize..(nint as usize) {
+    for i in 0..nint {
         if ndin[i] != 0 {
             elist[i] = abserr0;
         }
         errsum = errsum + elist[i];
     }
 
-    for i in 0usize..(nint as usize) {
-        level[i] = 0usize;
+    for i in 0..nint {
+        level[i] = 0;
     }
 
     /* Sort results into order of decreasing error via the indirection array order[] */
@@ -7192,7 +7192,7 @@ unsafe fn intern_qagp<T>(
 
     let positive_integrand = test_positivity(result0, resabs0);
 
-    let mut iteration = nint - 1;
+    let mut iteration = nint as u64 - 1;
 
     loop {
         let mut a_i = 0f64;
@@ -7211,7 +7211,7 @@ unsafe fn intern_qagp<T>(
         /* Bisect the subinterval with the largest error estimate */
         f_w.retrieve(&mut a_i, &mut b_i, &mut r_i, &mut e_i);
 
-        let current_level = level[(*w).i as usize] + 1usize;
+        let current_level = level[(*w).i as usize] + 1;
 
         let a1 = a_i;
         let b1 = 0.5f64 * (a_i + b_i);
@@ -7956,7 +7956,7 @@ unsafe fn qc25f<T>(
     a: f64,
     b: f64,
     wf: *mut sys::gsl_integration_qawo_table,
-    level: usize,
+    level: u64,
     result: &mut f64,
     abserr: &mut f64,
     resabs: &mut f64,

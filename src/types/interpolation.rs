@@ -67,9 +67,9 @@ impl InterpAccel {
     /// This function performs a lookup action on the data array x_array of size size, using the
     /// given accelerator a. This is how lookups are performed during evaluation of an
     /// interpolation. The function returns an index i such that `x_array[i] <= x < x_array[i+1]`.
-    pub fn find(&mut self, x_array: &[f64], x: f64) -> usize {
+    pub fn find(&mut self, x_array: &[f64], x: f64) -> u64 {
         unsafe {
-            sys::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as usize, x)
+            sys::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as _, x)
         }
     }
 }
@@ -88,7 +88,7 @@ impl Interp {
     /// let interp_type = InterpType::linear();
     /// let interp = Interp::new(&interp_type, 2).expect("Failed to initialize `Interp`...");
     /// ```
-    pub fn new(t: &InterpType, size: usize) -> Option<Interp> {
+    pub fn new(t: &InterpType, size: u64) -> Option<Interp> {
         let tmp = unsafe { sys::gsl_interp_alloc(t.t, size) };
 
         if tmp.is_null() {
@@ -105,7 +105,7 @@ impl Interp {
     /// arrangements is not defined.
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
+            sys::gsl_interp_init(self.interp, xa.as_ptr(), ya.as_ptr(), xa.len() as _)
         })
     }
 
@@ -248,7 +248,7 @@ pub struct Spline {
 }
 
 impl Spline {
-    pub fn new(t: &InterpType, size: usize) -> Option<Spline> {
+    pub fn new(t: &InterpType, size: u64) -> Option<Spline> {
         let tmp = unsafe { sys::gsl_spline_alloc(t.t, size) };
 
         if tmp.is_null() {
@@ -260,7 +260,7 @@ impl Spline {
 
     pub fn init(&self, xa: &[f64], ya: &[f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as usize)
+            sys::gsl_spline_init(self.spline, xa.as_ptr(), ya.as_ptr(), xa.len() as _)
         })
     }
 

@@ -376,14 +376,13 @@ pub fn LU_lndet(lu: &mut ::MatrixF64) -> f64 {
     unsafe { sys::gsl_linalg_LU_lndet(ffi::FFI::unwrap_unique(lu)) }
 }
 
-/// These functions compute the logarithm of the absolute value of the determinant of a matrix A, \ln|\det(A)|, from its LU decomposition,
-/// LU. This function may be useful if the direct computation of the determinant would overflow or underflow.
+/// This function computes the sign or phase factor of the determinant of a matrix A, \det(A)/|\det(A)|, from its LU decomposition, LU.
 pub fn complex_LU_lndet(lu: &mut ::MatrixComplexF64) -> f64 {
     unsafe { sys::gsl_linalg_complex_LU_lndet(ffi::FFI::unwrap_unique(lu)) }
 }
 
 /// This function computes the sign or phase factor of the determinant of a matrix A, \det(A)/|\det(A)|, from its LU decomposition, LU.
-pub fn LU_sgndet(lu: &mut ::MatrixF64, signum: i32) -> f64 {
+pub fn LU_sgndet(lu: &mut ::MatrixF64, signum: i32) -> i32 {
     unsafe { sys::gsl_linalg_LU_sgndet(ffi::FFI::unwrap_unique(lu), signum) }
 }
 
@@ -697,16 +696,16 @@ pub fn QRPT_QRsolve(
 /// This function performs a rank-1 update w v^T of the QRP^T decomposition (Q, R, p). The update is given by Q'R' = Q (R + w v^T P) where the
 /// output matrices Q' and R' are also orthogonal and right triangular. Note that w is destroyed by the update. The permutation p is not changed.
 pub fn QRPT_update(
-    q: &::MatrixF64,
-    r: &::MatrixF64,
+    q: &mut ::MatrixF64,
+    r: &mut ::MatrixF64,
     p: &::Permutation,
     w: &mut ::VectorF64,
     v: &::VectorF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_linalg_QRPT_update(
-            ffi::FFI::unwrap_shared(q),
-            ffi::FFI::unwrap_shared(r),
+            ffi::FFI::unwrap_unique(q),
+            ffi::FFI::unwrap_unique(r),
             ffi::FFI::unwrap_shared(p),
             ffi::FFI::unwrap_unique(w),
             ffi::FFI::unwrap_shared(v),
@@ -1261,7 +1260,7 @@ pub fn complex_householder_mh(
 
 /// This function applies the Householder transformation P defined by the scalar tau and the vector v to the vector w. On output the result P
 /// w is stored in w.
-pub fn householder_hv(tau: f64, v: &::VectorF64, w: &mut ::MatrixF64) -> enums::Value {
+pub fn householder_hv(tau: f64, v: &::VectorF64, w: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_linalg_householder_hv(
             tau,
@@ -1276,7 +1275,7 @@ pub fn householder_hv(tau: f64, v: &::VectorF64, w: &mut ::MatrixF64) -> enums::
 pub fn complex_householder_hv(
     tau: &::ComplexF64,
     v: &::VectorComplexF64,
-    w: &mut ::MatrixComplexF64,
+    w: &mut ::VectorComplexF64,
 ) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_linalg_complex_householder_hv(

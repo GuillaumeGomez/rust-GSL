@@ -51,7 +51,7 @@ impl<T> NTuples<T> {
             sys::gsl_ntuple_create(
                 c_str.as_ptr() as *mut c_char,
                 t_data,
-                ::std::mem::size_of::<T>() as usize,
+                ::std::mem::size_of::<T>() as _,
             )
         };
 
@@ -75,7 +75,7 @@ impl<T> NTuples<T> {
             sys::gsl_ntuple_open(
                 c_str.as_ptr() as *mut c_char,
                 t_data,
-                ::std::mem::size_of::<T>() as usize,
+                ::std::mem::size_of::<T>() as _,
             )
         };
 
@@ -114,9 +114,9 @@ impl<T> NTuples<T> {
     ) -> enums::Value {
         unsafe {
             loop {
-                let nread = fread((*self.n).ntuple_data, (*self.n).size, 1, (*self.n).file);
+                let nread = fread((*self.n).ntuple_data, (*self.n).size as _, 1, (*self.n).file);
 
-                if nread == 0 && feof((*self.n).file) != 0 {
+                if nread == 0 && feof((*self.n).file as _) != 0 {
                     break;
                 }
 

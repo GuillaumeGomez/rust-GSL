@@ -161,19 +161,8 @@ pub mod legendre {
         /// This routine computes the incomplete elliptic integral D(\phi,k) which is defined through the Carlson form RD(x,y,z) by the following relation,
         ///
         /// D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
-        #[cfg(feature = "v2")]
         pub fn ellint_D(phi: f64, k: f64, mode: ::Mode) -> f64 {
             unsafe { sys::gsl_sf_ellint_D(phi, k, mode.into()) }
-        }
-
-        /// This routine computes the incomplete elliptic integral D(\phi,k) which is defined through the Carlson form RD(x,y,z) by the following relation,
-        ///
-        /// D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
-        ///
-        /// The argument n is not used and will be removed in a future release.
-        #[cfg(not(feature = "v2"))]
-        pub fn ellint_D(phi: f64, k: f64, n: f64, mode: ::Mode) -> f64 {
-            unsafe { sys::gsl_sf_ellint_D(phi, k, n, mode.into()) }
         }
 
         /// This routine computes the incomplete elliptic integral D(\phi,k) which is defined through the Carlson form RD(x,y,z) by the following relation,
@@ -184,11 +173,10 @@ pub mod legendre {
         pub fn ellint_D_e(
             phi: f64,
             k: f64,
-            n: f64,
             mode: ::Mode,
         ) -> (enums::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-            let ret = unsafe { ::sys::gsl_sf_ellint_D_e(phi, k, n, mode.into(), &mut result) };
+            let ret = unsafe { ::sys::gsl_sf_ellint_D_e(phi, k, mode.into(), &mut result) };
 
             (
                 enums::Value::from(ret),

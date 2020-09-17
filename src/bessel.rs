@@ -445,7 +445,7 @@ pub fn Jnu_e(nu: f64, x: f64) -> (enums::Value, ::types::Result) {
 /// They are assumed to be strictly ordered and positive. The array is over-written with the values of J_\nu(x_i).
 pub fn sequence_Jnu(nu: f64, mode: ::Mode, v: &mut [f64]) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_sf_bessel_sequence_Jnu_e(nu, mode.into(), v.len() as i64, v.as_mut_ptr())
+        sys::gsl_sf_bessel_sequence_Jnu_e(nu, mode.into(), v.len() as u64, v.as_mut_ptr())
     })
 }
 

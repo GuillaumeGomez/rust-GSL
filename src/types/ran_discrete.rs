@@ -31,7 +31,7 @@ impl RanDiscrete {
     /// these array elements must all be positive, but they needn’t add up to one (so you can think of them more generally as “weights”)—the preprocessor will normalize appropriately.
     /// This return value is used as an argument for the gsl_ran_discrete function below.
     pub fn new(P: &[f64]) -> Option<RanDiscrete> {
-        let tmp = unsafe { sys::gsl_ran_discrete_preproc(P.len() as usize, P.as_ptr()) };
+        let tmp = unsafe { sys::gsl_ran_discrete_preproc(P.len() as _, P.as_ptr()) };
 
         if tmp.is_null() {
             None
@@ -41,13 +41,13 @@ impl RanDiscrete {
     }
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
-    pub fn discrete(&self, r: &mut Rng) -> usize {
+    pub fn discrete(&self, r: &mut Rng) -> u64 {
         unsafe { sys::gsl_ran_discrete(ffi::FFI::unwrap_unique(r), self.ran) }
     }
 
     /// Returns the probability P[k] of observing the variable k. Since P[k] is not stored as part of the lookup table, it must be recomputed; this computation takes O(K),
     /// so if K is large and you care about the original array P[k] used to create the lookup table, then you should just keep this original array P[k] around.
-    pub fn discrete_pdf(&self, k: usize) -> f64 {
+    pub fn discrete_pdf(&self, k: u64) -> f64 {
         unsafe { sys::gsl_ran_discrete_pdf(k, self.ran) }
     }
 }

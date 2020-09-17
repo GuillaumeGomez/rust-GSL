@@ -73,7 +73,7 @@ impl QRng {
     }
 
     /// These functions return a pointer to the state of generator r and its size.
-    pub fn size(&self) -> usize {
+    pub fn size(&self) -> u64 {
         unsafe { sys::gsl_qrng_size(self.q) }
     }
 
@@ -82,7 +82,7 @@ impl QRng {
         let tmp = unsafe { sys::gsl_qrng_state(self.q) };
 
         if !tmp.is_null() {
-            self.data = unsafe { CSlice::new(tmp as *mut c_char, self.size() as usize) };
+            self.data = unsafe { CSlice::new(tmp as *mut c_char, self.size() as _) };
         }
         self.data.as_mut()
     }

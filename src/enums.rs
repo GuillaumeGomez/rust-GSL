@@ -220,8 +220,8 @@ pub enum EigenSort {
     AbsDesc,
 }
 
-impl Into<libc::c_int> for EigenSort {
-    fn into(self) -> libc::c_int {
+impl Into<sys::gsl_eigen_sort_t> for EigenSort {
+    fn into(self) -> sys::gsl_eigen_sort_t {
         match self {
             EigenSort::ValAsc => 0,
             EigenSort::ValDesc => 1,
@@ -231,8 +231,8 @@ impl Into<libc::c_int> for EigenSort {
     }
 }
 
-impl From<libc::c_int> for EigenSort {
-    fn from(v: libc::c_int) -> EigenSort {
+impl From<sys::gsl_eigen_sort_t> for EigenSort {
+    fn from(v: sys::gsl_eigen_sort_t) -> EigenSort {
         match v {
             0 => EigenSort::ValAsc,
             1 => EigenSort::ValDesc,
@@ -326,8 +326,8 @@ pub enum IntegrationQawo {
     Sine,
 }
 
-impl Into<libc::c_int> for IntegrationQawo {
-    fn into(self) -> libc::c_int {
+impl Into<sys::gsl_integration_qawo_enum> for IntegrationQawo {
+    fn into(self) -> sys::gsl_integration_qawo_enum {
         match self {
             IntegrationQawo::Cosine => 0,
             IntegrationQawo::Sine => 1,
@@ -335,8 +335,8 @@ impl Into<libc::c_int> for IntegrationQawo {
     }
 }
 
-impl From<libc::c_int> for IntegrationQawo {
-    fn from(v: libc::c_int) -> IntegrationQawo {
+impl From<sys::gsl_integration_qawo_enum> for IntegrationQawo {
+    fn from(v: sys::gsl_integration_qawo_enum) -> IntegrationQawo {
         match v {
             0 => IntegrationQawo::Cosine,
             1 => IntegrationQawo::Sine,

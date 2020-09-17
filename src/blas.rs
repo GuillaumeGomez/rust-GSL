@@ -170,28 +170,28 @@ pub mod level1 {
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
-    pub fn isamax(x: &::types::VectorF32) -> u32 {
+    pub fn isamax(x: &::types::VectorF32) -> u64 {
         unsafe { sys::gsl_blas_isamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
-    pub fn idamax(x: &::types::VectorF64) -> u32 {
+    pub fn idamax(x: &::types::VectorF64) -> u64 {
         unsafe { sys::gsl_blas_idamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
-    pub fn icamax(x: &::types::VectorComplexF32) -> u32 {
+    pub fn icamax(x: &::types::VectorComplexF32) -> u64 {
         unsafe { sys::gsl_blas_icamax(ffi::FFI::unwrap_shared(x)) }
     }
 
     /// This function returns the index of the largest element of the vector x.
     /// The largest element is determined by its absolute magnitude for real vectors and by the sum of the magnitudes of the real and imaginary parts |\Re(x_i)| + |\Im(x_i)| for complex vectors.
     /// If the largest value occurs several times then the index of the first occurrence is returned.
-    pub fn izamax(x: &::types::VectorComplexF64) -> u32 {
+    pub fn izamax(x: &::types::VectorComplexF64) -> u64 {
         unsafe { sys::gsl_blas_izamax(ffi::FFI::unwrap_shared(x)) }
     }
 

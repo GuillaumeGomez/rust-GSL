@@ -1033,7 +1033,7 @@ pub fn qawf<T>(
     arg: &mut T,
     a: f64,
     epsabs: f64,
-    limit: usize,
+    limit: u64,
     workspace: &mut ::IntegrationWorkspace,
     cycle_workspace: &mut ::IntegrationWorkspace,
     wf: &mut ::IntegrationQawoTable,
@@ -1042,8 +1042,8 @@ pub fn qawf<T>(
 ) -> enums::Value {
     let mut total_error = 0f64;
 
-    let mut ktmin = 0usize;
-    let mut iteration = 0usize;
+    let mut ktmin: u64 = 0;
+    let mut iteration: u64 = 0;
 
     unsafe {
         let mut table: ffi::extrapolation_table = ::std::mem::zeroed();
@@ -1126,7 +1126,7 @@ pub fn qawf<T>(
                 a1,
                 epsabs1,
                 0f64,
-                limit as usize,
+                limit as _,
                 cycle_workspace,
                 &mut area1,
                 &mut error1,
