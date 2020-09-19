@@ -27,7 +27,6 @@ R. L. Burden and J. D. Faires, Numerical Analysis, 9th edition, ISBN 0-538-73351
 /// stability.
 pub mod evaluation {
     use enums;
-    use ffi;
     use std::mem::transmute;
     use types::ComplexF64;
 
@@ -96,7 +95,6 @@ pub mod evaluation {
 /// are discussed in Burden and Faires, section 3.4.
 pub mod divided_difference_representation {
     use enums;
-    use ffi;
 
     /// This function computes a divided-difference representation of the interpolating polynomial for the points (x, y) stored in the arrays
     /// xa and ya of length size. On output the divided-differences of (xa,ya) are stored in the array dd, also of length size. Using the
@@ -161,7 +159,6 @@ pub mod divided_difference_representation {
 }
 
 pub mod quadratic_equations {
-    use ffi;
     use std::mem::transmute;
     use types::ComplexF64;
 
@@ -201,7 +198,6 @@ pub mod quadratic_equations {
 }
 
 pub mod cubic_equations {
-    use ffi;
     use std::mem::transmute;
     use types::ComplexF64;
 

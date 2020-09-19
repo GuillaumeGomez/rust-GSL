@@ -18,7 +18,6 @@
 pub mod legendre {
     pub mod complete {
         use enums;
-        use ffi;
         use std::mem::zeroed;
 
         /// This routine computes the complete elliptic integral K(k) to the accuracy specified by the mode variable mode.
@@ -87,7 +86,6 @@ pub mod legendre {
 
     pub mod incomplete {
         use enums;
-        use ffi;
         use std::mem::zeroed;
 
         /// This routine computes the incomplete elliptic integral F(\phi,k) to the accuracy specified by the mode variable mode.
@@ -201,7 +199,6 @@ pub mod legendre {
 ///                (t+x)^(-1/2) (t+y)^(-1/2) (t+z)^(-1/2) (t+p)^(-1)
 pub mod carlson {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the incomplete elliptic integral RC(x,y) to the accuracy specified by the mode variable mode.

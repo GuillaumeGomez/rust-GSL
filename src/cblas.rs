@@ -353,6 +353,8 @@ pub mod level1 {
 }
 
 pub mod level2 {
+    use enums;
+
     /// Multiplies a matrix and a vector.
     ///
     /// * order : Whether matrices are row major order (C-Style) for column major order (Fortran-style). One of enum CblasRowMajor or CblasColMajor
@@ -371,7 +373,7 @@ pub mod level2 {
     /// For parameter lda, if you are passing a matrix A[m][n], the value of parameter lda should be m.
     pub fn sgemv(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         alpha: f32,
@@ -386,7 +388,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_sgemv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 alpha,
@@ -403,7 +405,7 @@ pub mod level2 {
 
     pub fn sgbmv(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         KL: i32,
@@ -420,7 +422,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_sgbmv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 KL,
@@ -440,7 +442,7 @@ pub mod level2 {
     pub fn strmv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[f32],
@@ -452,7 +454,7 @@ pub mod level2 {
             ::sys::cblas_strmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr(),
@@ -466,7 +468,7 @@ pub mod level2 {
     pub fn stbmv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -479,7 +481,7 @@ pub mod level2 {
             ::sys::cblas_stbmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -494,7 +496,7 @@ pub mod level2 {
     pub fn stpmv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[f32],
@@ -505,7 +507,7 @@ pub mod level2 {
             ::sys::cblas_stpmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr(),
@@ -518,7 +520,7 @@ pub mod level2 {
     pub fn strsv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[f32],
@@ -530,7 +532,7 @@ pub mod level2 {
             ::sys::cblas_strsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr(),
@@ -544,7 +546,7 @@ pub mod level2 {
     pub fn stbsv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -557,7 +559,7 @@ pub mod level2 {
             ::sys::cblas_stbsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -572,7 +574,7 @@ pub mod level2 {
     pub fn stpsv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[f32],
@@ -583,7 +585,7 @@ pub mod level2 {
             ::sys::cblas_stpsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr(),
@@ -595,7 +597,7 @@ pub mod level2 {
 
     pub fn dgemv(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         alpha: f64,
@@ -610,7 +612,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_dgemv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 alpha,
@@ -627,7 +629,7 @@ pub mod level2 {
 
     pub fn dgbmv(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         KL: i32,
@@ -644,7 +646,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_dgbmv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 KL,
@@ -664,7 +666,7 @@ pub mod level2 {
     pub fn dtrmv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[f64],
@@ -676,7 +678,7 @@ pub mod level2 {
             ::sys::cblas_dtrmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr(),
@@ -690,7 +692,7 @@ pub mod level2 {
     pub fn dtbmv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -703,7 +705,7 @@ pub mod level2 {
             ::sys::cblas_dtbmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -718,7 +720,7 @@ pub mod level2 {
     pub fn dtpmv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[f64],
@@ -729,7 +731,7 @@ pub mod level2 {
             ::sys::cblas_dtpmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr(),
@@ -742,7 +744,7 @@ pub mod level2 {
     pub fn dtrsv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[f64],
@@ -754,7 +756,7 @@ pub mod level2 {
             ::sys::cblas_dtrsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr(),
@@ -768,7 +770,7 @@ pub mod level2 {
     pub fn dtbsv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -781,7 +783,7 @@ pub mod level2 {
             ::sys::cblas_dtbsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -796,7 +798,7 @@ pub mod level2 {
     pub fn dtpsv(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[f64],
@@ -807,7 +809,7 @@ pub mod level2 {
             ::sys::cblas_dtpsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr(),
@@ -819,7 +821,7 @@ pub mod level2 {
 
     pub fn cgemv<T>(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         alpha: &[T],
@@ -834,7 +836,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_cgemv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -851,7 +853,7 @@ pub mod level2 {
 
     pub fn cgbmv<T>(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         KL: i32,
@@ -868,7 +870,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_cgbmv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 KL,
@@ -888,7 +890,7 @@ pub mod level2 {
     pub fn ctrmv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[T],
@@ -900,7 +902,7 @@ pub mod level2 {
             ::sys::cblas_ctrmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr() as *const ::libc::c_void,
@@ -914,7 +916,7 @@ pub mod level2 {
     pub fn ctbmv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -927,7 +929,7 @@ pub mod level2 {
             ::sys::cblas_ctbmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -942,7 +944,7 @@ pub mod level2 {
     pub fn ctpmv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[T],
@@ -953,7 +955,7 @@ pub mod level2 {
             ::sys::cblas_ctpmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr() as *const ::libc::c_void,
@@ -966,7 +968,7 @@ pub mod level2 {
     pub fn ctrsv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[T],
@@ -978,7 +980,7 @@ pub mod level2 {
             ::sys::cblas_ctrsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr() as *const ::libc::c_void,
@@ -992,7 +994,7 @@ pub mod level2 {
     pub fn ctbsv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -1005,7 +1007,7 @@ pub mod level2 {
             ::sys::cblas_ctbsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -1020,7 +1022,7 @@ pub mod level2 {
     pub fn ctpsv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[T],
@@ -1031,7 +1033,7 @@ pub mod level2 {
             ::sys::cblas_ctpsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr() as *const ::libc::c_void,
@@ -1043,7 +1045,7 @@ pub mod level2 {
 
     pub fn zgemv<T>(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         alpha: &[T],
@@ -1058,7 +1060,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_zgemv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -1075,7 +1077,7 @@ pub mod level2 {
 
     pub fn zgbmv<T>(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         M: i32,
         N: i32,
         KL: i32,
@@ -1092,7 +1094,7 @@ pub mod level2 {
         unsafe {
             ::sys::cblas_zgbmv(
                 order,
-                transA,
+                transA.into(),
                 M,
                 N,
                 KL,
@@ -1112,7 +1114,7 @@ pub mod level2 {
     pub fn ztrmv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[T],
@@ -1124,7 +1126,7 @@ pub mod level2 {
             ::sys::cblas_ztrmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr() as *const ::libc::c_void,
@@ -1138,7 +1140,7 @@ pub mod level2 {
     pub fn ztbmv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -1151,7 +1153,7 @@ pub mod level2 {
             ::sys::cblas_ztbmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -1166,7 +1168,7 @@ pub mod level2 {
     pub fn ztpmv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[T],
@@ -1177,7 +1179,7 @@ pub mod level2 {
             ::sys::cblas_ztpmv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr() as *const ::libc::c_void,
@@ -1190,7 +1192,7 @@ pub mod level2 {
     pub fn ztrsv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         A: &[T],
@@ -1202,7 +1204,7 @@ pub mod level2 {
             ::sys::cblas_ztrsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 A.as_ptr() as *const ::libc::c_void,
@@ -1216,7 +1218,7 @@ pub mod level2 {
     pub fn ztbsv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         K: i32,
@@ -1229,7 +1231,7 @@ pub mod level2 {
             ::sys::cblas_ztbsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 K,
@@ -1244,7 +1246,7 @@ pub mod level2 {
     pub fn ztpsv<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         N: i32,
         Ap: &[T],
@@ -1255,7 +1257,7 @@ pub mod level2 {
             ::sys::cblas_ztpsv(
                 order,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 N,
                 Ap.as_ptr() as *const ::libc::c_void,
@@ -1753,96 +1755,6 @@ pub mod level2 {
         }
     }
 
-    pub fn csymv<T>(
-        order: ::blas::Order,
-        uplo: ::blas::Uplo,
-        N: i32,
-        alpha: &[T],
-        A: &[T],
-        lda: i32,
-        x: &[T],
-        incx: i32,
-        beta: &[T],
-        y: &mut [T],
-        incy: i32,
-    ) {
-        unsafe {
-            ::sys::cblas_csymv(
-                order,
-                uplo,
-                N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
-                lda,
-                x.as_ptr() as *const ::libc::c_void,
-                incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
-                incy,
-            )
-        }
-    }
-
-    pub fn csbmv<T>(
-        order: ::blas::Order,
-        uplo: ::blas::Uplo,
-        N: i32,
-        K: i32,
-        alpha: &[T],
-        A: &[T],
-        lda: i32,
-        x: &[T],
-        incx: i32,
-        beta: &[T],
-        y: &mut [T],
-        incy: i32,
-    ) {
-        unsafe {
-            ::sys::cblas_csbmv(
-                order,
-                uplo,
-                N,
-                K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
-                lda,
-                x.as_ptr() as *const ::libc::c_void,
-                incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
-                incy,
-            )
-        }
-    }
-
-    pub fn cspmv<T>(
-        order: ::blas::Order,
-        uplo: ::blas::Uplo,
-        N: i32,
-        alpha: &[T],
-        Ap: &[T],
-        x: &[T],
-        incx: i32,
-        beta: &[T],
-        y: &mut [T],
-        incy: i32,
-    ) {
-        unsafe {
-            ::sys::cblas_cspmv(
-                order,
-                uplo,
-                N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                Ap.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
-                incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
-                incy,
-            )
-        }
-    }
-
     pub fn cgeru<T>(
         order: ::blas::Order,
         M: i32,
@@ -2089,96 +2001,6 @@ pub mod level2 {
         }
     }
 
-    pub fn zsymv<T>(
-        order: ::blas::Order,
-        uplo: ::blas::Uplo,
-        N: i32,
-        alpha: &[T],
-        A: &[T],
-        lda: i32,
-        x: &[T],
-        incx: i32,
-        beta: &[T],
-        y: &mut [T],
-        incy: i32,
-    ) {
-        unsafe {
-            ::sys::cblas_zsymv(
-                order,
-                uplo,
-                N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
-                lda,
-                x.as_ptr() as *const ::libc::c_void,
-                incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
-                incy,
-            )
-        }
-    }
-
-    pub fn zsbmv<T>(
-        order: ::blas::Order,
-        uplo: ::blas::Uplo,
-        N: i32,
-        K: i32,
-        alpha: &[T],
-        A: &[T],
-        lda: i32,
-        x: &[T],
-        incx: i32,
-        beta: &[T],
-        y: &mut [T],
-        incy: i32,
-    ) {
-        unsafe {
-            ::sys::cblas_zsbmv(
-                order,
-                uplo,
-                N,
-                K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
-                lda,
-                x.as_ptr() as *const ::libc::c_void,
-                incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
-                incy,
-            )
-        }
-    }
-
-    pub fn zspmv<T>(
-        order: ::blas::Order,
-        uplo: ::blas::Uplo,
-        N: i32,
-        alpha: &[T],
-        Ap: &[T],
-        x: &[T],
-        incx: i32,
-        beta: &[T],
-        y: &mut [T],
-        incy: i32,
-    ) {
-        unsafe {
-            ::sys::cblas_zspmv(
-                order,
-                uplo,
-                N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                Ap.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
-                incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
-                incy,
-            )
-        }
-    }
-
     pub fn zgeru<T>(
         order: ::blas::Order,
         M: i32,
@@ -2337,6 +2159,8 @@ pub mod level2 {
 }
 
 pub mod level3 {
+    use enums;
+
     /// General ::types::Matrix-MatrixF64 multiplication for single precision float.
     ///
     /// __Parameters:__
@@ -2359,8 +2183,8 @@ pub mod level3 {
     /// For parameters lda, ldb, and ldc, if you are passing a matrix D[m][n], the value of parameter lda, ldb, or ldc should be m.
     pub fn sgemm(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
-        transB: ::blas::Transpose,
+        transA: enums::CblasTranspose,
+        transB: enums::CblasTranspose,
         M: i32,
         N: i32,
         K: i32,
@@ -2376,8 +2200,8 @@ pub mod level3 {
         unsafe {
             ::sys::cblas_sgemm(
                 order,
-                transA,
-                transB,
+                transA.into(),
+                transB.into(),
                 M,
                 N,
                 K,
@@ -2447,7 +2271,7 @@ pub mod level3 {
     pub fn ssyrk(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: f32,
@@ -2461,7 +2285,7 @@ pub mod level3 {
             ::sys::cblas_ssyrk(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha,
@@ -2477,7 +2301,7 @@ pub mod level3 {
     pub fn ssyr2k(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: f32,
@@ -2493,7 +2317,7 @@ pub mod level3 {
             ::sys::cblas_ssyr2k(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha,
@@ -2512,7 +2336,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -2527,7 +2351,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -2544,7 +2368,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -2559,7 +2383,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -2574,8 +2398,8 @@ pub mod level3 {
 
     pub fn dgemm(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
-        transB: ::blas::Transpose,
+        transA: enums::CblasTranspose,
+        transB: enums::CblasTranspose,
         M: i32,
         N: i32,
         K: i32,
@@ -2591,8 +2415,8 @@ pub mod level3 {
         unsafe {
             ::sys::cblas_dgemm(
                 order,
-                transA,
-                transB,
+                transA.into(),
+                transB.into(),
                 M,
                 N,
                 K,
@@ -2645,7 +2469,7 @@ pub mod level3 {
     pub fn dsyrk(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: f64,
@@ -2659,7 +2483,7 @@ pub mod level3 {
             ::sys::cblas_dsyrk(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha,
@@ -2675,7 +2499,7 @@ pub mod level3 {
     pub fn dsyr2k(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: f64,
@@ -2691,7 +2515,7 @@ pub mod level3 {
             ::sys::cblas_dsyr2k(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha,
@@ -2710,7 +2534,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -2725,7 +2549,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -2742,7 +2566,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -2757,7 +2581,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -2772,8 +2596,8 @@ pub mod level3 {
 
     pub fn cgemm<T>(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
-        transB: ::blas::Transpose,
+        transA: enums::CblasTranspose,
+        transB: enums::CblasTranspose,
         M: i32,
         N: i32,
         K: i32,
@@ -2789,8 +2613,8 @@ pub mod level3 {
         unsafe {
             ::sys::cblas_cgemm(
                 order,
-                transA,
-                transB,
+                transA.into(),
+                transB.into(),
                 M,
                 N,
                 K,
@@ -2843,7 +2667,7 @@ pub mod level3 {
     pub fn csyrk<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: &[T],
@@ -2857,7 +2681,7 @@ pub mod level3 {
             ::sys::cblas_csyrk(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -2873,7 +2697,7 @@ pub mod level3 {
     pub fn csyr2k<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: &[T],
@@ -2889,7 +2713,7 @@ pub mod level3 {
             ::sys::cblas_csyr2k(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -2908,7 +2732,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -2923,7 +2747,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -2940,7 +2764,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -2955,7 +2779,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -2970,8 +2794,8 @@ pub mod level3 {
 
     pub fn zgemm<T>(
         order: ::blas::Order,
-        transA: ::blas::Transpose,
-        transB: ::blas::Transpose,
+        transA: enums::CblasTranspose,
+        transB: enums::CblasTranspose,
         M: i32,
         N: i32,
         K: i32,
@@ -2987,8 +2811,8 @@ pub mod level3 {
         unsafe {
             ::sys::cblas_zgemm(
                 order,
-                transA,
-                transB,
+                transA.into(),
+                transB.into(),
                 M,
                 N,
                 K,
@@ -3041,7 +2865,7 @@ pub mod level3 {
     pub fn zsyrk<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: &[T],
@@ -3055,7 +2879,7 @@ pub mod level3 {
             ::sys::cblas_zsyrk(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -3071,7 +2895,7 @@ pub mod level3 {
     pub fn zsyr2k<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: &[T],
@@ -3087,7 +2911,7 @@ pub mod level3 {
             ::sys::cblas_zsyr2k(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -3106,7 +2930,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -3121,7 +2945,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -3138,7 +2962,7 @@ pub mod level3 {
         order: ::blas::Order,
         side: ::blas::Side,
         uplo: ::blas::Uplo,
-        transA: ::blas::Transpose,
+        transA: enums::CblasTranspose,
         diag: ::blas::Diag,
         M: i32,
         N: i32,
@@ -3153,7 +2977,7 @@ pub mod level3 {
                 order,
                 side,
                 uplo,
-                transA,
+                transA.into(),
                 diag,
                 M,
                 N,
@@ -3203,7 +3027,7 @@ pub mod level3 {
     pub fn cherk<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: f32,
@@ -3217,7 +3041,7 @@ pub mod level3 {
             ::sys::cblas_cherk(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha,
@@ -3233,7 +3057,7 @@ pub mod level3 {
     pub fn cher2k<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: &[T],
@@ -3249,7 +3073,7 @@ pub mod level3 {
             ::sys::cblas_cher2k(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha.as_ptr() as *const ::libc::c_void,
@@ -3301,7 +3125,7 @@ pub mod level3 {
     pub fn zherk<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: f64,
@@ -3315,7 +3139,7 @@ pub mod level3 {
             ::sys::cblas_zherk(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha,
@@ -3331,7 +3155,7 @@ pub mod level3 {
     pub fn zher2k<T>(
         order: ::blas::Order,
         uplo: ::blas::Uplo,
-        trans: ::blas::Transpose,
+        trans: enums::CblasTranspose,
         N: i32,
         K: i32,
         alpha: &[T],
@@ -3347,7 +3171,7 @@ pub mod level3 {
             ::sys::cblas_zher2k(
                 order,
                 uplo,
-                trans,
+                trans.into(),
                 N,
                 K,
                 alpha.as_ptr() as *const ::libc::c_void,

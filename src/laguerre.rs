@@ -8,7 +8,6 @@ They are related to the plain Laguerre polynomials L_n(x) by L^0_n(x) = L_n(x) a
 !*/
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
@@ -27,45 +26,42 @@ pub fn laguerre_3(a: f64, x: f64) -> f64 {
 }
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
-pub fn laguerre_1_e(a: f64, x: f64) -> (enums::Value, ::types::Result) {
+pub fn laguerre_1_e(a: f64, x: f64) -> Result<::types::Result, enums::Value> {
     let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
     let ret = unsafe { sys::gsl_sf_laguerre_1_e(a, x, &mut result) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    let ret = enums::Value::from(ret);
+    if ret.is_success() {
+        Ok(result.into())
+    } else {
+        Err(ret)
+    }
 }
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
-pub fn laguerre_2_e(a: f64, x: f64) -> (enums::Value, ::types::Result) {
+pub fn laguerre_2_e(a: f64, x: f64) -> Result<::types::Result, enums::Value> {
     let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
     let ret = unsafe { sys::gsl_sf_laguerre_2_e(a, x, &mut result) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    let ret = enums::Value::from(ret);
+    if ret.is_success() {
+        Ok(result.into())
+    } else {
+        Err(ret)
+    }
 }
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
-pub fn laguerre_3_e(a: f64, x: f64) -> (enums::Value, ::types::Result) {
+pub fn laguerre_3_e(a: f64, x: f64) -> Result<::types::Result, enums::Value> {
     let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
     let ret = unsafe { sys::gsl_sf_laguerre_3_e(a, x, &mut result) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    let ret = enums::Value::from(ret);
+    if ret.is_success() {
+        Ok(result.into())
+    } else {
+        Err(ret)
+    }
 }
 
 /// the generalized Laguerre polynomials L^a_n(x) for a > -1, n >= 0.
@@ -74,15 +70,14 @@ pub fn laguerre_n(n: i32, a: f64, x: f64) -> f64 {
 }
 
 /// the generalized Laguerre polynomials L^a_n(x) for a > -1, n >= 0.
-pub fn laguerre_n_e(n: i32, a: f64, x: f64) -> (enums::Value, ::types::Result) {
+pub fn laguerre_n_e(n: i32, a: f64, x: f64) -> Result<::types::Result, enums::Value> {
     let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
     let ret = unsafe { sys::gsl_sf_laguerre_n_e(n, a, x, &mut result) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    let ret = enums::Value::from(ret);
+    if ret.is_success() {
+        Ok(result.into())
+    } else {
+        Err(ret)
+    }
 }

@@ -78,7 +78,6 @@ endpoints of the interval and x is an estimate of the minimum then f(a) > f(x) <
 somewhere in the interval. If a valid initial interval is used then these algorithm cannot fail, provided the function is well-behaved.
 !*/
 
-use ffi;
 use libc::{c_void, free, malloc};
 
 static REL_ERR_VAL: f64 = 1.0e-06f64;

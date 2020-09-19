@@ -2,8 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use ffi;
-
 pub trait Elementary {
     /// This function computes the value of __log(1+x)__ in a way that is accurate for small x. It provides an alternative to the BSD math function log1p(x).
     fn log1p(&self) -> Self;

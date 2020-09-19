@@ -5,7 +5,6 @@
 //! Hypergeometric functions are described in Abramowitz & Stegun, Chapters 13 and 15.
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the hypergeometric function 0F1(c,x).

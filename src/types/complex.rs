@@ -4,7 +4,6 @@
 
 // TODO : port to Rust type : http://doc.rust-lang.org/num/complex/struct.Complex.html
 
-use ffi;
 use std::default::Default;
 use std::fmt;
 use std::fmt::{Debug, Formatter};

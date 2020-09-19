@@ -2,8 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use ffi;
-
 pub fn test_interval(x_lower: f64, x_upper: f64, epsabs: f64, epsrel: f64) -> ::Value {
     ::Value::from(unsafe { sys::gsl_root_test_interval(x_lower, x_upper, epsabs, epsrel) })
 }

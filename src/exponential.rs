@@ -3,7 +3,6 @@
 //
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine provides an exponential function \exp(x) using GSL semantics and error checking.

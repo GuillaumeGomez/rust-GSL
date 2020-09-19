@@ -44,8 +44,6 @@ Review of Particle Properties R.M. Barnett et al., Physical Review D54, 1 (1996)
 The Review of Particle Physics is available online at the website http://pdg.lbl.gov/.
 !*/
 
-use ffi;
-
 /// This function returns the arithmetic mean of data, a dataset of length n with stride stride. The arithmetic mean, or sample mean, is
 /// denoted by \Hat\mu and defined as,
 ///

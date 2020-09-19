@@ -9,7 +9,6 @@
 /// Note that the Fermi-Dirac integral is sometimes defined without the normalisation factor in other texts.
 pub mod complete_integrals {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the complete Fermi-Dirac integral with an index of -1.
@@ -174,7 +173,6 @@ pub mod complete_integrals {
 /// F_j(x,b)   := (1/\Gamma(j+1)) \int_b^\infty dt (t^j / (\Exp(t-x) + 1))
 pub mod incomplete_integrals {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the incomplete Fermi-Dirac integral with an index of zero, F_0(x,b) = \ln(1 + e^{b-x}) - (b-x).

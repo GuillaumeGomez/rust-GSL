@@ -12,7 +12,6 @@ where \psi(x) = \Gamma'(x)/\Gamma(x) is known as the digamma function.
 
 pub mod diagamma {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the digamma function \psi(n) for positive integer n. The digamma function is also called the Psi function.
@@ -75,7 +74,6 @@ pub mod diagamma {
 
 pub mod trigamma {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the Trigamma function \psi'(n) for positive integer n.
@@ -119,7 +117,6 @@ pub mod trigamma {
 
 pub mod polygamma {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the polygamma function \psi^{(n)}(x) for n >= 0, x > 0.

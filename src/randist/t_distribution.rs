@@ -10,20 +10,6 @@ X = { Y_1 \over \sqrt{Y_2 / \nu} }
 has a t-distribution t(x;\nu) with \nu degrees of freedom.
 !*/
 
-use ffi;
-use types::Rng;
-
-/// This function returns a random variate from the t-distribution. The distribution function is,
-///
-/// p(x) dx = {Gamma((\nu + 1)/2) \over \sqrt{\pi \nu} Gamma(\nu/2)}
-///
-///    (1 + x^2/\nu)^{-(\nu + 1)/2} dx
-///
-/// for -\infty < x < +\infty.
-pub fn tdist(r: &mut Rng, nu: f64) -> f64 {
-    unsafe { sys::gsl_ran_tdist(ffi::FFI::unwrap_unique(r), nu) }
-}
-
 /// This function computes the probability density p(x) at x for a t-distribution with nu degrees of freedom, using the formula given above.
 pub fn tdist_pdf(x: f64, nu: f64) -> f64 {
     unsafe { sys::gsl_ran_tdist_pdf(x, nu) }

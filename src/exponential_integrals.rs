@@ -3,7 +3,6 @@
 //
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the exponential integral E_1(x),

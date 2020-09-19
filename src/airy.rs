@@ -3,7 +3,6 @@
 //
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the Airy function Ai(x) with an accuracy specified by mode.

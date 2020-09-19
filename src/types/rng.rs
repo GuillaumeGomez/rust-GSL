@@ -199,6 +199,535 @@ impl Rng {
     pub fn default_seed() -> u64 {
         unsafe { sys::gsl_rng_default_seed }
     }
+
+    /// This function randomly shuffles the order of n objects, each of size size, stored in the array base[0..n-1]. The output of the random number generator r is used to
+    /// produce the permutation. The algorithm generates all possible n! permutations with equal probability, assuming a perfect source of random numbers.
+    ///
+    /// The following code shows how to shuffle the numbers from 0 to 51,
+    ///
+    /// ```C
+    /// int a[52];
+    ///
+    /// for (i = 0; i < 52; i++)
+    ///   {
+    ///     a[i] = i;
+    ///   }
+    ///
+    /// gsl_ran_shuffle (r, a, 52, sizeof (int));
+    /// ```
+    pub fn shuffle<T>(&mut self, base: &mut [T]) {
+        unsafe {
+            sys::gsl_ran_shuffle(
+                self.r,
+                base.as_mut_ptr() as *mut _,
+                base.len() as _,
+                ::std::mem::size_of::<T>() as _,
+            )
+        }
+    }
+
+    /// This function fills the array dest[k] with k objects taken randomly from the n elements of the array src[0..n-1]. The objects are each of size size.
+    /// The output of the random number generator r is used to make the selection. The algorithm ensures all possible samples are equally likely, assuming a perfect source of randomness.
+    ///
+    /// The objects are sampled without replacement, thus each object can only appear once in dest[k]. It is required that k be less than or equal to n.
+    /// The objects in dest will be in the same relative order as those in src. You will need to call gsl_ran_shuffle(r, dest, n, size) if you want to randomize the order.
+    ///
+    /// The following code shows how to select a random sample of three unique numbers from the set 0 to 99,
+    ///
+    /// ```C
+    /// double a[3], b[100];
+    ///
+    /// for (i = 0; i < 100; i++)
+    ///   {
+    ///     b[i] = (double) i;
+    ///   }
+    ///
+    /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
+    /// ```
+    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> enums::Value {
+        assert!(src.len() <= dest.len());
+        enums::Value::from(unsafe {
+            sys::gsl_ran_choose(
+                self.r,
+                dest.as_mut_ptr() as *mut _,
+                dest.len() as _,
+                src.as_ptr() as *mut _,
+                src.len() as _,
+                ::std::mem::size_of::<T>() as _,
+            )
+        })
+    }
+
+    /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more
+    /// than once in the output sequence dest. There is no requirement that k be less than n in this case.
+    pub fn sample<T>(&mut self, src: &[T], dest: &mut [T]) {
+        assert!(src.len() <= dest.len());
+        unsafe {
+            sys::gsl_ran_sample(
+                self.r,
+                dest.as_mut_ptr() as *mut _,
+                dest.len() as _,
+                src.as_ptr() as *mut _,
+                src.len() as _,
+                ::std::mem::size_of::<T>() as _,
+            )
+        }
+    }
+
+    /// This function computes a random sample n[] from the multinomial distribution formed by N trials from an underlying distribution p[K]. The distribution function for n[] is,
+    ///
+    /// P(n_1, n_2, ..., n_K) =
+    ///   (N!/(n_1! n_2! ... n_K!)) p_1^n_1 p_2^n_2 ... p_K^n_K
+    ///
+    /// where (n_1, n_2, ..., n_K) are nonnegative integers with sum_{k=1}^K n_k = N, and (p_1, p_2, ..., p_K) is a probability distribution with \sum p_i = 1. If the array p[K] is not normalized then its
+    /// entries will be treated as weights and normalized appropriately. The arrays n[] and p[] must both be of length K.
+    ///
+    /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
+    pub fn multinomial(&mut self, N: u32, p: &[f64], n: &mut [u32]) {
+        assert!(p.len() <= n.len());
+        unsafe {
+            sys::gsl_ran_multinomial(
+                self.r,
+                p.len() as _,
+                N,
+                p.as_ptr(),
+                n.as_mut_ptr(),
+            )
+        }
+    }
+
+    /// This function returns an array of K random variates from a Dirichlet distribution of order K-1. The distribution function is
+    ///
+    /// p(\theta_1, ..., \theta_K) d\theta_1 ... d\theta_K =
+    ///
+    ///   (1/Z) \prod_{i=1}^K \theta_i^{\alpha_i - 1} \delta(1 -\sum_{i=1}^K \theta_i) d\theta_1 ... d\theta_K
+    ///
+    /// for theta_i >= 0 and alpha_i > 0. The delta function ensures that \sum \theta_i = 1. The normalization factor Z is
+    ///
+    /// Z = {\prod_{i=1}^K \Gamma(\alpha_i)} / {\Gamma( \sum_{i=1}^K \alpha_i)}
+    ///
+    /// The random variates are generated by sampling K values from gamma distributions with parameters a=alpha_i, b=1, and renormalizing. See A.M. Law, W.D. Kelton, Simulation Modeling and Analysis (1991).
+    pub fn dirichlet(&mut self, alpha: &[f64], theta: &mut [f64]) {
+        assert!(alpha.len() <= theta.len());
+        unsafe {
+            sys::gsl_ran_dirichlet(
+                self.r,
+                alpha.len() as _,
+                alpha.as_ptr(),
+                theta.as_mut_ptr(),
+            )
+        }
+    }
+
+    /// This function returns either 0 or 1, the result of a Bernoulli trial with probability p. The probability distribution for a Bernoulli trial is,
+    ///
+    /// p(0) = 1 - p
+    /// p(1) = p
+    pub fn bernoulli(&mut self, p: f64) -> u32 {
+        unsafe { sys::gsl_ran_bernoulli(self.r, p) }
+    }
+
+    /// This function returns a random variate from the beta distribution. The distribution function is,
+    ///
+    /// p(x) dx = {Gamma(a+b) over Gamma(a) Gamma(b)} x^{a-1} (1-x)^{b-1} dx
+    ///
+    /// for 0 <= x <= 1.
+    pub fn beta(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_beta(self.r, a, b) }
+    }
+
+    /// This function returns a random integer from the binomial distribution, the number of successes in n independent trials with probability p. The probability distribution for binomial variates is,
+    ///
+    /// p(k) = {n! \over k! (n-k)! } p^k (1-p)^{n-k}
+    ///
+    /// for 0 <= k <= n.
+    pub fn binomial(&mut self, p: f64, n: u32) -> u32 {
+        unsafe { sys::gsl_ran_binomial(self.r, p, n) }
+    }
+
+    /// This function generates a pair of correlated Gaussian variates, with mean zero, correlation coefficient rho and standard deviations sigma_x and sigma_y in the x and y directions.
+    /// The probability distribution for bivariate Gaussian random variates is,
+    ///
+    /// p(x,y) dx dy = {1 \over 2 \pi \sigma_x \sigma_y \sqrt{1-\rho^2}} \exp (-(x^2/\sigma_x^2 + y^2/\sigma_y^2 - 2 \rho x y/(\sigma_x\sigma_y))/2(1-\rho^2)) dx dy
+    ///
+    /// for x,y in the range -\infty to +\infty. The correlation coefficient rho should lie between 1 and -1.
+    pub fn bivariante_gaussian(&mut self, sigma_x: f64, sigma_y: f64, rho: f64) -> (f64, f64) {
+        let mut x = 0.;
+        let mut y = 0.;
+
+        unsafe {
+            sys::gsl_ran_bivariate_gaussian(
+                self.r,
+                sigma_x,
+                sigma_y,
+                rho,
+                &mut x,
+                &mut y,
+            );
+        }
+        (x, y)
+    }
+
+    /// This function returns a random variate from the Cauchy distribution with scale parameter a. The probability distribution for Cauchy random variates is,
+    ///
+    /// p(x) dx = {1 \over a\pi (1 + (x/a)^2) } dx
+    ///
+    /// for x in the range -\infty to +\infty. The Cauchy distribution is also known as the Lorentz distribution.
+    pub fn cauchy(&mut self, a: f64) -> f64 {
+        unsafe { sys::gsl_ran_cauchy(self.r, a) }
+    }
+
+    /// This function returns a random variate from the chi-squared distribution with nu degrees of freedom. The distribution function is,
+    ///
+    /// p(x) dx = {1 \over 2 Gamma(\nu/2) } (x/2)^{\nu/2 - 1} \exp(-x/2) dx
+    ///
+    /// for x >= 0.
+    pub fn chisq(&mut self, nu: f64) -> f64 {
+        unsafe { sys::gsl_ran_chisq(self.r, nu) }
+    }
+
+    /// This function returns a random variate from the exponential distribution with mean mu. The distribution is,
+    ///
+    /// p(x) dx = {1 \over \mu} \exp(-x/\mu) dx
+    ///
+    /// for x >= 0.
+    pub fn exponential(&mut self, mu: f64) -> f64 {
+        unsafe { sys::gsl_ran_exponential(self.r, mu) }
+    }
+
+    /// This function returns a random variate from the exponential power distribution with scale parameter a and exponent b. The distribution is,
+    ///
+    /// p(x) dx = {1 \over 2 a Gamma(1+1/b)} \exp(-|x/a|^b) dx
+    ///
+    /// for x >= 0. For b = 1 this reduces to the Laplace distribution. For b = 2 it has the same form as a Gaussian distribution, but with a = \sqrt{2} \sigma.
+    pub fn exppow(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_exppow(self.r, a, b) }
+    }
+
+    /// This function returns a random variate from the F-distribution with degrees of freedom nu1 and nu2. The distribution function is,
+    ///
+    /// ```latex
+    /// p(x) dx =
+    /// { Gamma((\nu_1 + \nu_2)/2)
+    ///
+    ///         over Gamma(nu_1/2) Gamma(nu_2/2) }
+    ///
+    /// \nu_1^{\nu_1/2} \nu_2^{\nu_2/2}
+    ///
+    ///    x^{\nu_1/2 - 1} (\nu_2 + \nu_1 x)^{-\nu_1/2 -\nu_2/2}
+    /// ```
+    ///
+    /// for x >= 0.
+    pub fn fdist(&mut self, nu1: f64, nu2: f64) -> f64 {
+        unsafe { sys::gsl_ran_fdist(self.r, nu1, nu2) }
+    }
+
+    /// This function returns a random variate from the flat (uniform) distribution from a to b. The distribution is,
+    ///
+    /// p(x) dx = {1 \over (b-a)} dx
+    ///
+    /// if a <= x < b and 0 otherwise.
+    pub fn flat(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_flat(self.r, a, b) }
+    }
+
+    /// This function returns a random variate from the gamma distribution. The distribution function is,
+    ///
+    /// p(x) dx = {1 over Gamma(a) b^a} x^{a-1} e^{-x/b} dx
+    ///
+    /// for x > 0.
+    ///
+    /// The gamma distribution with an integer parameter a is known as the Erlang distribution.
+    ///
+    /// The variates are computed using the Marsaglia-Tsang fast gamma method. This function for this method was previously called gsl_ran_gamma_mt and can still be accessed using this name.
+    pub fn gamma(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_gamma(self.r, a, b) }
+    }
+
+    /// This function returns a gamma variate using the algorithms from Knuth (vol 2).
+    pub fn gamma_knuth(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_gamma_knuth(self.r, a, b) }
+    }
+
+    /// This function returns a Gaussian random variate, with mean zero and standard deviation sigma.
+    /// The probability distribution for Gaussian random variates is,
+    ///
+    /// p(x) dx = {1 \over \sqrt{2 \pi \sigma^2}} \exp (-x^2 / 2\sigma^2) dx
+    /// for x in the range -\infty to +\infty. Use the transformation z = \mu + x on the numbers returned by gsl_ran_gaussian to obtain a Gaussian distribution with mean \mu.
+    /// This function uses the Box-Muller algorithm which requires two calls to the random number generator r.
+    pub fn gaussian(&mut self, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_gaussian(self.r, sigma) }
+    }
+
+    pub fn gaussian_ziggurat(&mut self, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_gaussian_ziggurat(self.r, sigma) }
+    }
+
+    /// This function computes a Gaussian random variate using the alternative Marsaglia-Tsang ziggurat and Kinderman-Monahan-Leva ratio methods.
+    /// The Ziggurat algorithm is the fastest available algorithm in most cases.
+    pub fn gaussian_ratio_method(&mut self, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_gaussian_ratio_method(self.r, sigma) }
+    }
+
+    /// This function computes results for the unit Gaussian distribution.
+    /// They are equivalent to the functions above with a standard deviation of one, sigma = 1.
+    pub fn ugaussian(&mut self) -> f64 {
+        unsafe { sys::gsl_ran_ugaussian(self.r) }
+    }
+
+    /// This function computes results for the unit Gaussian distribution.
+    /// They are equivalent to the functions above with a standard deviation of one, sigma = 1.
+    pub fn ugaussian_ratio_method(&mut self) -> f64 {
+        unsafe { sys::gsl_ran_ugaussian_ratio_method(self.r) }
+    }
+
+    /// This function provides random variates from the upper tail of a Gaussian distribution with standard deviation sigma.
+    /// The values returned are larger than the lower limit a, which must be positive. The method is based on Marsaglia’s famous rectangle-wedge-tail algorithm (Ann. Math. Stat. 32, 894–899 (1961)), with this aspect explained in Knuth, v2, 3rd ed, p139,586 (exercise 11).
+    ///
+    /// The probability distribution for Gaussian tail random variates is,
+    ///
+    /// p(x) dx = {1 \over N(a;\sigma) \sqrt{2 \pi \sigma^2}} \exp (- x^2/(2 \sigma^2)) dx
+    ///
+    /// for x > a where N(a;\sigma) is the normalization constant,
+    ///
+    /// N(a;\sigma) = (1/2) erfc(a / sqrt(2 sigma^2)).
+    pub fn gaussian_tail(&mut self, a: f64, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_gaussian_tail(self.r, a, sigma) }
+    }
+
+    /// This function computes results for the tail of a unit Gaussian distribution. They are equivalent to the functions above with a standard deviation of one, sigma = 1.
+    pub fn ugaussian_tail(&mut self, a: f64) -> f64 {
+        unsafe { sys::gsl_ran_ugaussian_tail(self.r, a) }
+    }
+
+    /// This function returns a random integer from the geometric distribution, the number of independent trials with probability p until the first success.
+    /// The probability distribution for geometric variates is,
+    ///
+    /// p(k) =  p (1-p)^(k-1)
+    ///
+    /// for k >= 1. Note that the distribution begins with k=1 with this definition. There is another convention in which the exponent k-1 is replaced by k.
+    pub fn geometric(&mut self, p: f64) -> u32 {
+        unsafe { sys::gsl_ran_geometric(self.r, p) }
+    }
+
+    /// This function returns a random variate from the Type-1 Gumbel distribution. The Type-1 Gumbel distribution function is,
+    ///
+    /// p(x) dx = a b \exp(-(b \exp(-ax) + ax)) dx
+    ///
+    /// for -\infty < x < \infty.
+    pub fn gumbel1(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_gumbel1(self.r, a, b) }
+    }
+
+    /// This function returns a random variate from the Type-2 Gumbel distribution. The Type-2 Gumbel distribution function is,
+    ///
+    /// p(x) dx = a b x^{-a-1} \exp(-b x^{-a}) dx
+    ///
+    /// for 0 < x < \infty.
+    pub fn gumbel2(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_gumbel2(self.r, a, b) }
+    }
+
+    /// This function returns a random integer from the hypergeometric distribution. The probability distribution for hypergeometric random variates is,
+    ///
+    /// p(k) =  C(n_1, k) C(n_2, t - k) / C(n_1 + n_2, t)
+    ///
+    /// where C(a,b) = a!/(b!(a-b)!) and t <= n_1 + n_2. The domain of k is max(0,t-n_2), ..., min(t,n_1).
+    ///
+    /// If a population contains n_1 elements of “type 1” and n_2 elements of “type 2” then the hypergeometric distribution gives the probability of obtaining
+    /// k elements of “type 1” in t samples from the population without replacement.
+    pub fn hypergeometric(&mut self, n1: u32, n2: u32, t: u32) -> u32 {
+        unsafe { sys::gsl_ran_hypergeometric(self.r, n1, n2, t) }
+    }
+
+    /// This function returns a random variate from the Landau distribution. The probability distribution for Landau random variates is defined analytically by the complex integral,
+    ///
+    /// p(x) = (1/(2 \pi i)) \int_{c-i\infty}^{c+i\infty} ds exp(s log(s) + x s)
+    ///
+    /// For numerical purposes it is more convenient to use the following equivalent form of the integral,
+    ///
+    /// p(x) = (1/\pi) \int_0^\infty dt \exp(-t \log(t) - x t) \sin(\pi t).
+    pub fn landau(&mut self) -> f64 {
+        unsafe { sys::gsl_ran_landau(self.r) }
+    }
+
+    /// This function returns a random variate from the Laplace distribution with width a. The distribution is,
+    ///
+    /// p(x) dx = {1 \over 2 a}  \exp(-|x/a|) dx
+    ///
+    /// for -\infty < x < \infty.
+    pub fn laplace(&mut self, a: f64) -> f64 {
+        unsafe { sys::gsl_ran_laplace(self.r, a) }
+    }
+
+    /// This function returns a random variate from the Levy symmetric stable distribution with scale c and exponent alpha. The symmetric stable probability distribution is defined by a Fourier transform,
+    ///
+    /// p(x) = {1 \over 2 \pi} \int_{-\infty}^{+\infty} dt \exp(-it x - |c t|^alpha)
+    ///
+    /// There is no explicit solution for the form of p(x) and the library does not define a corresponding pdf function. For \alpha = 1 the distribution reduces to the Cauchy distribution. For \alpha = 2 it is a Gaussian distribution with \sigma = \sqrt{2} c. For \alpha < 1 the tails of the distribution become extremely wide.
+    ///
+    /// The algorithm only works for 0 < alpha <= 2.
+    pub fn levy(&mut self, c: f64, alpha: f64) -> f64 {
+        unsafe { sys::gsl_ran_levy(self.r, c, alpha) }
+    }
+
+    /// This function returns a random variate from the Levy skew stable distribution with scale c, exponent alpha and skewness parameter beta.
+    /// The skewness parameter must lie in the range [-1,1]. The Levy skew stable probability distribution is defined by a Fourier transform,
+    ///
+    /// p(x) = {1 \over 2 \pi} \int_{-\infty}^{+\infty} dt \exp(-it x - |c t|^alpha (1-i beta sign(t) tan(pi alpha/2)))
+    ///
+    /// When \alpha = 1 the term \tan(\pi \alpha/2) is replaced by -(2/\pi)\log|t|. There is no explicit solution for the form of p(x) and the library does not define a corresponding pdf function.
+    /// For \alpha = 2 the distribution reduces to a Gaussian distribution with \sigma = \sqrt{2} c and the skewness parameter has no effect. For \alpha < 1 the tails of the distribution become extremely wide.
+    /// The symmetric distribution corresponds to \beta = 0.
+    ///
+    /// The algorithm only works for 0 < alpha <= 2.
+    ///
+    /// The Levy alpha-stable distributions have the property that if N alpha-stable variates are drawn from the distribution p(c, \alpha, \beta) then the sum Y = X_1 + X_2 + \dots + X_N will also be distributed as an alpha-stable variate, p(N^(1/\alpha) c, \alpha, \beta).
+    pub fn levy_skew(&mut self, c: f64, alpha: f64, beta: f64) -> f64 {
+        unsafe { sys::gsl_ran_levy_skew(self.r, c, alpha, beta) }
+    }
+
+    /// This function returns a random integer from the logarithmic distribution. The probability distribution for logarithmic random variates is,
+    ///
+    /// p(k) = {-1 \over \log(1-p)} {(p^k \over k)}
+    ///
+    /// for k >= 1.
+    pub fn logarithmic(&mut self, p: f64) -> u32 {
+        unsafe { sys::gsl_ran_logarithmic(self.r, p) }
+    }
+
+    /// This function returns a random variate from the logistic distribution. The distribution function is,
+    ///
+    /// p(x) dx = { \exp(-x/a) \over a (1 + \exp(-x/a))^2 } dx
+    ///
+    /// for -\infty < x < +\infty.
+    pub fn logistic(&mut self, a: f64) -> f64 {
+        unsafe { sys::gsl_ran_logistic(self.r, a) }
+    }
+
+    /// This function returns a random variate from the lognormal distribution. The distribution function is,
+    ///
+    /// p(x) dx = {1 \over x \sqrt{2 \pi \sigma^2} } \exp(-(\ln(x) - \zeta)^2/2 \sigma^2) dx
+    ///
+    /// for x > 0.
+    pub fn lognormal(&mut self, zeta: f64, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_lognormal(self.r, zeta, sigma) }
+    }
+
+    /// This function returns a random integer from the negative binomial distribution, the number of failures occurring before n successes in independent trials with
+    /// probability p of success. The probability distribution for negative binomial variates is,
+    ///
+    /// p(k) = {\Gamma(n + k) \over \Gamma(k+1) \Gamma(n) } p^n (1-p)^k
+    ///
+    /// Note that n is not required to be an integer.
+    pub fn negative_binomial(&mut self, p: f64, n: f64) -> u32 {
+        unsafe { sys::gsl_ran_negative_binomial(self.r, p, n) }
+    }
+
+    /// This function returns a random variate from the Pareto distribution of order a. The distribution function is,
+    ///
+    /// p(x) dx = (a/b) / (x/b)^{a+1} dx
+    ///
+    /// for x >= b.
+    pub fn pareto(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_pareto(self.r, a, b) }
+    }
+
+    /// This function returns a random integer from the Pascal distribution. The Pascal distribution is simply a negative binomial distribution with an integer value of n.
+    ///
+    /// p(k) = {(n + k - 1)! \over k! (n - 1)! } p^n (1-p)^k
+    ///
+    /// for k >= 0
+    pub fn pascal(&mut self, p: f64, n: u32) -> u32 {
+        unsafe { sys::gsl_ran_pascal(self.r, p, n) }
+    }
+
+    /// This function returns a random integer from the Poisson distribution with mean mu. The probability distribution for Poisson variates is,
+    ///
+    /// p(k) = {\mu^k \over k!} \exp(-\mu)
+    ///
+    /// for k >= 0.
+    pub fn poisson(&mut self, mu: f64) -> u32 {
+        unsafe { sys::gsl_ran_poisson(self.r, mu) }
+    }
+
+    /// This function returns a random variate from the Rayleigh distribution with scale parameter sigma. The distribution is,
+    ///
+    /// p(x) dx = {x \over \sigma^2} \exp(- x^2/(2 \sigma^2)) dx
+    ///
+    /// for x > 0.
+    pub fn rayleigh(&mut self, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_rayleigh(self.r, sigma) }
+    }
+
+    /// This function returns a random variate from the tail of the Rayleigh distribution with scale parameter sigma and a lower limit of a. The distribution is,
+    ///
+    /// p(x) dx = {x \over \sigma^2} \exp ((a^2 - x^2) /(2 \sigma^2)) dx
+    ///
+    /// for x > a.
+    pub fn rayleigh_tail(&mut self, a: f64, sigma: f64) -> f64 {
+        unsafe { sys::gsl_ran_rayleigh_tail(self.r, a, sigma) }
+    }
+
+    /// This function returns a random direction vector v = (x,y) in two dimensions. The vector is normalized such that |v|^2 = x^2 + y^2 = 1.
+    /// The obvious way to do this is to take a uniform random number between 0 and 2\pi and let x and y be the sine and cosine respectively.
+    /// Two trig functions would have been expensive in the old days, but with modern hardware implementations, this is sometimes the fastest way to go.
+    /// This is the case for the Pentium (but not the case for the Sun Sparcstation).
+    /// One can avoid the trig evaluations by choosing x and y in the interior of a unit circle (choose them at random from the interior of the enclosing square,
+    /// and then reject those that are outside the unit circle), and then dividing by \sqrt{x^2 + y^2}. A much cleverer approach, attributed to von Neumann
+    /// (See Knuth, v2, 3rd ed, p140, exercise 23), requires neither trig nor a square root. In this approach, u and v are chosen at random from the interior of
+    /// a unit circle, and then x=(u^2-v^2)/(u^2+v^2) and y=2uv/(u^2+v^2).
+    pub fn dir_2d(&mut self, x: &mut f64, y: &mut f64) {
+        unsafe { sys::gsl_ran_dir_2d(self.r, x, y) }
+    }
+
+    /// This function returns a random direction vector v = (x,y) in two dimensions. The vector is normalized such that |v|^2 = x^2 + y^2 = 1.
+    /// The obvious way to do this is to take a uniform random number between 0 and 2\pi and let x and y be the sine and cosine respectively.
+    /// Two trig functions would have been expensive in the old days, but with modern hardware implementations, this is sometimes the fastest way to go.
+    /// This is the case for the Pentium (but not the case for the Sun Sparcstation).
+    /// One can avoid the trig evaluations by choosing x and y in the interior of a unit circle (choose them at random from the interior of the enclosing square,
+    /// and then reject those that are outside the unit circle), and then dividing by \sqrt{x^2 + y^2}. A much cleverer approach, attributed to von Neumann
+    /// (See Knuth, v2, 3rd ed, p140, exercise 23), requires neither trig nor a square root. In this approach, u and v are chosen at random from the interior of
+    /// a unit circle, and then x=(u^2-v^2)/(u^2+v^2) and y=2uv/(u^2+v^2).
+    pub fn dir_2d_trig_method(&mut self, x: &mut f64, y: &mut f64) {
+        unsafe { sys::gsl_ran_dir_2d_trig_method(self.r, x, y) }
+    }
+
+    /// This function returns a random direction vector v = (x,y,z) in three dimensions. The vector is normalized such that |v|^2 = x^2 + y^2 + z^2 = 1.
+    /// The method employed is due to Robert E. Knop (CACM 13, 326 (1970)), and explained in Knuth, v2, 3rd ed, p136. It uses the surprising fact that the
+    /// distribution projected along any axis is actually uniform (this is only true for 3 dimensions).
+    pub fn dir_3d(&mut self, x: &mut f64, y: &mut f64, z: &mut f64) {
+        unsafe { sys::gsl_ran_dir_3d(self.r, x, y, z) }
+    }
+
+    /// This function returns a random direction vector v = (x_1,x_2,...,x_n) in n dimensions. The vector is normalized such that |v|^2 = x_1^2 + x_2^2 + ... + x_n^2 = 1.
+    /// The method uses the fact that a multivariate Gaussian distribution is spherically symmetric. Each component is generated to have a Gaussian distribution, and then
+    /// the components are normalized. The method is described by Knuth, v2, 3rd ed, p135–136, and attributed to G. W. Brown, Modern Mathematics for the Engineer (1956).
+    pub fn dir_nd(&mut self, x: &mut [f64]) {
+        unsafe {
+            sys::gsl_ran_dir_nd(self.r, x.len() as _, x.as_mut_ptr())
+        }
+    }
+
+    /// This function returns a random variate from the t-distribution. The distribution function is,
+    ///
+    /// p(x) dx = {Gamma((\nu + 1)/2) \over \sqrt{\pi \nu} Gamma(\nu/2)}
+    ///
+    ///    (1 + x^2/\nu)^{-(\nu + 1)/2} dx
+    ///
+    /// for -\infty < x < +\infty.
+    pub fn tdist(&mut self, nu: f64) -> f64 {
+        unsafe { sys::gsl_ran_tdist(self.r, nu) }
+    }
+
+    /// This function returns a random variate from the Weibull distribution. The distribution function is,
+    ///
+    /// p(x) dx = {b \over a^b} x^{b-1}  \exp(-(x/a)^b) dx
+    ///
+    /// for x >= 0.
+    pub fn weibull(&mut self, a: f64, b: f64) -> f64 {
+        unsafe { sys::gsl_ran_weibull(self.r, a, b) }
+    }
 }
 
 impl Clone for Rng {

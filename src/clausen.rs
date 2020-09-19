@@ -11,7 +11,6 @@ It is related to the dilogarithm by Cl_2(\theta) = \Im Li_2(\exp(i\theta)).
 !*/
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the Clausen integral Cl_2(x).

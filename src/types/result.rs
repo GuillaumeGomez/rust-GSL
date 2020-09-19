@@ -29,6 +29,15 @@ impl Result {
     }
 }
 
+impl From<::sys::gsl_sf_result> for Result {
+    fn from(v: ::sys::gsl_sf_result) -> Self {
+        Self {
+            val: v.val,
+            err: v.err,
+        }
+    }
+}
+
 /// In some cases, an overflow or underflow can be detected and handled by a function.
 /// In this case, it may be possible to return a scaling exponent as well as an error/value pair in order to save the result from exceeding the dynamic range of the built-in types.
 #[derive(Clone, Copy)]
@@ -53,6 +62,16 @@ impl ResultE10 {
             val: 0f64,
             err: 0f64,
             e10: 0i32,
+        }
+    }
+}
+
+impl From<::sys::gsl_sf_result_e10> for ResultE10 {
+    fn from(v: ::sys::gsl_sf_result_e10) -> Self {
+        Self {
+            val: v.val,
+            err: v.err,
+            e10: v.e10,
         }
     }
 }

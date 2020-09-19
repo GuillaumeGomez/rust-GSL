@@ -2,18 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use ffi;
-use types::Rng;
-
-/// This function returns a random variate from the Pareto distribution of order a. The distribution function is,
-///
-/// p(x) dx = (a/b) / (x/b)^{a+1} dx
-///
-/// for x >= b.
-pub fn pareto(r: &mut Rng, a: f64, b: f64) -> f64 {
-    unsafe { sys::gsl_ran_pareto(ffi::FFI::unwrap_unique(r), a, b) }
-}
-
 /// This function computes the probability density p(x) at x for a Pareto distribution with exponent a and scale b, using the formula given above.
 pub fn pareto_pdf(x: f64, a: f64, b: f64) -> f64 {
     unsafe { sys::gsl_ran_pareto_pdf(x, a, b) }

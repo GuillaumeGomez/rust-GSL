@@ -445,25 +445,53 @@ pub enum SfLegendreNorm {
     None,
 }
 
-impl Into<libc::c_int> for SfLegendreNorm {
-    fn into(self) -> libc::c_int {
+impl Into<sys::gsl_sf_legendre_t> for SfLegendreNorm {
+    fn into(self) -> sys::gsl_sf_legendre_t {
         match self {
-            SfLegendreNorm::Schmidt => 0,
-            SfLegendreNorm::SphericalHarmonic => 1,
-            SfLegendreNorm::Full => 2,
-            SfLegendreNorm::None => 3,
+            SfLegendreNorm::Schmidt => sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_SCHMIDT,
+            SfLegendreNorm::SphericalHarmonic => sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_SPHARM,
+            SfLegendreNorm::Full => sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_FULL,
+            SfLegendreNorm::None => sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_NONE,
         }
     }
 }
 
-impl From<libc::c_int> for SfLegendreNorm {
-    fn from(v: libc::c_int) -> SfLegendreNorm {
+impl From<sys::gsl_sf_legendre_t> for SfLegendreNorm {
+    fn from(v: sys::gsl_sf_legendre_t) -> SfLegendreNorm {
         match v {
-            0 => SfLegendreNorm::Schmidt,
-            1 => SfLegendreNorm::SphericalHarmonic,
-            2 => SfLegendreNorm::Full,
-            3 => SfLegendreNorm::None,
+            sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_SCHMIDT => SfLegendreNorm::Schmidt,
+            sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_SPHARM => SfLegendreNorm::SphericalHarmonic,
+            sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_FULL => SfLegendreNorm::Full,
+            sys::gsl_sf_legendre_t_GSL_SF_LEGENDRE_NONE => SfLegendreNorm::None,
             _ => panic!("Unknown SfLegendreNorm value"),
+        }
+    }
+}
+
+#[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
+pub enum CblasTranspose {
+    NoTranspose,
+    Transpose,
+    ConjugateTranspose,
+}
+
+impl Into<sys::CBLAS_TRANSPOSE> for CblasTranspose {
+    fn into(self) -> sys::CBLAS_TRANSPOSE {
+        match self {
+            Self::NoTranspose => sys::CBLAS_TRANSPOSE_CblasNoTrans,
+            Self::Transpose => sys::CBLAS_TRANSPOSE_CblasTrans,
+            Self::ConjugateTranspose => sys::CBLAS_TRANSPOSE_CblasConjTrans,
+        }
+    }
+}
+
+impl From<sys::CBLAS_TRANSPOSE> for CblasTranspose {
+    fn from(v: sys::CBLAS_TRANSPOSE) -> CblasTranspose {
+        match v {
+            sys::CBLAS_TRANSPOSE_CblasNoTrans => Self::NoTranspose,
+            sys::CBLAS_TRANSPOSE_CblasTrans => Self::Transpose,
+            sys::CBLAS_TRANSPOSE_CblasConjTrans => Self::ConjugateTranspose,
+            _ => panic!("Unknown CblasTranspose value"),
         }
     }
 }

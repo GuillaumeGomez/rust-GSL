@@ -6,8 +6,7 @@
 
 pub mod polynomials {
     use enums;
-    use ffi;
-    use std::mem::zeroed;
+    use std::mem::MaybeUninit;
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
     pub fn legendre_P1(x: f64) -> f64 {
@@ -25,45 +24,42 @@ pub mod polynomials {
     }
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
-    pub fn legendre_P1_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_P1_e(x, &mut result) };
+    pub fn legendre_P1_e(x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_P1_e(x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
-    pub fn legendre_P2_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_P2_e(x, &mut result) };
+    pub fn legendre_P2_e(x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_P2_e(x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
-    pub fn legendre_P3_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_P3_e(x, &mut result) };
+    pub fn legendre_P3_e(x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_P3_e(x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function evaluates the Legendre polynomial P_l(x) for a specific value of l, x subject to l >= 0, |x| <= 1
@@ -72,17 +68,16 @@ pub mod polynomials {
     }
 
     /// This function evaluates the Legendre polynomial P_l(x) for a specific value of l, x subject to l >= 0, |x| <= 1
-    pub fn legendre_Pl_e(l: i32, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_Pl_e(l, x, &mut result) };
+    pub fn legendre_Pl_e(l: i32, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_Pl_e(l, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function computes arrays of Legendre polynomials P_l(x) and derivatives dP_l(x)/dx, for l = 0, \dots, lmax, |x| <= 1
@@ -114,17 +109,16 @@ pub mod polynomials {
     }
 
     /// This function computes the Legendre function Q_0(x) for x > -1, x != 1
-    pub fn legendre_Q0_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_Q0_e(x, &mut result) };
+    pub fn legendre_Q0_e(x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_Q0_e(x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function computes the Legendre function Q_0(x) for x > -1, x != 1.
@@ -133,17 +127,16 @@ pub mod polynomials {
     }
 
     /// This function computes the Legendre function Q_0(x) for x > -1, x != 1.
-    pub fn legendre_Q1_e(x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_Q1_e(x, &mut result) };
+    pub fn legendre_Q1_e(x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_Q1_e(x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function computes the Legendre function Q_l(x) for x > -1, x != 1 and l >= 0.
@@ -152,17 +145,16 @@ pub mod polynomials {
     }
 
     /// This function computes the Legendre function Q_l(x) for x > -1, x != 1 and l >= 0.
-    pub fn legendre_Ql_e(l: i32, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_Ql_e(l, x, &mut result) };
+    pub fn legendre_Ql_e(l: i32, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_Ql_e(l, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 }
 
@@ -174,8 +166,7 @@ pub mod polynomials {
 /// If you want to calculate a spherical harmonic, then do not use these functions. Instead use [`legendre_sphPlm`](fn.legendre_sphPlm.html) below, which uses a similar recursion, but with the normalized functions.
 pub mod associated_polynomials {
     use enums;
-    use ffi;
-    use std::mem::zeroed;
+    use std::mem::MaybeUninit;
 
     /// This routine computes the associated Legendre polynomial P_l^m(x) for m >= 0, l >= m, |x| <= 1.
     pub fn legendre_Plm(l: i32, m: i32, x: f64) -> f64 {
@@ -183,49 +174,16 @@ pub mod associated_polynomials {
     }
 
     /// This routine computes the associated Legendre polynomial P_l^m(x) for m >= 0, l >= m, |x| <= 1.
-    pub fn legendre_Plm_e(l: i32, m: i32, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_Plm_e(l, m, x, &mut result) };
+    pub fn legendre_Plm_e(l: i32, m: i32, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_Plm_e(l, m, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
-    }
-
-    /// This function computes arrays of Legendre polynomials P_l^m(x) and derivatives dP_l^m(x)/dx, for m >= 0, l = |m|, ..., lmax, |x| <= 1.
-    #[cfg(not(feature = "v2"))]
-    pub fn legendre_Plm_array(m: i32, x: f64, result_array: &mut [f64]) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_sf_legendre_Plm_array(
-                result_array.len() as i32,
-                m,
-                x,
-                result_array.as_mut_ptr(),
-            )
-        })
-    }
-
-    /// This function computes arrays of Legendre polynomials P_l^m(x) and derivatives dP_l^m(x)/dx, for m >= 0, l = |m|, ..., lmax, |x| <= 1.
-    #[cfg(not(feature = "v2"))]
-    pub fn legendre_Plm_deriv_array(
-        m: i32,
-        x: f64,
-        result_array: &mut [f64],
-        result_deriv_array: &mut [f64],
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_sf_legendre_Plm_deriv_array(
-                result_array.len() as i32,
-                m,
-                x,
-                result_array.as_mut_ptr(),
-                result_deriv_array.as_mut_ptr(),
-            )
-        })
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the normalized associated Legendre polynomial \sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x) suitable for use in spherical harmonics.
@@ -238,72 +196,30 @@ pub mod associated_polynomials {
     /// This routine computes the normalized associated Legendre polynomial \sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x) suitable for use in spherical harmonics.
     /// The parameters must satisfy m >= 0, l >= m, |x| <= 1.
     /// This routine avoids the overflows that occur for the standard normalization of P_l^m(x).
-    pub fn legendre_sphPlm_e(l: i32, m: i32, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_sphPlm_e(l, m, x, &mut result) };
+    pub fn legendre_sphPlm_e(l: i32, m: i32, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_sphPlm_e(l, m, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
-    }
-
-    /// This function computes arrays of normalized associated Legendre functions \sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x), and derivatives, for m >= 0, l = |m|, ..., lmax, |x| <= 1.0
-    #[cfg(not(feature = "v2"))]
-    pub fn legendre_sphPlm_array(m: i32, x: f64, result_array: &mut [f64]) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_sf_legendre_sphPlm_array(
-                result_array.len() as i32,
-                m,
-                x,
-                result_array.as_mut_ptr(),
-            )
-        })
-    }
-
-    /// This function computes arrays of normalized associated Legendre functions \sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x), and derivatives, for m >= 0, l = |m|, ..., lmax, |x| <= 1.0
-    #[cfg(not(feature = "v2"))]
-    pub fn legendre_sphPlm_deriv_array(
-        m: i32,
-        x: f64,
-        result_array: &mut [f64],
-        result_deriv_array: &mut [f64],
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_sf_legendre_sphPlm_deriv_array(
-                result_array.len() as i32,
-                m,
-                x,
-                result_array.as_mut_ptr(),
-                result_deriv_array.as_mut_ptr(),
-            )
-        })
-    }
-
-    /// This function returns the size of result_array[] needed for the array versions of P_l^m(x), lmax - m + 1.
-    #[cfg(not(feature = "v2"))]
-    pub fn legendre_array_size(lmax: i32, m: i32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_sf_legendre_array_size(lmax, m) })
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// Returns the size of the array needed for these functions, including GSL workspace.
-    #[cfg(feature = "v2")]
-    pub fn legendre_array_n(lmax: usize) -> usize {
-        unsafe { sys::gsl_sf_legendre_array_n(lmax as _) as _ }
+    pub fn legendre_array_n(lmax: u64) -> u64 {
+        unsafe { sys::gsl_sf_legendre_array_n(lmax as _) }
     }
 
-    #[cfg(feature = "v2")]
-    pub fn legendre_array_index(l: usize, m: usize) -> usize {
-        unsafe { sys::gsl_sf_legendre_array_index(l as _, m as _) as _ }
+    pub fn legendre_array_index(l: u64, m: u64) -> u64 {
+        unsafe { sys::gsl_sf_legendre_array_index(l as _, m as _) }
     }
 
-    #[cfg(feature = "v2")]
     pub fn legendre_array(
         norm: enums::SfLegendreNorm,
-        lmax: usize,
+        lmax: u64,
         x: f64,
         result: &mut [f64],
     ) -> enums::Value {
@@ -312,10 +228,9 @@ pub mod associated_polynomials {
         })
     }
 
-    #[cfg(feature = "v2")]
     pub fn legendre_deriv_array(
         norm: enums::SfLegendreNorm,
-        lmax: usize,
+        lmax: u64,
         x: f64,
         result: &mut [f64],
         deriv: &mut [f64],
@@ -335,8 +250,7 @@ pub mod associated_polynomials {
 /// The Conical Functions P^\mu_{-(1/2)+i\lambda}(x) and Q^\mu_{-(1/2)+i\lambda} are described in Abramowitz & Stegun, Section 8.12.
 pub mod conical {
     use enums;
-    use ffi;
-    use std::mem::zeroed;
+    use std::mem::MaybeUninit;
 
     /// This routine computes the irregular Spherical Conical Function P^{1/2}_{-1/2 + i \lambda}(x) for x > -1.
     pub fn half(lambda: f64, x: f64) -> f64 {
@@ -344,17 +258,16 @@ pub mod conical {
     }
 
     /// This routine computes the irregular Spherical Conical Function P^{1/2}_{-1/2 + i \lambda}(x) for x > -1.
-    pub fn half_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_conicalP_half_e(lambda, x, &mut result) };
+    pub fn half_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_conicalP_half_e(lambda, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the regular Spherical Conical Function P^{-1/2}_{-1/2 + i \lambda}(x) for x > -1.
@@ -363,17 +276,16 @@ pub mod conical {
     }
 
     /// This routine computes the regular Spherical Conical Function P^{-1/2}_{-1/2 + i \lambda}(x) for x > -1.
-    pub fn mhalf_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_conicalP_mhalf_e(lambda, x, &mut result) };
+    pub fn mhalf_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_conicalP_mhalf_e(lambda, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the conical function P^0_{-1/2 + i \lambda}(x) for x > -1.
@@ -382,17 +294,16 @@ pub mod conical {
     }
 
     /// This routine computes the conical function P^0_{-1/2 + i \lambda}(x) for x > -1.
-    pub fn _0_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_conicalP_0_e(lambda, x, &mut result) };
+    pub fn _0_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_conicalP_0_e(lambda, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the conical function P^1_{-1/2 + i \lambda}(x) for x > -1.
@@ -401,17 +312,16 @@ pub mod conical {
     }
 
     /// This routine computes the conical function P^1_{-1/2 + i \lambda}(x) for x > -1.
-    pub fn _1_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_conicalP_1_e(lambda, x, &mut result) };
+    pub fn _1_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_conicalP_1_e(lambda, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the Regular Spherical Conical Function P^{-1/2-l}_{-1/2 + i \lambda}(x) for x > -1, l >= -1.
@@ -420,17 +330,16 @@ pub mod conical {
     }
 
     /// This routine computes the Regular Spherical Conical Function P^{-1/2-l}_{-1/2 + i \lambda}(x) for x > -1, l >= -1.
-    pub fn sph_reg_e(l: i32, lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_conicalP_sph_reg_e(l, lambda, x, &mut result) };
+    pub fn sph_reg_e(l: i32, lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_conicalP_sph_reg_e(l, lambda, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the Regular Cylindrical Conical Function P^{-m}_{-1/2 + i \lambda}(x) for x > -1, m >= -1.
@@ -439,17 +348,16 @@ pub mod conical {
     }
 
     /// This routine computes the Regular Cylindrical Conical Function P^{-m}_{-1/2 + i \lambda}(x) for x > -1, m >= -1.
-    pub fn cyl_reg_e(m: i32, lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_conicalP_cyl_reg_e(m, lambda, x, &mut result) };
+    pub fn cyl_reg_e(m: i32, lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_conicalP_cyl_reg_e(m, lambda, x, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 }
 
@@ -457,8 +365,7 @@ pub mod conical {
 /// Of particular interest is the flat limit, \lambda \to \infty, \eta \to 0, \lambda\eta fixed.
 pub mod radial {
     use enums;
-    use ffi;
-    use std::mem::zeroed;
+    use std::mem::MaybeUninit;
 
     /// This routine computes the zeroth radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space, L^{H3d}_0(\lambda,\eta) := \sin(\lambda\eta)/(\lambda\sinh(\eta)) for \eta >= 0.
     /// In the flat limit this takes the form L^{H3d}_0(\lambda,\eta) = j_0(\lambda\eta).
@@ -468,17 +375,16 @@ pub mod radial {
 
     /// This routine computes the zeroth radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space, L^{H3d}_0(\lambda,\eta) := \sin(\lambda\eta)/(\lambda\sinh(\eta)) for \eta >= 0.
     /// In the flat limit this takes the form L^{H3d}_0(\lambda,\eta) = j_0(\lambda\eta).
-    pub fn legendre_H3d_0_e(lambda: f64, eta: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_H3d_0_e(lambda, eta, &mut result) };
+    pub fn legendre_H3d_0_e(lambda: f64, eta: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_H3d_0_e(lambda, eta, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the first radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space, L^{H3d}_1(\lambda,\eta) := 1/\sqrt{\lambda^2 + 1} \sin(\lambda \eta)/(\lambda \sinh(\eta))
@@ -491,17 +397,16 @@ pub mod radial {
     /// This routine computes the first radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space, L^{H3d}_1(\lambda,\eta) := 1/\sqrt{\lambda^2 + 1} \sin(\lambda \eta)/(\lambda \sinh(\eta))
     /// (\coth(\eta) - \lambda \cot(\lambda\eta)) for \eta >= 0.
     /// In the flat limit this takes the form L^{H3d}_1(\lambda,\eta) = j_1(\lambda\eta).
-    pub fn legendre_H3d_1_e(lambda: f64, eta: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_H3d_1_e(lambda, eta, &mut result) };
+    pub fn legendre_H3d_1_e(lambda: f64, eta: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_H3d_1_e(lambda, eta, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This routine computes the l-th radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space \eta >= 0, l >= 0. In the flat limit this takes the form L^{H3d}_l(\lambda,\eta) = j_l(\lambda\eta).
@@ -510,17 +415,16 @@ pub mod radial {
     }
 
     /// This routine computes the l-th radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space \eta >= 0, l >= 0. In the flat limit this takes the form L^{H3d}_l(\lambda,\eta) = j_l(\lambda\eta).
-    pub fn legendre_H3d_e(l: i32, lambda: f64, eta: f64) -> (enums::Value, ::types::Result) {
-        let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-        let ret = unsafe { sys::gsl_sf_legendre_H3d_e(l, lambda, eta, &mut result) };
+    pub fn legendre_H3d_e(l: i32, lambda: f64, eta: f64) -> Result<::types::Result, enums::Value> {
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { sys::gsl_sf_legendre_H3d_e(l, lambda, eta, result.as_mut_ptr()) };
 
-        (
-            enums::Value::from(ret),
-            ::types::Result {
-                val: result.val,
-                err: result.err,
-            },
-        )
+        let ret = enums::Value::from(ret);
+        if ret.is_success() {
+            Ok(unsafe { result.assume_init() }.into())
+        } else {
+            Err(ret)
+        }
     }
 
     /// This function computes an array of radial eigenfunctions L^{H3d}_l(\lambda, \eta) for 0 <= l <= lmax.

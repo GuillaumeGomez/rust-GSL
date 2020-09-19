@@ -60,20 +60,20 @@ pub struct RootFSolverType {
 }
 
 impl ffi::FFI<sys::gsl_root_fsolver_type> for RootFSolverType {
-    fn wrap(r: *const sys::gsl_root_fsolver_type) -> RootFSolverType {
-        RootFSolverType { s: r }
+    fn wrap(r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
+        unimplemented!()
     }
 
-    fn soft_wrap(r: *const sys::gsl_root_fsolver_type) -> RootFSolverType {
-        RootFSolverType { s: r }
+    fn soft_wrap(r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
+        unimplemented!()
     }
 
     fn unwrap_shared(s: &RootFSolverType) -> *const sys::gsl_root_fsolver_type {
         s.s
     }
 
-    fn unwrap_unique(s: &mut RootFSolverType) -> *const sys::gsl_root_fsolver_type {
-        s.s
+    fn unwrap_unique(s: &mut RootFSolverType) -> *mut sys::gsl_root_fsolver_type {
+        unimplemented!()
     }
 }
 
@@ -240,20 +240,20 @@ pub struct RootFdfSolverType {
 }
 
 impl ffi::FFI<sys::gsl_root_fdfsolver_type> for RootFdfSolverType {
-    fn wrap(r: *const sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
-        RootFdfSolverType { s: r }
+    fn wrap(r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
+        unimplemented!()
     }
 
-    fn soft_wrap(r: *const sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
-        RootFdfSolverType { s: r }
+    fn soft_wrap(r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
+        unimplemented!()
     }
 
     fn unwrap_shared(s: &RootFdfSolverType) -> *const sys::gsl_root_fdfsolver_type {
         s.s
     }
 
-    fn unwrap_unique(s: &mut RootFdfSolverType) -> *const sys::gsl_root_fdfsolver_type {
-        s.s
+    fn unwrap_unique(s: &mut RootFdfSolverType) -> *mut sys::gsl_root_fdfsolver_type {
+        unimplemented!()
     }
 }
 

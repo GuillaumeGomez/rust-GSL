@@ -3,7 +3,6 @@
 //
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the first synchrotron function x \int_x^\infty dt K_{5/3}(t) for x >= 0.

@@ -12,7 +12,6 @@
 /// Further information on the Gamma function can be found in Abramowitz & Stegun, Chapter 6.
 pub mod gamma {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// These routines compute the Gamma function \Gamma(x), subject to x not being a negative integer or zero. The function is computed using the real Lanczos method.
@@ -152,7 +151,6 @@ pub mod gamma {
 /// efficient to call the functions in this section, particularly for small values of n, whose factorial values are maintained in hardcoded tables.
 pub mod factorials {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the factorial n!. The factorial is related to the Gamma function by n! = \Gamma(n+1).
@@ -297,7 +295,6 @@ pub mod factorials {
 
 pub mod pochhammer_symbol {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the Pochhammer symbol (a)_x = \Gamma(a + x)/\Gamma(a).
@@ -379,7 +376,6 @@ pub mod pochhammer_symbol {
 
 pub mod beta {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the Beta Function, B(a,b) = \Gamma(a)\Gamma(b)/\Gamma(a+b) subject to a and b not being negative integers.
@@ -423,7 +419,6 @@ pub mod beta {
 
 pub mod incomplete_gamma {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the unnormalized incomplete Gamma Function \Gamma(a,x) = \int_x^\infty dt t^{a-1} \exp(-t) for a real and x >= 0.
@@ -490,7 +485,6 @@ pub mod incomplete_gamma {
 
 pub mod incomplete_beta {
     use enums;
-    use ffi;
     use std::mem::zeroed;
 
     /// This routine computes the normalized incomplete Beta function I_x(a,b)=B_x(a,b)/B(a,b) where B_x(a,b) = \int_0^x t^{a-1} (1-t)^{b-1} dt for 0 <= x <= 1.

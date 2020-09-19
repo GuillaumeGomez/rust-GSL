@@ -5,7 +5,6 @@
 //! The error function is described in Abramowitz & Stegun, Chapter 7.
 
 use enums;
-use ffi;
 use libc;
 use std::ffi::CStr;
 use std::mem::zeroed;

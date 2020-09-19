@@ -3,7 +3,6 @@
 //
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the regular modified cylindrical Bessel function of zeroth order, I_0(x)

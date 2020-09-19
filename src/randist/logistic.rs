@@ -2,18 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use ffi;
-use types::Rng;
-
-/// This function returns a random variate from the logistic distribution. The distribution function is,
-///
-/// p(x) dx = { \exp(-x/a) \over a (1 + \exp(-x/a))^2 } dx
-///
-/// for -\infty < x < +\infty.
-pub fn logistic(r: &mut Rng, a: f64) -> f64 {
-    unsafe { sys::gsl_ran_logistic(ffi::FFI::unwrap_unique(r), a) }
-}
-
 /// This function computes the probability density p(x) at x for a logistic distribution with scale parameter a, using the formula given above.
 pub fn logistic_pdf(x: f64, a: f64) -> f64 {
     unsafe { sys::gsl_ran_logistic_pdf(x, a) }

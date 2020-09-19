@@ -166,7 +166,6 @@ is desirable for better locality of memory accesses).
 /// The functions return a value of ::Value::Success if no errors were detected, or Value::Dom if the length n is not a power of two.
 pub mod radix2 {
     use enums;
-    use ffi;
 
     pub fn forward(data: &mut [f64], stride: u64, n: u64) -> enums::Value {
         enums::Value::from(unsafe {
@@ -330,7 +329,6 @@ pub mod mixed_radix {
 /// are a power of 2.
 pub mod real_radix2 {
     use enums;
-    use ffi;
 
     /// This function computes an in-place radix-2 FFT of length n and stride stride on the real array data. The output is a half-complex sequence,
     /// which is stored in-place. The arrangement of the half-complex terms uses the following scheme: for k < n/2 the real part of the k-th term

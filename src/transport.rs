@@ -5,7 +5,6 @@
 //! The transport functions J(n,x) are defined by the integral representations J(n,x) := \int_0^x dt t^n e^t /(e^t - 1)^2.
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This routine computes the transport function J(2,x).

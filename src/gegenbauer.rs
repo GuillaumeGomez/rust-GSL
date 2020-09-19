@@ -5,7 +5,6 @@
 //! The Gegenbauer polynomials are defined in Abramowitz & Stegun, Chapter 22, where they are known as Ultraspherical polynomials.
 
 use enums;
-use ffi;
 use std::mem::zeroed;
 
 /// This function evaluates the Gegenbauer polynomials C^{(\lambda)}_n(x) using explicit representations for n =1, 2, 3.
