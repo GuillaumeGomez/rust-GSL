@@ -3,7 +3,7 @@
 //
 
 use enums;
-use std::mem::zeroed;
+use std::mem::MaybeUninit;
 use types;
 
 pub trait Trigonometric {
@@ -74,15 +74,10 @@ impl Trigonometric for f64 {
     }
 
     fn sin_e(&self) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_sin_e(*self, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_sin_e(*self, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn cos(&self) -> f64 {
@@ -90,15 +85,10 @@ impl Trigonometric for f64 {
     }
 
     fn cos_e(&self) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_cos_e(*self, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_cos_e(*self, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn sf_hypot(&self, y: f64) -> f64 {
@@ -106,15 +96,10 @@ impl Trigonometric for f64 {
     }
 
     fn sf_hypot_e(&self, y: f64) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_hypot_e(*self, y, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_hypot_e(*self, y, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn sinc(&self) -> f64 {
@@ -122,54 +107,58 @@ impl Trigonometric for f64 {
     }
 
     fn sinc_e(&self) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_sinc_e(*self, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_sinc_e(*self, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn complex_sin_e(&self, zi: f64) -> Result<(types::Result, types::Result), enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_complex_sin_e(*self, zi, &mut result, &mut result2) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result2 = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe {
+            ::sys::gsl_sf_complex_sin_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
+        };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok((result.into(), result2.into()))
-        } else {
-            Err(ret)
-        }
+        result!(
+            ret,
+            (
+                unsafe { result.assume_init() }.into(),
+                unsafe { result2.assume_init() }.into()
+            )
+        )
     }
 
     fn complex_cos_e(&self, zi: f64) -> Result<(types::Result, types::Result), enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_complex_cos_e(*self, zi, &mut result, &mut result2) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result2 = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe {
+            ::sys::gsl_sf_complex_cos_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
+        };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok((result.into(), result2.into()))
-        } else {
-            Err(ret)
-        }
+        result!(
+            ret,
+            (
+                unsafe { result.assume_init() }.into(),
+                unsafe { result2.assume_init() }.into()
+            )
+        )
     }
 
     fn complex_logsin_e(&self, zi: f64) -> Result<(types::Result, types::Result), enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_complex_logsin_e(*self, zi, &mut result, &mut result2) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result2 = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe {
+            ::sys::gsl_sf_complex_logsin_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
+        };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok((result.into(), result2.into()))
-        } else {
-            Err(ret)
-        }
+        result!(
+            ret,
+            (
+                unsafe { result.assume_init() }.into(),
+                unsafe { result2.assume_init() }.into()
+            )
+        )
     }
 
     fn lnsinh(&self) -> f64 {
@@ -177,15 +166,10 @@ impl Trigonometric for f64 {
     }
 
     fn lnsinh_e(&self) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_lnsinh_e(*self, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_lnsinh_e(*self, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn lncosh(&self) -> f64 {
@@ -193,41 +177,42 @@ impl Trigonometric for f64 {
     }
 
     fn lncosh_e(&self) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_lncosh_e(*self, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_lncosh_e(*self, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn polar_to_rect(&self, theta: f64) -> Result<(types::Result, types::Result), enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_polar_to_rect(*self, theta, &mut result, &mut result2) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result2 = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe {
+            ::sys::gsl_sf_polar_to_rect(*self, theta, result.as_mut_ptr(), result2.as_mut_ptr())
+        };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok((result.into(), result2.into()))
-        } else {
-            Err(ret)
-        }
+        result!(
+            ret,
+            (
+                unsafe { result.assume_init() }.into(),
+                unsafe { result2.assume_init() }.into()
+            )
+        )
     }
 
     fn rect_to_polar(&self, y: f64) -> Result<(types::Result, types::Result), enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let mut result2 = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_rect_to_polar(*self, y, &mut result, &mut result2) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result2 = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe {
+            ::sys::gsl_sf_rect_to_polar(*self, y, result.as_mut_ptr(), result2.as_mut_ptr())
+        };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok((result.into(), result2.into()))
-        } else {
-            Err(ret)
-        }
+        result!(
+            ret,
+            (
+                unsafe { result.assume_init() }.into(),
+                unsafe { result2.assume_init() }.into()
+            )
+        )
     }
 
     fn angle_restrict_symm(&self) -> f64 {
@@ -247,26 +232,16 @@ impl Trigonometric for f64 {
     }
 
     fn sin_err_e(&self, dx: f64) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_sin_err_e(*self, dx, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_sin_err_e(*self, dx, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 
     fn cos_err_e(&self, dx: f64) -> Result<types::Result, enums::Value> {
-        let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-        let ret = unsafe { ::sys::gsl_sf_cos_err_e(*self, dx, &mut result) };
+        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let ret = unsafe { ::sys::gsl_sf_cos_err_e(*self, dx, result.as_mut_ptr()) };
 
-        let ret = enums::Value::from(ret);
-        if ret.is_success() {
-            Ok(result.into())
-        } else {
-            Err(ret)
-        }
+        result!(ret, unsafe { result.assume_init() }.into())
     }
 }

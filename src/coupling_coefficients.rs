@@ -9,7 +9,7 @@ are, by convention, integers equal to twice the actual spin value.
 !*/
 
 use enums;
-use std::mem::zeroed;
+use std::mem::MaybeUninit;
 
 /// This routine computes the Wigner 3-j coefficient,
 ///
@@ -34,19 +34,21 @@ pub fn _3j_e(
     two_ma: i32,
     two_mb: i32,
     two_mc: i32,
-) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
-        ::sys::gsl_sf_coupling_3j_e(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc, &mut result)
+        ::sys::gsl_sf_coupling_3j_e(
+            two_ja,
+            two_jb,
+            two_jc,
+            two_ma,
+            two_mb,
+            two_mc,
+            result.as_mut_ptr(),
+        )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 6-j coefficient,
@@ -72,19 +74,21 @@ pub fn _6j_e(
     two_jd: i32,
     two_je: i32,
     two_jf: i32,
-) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
-        ::sys::gsl_sf_coupling_6j_e(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, &mut result)
+        ::sys::gsl_sf_coupling_6j_e(
+            two_ja,
+            two_jb,
+            two_jc,
+            two_jd,
+            two_je,
+            two_jf,
+            result.as_mut_ptr(),
+        )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 9-j coefficient,
@@ -127,8 +131,8 @@ pub fn _9j_e(
     two_jg: i32,
     two_jh: i32,
     two_ji: i32,
-) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
+) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
         ::sys::gsl_sf_coupling_9j_e(
             two_ja,
@@ -140,15 +144,9 @@ pub fn _9j_e(
             two_jg,
             two_jh,
             two_ji,
-            &mut result,
+            result.as_mut_ptr(),
         )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }

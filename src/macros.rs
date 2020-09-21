@@ -22,9 +22,26 @@ macro_rules! rgsl_error(
 );
 
 #[doc(hidden)]
-#[macro_export]
 macro_rules! ffi_wrap {
     ($name:tt, $cast:tt) => {
         unsafe { ffi::FFI::wrap(sys::$name as *mut sys::$cast) }
     };
+}
+
+#[doc(hidden)]
+macro_rules! result {
+    ($value:expr, $wrap:expr) => {{
+        let ret = ::Value::from($value);
+        match ret {
+            ::Value::Success => Ok($wrap),
+            e => Err(e),
+        }
+    }};
+    ($value:expr) => {{
+        let ret = ::Value::from($value);
+        match ret {
+            ::Value::Success => Ok(()),
+            e => Err(e),
+        }
+    }};
 }

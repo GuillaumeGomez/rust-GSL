@@ -82,8 +82,8 @@ pub use utilities::IOStream;
 
 // enums part
 pub use self::enums::{
-    EigenSort, FftDirection, GSLResult, GaussKonrodRule, IntegrationQawo, Mode, ODEiv,
-    SfLegendreNorm, Value, VegasMode, WaveletDirection,
+    EigenSort, FftDirection, GaussKonrodRule, IntegrationQawo, Mode, ODEiv, SfLegendreNorm, Value,
+    VegasMode, WaveletDirection,
 };
 
 mod enums;

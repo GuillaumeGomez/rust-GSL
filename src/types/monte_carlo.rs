@@ -130,17 +130,17 @@ impl PlainMonteCarlo {
         t_calls: u64,
         r: &mut ::Rng,
     ) -> Result<(f64, f64), ::Value> {
-        unsafe {
-            assert!(xl.len() == xu.len());
-            let mut result = 0f64;
-            let mut abserr = 0f64;
-            let f: Box<Box<F>> = Box::new(Box::new(f));
+        assert!(xl.len() == xu.len());
+        let mut result = 0f64;
+        let mut abserr = 0f64;
+        let f: Box<Box<F>> = Box::new(Box::new(f));
+        let ret = unsafe {
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ::Value::from(sys::gsl_monte_plain_integrate(
+            sys::gsl_monte_plain_integrate(
                 &mut func,
                 xl.as_ptr(),
                 xu.as_ptr(),
@@ -150,14 +150,10 @@ impl PlainMonteCarlo {
                 self.s,
                 &mut result,
                 &mut abserr,
-            ));
+            )
+        };
 
-            if ret == ::Value::Success {
-                Ok((result, abserr))
-            } else {
-                Err(ret)
-            }
-        }
+        result!(ret, (result, abserr))
     }
 }
 
@@ -249,17 +245,17 @@ impl MiserMonteCarlo {
         t_calls: u64,
         r: &mut ::Rng,
     ) -> Result<(f64, f64), ::Value> {
-        unsafe {
-            assert!(xl.len() == xu.len());
-            let mut result = 0f64;
-            let mut abserr = 0f64;
-            let f: Box<Box<F>> = Box::new(Box::new(f));
+        assert!(xl.len() == xu.len());
+        let mut result = 0f64;
+        let mut abserr = 0f64;
+        let f: Box<Box<F>> = Box::new(Box::new(f));
+        let ret = unsafe {
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ::Value::from(sys::gsl_monte_miser_integrate(
+            sys::gsl_monte_miser_integrate(
                 &mut func,
                 xl.as_ptr(),
                 xu.as_ptr(),
@@ -269,14 +265,9 @@ impl MiserMonteCarlo {
                 self.s,
                 &mut result,
                 &mut abserr,
-            ));
-
-            if ret == ::Value::Success {
-                Ok((result, abserr))
-            } else {
-                Err(ret)
-            }
-        }
+            )
+        };
+        result!(ret, (result, abserr))
     }
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
@@ -430,17 +421,17 @@ impl VegasMonteCarlo {
         t_calls: u64,
         r: &mut ::Rng,
     ) -> Result<(f64, f64), ::Value> {
-        unsafe {
-            assert!(xl.len() == xu.len());
-            let mut result = 0f64;
-            let mut abserr = 0f64;
-            let f: Box<Box<F>> = Box::new(Box::new(f));
+        assert!(xl.len() == xu.len());
+        let mut result = 0f64;
+        let mut abserr = 0f64;
+        let f: Box<Box<F>> = Box::new(Box::new(f));
+        let ret = unsafe {
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
-            let ret = ::Value::from(sys::gsl_monte_vegas_integrate(
+            sys::gsl_monte_vegas_integrate(
                 &mut func,
                 xl.as_ptr() as usize as *mut _,
                 xu.as_ptr() as usize as *mut _,
@@ -450,14 +441,9 @@ impl VegasMonteCarlo {
                 self.s,
                 &mut result,
                 &mut abserr,
-            ));
-
-            if ret == ::Value::Success {
-                Ok((result, abserr))
-            } else {
-                Err(ret)
-            }
-        }
+            )
+        };
+        result!(ret, (result, abserr))
     }
 
     /// This function returns the chi-squared per degree of freedom for the weighted estimate of the integral.

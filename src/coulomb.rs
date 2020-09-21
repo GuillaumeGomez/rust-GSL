@@ -3,7 +3,7 @@
 //
 
 use enums;
-use std::mem::zeroed;
+use std::mem::MaybeUninit;
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
 pub fn hydrogenicR_1(Z: f64, r: f64) -> f64 {
@@ -11,17 +11,11 @@ pub fn hydrogenicR_1(Z: f64, r: f64) -> f64 {
 }
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
-pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-    let ret = unsafe { sys::gsl_sf_hydrogenicR_1_e(Z, r, &mut result) };
+pub fn hydrogenicR_1_e(Z: f64, r: f64) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let ret = unsafe { sys::gsl_sf_hydrogenicR_1_e(Z, r, result.as_mut_ptr()) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the n-th normalized hydrogenic bound state radial wavefunction,
@@ -42,17 +36,11 @@ pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
 ///
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
-pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-    let ret = unsafe { sys::gsl_sf_hydrogenicR_e(n, l, Z, r, &mut result) };
+pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let ret = unsafe { sys::gsl_sf_hydrogenicR_e(n, l, Z, r, result.as_mut_ptr()) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This function computes the Coulomb wave functions F_L(\eta,x), G_{L-k}(\eta,x) and their derivatives F'_L(\eta,x), G'_{L-k}(\eta,x) with respect to x. The parameters are restricted to L, L-k > -1/2, x > 0 and integer k. Note that L itself is not restricted to being an integer. The results are stored in the parameters F, G for the function values and Fp, Gp for the derivative values.
@@ -64,41 +52,42 @@ pub fn wave_FG_e(
     k: i32,
     exp_F: &mut f64,
     exp_G: &mut f64,
-) -> (
+) -> Result<
+    (
+        ::types::Result,
+        ::types::Result,
+        ::types::Result,
+        ::types::Result,
+    ),
     enums::Value,
-    ::types::Result,
-    ::types::Result,
-    ::types::Result,
-    ::types::Result,
-) {
-    let mut F = unsafe { zeroed::<sys::gsl_sf_result>() };
-    let mut Fp = unsafe { zeroed::<sys::gsl_sf_result>() };
-    let mut G = unsafe { zeroed::<sys::gsl_sf_result>() };
-    let mut Gp = unsafe { zeroed::<sys::gsl_sf_result>() };
+> {
+    let mut F = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut Fp = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut G = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut Gp = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
         sys::gsl_sf_coulomb_wave_FG_e(
-            eta, x, L_F, k, &mut F, &mut Fp, &mut G, &mut Gp, exp_F, exp_G,
+            eta,
+            x,
+            L_F,
+            k,
+            F.as_mut_ptr(),
+            Fp.as_mut_ptr(),
+            G.as_mut_ptr(),
+            Gp.as_mut_ptr(),
+            exp_F,
+            exp_G,
         )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: F.val,
-            err: F.err,
-        },
-        ::types::Result {
-            val: Fp.val,
-            err: Fp.err,
-        },
-        ::types::Result {
-            val: G.val,
-            err: G.err,
-        },
-        ::types::Result {
-            val: Gp.val,
-            err: Gp.err,
-        },
+    result!(
+        ret,
+        (
+            unsafe { F.assume_init() }.into(),
+            unsafe { Fp.assume_init() }.into(),
+            unsafe { G.assume_init() }.into(),
+            unsafe { Gp.assume_init() }.into()
+        )
     )
 }
 
@@ -199,17 +188,11 @@ pub fn wave_sphF_array(
 }
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L > -1.
-pub fn CL_e(L: f64, eta: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<sys::gsl_sf_result>() };
-    let ret = unsafe { sys::gsl_sf_coulomb_CL_e(L, eta, &mut result) };
+pub fn CL_e(L: f64, eta: f64) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let ret = unsafe { sys::gsl_sf_coulomb_CL_e(L, eta, result.as_mut_ptr()) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L = Lmin \dots Lmin + kmax, Lmin > -1.

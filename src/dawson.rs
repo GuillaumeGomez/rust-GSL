@@ -8,7 +8,7 @@ A table of Dawson’s integral can be found in Abramowitz & Stegun, Table 7.5.
 !*/
 
 use enums;
-use std::mem::zeroed;
+use std::mem::MaybeUninit;
 
 /// This routine computes the value of Dawson’s integral for x.
 pub fn dawson(x: f64) -> f64 {
@@ -16,15 +16,9 @@ pub fn dawson(x: f64) -> f64 {
 }
 
 /// This routine computes the value of Dawson’s integral for x.
-pub fn dawson_e(x: f64) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
-    let ret = unsafe { ::sys::gsl_sf_dawson_e(x, &mut result) };
+pub fn dawson_e(x: f64) -> Result<::types::Result, enums::Value> {
+    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let ret = unsafe { ::sys::gsl_sf_dawson_e(x, result.as_mut_ptr()) };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    result!(ret, unsafe { result.assume_init() }.into())
 }
