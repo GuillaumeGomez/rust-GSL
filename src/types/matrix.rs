@@ -78,13 +78,7 @@ impl MatrixView {
     /// is still in use.
     ///
     /// The function gsl_matrix_const_submatrix is equivalent to gsl_matrix_submatrix but can be used for matrices which are declared const.
-    pub fn from_matrix(
-        m: &mut MatrixF64,
-        k1: u64,
-        k2: u64,
-        n1: u64,
-        n2: u64,
-    ) -> MatrixView {
+    pub fn from_matrix(m: &mut MatrixF64, k1: u64, k2: u64, n1: u64, n2: u64) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_submatrix(m.mat, k1, k2, n1, n2).matrix,
@@ -105,7 +99,10 @@ impl MatrixView {
     ///
     /// The function gsl_matrix_const_view_array is equivalent to gsl_matrix_view_array but can be used for matrices which are declared const.
     pub fn from_array(base: &mut [f64], n1: u64, n2: u64) -> MatrixView {
-        assert!(n1 * n2 <= base.len() as _, "n1 * n2 cannot be longer than base");
+        assert!(
+            n1 * n2 <= base.len() as _,
+            "n1 * n2 cannot be longer than base"
+        );
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_view_array(base.as_mut_ptr(), n1, n2).matrix,
@@ -130,8 +127,7 @@ impl MatrixView {
     pub fn from_array_with_tda(base: &mut [f64], n1: u64, n2: u64, tda: u64) -> MatrixView {
         unsafe {
             MatrixView {
-                mat: sys::gsl_matrix_view_array_with_tda(base.as_mut_ptr(), n1, n2, tda)
-                    .matrix,
+                mat: sys::gsl_matrix_view_array_with_tda(base.as_mut_ptr(), n1, n2, tda).matrix,
             }
         }
     }
@@ -173,13 +169,8 @@ impl MatrixView {
     pub fn from_vector_with_tda(v: &mut VectorF64, n1: u64, n2: u64, tda: u64) -> MatrixView {
         unsafe {
             MatrixView {
-                mat: sys::gsl_matrix_view_vector_with_tda(
-                    ffi::FFI::unwrap_unique(v),
-                    n1,
-                    n2,
-                    tda,
-                )
-                .matrix,
+                mat: sys::gsl_matrix_view_vector_with_tda(ffi::FFI::unwrap_unique(v), n1, n2, tda)
+                    .matrix,
             }
         }
     }
@@ -432,9 +423,7 @@ impl MatrixF64 {
         let mut jmax = 0;
 
         unsafe {
-            sys::gsl_matrix_minmax_index(
-                self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax,
-            )
+            sys::gsl_matrix_minmax_index(self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax)
         };
         (imin, jmin, imax, jmax)
     }
@@ -700,8 +689,7 @@ impl MatrixF32 {
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixF32, enums::Value)> {
-        let dest =
-            unsafe { sys::gsl_matrix_float_alloc((*self.mat).size2, (*self.mat).size1) };
+        let dest = unsafe { sys::gsl_matrix_float_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
             None
@@ -739,17 +727,13 @@ impl MatrixF32 {
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_float_mul_elements(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_float_mul_elements(self.mat, other.mat) })
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_float_div_elements(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_float_div_elements(self.mat, other.mat) })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
@@ -809,9 +793,7 @@ impl MatrixF32 {
         let mut jmax = 0;
 
         unsafe {
-            sys::gsl_matrix_float_minmax_index(
-                self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax,
-            )
+            sys::gsl_matrix_float_minmax_index(self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax)
         };
         (imin, jmin, imax, jmax)
     }

@@ -507,7 +507,11 @@ unsafe extern "C" fn f(
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
         if let Some(ref i_f) = (*t).f {
-            i_f(ffi::FFI::soft_wrap(x as usize as *mut _), ffi::FFI::soft_wrap(pf)).into()
+            i_f(
+                ffi::FFI::soft_wrap(x as usize as *mut _),
+                ffi::FFI::soft_wrap(pf),
+            )
+            .into()
         } else {
             ::Value::Success.into()
         }
@@ -522,7 +526,11 @@ unsafe extern "C" fn df(
     unsafe {
         let t = params as *mut MultiFitFunctionFdf;
         if let Some(ref i_df) = (*t).df {
-            i_df(ffi::FFI::soft_wrap(x as usize as *mut _), ffi::FFI::soft_wrap(pdf)).into()
+            i_df(
+                ffi::FFI::soft_wrap(x as usize as *mut _),
+                ffi::FFI::soft_wrap(pdf),
+            )
+            .into()
         } else {
             ::Value::Success.into()
         }

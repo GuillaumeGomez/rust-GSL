@@ -151,9 +151,7 @@ impl ffi::FFI<sys::gsl_eigen_symm_workspace> for EigenSymmetricWorkspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenSymmetricWorkspace,
-    ) -> *mut sys::gsl_eigen_symm_workspace {
+    fn unwrap_unique(t: &mut EigenSymmetricWorkspace) -> *mut sys::gsl_eigen_symm_workspace {
         t.w
     }
 }
@@ -215,15 +213,11 @@ impl ffi::FFI<sys::gsl_eigen_symmv_workspace> for EigenSymmetricVWorkspace {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(
-        t: &EigenSymmetricVWorkspace,
-    ) -> *const sys::gsl_eigen_symmv_workspace {
+    fn unwrap_shared(t: &EigenSymmetricVWorkspace) -> *const sys::gsl_eigen_symmv_workspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenSymmetricVWorkspace,
-    ) -> *mut sys::gsl_eigen_symmv_workspace {
+    fn unwrap_unique(t: &mut EigenSymmetricVWorkspace) -> *mut sys::gsl_eigen_symmv_workspace {
         t.w
     }
 }
@@ -281,9 +275,7 @@ impl ffi::FFI<sys::gsl_eigen_herm_workspace> for EigenHermitianWorkspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenHermitianWorkspace,
-    ) -> *mut sys::gsl_eigen_herm_workspace {
+    fn unwrap_unique(t: &mut EigenHermitianWorkspace) -> *mut sys::gsl_eigen_herm_workspace {
         t.w
     }
 }
@@ -347,15 +339,11 @@ impl ffi::FFI<sys::gsl_eigen_hermv_workspace> for EigenHermitianVWorkspace {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(
-        t: &EigenHermitianVWorkspace,
-    ) -> *const sys::gsl_eigen_hermv_workspace {
+    fn unwrap_shared(t: &EigenHermitianVWorkspace) -> *const sys::gsl_eigen_hermv_workspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenHermitianVWorkspace,
-    ) -> *mut sys::gsl_eigen_hermv_workspace {
+    fn unwrap_unique(t: &mut EigenHermitianVWorkspace) -> *mut sys::gsl_eigen_hermv_workspace {
         t.w
     }
 }
@@ -467,9 +455,7 @@ impl ffi::FFI<sys::gsl_eigen_nonsymm_workspace> for EigenNonSymmWorkspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenNonSymmWorkspace,
-    ) -> *mut sys::gsl_eigen_nonsymm_workspace {
+    fn unwrap_unique(t: &mut EigenNonSymmWorkspace) -> *mut sys::gsl_eigen_nonsymm_workspace {
         t.w
     }
 }
@@ -559,15 +545,11 @@ impl ffi::FFI<sys::gsl_eigen_nonsymmv_workspace> for EigenNonSymmVWorkspace {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(
-        t: &EigenNonSymmVWorkspace,
-    ) -> *const sys::gsl_eigen_nonsymmv_workspace {
+    fn unwrap_shared(t: &EigenNonSymmVWorkspace) -> *const sys::gsl_eigen_nonsymmv_workspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenNonSymmVWorkspace,
-    ) -> *mut sys::gsl_eigen_nonsymmv_workspace {
+    fn unwrap_unique(t: &mut EigenNonSymmVWorkspace) -> *mut sys::gsl_eigen_nonsymmv_workspace {
         t.w
     }
 }
@@ -629,9 +611,7 @@ impl ffi::FFI<sys::gsl_eigen_gensymm_workspace> for EigenGenSymmWorkspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenGenSymmWorkspace,
-    ) -> *mut sys::gsl_eigen_gensymm_workspace {
+    fn unwrap_unique(t: &mut EigenGenSymmWorkspace) -> *mut sys::gsl_eigen_gensymm_workspace {
         t.w
     }
 }
@@ -692,15 +672,11 @@ impl ffi::FFI<sys::gsl_eigen_gensymmv_workspace> for EigenGenSymmVWorkspace {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(
-        t: &EigenGenSymmVWorkspace,
-    ) -> *const sys::gsl_eigen_gensymmv_workspace {
+    fn unwrap_shared(t: &EigenGenSymmVWorkspace) -> *const sys::gsl_eigen_gensymmv_workspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenGenSymmVWorkspace,
-    ) -> *mut sys::gsl_eigen_gensymmv_workspace {
+    fn unwrap_unique(t: &mut EigenGenSymmVWorkspace) -> *mut sys::gsl_eigen_gensymmv_workspace {
         t.w
     }
 }
@@ -762,9 +738,7 @@ impl ffi::FFI<sys::gsl_eigen_genherm_workspace> for EigenGenHermWorkspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenGenHermWorkspace,
-    ) -> *mut sys::gsl_eigen_genherm_workspace {
+    fn unwrap_unique(t: &mut EigenGenHermWorkspace) -> *mut sys::gsl_eigen_genherm_workspace {
         t.w
     }
 }
@@ -824,15 +798,11 @@ impl ffi::FFI<sys::gsl_eigen_genhermv_workspace> for EigenGenHermVWorkspace {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(
-        t: &EigenGenHermVWorkspace,
-    ) -> *const sys::gsl_eigen_genhermv_workspace {
+    fn unwrap_shared(t: &EigenGenHermVWorkspace) -> *const sys::gsl_eigen_genhermv_workspace {
         t.w as *const _
     }
 
-    fn unwrap_unique(
-        t: &mut EigenGenHermVWorkspace,
-    ) -> *mut sys::gsl_eigen_genhermv_workspace {
+    fn unwrap_unique(t: &mut EigenGenHermVWorkspace) -> *mut sys::gsl_eigen_genhermv_workspace {
         t.w
     }
 }

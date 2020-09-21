@@ -68,9 +68,7 @@ impl InterpAccel {
     /// given accelerator a. This is how lookups are performed during evaluation of an
     /// interpolation. The function returns an index i such that `x_array[i] <= x < x_array[i+1]`.
     pub fn find(&mut self, x_array: &[f64], x: f64) -> u64 {
-        unsafe {
-            sys::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as _, x)
-        }
+        unsafe { sys::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as _, x) }
     }
 }
 

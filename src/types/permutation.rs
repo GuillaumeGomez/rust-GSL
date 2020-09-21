@@ -140,24 +140,14 @@ impl Permutation {
     /// This function applies the permutation to the array data of size n with stride stride.
     pub fn permute(&mut self, data: &mut [f64], stride: u64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_permute(
-                (*self.p).data,
-                data.as_mut_ptr(),
-                stride,
-                data.len() as _,
-            )
+            sys::gsl_permute((*self.p).data, data.as_mut_ptr(), stride, data.len() as _)
         })
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
     pub fn permute_inverse(&mut self, data: &mut [f64], stride: u64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_permute_inverse(
-                (*self.p).data,
-                data.as_mut_ptr(),
-                stride,
-                data.len() as _,
-            )
+            sys::gsl_permute_inverse((*self.p).data, data.as_mut_ptr(), stride, data.len() as _)
         })
     }
 

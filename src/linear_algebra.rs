@@ -843,9 +843,7 @@ pub fn SV_leverage(u: &::MatrixF64, h: &mut ::VectorF64) -> enums::Value {
 ///
 /// When testing whether a matrix is positive-definite, disable the error handler first to avoid triggering an error.
 pub fn cholesky_decomp(a: &mut ::MatrixF64) -> enums::Value {
-    enums::Value::from(unsafe {
-        sys::gsl_linalg_cholesky_decomp(ffi::FFI::unwrap_unique(a))
-    })
+    enums::Value::from(unsafe { sys::gsl_linalg_cholesky_decomp(ffi::FFI::unwrap_unique(a)) })
 }
 
 /// This function factorizes the symmetric, positive-definite square matrix A into the Cholesky decomposition A = L L^T (or A = L L^H for
@@ -942,10 +940,7 @@ pub fn complex_cholesky_invert(cholesky: &mut ::MatrixComplexF64) -> enums::Valu
 /// the same as used by LAPACK. The upper triangular part of A is not referenced.
 pub fn symmtd_decomp(a: &mut ::MatrixF64, tau: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_symmtd_decomp(
-            ffi::FFI::unwrap_unique(a),
-            ffi::FFI::unwrap_unique(tau),
-        )
+        sys::gsl_linalg_symmtd_decomp(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(tau))
     })
 }
 
@@ -991,10 +986,7 @@ pub fn symmtd_unpack_T(
 /// scheme is the same as used by LAPACK. The upper triangular part of A and imaginary parts of the diagonal are not referenced.
 pub fn hermtd_decomp(a: &mut ::MatrixComplexF64, tau: &mut ::VectorComplexF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_hermtd_decomp(
-            ffi::FFI::unwrap_unique(a),
-            ffi::FFI::unwrap_unique(tau),
-        )
+        sys::gsl_linalg_hermtd_decomp(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(tau))
     })
 }
 
@@ -1040,10 +1032,7 @@ pub fn hermtd_unpack_T(
 /// the Householder coefficients are stored in the vector tau. tau must be of length N.
 pub fn hessenberg_decomp(a: &mut ::MatrixF64, tau: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_hessenberg_decomp(
-            ffi::FFI::unwrap_unique(a),
-            ffi::FFI::unwrap_unique(tau),
-        )
+        sys::gsl_linalg_hessenberg_decomp(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(tau))
     })
 }
 
@@ -1083,9 +1072,7 @@ pub fn hessenberg_unpack_accum(
 /// This function sets the lower triangular portion of H, below the subdiagonal, to zero. It is useful for clearing out the Householder
 /// vectors after calling gsl_linalg_hessenberg_decomp.
 pub fn hessenberg_set_zero(h: &mut ::MatrixF64) -> enums::Value {
-    enums::Value::from(unsafe {
-        sys::gsl_linalg_hessenberg_set_zero(ffi::FFI::unwrap_unique(h))
-    })
+    enums::Value::from(unsafe { sys::gsl_linalg_hessenberg_set_zero(ffi::FFI::unwrap_unique(h)) })
 }
 
 /// This function computes the Hessenberg-Triangular decomposition of the matrix pair (A, B). On output, H is stored in A, and R is stored
@@ -1206,11 +1193,7 @@ pub fn complex_householder_transform(v: &mut ::VectorComplexF64) -> ::ComplexF64
 /// the result P A is stored in A.
 pub fn householder_hm(tau: f64, v: &::VectorF64, a: &mut ::MatrixF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_householder_hm(
-            tau,
-            ffi::FFI::unwrap_shared(v),
-            ffi::FFI::unwrap_unique(a),
-        )
+        sys::gsl_linalg_householder_hm(tau, ffi::FFI::unwrap_shared(v), ffi::FFI::unwrap_unique(a))
     })
 }
 
@@ -1234,11 +1217,7 @@ pub fn complex_householder_hm(
 /// the result A P is stored in A.
 pub fn householder_mh(tau: f64, v: &::VectorF64, a: &mut ::MatrixF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_householder_mh(
-            tau,
-            ffi::FFI::unwrap_shared(v),
-            ffi::FFI::unwrap_unique(a),
-        )
+        sys::gsl_linalg_householder_mh(tau, ffi::FFI::unwrap_shared(v), ffi::FFI::unwrap_unique(a))
     })
 }
 
@@ -1262,11 +1241,7 @@ pub fn complex_householder_mh(
 /// w is stored in w.
 pub fn householder_hv(tau: f64, v: &::VectorF64, w: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_householder_hv(
-            tau,
-            ffi::FFI::unwrap_shared(v),
-            ffi::FFI::unwrap_unique(w),
-        )
+        sys::gsl_linalg_householder_hv(tau, ffi::FFI::unwrap_shared(v), ffi::FFI::unwrap_unique(w))
     })
 }
 
@@ -1414,9 +1389,6 @@ pub fn solve_symm_cyc_tridiag(
 /// the vector D.
 pub fn balance_matrix(a: &mut ::MatrixF64, d: &mut ::VectorF64) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_linalg_balance_matrix(
-            ffi::FFI::unwrap_unique(a),
-            ffi::FFI::unwrap_unique(d),
-        )
+        sys::gsl_linalg_balance_matrix(ffi::FFI::unwrap_unique(a), ffi::FFI::unwrap_unique(d))
     })
 }

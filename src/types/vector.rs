@@ -89,12 +89,7 @@ impl VectorView {
     /// ```
     /// The function gsl_vector_const_subvector_with_stride is equivalent to gsl_vector_subvector_with_stride but can be used for vectors which
     /// are declared const.
-    pub fn from_vector_with_stride(
-        v: &VectorF64,
-        offset: u64,
-        stride: u64,
-        n: u64,
-    ) -> VectorView {
+    pub fn from_vector_with_stride(v: &VectorF64, offset: u64, stride: u64, n: u64) -> VectorView {
         unsafe {
             VectorView {
                 v: sys::gsl_vector_subvector_with_stride(v.vec, offset, stride, n),

@@ -5674,8 +5674,7 @@ impl CquadWorkspace {
             }
 
             let mut t_heap =
-                ::std::slice::from_raw_parts((*self.w).heap, (*self.w).size as usize + 1)
-                    .to_vec();
+                ::std::slice::from_raw_parts((*self.w).heap, (*self.w).size as usize + 1).to_vec();
             let heap: &mut [_] = t_heap.as_mut();
             let t_ivals =
                 ::std::slice::from_raw_parts((*self.w).ivals, (*self.w).size as usize + 1);

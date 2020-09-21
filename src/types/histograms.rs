@@ -255,7 +255,8 @@ impl Histogram {
 
             for i in 0isize..n {
                 write!(
-                    stream, "{} {} {}\n",
+                    stream,
+                    "{} {} {}\n",
                     *(*self.h).range.offset(i),
                     *(*self.h).range.offset(i + 1),
                     *(*self.h).range.offset(i),

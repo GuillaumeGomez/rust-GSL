@@ -285,15 +285,7 @@ impl Rng {
     /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
     pub fn multinomial(&mut self, N: u32, p: &[f64], n: &mut [u32]) {
         assert!(p.len() <= n.len());
-        unsafe {
-            sys::gsl_ran_multinomial(
-                self.r,
-                p.len() as _,
-                N,
-                p.as_ptr(),
-                n.as_mut_ptr(),
-            )
-        }
+        unsafe { sys::gsl_ran_multinomial(self.r, p.len() as _, N, p.as_ptr(), n.as_mut_ptr()) }
     }
 
     /// This function returns an array of K random variates from a Dirichlet distribution of order K-1. The distribution function is
@@ -310,12 +302,7 @@ impl Rng {
     pub fn dirichlet(&mut self, alpha: &[f64], theta: &mut [f64]) {
         assert!(alpha.len() <= theta.len());
         unsafe {
-            sys::gsl_ran_dirichlet(
-                self.r,
-                alpha.len() as _,
-                alpha.as_ptr(),
-                theta.as_mut_ptr(),
-            )
+            sys::gsl_ran_dirichlet(self.r, alpha.len() as _, alpha.as_ptr(), theta.as_mut_ptr())
         }
     }
 
@@ -356,14 +343,7 @@ impl Rng {
         let mut y = 0.;
 
         unsafe {
-            sys::gsl_ran_bivariate_gaussian(
-                self.r,
-                sigma_x,
-                sigma_y,
-                rho,
-                &mut x,
-                &mut y,
-            );
+            sys::gsl_ran_bivariate_gaussian(self.r, sigma_x, sigma_y, rho, &mut x, &mut y);
         }
         (x, y)
     }
@@ -704,9 +684,7 @@ impl Rng {
     /// The method uses the fact that a multivariate Gaussian distribution is spherically symmetric. Each component is generated to have a Gaussian distribution, and then
     /// the components are normalized. The method is described by Knuth, v2, 3rd ed, p135–136, and attributed to G. W. Brown, Modern Mathematics for the Engineer (1956).
     pub fn dir_nd(&mut self, x: &mut [f64]) {
-        unsafe {
-            sys::gsl_ran_dir_nd(self.r, x.len() as _, x.as_mut_ptr())
-        }
+        unsafe { sys::gsl_ran_dir_nd(self.r, x.len() as _, x.as_mut_ptr()) }
     }
 
     /// This function returns a random variate from the t-distribution. The distribution function is,

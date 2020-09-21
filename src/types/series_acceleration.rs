@@ -76,13 +76,7 @@ impl LevinUWorkspace {
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
     pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sum_levin_u_accel(
-                array.as_ptr(),
-                array.len() as _,
-                self.w,
-                sum_accel,
-                abserr,
-            )
+            sys::gsl_sum_levin_u_accel(array.as_ptr(), array.len() as _, self.w, sum_accel, abserr)
         })
     }
 

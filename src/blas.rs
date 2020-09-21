@@ -320,16 +320,12 @@ pub mod level1 {
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn cscal(alpha: &::types::ComplexF32, x: &mut ::types::VectorComplexF32) {
-        unsafe {
-            sys::gsl_blas_cscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
-        }
+        unsafe { sys::gsl_blas_cscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     pub fn zscal(alpha: &::types::ComplexF64, x: &mut ::types::VectorComplexF64) {
-        unsafe {
-            sys::gsl_blas_zscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x))
-        }
+        unsafe { sys::gsl_blas_zscal(::std::mem::transmute(*alpha), ffi::FFI::unwrap_unique(x)) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
@@ -565,17 +561,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn strmv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixF32,
         x: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_strmv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -586,17 +582,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn dtrmv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixF64,
         x: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dtrmv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -607,17 +603,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ctrmv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixComplexF32,
         x: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ctrmv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -628,17 +624,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ztrmv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixComplexF64,
         x: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ztrmv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -649,17 +645,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn strsv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixF32,
         x: &mut ::types::VectorF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_strsv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -670,17 +666,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn dtrsv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixF64,
         x: &mut ::types::VectorF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dtrsv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -691,17 +687,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ctrsv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixComplexF32,
         x: &mut ::types::VectorComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ctrsv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -712,17 +708,17 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle of A is used, and when Uplo is CblasLower then the lower triangle of A is used.
     /// If Diag is CblasNonUnit then the diagonal of the matrix is used, but if Diag is CblasUnit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ztrsv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         A: &::types::MatrixComplexF64,
         x: &mut ::types::VectorComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ztrsv(
-                uplo,
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(x),
             )
@@ -733,7 +729,7 @@ pub mod level2 {
     /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn ssymv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f32,
         A: &::types::MatrixF32,
         x: &::types::VectorF32,
@@ -742,7 +738,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ssymv(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(x),
@@ -756,7 +752,7 @@ pub mod level2 {
     /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn dsymv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f64,
         A: &::types::MatrixF64,
         x: &::types::VectorF64,
@@ -765,7 +761,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dsymv(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(x),
@@ -779,7 +775,7 @@ pub mod level2 {
     /// Since the matrix A is hermitian only its upper half or lower half need to be stored. When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically assumed to be zero and are not referenced.
     pub fn chemv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         x: &::types::VectorComplexF32,
@@ -788,7 +784,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_chemv(
-                uplo,
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(x),
@@ -802,7 +798,7 @@ pub mod level2 {
     /// Since the matrix A is hermitian only its upper half or lower half need to be stored. When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically assumed to be zero and are not referenced.
     pub fn zhemv(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         x: &::types::VectorComplexF64,
@@ -811,7 +807,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zhemv(
-                uplo,
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(x),
@@ -926,14 +922,14 @@ pub mod level2 {
     /// This function computes the symmetric rank-1 update A = \alpha x x^T + A of the symmetric matrix A. Since the matrix A is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn ssyr(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f32,
         x: &::types::VectorF32,
         A: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ssyr(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(A),
@@ -944,14 +940,14 @@ pub mod level2 {
     /// This function computes the symmetric rank-1 update A = \alpha x x^T + A of the symmetric matrix A. Since the matrix A is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn dsyr(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f64,
         x: &::types::VectorF64,
         A: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dsyr(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(A),
@@ -964,14 +960,14 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn cher(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f32,
         x: &::types::VectorComplexF32,
         A: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_cher(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(A),
@@ -984,14 +980,14 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn zher(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f64,
         x: &::types::VectorComplexF64,
         A: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zher(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_unique(A),
@@ -1003,7 +999,7 @@ pub mod level2 {
     /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn ssyr2(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f32,
         x: &::types::VectorF32,
         y: &::types::VectorF32,
@@ -1011,7 +1007,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ssyr2(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -1024,7 +1020,7 @@ pub mod level2 {
     /// Since the matrix A is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn dsyr2(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: f64,
         x: &::types::VectorF64,
         y: &::types::VectorF64,
@@ -1032,7 +1028,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dsyr2(
-                uplo,
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -1046,7 +1042,7 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn cher2(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF32,
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
@@ -1054,7 +1050,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_cher2(
-                uplo,
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -1068,7 +1064,7 @@ pub mod level2 {
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn zher2(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF64,
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
@@ -1076,7 +1072,7 @@ pub mod level2 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zher2(
-                uplo,
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
@@ -1185,8 +1181,8 @@ pub mod level3 {
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn ssymm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         alpha: f32,
         A: &::types::MatrixF32,
         B: &::types::MatrixF32,
@@ -1195,8 +1191,8 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ssymm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(B),
@@ -1209,8 +1205,8 @@ pub mod level3 {
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn dsymm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         alpha: f64,
         A: &::types::MatrixF64,
         B: &::types::MatrixF64,
@@ -1219,8 +1215,8 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dsymm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(B),
@@ -1233,8 +1229,8 @@ pub mod level3 {
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn csymm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         B: &::types::MatrixComplexF32,
@@ -1243,8 +1239,8 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_csymm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(B),
@@ -1257,8 +1253,8 @@ pub mod level3 {
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     pub fn zsymm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         B: &::types::MatrixComplexF64,
@@ -1267,8 +1263,8 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zsymm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(B),
@@ -1282,8 +1278,8 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle and diagonal of A are used, and when Uplo is Lower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn chemm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         B: &::types::MatrixComplexF32,
@@ -1292,8 +1288,8 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_chemm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(B),
@@ -1307,8 +1303,8 @@ pub mod level3 {
     /// When Uplo is CblasUpper then the upper triangle and diagonal of A are used, and when Uplo is CblasLower then the lower triangle and diagonal of A are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn zhemm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         B: &::types::MatrixComplexF64,
@@ -1317,8 +1313,8 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zhemm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_shared(B),
@@ -1333,20 +1329,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn strmm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: f32,
         A: &::types::MatrixF32,
         B: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_strmm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1359,20 +1355,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn dtrmm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: f64,
         A: &::types::MatrixF64,
         B: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dtrmm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1385,20 +1381,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ctrmm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         B: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ctrmm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1411,20 +1407,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ztrmm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         B: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ztrmm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1437,20 +1433,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn strsm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: f32,
         A: &::types::MatrixF32,
         B: &mut ::types::MatrixF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_strsm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1463,20 +1459,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn dtrsm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: f64,
         A: &::types::MatrixF64,
         B: &mut ::types::MatrixF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dtrsm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1489,20 +1485,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ctrsm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         B: &mut ::types::MatrixComplexF32,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ctrsm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1515,20 +1511,20 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle of A is used, and when Uplo is Lower then the lower triangle of A is used.
     /// If Diag is NonUnit then the diagonal of A is used, but if Diag is Unit then the diagonal elements of the matrix A are taken as unity and are not referenced.
     pub fn ztrsm(
-        side: ::blas::Side,
-        uplo: ::blas::Uplo,
+        side: enums::CblasSide,
+        uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
-        diag: ::blas::Diag,
+        diag: enums::CblasDiag,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         B: &mut ::types::MatrixComplexF64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ztrsm(
-                side,
-                uplo,
+                side.into(),
+                uplo.into(),
                 transA.into(),
-                diag,
+                diag.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
                 ffi::FFI::unwrap_unique(B),
@@ -1540,7 +1536,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn ssyrk(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: f32,
         A: &::types::MatrixF32,
@@ -1549,7 +1545,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ssyrk(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -1563,7 +1559,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn dsyrk(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: f64,
         A: &::types::MatrixF64,
@@ -1572,7 +1568,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dsyrk(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -1586,7 +1582,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn csyrk(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
@@ -1595,7 +1591,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_csyrk(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -1609,7 +1605,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn zsyrk(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
@@ -1618,7 +1614,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zsyrk(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -1633,7 +1629,7 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn cherk(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: f32,
         A: &::types::MatrixComplexF32,
@@ -1642,7 +1638,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_cherk(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -1657,7 +1653,7 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn zherk(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: f64,
         A: &::types::MatrixComplexF64,
@@ -1666,7 +1662,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zherk(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -1680,7 +1676,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn ssyr2k(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: f32,
         A: &::types::MatrixF32,
@@ -1690,7 +1686,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_ssyr2k(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -1705,7 +1701,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn dsyr2k(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: f64,
         A: &::types::MatrixF64,
@@ -1715,7 +1711,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_dsyr2k(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 alpha,
                 ffi::FFI::unwrap_shared(A),
@@ -1730,7 +1726,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn csyr2k(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
@@ -1740,7 +1736,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_csyr2k(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -1755,7 +1751,7 @@ pub mod level3 {
     /// Since the matrix C is symmetric only its upper half or lower half need to be stored.
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     pub fn zsyr2k(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
@@ -1765,7 +1761,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zsyr2k(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -1781,7 +1777,7 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn cher2k(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
@@ -1791,7 +1787,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_cher2k(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),
@@ -1807,7 +1803,7 @@ pub mod level3 {
     /// When Uplo is Upper then the upper triangle and diagonal of C are used, and when Uplo is Lower then the lower triangle and diagonal of C are used.
     /// The imaginary elements of the diagonal are automatically set to zero.
     pub fn zher2k(
-        uplo: ::blas::Uplo,
+        uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
@@ -1817,7 +1813,7 @@ pub mod level3 {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_blas_zher2k(
-                uplo,
+                uplo.into(),
                 trans.into(),
                 ::std::mem::transmute(*alpha),
                 ffi::FFI::unwrap_shared(A),

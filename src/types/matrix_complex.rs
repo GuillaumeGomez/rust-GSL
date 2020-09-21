@@ -40,9 +40,7 @@ impl MatrixComplexF64 {
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
     pub fn set(&mut self, y: u64, x: u64, value: &ComplexF64) -> &MatrixComplexF64 {
-        unsafe {
-            sys::gsl_matrix_complex_set(self.mat, y, x, ::std::mem::transmute(*value))
-        };
+        unsafe { sys::gsl_matrix_complex_set(self.mat, y, x, ::std::mem::transmute(*value)) };
         self
     }
 
@@ -129,9 +127,7 @@ impl MatrixComplexF64 {
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
     pub fn swap_columns(&mut self, x1: u64, x2: u64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_swap_columns(self.mat, x1, x2)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_swap_columns(self.mat, x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
@@ -142,8 +138,7 @@ impl MatrixComplexF64 {
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF64, enums::Value)> {
-        let dest =
-            unsafe { sys::gsl_matrix_complex_alloc((*self.mat).size2, (*self.mat).size1) };
+        let dest = unsafe { sys::gsl_matrix_complex_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
             None
@@ -175,17 +170,13 @@ impl MatrixComplexF64 {
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&mut self, other: &MatrixComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_mul_elements(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_mul_elements(self.mat, other.mat) })
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&mut self, other: &MatrixComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_div_elements(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_div_elements(self.mat, other.mat) })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
@@ -337,17 +328,13 @@ impl MatrixComplexF32 {
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
     pub fn set(&mut self, y: u64, x: u64, value: &ComplexF32) -> &MatrixComplexF32 {
-        unsafe {
-            sys::gsl_matrix_complex_float_set(self.mat, y, x, ::std::mem::transmute(*value))
-        };
+        unsafe { sys::gsl_matrix_complex_float_set(self.mat, y, x, ::std::mem::transmute(*value)) };
         self
     }
 
     /// This function sets all the elements of the matrix to the value x.
     pub fn set_all(&mut self, x: &ComplexF32) -> &MatrixComplexF32 {
-        unsafe {
-            sys::gsl_matrix_complex_float_set_all(self.mat, ::std::mem::transmute(*x))
-        };
+        unsafe { sys::gsl_matrix_complex_float_set_all(self.mat, ::std::mem::transmute(*x)) };
         self
     }
 
@@ -366,23 +353,17 @@ impl MatrixComplexF32 {
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&mut self, other: &MatrixComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_memcpy(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_memcpy(self.mat, other.mat) })
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &mut MatrixComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_memcpy(other.mat, self.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_memcpy(other.mat, self.mat) })
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
     pub fn swap(&mut self, other: &mut MatrixComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_swap(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_swap(self.mat, other.mat) })
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
@@ -429,37 +410,29 @@ impl MatrixComplexF32 {
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
     pub fn swap_rows(&self, y1: u64, y2: u64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_swap_rows(self.mat, y1, y2)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_swap_rows(self.mat, y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
     pub fn swap_columns(&mut self, x1: u64, x2: u64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_swap_columns(self.mat, x1, x2)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_swap_columns(self.mat, x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
     pub fn swap_row_col(&mut self, i: u64, j: u64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_swap_rowcol(self.mat, i, j)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_swap_rowcol(self.mat, i, j) })
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF32, enums::Value)> {
-        let dest = unsafe {
-            sys::gsl_matrix_complex_float_alloc((*self.mat).size2, (*self.mat).size1)
-        };
+        let dest =
+            unsafe { sys::gsl_matrix_complex_float_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
             None
         } else {
-            let ret =
-                unsafe { sys::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat) };
+            let ret = unsafe { sys::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat) };
 
             Some((MatrixComplexF32 { mat: dest }, enums::Value::from(ret)))
         }
@@ -474,17 +447,13 @@ impl MatrixComplexF32 {
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&mut self, other: &MatrixComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_add(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_add(self.mat, other.mat) })
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&mut self, other: &MatrixComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_sub(self.mat, other.mat)
-        })
+        enums::Value::from(unsafe { sys::gsl_matrix_complex_float_sub(self.mat, other.mat) })
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.

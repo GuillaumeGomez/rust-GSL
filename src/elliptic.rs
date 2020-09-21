@@ -168,11 +168,7 @@ pub mod legendre {
         /// D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
         ///
         /// The argument n is not used and will be removed in a future release.
-        pub fn ellint_D_e(
-            phi: f64,
-            k: f64,
-            mode: ::Mode,
-        ) -> (enums::Value, ::types::Result) {
+        pub fn ellint_D_e(phi: f64, k: f64, mode: ::Mode) -> (enums::Value, ::types::Result) {
             let mut result = unsafe { zeroed::<::sys::gsl_sf_result>() };
             let ret = unsafe { ::sys::gsl_sf_ellint_D_e(phi, k, mode.into(), &mut result) };
 

@@ -308,17 +308,13 @@ impl VectorComplexF32 {
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
     pub fn set(&mut self, i: u64, x: &ComplexF32) -> &VectorComplexF32 {
-        unsafe {
-            sys::gsl_vector_complex_float_set(self.vec, i, ::std::mem::transmute(*x))
-        };
+        unsafe { sys::gsl_vector_complex_float_set(self.vec, i, ::std::mem::transmute(*x)) };
         self
     }
 
     /// This function sets all the elements of the vector v to the value x.
     pub fn set_all(&mut self, x: &ComplexF32) -> &VectorComplexF32 {
-        unsafe {
-            sys::gsl_vector_complex_float_set_all(self.vec, ::std::mem::transmute(*x))
-        };
+        unsafe { sys::gsl_vector_complex_float_set_all(self.vec, ::std::mem::transmute(*x)) };
         self
     }
 
@@ -336,30 +332,22 @@ impl VectorComplexF32 {
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
     pub fn copy_from(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_memcpy(self.vec, other.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_memcpy(self.vec, other.vec) })
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
     pub fn copy_to(&self, other: &mut VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_memcpy(other.vec, self.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_memcpy(other.vec, self.vec) })
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
     pub fn swap(&mut self, other: &mut VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_swap(other.vec, self.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_swap(other.vec, self.vec) })
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
     pub fn swap_elements(&mut self, i: u64, j: u64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_swap_elements(self.vec, i, j)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_swap_elements(self.vec, i, j) })
     }
 
     /// This function reverses the order of the elements of the vector v.
@@ -370,33 +358,25 @@ impl VectorComplexF32 {
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn add(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_add(self.vec, other.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_add(self.vec, other.vec) })
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn sub(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_sub(self.vec, other.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_sub(self.vec, other.vec) })
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn mul(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_mul(self.vec, other.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_mul(self.vec, other.vec) })
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
     pub fn div(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_float_div(self.vec, other.vec)
-        })
+        enums::Value::from(unsafe { sys::gsl_vector_complex_float_div(self.vec, other.vec) })
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.

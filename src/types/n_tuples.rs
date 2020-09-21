@@ -114,7 +114,12 @@ impl<T> NTuples<T> {
     ) -> enums::Value {
         unsafe {
             loop {
-                let nread = fread((*self.n).ntuple_data, (*self.n).size as _, 1, (*self.n).file);
+                let nread = fread(
+                    (*self.n).ntuple_data,
+                    (*self.n).size as _,
+                    1,
+                    (*self.n).file,
+                );
 
                 if nread == 0 && feof((*self.n).file as _) != 0 {
                     break;
