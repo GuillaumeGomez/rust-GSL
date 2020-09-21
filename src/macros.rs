@@ -45,3 +45,19 @@ macro_rules! result {
         }
     }};
 }
+
+#[doc(hidden)]
+macro_rules! wrap_callback {
+    ($f:expr, $F:ident) => {{
+        unsafe extern "C" fn trampoline<F: Fn(f64) -> f64>(x: f64, params: *mut c_void) -> f64 {
+            let f: &F = &*(f as *const F);
+            f(x)
+        }
+
+        let f: Box<$F> = Box::new($f);
+        sys::gsl_function_struct {
+            function: transmute(trampoline::<$F> as usize),
+            params: Box::into_raw(f) as *mut _,
+        }
+    }};
+}
