@@ -116,7 +116,7 @@ pub fn qng<F: Fn(f64) -> f64>(
             &mut n_eval,
         )
     };
-    result!(ret, (result, abserr, n_eval))
+    result!(ret, (result, abs_err, n_eval))
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80

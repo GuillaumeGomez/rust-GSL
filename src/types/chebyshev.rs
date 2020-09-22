@@ -32,12 +32,11 @@ Communications of the ACM 16(4), 254–256 (1973)
 
 use c_vec::CSlice;
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use std::f64::consts::PI;
 
 pub struct ChebSeries {
     c: *mut sys::gsl_cheb_series,
-    data: CSlice<f64>,
 }
 
 impl ChebSeries {
@@ -47,50 +46,17 @@ impl ChebSeries {
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                Some(ChebSeries {
-                    c: tmp,
-                    data: CSlice::new((*tmp).c, (*tmp).order as usize + 1),
-                })
-            }
+            Some(Self { c: tmp })
         }
     }
 
     /// This function computes the Chebyshev approximation cs for the function f over the range
     /// (a,b) to the previously specified order. The computation of the Chebyshev approximation is
     /// an O(n^2) process, and requires n function evaluations.
-    pub fn init<T>(&mut self, func: ::function<T>, a: f64, b: f64, param: &mut T) -> enums::Value {
-        if a >= b {
-            rgsl_error!("null function interval [a,b]", ::Value::Domain);
-            ::Value::Failure
-        } else {
-            unsafe {
-                (*self.c).a = a;
-                (*self.c).b = b;
+    pub fn init<F: Fn(f64) -> f64>(&mut self, f: F, a: f64, b: f64) -> enums::Value {
+        let function = wrap_callback!(f, F);
 
-                let bma = 0.5 * (b - a);
-                let bpa = 0.5 * (b + a);
-                let fac = 2.0 / ((*self.c).order as f64 + 1.0);
-
-                let mut tmp_vec = CSlice::new((*self.c).f, (*self.c).order_sp as usize + 1);
-                for k in 0..((*self.c).order + 1) {
-                    let y = (PI * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64)).cos();
-                    tmp_vec.as_mut()[k as usize] = func(y * bma + bpa, param);
-                }
-
-                for j in 0..((*self.c).order + 1) {
-                    let mut sum = 0f64;
-
-                    for k in 0..((*self.c).order + 1) {
-                        sum += tmp_vec.as_ref()[k as usize]
-                            * (PI * j as f64 * (k as f64 + 0.5) / ((*self.c).order as f64 + 1f64))
-                                .cos();
-                    }
-                    self.data.as_mut()[j as usize] = fac * sum;
-                }
-            }
-            ::Value::Success
-        }
+        enums::Value::from(unsafe { sys::gsl_cheb_init(FFI::unwrap_unique(self), &function, a, b) })
     }
 
     /// This function returns the order of Chebyshev series cs.
@@ -104,28 +70,22 @@ impl ChebSeries {
         unsafe { sys::gsl_cheb_size(self.c) }
     }
 
-    /// This function returns a pointer to the coefficient array c[] location in memory for the
-    /// Chebyshev series cs.
-    pub fn as_slice<'r>(&'r self) -> &'r [f64] {
-        self.data.as_ref()
-    }
-
-    /// This function returns a pointer to the coefficient array c[] location in memory for the
-    /// Chebyshev series cs.
-    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [f64] {
-        self.data.as_mut()
-    }
-
     /// This function evaluates the Chebyshev series cs at a given point x.
     pub fn eval(&self, x: f64) -> f64 {
         unsafe { sys::gsl_cheb_eval(self.c, x) }
     }
 
     /// This function computes the Chebyshev series cs at a given point x, estimating both the
-    /// series result and its absolute error abserr.
-    /// The error estimate is made from the first neglected term in the series.
-    pub fn eval_err(&self, x: f64, result: &mut f64, abs_err: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_cheb_eval_err(self.c, x, result, abs_err) })
+    /// series result and its absolute error abserr. The error estimate is made from the first
+    /// neglected term in the series.
+    ///
+    /// Returns `(result, abs_err)` if everything went fine.
+    pub fn eval_err(&self, x: f64) -> Result<(f64, f64), enums::Value> {
+        let mut result = 0.;
+        let mut abs_err = 0.;
+
+        let ret = unsafe { sys::gsl_cheb_eval_err(self.c, x, &mut result, &mut abs_err) };
+        result!(ret, (result, abs_err))
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given
@@ -137,14 +97,14 @@ impl ChebSeries {
     /// This function evaluates a Chebyshev series cs at a given point x, estimating both the series
     /// result and its absolute error abserr, to (at most) the given order order. The error estimate
     /// is made from the first neglected term in the series.
-    pub fn eval_n_err(
-        &self,
-        order: u64,
-        x: f64,
-        result: &mut f64,
-        abs_err: &mut f64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_cheb_eval_n_err(self.c, order, x, result, abs_err) })
+    ///
+    /// Returns `(result, abs_err)` if everything went fine.
+    pub fn eval_n_err(&self, order: u64, x: f64) -> Result<(f64, f64), enums::Value> {
+        let mut result = 0.;
+        let mut abs_err = 0.;
+
+        let ret = unsafe { sys::gsl_cheb_eval_n_err(self.c, order, x, &mut result, &mut abs_err) };
+        result!(ret, (result, abs_err))
     }
 
     /// This function computes the derivative of the series cs, storing the derivative coefficients
