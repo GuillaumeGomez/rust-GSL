@@ -30,10 +30,8 @@ R. Broucke, “Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Al
 Communications of the ACM 16(4), 254–256 (1973)
 !*/
 
-use c_vec::CSlice;
 use enums;
 use ffi::{self, FFI};
-use std::f64::consts::PI;
 
 pub struct ChebSeries {
     c: *mut sys::gsl_cheb_series,
@@ -126,18 +124,12 @@ impl ChebSeries {
 impl Drop for ChebSeries {
     fn drop(&mut self) {
         unsafe { sys::gsl_cheb_free(self.c) };
-        self.c = ::std::ptr::null_mut();
     }
 }
 
 impl ffi::FFI<sys::gsl_cheb_series> for ChebSeries {
     fn wrap(c: *mut sys::gsl_cheb_series) -> ChebSeries {
-        unsafe {
-            ChebSeries {
-                c: c,
-                data: CSlice::new((*c).c, (*c).order as usize + 1),
-            }
-        }
+        unsafe { Self { c } }
     }
 
     fn soft_wrap(r: *mut sys::gsl_cheb_series) -> ChebSeries {

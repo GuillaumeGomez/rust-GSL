@@ -290,23 +290,24 @@ pub enum GaussKonrodRule {
 }
 
 #[doc(hidden)]
-impl Into<::std::os::raw::c_uint> for GaussKonrodRule {
-    fn into(self) -> ::std::os::raw::c_uint {
-        match self {
+impl Into<::std::os::raw::c_int> for GaussKonrodRule {
+    fn into(self) -> ::std::os::raw::c_int {
+        let x = match self {
             Self::Gauss15 => sys::GSL_INTEG_GAUSS15,
             Self::Gauss21 => sys::GSL_INTEG_GAUSS21,
             Self::Gauss31 => sys::GSL_INTEG_GAUSS31,
             Self::Gauss41 => sys::GSL_INTEG_GAUSS41,
             Self::Gauss51 => sys::GSL_INTEG_GAUSS51,
             Self::Gauss61 => sys::GSL_INTEG_GAUSS61,
-        }
+        };
+        x as _
     }
 }
 
 #[doc(hidden)]
-impl From<::std::os::raw::c_uint> for GaussKonrodRule {
-    fn from(v: ::std::os::raw::c_uint) -> GaussKonrodRule {
-        match v {
+impl From<::std::os::raw::c_int> for GaussKonrodRule {
+    fn from(v: ::std::os::raw::c_int) -> GaussKonrodRule {
+        match v as _ {
             sys::GSL_INTEG_GAUSS15 => Self::Gauss15,
             sys::GSL_INTEG_GAUSS21 => Self::Gauss21,
             sys::GSL_INTEG_GAUSS31 => Self::Gauss31,

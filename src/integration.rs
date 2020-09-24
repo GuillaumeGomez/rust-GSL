@@ -263,7 +263,7 @@ pub fn qk<F: Fn(f64) -> f64>(
     wgk: &[f64],
     fv1: &mut [f64],
     fv2: &mut [f64],
-    f: ::function<F>,
+    f: F,
     a: f64,
     b: f64,
 ) -> (f64, f64, f64, f64) {

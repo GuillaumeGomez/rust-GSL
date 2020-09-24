@@ -31,7 +31,7 @@ pub use self::multifit_solver::{
     MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction, MultiFitFunctionFdf,
 };
 pub use self::multiset::MultiSet;
-pub use self::n_tuples::NTuples;
+pub use self::n_tuples::{ReadNTuples, WriteNTuples};
 pub use self::ordinary_differential_equations::{
     ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step, ODEiv2StepType, ODEiv2System,
 };

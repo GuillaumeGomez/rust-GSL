@@ -66,12 +66,12 @@ pub use types::{
     IntegrationWorkspace, Interp, InterpAccel, InterpType, LevinUTruncWorkspace, LevinUWorkspace,
     MatrixComplexF32, MatrixComplexF64, MatrixF32, MatrixF64, MatrixView, Minimizer, MinimizerType,
     MiserMonteCarlo, MiserParams, MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction,
-    MultiFitFunctionFdf, MultiSet, NTuples, ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step,
+    MultiFitFunctionFdf, MultiSet, ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step,
     ODEiv2StepType, ODEiv2System, Permutation, PlainMonteCarlo, PolyComplex, QRng, QRngType,
-    Result, ResultE10, Rng, RngType, RootFSolver, RootFSolverType, RootFdfSolver,
+    ReadNTuples, Result, ResultE10, Rng, RngType, RootFSolver, RootFSolverType, RootFdfSolver,
     RootFdfSolverType, SimAnnealing, SimAnnealingParams, Spline, VectorComplexF32,
     VectorComplexF64, VectorF32, VectorF64, VectorView, VegasMonteCarlo, VegasParams, Wavelet,
-    WaveletType, WaveletWorkspace,
+    WaveletType, WaveletWorkspace, WriteNTuples,
 };
 
 pub use elementary::Elementary;
@@ -144,22 +144,6 @@ pub mod trigonometric;
 pub mod util;
 pub mod wavelet_transforms;
 pub mod zeta;
-
-pub type comparison_fn<T> = fn(a: &T, b: &T) -> i32;
-pub type integration_function<T> = fn(
-    f: ::function<T>,
-    arg: &mut T,
-    a: f64,
-    b: f64,
-    result: &mut f64,
-    abserr: &mut f64,
-    resabs: &mut f64,
-    resasc: &mut f64,
-);
-pub type monte_function<T> = fn(x: &mut [f64], params: &mut T) -> f64;
-pub type select_function<T, U> = fn(ntuple_data: &mut T, params: &mut U) -> bool;
-pub type value_function<T, U> = fn(ntuple_data: &mut T, params: &mut U) -> f64;
-//pub type ComplexPackedPtr = &mut [f64];
 
 /// The maximum x such that gamma(x) is not considered an overflow.
 pub static SF_GAMMA_XMAX: f64 = 171.0;
