@@ -60,11 +60,11 @@ pub struct RootFSolverType {
 }
 
 impl ffi::FFI<sys::gsl_root_fsolver_type> for RootFSolverType {
-    fn wrap(r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
+    fn wrap(_r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
         unimplemented!()
     }
 
-    fn soft_wrap(r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
+    fn soft_wrap(_r: *mut sys::gsl_root_fsolver_type) -> RootFSolverType {
         unimplemented!()
     }
 
@@ -72,7 +72,7 @@ impl ffi::FFI<sys::gsl_root_fsolver_type> for RootFSolverType {
         s.s
     }
 
-    fn unwrap_unique(s: &mut RootFSolverType) -> *mut sys::gsl_root_fsolver_type {
+    fn unwrap_unique(_s: &mut RootFSolverType) -> *mut sys::gsl_root_fsolver_type {
         unimplemented!()
     }
 }
@@ -240,11 +240,11 @@ pub struct RootFdfSolverType {
 }
 
 impl ffi::FFI<sys::gsl_root_fdfsolver_type> for RootFdfSolverType {
-    fn wrap(r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
+    fn wrap(_r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
         unimplemented!()
     }
 
-    fn soft_wrap(r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
+    fn soft_wrap(_r: *mut sys::gsl_root_fdfsolver_type) -> RootFdfSolverType {
         unimplemented!()
     }
 
@@ -252,7 +252,7 @@ impl ffi::FFI<sys::gsl_root_fdfsolver_type> for RootFdfSolverType {
         s.s
     }
 
-    fn unwrap_unique(s: &mut RootFdfSolverType) -> *mut sys::gsl_root_fdfsolver_type {
+    fn unwrap_unique(_s: &mut RootFdfSolverType) -> *mut sys::gsl_root_fdfsolver_type {
         unimplemented!()
     }
 }
@@ -395,11 +395,21 @@ impl RootFdfSolver {
     }
 
     /// Returns the solver type name.
-    pub fn name(&self) -> String {
+    pub fn name(&self) -> Option<&str> {
         unsafe {
-            let tmp = sys::gsl_root_fdfsolver_name(self.s);
+            let ptr = sys::gsl_root_fdfsolver_name(self.s);
 
-            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            if ptr.is_null() {
+                return None;
+            }
+
+            let mut len = 0;
+            while *ptr.add(len) != 0 {
+                len += 1;
+            }
+
+            let slice = ::std::slice::from_raw_parts(ptr as *const _, len);
+            ::std::str::from_utf8(slice).ok()
         }
     }
 

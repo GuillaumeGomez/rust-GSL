@@ -278,7 +278,7 @@ pub fn qk<F: Fn(f64) -> f64>(
     let mut resabs = 0.;
     let mut resasc = 0.;
 
-    let ret = unsafe {
+    unsafe {
         sys::gsl_integration_qk(
             xgk.len() as _,
             xgk.as_ptr(),
@@ -293,8 +293,8 @@ pub fn qk<F: Fn(f64) -> f64>(
             &mut abs_err,
             &mut resabs,
             &mut resasc,
-        )
-    };
+        );
+    }
     (result, abs_err, resabs, resasc)
 }
 
