@@ -25,26 +25,30 @@ pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::Inter
     }
 }
 
-/// This function returns the interpolated value of y for a given point x, using the interpolation object interp, data arrays xa and ya and
-/// the accelerator acc. When x is outside the range of xa, the error code ::Dom is returned with a value of rgsl::NAN for y.
+/// This function returns the interpolated value of y for a given point x, using the interpolation
+/// object interp, data arrays xa and ya and the accelerator acc. When x is outside the range of xa,
+/// the error code ::Dom is returned with a value of rgsl::NAN for y.
+///
+/// Returns `y` if everything went fine.
 pub fn eval_e(
     interp: &::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-    y: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Result<f64, enums::Value> {
+    let mut y = 0.;
+    let ret = unsafe {
         sys::gsl_interp_eval_e(
             ffi::FFI::unwrap_shared(interp),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
             &mut acc.0,
-            y,
+            &mut y,
         )
-    })
+    };
+    result!(ret, y)
 }
 
 /// This function returns the derivative d of an interpolated function for a given point x, using the interpolation object interp, data

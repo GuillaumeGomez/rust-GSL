@@ -5,115 +5,151 @@
 pub mod level1 {
     use enums;
     use ffi;
+    use types::complex::CFFI;
 
-    /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result in result.
+    /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result
+    /// in result.
+    ///
+    /// Returns `result` if everything went fine.
     pub fn sdsdot(
         alpha: f32,
         x: &::types::VectorF32,
         y: &::types::VectorF32,
-        result: &mut f32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Result<f32, enums::Value> {
+        let mut result = 0.;
+        let ret = unsafe {
             sys::gsl_blas_sdsdot(
                 alpha,
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                result,
+                &mut result,
             )
-        })
+        };
+        result!(ret, result)
     }
 
-    /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
-    pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32, result: &mut f32) -> enums::Value {
-        enums::Value::from(unsafe {
+    /// This function computes the scalar product x^T y for the vectors x and y, returning the
+    /// result in result.
+    ///
+    /// Returns `result` if everything went fine.
+    pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32) -> Result<f32, enums::Value> {
+        let mut result = 0.;
+        let ret = unsafe {
             sys::gsl_blas_sdot(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                result,
+                &mut result,
             )
-        })
+        };
+        result!(ret, result)
     }
 
-    /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
-    pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32, result: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
+    /// This function computes the scalar product x^T y for the vectors x and y, returning the
+    /// result in result.
+    ///
+    /// Returns `result` if everything went fine.
+    pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32) -> Result<f64, enums::Value> {
+        let mut result = 0.;
+        let ret = unsafe {
             sys::gsl_blas_dsdot(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                result,
+                &mut result,
             )
-        })
+        };
+        result!(ret, result)
     }
 
-    /// This function computes the scalar product x^T y for the vectors x and y, returning the result in result.
-    pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64, result: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
+    /// This function computes the scalar product x^T y for the vectors x and y, returning the
+    /// result in result.
+    ///
+    /// Returns `result` if everything went fine.
+    pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64) -> Result<f64, enums::Value> {
+        let mut result = 0.;
+        let ret = unsafe {
             sys::gsl_blas_ddot(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                result,
+                &mut result,
             )
-        })
+        };
+        result!(ret, result)
     }
 
-    /// This function computes the complex scalar product x^T y for the vectors x and y, returning the result in dotu.
+    /// This function computes the complex scalar product x^T y for the vectors x and y, returning
+    /// the result in dotu.
+    ///
+    /// Returns `dotu` if everything went fine.
     pub fn cdotu(
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
-        dotu: &mut ::types::ComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Result<::types::ComplexF32, enums::Value> {
+        let mut dotu = ::types::ComplexF32::default().unwrap();
+        let ret = unsafe {
             sys::gsl_blas_cdotu(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                ::std::mem::transmute(dotu),
+                &mut dotu,
             )
-        })
+        };
+        result!(ret, ::types::ComplexF32::wrap(dotu))
     }
 
-    /// This function computes the complex scalar product x^T y for the vectors x and y, returning the result in dotu.
+    /// This function computes the complex scalar product x^T y for the vectors x and y, returning
+    /// the result in dotu.
+    ///
+    /// Returns `dotu` if everything went fine.
     pub fn zdotu(
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
-        dotu: &mut ::types::ComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Result<::types::ComplexF64, enums::Value> {
+        let mut dotu = ::types::ComplexF64::default().unwrap();
+        let ret = unsafe {
             sys::gsl_blas_zdotu(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                ::std::mem::transmute(dotu),
+                &mut dotu,
             )
-        })
+        };
+        result!(ret, ::types::ComplexF64::wrap(dotu))
     }
 
-    /// This function computes the complex conjugate scalar product x^H y for the vectors x and y, returning the result in dotc.
+    /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
+    /// returning the result in dotc.
+    ///
+    /// Returns `dotc` if everything went fine.
     pub fn cdotc(
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
-        dotc: &mut ::types::ComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Result<::types::ComplexF32, enums::Value> {
+        let mut dotc = ::types::ComplexF32::default().unwrap();
+        let ret = unsafe {
             sys::gsl_blas_cdotc(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                ::std::mem::transmute(dotc),
+                &mut dotc,
             )
-        })
+        };
+        result!(ret, ::types::ComplexF32::wrap(dotc))
     }
 
-    /// This function computes the complex conjugate scalar product x^H y for the vectors x and y, returning the result in dotc.
+    /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
+    /// returning the result in dotc.
+    ///
+    /// Returns `dotc` if everything went fine.
     pub fn zdotc(
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
-        dotc: &mut ::types::ComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Result<::types::ComplexF64, enums::Value> {
+        let mut dotc = ::types::ComplexF64::default().unwrap();
+        let ret = unsafe {
             sys::gsl_blas_zdotc(
                 ffi::FFI::unwrap_shared(x),
                 ffi::FFI::unwrap_shared(y),
-                ::std::mem::transmute(dotc),
+                &mut dotc,
             )
-        })
+        };
+        result!(ret, ::types::ComplexF64::wrap(dotc))
     }
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
