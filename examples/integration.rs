@@ -53,7 +53,6 @@ fn main() {
     println!("=== integration::qng ===");
     match rgsl::integration::qng(
         f,
-        &mut params,
         xlow,
         xhigh,
         eps_abs,
