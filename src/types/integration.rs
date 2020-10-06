@@ -2,8 +2,140 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use c_vec::CSlice;
 use enums;
 use ffi::FFI;
+
+pub struct IntegrationFixedType {
+    w: *const sys::gsl_integration_fixed_type,
+}
+
+impl IntegrationFixedType {
+    pub fn legendre() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_legendre },
+        }
+    }
+    pub fn chebyshev() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_chebyshev },
+        }
+    }
+    pub fn chebyshev2() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_chebyshev2 },
+        }
+    }
+    pub fn gegenbauer() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_gegenbauer },
+        }
+    }
+    pub fn jacobi() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_jacobi },
+        }
+    }
+    pub fn laguerre() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_laguerre },
+        }
+    }
+    pub fn hermite() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_hermite },
+        }
+    }
+    pub fn exponential() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_exponential },
+        }
+    }
+    pub fn rational() -> IntegrationFixedType {
+        IntegrationFixedType {
+            w: unsafe { sys::gsl_integration_fixed_rational },
+        }
+    }
+}
+
+pub struct IntegrationFixedWorkspace {
+    w: *mut sys::gsl_integration_fixed_workspace,
+}
+
+impl IntegrationFixedWorkspace {
+    pub fn new(
+        type_: &IntegrationFixedType,
+        n: u64,
+        a: f64,
+        b: f64,
+        alpha: f64,
+        beta: f64,
+    ) -> Option<IntegrationFixedWorkspace> {
+        let tmp = unsafe { sys::gsl_integration_fixed_alloc(type_.w, n, a, b, alpha, beta) };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(IntegrationFixedWorkspace { w: tmp })
+        }
+    }
+
+    pub fn n(&self) -> u64 {
+        unsafe { sys::gsl_integration_fixed_n(FFI::unwrap_shared(self)) }
+    }
+
+    pub fn nodes(&self) -> Option<CSlice<f64>> {
+        let tmp = unsafe { sys::gsl_integration_fixed_nodes(FFI::unwrap_shared(self)) };
+        if tmp.is_null() {
+            return None;
+        }
+        unsafe { Some(CSlice::new(tmp, self.n() as _)) }
+    }
+
+    pub fn weights(&self) -> Option<CSlice<f64>> {
+        let tmp = unsafe { sys::gsl_integration_fixed_weights(FFI::unwrap_shared(self)) };
+        if tmp.is_null() {
+            return None;
+        }
+        unsafe { Some(CSlice::new(tmp, self.n() as _)) }
+    }
+
+    pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> (f64, ::Value) {
+        let mut result = 0.;
+        let function = wrap_callback!(f, F);
+
+        let ret =
+            unsafe { sys::gsl_integration_fixed(&function, &mut result, FFI::unwrap_shared(self)) };
+        (result, ::Value::from(ret))
+    }
+}
+
+impl Drop for IntegrationFixedWorkspace {
+    fn drop(&mut self) {
+        unsafe { sys::gsl_integration_fixed_free(self.w) };
+        self.w = ::std::ptr::null_mut();
+    }
+}
+
+impl FFI<sys::gsl_integration_fixed_workspace> for IntegrationFixedWorkspace {
+    fn wrap(w: *mut sys::gsl_integration_fixed_workspace) -> IntegrationFixedWorkspace {
+        IntegrationFixedWorkspace { w: w }
+    }
+
+    fn soft_wrap(w: *mut sys::gsl_integration_fixed_workspace) -> IntegrationFixedWorkspace {
+        Self::wrap(w)
+    }
+
+    fn unwrap_shared(w: &IntegrationFixedWorkspace) -> *const sys::gsl_integration_fixed_workspace {
+        w.w as *const _
+    }
+
+    fn unwrap_unique(
+        w: &mut IntegrationFixedWorkspace,
+    ) -> *mut sys::gsl_integration_fixed_workspace {
+        w.w
+    }
+}
 
 /// The QAG algorithm is a simple adaptive integration procedure. The integration region is divided
 /// into subintervals, and on each iteration the subinterval with the largest estimated error is
@@ -27,6 +159,22 @@ impl IntegrationWorkspace {
         } else {
             Some(IntegrationWorkspace { w: tmp })
         }
+    }
+
+    pub fn limit(&self) -> u64 {
+        unsafe { (*self.w).limit }
+    }
+    pub fn size(&self) -> u64 {
+        unsafe { (*self.w).size }
+    }
+    pub fn nrmax(&self) -> u64 {
+        unsafe { (*self.w).nrmax }
+    }
+    pub fn i(&self) -> u64 {
+        unsafe { (*self.w).i }
+    }
+    pub fn maximum_level(&self) -> u64 {
+        unsafe { (*self.w).maximum_level }
     }
 
     /// This function applies an integration rule adaptively until an estimate of the integral of f
@@ -66,7 +214,7 @@ impl IntegrationWorkspace {
         epsrel: f64,
         limit: u64,
         key: enums::GaussKonrodRule,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -85,7 +233,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 
     /// This function applies the Gauss-Kronrod 21-point integration rule adaptively until an
@@ -107,7 +255,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -125,7 +273,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 
     /// This function applies the adaptive integration algorithm QAGS taking account of the
@@ -154,7 +302,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -172,7 +320,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 
     /// This function computes the integral of the function f over the infinite interval
@@ -197,7 +345,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -213,7 +361,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval
@@ -237,7 +385,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -254,7 +402,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval
@@ -278,7 +426,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -295,7 +443,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 
     /// This function computes the Cauchy principal value of the integral of f over `(a,b)`, with a
@@ -322,7 +470,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -341,7 +489,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 }
 
@@ -439,7 +587,7 @@ impl IntegrationQawsTable {
         epsrel: f64,
         limit: u64,
         workspace: &mut IntegrationWorkspace,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -458,7 +606,7 @@ impl IntegrationQawsTable {
                 &mut abs_err,
             )
         };
-        result!(ret, (result, abs_err))
+        (result, abs_err, ::Value::from(ret))
     }
 }
 
@@ -568,7 +716,7 @@ impl IntegrationQawoTable {
         epsrel: f64,
         limit: u64,
         workspace: &mut IntegrationWorkspace,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (f64, f64, ::Value) {
         let mut function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abserr = 0.;
@@ -586,7 +734,7 @@ impl IntegrationQawoTable {
                 &mut abserr,
             )
         };
-        result!(ret, (result, abserr))
+        (result, abserr, ::Value::from(ret))
     }
 }
 
@@ -670,7 +818,7 @@ impl CquadWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-    ) -> Result<(f64, f64, u64), ::Value> {
+    ) -> (f64, f64, u64, ::Value) {
         let mut function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -689,7 +837,7 @@ impl CquadWorkspace {
                 &mut n_evals,
             )
         };
-        result!(ret, (result, abs_err, n_evals))
+        (result, abs_err, n_evals, ::Value::from(ret))
     }
 }
 
