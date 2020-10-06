@@ -10,7 +10,7 @@ pub mod level1 {
     /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result
     /// in result.
     ///
-    /// Returns `result` if everything went fine.
+    /// Returns `result`.
     pub fn sdsdot(
         alpha: f32,
         x: &::types::VectorF32,
@@ -31,7 +31,7 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the
     /// result in result.
     ///
-    /// Returns `result` if everything went fine.
+    /// Returns `result`.
     pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32) -> (enums::Value, f32) {
         let mut result = 0.;
         let ret = unsafe {
@@ -47,7 +47,7 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the
     /// result in result.
     ///
-    /// Returns `result` if everything went fine.
+    /// Returns `result`.
     pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32) -> (enums::Value, f64) {
         let mut result = 0.;
         let ret = unsafe {
@@ -63,7 +63,7 @@ pub mod level1 {
     /// This function computes the scalar product x^T y for the vectors x and y, returning the
     /// result in result.
     ///
-    /// Returns `result` if everything went fine.
+    /// Returns `result`.
     pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64) -> (enums::Value, f64) {
         let mut result = 0.;
         let ret = unsafe {
@@ -79,7 +79,7 @@ pub mod level1 {
     /// This function computes the complex scalar product x^T y for the vectors x and y, returning
     /// the result in dotu.
     ///
-    /// Returns `dotu` if everything went fine.
+    /// Returns `dotu`.
     pub fn cdotu(
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
@@ -98,7 +98,7 @@ pub mod level1 {
     /// This function computes the complex scalar product x^T y for the vectors x and y, returning
     /// the result in dotu.
     ///
-    /// Returns `dotu` if everything went fine.
+    /// Returns `dotu`.
     pub fn zdotu(
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
@@ -117,7 +117,7 @@ pub mod level1 {
     /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
     /// returning the result in dotc.
     ///
-    /// Returns `dotc` if everything went fine.
+    /// Returns `dotc`.
     pub fn cdotc(
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
@@ -136,7 +136,7 @@ pub mod level1 {
     /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
     /// returning the result in dotc.
     ///
-    /// Returns `dotc` if everything went fine.
+    /// Returns `dotc`.
     pub fn zdotc(
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,

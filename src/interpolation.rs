@@ -29,7 +29,7 @@ pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::Inter
 /// object interp, data arrays xa and ya and the accelerator acc. When x is outside the range of xa,
 /// the error code ::Dom is returned with a value of rgsl::NAN for y.
 ///
-/// Returns `y` if everything went fine.
+/// Returns `y`.
 pub fn eval_e(
     interp: &::Interp,
     xa: &[f64],

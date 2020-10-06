@@ -29,7 +29,7 @@ use enums;
 /// x-h, x, x+h. Note that the value of the function at x does not contribute to the derivative
 /// calculation, so only 4-points are actually used.
 ///
-/// Returns `(result, abs_err)` if everything went fine.
+/// Returns `(result, abs_err)`.
 pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
@@ -51,7 +51,7 @@ pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, 
 /// x+h, with an error estimate taken from the difference between the 4-point rule and the
 /// corresponding 2-point rule x+h/2, x+h.
 ///
-/// Returns `(result, abs_err)` if everything went fine.
+/// Returns `(result, abs_err)`.
 pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
@@ -69,7 +69,7 @@ pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, 
 ///
 /// This function is equivalent to calling gsl_deriv_forward with a negative step-size.
 ///
-/// Returns `(result, abs_err)` if everything went fine.
+/// Returns `(result, abs_err)`.
 pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;

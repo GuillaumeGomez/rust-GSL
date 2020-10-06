@@ -77,7 +77,7 @@ impl ChebSeries {
     /// series result and its absolute error abserr. The error estimate is made from the first
     /// neglected term in the series.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn eval_err(&self, x: f64) -> (enums::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -96,7 +96,7 @@ impl ChebSeries {
     /// result and its absolute error abserr, to (at most) the given order order. The error estimate
     /// is made from the first neglected term in the series.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn eval_n_err(&self, order: u64, x: f64) -> (enums::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;

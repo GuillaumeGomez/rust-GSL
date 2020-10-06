@@ -91,7 +91,7 @@ use ffi::FFI;
 /// all the results of its predecessors, in order to minimize the total number of function
 /// evaluations.
 ///
-/// Returns `(result, abs_err, n_eval)` if everything went fine.
+/// Returns `(result, abs_err, n_eval)`.
 pub fn qng<F: Fn(f64) -> f64>(
     f: F,
     a: f64,
@@ -346,7 +346,7 @@ pub fn qk<F: Fn(f64) -> f64>(
 /// workspace. The integration over each subinterval uses the memory provided by cycle_workspace
 /// as workspace for the QAWO algorithm.
 ///
-/// Returns `(result, abs_err)` if everything went fine.
+/// Returns `(result, abs_err)`.
 pub fn qawf<F: Fn(f64) -> f64>(
     f: F,
     a: f64,

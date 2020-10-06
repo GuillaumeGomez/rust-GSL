@@ -204,7 +204,7 @@ impl IntegrationWorkspace {
     /// workspace. The maximum number of subintervals is given by limit, which may not exceed the
     /// allocated size of the workspace.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qag<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -246,7 +246,7 @@ impl IntegrationWorkspace {
     /// number of subintervals is given by limit, which may not exceed the allocated size of the
     /// workspace.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qags<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -294,7 +294,7 @@ impl IntegrationWorkspace {
     /// If you know the locations of the singular points in the integration region then this routine
     /// will be faster than QAGS.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qagp<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -338,7 +338,7 @@ impl IntegrationWorkspace {
     /// QAGS is replaced by a 15-point rule, because the transformation can generate an integrable
     /// singularity at the origin. In this case a lower-order rule is more efficient.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qagi<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -377,7 +377,7 @@ impl IntegrationWorkspace {
     ///
     /// and then integrated using the QAGS algorithm.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qagiu<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -418,7 +418,7 @@ impl IntegrationWorkspace {
     ///
     /// and then integrated using the QAGS algorithm.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qagil<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -460,7 +460,7 @@ impl IntegrationWorkspace {
     /// modified Clenshaw-Curtis rule is used to control the singularity. Further away from the
     /// singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
     ///
-    /// Returns `(result, abs_err)` if everything went fine.
+    /// Returns `(result, abs_err)`.
     pub fn qawc<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -707,7 +707,7 @@ impl IntegrationQawoTable {
     /// Clenshaw-Curtis integration rule, which handles the oscillatory behavior. Subintervals with
     /// a "small" widths where d\omega < 4 are computed using a 15-point Gauss-Kronrod integration.
     ///
-    /// Returns `(result, abserr)` if everything went fine.
+    /// Returns `(result, abserr)`.
     pub fn qawo<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -810,7 +810,7 @@ impl CquadWorkspace {
     /// error estimate or the number of function evaluations is not needed, the pointers abserr and
     /// nevals can be set to NULL (not in rgsl).
     ///
-    /// Returns `(result, abs_err, n_evals)` if everything went fine.
+    /// Returns `(result, abs_err, n_evals)`.
     pub fn cquad<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
