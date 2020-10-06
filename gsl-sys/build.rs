@@ -7,8 +7,7 @@ fn main() {
         return;
     }
 
-    pkg_config::probe_library("gsl")
-        .expect("GSL library not found");
+    pkg_config::probe_library("gsl").expect("GSL library not found");
     /*pkg_config::probe_library("gslcblas")
-        .expect("GSL cblas library not found");*/
+    .expect("GSL cblas library not found");*/
 }
