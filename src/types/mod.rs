@@ -17,7 +17,8 @@ pub use self::eigen_symmetric_workspace::{
 pub use self::fast_fourier_transforms::{FftComplexWaveTable, FftComplexWorkspace};
 pub use self::histograms::{Histogram, Histogram2D, Histogram2DPdf, HistogramPdf};
 pub use self::integration::{
-    CquadWorkspace, GLFixedTable, IntegrationQawoTable, IntegrationQawsTable, IntegrationWorkspace,
+    CquadWorkspace, GLFixedTable, IntegrationFixedType, IntegrationFixedWorkspace,
+    IntegrationQawoTable, IntegrationQawsTable, IntegrationWorkspace,
 };
 pub use self::interpolation::{Interp, InterpAccel, InterpType, Spline};
 pub use self::mathieu::MathieuWorkspace;
