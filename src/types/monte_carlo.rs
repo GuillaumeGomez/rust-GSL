@@ -129,7 +129,7 @@ impl PlainMonteCarlo {
         xu: &[f64],
         t_calls: u64,
         r: &mut ::Rng,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (::Value, f64, f64) {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -153,7 +153,7 @@ impl PlainMonteCarlo {
             )
         };
 
-        result!(ret, (result, abserr))
+        (::Value::from(ret), result, abserr)
     }
 }
 
@@ -244,7 +244,7 @@ impl MiserMonteCarlo {
         xu: &[f64],
         t_calls: u64,
         r: &mut ::Rng,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (::Value, f64, f64) {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -267,7 +267,7 @@ impl MiserMonteCarlo {
                 &mut abserr,
             )
         };
-        result!(ret, (result, abserr))
+        (::Value::from(ret), result, abserr)
     }
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
@@ -420,7 +420,7 @@ impl VegasMonteCarlo {
         xu: &[f64],
         t_calls: u64,
         r: &mut ::Rng,
-    ) -> Result<(f64, f64), ::Value> {
+    ) -> (::Value, f64, f64) {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -443,7 +443,7 @@ impl VegasMonteCarlo {
                 &mut abserr,
             )
         };
-        result!(ret, (result, abserr))
+        (::Value::from(ret), result, abserr)
     }
 
     /// This function returns the chi-squared per degree of freedom for the weighted estimate of the integral.

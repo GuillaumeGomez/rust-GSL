@@ -23,27 +23,27 @@ pub fn gegenpoly_3(lambda: f64, x: f64) -> f64 {
 }
 
 /// This function evaluates the Gegenbauer polynomials C^{(\lambda)}_n(x) using explicit representations for n =1, 2, 3.
-pub fn gegenpoly_1_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+pub fn gegenpoly_1_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_gegenpoly_1_e(lambda, x, result.as_mut_ptr()) };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This function evaluates the Gegenbauer polynomials C^{(\lambda)}_n(x) using explicit representations for n =1, 2, 3.
-pub fn gegenpoly_2_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+pub fn gegenpoly_2_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_gegenpoly_2_e(lambda, x, result.as_mut_ptr()) };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This function evaluates the Gegenbauer polynomials C^{(\lambda)}_n(x) using explicit representations for n =1, 2, 3.
-pub fn gegenpoly_3_e(lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+pub fn gegenpoly_3_e(lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_gegenpoly_3_e(lambda, x, result.as_mut_ptr()) };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This function evaluates the Gegenbauer polynomial C^{(\lambda)}_n(x) for a specific value of n, lambda, x subject to \lambda > -1/2, n >= 0.
@@ -52,11 +52,11 @@ pub fn gegenpoly_n(n: i32, lambda: f64, x: f64) -> f64 {
 }
 
 /// This function evaluates the Gegenbauer polynomial C^{(\lambda)}_n(x) for a specific value of n, lambda, x subject to \lambda > -1/2, n >= 0.
-pub fn gegenpoly_n_e(n: i32, lambda: f64, x: f64) -> Result<::types::Result, enums::Value> {
+pub fn gegenpoly_n_e(n: i32, lambda: f64, x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_gegenpoly_n_e(n, lambda, x, result.as_mut_ptr()) };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This function computes an array of Gegenbauer polynomials C^{(\lambda)}_n(x) for n = 0, 1, 2, \dots, nmax, subject to \lambda > -1/2, nmax >= 0.

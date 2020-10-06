@@ -19,9 +19,9 @@ pub fn clausen(x: f64) -> f64 {
 }
 
 /// This routine computes the Clausen integral Cl_2(x).
-pub fn clausen_e(x: f64) -> Result<::types::Result, enums::Value> {
+pub fn clausen_e(x: f64) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_clausen_e(x, result.as_mut_ptr()) };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }

@@ -111,7 +111,7 @@ impl ReadNTuples {
 
     /// This function reads the current row of the ntuple file for ntuple and stores the values in
     /// ntuple->data.
-    pub fn read<T: Sized>(&mut self) -> Result<T, enums::Value> {
+    pub fn read<T: Sized>(&mut self) -> (enums::Value, T) {
         let mut data = unsafe { MaybeUninit::<T>::uninit() };
 
         let ret = unsafe {
@@ -119,7 +119,7 @@ impl ReadNTuples {
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_read(self.n)
         };
-        result!(ret, unsafe { data.assume_init() }.into())
+        (::Value::from(ret), unsafe { data.assume_init() }.into())
     }
 }
 

@@ -94,21 +94,16 @@ impl DiscreteHankel {
     ///
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2,
     /// up to numerical errors.
-    pub fn apply(&self, f_in: &[f64]) -> Result<Vec<f64>, enums::Value> {
+    pub fn apply(&self, f_in: &[f64]) -> (enums::Value, Vec<f64>) {
         unsafe {
             assert!(
                 (*self.t).size == f_in.len() as _,
                 "f_in and f_out must have the same length as this struct"
             );
             let mut f_out: Vec<f64> = ::std::iter::repeat(0.).take(f_in.len()).collect();
-            match enums::Value::from(sys::gsl_dht_apply(
-                self.t,
-                f_in.as_ptr() as usize as *mut _,
-                f_out.as_mut_ptr(),
-            )) {
-                enums::Value::Success => Ok(f_out),
-                err => Err(err),
-            }
+            let ret =
+                sys::gsl_dht_apply(self.t, f_in.as_ptr() as usize as *mut _, f_out.as_mut_ptr());
+            (enums::Value::from(ret), f_out)
         }
     }
 

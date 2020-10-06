@@ -30,13 +30,13 @@ use enums;
 /// calculation, so only 4-points are actually used.
 ///
 /// Returns `(result, abs_err)` if everything went fine.
-pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f64), enums::Value> {
+pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
 
     let ret = unsafe { sys::gsl_deriv_central(&function, x, h, &mut result, &mut abs_err) };
-    result!(ret, (result, abs_err))
+    (::Value::from(ret), result, abs_err)
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an
@@ -52,13 +52,13 @@ pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f6
 /// corresponding 2-point rule x+h/2, x+h.
 ///
 /// Returns `(result, abs_err)` if everything went fine.
-pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f64), enums::Value> {
+pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
 
     let ret = unsafe { sys::gsl_deriv_forward(&function, x, h, &mut result, &mut abs_err) };
-    result!(ret, (result, abs_err))
+    (::Value::from(ret), result, abs_err)
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an
@@ -70,11 +70,11 @@ pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f6
 /// This function is equivalent to calling gsl_deriv_forward with a negative step-size.
 ///
 /// Returns `(result, abs_err)` if everything went fine.
-pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f64), enums::Value> {
+pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
 
     let ret = unsafe { sys::gsl_deriv_backward(&function, x, h, &mut result, &mut abs_err) };
-    result!(ret, (result, abs_err))
+    (::Value::from(ret), result, abs_err)
 }

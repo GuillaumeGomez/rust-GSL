@@ -630,7 +630,7 @@ impl MatrixF32 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorF32, enums::Value)> {
+    pub fn get_row(&self, y: u64) -> Option<(enums::Value, VectorF32)> {
         let tmp = unsafe { sys::gsl_vector_float_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -638,12 +638,12 @@ impl MatrixF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_float_get_row(tmp, self.mat, y) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorF32, enums::Value)> {
+    pub fn get_col(&self, x: u64) -> Option<(enums::Value, VectorF32)> {
         let tmp = unsafe { sys::gsl_vector_float_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -651,7 +651,7 @@ impl MatrixF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_float_get_col(tmp, self.mat, x) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
@@ -688,7 +688,7 @@ impl MatrixF32 {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixF32, enums::Value)> {
+    pub fn transpose_memcpy(&self) -> Option<(enums::Value, MatrixF32)> {
         let dest = unsafe { sys::gsl_matrix_float_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
@@ -697,11 +697,11 @@ impl MatrixF32 {
             let ret = unsafe { sys::gsl_matrix_float_transpose_memcpy(dest, self.mat) };
 
             Some((
+                enums::Value::from(ret),
                 MatrixF32 {
                     mat: dest,
                     can_free: true,
                 },
-                enums::Value::from(ret),
             ))
         }
     }

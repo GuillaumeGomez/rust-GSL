@@ -20,11 +20,11 @@ pub mod diagamma {
     }
 
     /// This routine computes the digamma function \psi(n) for positive integer n. The digamma function is also called the Psi function.
-    pub fn psi_int_e(n: i32) -> Result<::types::Result, enums::Value> {
+    pub fn psi_int_e(n: i32) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_psi_int_e(n, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the digamma function \psi(x) for general x, x \ne 0.
@@ -33,11 +33,11 @@ pub mod diagamma {
     }
 
     /// This routine computes the digamma function \psi(x) for general x, x \ne 0.
-    pub fn psi_e(x: f64) -> Result<::types::Result, enums::Value> {
+    pub fn psi_e(x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_psi_e(x, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the real part of the digamma function on the line 1+i y, \Re[\psi(1 + i y)].
@@ -46,11 +46,11 @@ pub mod diagamma {
     }
 
     /// This routine computes the real part of the digamma function on the line 1+i y, \Re[\psi(1 + i y)].
-    pub fn psi_1piy_e(x: f64) -> Result<::types::Result, enums::Value> {
+    pub fn psi_1piy_e(x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_psi_1piy_e(x, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }
 
@@ -64,11 +64,11 @@ pub mod trigamma {
     }
 
     /// This routine computes the Trigamma function \psi'(n) for positive integer n.
-    pub fn psi_1_int_e(n: i32) -> Result<::types::Result, enums::Value> {
+    pub fn psi_1_int_e(n: i32) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_psi_1_int_e(n, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the Trigamma function \psi'(x) for general x.
@@ -77,11 +77,11 @@ pub mod trigamma {
     }
 
     /// This routine computes the Trigamma function \psi'(x) for general x.
-    pub fn psi_1_e(x: f64) -> Result<::types::Result, enums::Value> {
+    pub fn psi_1_e(x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_psi_1_e(x, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }
 
@@ -95,10 +95,10 @@ pub mod polygamma {
     }
 
     /// This routine computes the polygamma function \psi^{(n)}(x) for n >= 0, x > 0.
-    pub fn psi_n_e(n: i32, x: f64) -> Result<::types::Result, enums::Value> {
+    pub fn psi_n_e(n: i32, x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_psi_n_e(n, x, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }

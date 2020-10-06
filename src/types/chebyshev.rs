@@ -78,12 +78,12 @@ impl ChebSeries {
     /// neglected term in the series.
     ///
     /// Returns `(result, abs_err)` if everything went fine.
-    pub fn eval_err(&self, x: f64) -> Result<(f64, f64), enums::Value> {
+    pub fn eval_err(&self, x: f64) -> (enums::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
 
         let ret = unsafe { sys::gsl_cheb_eval_err(self.c, x, &mut result, &mut abs_err) };
-        result!(ret, (result, abs_err))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given
@@ -97,12 +97,12 @@ impl ChebSeries {
     /// is made from the first neglected term in the series.
     ///
     /// Returns `(result, abs_err)` if everything went fine.
-    pub fn eval_n_err(&self, order: u64, x: f64) -> Result<(f64, f64), enums::Value> {
+    pub fn eval_n_err(&self, order: u64, x: f64) -> (enums::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
 
         let ret = unsafe { sys::gsl_cheb_eval_n_err(self.c, order, x, &mut result, &mut abs_err) };
-        result!(ret, (result, abs_err))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function computes the derivative of the series cs, storing the derivative coefficients

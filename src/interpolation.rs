@@ -36,7 +36,7 @@ pub fn eval_e(
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> Result<f64, enums::Value> {
+) -> (enums::Value, f64) {
     let mut y = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_e(
@@ -48,7 +48,7 @@ pub fn eval_e(
             &mut y,
         )
     };
-    result!(ret, y)
+    (::Value::from(ret), y)
 }
 
 /// This function returns the derivative d of an interpolated function for a given point x, using the interpolation object interp, data

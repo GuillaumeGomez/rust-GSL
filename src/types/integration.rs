@@ -100,13 +100,13 @@ impl IntegrationFixedWorkspace {
         unsafe { Some(CSlice::new(tmp, self.n() as _)) }
     }
 
-    pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> (f64, ::Value) {
+    pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> (::Value, f64) {
         let mut result = 0.;
         let function = wrap_callback!(f, F);
 
         let ret =
             unsafe { sys::gsl_integration_fixed(&function, &mut result, FFI::unwrap_shared(self)) };
-        (result, ::Value::from(ret))
+        (::Value::from(ret), result)
     }
 }
 
@@ -214,7 +214,7 @@ impl IntegrationWorkspace {
         epsrel: f64,
         limit: u64,
         key: enums::GaussKonrodRule,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -233,7 +233,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function applies the Gauss-Kronrod 21-point integration rule adaptively until an
@@ -255,7 +255,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -273,7 +273,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function applies the adaptive integration algorithm QAGS taking account of the
@@ -302,7 +302,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -320,7 +320,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function computes the integral of the function f over the infinite interval
@@ -345,7 +345,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -361,7 +361,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval
@@ -385,7 +385,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -402,7 +402,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval
@@ -426,7 +426,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -443,7 +443,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 
     /// This function computes the Cauchy principal value of the integral of f over `(a,b)`, with a
@@ -470,7 +470,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: u64,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -489,7 +489,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 }
 
@@ -587,7 +587,7 @@ impl IntegrationQawsTable {
         epsrel: f64,
         limit: u64,
         workspace: &mut IntegrationWorkspace,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -606,7 +606,7 @@ impl IntegrationQawsTable {
                 &mut abs_err,
             )
         };
-        (result, abs_err, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err)
     }
 }
 
@@ -716,7 +716,7 @@ impl IntegrationQawoTable {
         epsrel: f64,
         limit: u64,
         workspace: &mut IntegrationWorkspace,
-    ) -> (f64, f64, ::Value) {
+    ) -> (::Value, f64, f64) {
         let mut function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abserr = 0.;
@@ -734,7 +734,7 @@ impl IntegrationQawoTable {
                 &mut abserr,
             )
         };
-        (result, abserr, ::Value::from(ret))
+        (::Value::from(ret), result, abserr)
     }
 }
 
@@ -818,7 +818,7 @@ impl CquadWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-    ) -> (f64, f64, u64, ::Value) {
+    ) -> (::Value, f64, f64, u64) {
         let mut function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -837,7 +837,7 @@ impl CquadWorkspace {
                 &mut n_evals,
             )
         };
-        (result, abs_err, n_evals, ::Value::from(ret))
+        (::Value::from(ret), result, abs_err, n_evals)
     }
 }
 

@@ -34,7 +34,7 @@ pub fn _3j_e(
     two_ma: i32,
     two_mb: i32,
     two_mc: i32,
-) -> Result<::types::Result, enums::Value> {
+) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
         ::sys::gsl_sf_coupling_3j_e(
@@ -48,7 +48,7 @@ pub fn _3j_e(
         )
     };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 6-j coefficient,
@@ -74,7 +74,7 @@ pub fn _6j_e(
     two_jd: i32,
     two_je: i32,
     two_jf: i32,
-) -> Result<::types::Result, enums::Value> {
+) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
         ::sys::gsl_sf_coupling_6j_e(
@@ -88,7 +88,7 @@ pub fn _6j_e(
         )
     };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 9-j coefficient,
@@ -131,7 +131,7 @@ pub fn _9j_e(
     two_jg: i32,
     two_jh: i32,
     two_ji: i32,
-) -> Result<::types::Result, enums::Value> {
+) -> (enums::Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
         ::sys::gsl_sf_coupling_9j_e(
@@ -148,5 +148,5 @@ pub fn _9j_e(
         )
     };
 
-    result!(ret, unsafe { result.assume_init() }.into())
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }

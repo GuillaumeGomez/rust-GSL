@@ -15,11 +15,11 @@ pub mod riemann {
     }
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
-    pub fn zeta_int_e(n: i32) -> Result<::types::Result, enums::Value> {
+    pub fn zeta_int_e(n: i32) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_zeta_int_e(n, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the Riemann zeta function \zeta(s) for arbitrary s, s \ne 1.
@@ -28,11 +28,11 @@ pub mod riemann {
     }
 
     /// This routine computes the Riemann zeta function \zeta(s) for arbitrary s, s \ne 1.
-    pub fn zeta_e(x: f64) -> Result<::types::Result, enums::Value> {
+    pub fn zeta_e(x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_zeta_e(x, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }
 
@@ -48,11 +48,11 @@ pub mod riemann_mins_one {
     }
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
-    pub fn zetam1_int_e(n: i32) -> Result<::types::Result, enums::Value> {
+    pub fn zetam1_int_e(n: i32) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_zetam1_int_e(n, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes \zeta(s) - 1 for arbitrary s, s \ne 1.
@@ -61,11 +61,11 @@ pub mod riemann_mins_one {
     }
 
     /// This routine computes \zeta(s) - 1 for arbitrary s, s \ne 1.
-    pub fn zetam1_e(x: f64) -> Result<::types::Result, enums::Value> {
+    pub fn zetam1_e(x: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_zetam1_e(x, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }
 
@@ -80,11 +80,11 @@ pub mod hurwitz {
     }
 
     /// This routine computes the Hurwitz zeta function \zeta(s,q) for s > 1, q > 0.
-    pub fn hzeta_e(s: f64, q: f64) -> Result<::types::Result, enums::Value> {
+    pub fn hzeta_e(s: f64, q: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_hzeta_e(s, q, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }
 
@@ -99,11 +99,11 @@ pub mod eta {
     }
 
     /// This routine computes the eta function \eta(n) for integer n.
-    pub fn eta_int_e(n: i32) -> Result<::types::Result, enums::Value> {
+    pub fn eta_int_e(n: i32) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_eta_int_e(n, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the eta function \eta(s) for arbitrary s.
@@ -112,10 +112,10 @@ pub mod eta {
     }
 
     /// This routine computes the eta function \eta(s) for arbitrary s.
-    pub fn eta_e(s: f64) -> Result<::types::Result, enums::Value> {
+    pub fn eta_e(s: f64) -> (enums::Value, ::types::Result) {
         let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
         let ret = unsafe { sys::gsl_sf_eta_e(s, result.as_mut_ptr()) };
 
-        result!(ret, unsafe { result.assume_init() }.into())
+        (::Value::from(ret), unsafe { result.assume_init() }.into())
     }
 }

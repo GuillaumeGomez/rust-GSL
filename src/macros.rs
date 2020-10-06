@@ -12,24 +12,6 @@ macro_rules! ffi_wrap {
 }
 
 #[doc(hidden)]
-macro_rules! result {
-    ($value:expr, $wrap:expr) => {{
-        let ret = ::Value::from($value);
-        match ret {
-            ::Value::Success => Ok($wrap),
-            e => Err(e),
-        }
-    }};
-    ($value:expr) => {{
-        let ret = ::Value::from($value);
-        match ret {
-            ::Value::Success => Ok(()),
-            e => Err(e),
-        }
-    }};
-}
-
-#[doc(hidden)]
 macro_rules! wrap_callback {
     ($f:expr, $F:ident) => {{
         unsafe extern "C" fn trampoline<F: Fn(f64) -> f64>(

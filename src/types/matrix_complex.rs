@@ -79,7 +79,7 @@ impl MatrixComplexF64 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorComplexF64, enums::Value)> {
+    pub fn get_row(&self, y: u64) -> Option<(enums::Value, VectorComplexF64)> {
         let tmp = unsafe { sys::gsl_vector_complex_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -87,12 +87,12 @@ impl MatrixComplexF64 {
         } else {
             let ret = unsafe { sys::gsl_matrix_complex_get_row(tmp, self.mat, y) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorComplexF64, enums::Value)> {
+    pub fn get_col(&self, x: u64) -> Option<(enums::Value, VectorComplexF64)> {
         let tmp = unsafe { sys::gsl_vector_complex_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -100,7 +100,7 @@ impl MatrixComplexF64 {
         } else {
             let ret = unsafe { sys::gsl_matrix_complex_get_col(tmp, self.mat, x) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
@@ -137,7 +137,7 @@ impl MatrixComplexF64 {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF64, enums::Value)> {
+    pub fn transpose_memcpy(&self) -> Option<(enums::Value, MatrixComplexF64)> {
         let dest = unsafe { sys::gsl_matrix_complex_alloc((*self.mat).size2, (*self.mat).size1) };
 
         if dest.is_null() {
@@ -145,7 +145,7 @@ impl MatrixComplexF64 {
         } else {
             let ret = unsafe { sys::gsl_matrix_complex_transpose_memcpy(dest, self.mat) };
 
-            Some((MatrixComplexF64 { mat: dest }, enums::Value::from(ret)))
+            Some((enums::Value::from(ret), MatrixComplexF64 { mat: dest }))
         }
     }
 
@@ -367,7 +367,7 @@ impl MatrixComplexF32 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorComplexF32, enums::Value)> {
+    pub fn get_row(&self, y: u64) -> Option<(enums::Value, VectorComplexF32)> {
         let tmp = unsafe { sys::gsl_vector_complex_float_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -375,12 +375,12 @@ impl MatrixComplexF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_complex_float_get_row(tmp, self.mat, y) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorComplexF32, enums::Value)> {
+    pub fn get_col(&self, x: u64) -> Option<(enums::Value, VectorComplexF32)> {
         let tmp = unsafe { sys::gsl_vector_complex_float_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -388,7 +388,7 @@ impl MatrixComplexF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_complex_float_get_col(tmp, self.mat, x) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
@@ -425,7 +425,7 @@ impl MatrixComplexF32 {
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixComplexF32, enums::Value)> {
+    pub fn transpose_memcpy(&self) -> Option<(enums::Value, MatrixComplexF32)> {
         let dest =
             unsafe { sys::gsl_matrix_complex_float_alloc((*self.mat).size2, (*self.mat).size1) };
 
@@ -434,7 +434,7 @@ impl MatrixComplexF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_complex_float_transpose_memcpy(dest, self.mat) };
 
-            Some((MatrixComplexF32 { mat: dest }, enums::Value::from(ret)))
+            Some((enums::Value::from(ret), MatrixComplexF32 { mat: dest }))
         }
     }
 
