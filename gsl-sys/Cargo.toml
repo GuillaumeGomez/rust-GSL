@@ -21,3 +21,12 @@ pkg-config = "0.3"
 [lib]
 name = "gsl_sys"
 crate-type = ["dylib", "rlib"]
+
+[features]
+v2_1 = []
+v2_2 = ["v2_1"]
+v2_3 = ["v2_2"]
+v2_4 = ["v2_3"]
+v2_5 = ["v2_4"]
+v2_6 = ["v2_5"]
+v2_7 = ["v2_6"]

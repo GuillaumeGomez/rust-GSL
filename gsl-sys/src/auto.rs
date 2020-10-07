@@ -859,6 +859,7 @@ pub struct gsl_function_vec_struct {
     pub params: *mut ::std::os::raw::c_void,
 }
 pub type gsl_function_vec = gsl_function_vec_struct;
+#[cfg(feature = "v2_6")]
 pub type gsl_bst_cmp_function = ::std::option::Option<
     unsafe extern "C" fn(
         a: *const ::std::os::raw::c_void,
@@ -868,6 +869,7 @@ pub type gsl_bst_cmp_function = ::std::option::Option<
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_allocator {
     pub alloc: ::std::option::Option<
         unsafe extern "C" fn(
@@ -884,6 +886,7 @@ pub struct gsl_bst_allocator {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_avl_node {
     pub avl_link: [*mut gsl_bst_avl_node; 2usize],
     pub avl_data: *mut ::std::os::raw::c_void,
@@ -891,6 +894,7 @@ pub struct gsl_bst_avl_node {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_avl_table {
     pub avl_root: *mut gsl_bst_avl_node,
     pub avl_compare: gsl_bst_cmp_function,
@@ -901,6 +905,7 @@ pub struct gsl_bst_avl_table {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_avl_traverser {
     pub avl_table: *const gsl_bst_avl_table,
     pub avl_node: *mut gsl_bst_avl_node,
@@ -910,6 +915,7 @@ pub struct gsl_bst_avl_traverser {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_rb_node {
     pub rb_link: [*mut gsl_bst_rb_node; 2usize],
     pub rb_data: *mut ::std::os::raw::c_void,
@@ -917,6 +923,7 @@ pub struct gsl_bst_rb_node {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_rb_table {
     pub rb_root: *mut gsl_bst_rb_node,
     pub rb_compare: gsl_bst_cmp_function,
@@ -927,6 +934,7 @@ pub struct gsl_bst_rb_table {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_rb_traverser {
     pub rb_table: *const gsl_bst_rb_table,
     pub rb_node: *mut gsl_bst_rb_node,
@@ -936,6 +944,7 @@ pub struct gsl_bst_rb_traverser {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_type {
     pub name: *const ::std::os::raw::c_char,
     pub node_size: size_t,
@@ -1027,12 +1036,14 @@ pub struct gsl_bst_type {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_workspace {
     pub type_: *const gsl_bst_type,
     pub table: gsl_bst_workspace__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub union gsl_bst_workspace__bindgen_ty_1 {
     pub avl_table: gsl_bst_avl_table,
     pub rb_table: gsl_bst_rb_table,
@@ -1040,24 +1051,29 @@ pub union gsl_bst_workspace__bindgen_ty_1 {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub struct gsl_bst_trav {
     pub type_: *const gsl_bst_type,
     pub trav_data: gsl_bst_trav__bindgen_ty_1,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
+#[cfg(feature = "v2_6")]
 pub union gsl_bst_trav__bindgen_ty_1 {
     pub avl_trav: gsl_bst_avl_traverser,
     pub rb_trav: gsl_bst_rb_traverser,
     _bindgen_union_align: [u64; 52usize],
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub static mut gsl_bst_avl: *const gsl_bst_type;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub static mut gsl_bst_rb: *const gsl_bst_type;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_alloc(
         T: *const gsl_bst_type,
         allocator: *const gsl_bst_allocator,
@@ -1066,57 +1082,69 @@ extern "C" {
     ) -> *mut gsl_bst_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_free(w: *mut gsl_bst_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_empty(w: *mut gsl_bst_workspace) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_insert(
         item: *mut ::std::os::raw::c_void,
         w: *mut gsl_bst_workspace,
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_find(
         item: *const ::std::os::raw::c_void,
         w: *const gsl_bst_workspace,
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_remove(
         item: *const ::std::os::raw::c_void,
         w: *mut gsl_bst_workspace,
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_nodes(w: *const gsl_bst_workspace) -> size_t;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_node_size(w: *const gsl_bst_workspace) -> size_t;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_name(w: *const gsl_bst_workspace) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_init(
         trav: *mut gsl_bst_trav,
         w: *const gsl_bst_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_first(
         trav: *mut gsl_bst_trav,
         w: *const gsl_bst_workspace,
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_last(
         trav: *mut gsl_bst_trav,
         w: *const gsl_bst_workspace,
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_find(
         item: *const ::std::os::raw::c_void,
         trav: *mut gsl_bst_trav,
@@ -1124,6 +1152,7 @@ extern "C" {
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_insert(
         item: *mut ::std::os::raw::c_void,
         trav: *mut gsl_bst_trav,
@@ -1131,21 +1160,26 @@ extern "C" {
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_copy(
         dest: *mut gsl_bst_trav,
         src: *const gsl_bst_trav,
     ) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_next(trav: *mut gsl_bst_trav) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_prev(trav: *mut gsl_bst_trav) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_cur(trav: *const gsl_bst_trav) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_bst_trav_replace(
         trav: *mut gsl_bst_trav,
         new_item: *mut ::std::os::raw::c_void,
@@ -4644,6 +4678,7 @@ extern "C" {
     pub fn gsl_vector_add_constant(a: *mut gsl_vector, x: f64) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_vector_axpby(
         alpha: f64,
         x: *const gsl_vector,
@@ -4652,6 +4687,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_vector_sum(a: *const gsl_vector) -> f64;
 }
 extern "C" {
@@ -5328,6 +5364,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_matrix_complex_conjtrans_memcpy(
         dest: *mut gsl_matrix_complex,
         src: *const gsl_matrix_complex,
@@ -8094,6 +8131,7 @@ extern "C" {
     pub fn gsl_matrix_isnonneg(m: *const gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_matrix_norm1(m: *const gsl_matrix) -> f64;
 }
 extern "C" {
@@ -8118,10 +8156,12 @@ extern "C" {
     pub fn gsl_matrix_scale(a: *mut gsl_matrix, x: f64) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_matrix_scale_rows(a: *mut gsl_matrix, x: *const gsl_vector)
         -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_matrix_scale_columns(
         a: *mut gsl_matrix,
         x: *const gsl_vector,
@@ -8298,6 +8338,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_spmatrix_min_index(
         m: *const gsl_spmatrix,
         imin_out: *mut size_t,
@@ -8308,12 +8349,14 @@ extern "C" {
     pub fn gsl_spmatrix_scale(m: *mut gsl_spmatrix, x: f64) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_spmatrix_scale_columns(
         m: *mut gsl_spmatrix,
         x: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_spmatrix_scale_rows(
         m: *mut gsl_spmatrix,
         x: *const gsl_vector,
@@ -8333,6 +8376,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_spmatrix_dense_sub(
         a: *mut gsl_matrix,
         b: *const gsl_spmatrix,
@@ -8345,6 +8389,7 @@ extern "C" {
     pub fn gsl_spmatrix_sp2d(A: *mut gsl_matrix, S: *const gsl_spmatrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_spmatrix_add_to_dense(
         a: *mut gsl_matrix,
         b: *const gsl_spmatrix,
@@ -8357,6 +8402,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_spmatrix_norm1(a: *const gsl_spmatrix) -> f64;
 }
 extern "C" {
@@ -17631,6 +17677,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_3")]
     pub fn gsl_multifit_linear_tsvd(
         X: *const gsl_matrix,
         y: *const gsl_vector,
@@ -17655,6 +17702,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_3")]
     pub fn gsl_multifit_linear_rank(tol: f64, work: *const gsl_multifit_linear_workspace)
         -> size_t;
 }
@@ -17821,6 +17869,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_3")]
     pub fn gsl_multifit_wlinear_tsvd(
         X: *const gsl_matrix,
         w: *const gsl_vector,
@@ -17869,6 +17918,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multifit_linear_rcond(w: *const gsl_multifit_linear_workspace) -> f64;
 }
 extern "C" {
@@ -19087,6 +19137,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_permute_matrix(
         p: *const gsl_permutation,
         A: *mut gsl_matrix,
@@ -21606,6 +21657,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_decomp(
         M: size_t,
         lb: size_t,
@@ -21615,6 +21667,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_solve(
         lb: size_t,
         ub: size_t,
@@ -21625,6 +21678,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_svx(
         lb: size_t,
         ub: size_t,
@@ -21634,6 +21688,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_unpack(
         M: size_t,
         lb: size_t,
@@ -21861,18 +21916,21 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_decomp(
         A: *mut gsl_matrix_complex,
         tau: *mut gsl_vector_complex,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_decomp_r(
         A: *mut gsl_matrix_complex,
         T: *mut gsl_matrix_complex,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_solve(
         QR: *const gsl_matrix_complex,
         tau: *const gsl_vector_complex,
@@ -21881,6 +21939,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_solve_r(
         QR: *const gsl_matrix_complex,
         T: *const gsl_matrix_complex,
@@ -21889,6 +21948,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_svx(
         QR: *const gsl_matrix_complex,
         tau: *const gsl_vector_complex,
@@ -21896,6 +21956,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_lssolve(
         QR: *const gsl_matrix_complex,
         tau: *const gsl_vector_complex,
@@ -21905,6 +21966,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_lssolve_r(
         QR: *const gsl_matrix_complex,
         T: *const gsl_matrix_complex,
@@ -21914,6 +21976,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_QHvec(
         QR: *const gsl_matrix_complex,
         tau: *const gsl_vector_complex,
@@ -21921,6 +21984,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_QHvec_r(
         QR: *const gsl_matrix_complex,
         T: *const gsl_matrix_complex,
@@ -21929,6 +21993,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_Qvec(
         QR: *const gsl_matrix_complex,
         tau: *const gsl_vector_complex,
@@ -21936,6 +22001,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_unpack(
         QR: *const gsl_matrix_complex,
         tau: *const gsl_vector_complex,
@@ -21944,6 +22010,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_complex_QR_unpack_r(
         QR: *const gsl_matrix_complex,
         T: *const gsl_matrix_complex,
@@ -22000,6 +22067,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_QRPT_lssolve(
         QR: *const gsl_matrix,
         tau: *const gsl_vector,
@@ -22010,6 +22078,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_QRPT_lssolve2(
         QR: *const gsl_matrix,
         tau: *const gsl_vector,
@@ -22065,6 +22134,7 @@ extern "C" {
     pub fn gsl_linalg_QRPT_rank(QR: *const gsl_matrix, tol: f64) -> size_t;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_QRPT_rcond(
         QR: *const gsl_matrix,
         rcond: *mut f64,
@@ -22079,9 +22149,11 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_QL_decomp(A: *mut gsl_matrix, tau: *mut gsl_vector) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_QL_unpack(
         QL: *const gsl_matrix,
         tau: *const gsl_vector,
@@ -22090,6 +22162,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_COD_decomp(
         A: *mut gsl_matrix,
         tau_Q: *mut gsl_vector,
@@ -22100,6 +22173,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_COD_decomp_e(
         A: *mut gsl_matrix,
         tau_Q: *mut gsl_vector,
@@ -22111,6 +22185,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_COD_lssolve(
         QRZT: *const gsl_matrix,
         tau_Q: *const gsl_vector,
@@ -22123,6 +22198,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_COD_lssolve2(
         lambda: f64,
         QRZT: *const gsl_matrix,
@@ -22138,6 +22214,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_COD_unpack(
         QRZT: *const gsl_matrix,
         tau_Q: *const gsl_vector,
@@ -22149,6 +22226,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_COD_matZ(
         QRZT: *const gsl_matrix,
         tau_Z: *const gsl_vector,
@@ -22161,6 +22239,7 @@ extern "C" {
     pub fn gsl_linalg_LQ_decomp(A: *mut gsl_matrix, tau: *mut gsl_vector) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_LQ_lssolve(
         LQ: *const gsl_matrix,
         tau: *const gsl_vector,
@@ -22401,6 +22480,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_cholesky_rcond(
         LLT: *const gsl_matrix,
         rcond: *mut f64,
@@ -22429,12 +22509,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_decomp(
         A: *mut gsl_matrix,
         p: *mut gsl_permutation,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_solve(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22443,6 +22525,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_svx(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22450,6 +22533,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_decomp2(
         A: *mut gsl_matrix,
         p: *mut gsl_permutation,
@@ -22457,6 +22541,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_solve2(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22466,6 +22551,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_svx2(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22474,6 +22560,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_invert(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22481,6 +22568,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_pcholesky_rcond(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22489,6 +22577,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_mcholesky_decomp(
         A: *mut gsl_matrix,
         p: *mut gsl_permutation,
@@ -22496,6 +22585,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_mcholesky_solve(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22504,6 +22594,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_mcholesky_svx(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22511,6 +22602,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_mcholesky_rcond(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22519,6 +22611,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_mcholesky_invert(
         LDLT: *const gsl_matrix,
         p: *const gsl_permutation,
@@ -22526,9 +22619,11 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_decomp(A: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_solve(
         LLT: *const gsl_matrix,
         b: *const gsl_vector,
@@ -22536,12 +22631,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_svx(
         LLT: *const gsl_matrix,
         x: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_solvem(
         LLT: *const gsl_matrix,
         B: *const gsl_matrix,
@@ -22549,24 +22646,28 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_svxm(
         LLT: *const gsl_matrix,
         X: *mut gsl_matrix,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_invert(
         LLT: *const gsl_matrix,
         Ainv: *mut gsl_matrix,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_unpack(
         LLT: *const gsl_matrix,
         L: *mut gsl_matrix,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_cholesky_band_rcond(
         LLT: *const gsl_matrix,
         rcond: *mut f64,
@@ -22574,9 +22675,11 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_decomp(A: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_solve(
         LDLT: *const gsl_matrix,
         b: *const gsl_vector,
@@ -22584,12 +22687,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_svx(
         LDLT: *const gsl_matrix,
         x: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_rcond(
         LDLT: *const gsl_matrix,
         rcond: *mut f64,
@@ -22597,9 +22702,11 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_band_decomp(A: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_band_solve(
         LDLT: *const gsl_matrix,
         b: *const gsl_vector,
@@ -22607,12 +22714,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_band_svx(
         LDLT: *const gsl_matrix,
         x: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_band_unpack(
         LDLT: *const gsl_matrix,
         L: *mut gsl_matrix,
@@ -22620,6 +22729,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_6")]
     pub fn gsl_linalg_ldlt_band_rcond(
         LDLT: *const gsl_matrix,
         rcond: *mut f64,
@@ -22766,6 +22876,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_rcond(
         Uplo: CBLAS_UPLO_t,
         A: *const gsl_matrix,
@@ -22774,6 +22885,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_upper_rcond(
         A: *const gsl_matrix,
         rcond: *mut f64,
@@ -22781,6 +22893,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_lower_rcond(
         A: *const gsl_matrix,
         rcond: *mut f64,
@@ -22803,18 +22916,23 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_upper_invert(T: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_lower_invert(T: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_upper_unit_invert(T: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_lower_unit_invert(T: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_invert(
         Uplo: CBLAS_UPLO_t,
         Diag: CBLAS_DIAG_t,
@@ -22829,9 +22947,11 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_LTL(L: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_linalg_tri_UL(LU: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -26205,12 +26325,17 @@ extern "C" {
         compare: gsl_comparison_fn_t,
     ) -> ::std::os::raw::c_int;
 }
+#[cfg(feature = "v2_5")]
 pub const gsl_movstat_end_t_GSL_MOVSTAT_END_PADZERO: gsl_movstat_end_t = 0;
+#[cfg(feature = "v2_5")]
 pub const gsl_movstat_end_t_GSL_MOVSTAT_END_PADVALUE: gsl_movstat_end_t = 1;
+#[cfg(feature = "v2_5")]
 pub const gsl_movstat_end_t_GSL_MOVSTAT_END_TRUNCATE: gsl_movstat_end_t = 2;
+#[cfg(feature = "v2_5")]
 pub type gsl_movstat_end_t = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_movstat_accum {
     pub size: ::std::option::Option<unsafe extern "C" fn(n: size_t) -> size_t>,
     pub init: ::std::option::Option<
@@ -26235,6 +26360,7 @@ pub struct gsl_movstat_accum {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_movstat_function {
     pub function: ::std::option::Option<
         unsafe extern "C" fn(n: size_t, x: *mut f64, params: *mut ::std::os::raw::c_void) -> f64,
@@ -26243,6 +26369,7 @@ pub struct gsl_movstat_function {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_movstat_workspace {
     pub H: size_t,
     pub J: size_t,
@@ -26252,12 +26379,15 @@ pub struct gsl_movstat_workspace {
     pub state_size: size_t,
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_alloc(K: size_t) -> *mut gsl_movstat_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_alloc2(H: size_t, J: size_t) -> *mut gsl_movstat_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_alloc_with_size(
         accum_state_size: size_t,
         H: size_t,
@@ -26265,9 +26395,11 @@ extern "C" {
     ) -> *mut gsl_movstat_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_free(w: *mut gsl_movstat_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_apply_accum(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26279,6 +26411,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_apply(
         endtype: gsl_movstat_end_t,
         F: *const gsl_movstat_function,
@@ -26288,6 +26421,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_fill(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26298,6 +26432,7 @@ extern "C" {
     ) -> size_t;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_mean(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26306,6 +26441,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_variance(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26314,6 +26450,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_sd(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26322,6 +26459,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_median(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26330,6 +26468,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_min(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26338,6 +26477,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_max(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26346,6 +26486,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_minmax(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26355,6 +26496,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_mad0(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26364,6 +26506,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_mad(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26373,6 +26516,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_qqr(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26382,6 +26526,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_Sn(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26390,6 +26535,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_Qn(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26398,6 +26544,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_sum(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
@@ -26406,67 +26553,93 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_mad: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_max: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_mean: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_median: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_min: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_minmax: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_sd: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_Sn: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_sum: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_Qn: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_qqr: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_userfunc: *const gsl_movstat_accum;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub static mut gsl_movstat_accum_variance: *const gsl_movstat_accum;
 }
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_end_t_GSL_FILTER_END_PADZERO: gsl_filter_end_t = 0;
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_end_t_GSL_FILTER_END_PADVALUE: gsl_filter_end_t = 1;
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_end_t_GSL_FILTER_END_TRUNCATE: gsl_filter_end_t = 2;
+#[cfg(feature = "v2_5")]
 pub type gsl_filter_end_t = ::std::os::raw::c_uint;
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_scale_t_GSL_FILTER_SCALE_MAD: gsl_filter_scale_t = 0;
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_scale_t_GSL_FILTER_SCALE_IQR: gsl_filter_scale_t = 1;
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_scale_t_GSL_FILTER_SCALE_SN: gsl_filter_scale_t = 2;
+#[cfg(feature = "v2_5")]
 pub const gsl_filter_scale_t_GSL_FILTER_SCALE_QN: gsl_filter_scale_t = 3;
+#[cfg(feature = "v2_5")]
 pub type gsl_filter_scale_t = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_filter_gaussian_workspace {
     pub K: size_t,
     pub kernel: *mut f64,
     pub movstat_workspace_p: *mut gsl_movstat_workspace,
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_gaussian_alloc(K: size_t) -> *mut gsl_filter_gaussian_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_gaussian_free(w: *mut gsl_filter_gaussian_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_gaussian(
         endtype: gsl_filter_end_t,
         alpha: f64,
@@ -26477,6 +26650,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_gaussian_kernel(
         alpha: f64,
         order: size_t,
@@ -26486,16 +26660,20 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_filter_median_workspace {
     pub movstat_workspace_p: *mut gsl_movstat_workspace,
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_median_alloc(K: size_t) -> *mut gsl_filter_median_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_median_free(w: *mut gsl_filter_median_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_median(
         endtype: gsl_filter_end_t,
         x: *const gsl_vector,
@@ -26505,6 +26683,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_filter_rmedian_workspace {
     pub H: size_t,
     pub K: size_t,
@@ -26514,12 +26693,15 @@ pub struct gsl_filter_rmedian_workspace {
     pub movstat_workspace_p: *mut gsl_movstat_workspace,
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_rmedian_alloc(K: size_t) -> *mut gsl_filter_rmedian_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_rmedian_free(w: *mut gsl_filter_rmedian_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_rmedian(
         arg1: gsl_filter_end_t,
         x: *const gsl_vector,
@@ -26529,16 +26711,20 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_filter_impulse_workspace {
     pub movstat_workspace_p: *mut gsl_movstat_workspace,
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_impulse_alloc(K: size_t) -> *mut gsl_filter_impulse_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_impulse_free(w: *mut gsl_filter_impulse_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_filter_impulse(
         endtype: gsl_filter_end_t,
         scale_type: gsl_filter_scale_t,
@@ -26881,6 +27067,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_linear_type {
     pub name: *const ::std::os::raw::c_char,
     pub alloc:
@@ -26928,6 +27115,7 @@ pub struct gsl_multilarge_linear_type {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_linear_workspace {
     pub type_: *const gsl_multilarge_linear_type,
     pub state: *mut ::std::os::raw::c_void,
@@ -26940,25 +27128,30 @@ extern "C" {
     pub static mut gsl_multilarge_linear_tsqr: *const gsl_multilarge_linear_type;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_alloc(
         T: *const gsl_multilarge_linear_type,
         p: size_t,
     ) -> *mut gsl_multilarge_linear_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_free(w: *mut gsl_multilarge_linear_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_name(
         w: *const gsl_multilarge_linear_workspace,
     ) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_reset(
         w: *mut gsl_multilarge_linear_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_accumulate(
         X: *mut gsl_matrix,
         y: *mut gsl_vector,
@@ -26966,6 +27159,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_solve(
         lambda: f64,
         c: *mut gsl_vector,
@@ -26975,12 +27169,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_rcond(
         rcond: *mut f64,
         w: *mut gsl_multilarge_linear_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_lcurve(
         reg_param: *mut gsl_vector,
         rho: *mut gsl_vector,
@@ -26989,6 +27185,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_wstdform1(
         L: *const gsl_vector,
         X: *const gsl_matrix,
@@ -27000,6 +27197,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_stdform1(
         L: *const gsl_vector,
         X: *const gsl_matrix,
@@ -27010,12 +27208,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_L_decomp(
         L: *mut gsl_matrix,
         tau: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_wstdform2(
         LQR: *const gsl_matrix,
         Ltau: *const gsl_vector,
@@ -27028,6 +27228,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_stdform2(
         LQR: *const gsl_matrix,
         Ltau: *const gsl_vector,
@@ -27039,6 +27240,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_genform1(
         L: *const gsl_vector,
         cs: *const gsl_vector,
@@ -27047,6 +27249,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_genform2(
         LQR: *const gsl_matrix,
         Ltau: *const gsl_vector,
@@ -27056,11 +27259,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_matrix_ptr(
         work: *const gsl_multilarge_linear_workspace,
     ) -> *const gsl_matrix;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_rhs_ptr(
         work: *const gsl_multilarge_linear_workspace,
     ) -> *const gsl_vector;
@@ -29244,6 +29449,7 @@ extern "C" {
     );
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_select(data: *mut f64, stride: size_t, n: size_t, k: size_t) -> f64;
 }
 extern "C" {
@@ -29254,6 +29460,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_median(sorted_data: *mut f64, stride: size_t, n: size_t) -> f64;
 }
 extern "C" {
@@ -29265,6 +29472,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const f64,
@@ -29273,6 +29481,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_gastwirth_from_sorted_data(
         sorted_data: *const f64,
         stride: size_t,
@@ -29280,9 +29489,11 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_mad0(data: *const f64, stride: size_t, n: size_t, work: *mut f64) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_mad(data: *const f64, stride: size_t, n: size_t, work: *mut f64) -> f64;
 }
 extern "C" {
@@ -29294,6 +29505,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_Sn_from_sorted_data(
         sorted_data: *const f64,
         stride: size_t,
@@ -29311,6 +29523,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_stats_Qn_from_sorted_data(
         sorted_data: *const f64,
         stride: size_t,
@@ -33185,15 +33398,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_5")]
 pub struct gsl_integration_romberg_workspace {
     pub n: size_t,
     pub work1: *mut f64,
     pub work2: *mut f64,
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_integration_romberg_alloc(n: size_t) -> *mut gsl_integration_romberg_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_integration_romberg_free(w: *mut gsl_integration_romberg_workspace);
 }
 extern "C" {
@@ -34189,6 +34405,7 @@ extern "C" {
     ) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_ran_multivariate_gaussian(
         r: *const gsl_rng,
         mu: *const gsl_vector,
@@ -34197,6 +34414,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_ran_multivariate_gaussian_log_pdf(
         x: *const gsl_vector,
         mu: *const gsl_vector,
@@ -34206,6 +34424,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_ran_multivariate_gaussian_pdf(
         x: *const gsl_vector,
         mu: *const gsl_vector,
@@ -34215,18 +34434,21 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_ran_multivariate_gaussian_mean(
         X: *const gsl_matrix,
         mu_hat: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_ran_multivariate_gaussian_vcov(
         X: *const gsl_matrix,
         sigma_hat: *mut gsl_matrix,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_ran_wishart(
         r: *const gsl_rng,
         df: f64,
@@ -34236,6 +34458,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_ran_wishart_log_pdf(
         X: *const gsl_matrix,
         L_X: *const gsl_matrix,
@@ -34246,6 +34469,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_ran_wishart_pdf(
         X: *const gsl_matrix,
         L_X: *const gsl_matrix,
@@ -34755,6 +34979,7 @@ pub const gsl_multilarge_nlinear_fdtype_GSL_MULTILARGE_NLINEAR_CTRDIFF:
 pub type gsl_multilarge_nlinear_fdtype = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_fdf {
     pub f: ::std::option::Option<
         unsafe extern "C" fn(
@@ -34791,6 +35016,7 @@ pub struct gsl_multilarge_nlinear_fdf {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_trs {
     pub name: *const ::std::os::raw::c_char,
     pub alloc: ::std::option::Option<
@@ -34832,6 +35058,7 @@ pub struct gsl_multilarge_nlinear_trs {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_scale {
     pub name: *const ::std::os::raw::c_char,
     pub init: ::std::option::Option<
@@ -34849,6 +35076,7 @@ pub struct gsl_multilarge_nlinear_scale {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_solver {
     pub name: *const ::std::os::raw::c_char,
     pub alloc: ::std::option::Option<
@@ -34893,6 +35121,7 @@ pub struct gsl_multilarge_nlinear_solver {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_parameters {
     pub trs: *const gsl_multilarge_nlinear_trs,
     pub scale: *const gsl_multilarge_nlinear_scale,
@@ -34908,6 +35137,7 @@ pub struct gsl_multilarge_nlinear_parameters {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_type {
     pub name: *const ::std::os::raw::c_char,
     pub alloc: ::std::option::Option<
@@ -34960,6 +35190,7 @@ pub struct gsl_multilarge_nlinear_type {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_trust_state {
     pub x: *const gsl_vector,
     pub f: *const gsl_vector,
@@ -34975,6 +35206,7 @@ pub struct gsl_multilarge_nlinear_trust_state {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+#[cfg(feature = "v2_1")]
 pub struct gsl_multilarge_nlinear_workspace {
     pub type_: *const gsl_multilarge_nlinear_type,
     pub fdf: *mut gsl_multilarge_nlinear_fdf,
@@ -34992,6 +35224,7 @@ pub struct gsl_multilarge_nlinear_workspace {
     pub state: *mut ::std::os::raw::c_void,
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_alloc(
         T: *const gsl_multilarge_nlinear_type,
         params: *const gsl_multilarge_nlinear_parameters,
@@ -35000,12 +35233,15 @@ extern "C" {
     ) -> *mut gsl_multilarge_nlinear_workspace;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_free(w: *mut gsl_multilarge_nlinear_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_default_parameters() -> gsl_multilarge_nlinear_parameters;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_init(
         x: *const gsl_vector,
         fdf: *mut gsl_multilarge_nlinear_fdf,
@@ -35013,6 +35249,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_winit(
         x: *const gsl_vector,
         wts: *const gsl_vector,
@@ -35021,26 +35258,31 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_iterate(
         w: *mut gsl_multilarge_nlinear_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_avratio(w: *const gsl_multilarge_nlinear_workspace) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_rcond(
         rcond: *mut f64,
         w: *const gsl_multilarge_nlinear_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_covar(
         covar: *mut gsl_matrix,
         w: *mut gsl_multilarge_nlinear_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_driver(
         maxiter: size_t,
         xtol: f64,
@@ -35059,34 +35301,41 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_name(
         w: *const gsl_multilarge_nlinear_workspace,
     ) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_position(
         w: *const gsl_multilarge_nlinear_workspace,
     ) -> *mut gsl_vector;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_residual(
         w: *const gsl_multilarge_nlinear_workspace,
     ) -> *mut gsl_vector;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_step(
         w: *const gsl_multilarge_nlinear_workspace,
     ) -> *mut gsl_vector;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_niter(w: *const gsl_multilarge_nlinear_workspace) -> size_t;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_trs_name(
         w: *const gsl_multilarge_nlinear_workspace,
     ) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_eval_f(
         fdf: *mut gsl_multilarge_nlinear_fdf,
         x: *const gsl_vector,
@@ -35095,6 +35344,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_eval_df(
         TransJ: CBLAS_TRANSPOSE_t,
         x: *const gsl_vector,
@@ -35110,6 +35360,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_eval_fvv(
         h: f64,
         x: *const gsl_vector,
@@ -35122,6 +35373,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_test(
         xtol: f64,
         gtol: f64,
@@ -35131,6 +35383,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_df(
         h: f64,
         fdtype: gsl_multilarge_nlinear_fdtype,
@@ -35143,6 +35396,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_fdfvv(
         h: f64,
         x: *const gsl_vector,
@@ -35211,6 +35465,7 @@ extern "C" {
     pub fn gsl_rstat_quantile_free(w: *mut gsl_rstat_quantile_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_rstat_quantile_reset(w: *mut gsl_rstat_quantile_workspace) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -35262,6 +35517,7 @@ extern "C" {
     pub fn gsl_rstat_sd(w: *const gsl_rstat_workspace) -> f64;
 }
 extern "C" {
+    #[cfg(feature = "v2_2")]
     pub fn gsl_rstat_rms(w: *const gsl_rstat_workspace) -> f64;
 }
 extern "C" {
