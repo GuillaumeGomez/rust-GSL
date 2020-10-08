@@ -178,12 +178,13 @@ fn first_pass(mut content: Vec<&str>) -> Vec<String> {
         } else if content[pos].starts_with("pub type FILE = ") {
             content[pos] = "pub type FILE = libc::FILE;";
         } else if content[pos].starts_with("pub struct ") {
-            pos += 1;
-            while pos < content.len() && !content[pos].starts_with("}") {
-                content.remove(pos);
-            }
-            if pos < content.len() {
-                content.remove(pos);
+            if !content[pos].contains(" gsl_function_struct ") {
+                while pos + 1 < content.len() && !content[pos + 1].starts_with("}") {
+                    content.remove(pos + 1);
+                }
+                if pos + 1 < content.len() {
+                    content.remove(pos + 1);
+                }
             }
         } else if content[pos].starts_with("pub union ") {
             while pos > 0 && content[pos - 1].starts_with("#[") {
@@ -291,7 +292,7 @@ fn add_features(content: &mut Vec<String>) {
 
 fn clean_structs(content: &mut Vec<String>) {
     for line in content.iter_mut() {
-        if !line.starts_with("pub struct ") {
+        if !line.starts_with("pub struct ") || line.contains(" gsl_function_struct ") {
             continue;
         }
         // remove " {" at the end of the struct.

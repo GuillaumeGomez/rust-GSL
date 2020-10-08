@@ -798,7 +798,12 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_function_struct;
+pub struct gsl_function_struct {
+    pub function: ::std::option::Option<
+        unsafe extern "C" fn(x: f64, params: *mut ::std::os::raw::c_void) -> f64,
+    >,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_function = gsl_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
