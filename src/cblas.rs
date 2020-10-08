@@ -6,7 +6,7 @@
 pub struct Index(pub(crate) sys::CBLAS_INDEX_t);
 
 impl Index {
-    pub fn new(value: u64) -> Index {
+    pub fn new(value: usize) -> Index {
         Index(value)
     }
 }

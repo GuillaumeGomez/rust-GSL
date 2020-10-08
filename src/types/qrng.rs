@@ -73,7 +73,7 @@ impl QRng {
     }
 
     /// These functions return a pointer to the state of generator r and its size.
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { sys::gsl_qrng_size(self.q) }
     }
 

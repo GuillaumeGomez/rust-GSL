@@ -22,7 +22,7 @@ impl PolyComplex {
     ///
     /// The function returns a pointer to the newly allocated gsl_poly_complex_workspace if no errors were detected, and a null pointer in the case
     /// of error.
-    pub fn new(n: u64) -> Option<PolyComplex> {
+    pub fn new(n: usize) -> Option<PolyComplex> {
         let tmp = unsafe { sys::gsl_poly_complex_workspace_alloc(n) };
 
         if tmp.is_null() {

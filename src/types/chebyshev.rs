@@ -38,7 +38,7 @@ pub struct ChebSeries {
 }
 
 impl ChebSeries {
-    pub fn new(n: u64) -> Option<ChebSeries> {
+    pub fn new(n: usize) -> Option<ChebSeries> {
         let tmp = unsafe { sys::gsl_cheb_alloc(n) };
 
         if tmp.is_null() {
@@ -58,13 +58,13 @@ impl ChebSeries {
     }
 
     /// This function returns the order of Chebyshev series cs.
-    pub fn order(&self) -> u64 {
+    pub fn order(&self) -> usize {
         unsafe { sys::gsl_cheb_order(self.c) }
     }
 
     /// This function returns the size of the Chebyshev coefficient array c[] for the Chebyshev
     /// series cs.
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { sys::gsl_cheb_size(self.c) }
     }
 
@@ -88,7 +88,7 @@ impl ChebSeries {
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given
     /// order order.
-    pub fn eval_n(&self, order: u64, x: f64) -> f64 {
+    pub fn eval_n(&self, order: usize, x: f64) -> f64 {
         unsafe { sys::gsl_cheb_eval_n(self.c, order, x) }
     }
 
@@ -97,7 +97,7 @@ impl ChebSeries {
     /// is made from the first neglected term in the series.
     ///
     /// Returns `(result, abs_err)`.
-    pub fn eval_n_err(&self, order: u64, x: f64) -> (enums::Value, f64, f64) {
+    pub fn eval_n_err(&self, order: usize, x: f64) -> (enums::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
 

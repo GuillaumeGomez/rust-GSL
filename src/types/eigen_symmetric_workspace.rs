@@ -106,7 +106,7 @@ pub struct EigenSymmetricWorkspace {
 impl EigenSymmetricWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real symmetric
     /// matrices. The size of the workspace is O(2n).
-    pub fn new(n: u64) -> Option<EigenSymmetricWorkspace> {
+    pub fn new(n: usize) -> Option<EigenSymmetricWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_symm_alloc(n) };
 
         if tmp.is_null() {
@@ -163,7 +163,7 @@ pub struct EigenSymmetricVWorkspace {
 impl EigenSymmetricVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real symmetric matrices. The size of the workspace is O(4n).
-    pub fn new(n: u64) -> Option<EigenSymmetricVWorkspace> {
+    pub fn new(n: usize) -> Option<EigenSymmetricVWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_symmv_alloc(n) };
 
         if tmp.is_null() {
@@ -229,7 +229,7 @@ pub struct EigenHermitianWorkspace {
 impl EigenHermitianWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
     /// matrices. The size of the workspace is O(3n).
-    pub fn new(n: u64) -> Option<EigenHermitianWorkspace> {
+    pub fn new(n: usize) -> Option<EigenHermitianWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_herm_alloc(n) };
 
         if tmp.is_null() {
@@ -287,7 +287,7 @@ pub struct EigenHermitianVWorkspace {
 impl EigenHermitianVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// complex hermitian matrices. The size of the workspace is O(5n).
-    pub fn new(n: u64) -> Option<EigenHermitianVWorkspace> {
+    pub fn new(n: usize) -> Option<EigenHermitianVWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_hermv_alloc(n) };
 
         if tmp.is_null() {
@@ -355,7 +355,7 @@ pub struct EigenNonSymmWorkspace {
 impl EigenNonSymmWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
     /// matrices. The size of the workspace is O(3n).
-    pub fn new(n: u64) -> Option<EigenNonSymmWorkspace> {
+    pub fn new(n: usize) -> Option<EigenNonSymmWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_nonsymm_alloc(n) };
 
         if tmp.is_null() {
@@ -430,7 +430,7 @@ impl EigenNonSymmWorkspace {
         })
     }
 
-    pub fn n_evals(&self) -> u64 {
+    pub fn n_evals(&self) -> usize {
         unsafe { (*self.w).n_evals }
     }
 }
@@ -467,7 +467,7 @@ pub struct EigenNonSymmVWorkspace {
 impl EigenNonSymmVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real nonsymmetric matrices. The size of the workspace is O(5n).
-    pub fn new(n: u64) -> Option<EigenNonSymmVWorkspace> {
+    pub fn new(n: usize) -> Option<EigenNonSymmVWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_nonsymmv_alloc(n) };
 
         if tmp.is_null() {
@@ -561,7 +561,7 @@ pub struct EigenGenSymmWorkspace {
 impl EigenGenSymmWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// symmetric-definite eigensystems. The size of the workspace is O(2n).
-    pub fn new(n: u64) -> Option<EigenGenSymmWorkspace> {
+    pub fn new(n: usize) -> Option<EigenGenSymmWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_gensymm_alloc(n) };
 
         if tmp.is_null() {
@@ -623,7 +623,7 @@ pub struct EigenGenSymmVWorkspace {
 impl EigenGenSymmVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real generalized symmetric-definite eigensystems. The size of the workspace is O(4n).
-    pub fn new(n: u64) -> Option<EigenGenSymmVWorkspace> {
+    pub fn new(n: usize) -> Option<EigenGenSymmVWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_gensymmv_alloc(n) };
 
         if tmp.is_null() {
@@ -688,7 +688,7 @@ pub struct EigenGenHermWorkspace {
 impl EigenGenHermWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
     /// hermitian-definite eigensystems. The size of the workspace is O(3n).
-    pub fn new(n: u64) -> Option<EigenGenHermWorkspace> {
+    pub fn new(n: usize) -> Option<EigenGenHermWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_genherm_alloc(n) };
 
         if tmp.is_null() {
@@ -750,7 +750,7 @@ pub struct EigenGenHermVWorkspace {
 impl EigenGenHermVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
     /// hermitian-definite eigensystems. The size of the workspace is O(3n).
-    pub fn new(n: u64) -> Option<EigenGenHermVWorkspace> {
+    pub fn new(n: usize) -> Option<EigenGenHermVWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_genhermv_alloc(n) };
 
         if tmp.is_null() {
@@ -814,7 +814,7 @@ pub struct EigenGenWorkspace {
 impl EigenGenWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// nonsymmetric eigensystems. The size of the workspace is O(n).
-    pub fn new(n: u64) -> Option<EigenGenWorkspace> {
+    pub fn new(n: usize) -> Option<EigenGenWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_gen_alloc(n) };
 
         if tmp.is_null() {
@@ -928,7 +928,7 @@ pub struct EigenGenVWorkspace {
 impl EigenGenVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// nonsymmetric eigensystems. The size of the workspace is O(n).
-    pub fn new(n: u64) -> Option<EigenGenVWorkspace> {
+    pub fn new(n: usize) -> Option<EigenGenVWorkspace> {
         let tmp = unsafe { sys::gsl_eigen_genv_alloc(n) };
 
         if tmp.is_null() {

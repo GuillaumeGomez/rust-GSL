@@ -32,8 +32,8 @@ pub mod one_dimension {
     pub fn transform(
         w: &::Wavelet,
         data: &mut [f64],
-        stride: u64,
-        n: u64,
+        stride: usize,
+        n: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
@@ -52,8 +52,8 @@ pub mod one_dimension {
     pub fn transform_forward(
         w: &::Wavelet,
         data: &mut [f64],
-        stride: u64,
-        n: u64,
+        stride: usize,
+        n: usize,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
         enums::Value::from(unsafe {
@@ -70,8 +70,8 @@ pub mod one_dimension {
     pub fn transform_inverse(
         w: &::Wavelet,
         data: &mut [f64],
-        stride: u64,
-        n: u64,
+        stride: usize,
+        n: usize,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
         enums::Value::from(unsafe {
@@ -113,9 +113,9 @@ pub mod two_dimension {
     pub fn transform(
         w: &::Wavelet,
         data: &mut [f64],
-        tda: u64,
-        size1: u64,
-        size2: u64,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
@@ -143,9 +143,9 @@ pub mod two_dimension {
     pub fn transform_forward(
         w: &::Wavelet,
         data: &mut [f64],
-        tda: u64,
-        size1: u64,
-        size2: u64,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
         enums::Value::from(unsafe {
@@ -171,9 +171,9 @@ pub mod two_dimension {
     pub fn transform_inverse(
         w: &::Wavelet,
         data: &mut [f64],
-        tda: u64,
-        size1: u64,
-        size2: u64,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
         enums::Value::from(unsafe {
@@ -239,9 +239,9 @@ pub mod two_dimension {
     pub fn nstransform(
         w: &::Wavelet,
         data: &mut [f64],
-        tda: u64,
-        size1: u64,
-        size2: u64,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
@@ -262,9 +262,9 @@ pub mod two_dimension {
     pub fn nstransform_forward(
         w: &::Wavelet,
         data: &mut [f64],
-        tda: u64,
-        size1: u64,
-        size2: u64,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
         enums::Value::from(unsafe {
@@ -283,9 +283,9 @@ pub mod two_dimension {
     pub fn nstransform_inverse(
         w: &::Wavelet,
         data: &mut [f64],
-        tda: u64,
-        size1: u64,
-        size2: u64,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: &mut ::WaveletWorkspace,
     ) -> enums::Value {
         enums::Value::from(unsafe {

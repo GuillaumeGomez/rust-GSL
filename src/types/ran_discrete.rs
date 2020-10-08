@@ -41,13 +41,13 @@ impl RanDiscrete {
     }
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
-    pub fn discrete(&self, r: &mut Rng) -> u64 {
+    pub fn discrete(&self, r: &mut Rng) -> usize {
         unsafe { sys::gsl_ran_discrete(ffi::FFI::unwrap_unique(r), self.ran) }
     }
 
     /// Returns the probability P[k] of observing the variable k. Since P[k] is not stored as part of the lookup table, it must be recomputed; this computation takes O(K),
     /// so if K is large and you care about the original array P[k] used to create the lookup table, then you should just keep this original array P[k] around.
-    pub fn discrete_pdf(&self, k: u64) -> f64 {
+    pub fn discrete_pdf(&self, k: usize) -> f64 {
         unsafe { sys::gsl_ran_discrete_pdf(k, self.ran) }
     }
 }

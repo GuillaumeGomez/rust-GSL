@@ -11,7 +11,7 @@ use types::VectorF64;
 
 pub struct Permutation {
     p: *mut sys::gsl_permutation,
-    d: CSlice<u64>,
+    d: CSlice<usize>,
 }
 
 ///##Permutations in cyclic form
@@ -43,7 +43,7 @@ impl Permutation {
     /// This function allocates memory for a new permutation of size n. The permutation is not initialized and its elements are undefined.
     /// Use the function gsl_permutation_calloc if you want to create a permutation which is initialized to the identity. A null pointer is
     /// returned if insufficient memory is available to create the permutation.
-    pub fn new(n: u64) -> Option<Permutation> {
+    pub fn new(n: usize) -> Option<Permutation> {
         let tmp = unsafe { sys::gsl_permutation_alloc(n) };
 
         if tmp.is_null() {
@@ -60,7 +60,7 @@ impl Permutation {
 
     /// This function allocates memory for a new permutation of size n and initializes it to the identity. A null pointer is returned if
     /// insufficient memory is available to create the permutation.
-    pub fn new_with_init(n: u64) -> Option<Permutation> {
+    pub fn new_with_init(n: usize) -> Option<Permutation> {
         let tmp = unsafe { sys::gsl_permutation_calloc(n) };
 
         if tmp.is_null() {
@@ -87,22 +87,22 @@ impl Permutation {
 
     /// This function returns the value of the i-th element of the permutation p. If i lies outside the allowed range of 0 to n-1 then
     /// the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: u64) -> u64 {
+    pub fn get(&self, i: usize) -> usize {
         unsafe { sys::gsl_permutation_get(self.p, i) }
     }
 
     /// This function exchanges the i-th and j-th elements of the permutation p.
-    pub fn swap(&mut self, i: u64, j: u64) -> enums::Value {
+    pub fn swap(&mut self, i: usize, j: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_permutation_swap(self.p, i, j) })
     }
 
     /// This function returns the size of the permutation p.
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { sys::gsl_permutation_size(self.p) }
     }
 
     /// This function returns a pointer to the array of elements in the permutation p.
-    pub fn data<'r>(&'r mut self) -> &'r mut [u64] {
+    pub fn data<'r>(&'r mut self) -> &'r mut [usize] {
         self.d.as_mut()
     }
 
@@ -138,14 +138,14 @@ impl Permutation {
     }
 
     /// This function applies the permutation to the array data of size n with stride stride.
-    pub fn permute(&mut self, data: &mut [f64], stride: u64) -> enums::Value {
+    pub fn permute(&mut self, data: &mut [f64], stride: usize) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_permute((*self.p).data, data.as_mut_ptr(), stride, data.len() as _)
         })
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
-    pub fn permute_inverse(&mut self, data: &mut [f64], stride: u64) -> enums::Value {
+    pub fn permute_inverse(&mut self, data: &mut [f64], stride: usize) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_permute_inverse((*self.p).data, data.as_mut_ptr(), stride, data.len() as _)
         })
@@ -185,17 +185,17 @@ impl Permutation {
 
     /// This function counts the number of inversions in the self permutation. An inversion is any pair of elements that are not in order. For example, the
     /// permutation 2031 has three inversions, corresponding to the pairs (2,0) (2,1) and (3,1). The identity permutation has no inversions.
-    pub fn inversions(&self) -> u64 {
+    pub fn inversions(&self) -> usize {
         unsafe { sys::gsl_permutation_inversions(self.p) }
     }
 
     /// This function counts the number of cycles in the self permutation, given in linear form.
-    pub fn linear_cycles(&self) -> u64 {
+    pub fn linear_cycles(&self) -> usize {
         unsafe { sys::gsl_permutation_linear_cycles(self.p) }
     }
 
     /// This function counts the number of cycles in the self permutation, given in canonical form.
-    pub fn canonical_cycles(&self) -> u64 {
+    pub fn canonical_cycles(&self) -> usize {
         unsafe { sys::gsl_permutation_canonical_cycles(self.p) }
     }
 }

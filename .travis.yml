@@ -24,9 +24,13 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gsl; fi
 script:
   - rustc --version
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo build --features v2; else cargo build; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo build --features v2; else cargo build --features v2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo doc --features v2; else cargo doc; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo test --features v2; else cargo test; fi
+  - cargo check
+  - cargo check --features v2_1
+  - cargo check --features v2_2
+  - cargo check --features v2_3
+  - cargo check --features v2_4
+  - cargo check --features v2_5
+  - cargo check --features v2_6
+  - cargo check --features v2_7
   - cd examples
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cargo build --features v2; else cargo build; fi
+  - cargo build

@@ -65,7 +65,7 @@ pub struct IntegrationFixedWorkspace {
 impl IntegrationFixedWorkspace {
     pub fn new(
         type_: &IntegrationFixedType,
-        n: u64,
+        n: usize,
         a: f64,
         b: f64,
         alpha: f64,
@@ -80,7 +80,7 @@ impl IntegrationFixedWorkspace {
         }
     }
 
-    pub fn n(&self) -> u64 {
+    pub fn n(&self) -> usize {
         unsafe { sys::gsl_integration_fixed_n(FFI::unwrap_shared(self)) }
     }
 
@@ -151,7 +151,7 @@ impl IntegrationWorkspace {
     /// This function allocates a workspace sufficient to hold n double precision intervals, their
     /// integration results and error estimates. One workspace may be used multiple times as all
     /// necessary reinitialization is performed automatically by the integration routines.
-    pub fn new(n: u64) -> Option<IntegrationWorkspace> {
+    pub fn new(n: usize) -> Option<IntegrationWorkspace> {
         let tmp = unsafe { sys::gsl_integration_workspace_alloc(n) };
 
         if tmp.is_null() {
@@ -161,19 +161,19 @@ impl IntegrationWorkspace {
         }
     }
 
-    pub fn limit(&self) -> u64 {
+    pub fn limit(&self) -> usize {
         unsafe { (*self.w).limit }
     }
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { (*self.w).size }
     }
-    pub fn nrmax(&self) -> u64 {
+    pub fn nrmax(&self) -> usize {
         unsafe { (*self.w).nrmax }
     }
-    pub fn i(&self) -> u64 {
+    pub fn i(&self) -> usize {
         unsafe { (*self.w).i }
     }
-    pub fn maximum_level(&self) -> u64 {
+    pub fn maximum_level(&self) -> usize {
         unsafe { (*self.w).maximum_level }
     }
 
@@ -212,7 +212,7 @@ impl IntegrationWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
         key: enums::GaussKonrodRule,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
@@ -254,7 +254,7 @@ impl IntegrationWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -301,7 +301,7 @@ impl IntegrationWorkspace {
         pts: &mut [f64],
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -344,7 +344,7 @@ impl IntegrationWorkspace {
         f: F,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -384,7 +384,7 @@ impl IntegrationWorkspace {
         a: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -425,7 +425,7 @@ impl IntegrationWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -469,7 +469,7 @@ impl IntegrationWorkspace {
         c: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -585,7 +585,7 @@ impl IntegrationQawsTable {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
         workspace: &mut IntegrationWorkspace,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
@@ -670,7 +670,7 @@ impl IntegrationQawoTable {
         omega: f64,
         l: f64,
         sine: ::IntegrationQawo,
-        n: u64,
+        n: usize,
     ) -> Option<IntegrationQawoTable> {
         let tmp = unsafe { sys::gsl_integration_qawo_table_alloc(omega, l, sine.into(), n) };
 
@@ -714,7 +714,7 @@ impl IntegrationQawoTable {
         a: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: u64,
+        limit: usize,
         workspace: &mut IntegrationWorkspace,
     ) -> (::Value, f64, f64) {
         let mut function = wrap_callback!(f, F);
@@ -782,7 +782,7 @@ impl CquadWorkspace {
     /// n is not the maximum number of intervals that will be evaluated. If the workspace is full,
     /// intervals with smaller error estimates will be discarded. A minimum of 3 intervals
     /// is required and for most functions, a workspace of size 100 is sufficient.
-    pub fn new(n: u64) -> Option<CquadWorkspace> {
+    pub fn new(n: usize) -> Option<CquadWorkspace> {
         let tmp = unsafe { sys::gsl_integration_cquad_workspace_alloc(n) };
 
         if tmp.is_null() {
@@ -818,7 +818,7 @@ impl CquadWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-    ) -> (::Value, f64, f64, u64) {
+    ) -> (::Value, f64, f64, usize) {
         let mut function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -880,7 +880,7 @@ impl GLFixedTable {
     /// fixed order integration scheme. If possible, high precision precomputed coefficients are
     /// used. If precomputed weights are not available, lower precision coefficients are computed
     /// on the fly.
-    pub fn new(n: u64) -> Option<GLFixedTable> {
+    pub fn new(n: usize) -> Option<GLFixedTable> {
         let tmp = unsafe { sys::gsl_integration_glfixed_table_alloc(n) };
 
         if tmp.is_null() {
@@ -893,7 +893,7 @@ impl GLFixedTable {
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight
     /// wi on the interval [a,b]. The points and weights are ordered by increasing point value. A
     /// function f may be integrated on [a,b] by summing wi * f(xi) over i.
-    pub fn point(&self, a: f64, b: f64, i: u64, xi: &mut f64, wi: &mut f64) -> ::Value {
+    pub fn point(&self, a: f64, b: f64, i: usize, xi: &mut f64, wi: &mut f64) -> ::Value {
         ::Value::from(unsafe { sys::gsl_integration_glfixed_point(a, b, i, xi, wi, self.w) })
     }
 

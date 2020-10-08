@@ -242,7 +242,7 @@ impl ffi::FFI<sys::gsl_multifit_fsolver_type> for MultiFitFSolverType {
 // pub struct MultiFitFunction<F: Fn(x: &::VectorF64, f: &mut ::VectorF64)> {
 //     pub f: Box<F>,
 //     /// Number of functions.
-//     pub n: u64,
+//     pub n: usize,
 //     /// Number of independent variables.
 //     pub p,
 // }
@@ -260,7 +260,7 @@ impl MultiFitFSolver {
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
-    pub fn new(t: &MultiFitFSolverType, n: u64, p: u64) -> Option<MultiFitFSolver> {
+    pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
         let tmp = unsafe { sys::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap_shared(t), n, p) };
 
         if tmp.is_null() {
@@ -332,7 +332,7 @@ impl MultiFitFdfSolver {
     /// This function returns a pointer to a newly allocated instance of a solver of type T for n
     /// observations and p parameters. The number of observations n must be greater than or equal
     /// to parameters p.
-    pub fn new(_type: &MultiFitFdfSolverType, n: u64, p: u64) -> Option<MultiFitFdfSolver> {
+    pub fn new(_type: &MultiFitFdfSolverType, n: usize, p: usize) -> Option<MultiFitFdfSolver> {
         let s = unsafe {
             sys::gsl_multifit_fdfsolver_alloc(
                 _type.intern as *const sys::gsl_multifit_fdfsolver_type,
@@ -465,13 +465,13 @@ pub struct MultiFitFunctionFdf {
     pub f: Option<Box<dyn Fn(::VectorF64, ::VectorF64) -> ::Value>>,
     pub df: Option<Box<dyn Fn(::VectorF64, ::MatrixF64) -> ::Value>>,
     pub fdf: Option<Box<dyn Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> ::Value>>,
-    pub n: u64,
-    pub p: u64,
+    pub n: usize,
+    pub p: usize,
     intern: sys::gsl_multifit_function_fdf,
 }
 
 impl MultiFitFunctionFdf {
-    pub fn new(n: u64, p: u64, nevalf: u64, nevaldf: u64) -> MultiFitFunctionFdf {
+    pub fn new(n: usize, p: usize, nevalf: usize, nevaldf: usize) -> MultiFitFunctionFdf {
         MultiFitFunctionFdf {
             f: None,
             df: None,

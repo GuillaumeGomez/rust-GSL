@@ -59,7 +59,7 @@ pub struct LevinUWorkspace {
 
 impl LevinUWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms. The size of the workspace is O(2n^2 + 3n).
-    pub fn new(n: u64) -> Option<LevinUWorkspace> {
+    pub fn new(n: usize) -> Option<LevinUWorkspace> {
         let tmp = unsafe { sys::gsl_sum_levin_u_alloc(n) };
 
         if tmp.is_null() {
@@ -84,11 +84,11 @@ impl LevinUWorkspace {
         unsafe { (*self.w).sum_plain }
     }
 
-    pub fn terms_used(&self) -> u64 {
+    pub fn terms_used(&self) -> usize {
         unsafe { (*self.w).terms_used }
     }
 
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { (*self.w).size }
     }
 }
@@ -127,7 +127,7 @@ pub struct LevinUTruncWorkspace {
 
 impl LevinUTruncWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms, without error estimation. The size of the workspace is O(3n).
-    pub fn new(n: u64) -> Option<LevinUTruncWorkspace> {
+    pub fn new(n: usize) -> Option<LevinUTruncWorkspace> {
         let tmp = unsafe { sys::gsl_sum_levin_utrunc_alloc(n) };
 
         if tmp.is_null() {
@@ -164,11 +164,11 @@ impl LevinUTruncWorkspace {
         unsafe { (*self.w).sum_plain }
     }
 
-    pub fn terms_used(&self) -> u64 {
+    pub fn terms_used(&self) -> usize {
         unsafe { (*self.w).terms_used }
     }
 
-    pub fn size(&self) -> u64 {
+    pub fn size(&self) -> usize {
         unsafe { (*self.w).size }
     }
 }

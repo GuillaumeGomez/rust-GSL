@@ -78,7 +78,7 @@ impl MatrixView {
     /// is still in use.
     ///
     /// The function gsl_matrix_const_submatrix is equivalent to gsl_matrix_submatrix but can be used for matrices which are declared const.
-    pub fn from_matrix(m: &mut MatrixF64, k1: u64, k2: u64, n1: u64, n2: u64) -> MatrixView {
+    pub fn from_matrix(m: &mut MatrixF64, k1: usize, k2: usize, n1: usize, n2: usize) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_submatrix(m.mat, k1, k2, n1, n2).matrix,
@@ -98,7 +98,7 @@ impl MatrixView {
     /// the view is still in use.
     ///
     /// The function gsl_matrix_const_view_array is equivalent to gsl_matrix_view_array but can be used for matrices which are declared const.
-    pub fn from_array(base: &mut [f64], n1: u64, n2: u64) -> MatrixView {
+    pub fn from_array(base: &mut [f64], n1: usize, n2: usize) -> MatrixView {
         assert!(
             n1 * n2 <= base.len() as _,
             "n1 * n2 cannot be longer than base"
@@ -124,7 +124,7 @@ impl MatrixView {
     ///
     /// The function gsl_matrix_const_view_array_with_tda is equivalent to gsl_matrix_view_array_with_tda but can be used for matrices which
     /// are declared const.
-    pub fn from_array_with_tda(base: &mut [f64], n1: u64, n2: u64, tda: u64) -> MatrixView {
+    pub fn from_array_with_tda(base: &mut [f64], n1: usize, n2: usize, tda: usize) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_view_array_with_tda(base.as_mut_ptr(), n1, n2, tda).matrix,
@@ -144,7 +144,7 @@ impl MatrixView {
     /// is still in use.
     ///
     /// The function gsl_matrix_const_view_vector is equivalent to gsl_matrix_view_vector but can be used for matrices which are declared const.
-    pub fn from_vector(v: &mut VectorF64, n1: u64, n2: u64) -> MatrixView {
+    pub fn from_vector(v: &mut VectorF64, n1: usize, n2: usize) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_view_vector(ffi::FFI::unwrap_unique(v), n1, n2).matrix,
@@ -166,7 +166,7 @@ impl MatrixView {
     ///
     /// The function gsl_matrix_const_view_vector_with_tda is equivalent to gsl_matrix_view_vector_with_tda but can be used for matrices which
     /// are declared const.
-    pub fn from_vector_with_tda(v: &mut VectorF64, n1: u64, n2: u64, tda: u64) -> MatrixView {
+    pub fn from_vector_with_tda(v: &mut VectorF64, n1: usize, n2: usize, tda: usize) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_view_vector_with_tda(ffi::FFI::unwrap_unique(v), n1, n2, tda)
@@ -198,7 +198,7 @@ impl MatrixF64 {
     /// XX XX XX
     ///
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixF64> {
+    pub fn new(n1: usize, n2: usize) -> Option<MatrixF64> {
         let tmp = unsafe { sys::gsl_matrix_calloc(n1, n2) };
 
         if tmp.is_null() {
@@ -213,13 +213,13 @@ impl MatrixF64 {
 
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, y: u64, x: u64) -> f64 {
+    pub fn get(&self, y: usize, x: usize) -> f64 {
         unsafe { sys::gsl_matrix_get(self.mat, y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&mut self, y: u64, x: u64, value: f64) -> &MatrixF64 {
+    pub fn set(&mut self, y: usize, x: usize, value: f64) -> &MatrixF64 {
         unsafe { sys::gsl_matrix_set(self.mat, y, x, value) };
         self
     }
@@ -259,7 +259,7 @@ impl MatrixF64 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(VectorF64, enums::Value)> {
+    pub fn get_row(&self, y: usize) -> Option<(VectorF64, enums::Value)> {
         let tmp = unsafe { sys::gsl_vector_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -272,7 +272,7 @@ impl MatrixF64 {
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(VectorF64, enums::Value)> {
+    pub fn get_col(&self, x: usize) -> Option<(VectorF64, enums::Value)> {
         let tmp = unsafe { sys::gsl_vector_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -286,7 +286,7 @@ impl MatrixF64 {
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&mut self, y: u64, v: &VectorF64) -> enums::Value {
+    pub fn set_row(&mut self, y: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap_shared(v))
         })
@@ -294,25 +294,25 @@ impl MatrixF64 {
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&mut self, x: u64, v: &VectorF64) -> enums::Value {
+    pub fn set_col(&mut self, x: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap_shared(v))
         })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&mut self, y1: u64, y2: u64) -> enums::Value {
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_matrix_swap_rows(self.mat, y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&mut self, x1: u64, x2: u64) -> enums::Value {
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_matrix_swap_columns(self.mat, x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&mut self, i: u64, j: u64) -> enums::Value {
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_matrix_swap_rowcol(self.mat, i, j) })
     }
 
@@ -396,7 +396,7 @@ impl MatrixF64 {
 
     /// This function returns the indices of the maximum value in the self matrix, storing them in imax and jmax.
     /// When there are several equal maximum elements then the first element found is returned, searching in row-major order.
-    pub fn max_index(&self) -> (u64, u64) {
+    pub fn max_index(&self) -> (usize, usize) {
         let mut imax = 0;
         let mut jmax = 0;
 
@@ -406,7 +406,7 @@ impl MatrixF64 {
 
     /// This function returns the indices of the minimum value in the self matrix, storing them in imin and jmin.
     /// When there are several equal minimum elements then the first element found is returned, searching in row-major order.
-    pub fn min_index(&self) -> (u64, u64) {
+    pub fn min_index(&self) -> (usize, usize) {
         let mut imax = 0;
         let mut jmax = 0;
 
@@ -416,7 +416,7 @@ impl MatrixF64 {
 
     /// This function returns the indices of the minimum and maximum values in the self matrix, storing them in (imin,jmin) and (imax,jmax).
     /// When there are several equal minimum or maximum elements then the first elements found are returned, searching in row-major order.
-    pub fn minmax_index(&self) -> (u64, u64, u64, u64) {
+    pub fn minmax_index(&self) -> (usize, usize, usize, usize) {
         let mut imin = 0;
         let mut jmin = 0;
         let mut imax = 0;
@@ -468,7 +468,7 @@ impl MatrixF64 {
         }
     }
 
-    pub fn size1(&self) -> u64 {
+    pub fn size1(&self) -> usize {
         if self.mat.is_null() {
             0
         } else {
@@ -476,7 +476,7 @@ impl MatrixF64 {
         }
     }
 
-    pub fn size2(&self) -> u64 {
+    pub fn size2(&self) -> usize {
         if self.mat.is_null() {
             0
         } else {
@@ -569,7 +569,7 @@ impl MatrixF32 {
     /// XX XX XX
     ///
     /// XX XX XX
-    pub fn new(n1: u64, n2: u64) -> Option<MatrixF32> {
+    pub fn new(n1: usize, n2: usize) -> Option<MatrixF32> {
         let tmp = unsafe { sys::gsl_matrix_float_calloc(n1, n2) };
 
         if tmp.is_null() {
@@ -584,13 +584,13 @@ impl MatrixF32 {
 
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, y: u64, x: u64) -> f32 {
+    pub fn get(&self, y: usize, x: usize) -> f32 {
         unsafe { sys::gsl_matrix_float_get(self.mat, y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
-    pub fn set(&mut self, y: u64, x: u64, value: f32) -> &MatrixF32 {
+    pub fn set(&mut self, y: usize, x: usize, value: f32) -> &MatrixF32 {
         unsafe { sys::gsl_matrix_float_set(self.mat, y, x, value) };
         self
     }
@@ -630,7 +630,7 @@ impl MatrixF32 {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: u64) -> Option<(enums::Value, VectorF32)> {
+    pub fn get_row(&self, y: usize) -> Option<(enums::Value, VectorF32)> {
         let tmp = unsafe { sys::gsl_vector_float_alloc((*self.mat).size2) };
 
         if tmp.is_null() {
@@ -643,7 +643,7 @@ impl MatrixF32 {
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: u64) -> Option<(enums::Value, VectorF32)> {
+    pub fn get_col(&self, x: usize) -> Option<(enums::Value, VectorF32)> {
         let tmp = unsafe { sys::gsl_vector_float_alloc((*self.mat).size1) };
 
         if tmp.is_null() {
@@ -657,7 +657,7 @@ impl MatrixF32 {
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&mut self, y: u64, v: &VectorF32) -> enums::Value {
+    pub fn set_row(&mut self, y: usize, v: &VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap_shared(v))
         })
@@ -665,24 +665,24 @@ impl MatrixF32 {
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&mut self, x: u64, v: &VectorF32) -> enums::Value {
+    pub fn set_col(&mut self, x: usize, v: &VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap_shared(v))
         })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&mut self, y1: u64, y2: u64) -> enums::Value {
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rows(self.mat, y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&mut self, x1: u64, x2: u64) -> enums::Value {
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_matrix_float_swap_columns(self.mat, x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&mut self, i: u64, j: u64) -> enums::Value {
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
         enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rowcol(self.mat, i, j) })
     }
 
@@ -766,7 +766,7 @@ impl MatrixF32 {
 
     /// This function returns the indices of the maximum value in the self matrix, storing them in imax and jmax.
     /// When there are several equal maximum elements then the first element found is returned, searching in row-major order.
-    pub fn max_index(&self) -> (u64, u64) {
+    pub fn max_index(&self) -> (usize, usize) {
         let mut imax = 0;
         let mut jmax = 0;
 
@@ -776,7 +776,7 @@ impl MatrixF32 {
 
     /// This function returns the indices of the minimum value in the self matrix, storing them in imin and jmin.
     /// When there are several equal minimum elements then the first element found is returned, searching in row-major order.
-    pub fn min_index(&self) -> (u64, u64) {
+    pub fn min_index(&self) -> (usize, usize) {
         let mut imax = 0;
         let mut jmax = 0;
 
@@ -786,7 +786,7 @@ impl MatrixF32 {
 
     /// This function returns the indices of the minimum and maximum values in the self matrix, storing them in (imin,jmin) and (imax,jmax).
     /// When there are several equal minimum or maximum elements then the first elements found are returned, searching in row-major order.
-    pub fn minmax_index(&self) -> (u64, u64, u64, u64) {
+    pub fn minmax_index(&self) -> (usize, usize, usize, usize) {
         let mut imin = 0;
         let mut jmin = 0;
         let mut imax = 0;

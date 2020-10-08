@@ -96,7 +96,7 @@ pub struct PlainMonteCarlo {
 
 impl PlainMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
-    pub fn new(dim: u64) -> Option<PlainMonteCarlo> {
+    pub fn new(dim: usize) -> Option<PlainMonteCarlo> {
         let tmp = unsafe { sys::gsl_monte_plain_alloc(dim) };
 
         if tmp.is_null() {
@@ -127,7 +127,7 @@ impl PlainMonteCarlo {
         f: F,
         xl: &[f64],
         xu: &[f64],
-        t_calls: u64,
+        t_calls: usize,
         r: &mut ::Rng,
     ) -> (::Value, f64, f64) {
         assert!(xl.len() == xu.len());
@@ -212,7 +212,7 @@ pub struct MiserMonteCarlo {
 impl MiserMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
     /// the state of the integration.
-    pub fn new(dim: u64) -> Option<MiserMonteCarlo> {
+    pub fn new(dim: usize) -> Option<MiserMonteCarlo> {
         let tmp_pointer = unsafe { sys::gsl_monte_miser_alloc(dim) };
 
         if tmp_pointer.is_null() {
@@ -242,7 +242,7 @@ impl MiserMonteCarlo {
         f: F,
         xl: &[f64],
         xu: &[f64],
-        t_calls: u64,
+        t_calls: usize,
         r: &mut ::Rng,
     ) -> (::Value, f64, f64) {
         assert!(xl.len() == xu.len());
@@ -383,7 +383,7 @@ pub struct VegasMonteCarlo {
 impl VegasMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
     /// The workspace is used to maintain the state of the integration.
-    pub fn new(dim: u64) -> Option<VegasMonteCarlo> {
+    pub fn new(dim: usize) -> Option<VegasMonteCarlo> {
         let tmp_pointer = unsafe { sys::gsl_monte_vegas_alloc(dim) };
 
         if tmp_pointer.is_null() {
@@ -418,7 +418,7 @@ impl VegasMonteCarlo {
         f: F,
         xl: &[f64],
         xu: &[f64],
-        t_calls: u64,
+        t_calls: usize,
         r: &mut ::Rng,
     ) -> (::Value, f64, f64) {
         assert!(xl.len() == xu.len());
@@ -509,7 +509,7 @@ impl<'a> VegasParams<'a> {
     /// verbosity + stream: These parameters set the level of information printed by vegas.
     pub fn new(
         alpha: f64,
-        iterations: u64,
+        iterations: usize,
         stage: i32,
         mode: ::VegasMode,
         verbosity: VegasVerbosity,

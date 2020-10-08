@@ -191,17 +191,17 @@ pub mod associated_polynomials {
     }
 
     /// Returns the size of the array needed for these functions, including GSL workspace.
-    pub fn legendre_array_n(lmax: u64) -> u64 {
+    pub fn legendre_array_n(lmax: usize) -> usize {
         unsafe { sys::gsl_sf_legendre_array_n(lmax as _) }
     }
 
-    pub fn legendre_array_index(l: u64, m: u64) -> u64 {
+    pub fn legendre_array_index(l: usize, m: usize) -> usize {
         unsafe { sys::gsl_sf_legendre_array_index(l as _, m as _) }
     }
 
     pub fn legendre_array(
         norm: enums::SfLegendreNorm,
-        lmax: u64,
+        lmax: usize,
         x: f64,
         result: &mut [f64],
     ) -> enums::Value {
@@ -212,7 +212,7 @@ pub mod associated_polynomials {
 
     pub fn legendre_deriv_array(
         norm: enums::SfLegendreNorm,
-        lmax: u64,
+        lmax: usize,
         x: f64,
         result: &mut [f64],
         deriv: &mut [f64],

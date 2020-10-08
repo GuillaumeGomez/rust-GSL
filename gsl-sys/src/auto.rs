@@ -222,7 +222,10 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_permutation_struct;
+pub struct gsl_permutation_struct {
+    pub size: usize,
+    pub data: *mut usize,
+}
 pub type gsl_permutation = gsl_permutation_struct;
 extern "C" {
     pub fn gsl_permutation_alloc(n: usize) -> *mut gsl_permutation;
@@ -406,7 +409,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_long;
+pub struct gsl_vector_long {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_long,
+    pub block: *mut gsl_block_long,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_long_view;
@@ -807,7 +816,23 @@ pub struct gsl_function_struct {
 pub type gsl_function = gsl_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_function_fdf_struct;
+pub struct gsl_function_fdf_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(x: f64, params: *mut ::std::os::raw::c_void) -> f64,
+    >,
+    pub df: ::std::option::Option<
+        unsafe extern "C" fn(x: f64, params: *mut ::std::os::raw::c_void) -> f64,
+    >,
+    pub fdf: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: f64,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut f64,
+            df: *mut f64,
+        ),
+    >,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_function_fdf = gsl_function_fdf_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -1003,13 +1028,19 @@ pub type gsl_const_complex_packed_long_double_ptr = *const u128;
 #[repr(C)]
 #[repr(align(16))]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_complex_long_double;
+pub struct gsl_complex_long_double {
+    pub dat: [u128; 2usize],
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_complex;
+pub struct gsl_complex {
+    pub dat: [f64; 2usize],
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_complex_float;
+pub struct gsl_complex_float {
+    pub dat: [f32; 2usize],
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_block_long_double_struct;
@@ -1089,7 +1120,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_long_double;
+pub struct gsl_vector_long_double {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut u128,
+    pub block: *mut gsl_block_long_double,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_long_double_view;
@@ -1427,7 +1464,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_complex_long_double;
+pub struct gsl_vector_complex_long_double {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut u128,
+    pub block: *mut gsl_block_complex_long_double,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_complex_long_double_view;
@@ -3496,7 +3539,14 @@ pub use self::CBLAS_TRANSPOSE as CBLAS_TRANSPOSE_t;
 pub use self::CBLAS_UPLO as CBLAS_UPLO_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_complex_long_double;
+pub struct gsl_matrix_complex_long_double {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut u128,
+    pub block: *mut gsl_block_complex_long_double,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_complex_long_double_view;
@@ -4236,7 +4286,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector;
+pub struct gsl_vector {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut f64,
+    pub block: *mut gsl_block,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_view;
@@ -4515,7 +4571,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_complex;
+pub struct gsl_vector_complex {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut f64,
+    pub block: *mut gsl_block_complex,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_complex_view;
@@ -4752,7 +4814,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_complex;
+pub struct gsl_matrix_complex {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut f64,
+    pub block: *mut gsl_block_complex,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_complex_view;
@@ -5452,7 +5521,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_float;
+pub struct gsl_vector_float {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut f32,
+    pub block: *mut gsl_block_float,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_float_view;
@@ -5772,7 +5847,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_complex_float;
+pub struct gsl_vector_complex_float {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut f32,
+    pub block: *mut gsl_block_complex_float,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_complex_float_view;
@@ -6040,7 +6121,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_complex_float;
+pub struct gsl_matrix_complex_float {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut f32,
+    pub block: *mut gsl_block_complex_float,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_complex_float_view;
@@ -6699,7 +6787,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_long_double;
+pub struct gsl_matrix_long_double {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut u128,
+    pub block: *mut gsl_block_long_double,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_long_double_view;
@@ -7392,10 +7487,19 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix;
+pub struct gsl_matrix {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut f64,
+    pub block: *mut gsl_block,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_view;
+pub struct _gsl_matrix_view {
+    pub matrix: gsl_matrix,
+}
 pub type gsl_matrix_view = _gsl_matrix_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -7942,7 +8046,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_float;
+pub struct gsl_matrix_float {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut f32,
+    pub block: *mut gsl_block_float,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_float_view;
@@ -8657,7 +8768,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_ulong;
+pub struct gsl_vector_ulong {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_ulong,
+    pub block: *mut gsl_block_ulong,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_ulong_view;
@@ -8910,7 +9027,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_ulong;
+pub struct gsl_matrix_ulong {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_ulong,
+    pub block: *mut gsl_block_ulong,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_ulong_view;
@@ -9575,7 +9699,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_long;
+pub struct gsl_matrix_long {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_long,
+    pub block: *mut gsl_block_long,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_long_view;
@@ -10301,7 +10432,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_uint;
+pub struct gsl_vector_uint {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_uint,
+    pub block: *mut gsl_block_uint,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_uint_view;
@@ -10552,7 +10689,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_uint;
+pub struct gsl_matrix_uint {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_uint,
+    pub block: *mut gsl_block_uint,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_uint_view;
@@ -11274,7 +11418,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_int;
+pub struct gsl_vector_int {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_int,
+    pub block: *mut gsl_block_int,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_int_view;
@@ -11523,7 +11673,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_int;
+pub struct gsl_matrix_int {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_int,
+    pub block: *mut gsl_block_int,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_int_view;
@@ -12240,7 +12397,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_ushort;
+pub struct gsl_vector_ushort {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_ushort,
+    pub block: *mut gsl_block_ushort,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_ushort_view;
@@ -12501,7 +12664,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_ushort;
+pub struct gsl_matrix_ushort {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_ushort,
+    pub block: *mut gsl_block_ushort,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_ushort_view;
@@ -13250,7 +13420,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_short;
+pub struct gsl_vector_short {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_short,
+    pub block: *mut gsl_block_short,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_short_view;
@@ -13503,7 +13679,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_short;
+pub struct gsl_matrix_short {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_short,
+    pub block: *mut gsl_block_short,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_short_view;
@@ -14245,7 +14428,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_uchar;
+pub struct gsl_vector_uchar {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_uchar,
+    pub block: *mut gsl_block_uchar,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_uchar_view;
@@ -14498,7 +14687,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_uchar;
+pub struct gsl_matrix_uchar {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_uchar,
+    pub block: *mut gsl_block_uchar,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_uchar_view;
@@ -15238,7 +15434,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_char;
+pub struct gsl_vector_char {
+    pub size: usize,
+    pub stride: usize,
+    pub data: *mut ::std::os::raw::c_char,
+    pub block: *mut gsl_block_char,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_vector_char_view;
@@ -15489,7 +15691,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_char;
+pub struct gsl_matrix_char {
+    pub size1: usize,
+    pub size2: usize,
+    pub tda: usize,
+    pub data: *mut ::std::os::raw::c_char,
+    pub block: *mut gsl_block_char,
+    pub owner: ::std::os::raw::c_int,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _gsl_matrix_char_view;
@@ -16286,7 +16495,20 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_rng_type;
+pub struct gsl_rng_type {
+    pub name: *const ::std::os::raw::c_char,
+    pub max: ::std::os::raw::c_ulong,
+    pub min: ::std::os::raw::c_ulong,
+    pub size: usize,
+    pub set: ::std::option::Option<
+        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void, seed: ::std::os::raw::c_ulong),
+    >,
+    pub get: ::std::option::Option<
+        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_ulong,
+    >,
+    pub get_double:
+        ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> f64>,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_rng;
@@ -16544,7 +16766,17 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_function_struct;
+pub struct gsl_monte_function_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(
+            x_array: *mut f64,
+            dim: usize,
+            params: *mut ::std::os::raw::c_void,
+        ) -> f64,
+    >,
+    pub dim: usize,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_monte_function = gsl_monte_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -16598,7 +16830,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_miser_params;
+pub struct gsl_monte_miser_params {
+    pub estimate_frac: f64,
+    pub min_calls: usize,
+    pub min_calls_per_bisection: usize,
+    pub alpha: f64,
+    pub dither: f64,
+}
 extern "C" {
     pub fn gsl_monte_miser_params_get(
         state: *const gsl_monte_miser_state,
@@ -17111,11 +17349,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sf_result_struct;
+pub struct gsl_sf_result_struct {
+    pub val: f64,
+    pub err: f64,
+}
 pub type gsl_sf_result = gsl_sf_result_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sf_result_e10_struct;
+pub struct gsl_sf_result_e10_struct {
+    pub val: f64,
+    pub err: f64,
+    pub e10: ::std::os::raw::c_int,
+}
 pub type gsl_sf_result_e10 = gsl_sf_result_e10_struct;
 extern "C" {
     pub fn gsl_sf_result_smash_e(
@@ -17524,7 +17769,15 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_dht_struct;
+pub struct gsl_dht_struct {
+    pub size: usize,
+    pub nu: f64,
+    pub xmax: f64,
+    pub kmax: f64,
+    pub j: *mut f64,
+    pub Jjj: *mut f64,
+    pub J2: *mut f64,
+}
 pub type gsl_dht = gsl_dht_struct;
 extern "C" {
     pub fn gsl_dht_alloc(size: usize) -> *mut gsl_dht;
@@ -18265,7 +18518,11 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_interp_accel;
+pub struct gsl_interp_accel {
+    pub cache: usize,
+    pub miss_count: usize,
+    pub hit_count: usize,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_interp_type;
@@ -22906,7 +23163,11 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_histogram;
+pub struct gsl_histogram {
+    pub n: usize,
+    pub range: *mut f64,
+    pub bin: *mut f64,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_histogram_pdf;
@@ -23082,13 +23343,33 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ntuple;
+pub struct gsl_ntuple {
+    pub file: *mut FILE,
+    pub ntuple_data: *mut ::std::os::raw::c_void,
+    pub size: usize,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ntuple_select_fn;
+pub struct gsl_ntuple_select_fn {
+    pub function: ::std::option::Option<
+        unsafe extern "C" fn(
+            ntuple_data: *mut ::std::os::raw::c_void,
+            params: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub params: *mut ::std::os::raw::c_void,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ntuple_value_fn;
+pub struct gsl_ntuple_value_fn {
+    pub function: ::std::option::Option<
+        unsafe extern "C" fn(
+            ntuple_data: *mut ::std::os::raw::c_void,
+            params: *mut ::std::os::raw::c_void,
+        ) -> f64,
+    >,
+    pub params: *mut ::std::os::raw::c_void,
+}
 extern "C" {
     pub fn gsl_ntuple_open(
         filename: *mut ::std::os::raw::c_char,
@@ -25839,7 +26120,27 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_system;
+pub struct gsl_odeiv2_system {
+    pub function: ::std::option::Option<
+        unsafe extern "C" fn(
+            t: f64,
+            y: *const f64,
+            dydt: *mut f64,
+            params: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub jacobian: ::std::option::Option<
+        unsafe extern "C" fn(
+            t: f64,
+            y: *const f64,
+            dfdy: *mut f64,
+            dfdt: *mut f64,
+            params: *mut ::std::os::raw::c_void,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub dimension: usize,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_odeiv2_step = gsl_odeiv2_step_struct;
 pub type gsl_odeiv2_control = gsl_odeiv2_control_struct;
 pub type gsl_odeiv2_evolve = gsl_odeiv2_evolve_struct;
@@ -27147,7 +27448,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_vegas_params;
+pub struct gsl_monte_vegas_params {
+    pub alpha: f64,
+    pub iterations: usize,
+    pub stage: ::std::os::raw::c_int,
+    pub mode: ::std::os::raw::c_int,
+    pub verbose: ::std::os::raw::c_int,
+    pub ostream: *mut FILE,
+}
 extern "C" {
     pub fn gsl_monte_vegas_params_get(
         state: *const gsl_monte_vegas_state,
@@ -30147,7 +30455,15 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_nonsymm_workspace;
+pub struct gsl_eigen_nonsymm_workspace {
+    pub size: usize,
+    pub diag: *mut gsl_vector,
+    pub tau: *mut gsl_vector,
+    pub Z: *mut gsl_matrix,
+    pub do_balance: ::std::os::raw::c_int,
+    pub n_evals: usize,
+    pub francis_workspace_p: *mut gsl_eigen_francis_workspace,
+}
 extern "C" {
     pub fn gsl_eigen_nonsymm_alloc(n: usize) -> *mut gsl_eigen_nonsymm_workspace;
 }
@@ -30982,7 +31298,19 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_workspace;
+pub struct gsl_integration_workspace {
+    pub limit: usize,
+    pub size: usize,
+    pub nrmax: usize,
+    pub i: usize,
+    pub maximum_level: usize,
+    pub alist: *mut f64,
+    pub blist: *mut f64,
+    pub rlist: *mut f64,
+    pub elist: *mut f64,
+    pub order: *mut usize,
+    pub level: *mut usize,
+}
 extern "C" {
     pub fn gsl_integration_workspace_alloc(n: usize) -> *mut gsl_integration_workspace;
 }
@@ -31483,7 +31811,17 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sum_levin_u_workspace;
+pub struct gsl_sum_levin_u_workspace {
+    pub size: usize,
+    pub i: usize,
+    pub terms_used: usize,
+    pub sum_plain: f64,
+    pub q_num: *mut f64,
+    pub q_den: *mut f64,
+    pub dq_num: *mut f64,
+    pub dq_den: *mut f64,
+    pub dsum: *mut f64,
+}
 extern "C" {
     pub fn gsl_sum_levin_u_alloc(n: usize) -> *mut gsl_sum_levin_u_workspace;
 }
@@ -31521,7 +31859,15 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sum_levin_utrunc_workspace;
+pub struct gsl_sum_levin_utrunc_workspace {
+    pub size: usize,
+    pub i: usize,
+    pub terms_used: usize,
+    pub sum_plain: f64,
+    pub q_num: *mut f64,
+    pub q_den: *mut f64,
+    pub dsum: *mut f64,
+}
 extern "C" {
     pub fn gsl_sum_levin_utrunc_alloc(n: usize) -> *mut gsl_sum_levin_utrunc_workspace;
 }
@@ -31616,7 +31962,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_complex_wavetable;
+pub struct gsl_fft_complex_wavetable {
+    pub n: usize,
+    pub nf: usize,
+    pub factor: [usize; 64usize],
+    pub twiddle: [*mut gsl_complex; 64usize],
+    pub trig: *mut gsl_complex,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_fft_complex_workspace;
@@ -33438,7 +33790,11 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_combination_struct;
+pub struct gsl_combination_struct {
+    pub n: usize,
+    pub k: usize,
+    pub data: *mut usize,
+}
 pub type gsl_combination = gsl_combination_struct;
 extern "C" {
     pub fn gsl_combination_alloc(n: usize, k: usize) -> *mut gsl_combination;
@@ -33509,7 +33865,11 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiset_struct;
+pub struct gsl_multiset_struct {
+    pub n: usize,
+    pub k: usize,
+    pub data: *mut usize,
+}
 pub type gsl_multiset = gsl_multiset_struct;
 extern "C" {
     pub fn gsl_multiset_alloc(n: usize, k: usize) -> *mut gsl_multiset;
@@ -34009,14 +34369,52 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_function_fdf_struct;
+pub struct gsl_multifit_function_fdf_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut gsl_vector,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub df: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            df: *mut gsl_matrix,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub fdf: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut gsl_vector,
+            df: *mut gsl_matrix,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub n: usize,
+    pub p: usize,
+    pub params: *mut ::std::os::raw::c_void,
+    pub nevalf: usize,
+    pub nevaldf: usize,
+}
 pub type gsl_multifit_function_fdf = gsl_multifit_function_fdf_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_multifit_fdfsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_fdfsolver;
+pub struct gsl_multifit_fdfsolver {
+    pub type_: *const gsl_multifit_fdfsolver_type,
+    pub fdf: *mut gsl_multifit_function_fdf,
+    pub x: *mut gsl_vector,
+    pub f: *mut gsl_vector,
+    pub dx: *mut gsl_vector,
+    pub g: *mut gsl_vector,
+    pub sqrt_wts: *mut gsl_vector,
+    pub niter: usize,
+    pub state: *mut ::std::os::raw::c_void,
+}
 extern "C" {
     pub fn gsl_multifit_fdfsolver_alloc(
         T: *const gsl_multifit_fdfsolver_type,

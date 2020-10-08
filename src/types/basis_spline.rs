@@ -62,7 +62,7 @@ impl BSpLineWorkspace {
     /// functions.
     ///
     /// Cubic B-splines are specified by k = 4. The size of the workspace is O(5k + nbreak).
-    pub fn new(k: u64, nbreak: u64) -> Option<BSpLineWorkspace> {
+    pub fn new(k: usize, nbreak: usize) -> Option<BSpLineWorkspace> {
         let tmp = unsafe { sys::gsl_bspline_alloc(k, nbreak) };
 
         if tmp.is_null() {
@@ -110,8 +110,8 @@ impl BSpLineWorkspace {
         &mut self,
         x: f64,
         Bk: &mut VectorF64,
-        istart: &mut u64,
-        iend: &mut u64,
+        istart: &mut usize,
+        iend: &mut usize,
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_bspline_eval_nonzero(x, ffi::FFI::unwrap_unique(Bk), istart, iend, self.w)
@@ -119,7 +119,7 @@ impl BSpLineWorkspace {
     }
 
     /// This function returns the number of B-spline coefficients given by n = nbreak + k - 2.
-    pub fn ncoeffs(&mut self) -> u64 {
+    pub fn ncoeffs(&mut self) -> usize {
         unsafe { sys::gsl_bspline_ncoeffs(self.w) }
     }
 
@@ -135,7 +135,7 @@ impl BSpLineWorkspace {
     /// Returns the location of the i-th Greville abscissa for the given B-spline basis.
     /// For the ill-defined case when k=1, the implementation chooses to return breakpoint interval
     /// midpoints.
-    pub fn greville_abscissa(&mut self, i: u64) -> f64 {
+    pub fn greville_abscissa(&mut self, i: usize) -> f64 {
         unsafe { sys::gsl_bspline_greville_abscissa(i, self.w) }
     }
 }

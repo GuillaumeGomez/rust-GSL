@@ -147,6 +147,38 @@ fn create_header_file(folder: &Path) {
     println!("<= Done");
 }
 
+fn should_strip_struct(line: &str) -> bool {
+    !line.contains("pub struct gsl_function_struct ")
+    && !line.contains("pub struct gsl_vector")
+    && !line.contains("pub struct gsl_ntuple")
+    && !line.contains("pub struct gsl_function_fdf_struct ")
+    && !line.contains("pub struct gsl_rng_type ")
+    && !line.contains("pub struct gsl_sf_result_struct ")
+    && !line.contains("pub struct gsl_permutation_struct ")
+    && !line.contains("pub struct gsl_ntuple_select_fn ")
+    && !line.contains("pub struct gsl_ntuple_value_fn ")
+    && !line.contains("pub struct gsl_multifit_function_fdf_struct ")
+    && !line.contains("pub struct gsl_monte_vegas_params ")
+    && !line.contains("pub struct gsl_monte_function_struct ")
+    && !line.contains("pub struct gsl_monte_miser_params ")
+    && !line.contains("pub struct gsl_odeiv2_system ")
+    && !line.contains("pub struct gsl_multiset_struct ")
+    && !line.contains("pub struct gsl_multifit_fdfsolver ")
+    && !line.contains("pub struct gsl_matrix")
+    && !line.contains("pub struct gsl_sf_result_e10_struct ")
+    && !line.contains("pub struct _gsl_matrix_view")
+    && !line.contains("pub struct gsl_interp_accel ")
+    && !line.contains("pub struct gsl_complex")
+    && !line.contains("pub struct gsl_combination_struct ")
+    && !line.contains("pub struct gsl_fft_complex_wavetable ")
+    && !line.contains("pub struct gsl_dht_struct ")
+    && !line.contains("pub struct gsl_eigen_nonsymm_workspace ")
+    && !line.contains("pub struct gsl_histogram ")
+    && !line.contains("pub struct gsl_integration_workspace ")
+    && !line.contains("pub struct gsl_sum_levin_u_workspace ")
+    && !line.contains("pub struct gsl_sum_levin_utrunc_workspace ")
+}
+
 fn first_pass(mut content: Vec<&str>) -> Vec<String> {
     println!("=> Running first pass...");
     let mut consts = HashSet::new();
@@ -178,7 +210,7 @@ fn first_pass(mut content: Vec<&str>) -> Vec<String> {
         } else if content[pos].starts_with("pub type FILE = ") {
             content[pos] = "pub type FILE = libc::FILE;";
         } else if content[pos].starts_with("pub struct ") {
-            if !content[pos].contains(" gsl_function_struct ") {
+            if should_strip_struct(content[pos]) {
                 while pos + 1 < content.len() && !content[pos + 1].starts_with("}") {
                     content.remove(pos + 1);
                 }
@@ -292,7 +324,7 @@ fn add_features(content: &mut Vec<String>) {
 
 fn clean_structs(content: &mut Vec<String>) {
     for line in content.iter_mut() {
-        if !line.starts_with("pub struct ") || line.contains(" gsl_function_struct ") {
+        if !line.starts_with("pub struct ") || !should_strip_struct(&line) {
             continue;
         }
         // remove " {" at the end of the struct.

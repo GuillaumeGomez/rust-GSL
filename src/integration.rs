@@ -98,7 +98,7 @@ pub fn qng<F: Fn(f64) -> f64>(
     b: f64,
     eps_abs: f64,
     eps_rel: f64,
-) -> (::enums::Value, f64, f64, u64) {
+) -> (::enums::Value, f64, f64, usize) {
     let mut function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
@@ -351,7 +351,7 @@ pub fn qawf<F: Fn(f64) -> f64>(
     f: F,
     a: f64,
     epsabs: f64,
-    limit: u64,
+    limit: usize,
     workspace: &mut ::IntegrationWorkspace,
     cycle_workspace: &mut ::IntegrationWorkspace,
     wf: &mut ::IntegrationQawoTable,

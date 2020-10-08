@@ -74,13 +74,13 @@ use libc::c_void;
 pub struct ODEiv2System<'a> {
     function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> enums::Value,
     jacobian: Option<&'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> enums::Value>,
-    dimension: u64,
+    dimension: usize,
 }
 
 impl<'a> ODEiv2System<'a> {
     /// Returns a new ODEiv2System with a given dimension and right-hand side.
     pub fn new(
-        dimension: u64,
+        dimension: usize,
         function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> enums::Value,
     ) -> ODEiv2System<'a> {
         ODEiv2System {
@@ -92,7 +92,7 @@ impl<'a> ODEiv2System<'a> {
 
     /// Returns a new ODEiv2System with a jacobian function provided.
     pub fn with_jacobian(
-        dimension: u64,
+        dimension: usize,
         function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> enums::Value,
         jacobian: &'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> enums::Value,
     ) -> ODEiv2System<'a> {
@@ -162,7 +162,7 @@ impl ODEiv2Step {
     /// This function returns a pointer to a newly allocated instance of a stepping function of type T for a system of dim dimensions.
     /// Please note that if you use a stepper method that requires access to a driver object, it is advisable to use a driver allocation
     /// method, which automatically allocates a stepper, too.
-    pub fn new(t: &ODEiv2StepType, dim: u64) -> Option<ODEiv2Step> {
+    pub fn new(t: &ODEiv2StepType, dim: usize) -> Option<ODEiv2Step> {
         let tmp = unsafe { sys::gsl_odeiv2_step_alloc(ffi::FFI::unwrap_shared(t), dim) };
 
         if tmp.is_null() {
@@ -581,7 +581,7 @@ impl ODEiv2Control {
         y: f64,
         dydt: f64,
         h: f64,
-        ind: u64,
+        ind: usize,
         errlev: &mut f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
@@ -668,7 +668,7 @@ pub struct ODEiv2Evolve {
 
 impl ODEiv2Evolve {
     /// This function returns a pointer to a newly allocated instance of an evolution function for a system of dim dimensions.
-    pub fn new(dim: u64) -> Option<ODEiv2Evolve> {
+    pub fn new(dim: usize) -> Option<ODEiv2Evolve> {
         let tmp = unsafe { sys::gsl_odeiv2_evolve_alloc(dim) };
 
         if tmp.is_null() {
@@ -919,8 +919,8 @@ impl<'a> ODEiv2Driver<'a> {
     }
 
     /// The function sets a maximum for allowed number of steps nmax for driver self. Default value of 0 sets no limit for steps.
-    pub fn set_nmax(&mut self, nmax: u64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_odeiv2_driver_set_nmax(self.d, nmax) })
+    pub fn set_nmax(&mut self, nmax: usize) -> enums::Value {
+        enums::Value::from(unsafe { sys::gsl_odeiv2_driver_set_nmax(self.d, nmax as _) })
     }
 
     /// This function evolves the driver system d from t to t1. Initially vector y should contain the values of dependent variables at
@@ -937,9 +937,9 @@ impl<'a> ODEiv2Driver<'a> {
 
     /// This function evolves the driver system d from t with n steps of size h. If the function is unable to complete the calculation, an
     /// error code from gsl_odeiv2_evolve_apply_fixed_step is returned, and t and y contain the values from last successful step.
-    pub fn apply_fixed_step(&mut self, t: &mut f64, h: f64, n: u64, y: &mut [f64]) -> enums::Value {
+    pub fn apply_fixed_step(&mut self, t: &mut f64, h: f64, n: usize, y: &mut [f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_odeiv2_driver_apply_fixed_step(self.d, t, h, n, y.as_mut_ptr())
+            sys::gsl_odeiv2_driver_apply_fixed_step(self.d, t, h, n as _, y.as_mut_ptr())
         })
     }
 
