@@ -24,13 +24,19 @@ const STATICS_TO_IGNORE: &[&str] = &[
 const VERSIONS: &[(&str, &str)] = &[
     // 2.1
     ("pub fn gsl_multifit_linear_rcond(", "v2_1"),
-    ("pub struct gsl_multilarge_* {", "v2_1"),
+    // --> little exception here...
+    ("pub fn gsl_multilarge_linear_matrix_ptr(", "v2_7"),
+    // --> little exception here...
+    ("pub fn gsl_multilarge_linear_rhs_ptr(", "v2_7"),
+    ("pub struct gsl_multilarge_*;", "v2_1"),
+    // --> little exception here...
+    ("pub fn gsl_multilarge_linear_lcurve(", "v2_2"),
     ("pub fn gsl_multilarge_*(", "v2_1"),
+    ("pub static mut gsl_multilarge_*:", "v2_1"),
     // 2.2
     ("pub fn gsl_linalg_tri_*(", "v2_2"),
     ("pub fn gsl_linalg_COD_*(", "v2_2"),
     ("pub fn gsl_rstat_quantile_reset(", "v2_2"),
-    ("pub fn gsl_ran_multivariate_gaussian*(", "v2_2"),
     ("pub fn gsl_ran_multivariate_gaussian*(", "v2_2"),
     ("pub fn gsl_linalg_cholesky_rcond(", "v2_2"),
     ("pub fn gsl_linalg_QRPT_rcond(", "v2_2"),
@@ -40,7 +46,6 @@ const VERSIONS: &[(&str, &str)] = &[
     ("pub fn gsl_linalg_mcholesky_*(", "v2_2"),
     ("pub fn gsl_linalg_pcholesky_*(", "v2_2"),
     ("pub fn gsl_rstat_rms(", "v2_2"),
-    ("pub fn gsl_multilarge_linear_lcurve(", "v2_2"),
     // 2.3
     ("pub fn gsl_multifit_linear_tsvd(", "v2_3"),
     ("pub fn gsl_multifit_wlinear_tsvd(", "v2_3"),
@@ -49,12 +54,12 @@ const VERSIONS: &[(&str, &str)] = &[
     ("pub fn gsl_ran_wishart*(", "v2_5"),
     ("pub const gsl_filter_*:", "v2_5"),
     ("pub type gsl_filter_* = ", "v2_5"),
-    ("pub struct gsl_filter_* {", "v2_5"),
+    ("pub struct gsl_filter_*;", "v2_5"),
     ("pub fn gsl_filter_*(", "v2_5"),
     ("pub const gsl_movstat_*:", "v2_5"),
     ("pub static mut gsl_movstat_*:", "v2_5"),
     ("pub type gsl_movstat_* = ", "v2_5"),
-    ("pub struct gsl_movstat_* {", "v2_5"),
+    ("pub struct gsl_movstat_*;", "v2_5"),
     ("pub fn gsl_movstat_*(", "v2_5"),
     ("pub fn gsl_stats_median(", "v2_5"),
     ("pub fn gsl_stats_select(", "v2_5"),
@@ -64,23 +69,23 @@ const VERSIONS: &[(&str, &str)] = &[
     ("pub fn gsl_stats_Qn_from_sorted_data(", "v2_5"),
     ("pub fn gsl_stats_gastwirth_from_sorted_data(", "v2_5"),
     ("pub fn gsl_stats_trmean_from_sorted_data(", "v2_5"),
-    ("pub struct gsl_integration_romberg_workspace {", "v2_5"),
-    ("pub fn gsl_integration_romberg_*(", "v2_5"),
+    ("pub struct gsl_integration_romberg_workspace;", "v2_5"),
+    ("pub fn gsl_integration_romberg*(", "v2_5"),
     // 2.6
-    ("pub fn gsl_integration_romberg_*(", "v2_6"),
     ("pub fn gsl_vector_axpby(", "v2_6"),
     ("pub fn gsl_linalg_ldlt_*(", "v2_6"),
-    ("pub fn gsl_linalg_ldlt_band_*(", "v2_6"),
-    ("pub fn gsl_linalg_ldlt_band_*(", "v2_6"),
     ("pub static mut gsl_bst_*: ", "v2_6"),
     ("pub type gsl_bst_* = ", "v2_6"),
-    ("pub struct gsl_bst_* {", "v2_6"),
-    ("pub union gsl_bst_* {", "v2_6"),
+    ("pub struct gsl_bst_*;", "v2_6"),
     ("pub fn gsl_bst_*(", "v2_6"),
     ("pub fn gsl_spmatrix_scale_columns(", "v2_6"),
     ("pub fn gsl_spmatrix_scale_rows(", "v2_6"),
     ("pub fn gsl_spmatrix_add_to_dense(", "v2_6"),
     ("pub fn gsl_spmatrix_min_index(", "v2_6"),
+    // --> little exception here...
+    ("pub fn gsl_linalg_cholesky_band_solvem(", "v2_7"),
+    // --> little exception here...
+    ("pub fn gsl_linalg_cholesky_band_svxm(", "v2_7"),
     ("pub fn gsl_linalg_cholesky_band_*(", "v2_6"),
     ("pub fn gsl_linalg_LQ_lssolve(", "v2_6"),
     // 2.7
@@ -93,11 +98,7 @@ const VERSIONS: &[(&str, &str)] = &[
     ("pub fn gsl_vector_sum(", "v2_7"),
     ("pub fn gsl_matrix_scale_rows(", "v2_7"),
     ("pub fn gsl_matrix_scale_columns(", "v2_7"),
-    ("pub fn gsl_multilarge_linear_matrix_ptr(", "v2_7"),
-    ("pub fn gsl_multilarge_linear_rhs_ptr(", "v2_7"),
     ("pub fn gsl_spmatrix_dense_sub(", "v2_7"),
-    ("pub fn gsl_linalg_cholesky_band_solvem(", "v2_7"),
-    ("pub fn gsl_linalg_cholesky_band_svxm(", "v2_7"),
 ];
 
 fn get_all_headers(folder: &Path, extra: &mut Vec<String>, headers: &mut Vec<String>) {
@@ -167,7 +168,7 @@ fn first_pass(mut content: Vec<&str>) -> Vec<String> {
             while pos > 1 && content[pos - 1].starts_with("#[") {
                 pos -= 1;
             }
-            while !content[pos].starts_with("}") && pos < content.len() {
+            while pos < content.len() && !content[pos].starts_with("}") {
                 content.remove(pos);
             }
             if pos < content.len() {
@@ -176,6 +177,26 @@ fn first_pass(mut content: Vec<&str>) -> Vec<String> {
             continue;
         } else if content[pos].starts_with("pub type FILE = ") {
             content[pos] = "pub type FILE = libc::FILE;";
+        } else if content[pos].starts_with("pub struct ") {
+            pos += 1;
+            while pos < content.len() && !content[pos].starts_with("}") {
+                content.remove(pos);
+            }
+            if pos < content.len() {
+                content.remove(pos);
+            }
+        } else if content[pos].starts_with("pub union ") {
+            while pos > 0 && content[pos - 1].starts_with("#[") {
+                content.remove(pos - 1);
+                pos -= 1;
+            }
+            content.remove(pos);
+            while pos < content.len() && !content[pos].starts_with("}") {
+                content.remove(pos);
+            }
+            if pos < content.len() {
+                content.remove(pos);
+            }
         } else if TYPES_TO_IGNORE.iter().any(|s| content[pos].starts_with(s)) {
             content.remove(pos);
             continue;
@@ -268,11 +289,24 @@ fn add_features(content: &mut Vec<String>) {
     }
 }
 
+fn clean_structs(content: &mut Vec<String>) {
+    for line in content.iter_mut() {
+        if !line.starts_with("pub struct ") {
+            continue;
+        }
+        // remove " {" at the end of the struct.
+        line.pop();
+        line.pop();
+        line.push(';');
+    }
+}
+
 fn run_bindgen(folder: &Path, commit_hash: String) {
     println!("=> Running bindgen...");
     let bindings = bindgen::Builder::default()
         .header(HEADER_FILE)
         .layout_tests(false)
+        .size_t_is_usize(true)
         .clang_args(&[format!("-I{}", folder.display())])
         .whitelist_function("(gsl|cblas)_.*")
         .whitelist_type("(gsl|cblas)_.*")
@@ -284,6 +318,7 @@ fn run_bindgen(folder: &Path, commit_hash: String) {
 
     let content = bindings.to_string();
     let mut content = first_pass(content.lines().collect::<Vec<_>>());
+    clean_structs(&mut content);
     add_features(&mut content);
 
     let out = "../src/auto.rs";

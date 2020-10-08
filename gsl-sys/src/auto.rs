@@ -131,7 +131,6 @@ pub const GSL_MAJOR_VERSION: u32 = 2;
 pub const GSL_MINOR_VERSION: u32 = 6;
 pub const GSL_SF_MATHIEU_COEFF: u32 = 100;
 pub const GSL_MESSAGE_MASK: u32 = 4294967295;
-pub type size_t = ::std::os::raw::c_ulong;
 pub type __off_t = ::std::os::raw::c_long;
 pub type __off64_t = ::std::os::raw::c_long;
 pub type FILE = libc::FILE;
@@ -223,16 +222,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_permutation_struct {
-    pub size: size_t,
-    pub data: *mut size_t,
-}
+pub struct gsl_permutation_struct;
 pub type gsl_permutation = gsl_permutation_struct;
 extern "C" {
-    pub fn gsl_permutation_alloc(n: size_t) -> *mut gsl_permutation;
+    pub fn gsl_permutation_alloc(n: usize) -> *mut gsl_permutation;
 }
 extern "C" {
-    pub fn gsl_permutation_calloc(n: size_t) -> *mut gsl_permutation;
+    pub fn gsl_permutation_calloc(n: usize) -> *mut gsl_permutation;
 }
 extern "C" {
     pub fn gsl_permutation_init(p: *mut gsl_permutation);
@@ -272,16 +268,16 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_permutation_size(p: *const gsl_permutation) -> size_t;
+    pub fn gsl_permutation_size(p: *const gsl_permutation) -> usize;
 }
 extern "C" {
-    pub fn gsl_permutation_data(p: *const gsl_permutation) -> *mut size_t;
+    pub fn gsl_permutation_data(p: *const gsl_permutation) -> *mut usize;
 }
 extern "C" {
     pub fn gsl_permutation_swap(
         p: *mut gsl_permutation,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -322,29 +318,26 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_permutation_inversions(p: *const gsl_permutation) -> size_t;
+    pub fn gsl_permutation_inversions(p: *const gsl_permutation) -> usize;
 }
 extern "C" {
-    pub fn gsl_permutation_linear_cycles(p: *const gsl_permutation) -> size_t;
+    pub fn gsl_permutation_linear_cycles(p: *const gsl_permutation) -> usize;
 }
 extern "C" {
-    pub fn gsl_permutation_canonical_cycles(q: *const gsl_permutation) -> size_t;
+    pub fn gsl_permutation_canonical_cycles(q: *const gsl_permutation) -> usize;
 }
 extern "C" {
-    pub fn gsl_permutation_get(p: *const gsl_permutation, i: size_t) -> size_t;
+    pub fn gsl_permutation_get(p: *const gsl_permutation, i: usize) -> usize;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_long_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_long,
-}
+pub struct gsl_block_long_struct;
 pub type gsl_block_long = gsl_block_long_struct;
 extern "C" {
-    pub fn gsl_block_long_alloc(n: size_t) -> *mut gsl_block_long;
+    pub fn gsl_block_long_alloc(n: usize) -> *mut gsl_block_long;
 }
 extern "C" {
-    pub fn gsl_block_long_calloc(n: size_t) -> *mut gsl_block_long;
+    pub fn gsl_block_long_calloc(n: usize) -> *mut gsl_block_long;
 }
 extern "C" {
     pub fn gsl_block_long_free(b: *mut gsl_block_long);
@@ -376,82 +369,72 @@ extern "C" {
     pub fn gsl_block_long_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_long,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_long_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_long,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_long_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_long,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_long_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_long,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_long_size(b: *const gsl_block_long) -> size_t;
+    pub fn gsl_block_long_size(b: *const gsl_block_long) -> usize;
 }
 extern "C" {
     pub fn gsl_block_long_data(b: *const gsl_block_long) -> *mut ::std::os::raw::c_long;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_long {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_long,
-    pub block: *mut gsl_block_long,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_long;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_view {
-    pub vector: gsl_vector_long,
-}
+pub struct _gsl_vector_long_view;
 pub type gsl_vector_long_view = _gsl_vector_long_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_const_view {
-    pub vector: gsl_vector_long,
-}
+pub struct _gsl_vector_long_const_view;
 pub type gsl_vector_long_const_view = _gsl_vector_long_const_view;
 extern "C" {
-    pub fn gsl_vector_long_alloc(n: size_t) -> *mut gsl_vector_long;
+    pub fn gsl_vector_long_alloc(n: usize) -> *mut gsl_vector_long;
 }
 extern "C" {
-    pub fn gsl_vector_long_calloc(n: size_t) -> *mut gsl_vector_long;
+    pub fn gsl_vector_long_calloc(n: usize) -> *mut gsl_vector_long;
 }
 extern "C" {
     pub fn gsl_vector_long_alloc_from_block(
         b: *mut gsl_block_long,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_long;
 }
 extern "C" {
     pub fn gsl_vector_long_alloc_from_vector(
         v: *mut gsl_vector_long,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_long;
 }
 extern "C" {
@@ -460,57 +443,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_long_view_array(
         v: *mut ::std::os::raw::c_long,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_vector_long_view_array_with_stride(
         base: *mut ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_vector_long_const_view_array(
         v: *const ::std::os::raw::c_long,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_vector_long_const_view_array_with_stride(
         base: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_vector_long_subvector(
         v: *mut gsl_vector_long,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_vector_long_subvector_with_stride(
         v: *mut gsl_vector_long,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_vector_long_const_subvector(
         v: *const gsl_vector_long,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_vector_long_const_subvector_with_stride(
         v: *const gsl_vector_long,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
@@ -520,7 +503,7 @@ extern "C" {
     pub fn gsl_vector_long_set_all(v: *mut gsl_vector_long, x: ::std::os::raw::c_long);
 }
 extern "C" {
-    pub fn gsl_vector_long_set_basis(v: *mut gsl_vector_long, i: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_vector_long_set_basis(v: *mut gsl_vector_long, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_long_fread(
@@ -565,8 +548,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_long_swap_elements(
         v: *mut gsl_vector_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -583,16 +566,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_long_max_index(v: *const gsl_vector_long) -> size_t;
+    pub fn gsl_vector_long_max_index(v: *const gsl_vector_long) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_long_min_index(v: *const gsl_vector_long) -> size_t;
+    pub fn gsl_vector_long_min_index(v: *const gsl_vector_long) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_long_minmax_index(
         v: *const gsl_vector_long,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -658,18 +641,18 @@ extern "C" {
     pub fn gsl_vector_long_isnonneg(v: *const gsl_vector_long) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_long_get(v: *const gsl_vector_long, i: size_t) -> ::std::os::raw::c_long;
+    pub fn gsl_vector_long_get(v: *const gsl_vector_long, i: usize) -> ::std::os::raw::c_long;
 }
 extern "C" {
-    pub fn gsl_vector_long_set(v: *mut gsl_vector_long, i: size_t, x: ::std::os::raw::c_long);
+    pub fn gsl_vector_long_set(v: *mut gsl_vector_long, i: usize, x: ::std::os::raw::c_long);
 }
 extern "C" {
-    pub fn gsl_vector_long_ptr(v: *mut gsl_vector_long, i: size_t) -> *mut ::std::os::raw::c_long;
+    pub fn gsl_vector_long_ptr(v: *mut gsl_vector_long, i: usize) -> *mut ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_vector_long_const_ptr(
         v: *const gsl_vector_long,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_long;
 }
 extern "C" {
@@ -693,14 +676,10 @@ pub const GSL_SPMATRIX_CRS: ::std::os::raw::c_uint = 2;
 pub type _bindgen_ty_2 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_spmatrix_pool_node {
-    pub next: *mut gsl_spmatrix_pool_node,
-    pub block_ptr: *mut ::std::os::raw::c_void,
-    pub free_slot: *mut ::std::os::raw::c_uchar,
-}
+pub struct gsl_spmatrix_pool_node;
 pub type gsl_spmatrix_pool = gsl_spmatrix_pool_node;
 extern "C" {
-    pub fn gsl_spmatrix_cumsum(n: size_t, c: *mut ::std::os::raw::c_int);
+    pub fn gsl_spmatrix_cumsum(n: usize, c: *mut ::std::os::raw::c_int);
 }
 extern "C" {
     pub fn gsl_log1p(x: f64) -> f64;
@@ -819,45 +798,15 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_function_struct {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(x: f64, params: *mut ::std::os::raw::c_void) -> f64,
-    >,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_function_struct;
 pub type gsl_function = gsl_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_function_fdf_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(x: f64, params: *mut ::std::os::raw::c_void) -> f64,
-    >,
-    pub df: ::std::option::Option<
-        unsafe extern "C" fn(x: f64, params: *mut ::std::os::raw::c_void) -> f64,
-    >,
-    pub fdf: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: f64,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut f64,
-            df: *mut f64,
-        ),
-    >,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_function_fdf_struct;
 pub type gsl_function_fdf = gsl_function_fdf_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_function_vec_struct {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: f64,
-            y: *mut f64,
-            params: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_function_vec_struct;
 pub type gsl_function_vec = gsl_function_vec_struct;
 #[cfg(feature = "v2_6")]
 pub type gsl_bst_cmp_function = ::std::option::Option<
@@ -870,200 +819,43 @@ pub type gsl_bst_cmp_function = ::std::option::Option<
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_allocator {
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            size: size_t,
-            params: *mut ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub free: ::std::option::Option<
-        unsafe extern "C" fn(
-            block: *mut ::std::os::raw::c_void,
-            params: *mut ::std::os::raw::c_void,
-        ),
-    >,
-}
+pub struct gsl_bst_allocator;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_avl_node {
-    pub avl_link: [*mut gsl_bst_avl_node; 2usize],
-    pub avl_data: *mut ::std::os::raw::c_void,
-    pub avl_balance: ::std::os::raw::c_schar,
-}
+pub struct gsl_bst_avl_node;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_avl_table {
-    pub avl_root: *mut gsl_bst_avl_node,
-    pub avl_compare: gsl_bst_cmp_function,
-    pub avl_param: *mut ::std::os::raw::c_void,
-    pub avl_alloc: *const gsl_bst_allocator,
-    pub avl_count: size_t,
-    pub avl_generation: ::std::os::raw::c_ulong,
-}
+pub struct gsl_bst_avl_table;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_avl_traverser {
-    pub avl_table: *const gsl_bst_avl_table,
-    pub avl_node: *mut gsl_bst_avl_node,
-    pub avl_stack: [*mut gsl_bst_avl_node; 32usize],
-    pub avl_height: size_t,
-    pub avl_generation: ::std::os::raw::c_ulong,
-}
+pub struct gsl_bst_avl_traverser;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_rb_node {
-    pub rb_link: [*mut gsl_bst_rb_node; 2usize],
-    pub rb_data: *mut ::std::os::raw::c_void,
-    pub rb_color: ::std::os::raw::c_uchar,
-}
+pub struct gsl_bst_rb_node;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_rb_table {
-    pub rb_root: *mut gsl_bst_rb_node,
-    pub rb_compare: gsl_bst_cmp_function,
-    pub rb_param: *mut ::std::os::raw::c_void,
-    pub rb_alloc: *const gsl_bst_allocator,
-    pub rb_count: size_t,
-    pub rb_generation: ::std::os::raw::c_ulong,
-}
+pub struct gsl_bst_rb_table;
 #[repr(C)]
 #[derive(Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_rb_traverser {
-    pub rb_table: *const gsl_bst_rb_table,
-    pub rb_node: *mut gsl_bst_rb_node,
-    pub rb_stack: [*mut gsl_bst_rb_node; 48usize],
-    pub rb_height: size_t,
-    pub rb_generation: ::std::os::raw::c_ulong,
-}
+pub struct gsl_bst_rb_traverser;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub node_size: size_t,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            allocator: *const gsl_bst_allocator,
-            compare: gsl_bst_cmp_function,
-            params: *mut ::std::os::raw::c_void,
-            vtable: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub nodes: ::std::option::Option<
-        unsafe extern "C" fn(vtable: *const ::std::os::raw::c_void) -> size_t,
-    >,
-    pub insert: ::std::option::Option<
-        unsafe extern "C" fn(
-            item: *mut ::std::os::raw::c_void,
-            vtable: *mut ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub find: ::std::option::Option<
-        unsafe extern "C" fn(
-            item: *const ::std::os::raw::c_void,
-            vtable: *const ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub remove: ::std::option::Option<
-        unsafe extern "C" fn(
-            item: *const ::std::os::raw::c_void,
-            vtable: *mut ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub empty: ::std::option::Option<
-        unsafe extern "C" fn(vtable: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
-    >,
-    pub trav_init: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrav: *mut ::std::os::raw::c_void,
-            vtable: *const ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub trav_first: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrav: *mut ::std::os::raw::c_void,
-            vtable: *const ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_last: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrav: *mut ::std::os::raw::c_void,
-            vtable: *const ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_find: ::std::option::Option<
-        unsafe extern "C" fn(
-            item: *const ::std::os::raw::c_void,
-            vtrav: *mut ::std::os::raw::c_void,
-            vtable: *const ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_insert: ::std::option::Option<
-        unsafe extern "C" fn(
-            item: *mut ::std::os::raw::c_void,
-            vtrav: *mut ::std::os::raw::c_void,
-            vtable: *mut ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_copy: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrav: *mut ::std::os::raw::c_void,
-            vsrc: *const ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_next: ::std::option::Option<
-        unsafe extern "C" fn(vtrav: *mut ::std::os::raw::c_void) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_prev: ::std::option::Option<
-        unsafe extern "C" fn(vtrav: *mut ::std::os::raw::c_void) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_cur: ::std::option::Option<
-        unsafe extern "C" fn(vtrav: *const ::std::os::raw::c_void) -> *mut ::std::os::raw::c_void,
-    >,
-    pub trav_replace: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrav: *mut ::std::os::raw::c_void,
-            new_item: *mut ::std::os::raw::c_void,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-}
+pub struct gsl_bst_type;
 #[repr(C)]
 #[derive(Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub struct gsl_bst_workspace {
-    pub type_: *const gsl_bst_type,
-    pub table: gsl_bst_workspace__bindgen_ty_1,
-}
+pub struct gsl_bst_workspace;
 #[repr(C)]
 #[derive(Copy, Clone)]
 #[cfg(feature = "v2_6")]
-pub union gsl_bst_workspace__bindgen_ty_1 {
-    pub avl_table: gsl_bst_avl_table,
-    pub rb_table: gsl_bst_rb_table,
-    _bindgen_union_align: [u64; 6usize],
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-#[cfg(feature = "v2_6")]
-pub struct gsl_bst_trav {
-    pub type_: *const gsl_bst_type,
-    pub trav_data: gsl_bst_trav__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-#[cfg(feature = "v2_6")]
-pub union gsl_bst_trav__bindgen_ty_1 {
-    pub avl_trav: gsl_bst_avl_traverser,
-    pub rb_trav: gsl_bst_rb_traverser,
-    _bindgen_union_align: [u64; 52usize],
-}
+pub struct gsl_bst_trav;
 extern "C" {
     #[cfg(feature = "v2_6")]
     pub static mut gsl_bst_avl: *const gsl_bst_type;
@@ -1112,11 +904,11 @@ extern "C" {
 }
 extern "C" {
     #[cfg(feature = "v2_6")]
-    pub fn gsl_bst_nodes(w: *const gsl_bst_workspace) -> size_t;
+    pub fn gsl_bst_nodes(w: *const gsl_bst_workspace) -> usize;
 }
 extern "C" {
     #[cfg(feature = "v2_6")]
-    pub fn gsl_bst_node_size(w: *const gsl_bst_workspace) -> size_t;
+    pub fn gsl_bst_node_size(w: *const gsl_bst_workspace) -> usize;
 }
 extern "C" {
     #[cfg(feature = "v2_6")]
@@ -1206,31 +998,22 @@ pub type gsl_const_complex_packed_long_double_ptr = *const u128;
 #[repr(C)]
 #[repr(align(16))]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_complex_long_double {
-    pub dat: [u128; 2usize],
-}
+pub struct gsl_complex_long_double;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_complex {
-    pub dat: [f64; 2usize],
-}
+pub struct gsl_complex;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_complex_float {
-    pub dat: [f32; 2usize],
-}
+pub struct gsl_complex_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_long_double_struct {
-    pub size: size_t,
-    pub data: *mut u128,
-}
+pub struct gsl_block_long_double_struct;
 pub type gsl_block_long_double = gsl_block_long_double_struct;
 extern "C" {
-    pub fn gsl_block_long_double_alloc(n: size_t) -> *mut gsl_block_long_double;
+    pub fn gsl_block_long_double_alloc(n: usize) -> *mut gsl_block_long_double;
 }
 extern "C" {
-    pub fn gsl_block_long_double_calloc(n: size_t) -> *mut gsl_block_long_double;
+    pub fn gsl_block_long_double_calloc(n: usize) -> *mut gsl_block_long_double;
 }
 extern "C" {
     pub fn gsl_block_long_double_free(b: *mut gsl_block_long_double);
@@ -1264,82 +1047,72 @@ extern "C" {
     pub fn gsl_block_long_double_raw_fread(
         stream: *mut FILE,
         b: *mut u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_long_double_raw_fwrite(
         stream: *mut FILE,
         b: *const u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_long_double_raw_fscanf(
         stream: *mut FILE,
         b: *mut u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_long_double_raw_fprintf(
         stream: *mut FILE,
         b: *const u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_long_double_size(b: *const gsl_block_long_double) -> size_t;
+    pub fn gsl_block_long_double_size(b: *const gsl_block_long_double) -> usize;
 }
 extern "C" {
     pub fn gsl_block_long_double_data(b: *const gsl_block_long_double) -> *mut u128;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_long_double {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut u128,
-    pub block: *mut gsl_block_long_double,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_long_double;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_double_view {
-    pub vector: gsl_vector_long_double,
-}
+pub struct _gsl_vector_long_double_view;
 pub type gsl_vector_long_double_view = _gsl_vector_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_double_const_view {
-    pub vector: gsl_vector_long_double,
-}
+pub struct _gsl_vector_long_double_const_view;
 pub type gsl_vector_long_double_const_view = _gsl_vector_long_double_const_view;
 extern "C" {
-    pub fn gsl_vector_long_double_alloc(n: size_t) -> *mut gsl_vector_long_double;
+    pub fn gsl_vector_long_double_alloc(n: usize) -> *mut gsl_vector_long_double;
 }
 extern "C" {
-    pub fn gsl_vector_long_double_calloc(n: size_t) -> *mut gsl_vector_long_double;
+    pub fn gsl_vector_long_double_calloc(n: usize) -> *mut gsl_vector_long_double;
 }
 extern "C" {
     pub fn gsl_vector_long_double_alloc_from_block(
         b: *mut gsl_block_long_double,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_long_double;
 }
 extern "C" {
     pub fn gsl_vector_long_double_alloc_from_vector(
         v: *mut gsl_vector_long_double,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_long_double;
 }
 extern "C" {
@@ -1348,57 +1121,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_long_double_view_array(
         v: *mut u128,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_view_array_with_stride(
         base: *mut u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_const_view_array(
         v: *const u128,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_const_view_array_with_stride(
         base: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_subvector(
         v: *mut gsl_vector_long_double,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_subvector_with_stride(
         v: *mut gsl_vector_long_double,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_const_subvector(
         v: *const gsl_vector_long_double,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_vector_long_double_const_subvector_with_stride(
         v: *const gsl_vector_long_double,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
@@ -1410,7 +1183,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_long_double_set_basis(
         v: *mut gsl_vector_long_double,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -1456,8 +1229,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_long_double_swap_elements(
         v: *mut gsl_vector_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -1474,16 +1247,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_long_double_max_index(v: *const gsl_vector_long_double) -> size_t;
+    pub fn gsl_vector_long_double_max_index(v: *const gsl_vector_long_double) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_long_double_min_index(v: *const gsl_vector_long_double) -> size_t;
+    pub fn gsl_vector_long_double_min_index(v: *const gsl_vector_long_double) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_long_double_minmax_index(
         v: *const gsl_vector_long_double,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -1555,32 +1328,29 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_long_double_get(v: *const gsl_vector_long_double, i: size_t) -> u128;
+    pub fn gsl_vector_long_double_get(v: *const gsl_vector_long_double, i: usize) -> u128;
 }
 extern "C" {
-    pub fn gsl_vector_long_double_set(v: *mut gsl_vector_long_double, i: size_t, x: u128);
+    pub fn gsl_vector_long_double_set(v: *mut gsl_vector_long_double, i: usize, x: u128);
 }
 extern "C" {
-    pub fn gsl_vector_long_double_ptr(v: *mut gsl_vector_long_double, i: size_t) -> *mut u128;
+    pub fn gsl_vector_long_double_ptr(v: *mut gsl_vector_long_double, i: usize) -> *mut u128;
 }
 extern "C" {
     pub fn gsl_vector_long_double_const_ptr(
         v: *const gsl_vector_long_double,
-        i: size_t,
+        i: usize,
     ) -> *const u128;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_complex_long_double_struct {
-    pub size: size_t,
-    pub data: *mut u128,
-}
+pub struct gsl_block_complex_long_double_struct;
 pub type gsl_block_complex_long_double = gsl_block_complex_long_double_struct;
 extern "C" {
-    pub fn gsl_block_complex_long_double_alloc(n: size_t) -> *mut gsl_block_complex_long_double;
+    pub fn gsl_block_complex_long_double_alloc(n: usize) -> *mut gsl_block_complex_long_double;
 }
 extern "C" {
-    pub fn gsl_block_complex_long_double_calloc(n: size_t) -> *mut gsl_block_complex_long_double;
+    pub fn gsl_block_complex_long_double_calloc(n: usize) -> *mut gsl_block_complex_long_double;
 }
 extern "C" {
     pub fn gsl_block_complex_long_double_free(b: *mut gsl_block_complex_long_double);
@@ -1614,37 +1384,37 @@ extern "C" {
     pub fn gsl_block_complex_long_double_raw_fread(
         stream: *mut FILE,
         b: *mut u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_long_double_raw_fwrite(
         stream: *mut FILE,
         b: *const u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_long_double_raw_fscanf(
         stream: *mut FILE,
         b: *mut u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_long_double_raw_fprintf(
         stream: *mut FILE,
         b: *const u128,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_complex_long_double_size(b: *const gsl_block_complex_long_double) -> size_t;
+    pub fn gsl_block_complex_long_double_size(b: *const gsl_block_complex_long_double) -> usize;
 }
 extern "C" {
     pub fn gsl_block_complex_long_double_data(b: *const gsl_block_complex_long_double)
@@ -1652,45 +1422,35 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_complex_long_double {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut u128,
-    pub block: *mut gsl_block_complex_long_double,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_complex_long_double;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_long_double_view {
-    pub vector: gsl_vector_complex_long_double,
-}
+pub struct _gsl_vector_complex_long_double_view;
 pub type gsl_vector_complex_long_double_view = _gsl_vector_complex_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_long_double_const_view {
-    pub vector: gsl_vector_complex_long_double,
-}
+pub struct _gsl_vector_complex_long_double_const_view;
 pub type gsl_vector_complex_long_double_const_view = _gsl_vector_complex_long_double_const_view;
 extern "C" {
-    pub fn gsl_vector_complex_long_double_alloc(n: size_t) -> *mut gsl_vector_complex_long_double;
+    pub fn gsl_vector_complex_long_double_alloc(n: usize) -> *mut gsl_vector_complex_long_double;
 }
 extern "C" {
-    pub fn gsl_vector_complex_long_double_calloc(n: size_t) -> *mut gsl_vector_complex_long_double;
+    pub fn gsl_vector_complex_long_double_calloc(n: usize) -> *mut gsl_vector_complex_long_double;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_alloc_from_block(
         b: *mut gsl_block_complex_long_double,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_complex_long_double;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_alloc_from_vector(
         v: *mut gsl_vector_complex_long_double,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_complex_long_double;
 }
 extern "C" {
@@ -1699,57 +1459,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_long_double_view_array(
         base: *mut u128,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_view_array_with_stride(
         base: *mut u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_const_view_array(
         base: *const u128,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_const_view_array_with_stride(
         base: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_subvector(
         base: *mut gsl_vector_complex_long_double,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_subvector_with_stride(
         v: *mut gsl_vector_complex_long_double,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_const_subvector(
         base: *const gsl_vector_complex_long_double,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_const_subvector_with_stride(
         v: *const gsl_vector_complex_long_double,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
@@ -1784,7 +1544,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_long_double_set_basis(
         v: *mut gsl_vector_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -1832,8 +1592,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_long_double_swap_elements(
         v: *mut gsl_vector_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -1909,26 +1669,26 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_long_double_get(
         v: *const gsl_vector_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> gsl_complex_long_double;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_set(
         v: *mut gsl_vector_complex_long_double,
-        i: size_t,
+        i: usize,
         z: gsl_complex_long_double,
     );
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_ptr(
         v: *mut gsl_vector_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_complex_long_double;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_const_ptr(
         v: *const gsl_vector_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> *const gsl_complex_long_double;
 }
 pub const CBLAS_ORDER_CblasRowMajor: CBLAS_ORDER = 101;
@@ -2073,28 +1833,28 @@ extern "C" {
         N: ::std::os::raw::c_int,
         X: *const f32,
         incX: ::std::os::raw::c_int,
-    ) -> size_t;
+    ) -> usize;
 }
 extern "C" {
     pub fn cblas_idamax(
         N: ::std::os::raw::c_int,
         X: *const f64,
         incX: ::std::os::raw::c_int,
-    ) -> size_t;
+    ) -> usize;
 }
 extern "C" {
     pub fn cblas_icamax(
         N: ::std::os::raw::c_int,
         X: *const ::std::os::raw::c_void,
         incX: ::std::os::raw::c_int,
-    ) -> size_t;
+    ) -> usize;
 }
 extern "C" {
     pub fn cblas_izamax(
         N: ::std::os::raw::c_int,
         X: *const ::std::os::raw::c_void,
         incX: ::std::os::raw::c_int,
-    ) -> size_t;
+    ) -> usize;
 }
 extern "C" {
     pub fn cblas_sswap(
@@ -3724,73 +3484,62 @@ extern "C" {
         ...
     );
 }
-pub type CBLAS_INDEX_t = size_t;
+pub type CBLAS_INDEX_t = usize;
 pub use self::CBLAS_DIAG as CBLAS_DIAG_t;
 pub use self::CBLAS_SIDE as CBLAS_SIDE_t;
 pub use self::CBLAS_TRANSPOSE as CBLAS_TRANSPOSE_t;
 pub use self::CBLAS_UPLO as CBLAS_UPLO_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_complex_long_double {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut u128,
-    pub block: *mut gsl_block_complex_long_double,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_complex_long_double;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_long_double_view {
-    pub matrix: gsl_matrix_complex_long_double,
-}
+pub struct _gsl_matrix_complex_long_double_view;
 pub type gsl_matrix_complex_long_double_view = _gsl_matrix_complex_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_long_double_const_view {
-    pub matrix: gsl_matrix_complex_long_double,
-}
+pub struct _gsl_matrix_complex_long_double_const_view;
 pub type gsl_matrix_complex_long_double_const_view = _gsl_matrix_complex_long_double_const_view;
 extern "C" {
     pub fn gsl_matrix_complex_long_double_alloc(
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_complex_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_calloc(
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_complex_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_alloc_from_block(
         b: *mut gsl_block_complex_long_double,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_complex_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_alloc_from_matrix(
         b: *mut gsl_matrix_complex_long_double,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_complex_long_double;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_alloc_row_from_matrix(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_complex_long_double;
 }
 extern "C" {
     pub fn gsl_vector_complex_long_double_alloc_col_from_matrix(
         m: *mut gsl_matrix_complex_long_double,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_complex_long_double;
 }
 extern "C" {
@@ -3799,22 +3548,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_long_double_submatrix(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_row(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_column(
         m: *mut gsl_matrix_complex_long_double,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
@@ -3825,80 +3574,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_long_double_subdiagonal(
         m: *mut gsl_matrix_complex_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_superdiagonal(
         m: *mut gsl_matrix_complex_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_subrow(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_subcolumn(
         m: *mut gsl_matrix_complex_long_double,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_view_array(
         base: *mut u128,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_view_array_with_tda(
         base: *mut u128,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_view_vector(
         v: *mut gsl_vector_complex_long_double,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_view_vector_with_tda(
         v: *mut gsl_vector_complex_long_double,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_submatrix(
         m: *const gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_row(
         m: *const gsl_matrix_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_column(
         m: *const gsl_matrix_complex_long_double,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
@@ -3909,59 +3658,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_subdiagonal(
         m: *const gsl_matrix_complex_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_superdiagonal(
         m: *const gsl_matrix_complex_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_subrow(
         m: *const gsl_matrix_complex_long_double,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_subcolumn(
         m: *const gsl_matrix_complex_long_double,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_view_array(
         base: *const u128,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_view_array_with_tda(
         base: *const u128,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_view_vector(
         v: *const gsl_vector_complex_long_double,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_view_vector_with_tda(
         v: *const gsl_vector_complex_long_double,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_long_double_const_view;
 }
 extern "C" {
@@ -4024,22 +3773,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_long_double_swap_rows(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_swap_columns(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_swap_rowcol(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -4151,95 +3900,73 @@ extern "C" {
     pub fn gsl_matrix_complex_long_double_get_row(
         v: *mut gsl_vector_complex_long_double,
         m: *const gsl_matrix_complex_long_double,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_get_col(
         v: *mut gsl_vector_complex_long_double,
         m: *const gsl_matrix_complex_long_double,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_set_row(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_complex_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_set_col(
         m: *mut gsl_matrix_complex_long_double,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_complex_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_get(
         m: *const gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> gsl_complex_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_set(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: gsl_complex_long_double,
     );
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_ptr(
         m: *mut gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut gsl_complex_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_complex_long_double_const_ptr(
         m: *const gsl_matrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const gsl_complex_long_double;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_complex_long_double {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut u128,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_complex_long_double__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_complex_long_double__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut u128,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_complex_long_double;
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_alloc(
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_spmatrix_complex_long_double;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_complex_long_double;
 }
@@ -4248,14 +3975,14 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_complex_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_nnz(
         m: *const gsl_spmatrix_complex_long_double,
-    ) -> size_t;
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_type(
@@ -4338,23 +4065,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_get(
         m: *const gsl_spmatrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> gsl_complex_long_double;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_set(
         m: *mut gsl_spmatrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: gsl_complex_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_long_double_ptr(
         m: *const gsl_spmatrix_complex_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut gsl_complex_long_double;
 }
 extern "C" {
@@ -4436,16 +4163,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_struct {
-    pub size: size_t,
-    pub data: *mut f64,
-}
+pub struct gsl_block_struct;
 pub type gsl_block = gsl_block_struct;
 extern "C" {
-    pub fn gsl_block_alloc(n: size_t) -> *mut gsl_block;
+    pub fn gsl_block_alloc(n: usize) -> *mut gsl_block;
 }
 extern "C" {
-    pub fn gsl_block_calloc(n: size_t) -> *mut gsl_block;
+    pub fn gsl_block_calloc(n: usize) -> *mut gsl_block;
 }
 extern "C" {
     pub fn gsl_block_free(b: *mut gsl_block);
@@ -4470,131 +4194,121 @@ extern "C" {
     pub fn gsl_block_raw_fread(
         stream: *mut FILE,
         b: *mut f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_raw_fwrite(
         stream: *mut FILE,
         b: *const f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_raw_fscanf(
         stream: *mut FILE,
         b: *mut f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_raw_fprintf(
         stream: *mut FILE,
         b: *const f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_size(b: *const gsl_block) -> size_t;
+    pub fn gsl_block_size(b: *const gsl_block) -> usize;
 }
 extern "C" {
     pub fn gsl_block_data(b: *const gsl_block) -> *mut f64;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut f64,
-    pub block: *mut gsl_block,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_view {
-    pub vector: gsl_vector,
-}
+pub struct _gsl_vector_view;
 pub type gsl_vector_view = _gsl_vector_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_const_view {
-    pub vector: gsl_vector,
-}
+pub struct _gsl_vector_const_view;
 pub type gsl_vector_const_view = _gsl_vector_const_view;
 extern "C" {
-    pub fn gsl_vector_alloc(n: size_t) -> *mut gsl_vector;
+    pub fn gsl_vector_alloc(n: usize) -> *mut gsl_vector;
 }
 extern "C" {
-    pub fn gsl_vector_calloc(n: size_t) -> *mut gsl_vector;
+    pub fn gsl_vector_calloc(n: usize) -> *mut gsl_vector;
 }
 extern "C" {
     pub fn gsl_vector_alloc_from_block(
         b: *mut gsl_block,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector;
 }
 extern "C" {
     pub fn gsl_vector_alloc_from_vector(
         v: *mut gsl_vector,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector;
 }
 extern "C" {
     pub fn gsl_vector_free(v: *mut gsl_vector);
 }
 extern "C" {
-    pub fn gsl_vector_view_array(v: *mut f64, n: size_t) -> _gsl_vector_view;
+    pub fn gsl_vector_view_array(v: *mut f64, n: usize) -> _gsl_vector_view;
 }
 extern "C" {
     pub fn gsl_vector_view_array_with_stride(
         base: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_view;
 }
 extern "C" {
-    pub fn gsl_vector_const_view_array(v: *const f64, n: size_t) -> _gsl_vector_const_view;
+    pub fn gsl_vector_const_view_array(v: *const f64, n: usize) -> _gsl_vector_const_view;
 }
 extern "C" {
     pub fn gsl_vector_const_view_array_with_stride(
         base: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_const_view;
 }
 extern "C" {
-    pub fn gsl_vector_subvector(v: *mut gsl_vector, i: size_t, n: size_t) -> _gsl_vector_view;
+    pub fn gsl_vector_subvector(v: *mut gsl_vector, i: usize, n: usize) -> _gsl_vector_view;
 }
 extern "C" {
     pub fn gsl_vector_subvector_with_stride(
         v: *mut gsl_vector,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_view;
 }
 extern "C" {
     pub fn gsl_vector_const_subvector(
         v: *const gsl_vector,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_const_view;
 }
 extern "C" {
     pub fn gsl_vector_const_subvector_with_stride(
         v: *const gsl_vector,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_const_view;
 }
 extern "C" {
@@ -4604,7 +4318,7 @@ extern "C" {
     pub fn gsl_vector_set_all(v: *mut gsl_vector, x: f64);
 }
 extern "C" {
-    pub fn gsl_vector_set_basis(v: *mut gsl_vector, i: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_vector_set_basis(v: *mut gsl_vector, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_fread(stream: *mut FILE, v: *mut gsl_vector) -> ::std::os::raw::c_int;
@@ -4637,8 +4351,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_swap_elements(
         v: *mut gsl_vector,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -4651,13 +4365,13 @@ extern "C" {
     pub fn gsl_vector_minmax(v: *const gsl_vector, min_out: *mut f64, max_out: *mut f64);
 }
 extern "C" {
-    pub fn gsl_vector_max_index(v: *const gsl_vector) -> size_t;
+    pub fn gsl_vector_max_index(v: *const gsl_vector) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_min_index(v: *const gsl_vector) -> size_t;
+    pub fn gsl_vector_min_index(v: *const gsl_vector) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_minmax_index(v: *const gsl_vector, imin: *mut size_t, imax: *mut size_t);
+    pub fn gsl_vector_minmax_index(v: *const gsl_vector, imin: *mut usize, imax: *mut usize);
 }
 extern "C" {
     pub fn gsl_vector_add(a: *mut gsl_vector, b: *const gsl_vector) -> ::std::os::raw::c_int;
@@ -4706,29 +4420,26 @@ extern "C" {
     pub fn gsl_vector_isnonneg(v: *const gsl_vector) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_get(v: *const gsl_vector, i: size_t) -> f64;
+    pub fn gsl_vector_get(v: *const gsl_vector, i: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_vector_set(v: *mut gsl_vector, i: size_t, x: f64);
+    pub fn gsl_vector_set(v: *mut gsl_vector, i: usize, x: f64);
 }
 extern "C" {
-    pub fn gsl_vector_ptr(v: *mut gsl_vector, i: size_t) -> *mut f64;
+    pub fn gsl_vector_ptr(v: *mut gsl_vector, i: usize) -> *mut f64;
 }
 extern "C" {
-    pub fn gsl_vector_const_ptr(v: *const gsl_vector, i: size_t) -> *const f64;
+    pub fn gsl_vector_const_ptr(v: *const gsl_vector, i: usize) -> *const f64;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_complex_struct {
-    pub size: size_t,
-    pub data: *mut f64,
-}
+pub struct gsl_block_complex_struct;
 pub type gsl_block_complex = gsl_block_complex_struct;
 extern "C" {
-    pub fn gsl_block_complex_alloc(n: size_t) -> *mut gsl_block_complex;
+    pub fn gsl_block_complex_alloc(n: usize) -> *mut gsl_block_complex;
 }
 extern "C" {
-    pub fn gsl_block_complex_calloc(n: size_t) -> *mut gsl_block_complex;
+    pub fn gsl_block_complex_calloc(n: usize) -> *mut gsl_block_complex;
 }
 extern "C" {
     pub fn gsl_block_complex_free(b: *mut gsl_block_complex);
@@ -4762,138 +4473,128 @@ extern "C" {
     pub fn gsl_block_complex_raw_fread(
         stream: *mut FILE,
         b: *mut f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_raw_fwrite(
         stream: *mut FILE,
         b: *const f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_raw_fscanf(
         stream: *mut FILE,
         b: *mut f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_raw_fprintf(
         stream: *mut FILE,
         b: *const f64,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_complex_size(b: *const gsl_block_complex) -> size_t;
+    pub fn gsl_block_complex_size(b: *const gsl_block_complex) -> usize;
 }
 extern "C" {
     pub fn gsl_block_complex_data(b: *const gsl_block_complex) -> *mut f64;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_complex {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut f64,
-    pub block: *mut gsl_block_complex,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_complex;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_view {
-    pub vector: gsl_vector_complex,
-}
+pub struct _gsl_vector_complex_view;
 pub type gsl_vector_complex_view = _gsl_vector_complex_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_const_view {
-    pub vector: gsl_vector_complex,
-}
+pub struct _gsl_vector_complex_const_view;
 pub type gsl_vector_complex_const_view = _gsl_vector_complex_const_view;
 extern "C" {
-    pub fn gsl_vector_complex_alloc(n: size_t) -> *mut gsl_vector_complex;
+    pub fn gsl_vector_complex_alloc(n: usize) -> *mut gsl_vector_complex;
 }
 extern "C" {
-    pub fn gsl_vector_complex_calloc(n: size_t) -> *mut gsl_vector_complex;
+    pub fn gsl_vector_complex_calloc(n: usize) -> *mut gsl_vector_complex;
 }
 extern "C" {
     pub fn gsl_vector_complex_alloc_from_block(
         b: *mut gsl_block_complex,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_complex;
 }
 extern "C" {
     pub fn gsl_vector_complex_alloc_from_vector(
         v: *mut gsl_vector_complex,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_complex;
 }
 extern "C" {
     pub fn gsl_vector_complex_free(v: *mut gsl_vector_complex);
 }
 extern "C" {
-    pub fn gsl_vector_complex_view_array(base: *mut f64, n: size_t) -> _gsl_vector_complex_view;
+    pub fn gsl_vector_complex_view_array(base: *mut f64, n: usize) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_view_array_with_stride(
         base: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_const_view_array(
         base: *const f64,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_const_view_array_with_stride(
         base: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_subvector(
         base: *mut gsl_vector_complex,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_subvector_with_stride(
         v: *mut gsl_vector_complex,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_const_subvector(
         base: *const gsl_vector_complex,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_const_subvector_with_stride(
         v: *const gsl_vector_complex,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
@@ -4917,7 +4618,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_set_basis(
         v: *mut gsl_vector_complex,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -4963,8 +4664,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_swap_elements(
         v: *mut gsl_vector_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -5030,76 +4731,65 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_complex_get(v: *const gsl_vector_complex, i: size_t) -> gsl_complex;
+    pub fn gsl_vector_complex_get(v: *const gsl_vector_complex, i: usize) -> gsl_complex;
 }
 extern "C" {
-    pub fn gsl_vector_complex_set(v: *mut gsl_vector_complex, i: size_t, z: gsl_complex);
+    pub fn gsl_vector_complex_set(v: *mut gsl_vector_complex, i: usize, z: gsl_complex);
 }
 extern "C" {
-    pub fn gsl_vector_complex_ptr(v: *mut gsl_vector_complex, i: size_t) -> *mut gsl_complex;
+    pub fn gsl_vector_complex_ptr(v: *mut gsl_vector_complex, i: usize) -> *mut gsl_complex;
 }
 extern "C" {
     pub fn gsl_vector_complex_const_ptr(
         v: *const gsl_vector_complex,
-        i: size_t,
+        i: usize,
     ) -> *const gsl_complex;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_complex {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut f64,
-    pub block: *mut gsl_block_complex,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_complex;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_view {
-    pub matrix: gsl_matrix_complex,
-}
+pub struct _gsl_matrix_complex_view;
 pub type gsl_matrix_complex_view = _gsl_matrix_complex_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_const_view {
-    pub matrix: gsl_matrix_complex,
-}
+pub struct _gsl_matrix_complex_const_view;
 pub type gsl_matrix_complex_const_view = _gsl_matrix_complex_const_view;
 extern "C" {
-    pub fn gsl_matrix_complex_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_complex;
+    pub fn gsl_matrix_complex_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_complex;
 }
 extern "C" {
-    pub fn gsl_matrix_complex_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_complex;
+    pub fn gsl_matrix_complex_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_complex;
 }
 extern "C" {
     pub fn gsl_matrix_complex_alloc_from_block(
         b: *mut gsl_block_complex,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_complex;
 }
 extern "C" {
     pub fn gsl_matrix_complex_alloc_from_matrix(
         b: *mut gsl_matrix_complex,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_complex;
 }
 extern "C" {
     pub fn gsl_vector_complex_alloc_row_from_matrix(
         m: *mut gsl_matrix_complex,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_complex;
 }
 extern "C" {
     pub fn gsl_vector_complex_alloc_col_from_matrix(
         m: *mut gsl_matrix_complex,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_complex;
 }
 extern "C" {
@@ -5108,22 +4798,20 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_submatrix(
         m: *mut gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_view;
 }
 extern "C" {
-    pub fn gsl_matrix_complex_row(
-        m: *mut gsl_matrix_complex,
-        i: size_t,
-    ) -> _gsl_vector_complex_view;
+    pub fn gsl_matrix_complex_row(m: *mut gsl_matrix_complex, i: usize)
+        -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_column(
         m: *mut gsl_matrix_complex,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
@@ -5132,80 +4820,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_subdiagonal(
         m: *mut gsl_matrix_complex,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_superdiagonal(
         m: *mut gsl_matrix_complex,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_subrow(
         m: *mut gsl_matrix_complex,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_subcolumn(
         m: *mut gsl_matrix_complex,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_view_array(
         base: *mut f64,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_view_array_with_tda(
         base: *mut f64,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_view_vector(
         v: *mut gsl_vector_complex,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_view_vector_with_tda(
         v: *mut gsl_vector_complex,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_submatrix(
         m: *const gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_row(
         m: *const gsl_matrix_complex,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_column(
         m: *const gsl_matrix_complex,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
@@ -5216,59 +4904,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_const_subdiagonal(
         m: *const gsl_matrix_complex,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_superdiagonal(
         m: *const gsl_matrix_complex,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_subrow(
         m: *const gsl_matrix_complex,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_subcolumn(
         m: *const gsl_matrix_complex,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_view_array(
         base: *const f64,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_view_array_with_tda(
         base: *const f64,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_view_vector(
         v: *const gsl_vector_complex,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_view_vector_with_tda(
         v: *const gsl_vector_complex,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_const_view;
 }
 extern "C" {
@@ -5328,22 +5016,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_swap_rows(
         m: *mut gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_swap_columns(
         m: *mut gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_swap_rowcol(
         m: *mut gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -5446,87 +5134,61 @@ extern "C" {
     pub fn gsl_matrix_complex_get_row(
         v: *mut gsl_vector_complex,
         m: *const gsl_matrix_complex,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_get_col(
         v: *mut gsl_vector_complex,
         m: *const gsl_matrix_complex,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_set_row(
         m: *mut gsl_matrix_complex,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_complex,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_set_col(
         m: *mut gsl_matrix_complex,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_complex,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_complex_get(
-        m: *const gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
-    ) -> gsl_complex;
+    pub fn gsl_matrix_complex_get(m: *const gsl_matrix_complex, i: usize, j: usize) -> gsl_complex;
 }
 extern "C" {
-    pub fn gsl_matrix_complex_set(m: *mut gsl_matrix_complex, i: size_t, j: size_t, x: gsl_complex);
+    pub fn gsl_matrix_complex_set(m: *mut gsl_matrix_complex, i: usize, j: usize, x: gsl_complex);
 }
 extern "C" {
     pub fn gsl_matrix_complex_ptr(
         m: *mut gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut gsl_complex;
 }
 extern "C" {
     pub fn gsl_matrix_complex_const_ptr(
         m: *const gsl_matrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const gsl_complex;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_complex {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut f64,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_complex__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_complex__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut f64,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_complex;
 extern "C" {
-    pub fn gsl_spmatrix_complex_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_complex;
+    pub fn gsl_spmatrix_complex_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_complex;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_complex;
 }
@@ -5535,12 +5197,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_complex,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_complex_nnz(m: *const gsl_spmatrix_complex) -> size_t;
+    pub fn gsl_spmatrix_complex_nnz(m: *const gsl_spmatrix_complex) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_type(
@@ -5614,23 +5276,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_complex_get(
         m: *const gsl_spmatrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> gsl_complex;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_set(
         m: *mut gsl_spmatrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: gsl_complex,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_ptr(
         m: *const gsl_spmatrix_complex,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut gsl_complex;
 }
 extern "C" {
@@ -5708,16 +5370,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_float_struct {
-    pub size: size_t,
-    pub data: *mut f32,
-}
+pub struct gsl_block_float_struct;
 pub type gsl_block_float = gsl_block_float_struct;
 extern "C" {
-    pub fn gsl_block_float_alloc(n: size_t) -> *mut gsl_block_float;
+    pub fn gsl_block_float_alloc(n: usize) -> *mut gsl_block_float;
 }
 extern "C" {
-    pub fn gsl_block_float_calloc(n: size_t) -> *mut gsl_block_float;
+    pub fn gsl_block_float_calloc(n: usize) -> *mut gsl_block_float;
 }
 extern "C" {
     pub fn gsl_block_float_free(b: *mut gsl_block_float);
@@ -5751,138 +5410,128 @@ extern "C" {
     pub fn gsl_block_float_raw_fread(
         stream: *mut FILE,
         b: *mut f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_float_raw_fwrite(
         stream: *mut FILE,
         b: *const f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_float_raw_fscanf(
         stream: *mut FILE,
         b: *mut f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_float_raw_fprintf(
         stream: *mut FILE,
         b: *const f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_float_size(b: *const gsl_block_float) -> size_t;
+    pub fn gsl_block_float_size(b: *const gsl_block_float) -> usize;
 }
 extern "C" {
     pub fn gsl_block_float_data(b: *const gsl_block_float) -> *mut f32;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_float {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut f32,
-    pub block: *mut gsl_block_float,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_float_view {
-    pub vector: gsl_vector_float,
-}
+pub struct _gsl_vector_float_view;
 pub type gsl_vector_float_view = _gsl_vector_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_float_const_view {
-    pub vector: gsl_vector_float,
-}
+pub struct _gsl_vector_float_const_view;
 pub type gsl_vector_float_const_view = _gsl_vector_float_const_view;
 extern "C" {
-    pub fn gsl_vector_float_alloc(n: size_t) -> *mut gsl_vector_float;
+    pub fn gsl_vector_float_alloc(n: usize) -> *mut gsl_vector_float;
 }
 extern "C" {
-    pub fn gsl_vector_float_calloc(n: size_t) -> *mut gsl_vector_float;
+    pub fn gsl_vector_float_calloc(n: usize) -> *mut gsl_vector_float;
 }
 extern "C" {
     pub fn gsl_vector_float_alloc_from_block(
         b: *mut gsl_block_float,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_float;
 }
 extern "C" {
     pub fn gsl_vector_float_alloc_from_vector(
         v: *mut gsl_vector_float,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_float;
 }
 extern "C" {
     pub fn gsl_vector_float_free(v: *mut gsl_vector_float);
 }
 extern "C" {
-    pub fn gsl_vector_float_view_array(v: *mut f32, n: size_t) -> _gsl_vector_float_view;
+    pub fn gsl_vector_float_view_array(v: *mut f32, n: usize) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_vector_float_view_array_with_stride(
         base: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_vector_float_const_view_array(
         v: *const f32,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_vector_float_const_view_array_with_stride(
         base: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_vector_float_subvector(
         v: *mut gsl_vector_float,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_vector_float_subvector_with_stride(
         v: *mut gsl_vector_float,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_vector_float_const_subvector(
         v: *const gsl_vector_float,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_vector_float_const_subvector_with_stride(
         v: *const gsl_vector_float,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
@@ -5892,8 +5541,7 @@ extern "C" {
     pub fn gsl_vector_float_set_all(v: *mut gsl_vector_float, x: f32);
 }
 extern "C" {
-    pub fn gsl_vector_float_set_basis(v: *mut gsl_vector_float, i: size_t)
-        -> ::std::os::raw::c_int;
+    pub fn gsl_vector_float_set_basis(v: *mut gsl_vector_float, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_float_fread(
@@ -5938,8 +5586,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_float_swap_elements(
         v: *mut gsl_vector_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -5956,16 +5604,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_float_max_index(v: *const gsl_vector_float) -> size_t;
+    pub fn gsl_vector_float_max_index(v: *const gsl_vector_float) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_float_min_index(v: *const gsl_vector_float) -> size_t;
+    pub fn gsl_vector_float_min_index(v: *const gsl_vector_float) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_float_minmax_index(
         v: *const gsl_vector_float,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -6029,29 +5677,26 @@ extern "C" {
     pub fn gsl_vector_float_isnonneg(v: *const gsl_vector_float) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_float_get(v: *const gsl_vector_float, i: size_t) -> f32;
+    pub fn gsl_vector_float_get(v: *const gsl_vector_float, i: usize) -> f32;
 }
 extern "C" {
-    pub fn gsl_vector_float_set(v: *mut gsl_vector_float, i: size_t, x: f32);
+    pub fn gsl_vector_float_set(v: *mut gsl_vector_float, i: usize, x: f32);
 }
 extern "C" {
-    pub fn gsl_vector_float_ptr(v: *mut gsl_vector_float, i: size_t) -> *mut f32;
+    pub fn gsl_vector_float_ptr(v: *mut gsl_vector_float, i: usize) -> *mut f32;
 }
 extern "C" {
-    pub fn gsl_vector_float_const_ptr(v: *const gsl_vector_float, i: size_t) -> *const f32;
+    pub fn gsl_vector_float_const_ptr(v: *const gsl_vector_float, i: usize) -> *const f32;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_complex_float_struct {
-    pub size: size_t,
-    pub data: *mut f32,
-}
+pub struct gsl_block_complex_float_struct;
 pub type gsl_block_complex_float = gsl_block_complex_float_struct;
 extern "C" {
-    pub fn gsl_block_complex_float_alloc(n: size_t) -> *mut gsl_block_complex_float;
+    pub fn gsl_block_complex_float_alloc(n: usize) -> *mut gsl_block_complex_float;
 }
 extern "C" {
-    pub fn gsl_block_complex_float_calloc(n: size_t) -> *mut gsl_block_complex_float;
+    pub fn gsl_block_complex_float_calloc(n: usize) -> *mut gsl_block_complex_float;
 }
 extern "C" {
     pub fn gsl_block_complex_float_free(b: *mut gsl_block_complex_float);
@@ -6085,82 +5730,72 @@ extern "C" {
     pub fn gsl_block_complex_float_raw_fread(
         stream: *mut FILE,
         b: *mut f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_float_raw_fwrite(
         stream: *mut FILE,
         b: *const f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_float_raw_fscanf(
         stream: *mut FILE,
         b: *mut f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_complex_float_raw_fprintf(
         stream: *mut FILE,
         b: *const f32,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_complex_float_size(b: *const gsl_block_complex_float) -> size_t;
+    pub fn gsl_block_complex_float_size(b: *const gsl_block_complex_float) -> usize;
 }
 extern "C" {
     pub fn gsl_block_complex_float_data(b: *const gsl_block_complex_float) -> *mut f32;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_complex_float {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut f32,
-    pub block: *mut gsl_block_complex_float,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_complex_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_float_view {
-    pub vector: gsl_vector_complex_float,
-}
+pub struct _gsl_vector_complex_float_view;
 pub type gsl_vector_complex_float_view = _gsl_vector_complex_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_float_const_view {
-    pub vector: gsl_vector_complex_float,
-}
+pub struct _gsl_vector_complex_float_const_view;
 pub type gsl_vector_complex_float_const_view = _gsl_vector_complex_float_const_view;
 extern "C" {
-    pub fn gsl_vector_complex_float_alloc(n: size_t) -> *mut gsl_vector_complex_float;
+    pub fn gsl_vector_complex_float_alloc(n: usize) -> *mut gsl_vector_complex_float;
 }
 extern "C" {
-    pub fn gsl_vector_complex_float_calloc(n: size_t) -> *mut gsl_vector_complex_float;
+    pub fn gsl_vector_complex_float_calloc(n: usize) -> *mut gsl_vector_complex_float;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_alloc_from_block(
         b: *mut gsl_block_complex_float,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_complex_float;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_alloc_from_vector(
         v: *mut gsl_vector_complex_float,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_complex_float;
 }
 extern "C" {
@@ -6169,57 +5804,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_float_view_array(
         base: *mut f32,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_view_array_with_stride(
         base: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_const_view_array(
         base: *const f32,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_const_view_array_with_stride(
         base: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_subvector(
         base: *mut gsl_vector_complex_float,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_subvector_with_stride(
         v: *mut gsl_vector_complex_float,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_const_subvector(
         base: *const gsl_vector_complex_float,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_const_subvector_with_stride(
         v: *const gsl_vector_complex_float,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
@@ -6251,7 +5886,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_float_set_basis(
         v: *mut gsl_vector_complex_float,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -6299,8 +5934,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_float_swap_elements(
         v: *mut gsl_vector_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -6376,85 +6011,73 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_complex_float_get(
         v: *const gsl_vector_complex_float,
-        i: size_t,
+        i: usize,
     ) -> gsl_complex_float;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_set(
         v: *mut gsl_vector_complex_float,
-        i: size_t,
+        i: usize,
         z: gsl_complex_float,
     );
 }
 extern "C" {
     pub fn gsl_vector_complex_float_ptr(
         v: *mut gsl_vector_complex_float,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_complex_float;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_const_ptr(
         v: *const gsl_vector_complex_float,
-        i: size_t,
+        i: usize,
     ) -> *const gsl_complex_float;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_complex_float {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut f32,
-    pub block: *mut gsl_block_complex_float,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_complex_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_float_view {
-    pub matrix: gsl_matrix_complex_float,
-}
+pub struct _gsl_matrix_complex_float_view;
 pub type gsl_matrix_complex_float_view = _gsl_matrix_complex_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_float_const_view {
-    pub matrix: gsl_matrix_complex_float,
-}
+pub struct _gsl_matrix_complex_float_const_view;
 pub type gsl_matrix_complex_float_const_view = _gsl_matrix_complex_float_const_view;
 extern "C" {
-    pub fn gsl_matrix_complex_float_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_complex_float;
+    pub fn gsl_matrix_complex_float_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_complex_float;
 }
 extern "C" {
-    pub fn gsl_matrix_complex_float_calloc(n1: size_t, n2: size_t)
-        -> *mut gsl_matrix_complex_float;
+    pub fn gsl_matrix_complex_float_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_complex_float;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_alloc_from_block(
         b: *mut gsl_block_complex_float,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_complex_float;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_alloc_from_matrix(
         b: *mut gsl_matrix_complex_float,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_complex_float;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_alloc_row_from_matrix(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_complex_float;
 }
 extern "C" {
     pub fn gsl_vector_complex_float_alloc_col_from_matrix(
         m: *mut gsl_matrix_complex_float,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_complex_float;
 }
 extern "C" {
@@ -6463,22 +6086,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_float_submatrix(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_row(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_column(
         m: *mut gsl_matrix_complex_float,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
@@ -6489,80 +6112,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_float_subdiagonal(
         m: *mut gsl_matrix_complex_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_superdiagonal(
         m: *mut gsl_matrix_complex_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_subrow(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_subcolumn(
         m: *mut gsl_matrix_complex_float,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_view_array(
         base: *mut f32,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_view_array_with_tda(
         base: *mut f32,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_view_vector(
         v: *mut gsl_vector_complex_float,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_view_vector_with_tda(
         v: *mut gsl_vector_complex_float,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_submatrix(
         m: *const gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_row(
         m: *const gsl_matrix_complex_float,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_column(
         m: *const gsl_matrix_complex_float,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
@@ -6573,59 +6196,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_float_const_subdiagonal(
         m: *const gsl_matrix_complex_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_superdiagonal(
         m: *const gsl_matrix_complex_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_subrow(
         m: *const gsl_matrix_complex_float,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_subcolumn(
         m: *const gsl_matrix_complex_float,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_view_array(
         base: *const f32,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_view_array_with_tda(
         base: *const f32,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_view_vector(
         v: *const gsl_vector_complex_float,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_complex_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_view_vector_with_tda(
         v: *const gsl_vector_complex_float,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_complex_float_const_view;
 }
 extern "C" {
@@ -6685,22 +6308,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_complex_float_swap_rows(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_swap_columns(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_swap_rowcol(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -6812,95 +6435,73 @@ extern "C" {
     pub fn gsl_matrix_complex_float_get_row(
         v: *mut gsl_vector_complex_float,
         m: *const gsl_matrix_complex_float,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_get_col(
         v: *mut gsl_vector_complex_float,
         m: *const gsl_matrix_complex_float,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_set_row(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_complex_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_set_col(
         m: *mut gsl_matrix_complex_float,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_complex_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_get(
         m: *const gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> gsl_complex_float;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_set(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: gsl_complex_float,
     );
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_ptr(
         m: *mut gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut gsl_complex_float;
 }
 extern "C" {
     pub fn gsl_matrix_complex_float_const_ptr(
         m: *const gsl_matrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const gsl_complex_float;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_complex_float {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut f32,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_complex_float__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_complex_float__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut f32,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_complex_float;
 extern "C" {
     pub fn gsl_spmatrix_complex_float_alloc(
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_spmatrix_complex_float;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_float_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_complex_float;
 }
@@ -6909,12 +6510,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_float_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_complex_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_complex_float_nnz(m: *const gsl_spmatrix_complex_float) -> size_t;
+    pub fn gsl_spmatrix_complex_float_nnz(m: *const gsl_spmatrix_complex_float) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_float_type(
@@ -6995,23 +6596,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_complex_float_get(
         m: *const gsl_spmatrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> gsl_complex_float;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_float_set(
         m: *mut gsl_spmatrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: gsl_complex_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_complex_float_ptr(
         m: *const gsl_spmatrix_complex_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut gsl_complex_float;
 }
 extern "C" {
@@ -7093,60 +6694,49 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_long_double {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut u128,
-    pub block: *mut gsl_block_long_double,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_long_double;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_double_view {
-    pub matrix: gsl_matrix_long_double,
-}
+pub struct _gsl_matrix_long_double_view;
 pub type gsl_matrix_long_double_view = _gsl_matrix_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_double_const_view {
-    pub matrix: gsl_matrix_long_double,
-}
+pub struct _gsl_matrix_long_double_const_view;
 pub type gsl_matrix_long_double_const_view = _gsl_matrix_long_double_const_view;
 extern "C" {
-    pub fn gsl_matrix_long_double_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_long_double;
+    pub fn gsl_matrix_long_double_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_long_double;
 }
 extern "C" {
-    pub fn gsl_matrix_long_double_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_long_double;
+    pub fn gsl_matrix_long_double_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_alloc_from_block(
         b: *mut gsl_block_long_double,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_long_double;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_alloc_from_matrix(
         m: *mut gsl_matrix_long_double,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_long_double;
 }
 extern "C" {
     pub fn gsl_vector_long_double_alloc_row_from_matrix(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_long_double;
 }
 extern "C" {
     pub fn gsl_vector_long_double_alloc_col_from_matrix(
         m: *mut gsl_matrix_long_double,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_long_double;
 }
 extern "C" {
@@ -7155,22 +6745,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_double_submatrix(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_row(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_column(
         m: *mut gsl_matrix_long_double,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
@@ -7181,80 +6771,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_double_subdiagonal(
         m: *mut gsl_matrix_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_superdiagonal(
         m: *mut gsl_matrix_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_subrow(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_subcolumn(
         m: *mut gsl_matrix_long_double,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_view_array(
         base: *mut u128,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_view_array_with_tda(
         base: *mut u128,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_view_vector(
         v: *mut gsl_vector_long_double,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_view_vector_with_tda(
         v: *mut gsl_vector_long_double,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_double_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_submatrix(
         m: *const gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_row(
         m: *const gsl_matrix_long_double,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_column(
         m: *const gsl_matrix_long_double,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
@@ -7265,59 +6855,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_double_const_subdiagonal(
         m: *const gsl_matrix_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_superdiagonal(
         m: *const gsl_matrix_long_double,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_subrow(
         m: *const gsl_matrix_long_double,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_subcolumn(
         m: *const gsl_matrix_long_double,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_view_array(
         base: *const u128,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_view_array_with_tda(
         base: *const u128,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_view_vector(
         v: *const gsl_vector_long_double,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_double_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_view_vector_with_tda(
         v: *const gsl_vector_long_double,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_double_const_view;
 }
 extern "C" {
@@ -7377,22 +6967,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_double_swap_rows(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_swap_columns(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_swap_rowcol(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -7430,24 +7020,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_double_max_index(
         m: *const gsl_matrix_long_double,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_long_double_min_index(
         m: *const gsl_matrix_long_double,
-        imin: *mut size_t,
-        jmin: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_long_double_minmax_index(
         m: *const gsl_matrix_long_double,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -7532,92 +7122,62 @@ extern "C" {
     pub fn gsl_matrix_long_double_get_row(
         v: *mut gsl_vector_long_double,
         m: *const gsl_matrix_long_double,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_get_col(
         v: *mut gsl_vector_long_double,
         m: *const gsl_matrix_long_double,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_set_row(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_set_col(
         m: *mut gsl_matrix_long_double,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_long_double_get(
-        m: *const gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
-    ) -> u128;
+    pub fn gsl_matrix_long_double_get(m: *const gsl_matrix_long_double, i: usize, j: usize)
+        -> u128;
 }
 extern "C" {
-    pub fn gsl_matrix_long_double_set(
-        m: *mut gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
-        x: u128,
-    );
+    pub fn gsl_matrix_long_double_set(m: *mut gsl_matrix_long_double, i: usize, j: usize, x: u128);
 }
 extern "C" {
     pub fn gsl_matrix_long_double_ptr(
         m: *mut gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut u128;
 }
 extern "C" {
     pub fn gsl_matrix_long_double_const_ptr(
         m: *const gsl_matrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const u128;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_long_double {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut u128,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_long_double__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_long_double__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut u128,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_long_double;
 extern "C" {
-    pub fn gsl_spmatrix_long_double_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_long_double;
+    pub fn gsl_spmatrix_long_double_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_long_double;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_double_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_long_double;
 }
@@ -7626,12 +7186,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_long_double_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_long_double_nnz(m: *const gsl_spmatrix_long_double) -> size_t;
+    pub fn gsl_spmatrix_long_double_nnz(m: *const gsl_spmatrix_long_double) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_double_type(
@@ -7712,23 +7272,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_long_double_get(
         m: *const gsl_spmatrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> u128;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_double_set(
         m: *mut gsl_spmatrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: u128,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_double_ptr(
         m: *const gsl_spmatrix_long_double,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut u128;
 }
 extern "C" {
@@ -7741,8 +7301,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_long_double_min_index(
         m: *const gsl_spmatrix_long_double,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -7827,55 +7387,44 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut f64,
-    pub block: *mut gsl_block,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_view {
-    pub matrix: gsl_matrix,
-}
+pub struct _gsl_matrix_view;
 pub type gsl_matrix_view = _gsl_matrix_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_const_view {
-    pub matrix: gsl_matrix,
-}
+pub struct _gsl_matrix_const_view;
 pub type gsl_matrix_const_view = _gsl_matrix_const_view;
 extern "C" {
-    pub fn gsl_matrix_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix;
+    pub fn gsl_matrix_alloc(n1: usize, n2: usize) -> *mut gsl_matrix;
 }
 extern "C" {
-    pub fn gsl_matrix_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix;
+    pub fn gsl_matrix_calloc(n1: usize, n2: usize) -> *mut gsl_matrix;
 }
 extern "C" {
     pub fn gsl_matrix_alloc_from_block(
         b: *mut gsl_block,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix;
 }
 extern "C" {
     pub fn gsl_matrix_alloc_from_matrix(
         m: *mut gsl_matrix,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix;
 }
 extern "C" {
-    pub fn gsl_vector_alloc_row_from_matrix(m: *mut gsl_matrix, i: size_t) -> *mut gsl_vector;
+    pub fn gsl_vector_alloc_row_from_matrix(m: *mut gsl_matrix, i: usize) -> *mut gsl_vector;
 }
 extern "C" {
-    pub fn gsl_vector_alloc_col_from_matrix(m: *mut gsl_matrix, j: size_t) -> *mut gsl_vector;
+    pub fn gsl_vector_alloc_col_from_matrix(m: *mut gsl_matrix, j: usize) -> *mut gsl_vector;
 }
 extern "C" {
     pub fn gsl_matrix_free(m: *mut gsl_matrix);
@@ -7883,136 +7432,134 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_submatrix(
         m: *mut gsl_matrix,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_view;
 }
 extern "C" {
-    pub fn gsl_matrix_row(m: *mut gsl_matrix, i: size_t) -> _gsl_vector_view;
+    pub fn gsl_matrix_row(m: *mut gsl_matrix, i: usize) -> _gsl_vector_view;
 }
 extern "C" {
-    pub fn gsl_matrix_column(m: *mut gsl_matrix, j: size_t) -> _gsl_vector_view;
+    pub fn gsl_matrix_column(m: *mut gsl_matrix, j: usize) -> _gsl_vector_view;
 }
 extern "C" {
     pub fn gsl_matrix_diagonal(m: *mut gsl_matrix) -> _gsl_vector_view;
 }
 extern "C" {
-    pub fn gsl_matrix_subdiagonal(m: *mut gsl_matrix, k: size_t) -> _gsl_vector_view;
+    pub fn gsl_matrix_subdiagonal(m: *mut gsl_matrix, k: usize) -> _gsl_vector_view;
 }
 extern "C" {
-    pub fn gsl_matrix_superdiagonal(m: *mut gsl_matrix, k: size_t) -> _gsl_vector_view;
+    pub fn gsl_matrix_superdiagonal(m: *mut gsl_matrix, k: usize) -> _gsl_vector_view;
 }
 extern "C" {
     pub fn gsl_matrix_subrow(
         m: *mut gsl_matrix,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_view;
 }
 extern "C" {
     pub fn gsl_matrix_subcolumn(
         m: *mut gsl_matrix,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_view;
 }
 extern "C" {
-    pub fn gsl_matrix_view_array(base: *mut f64, n1: size_t, n2: size_t) -> _gsl_matrix_view;
+    pub fn gsl_matrix_view_array(base: *mut f64, n1: usize, n2: usize) -> _gsl_matrix_view;
 }
 extern "C" {
     pub fn gsl_matrix_view_array_with_tda(
         base: *mut f64,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_view;
 }
 extern "C" {
-    pub fn gsl_matrix_view_vector(v: *mut gsl_vector, n1: size_t, n2: size_t) -> _gsl_matrix_view;
+    pub fn gsl_matrix_view_vector(v: *mut gsl_vector, n1: usize, n2: usize) -> _gsl_matrix_view;
 }
 extern "C" {
     pub fn gsl_matrix_view_vector_with_tda(
         v: *mut gsl_vector,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_submatrix(
         m: *const gsl_matrix,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_const_view;
 }
 extern "C" {
-    pub fn gsl_matrix_const_row(m: *const gsl_matrix, i: size_t) -> _gsl_vector_const_view;
+    pub fn gsl_matrix_const_row(m: *const gsl_matrix, i: usize) -> _gsl_vector_const_view;
 }
 extern "C" {
-    pub fn gsl_matrix_const_column(m: *const gsl_matrix, j: size_t) -> _gsl_vector_const_view;
+    pub fn gsl_matrix_const_column(m: *const gsl_matrix, j: usize) -> _gsl_vector_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_diagonal(m: *const gsl_matrix) -> _gsl_vector_const_view;
 }
 extern "C" {
-    pub fn gsl_matrix_const_subdiagonal(m: *const gsl_matrix, k: size_t) -> _gsl_vector_const_view;
+    pub fn gsl_matrix_const_subdiagonal(m: *const gsl_matrix, k: usize) -> _gsl_vector_const_view;
 }
 extern "C" {
-    pub fn gsl_matrix_const_superdiagonal(
-        m: *const gsl_matrix,
-        k: size_t,
-    ) -> _gsl_vector_const_view;
+    pub fn gsl_matrix_const_superdiagonal(m: *const gsl_matrix, k: usize)
+        -> _gsl_vector_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_subrow(
         m: *const gsl_matrix,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_subcolumn(
         m: *const gsl_matrix,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_view_array(
         base: *const f64,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_view_array_with_tda(
         base: *const f64,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_view_vector(
         v: *const gsl_vector,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_const_view_vector_with_tda(
         v: *const gsl_vector,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_const_view;
 }
 extern "C" {
@@ -8058,21 +7605,14 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_swap_rows(m: *mut gsl_matrix, i: size_t, j: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_matrix_swap_rows(m: *mut gsl_matrix, i: usize, j: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_swap_columns(
-        m: *mut gsl_matrix,
-        i: size_t,
-        j: size_t,
-    ) -> ::std::os::raw::c_int;
+    pub fn gsl_matrix_swap_columns(m: *mut gsl_matrix, i: usize, j: usize)
+        -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_swap_rowcol(
-        m: *mut gsl_matrix,
-        i: size_t,
-        j: size_t,
-    ) -> ::std::os::raw::c_int;
+    pub fn gsl_matrix_swap_rowcol(m: *mut gsl_matrix, i: usize, j: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_transpose(m: *mut gsl_matrix) -> ::std::os::raw::c_int;
@@ -8101,18 +7641,18 @@ extern "C" {
     pub fn gsl_matrix_minmax(m: *const gsl_matrix, min_out: *mut f64, max_out: *mut f64);
 }
 extern "C" {
-    pub fn gsl_matrix_max_index(m: *const gsl_matrix, imax: *mut size_t, jmax: *mut size_t);
+    pub fn gsl_matrix_max_index(m: *const gsl_matrix, imax: *mut usize, jmax: *mut usize);
 }
 extern "C" {
-    pub fn gsl_matrix_min_index(m: *const gsl_matrix, imin: *mut size_t, jmin: *mut size_t);
+    pub fn gsl_matrix_min_index(m: *const gsl_matrix, imin: *mut usize, jmin: *mut usize);
 }
 extern "C" {
     pub fn gsl_matrix_minmax_index(
         m: *const gsl_matrix,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -8177,75 +7717,53 @@ extern "C" {
     pub fn gsl_matrix_get_row(
         v: *mut gsl_vector,
         m: *const gsl_matrix,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_get_col(
         v: *mut gsl_vector,
         m: *const gsl_matrix,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_set_row(
         m: *mut gsl_matrix,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_set_col(
         m: *mut gsl_matrix,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_get(m: *const gsl_matrix, i: size_t, j: size_t) -> f64;
+    pub fn gsl_matrix_get(m: *const gsl_matrix, i: usize, j: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_matrix_set(m: *mut gsl_matrix, i: size_t, j: size_t, x: f64);
+    pub fn gsl_matrix_set(m: *mut gsl_matrix, i: usize, j: usize, x: f64);
 }
 extern "C" {
-    pub fn gsl_matrix_ptr(m: *mut gsl_matrix, i: size_t, j: size_t) -> *mut f64;
+    pub fn gsl_matrix_ptr(m: *mut gsl_matrix, i: usize, j: usize) -> *mut f64;
 }
 extern "C" {
-    pub fn gsl_matrix_const_ptr(m: *const gsl_matrix, i: size_t, j: size_t) -> *const f64;
+    pub fn gsl_matrix_const_ptr(m: *const gsl_matrix, i: usize, j: usize) -> *const f64;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut f64,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut f64,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix;
 extern "C" {
-    pub fn gsl_spmatrix_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix;
+    pub fn gsl_spmatrix_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix;
 }
 extern "C" {
     pub fn gsl_spmatrix_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix;
 }
@@ -8253,10 +7771,10 @@ extern "C" {
     pub fn gsl_spmatrix_free(m: *mut gsl_spmatrix);
 }
 extern "C" {
-    pub fn gsl_spmatrix_realloc(nzmax: size_t, m: *mut gsl_spmatrix) -> ::std::os::raw::c_int;
+    pub fn gsl_spmatrix_realloc(nzmax: usize, m: *mut gsl_spmatrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_nnz(m: *const gsl_spmatrix) -> size_t;
+    pub fn gsl_spmatrix_nnz(m: *const gsl_spmatrix) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_type(m: *const gsl_spmatrix) -> *const ::std::os::raw::c_char;
@@ -8317,18 +7835,18 @@ extern "C" {
     pub fn gsl_spmatrix_fread(stream: *mut FILE, m: *mut gsl_spmatrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_get(m: *const gsl_spmatrix, i: size_t, j: size_t) -> f64;
+    pub fn gsl_spmatrix_get(m: *const gsl_spmatrix, i: usize, j: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_spmatrix_set(
         m: *mut gsl_spmatrix,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: f64,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_ptr(m: *const gsl_spmatrix, i: size_t, j: size_t) -> *mut f64;
+    pub fn gsl_spmatrix_ptr(m: *const gsl_spmatrix, i: usize, j: usize) -> *mut f64;
 }
 extern "C" {
     pub fn gsl_spmatrix_minmax(
@@ -8341,8 +7859,8 @@ extern "C" {
     #[cfg(feature = "v2_6")]
     pub fn gsl_spmatrix_min_index(
         m: *const gsl_spmatrix,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -8419,60 +7937,49 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_float {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut f32,
-    pub block: *mut gsl_block_float,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_float_view {
-    pub matrix: gsl_matrix_float,
-}
+pub struct _gsl_matrix_float_view;
 pub type gsl_matrix_float_view = _gsl_matrix_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_float_const_view {
-    pub matrix: gsl_matrix_float,
-}
+pub struct _gsl_matrix_float_const_view;
 pub type gsl_matrix_float_const_view = _gsl_matrix_float_const_view;
 extern "C" {
-    pub fn gsl_matrix_float_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_float;
+    pub fn gsl_matrix_float_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_float;
 }
 extern "C" {
-    pub fn gsl_matrix_float_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_float;
+    pub fn gsl_matrix_float_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_float;
 }
 extern "C" {
     pub fn gsl_matrix_float_alloc_from_block(
         b: *mut gsl_block_float,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_float;
 }
 extern "C" {
     pub fn gsl_matrix_float_alloc_from_matrix(
         m: *mut gsl_matrix_float,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_float;
 }
 extern "C" {
     pub fn gsl_vector_float_alloc_row_from_matrix(
         m: *mut gsl_matrix_float,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_float;
 }
 extern "C" {
     pub fn gsl_vector_float_alloc_col_from_matrix(
         m: *mut gsl_matrix_float,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_float;
 }
 extern "C" {
@@ -8481,17 +7988,17 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_float_submatrix(
         m: *mut gsl_matrix_float,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_float_view;
 }
 extern "C" {
-    pub fn gsl_matrix_float_row(m: *mut gsl_matrix_float, i: size_t) -> _gsl_vector_float_view;
+    pub fn gsl_matrix_float_row(m: *mut gsl_matrix_float, i: usize) -> _gsl_vector_float_view;
 }
 extern "C" {
-    pub fn gsl_matrix_float_column(m: *mut gsl_matrix_float, j: size_t) -> _gsl_vector_float_view;
+    pub fn gsl_matrix_float_column(m: *mut gsl_matrix_float, j: usize) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_diagonal(m: *mut gsl_matrix_float) -> _gsl_vector_float_view;
@@ -8499,80 +8006,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_float_subdiagonal(
         m: *mut gsl_matrix_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_superdiagonal(
         m: *mut gsl_matrix_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_subrow(
         m: *mut gsl_matrix_float,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_subcolumn(
         m: *mut gsl_matrix_float,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_view_array(
         base: *mut f32,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_view_array_with_tda(
         base: *mut f32,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_view_vector(
         v: *mut gsl_vector_float,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_view_vector_with_tda(
         v: *mut gsl_vector_float,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_float_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_submatrix(
         m: *const gsl_matrix_float,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_row(
         m: *const gsl_matrix_float,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_column(
         m: *const gsl_matrix_float,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
@@ -8583,59 +8090,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_float_const_subdiagonal(
         m: *const gsl_matrix_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_superdiagonal(
         m: *const gsl_matrix_float,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_subrow(
         m: *const gsl_matrix_float,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_subcolumn(
         m: *const gsl_matrix_float,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_view_array(
         base: *const f32,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_view_array_with_tda(
         base: *const f32,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_view_vector(
         v: *const gsl_vector_float,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_float_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_float_const_view_vector_with_tda(
         v: *const gsl_vector_float,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_float_const_view;
 }
 extern "C" {
@@ -8695,22 +8202,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_float_swap_rows(
         m: *mut gsl_matrix_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_float_swap_columns(
         m: *mut gsl_matrix_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_float_swap_rowcol(
         m: *mut gsl_matrix_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -8746,24 +8253,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_float_max_index(
         m: *const gsl_matrix_float,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_float_min_index(
         m: *const gsl_matrix_float,
-        imin: *mut size_t,
-        jmin: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_float_minmax_index(
         m: *const gsl_matrix_float,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -8838,79 +8345,54 @@ extern "C" {
     pub fn gsl_matrix_float_get_row(
         v: *mut gsl_vector_float,
         m: *const gsl_matrix_float,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_float_get_col(
         v: *mut gsl_vector_float,
         m: *const gsl_matrix_float,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_float_set_row(
         m: *mut gsl_matrix_float,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_float_set_col(
         m: *mut gsl_matrix_float,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_float_get(m: *const gsl_matrix_float, i: size_t, j: size_t) -> f32;
+    pub fn gsl_matrix_float_get(m: *const gsl_matrix_float, i: usize, j: usize) -> f32;
 }
 extern "C" {
-    pub fn gsl_matrix_float_set(m: *mut gsl_matrix_float, i: size_t, j: size_t, x: f32);
+    pub fn gsl_matrix_float_set(m: *mut gsl_matrix_float, i: usize, j: usize, x: f32);
 }
 extern "C" {
-    pub fn gsl_matrix_float_ptr(m: *mut gsl_matrix_float, i: size_t, j: size_t) -> *mut f32;
+    pub fn gsl_matrix_float_ptr(m: *mut gsl_matrix_float, i: usize, j: usize) -> *mut f32;
 }
 extern "C" {
-    pub fn gsl_matrix_float_const_ptr(
-        m: *const gsl_matrix_float,
-        i: size_t,
-        j: size_t,
-    ) -> *const f32;
+    pub fn gsl_matrix_float_const_ptr(m: *const gsl_matrix_float, i: usize, j: usize)
+        -> *const f32;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_float {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut f32,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_float__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_float__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut f32,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_float;
 extern "C" {
-    pub fn gsl_spmatrix_float_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_float;
+    pub fn gsl_spmatrix_float_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_float;
 }
 extern "C" {
     pub fn gsl_spmatrix_float_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_float;
 }
@@ -8919,12 +8401,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_float_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_float_nnz(m: *const gsl_spmatrix_float) -> size_t;
+    pub fn gsl_spmatrix_float_nnz(m: *const gsl_spmatrix_float) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_float_type(m: *const gsl_spmatrix_float) -> *const ::std::os::raw::c_char;
@@ -8991,18 +8473,18 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_float_get(m: *const gsl_spmatrix_float, i: size_t, j: size_t) -> f32;
+    pub fn gsl_spmatrix_float_get(m: *const gsl_spmatrix_float, i: usize, j: usize) -> f32;
 }
 extern "C" {
     pub fn gsl_spmatrix_float_set(
         m: *mut gsl_spmatrix_float,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: f32,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_float_ptr(m: *const gsl_spmatrix_float, i: size_t, j: size_t) -> *mut f32;
+    pub fn gsl_spmatrix_float_ptr(m: *const gsl_spmatrix_float, i: usize, j: usize) -> *mut f32;
 }
 extern "C" {
     pub fn gsl_spmatrix_float_minmax(
@@ -9014,8 +8496,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_float_min_index(
         m: *const gsl_spmatrix_float,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9093,16 +8575,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_ulong_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_ulong,
-}
+pub struct gsl_block_ulong_struct;
 pub type gsl_block_ulong = gsl_block_ulong_struct;
 extern "C" {
-    pub fn gsl_block_ulong_alloc(n: size_t) -> *mut gsl_block_ulong;
+    pub fn gsl_block_ulong_alloc(n: usize) -> *mut gsl_block_ulong;
 }
 extern "C" {
-    pub fn gsl_block_ulong_calloc(n: size_t) -> *mut gsl_block_ulong;
+    pub fn gsl_block_ulong_calloc(n: usize) -> *mut gsl_block_ulong;
 }
 extern "C" {
     pub fn gsl_block_ulong_free(b: *mut gsl_block_ulong);
@@ -9136,82 +8615,72 @@ extern "C" {
     pub fn gsl_block_ulong_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_ulong,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_ulong_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_ulong,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_ulong_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_ulong,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_ulong_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_ulong,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_ulong_size(b: *const gsl_block_ulong) -> size_t;
+    pub fn gsl_block_ulong_size(b: *const gsl_block_ulong) -> usize;
 }
 extern "C" {
     pub fn gsl_block_ulong_data(b: *const gsl_block_ulong) -> *mut ::std::os::raw::c_ulong;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_ulong {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_ulong,
-    pub block: *mut gsl_block_ulong,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_ulong;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ulong_view {
-    pub vector: gsl_vector_ulong,
-}
+pub struct _gsl_vector_ulong_view;
 pub type gsl_vector_ulong_view = _gsl_vector_ulong_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ulong_const_view {
-    pub vector: gsl_vector_ulong,
-}
+pub struct _gsl_vector_ulong_const_view;
 pub type gsl_vector_ulong_const_view = _gsl_vector_ulong_const_view;
 extern "C" {
-    pub fn gsl_vector_ulong_alloc(n: size_t) -> *mut gsl_vector_ulong;
+    pub fn gsl_vector_ulong_alloc(n: usize) -> *mut gsl_vector_ulong;
 }
 extern "C" {
-    pub fn gsl_vector_ulong_calloc(n: size_t) -> *mut gsl_vector_ulong;
+    pub fn gsl_vector_ulong_calloc(n: usize) -> *mut gsl_vector_ulong;
 }
 extern "C" {
     pub fn gsl_vector_ulong_alloc_from_block(
         b: *mut gsl_block_ulong,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_ulong;
 }
 extern "C" {
     pub fn gsl_vector_ulong_alloc_from_vector(
         v: *mut gsl_vector_ulong,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_ulong;
 }
 extern "C" {
@@ -9220,57 +8689,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_ulong_view_array(
         v: *mut ::std::os::raw::c_ulong,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_view_array_with_stride(
         base: *mut ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_const_view_array(
         v: *const ::std::os::raw::c_ulong,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_const_view_array_with_stride(
         base: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_subvector(
         v: *mut gsl_vector_ulong,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_subvector_with_stride(
         v: *mut gsl_vector_ulong,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_const_subvector(
         v: *const gsl_vector_ulong,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_vector_ulong_const_subvector_with_stride(
         v: *const gsl_vector_ulong,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
@@ -9280,8 +8749,7 @@ extern "C" {
     pub fn gsl_vector_ulong_set_all(v: *mut gsl_vector_ulong, x: ::std::os::raw::c_ulong);
 }
 extern "C" {
-    pub fn gsl_vector_ulong_set_basis(v: *mut gsl_vector_ulong, i: size_t)
-        -> ::std::os::raw::c_int;
+    pub fn gsl_vector_ulong_set_basis(v: *mut gsl_vector_ulong, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_ulong_fread(
@@ -9326,8 +8794,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_ulong_swap_elements(
         v: *mut gsl_vector_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9344,16 +8812,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_ulong_max_index(v: *const gsl_vector_ulong) -> size_t;
+    pub fn gsl_vector_ulong_max_index(v: *const gsl_vector_ulong) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_ulong_min_index(v: *const gsl_vector_ulong) -> size_t;
+    pub fn gsl_vector_ulong_min_index(v: *const gsl_vector_ulong) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_ulong_minmax_index(
         v: *const gsl_vector_ulong,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -9420,79 +8888,66 @@ extern "C" {
     pub fn gsl_vector_ulong_isnonneg(v: *const gsl_vector_ulong) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_ulong_get(v: *const gsl_vector_ulong, i: size_t) -> ::std::os::raw::c_ulong;
+    pub fn gsl_vector_ulong_get(v: *const gsl_vector_ulong, i: usize) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
-    pub fn gsl_vector_ulong_set(v: *mut gsl_vector_ulong, i: size_t, x: ::std::os::raw::c_ulong);
+    pub fn gsl_vector_ulong_set(v: *mut gsl_vector_ulong, i: usize, x: ::std::os::raw::c_ulong);
 }
 extern "C" {
-    pub fn gsl_vector_ulong_ptr(
-        v: *mut gsl_vector_ulong,
-        i: size_t,
-    ) -> *mut ::std::os::raw::c_ulong;
+    pub fn gsl_vector_ulong_ptr(v: *mut gsl_vector_ulong, i: usize)
+        -> *mut ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_vector_ulong_const_ptr(
         v: *const gsl_vector_ulong,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_ulong;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_ulong {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_ulong,
-    pub block: *mut gsl_block_ulong,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_ulong;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ulong_view {
-    pub matrix: gsl_matrix_ulong,
-}
+pub struct _gsl_matrix_ulong_view;
 pub type gsl_matrix_ulong_view = _gsl_matrix_ulong_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ulong_const_view {
-    pub matrix: gsl_matrix_ulong,
-}
+pub struct _gsl_matrix_ulong_const_view;
 pub type gsl_matrix_ulong_const_view = _gsl_matrix_ulong_const_view;
 extern "C" {
-    pub fn gsl_matrix_ulong_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_ulong;
+    pub fn gsl_matrix_ulong_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_ulong;
 }
 extern "C" {
-    pub fn gsl_matrix_ulong_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_ulong;
+    pub fn gsl_matrix_ulong_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_ulong;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_alloc_from_block(
         b: *mut gsl_block_ulong,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_ulong;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_alloc_from_matrix(
         m: *mut gsl_matrix_ulong,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_ulong;
 }
 extern "C" {
     pub fn gsl_vector_ulong_alloc_row_from_matrix(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_ulong;
 }
 extern "C" {
     pub fn gsl_vector_ulong_alloc_col_from_matrix(
         m: *mut gsl_matrix_ulong,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_ulong;
 }
 extern "C" {
@@ -9501,17 +8956,17 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ulong_submatrix(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ulong_view;
 }
 extern "C" {
-    pub fn gsl_matrix_ulong_row(m: *mut gsl_matrix_ulong, i: size_t) -> _gsl_vector_ulong_view;
+    pub fn gsl_matrix_ulong_row(m: *mut gsl_matrix_ulong, i: usize) -> _gsl_vector_ulong_view;
 }
 extern "C" {
-    pub fn gsl_matrix_ulong_column(m: *mut gsl_matrix_ulong, j: size_t) -> _gsl_vector_ulong_view;
+    pub fn gsl_matrix_ulong_column(m: *mut gsl_matrix_ulong, j: usize) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_diagonal(m: *mut gsl_matrix_ulong) -> _gsl_vector_ulong_view;
@@ -9519,80 +8974,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ulong_subdiagonal(
         m: *mut gsl_matrix_ulong,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_superdiagonal(
         m: *mut gsl_matrix_ulong,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_subrow(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_subcolumn(
         m: *mut gsl_matrix_ulong,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_view_array(
         base: *mut ::std::os::raw::c_ulong,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_view_array_with_tda(
         base: *mut ::std::os::raw::c_ulong,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_view_vector(
         v: *mut gsl_vector_ulong,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_view_vector_with_tda(
         v: *mut gsl_vector_ulong,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ulong_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_submatrix(
         m: *const gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_row(
         m: *const gsl_matrix_ulong,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_column(
         m: *const gsl_matrix_ulong,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
@@ -9603,59 +9058,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ulong_const_subdiagonal(
         m: *const gsl_matrix_ulong,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_superdiagonal(
         m: *const gsl_matrix_ulong,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_subrow(
         m: *const gsl_matrix_ulong,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_subcolumn(
         m: *const gsl_matrix_ulong,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_view_array(
         base: *const ::std::os::raw::c_ulong,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_view_array_with_tda(
         base: *const ::std::os::raw::c_ulong,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_view_vector(
         v: *const gsl_vector_ulong,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ulong_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_view_vector_with_tda(
         v: *const gsl_vector_ulong,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ulong_const_view;
 }
 extern "C" {
@@ -9715,22 +9170,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ulong_swap_rows(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_swap_columns(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_swap_rowcol(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9766,24 +9221,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ulong_max_index(
         m: *const gsl_matrix_ulong,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_ulong_min_index(
         m: *const gsl_matrix_ulong,
-        imin: *mut size_t,
-        jmin: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_ulong_minmax_index(
         m: *const gsl_matrix_ulong,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -9858,92 +9313,70 @@ extern "C" {
     pub fn gsl_matrix_ulong_get_row(
         v: *mut gsl_vector_ulong,
         m: *const gsl_matrix_ulong,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_get_col(
         v: *mut gsl_vector_ulong,
         m: *const gsl_matrix_ulong,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_set_row(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_set_col(
         m: *mut gsl_matrix_ulong,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_get(
         m: *const gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_set(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_ulong,
     );
 }
 extern "C" {
     pub fn gsl_matrix_ulong_ptr(
         m: *mut gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_matrix_ulong_const_ptr(
         m: *const gsl_matrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_ulong;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_ulong {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_ulong,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_ulong__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_ulong__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_ulong,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_ulong;
 extern "C" {
-    pub fn gsl_spmatrix_ulong_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_ulong;
+    pub fn gsl_spmatrix_ulong_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_ulong;
 }
 extern "C" {
     pub fn gsl_spmatrix_ulong_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_ulong;
 }
@@ -9952,12 +9385,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_ulong_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_ulong_nnz(m: *const gsl_spmatrix_ulong) -> size_t;
+    pub fn gsl_spmatrix_ulong_nnz(m: *const gsl_spmatrix_ulong) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_ulong_type(m: *const gsl_spmatrix_ulong) -> *const ::std::os::raw::c_char;
@@ -10026,23 +9459,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_ulong_get(
         m: *const gsl_spmatrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_spmatrix_ulong_set(
         m: *mut gsl_spmatrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_ulong_ptr(
         m: *const gsl_spmatrix_ulong,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_ulong;
 }
 extern "C" {
@@ -10055,8 +9488,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_ulong_min_index(
         m: *const gsl_spmatrix_ulong,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -10137,60 +9570,49 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_long {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_long,
-    pub block: *mut gsl_block_long,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_long;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_view {
-    pub matrix: gsl_matrix_long,
-}
+pub struct _gsl_matrix_long_view;
 pub type gsl_matrix_long_view = _gsl_matrix_long_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_const_view {
-    pub matrix: gsl_matrix_long,
-}
+pub struct _gsl_matrix_long_const_view;
 pub type gsl_matrix_long_const_view = _gsl_matrix_long_const_view;
 extern "C" {
-    pub fn gsl_matrix_long_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_long;
+    pub fn gsl_matrix_long_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_long;
 }
 extern "C" {
-    pub fn gsl_matrix_long_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_long;
+    pub fn gsl_matrix_long_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_long;
 }
 extern "C" {
     pub fn gsl_matrix_long_alloc_from_block(
         b: *mut gsl_block_long,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_long;
 }
 extern "C" {
     pub fn gsl_matrix_long_alloc_from_matrix(
         m: *mut gsl_matrix_long,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_long;
 }
 extern "C" {
     pub fn gsl_vector_long_alloc_row_from_matrix(
         m: *mut gsl_matrix_long,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_long;
 }
 extern "C" {
     pub fn gsl_vector_long_alloc_col_from_matrix(
         m: *mut gsl_matrix_long,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_long;
 }
 extern "C" {
@@ -10199,96 +9621,95 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_submatrix(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_view;
 }
 extern "C" {
-    pub fn gsl_matrix_long_row(m: *mut gsl_matrix_long, i: size_t) -> _gsl_vector_long_view;
+    pub fn gsl_matrix_long_row(m: *mut gsl_matrix_long, i: usize) -> _gsl_vector_long_view;
 }
 extern "C" {
-    pub fn gsl_matrix_long_column(m: *mut gsl_matrix_long, j: size_t) -> _gsl_vector_long_view;
+    pub fn gsl_matrix_long_column(m: *mut gsl_matrix_long, j: usize) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_diagonal(m: *mut gsl_matrix_long) -> _gsl_vector_long_view;
 }
 extern "C" {
-    pub fn gsl_matrix_long_subdiagonal(m: *mut gsl_matrix_long, k: size_t)
-        -> _gsl_vector_long_view;
+    pub fn gsl_matrix_long_subdiagonal(m: *mut gsl_matrix_long, k: usize) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_superdiagonal(
         m: *mut gsl_matrix_long,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_subrow(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_subcolumn(
         m: *mut gsl_matrix_long,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_view_array(
         base: *mut ::std::os::raw::c_long,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_view_array_with_tda(
         base: *mut ::std::os::raw::c_long,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_view_vector(
         v: *mut gsl_vector_long,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_view_vector_with_tda(
         v: *mut gsl_vector_long,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_submatrix(
         m: *const gsl_matrix_long,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_row(
         m: *const gsl_matrix_long,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_column(
         m: *const gsl_matrix_long,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
@@ -10298,59 +9719,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_const_subdiagonal(
         m: *const gsl_matrix_long,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_superdiagonal(
         m: *const gsl_matrix_long,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_subrow(
         m: *const gsl_matrix_long,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_subcolumn(
         m: *const gsl_matrix_long,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_view_array(
         base: *const ::std::os::raw::c_long,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_view_array_with_tda(
         base: *const ::std::os::raw::c_long,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_view_vector(
         v: *const gsl_vector_long,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_long_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_view_vector_with_tda(
         v: *const gsl_vector_long,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_long_const_view;
 }
 extern "C" {
@@ -10410,22 +9831,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_long_swap_rows(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_swap_columns(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_swap_rowcol(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -10459,26 +9880,18 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_matrix_long_max_index(
-        m: *const gsl_matrix_long,
-        imax: *mut size_t,
-        jmax: *mut size_t,
-    );
+    pub fn gsl_matrix_long_max_index(m: *const gsl_matrix_long, imax: *mut usize, jmax: *mut usize);
 }
 extern "C" {
-    pub fn gsl_matrix_long_min_index(
-        m: *const gsl_matrix_long,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-    );
+    pub fn gsl_matrix_long_min_index(m: *const gsl_matrix_long, imin: *mut usize, jmin: *mut usize);
 }
 extern "C" {
     pub fn gsl_matrix_long_minmax_index(
         m: *const gsl_matrix_long,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -10551,92 +9964,70 @@ extern "C" {
     pub fn gsl_matrix_long_get_row(
         v: *mut gsl_vector_long,
         m: *const gsl_matrix_long,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_get_col(
         v: *mut gsl_vector_long,
         m: *const gsl_matrix_long,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_set_row(
         m: *mut gsl_matrix_long,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_set_col(
         m: *mut gsl_matrix_long,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_long_get(
         m: *const gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_matrix_long_set(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_long,
     );
 }
 extern "C" {
     pub fn gsl_matrix_long_ptr(
         m: *mut gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_matrix_long_const_ptr(
         m: *const gsl_matrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_long;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_long {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_long,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_long__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_long__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_long,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_long;
 extern "C" {
-    pub fn gsl_spmatrix_long_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_long;
+    pub fn gsl_spmatrix_long_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_long;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_long;
 }
@@ -10645,12 +10036,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_long_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_long_nnz(m: *const gsl_spmatrix_long) -> size_t;
+    pub fn gsl_spmatrix_long_nnz(m: *const gsl_spmatrix_long) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_type(m: *const gsl_spmatrix_long) -> *const ::std::os::raw::c_char;
@@ -10719,23 +10110,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_long_get(
         m: *const gsl_spmatrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_set(
         m: *mut gsl_spmatrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_long_ptr(
         m: *const gsl_spmatrix_long,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_long;
 }
 extern "C" {
@@ -10748,8 +10139,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_long_min_index(
         m: *const gsl_spmatrix_long,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -10830,16 +10221,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_uint_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_uint,
-}
+pub struct gsl_block_uint_struct;
 pub type gsl_block_uint = gsl_block_uint_struct;
 extern "C" {
-    pub fn gsl_block_uint_alloc(n: size_t) -> *mut gsl_block_uint;
+    pub fn gsl_block_uint_alloc(n: usize) -> *mut gsl_block_uint;
 }
 extern "C" {
-    pub fn gsl_block_uint_calloc(n: size_t) -> *mut gsl_block_uint;
+    pub fn gsl_block_uint_calloc(n: usize) -> *mut gsl_block_uint;
 }
 extern "C" {
     pub fn gsl_block_uint_free(b: *mut gsl_block_uint);
@@ -10871,82 +10259,72 @@ extern "C" {
     pub fn gsl_block_uint_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_uint,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_uint_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_uint,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_uint_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_uint,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_uint_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_uint,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_uint_size(b: *const gsl_block_uint) -> size_t;
+    pub fn gsl_block_uint_size(b: *const gsl_block_uint) -> usize;
 }
 extern "C" {
     pub fn gsl_block_uint_data(b: *const gsl_block_uint) -> *mut ::std::os::raw::c_uint;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_uint {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_uint,
-    pub block: *mut gsl_block_uint,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uint_view {
-    pub vector: gsl_vector_uint,
-}
+pub struct _gsl_vector_uint_view;
 pub type gsl_vector_uint_view = _gsl_vector_uint_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uint_const_view {
-    pub vector: gsl_vector_uint,
-}
+pub struct _gsl_vector_uint_const_view;
 pub type gsl_vector_uint_const_view = _gsl_vector_uint_const_view;
 extern "C" {
-    pub fn gsl_vector_uint_alloc(n: size_t) -> *mut gsl_vector_uint;
+    pub fn gsl_vector_uint_alloc(n: usize) -> *mut gsl_vector_uint;
 }
 extern "C" {
-    pub fn gsl_vector_uint_calloc(n: size_t) -> *mut gsl_vector_uint;
+    pub fn gsl_vector_uint_calloc(n: usize) -> *mut gsl_vector_uint;
 }
 extern "C" {
     pub fn gsl_vector_uint_alloc_from_block(
         b: *mut gsl_block_uint,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_uint;
 }
 extern "C" {
     pub fn gsl_vector_uint_alloc_from_vector(
         v: *mut gsl_vector_uint,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_uint;
 }
 extern "C" {
@@ -10955,57 +10333,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_uint_view_array(
         v: *mut ::std::os::raw::c_uint,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_view_array_with_stride(
         base: *mut ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_const_view_array(
         v: *const ::std::os::raw::c_uint,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_const_view_array_with_stride(
         base: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_subvector(
         v: *mut gsl_vector_uint,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_subvector_with_stride(
         v: *mut gsl_vector_uint,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_const_subvector(
         v: *const gsl_vector_uint,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_vector_uint_const_subvector_with_stride(
         v: *const gsl_vector_uint,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
@@ -11015,7 +10393,7 @@ extern "C" {
     pub fn gsl_vector_uint_set_all(v: *mut gsl_vector_uint, x: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn gsl_vector_uint_set_basis(v: *mut gsl_vector_uint, i: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_vector_uint_set_basis(v: *mut gsl_vector_uint, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_uint_fread(
@@ -11060,8 +10438,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_uint_swap_elements(
         v: *mut gsl_vector_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -11078,16 +10456,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_uint_max_index(v: *const gsl_vector_uint) -> size_t;
+    pub fn gsl_vector_uint_max_index(v: *const gsl_vector_uint) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_uint_min_index(v: *const gsl_vector_uint) -> size_t;
+    pub fn gsl_vector_uint_min_index(v: *const gsl_vector_uint) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_uint_minmax_index(
         v: *const gsl_vector_uint,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -11153,76 +10531,65 @@ extern "C" {
     pub fn gsl_vector_uint_isnonneg(v: *const gsl_vector_uint) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_uint_get(v: *const gsl_vector_uint, i: size_t) -> ::std::os::raw::c_uint;
+    pub fn gsl_vector_uint_get(v: *const gsl_vector_uint, i: usize) -> ::std::os::raw::c_uint;
 }
 extern "C" {
-    pub fn gsl_vector_uint_set(v: *mut gsl_vector_uint, i: size_t, x: ::std::os::raw::c_uint);
+    pub fn gsl_vector_uint_set(v: *mut gsl_vector_uint, i: usize, x: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn gsl_vector_uint_ptr(v: *mut gsl_vector_uint, i: size_t) -> *mut ::std::os::raw::c_uint;
+    pub fn gsl_vector_uint_ptr(v: *mut gsl_vector_uint, i: usize) -> *mut ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_vector_uint_const_ptr(
         v: *const gsl_vector_uint,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_uint;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_uint {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_uint,
-    pub block: *mut gsl_block_uint,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uint_view {
-    pub matrix: gsl_matrix_uint,
-}
+pub struct _gsl_matrix_uint_view;
 pub type gsl_matrix_uint_view = _gsl_matrix_uint_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uint_const_view {
-    pub matrix: gsl_matrix_uint,
-}
+pub struct _gsl_matrix_uint_const_view;
 pub type gsl_matrix_uint_const_view = _gsl_matrix_uint_const_view;
 extern "C" {
-    pub fn gsl_matrix_uint_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_uint;
+    pub fn gsl_matrix_uint_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_uint;
 }
 extern "C" {
-    pub fn gsl_matrix_uint_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_uint;
+    pub fn gsl_matrix_uint_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_uint;
 }
 extern "C" {
     pub fn gsl_matrix_uint_alloc_from_block(
         b: *mut gsl_block_uint,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_uint;
 }
 extern "C" {
     pub fn gsl_matrix_uint_alloc_from_matrix(
         m: *mut gsl_matrix_uint,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_uint;
 }
 extern "C" {
     pub fn gsl_vector_uint_alloc_row_from_matrix(
         m: *mut gsl_matrix_uint,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_uint;
 }
 extern "C" {
     pub fn gsl_vector_uint_alloc_col_from_matrix(
         m: *mut gsl_matrix_uint,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_uint;
 }
 extern "C" {
@@ -11231,96 +10598,95 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uint_submatrix(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uint_view;
 }
 extern "C" {
-    pub fn gsl_matrix_uint_row(m: *mut gsl_matrix_uint, i: size_t) -> _gsl_vector_uint_view;
+    pub fn gsl_matrix_uint_row(m: *mut gsl_matrix_uint, i: usize) -> _gsl_vector_uint_view;
 }
 extern "C" {
-    pub fn gsl_matrix_uint_column(m: *mut gsl_matrix_uint, j: size_t) -> _gsl_vector_uint_view;
+    pub fn gsl_matrix_uint_column(m: *mut gsl_matrix_uint, j: usize) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_diagonal(m: *mut gsl_matrix_uint) -> _gsl_vector_uint_view;
 }
 extern "C" {
-    pub fn gsl_matrix_uint_subdiagonal(m: *mut gsl_matrix_uint, k: size_t)
-        -> _gsl_vector_uint_view;
+    pub fn gsl_matrix_uint_subdiagonal(m: *mut gsl_matrix_uint, k: usize) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_superdiagonal(
         m: *mut gsl_matrix_uint,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_subrow(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_subcolumn(
         m: *mut gsl_matrix_uint,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_view_array(
         base: *mut ::std::os::raw::c_uint,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_view_array_with_tda(
         base: *mut ::std::os::raw::c_uint,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_view_vector(
         v: *mut gsl_vector_uint,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_view_vector_with_tda(
         v: *mut gsl_vector_uint,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uint_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_submatrix(
         m: *const gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_row(
         m: *const gsl_matrix_uint,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_column(
         m: *const gsl_matrix_uint,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
@@ -11330,59 +10696,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uint_const_subdiagonal(
         m: *const gsl_matrix_uint,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_superdiagonal(
         m: *const gsl_matrix_uint,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_subrow(
         m: *const gsl_matrix_uint,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_subcolumn(
         m: *const gsl_matrix_uint,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_view_array(
         base: *const ::std::os::raw::c_uint,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_view_array_with_tda(
         base: *const ::std::os::raw::c_uint,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_view_vector(
         v: *const gsl_vector_uint,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uint_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_view_vector_with_tda(
         v: *const gsl_vector_uint,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uint_const_view;
 }
 extern "C" {
@@ -11442,22 +10808,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uint_swap_rows(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uint_swap_columns(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uint_swap_rowcol(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -11491,26 +10857,18 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_matrix_uint_max_index(
-        m: *const gsl_matrix_uint,
-        imax: *mut size_t,
-        jmax: *mut size_t,
-    );
+    pub fn gsl_matrix_uint_max_index(m: *const gsl_matrix_uint, imax: *mut usize, jmax: *mut usize);
 }
 extern "C" {
-    pub fn gsl_matrix_uint_min_index(
-        m: *const gsl_matrix_uint,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-    );
+    pub fn gsl_matrix_uint_min_index(m: *const gsl_matrix_uint, imin: *mut usize, jmin: *mut usize);
 }
 extern "C" {
     pub fn gsl_matrix_uint_minmax_index(
         m: *const gsl_matrix_uint,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -11583,92 +10941,70 @@ extern "C" {
     pub fn gsl_matrix_uint_get_row(
         v: *mut gsl_vector_uint,
         m: *const gsl_matrix_uint,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uint_get_col(
         v: *mut gsl_vector_uint,
         m: *const gsl_matrix_uint,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uint_set_row(
         m: *mut gsl_matrix_uint,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uint_set_col(
         m: *mut gsl_matrix_uint,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uint_get(
         m: *const gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_matrix_uint_set(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_uint,
     );
 }
 extern "C" {
     pub fn gsl_matrix_uint_ptr(
         m: *mut gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_matrix_uint_const_ptr(
         m: *const gsl_matrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_uint;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_uint {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_uint,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_uint__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_uint__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_uint,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_uint;
 extern "C" {
-    pub fn gsl_spmatrix_uint_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_uint;
+    pub fn gsl_spmatrix_uint_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_uint;
 }
 extern "C" {
     pub fn gsl_spmatrix_uint_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_uint;
 }
@@ -11677,12 +11013,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_uint_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_uint_nnz(m: *const gsl_spmatrix_uint) -> size_t;
+    pub fn gsl_spmatrix_uint_nnz(m: *const gsl_spmatrix_uint) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_uint_type(m: *const gsl_spmatrix_uint) -> *const ::std::os::raw::c_char;
@@ -11751,23 +11087,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_uint_get(
         m: *const gsl_spmatrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_spmatrix_uint_set(
         m: *mut gsl_spmatrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_uint_ptr(
         m: *const gsl_spmatrix_uint,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_uint;
 }
 extern "C" {
@@ -11780,8 +11116,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_uint_min_index(
         m: *const gsl_spmatrix_uint,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -11862,16 +11198,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_int_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_int,
-}
+pub struct gsl_block_int_struct;
 pub type gsl_block_int = gsl_block_int_struct;
 extern "C" {
-    pub fn gsl_block_int_alloc(n: size_t) -> *mut gsl_block_int;
+    pub fn gsl_block_int_alloc(n: usize) -> *mut gsl_block_int;
 }
 extern "C" {
-    pub fn gsl_block_int_calloc(n: size_t) -> *mut gsl_block_int;
+    pub fn gsl_block_int_calloc(n: usize) -> *mut gsl_block_int;
 }
 extern "C" {
     pub fn gsl_block_int_free(b: *mut gsl_block_int);
@@ -11899,82 +11232,72 @@ extern "C" {
     pub fn gsl_block_int_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_int,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_int_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_int,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_int_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_int,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_int_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_int,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_int_size(b: *const gsl_block_int) -> size_t;
+    pub fn gsl_block_int_size(b: *const gsl_block_int) -> usize;
 }
 extern "C" {
     pub fn gsl_block_int_data(b: *const gsl_block_int) -> *mut ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_int {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_int,
-    pub block: *mut gsl_block_int,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_int;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_int_view {
-    pub vector: gsl_vector_int,
-}
+pub struct _gsl_vector_int_view;
 pub type gsl_vector_int_view = _gsl_vector_int_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_int_const_view {
-    pub vector: gsl_vector_int,
-}
+pub struct _gsl_vector_int_const_view;
 pub type gsl_vector_int_const_view = _gsl_vector_int_const_view;
 extern "C" {
-    pub fn gsl_vector_int_alloc(n: size_t) -> *mut gsl_vector_int;
+    pub fn gsl_vector_int_alloc(n: usize) -> *mut gsl_vector_int;
 }
 extern "C" {
-    pub fn gsl_vector_int_calloc(n: size_t) -> *mut gsl_vector_int;
+    pub fn gsl_vector_int_calloc(n: usize) -> *mut gsl_vector_int;
 }
 extern "C" {
     pub fn gsl_vector_int_alloc_from_block(
         b: *mut gsl_block_int,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_int;
 }
 extern "C" {
     pub fn gsl_vector_int_alloc_from_vector(
         v: *mut gsl_vector_int,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_int;
 }
 extern "C" {
@@ -11983,57 +11306,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_int_view_array(
         v: *mut ::std::os::raw::c_int,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_vector_int_view_array_with_stride(
         base: *mut ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_vector_int_const_view_array(
         v: *const ::std::os::raw::c_int,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_vector_int_const_view_array_with_stride(
         base: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_vector_int_subvector(
         v: *mut gsl_vector_int,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_vector_int_subvector_with_stride(
         v: *mut gsl_vector_int,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_vector_int_const_subvector(
         v: *const gsl_vector_int,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_vector_int_const_subvector_with_stride(
         v: *const gsl_vector_int,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
@@ -12043,7 +11366,7 @@ extern "C" {
     pub fn gsl_vector_int_set_all(v: *mut gsl_vector_int, x: ::std::os::raw::c_int);
 }
 extern "C" {
-    pub fn gsl_vector_int_set_basis(v: *mut gsl_vector_int, i: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_vector_int_set_basis(v: *mut gsl_vector_int, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_int_fread(stream: *mut FILE, v: *mut gsl_vector_int)
@@ -12086,8 +11409,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_int_swap_elements(
         v: *mut gsl_vector_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -12104,16 +11427,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_int_max_index(v: *const gsl_vector_int) -> size_t;
+    pub fn gsl_vector_int_max_index(v: *const gsl_vector_int) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_int_min_index(v: *const gsl_vector_int) -> size_t;
+    pub fn gsl_vector_int_min_index(v: *const gsl_vector_int) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_int_minmax_index(
         v: *const gsl_vector_int,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -12179,76 +11502,65 @@ extern "C" {
     pub fn gsl_vector_int_isnonneg(v: *const gsl_vector_int) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_int_get(v: *const gsl_vector_int, i: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_vector_int_get(v: *const gsl_vector_int, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_int_set(v: *mut gsl_vector_int, i: size_t, x: ::std::os::raw::c_int);
+    pub fn gsl_vector_int_set(v: *mut gsl_vector_int, i: usize, x: ::std::os::raw::c_int);
 }
 extern "C" {
-    pub fn gsl_vector_int_ptr(v: *mut gsl_vector_int, i: size_t) -> *mut ::std::os::raw::c_int;
+    pub fn gsl_vector_int_ptr(v: *mut gsl_vector_int, i: usize) -> *mut ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_int_const_ptr(
         v: *const gsl_vector_int,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_int {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_int,
-    pub block: *mut gsl_block_int,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_int;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_int_view {
-    pub matrix: gsl_matrix_int,
-}
+pub struct _gsl_matrix_int_view;
 pub type gsl_matrix_int_view = _gsl_matrix_int_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_int_const_view {
-    pub matrix: gsl_matrix_int,
-}
+pub struct _gsl_matrix_int_const_view;
 pub type gsl_matrix_int_const_view = _gsl_matrix_int_const_view;
 extern "C" {
-    pub fn gsl_matrix_int_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_int;
+    pub fn gsl_matrix_int_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_int;
 }
 extern "C" {
-    pub fn gsl_matrix_int_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_int;
+    pub fn gsl_matrix_int_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_alloc_from_block(
         b: *mut gsl_block_int,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_alloc_from_matrix(
         m: *mut gsl_matrix_int,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_int;
 }
 extern "C" {
     pub fn gsl_vector_int_alloc_row_from_matrix(
         m: *mut gsl_matrix_int,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_int;
 }
 extern "C" {
     pub fn gsl_vector_int_alloc_col_from_matrix(
         m: *mut gsl_matrix_int,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_int;
 }
 extern "C" {
@@ -12257,92 +11569,92 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_int_submatrix(
         m: *mut gsl_matrix_int,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_int_view;
 }
 extern "C" {
-    pub fn gsl_matrix_int_row(m: *mut gsl_matrix_int, i: size_t) -> _gsl_vector_int_view;
+    pub fn gsl_matrix_int_row(m: *mut gsl_matrix_int, i: usize) -> _gsl_vector_int_view;
 }
 extern "C" {
-    pub fn gsl_matrix_int_column(m: *mut gsl_matrix_int, j: size_t) -> _gsl_vector_int_view;
+    pub fn gsl_matrix_int_column(m: *mut gsl_matrix_int, j: usize) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_diagonal(m: *mut gsl_matrix_int) -> _gsl_vector_int_view;
 }
 extern "C" {
-    pub fn gsl_matrix_int_subdiagonal(m: *mut gsl_matrix_int, k: size_t) -> _gsl_vector_int_view;
+    pub fn gsl_matrix_int_subdiagonal(m: *mut gsl_matrix_int, k: usize) -> _gsl_vector_int_view;
 }
 extern "C" {
-    pub fn gsl_matrix_int_superdiagonal(m: *mut gsl_matrix_int, k: size_t) -> _gsl_vector_int_view;
+    pub fn gsl_matrix_int_superdiagonal(m: *mut gsl_matrix_int, k: usize) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_subrow(
         m: *mut gsl_matrix_int,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_subcolumn(
         m: *mut gsl_matrix_int,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_view_array(
         base: *mut ::std::os::raw::c_int,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_view_array_with_tda(
         base: *mut ::std::os::raw::c_int,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_view_vector(
         v: *mut gsl_vector_int,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_view_vector_with_tda(
         v: *mut gsl_vector_int,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_int_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_submatrix(
         m: *const gsl_matrix_int,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_row(
         m: *const gsl_matrix_int,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_column(
         m: *const gsl_matrix_int,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
@@ -12351,59 +11663,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_int_const_subdiagonal(
         m: *const gsl_matrix_int,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_superdiagonal(
         m: *const gsl_matrix_int,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_subrow(
         m: *const gsl_matrix_int,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_subcolumn(
         m: *const gsl_matrix_int,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_view_array(
         base: *const ::std::os::raw::c_int,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_view_array_with_tda(
         base: *const ::std::os::raw::c_int,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_view_vector(
         v: *const gsl_vector_int,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_int_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_view_vector_with_tda(
         v: *const gsl_vector_int,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_int_const_view;
 }
 extern "C" {
@@ -12461,22 +11773,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_int_swap_rows(
         m: *mut gsl_matrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_swap_columns(
         m: *mut gsl_matrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_swap_rowcol(
         m: *mut gsl_matrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -12510,18 +11822,18 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_matrix_int_max_index(m: *const gsl_matrix_int, imax: *mut size_t, jmax: *mut size_t);
+    pub fn gsl_matrix_int_max_index(m: *const gsl_matrix_int, imax: *mut usize, jmax: *mut usize);
 }
 extern "C" {
-    pub fn gsl_matrix_int_min_index(m: *const gsl_matrix_int, imin: *mut size_t, jmin: *mut size_t);
+    pub fn gsl_matrix_int_min_index(m: *const gsl_matrix_int, imin: *mut usize, jmin: *mut usize);
 }
 extern "C" {
     pub fn gsl_matrix_int_minmax_index(
         m: *const gsl_matrix_int,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -12594,92 +11906,65 @@ extern "C" {
     pub fn gsl_matrix_int_get_row(
         v: *mut gsl_vector_int,
         m: *const gsl_matrix_int,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_get_col(
         v: *mut gsl_vector_int,
         m: *const gsl_matrix_int,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_set_row(
         m: *mut gsl_matrix_int,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_set_col(
         m: *mut gsl_matrix_int,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_get(
         m: *const gsl_matrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_matrix_int_set(
-        m: *mut gsl_matrix_int,
-        i: size_t,
-        j: size_t,
-        x: ::std::os::raw::c_int,
-    );
+    pub fn gsl_matrix_int_set(m: *mut gsl_matrix_int, i: usize, j: usize, x: ::std::os::raw::c_int);
 }
 extern "C" {
     pub fn gsl_matrix_int_ptr(
         m: *mut gsl_matrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_int_const_ptr(
         m: *const gsl_matrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_int {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_int,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_int__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_int__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_int,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_int;
 extern "C" {
-    pub fn gsl_spmatrix_int_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_int;
+    pub fn gsl_spmatrix_int_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_int_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_int;
 }
@@ -12688,12 +11973,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_int_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_int_nnz(m: *const gsl_spmatrix_int) -> size_t;
+    pub fn gsl_spmatrix_int_nnz(m: *const gsl_spmatrix_int) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_int_type(m: *const gsl_spmatrix_int) -> *const ::std::os::raw::c_char;
@@ -12762,23 +12047,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_int_get(
         m: *const gsl_spmatrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_int_set(
         m: *mut gsl_spmatrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_int_ptr(
         m: *const gsl_spmatrix_int,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_int;
 }
 extern "C" {
@@ -12791,8 +12076,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_int_min_index(
         m: *const gsl_spmatrix_int,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -12873,16 +12158,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_ushort_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_ushort,
-}
+pub struct gsl_block_ushort_struct;
 pub type gsl_block_ushort = gsl_block_ushort_struct;
 extern "C" {
-    pub fn gsl_block_ushort_alloc(n: size_t) -> *mut gsl_block_ushort;
+    pub fn gsl_block_ushort_alloc(n: usize) -> *mut gsl_block_ushort;
 }
 extern "C" {
-    pub fn gsl_block_ushort_calloc(n: size_t) -> *mut gsl_block_ushort;
+    pub fn gsl_block_ushort_calloc(n: usize) -> *mut gsl_block_ushort;
 }
 extern "C" {
     pub fn gsl_block_ushort_free(b: *mut gsl_block_ushort);
@@ -12916,82 +12198,72 @@ extern "C" {
     pub fn gsl_block_ushort_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_ushort,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_ushort_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_ushort,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_ushort_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_ushort,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_ushort_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_ushort,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_ushort_size(b: *const gsl_block_ushort) -> size_t;
+    pub fn gsl_block_ushort_size(b: *const gsl_block_ushort) -> usize;
 }
 extern "C" {
     pub fn gsl_block_ushort_data(b: *const gsl_block_ushort) -> *mut ::std::os::raw::c_ushort;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_ushort {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_ushort,
-    pub block: *mut gsl_block_ushort,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_ushort;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ushort_view {
-    pub vector: gsl_vector_ushort,
-}
+pub struct _gsl_vector_ushort_view;
 pub type gsl_vector_ushort_view = _gsl_vector_ushort_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ushort_const_view {
-    pub vector: gsl_vector_ushort,
-}
+pub struct _gsl_vector_ushort_const_view;
 pub type gsl_vector_ushort_const_view = _gsl_vector_ushort_const_view;
 extern "C" {
-    pub fn gsl_vector_ushort_alloc(n: size_t) -> *mut gsl_vector_ushort;
+    pub fn gsl_vector_ushort_alloc(n: usize) -> *mut gsl_vector_ushort;
 }
 extern "C" {
-    pub fn gsl_vector_ushort_calloc(n: size_t) -> *mut gsl_vector_ushort;
+    pub fn gsl_vector_ushort_calloc(n: usize) -> *mut gsl_vector_ushort;
 }
 extern "C" {
     pub fn gsl_vector_ushort_alloc_from_block(
         b: *mut gsl_block_ushort,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_ushort;
 }
 extern "C" {
     pub fn gsl_vector_ushort_alloc_from_vector(
         v: *mut gsl_vector_ushort,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_ushort;
 }
 extern "C" {
@@ -13000,57 +12272,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_ushort_view_array(
         v: *mut ::std::os::raw::c_ushort,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_view_array_with_stride(
         base: *mut ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_const_view_array(
         v: *const ::std::os::raw::c_ushort,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_const_view_array_with_stride(
         base: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_subvector(
         v: *mut gsl_vector_ushort,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_subvector_with_stride(
         v: *mut gsl_vector_ushort,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_const_subvector(
         v: *const gsl_vector_ushort,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_vector_ushort_const_subvector_with_stride(
         v: *const gsl_vector_ushort,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
@@ -13062,7 +12334,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_ushort_set_basis(
         v: *mut gsl_vector_ushort,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -13108,8 +12380,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_ushort_swap_elements(
         v: *mut gsl_vector_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -13126,16 +12398,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_ushort_max_index(v: *const gsl_vector_ushort) -> size_t;
+    pub fn gsl_vector_ushort_max_index(v: *const gsl_vector_ushort) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_ushort_min_index(v: *const gsl_vector_ushort) -> size_t;
+    pub fn gsl_vector_ushort_min_index(v: *const gsl_vector_ushort) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_ushort_minmax_index(
         v: *const gsl_vector_ushort,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -13204,82 +12476,69 @@ extern "C" {
     pub fn gsl_vector_ushort_isnonneg(v: *const gsl_vector_ushort) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_ushort_get(
-        v: *const gsl_vector_ushort,
-        i: size_t,
-    ) -> ::std::os::raw::c_ushort;
+    pub fn gsl_vector_ushort_get(v: *const gsl_vector_ushort, i: usize)
+        -> ::std::os::raw::c_ushort;
 }
 extern "C" {
-    pub fn gsl_vector_ushort_set(v: *mut gsl_vector_ushort, i: size_t, x: ::std::os::raw::c_ushort);
+    pub fn gsl_vector_ushort_set(v: *mut gsl_vector_ushort, i: usize, x: ::std::os::raw::c_ushort);
 }
 extern "C" {
     pub fn gsl_vector_ushort_ptr(
         v: *mut gsl_vector_ushort,
-        i: size_t,
+        i: usize,
     ) -> *mut ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_vector_ushort_const_ptr(
         v: *const gsl_vector_ushort,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_ushort;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_ushort {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_ushort,
-    pub block: *mut gsl_block_ushort,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_ushort;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ushort_view {
-    pub matrix: gsl_matrix_ushort,
-}
+pub struct _gsl_matrix_ushort_view;
 pub type gsl_matrix_ushort_view = _gsl_matrix_ushort_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ushort_const_view {
-    pub matrix: gsl_matrix_ushort,
-}
+pub struct _gsl_matrix_ushort_const_view;
 pub type gsl_matrix_ushort_const_view = _gsl_matrix_ushort_const_view;
 extern "C" {
-    pub fn gsl_matrix_ushort_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_ushort;
+    pub fn gsl_matrix_ushort_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_ushort;
 }
 extern "C" {
-    pub fn gsl_matrix_ushort_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_ushort;
+    pub fn gsl_matrix_ushort_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_ushort;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_alloc_from_block(
         b: *mut gsl_block_ushort,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_ushort;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_alloc_from_matrix(
         m: *mut gsl_matrix_ushort,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_ushort;
 }
 extern "C" {
     pub fn gsl_vector_ushort_alloc_row_from_matrix(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_ushort;
 }
 extern "C" {
     pub fn gsl_vector_ushort_alloc_col_from_matrix(
         m: *mut gsl_matrix_ushort,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_ushort;
 }
 extern "C" {
@@ -13288,20 +12547,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ushort_submatrix(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ushort_view;
 }
 extern "C" {
-    pub fn gsl_matrix_ushort_row(m: *mut gsl_matrix_ushort, i: size_t) -> _gsl_vector_ushort_view;
+    pub fn gsl_matrix_ushort_row(m: *mut gsl_matrix_ushort, i: usize) -> _gsl_vector_ushort_view;
 }
 extern "C" {
-    pub fn gsl_matrix_ushort_column(
-        m: *mut gsl_matrix_ushort,
-        j: size_t,
-    ) -> _gsl_vector_ushort_view;
+    pub fn gsl_matrix_ushort_column(m: *mut gsl_matrix_ushort, j: usize)
+        -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_diagonal(m: *mut gsl_matrix_ushort) -> _gsl_vector_ushort_view;
@@ -13309,80 +12566,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ushort_subdiagonal(
         m: *mut gsl_matrix_ushort,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_superdiagonal(
         m: *mut gsl_matrix_ushort,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_subrow(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_subcolumn(
         m: *mut gsl_matrix_ushort,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_view_array(
         base: *mut ::std::os::raw::c_ushort,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_view_array_with_tda(
         base: *mut ::std::os::raw::c_ushort,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_view_vector(
         v: *mut gsl_vector_ushort,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_view_vector_with_tda(
         v: *mut gsl_vector_ushort,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ushort_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_submatrix(
         m: *const gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_row(
         m: *const gsl_matrix_ushort,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_column(
         m: *const gsl_matrix_ushort,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
@@ -13393,59 +12650,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ushort_const_subdiagonal(
         m: *const gsl_matrix_ushort,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_superdiagonal(
         m: *const gsl_matrix_ushort,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_subrow(
         m: *const gsl_matrix_ushort,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_subcolumn(
         m: *const gsl_matrix_ushort,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_view_array(
         base: *const ::std::os::raw::c_ushort,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_view_array_with_tda(
         base: *const ::std::os::raw::c_ushort,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_view_vector(
         v: *const gsl_vector_ushort,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_ushort_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_view_vector_with_tda(
         v: *const gsl_vector_ushort,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_ushort_const_view;
 }
 extern "C" {
@@ -13505,22 +12762,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ushort_swap_rows(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_swap_columns(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_swap_rowcol(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -13556,24 +12813,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_ushort_max_index(
         m: *const gsl_matrix_ushort,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_ushort_min_index(
         m: *const gsl_matrix_ushort,
-        imin: *mut size_t,
-        jmin: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_ushort_minmax_index(
         m: *const gsl_matrix_ushort,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -13652,92 +12909,70 @@ extern "C" {
     pub fn gsl_matrix_ushort_get_row(
         v: *mut gsl_vector_ushort,
         m: *const gsl_matrix_ushort,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_get_col(
         v: *mut gsl_vector_ushort,
         m: *const gsl_matrix_ushort,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_set_row(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_set_col(
         m: *mut gsl_matrix_ushort,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_get(
         m: *const gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_set(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_ushort,
     );
 }
 extern "C" {
     pub fn gsl_matrix_ushort_ptr(
         m: *mut gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_matrix_ushort_const_ptr(
         m: *const gsl_matrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_ushort;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_ushort {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_ushort,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_ushort__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_ushort__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_ushort,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_ushort;
 extern "C" {
-    pub fn gsl_spmatrix_ushort_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_ushort;
+    pub fn gsl_spmatrix_ushort_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_ushort;
 }
 extern "C" {
     pub fn gsl_spmatrix_ushort_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_ushort;
 }
@@ -13746,12 +12981,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_ushort_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_ushort_nnz(m: *const gsl_spmatrix_ushort) -> size_t;
+    pub fn gsl_spmatrix_ushort_nnz(m: *const gsl_spmatrix_ushort) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_ushort_type(m: *const gsl_spmatrix_ushort)
@@ -13822,23 +13057,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_ushort_get(
         m: *const gsl_spmatrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_spmatrix_ushort_set(
         m: *mut gsl_spmatrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_ushort_ptr(
         m: *const gsl_spmatrix_ushort,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_ushort;
 }
 extern "C" {
@@ -13851,8 +13086,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_ushort_min_index(
         m: *const gsl_spmatrix_ushort,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -13933,16 +13168,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_short_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_short,
-}
+pub struct gsl_block_short_struct;
 pub type gsl_block_short = gsl_block_short_struct;
 extern "C" {
-    pub fn gsl_block_short_alloc(n: size_t) -> *mut gsl_block_short;
+    pub fn gsl_block_short_alloc(n: usize) -> *mut gsl_block_short;
 }
 extern "C" {
-    pub fn gsl_block_short_calloc(n: size_t) -> *mut gsl_block_short;
+    pub fn gsl_block_short_calloc(n: usize) -> *mut gsl_block_short;
 }
 extern "C" {
     pub fn gsl_block_short_free(b: *mut gsl_block_short);
@@ -13976,82 +13208,72 @@ extern "C" {
     pub fn gsl_block_short_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_short,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_short_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_short,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_short_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_short,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_short_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_short,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_short_size(b: *const gsl_block_short) -> size_t;
+    pub fn gsl_block_short_size(b: *const gsl_block_short) -> usize;
 }
 extern "C" {
     pub fn gsl_block_short_data(b: *const gsl_block_short) -> *mut ::std::os::raw::c_short;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_short {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_short,
-    pub block: *mut gsl_block_short,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_short;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_short_view {
-    pub vector: gsl_vector_short,
-}
+pub struct _gsl_vector_short_view;
 pub type gsl_vector_short_view = _gsl_vector_short_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_short_const_view {
-    pub vector: gsl_vector_short,
-}
+pub struct _gsl_vector_short_const_view;
 pub type gsl_vector_short_const_view = _gsl_vector_short_const_view;
 extern "C" {
-    pub fn gsl_vector_short_alloc(n: size_t) -> *mut gsl_vector_short;
+    pub fn gsl_vector_short_alloc(n: usize) -> *mut gsl_vector_short;
 }
 extern "C" {
-    pub fn gsl_vector_short_calloc(n: size_t) -> *mut gsl_vector_short;
+    pub fn gsl_vector_short_calloc(n: usize) -> *mut gsl_vector_short;
 }
 extern "C" {
     pub fn gsl_vector_short_alloc_from_block(
         b: *mut gsl_block_short,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_short;
 }
 extern "C" {
     pub fn gsl_vector_short_alloc_from_vector(
         v: *mut gsl_vector_short,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_short;
 }
 extern "C" {
@@ -14060,57 +13282,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_short_view_array(
         v: *mut ::std::os::raw::c_short,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_vector_short_view_array_with_stride(
         base: *mut ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_vector_short_const_view_array(
         v: *const ::std::os::raw::c_short,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_vector_short_const_view_array_with_stride(
         base: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_vector_short_subvector(
         v: *mut gsl_vector_short,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_vector_short_subvector_with_stride(
         v: *mut gsl_vector_short,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_vector_short_const_subvector(
         v: *const gsl_vector_short,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_vector_short_const_subvector_with_stride(
         v: *const gsl_vector_short,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
@@ -14120,8 +13342,7 @@ extern "C" {
     pub fn gsl_vector_short_set_all(v: *mut gsl_vector_short, x: ::std::os::raw::c_short);
 }
 extern "C" {
-    pub fn gsl_vector_short_set_basis(v: *mut gsl_vector_short, i: size_t)
-        -> ::std::os::raw::c_int;
+    pub fn gsl_vector_short_set_basis(v: *mut gsl_vector_short, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_short_fread(
@@ -14166,8 +13387,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_short_swap_elements(
         v: *mut gsl_vector_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -14184,16 +13405,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_short_max_index(v: *const gsl_vector_short) -> size_t;
+    pub fn gsl_vector_short_max_index(v: *const gsl_vector_short) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_short_min_index(v: *const gsl_vector_short) -> size_t;
+    pub fn gsl_vector_short_min_index(v: *const gsl_vector_short) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_short_minmax_index(
         v: *const gsl_vector_short,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -14260,79 +13481,66 @@ extern "C" {
     pub fn gsl_vector_short_isnonneg(v: *const gsl_vector_short) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_short_get(v: *const gsl_vector_short, i: size_t) -> ::std::os::raw::c_short;
+    pub fn gsl_vector_short_get(v: *const gsl_vector_short, i: usize) -> ::std::os::raw::c_short;
 }
 extern "C" {
-    pub fn gsl_vector_short_set(v: *mut gsl_vector_short, i: size_t, x: ::std::os::raw::c_short);
+    pub fn gsl_vector_short_set(v: *mut gsl_vector_short, i: usize, x: ::std::os::raw::c_short);
 }
 extern "C" {
-    pub fn gsl_vector_short_ptr(
-        v: *mut gsl_vector_short,
-        i: size_t,
-    ) -> *mut ::std::os::raw::c_short;
+    pub fn gsl_vector_short_ptr(v: *mut gsl_vector_short, i: usize)
+        -> *mut ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_vector_short_const_ptr(
         v: *const gsl_vector_short,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_short;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_short {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_short,
-    pub block: *mut gsl_block_short,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_short;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_short_view {
-    pub matrix: gsl_matrix_short,
-}
+pub struct _gsl_matrix_short_view;
 pub type gsl_matrix_short_view = _gsl_matrix_short_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_short_const_view {
-    pub matrix: gsl_matrix_short,
-}
+pub struct _gsl_matrix_short_const_view;
 pub type gsl_matrix_short_const_view = _gsl_matrix_short_const_view;
 extern "C" {
-    pub fn gsl_matrix_short_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_short;
+    pub fn gsl_matrix_short_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_short;
 }
 extern "C" {
-    pub fn gsl_matrix_short_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_short;
+    pub fn gsl_matrix_short_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_short;
 }
 extern "C" {
     pub fn gsl_matrix_short_alloc_from_block(
         b: *mut gsl_block_short,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_short;
 }
 extern "C" {
     pub fn gsl_matrix_short_alloc_from_matrix(
         m: *mut gsl_matrix_short,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_short;
 }
 extern "C" {
     pub fn gsl_vector_short_alloc_row_from_matrix(
         m: *mut gsl_matrix_short,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_short;
 }
 extern "C" {
     pub fn gsl_vector_short_alloc_col_from_matrix(
         m: *mut gsl_matrix_short,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_short;
 }
 extern "C" {
@@ -14341,17 +13549,17 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_short_submatrix(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_short_view;
 }
 extern "C" {
-    pub fn gsl_matrix_short_row(m: *mut gsl_matrix_short, i: size_t) -> _gsl_vector_short_view;
+    pub fn gsl_matrix_short_row(m: *mut gsl_matrix_short, i: usize) -> _gsl_vector_short_view;
 }
 extern "C" {
-    pub fn gsl_matrix_short_column(m: *mut gsl_matrix_short, j: size_t) -> _gsl_vector_short_view;
+    pub fn gsl_matrix_short_column(m: *mut gsl_matrix_short, j: usize) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_diagonal(m: *mut gsl_matrix_short) -> _gsl_vector_short_view;
@@ -14359,80 +13567,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_short_subdiagonal(
         m: *mut gsl_matrix_short,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_superdiagonal(
         m: *mut gsl_matrix_short,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_subrow(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_subcolumn(
         m: *mut gsl_matrix_short,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_view_array(
         base: *mut ::std::os::raw::c_short,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_view_array_with_tda(
         base: *mut ::std::os::raw::c_short,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_view_vector(
         v: *mut gsl_vector_short,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_view_vector_with_tda(
         v: *mut gsl_vector_short,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_short_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_submatrix(
         m: *const gsl_matrix_short,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_row(
         m: *const gsl_matrix_short,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_column(
         m: *const gsl_matrix_short,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
@@ -14443,59 +13651,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_short_const_subdiagonal(
         m: *const gsl_matrix_short,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_superdiagonal(
         m: *const gsl_matrix_short,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_subrow(
         m: *const gsl_matrix_short,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_subcolumn(
         m: *const gsl_matrix_short,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_view_array(
         base: *const ::std::os::raw::c_short,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_view_array_with_tda(
         base: *const ::std::os::raw::c_short,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_view_vector(
         v: *const gsl_vector_short,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_short_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_view_vector_with_tda(
         v: *const gsl_vector_short,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_short_const_view;
 }
 extern "C" {
@@ -14555,22 +13763,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_short_swap_rows(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_short_swap_columns(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_short_swap_rowcol(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -14606,24 +13814,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_short_max_index(
         m: *const gsl_matrix_short,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_short_min_index(
         m: *const gsl_matrix_short,
-        imin: *mut size_t,
-        jmin: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_short_minmax_index(
         m: *const gsl_matrix_short,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -14698,92 +13906,70 @@ extern "C" {
     pub fn gsl_matrix_short_get_row(
         v: *mut gsl_vector_short,
         m: *const gsl_matrix_short,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_short_get_col(
         v: *mut gsl_vector_short,
         m: *const gsl_matrix_short,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_short_set_row(
         m: *mut gsl_matrix_short,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_short_set_col(
         m: *mut gsl_matrix_short,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_short_get(
         m: *const gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_matrix_short_set(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_short,
     );
 }
 extern "C" {
     pub fn gsl_matrix_short_ptr(
         m: *mut gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_matrix_short_const_ptr(
         m: *const gsl_matrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_short;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_short {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_short,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_short__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_short__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_short,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_short;
 extern "C" {
-    pub fn gsl_spmatrix_short_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_short;
+    pub fn gsl_spmatrix_short_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_short;
 }
 extern "C" {
     pub fn gsl_spmatrix_short_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_short;
 }
@@ -14792,12 +13978,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_short_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_short_nnz(m: *const gsl_spmatrix_short) -> size_t;
+    pub fn gsl_spmatrix_short_nnz(m: *const gsl_spmatrix_short) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_short_type(m: *const gsl_spmatrix_short) -> *const ::std::os::raw::c_char;
@@ -14866,23 +14052,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_short_get(
         m: *const gsl_spmatrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_spmatrix_short_set(
         m: *mut gsl_spmatrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_short_ptr(
         m: *const gsl_spmatrix_short,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_short;
 }
 extern "C" {
@@ -14895,8 +14081,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_short_min_index(
         m: *const gsl_spmatrix_short,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -14977,16 +14163,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_uchar_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_uchar,
-}
+pub struct gsl_block_uchar_struct;
 pub type gsl_block_uchar = gsl_block_uchar_struct;
 extern "C" {
-    pub fn gsl_block_uchar_alloc(n: size_t) -> *mut gsl_block_uchar;
+    pub fn gsl_block_uchar_alloc(n: usize) -> *mut gsl_block_uchar;
 }
 extern "C" {
-    pub fn gsl_block_uchar_calloc(n: size_t) -> *mut gsl_block_uchar;
+    pub fn gsl_block_uchar_calloc(n: usize) -> *mut gsl_block_uchar;
 }
 extern "C" {
     pub fn gsl_block_uchar_free(b: *mut gsl_block_uchar);
@@ -15020,82 +14203,72 @@ extern "C" {
     pub fn gsl_block_uchar_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_uchar,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_uchar_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_uchar,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_uchar_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_uchar,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_uchar_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_uchar,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_uchar_size(b: *const gsl_block_uchar) -> size_t;
+    pub fn gsl_block_uchar_size(b: *const gsl_block_uchar) -> usize;
 }
 extern "C" {
     pub fn gsl_block_uchar_data(b: *const gsl_block_uchar) -> *mut ::std::os::raw::c_uchar;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_uchar {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_uchar,
-    pub block: *mut gsl_block_uchar,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_uchar;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uchar_view {
-    pub vector: gsl_vector_uchar,
-}
+pub struct _gsl_vector_uchar_view;
 pub type gsl_vector_uchar_view = _gsl_vector_uchar_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uchar_const_view {
-    pub vector: gsl_vector_uchar,
-}
+pub struct _gsl_vector_uchar_const_view;
 pub type gsl_vector_uchar_const_view = _gsl_vector_uchar_const_view;
 extern "C" {
-    pub fn gsl_vector_uchar_alloc(n: size_t) -> *mut gsl_vector_uchar;
+    pub fn gsl_vector_uchar_alloc(n: usize) -> *mut gsl_vector_uchar;
 }
 extern "C" {
-    pub fn gsl_vector_uchar_calloc(n: size_t) -> *mut gsl_vector_uchar;
+    pub fn gsl_vector_uchar_calloc(n: usize) -> *mut gsl_vector_uchar;
 }
 extern "C" {
     pub fn gsl_vector_uchar_alloc_from_block(
         b: *mut gsl_block_uchar,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_uchar;
 }
 extern "C" {
     pub fn gsl_vector_uchar_alloc_from_vector(
         v: *mut gsl_vector_uchar,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_uchar;
 }
 extern "C" {
@@ -15104,57 +14277,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_uchar_view_array(
         v: *mut ::std::os::raw::c_uchar,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_view_array_with_stride(
         base: *mut ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_const_view_array(
         v: *const ::std::os::raw::c_uchar,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_const_view_array_with_stride(
         base: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_subvector(
         v: *mut gsl_vector_uchar,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_subvector_with_stride(
         v: *mut gsl_vector_uchar,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_const_subvector(
         v: *const gsl_vector_uchar,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_vector_uchar_const_subvector_with_stride(
         v: *const gsl_vector_uchar,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
@@ -15164,8 +14337,7 @@ extern "C" {
     pub fn gsl_vector_uchar_set_all(v: *mut gsl_vector_uchar, x: ::std::os::raw::c_uchar);
 }
 extern "C" {
-    pub fn gsl_vector_uchar_set_basis(v: *mut gsl_vector_uchar, i: size_t)
-        -> ::std::os::raw::c_int;
+    pub fn gsl_vector_uchar_set_basis(v: *mut gsl_vector_uchar, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_uchar_fread(
@@ -15210,8 +14382,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_uchar_swap_elements(
         v: *mut gsl_vector_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -15228,16 +14400,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_uchar_max_index(v: *const gsl_vector_uchar) -> size_t;
+    pub fn gsl_vector_uchar_max_index(v: *const gsl_vector_uchar) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_uchar_min_index(v: *const gsl_vector_uchar) -> size_t;
+    pub fn gsl_vector_uchar_min_index(v: *const gsl_vector_uchar) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_uchar_minmax_index(
         v: *const gsl_vector_uchar,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -15304,79 +14476,66 @@ extern "C" {
     pub fn gsl_vector_uchar_isnonneg(v: *const gsl_vector_uchar) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_uchar_get(v: *const gsl_vector_uchar, i: size_t) -> ::std::os::raw::c_uchar;
+    pub fn gsl_vector_uchar_get(v: *const gsl_vector_uchar, i: usize) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
-    pub fn gsl_vector_uchar_set(v: *mut gsl_vector_uchar, i: size_t, x: ::std::os::raw::c_uchar);
+    pub fn gsl_vector_uchar_set(v: *mut gsl_vector_uchar, i: usize, x: ::std::os::raw::c_uchar);
 }
 extern "C" {
-    pub fn gsl_vector_uchar_ptr(
-        v: *mut gsl_vector_uchar,
-        i: size_t,
-    ) -> *mut ::std::os::raw::c_uchar;
+    pub fn gsl_vector_uchar_ptr(v: *mut gsl_vector_uchar, i: usize)
+        -> *mut ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_vector_uchar_const_ptr(
         v: *const gsl_vector_uchar,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_uchar;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_uchar {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_uchar,
-    pub block: *mut gsl_block_uchar,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_uchar;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uchar_view {
-    pub matrix: gsl_matrix_uchar,
-}
+pub struct _gsl_matrix_uchar_view;
 pub type gsl_matrix_uchar_view = _gsl_matrix_uchar_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uchar_const_view {
-    pub matrix: gsl_matrix_uchar,
-}
+pub struct _gsl_matrix_uchar_const_view;
 pub type gsl_matrix_uchar_const_view = _gsl_matrix_uchar_const_view;
 extern "C" {
-    pub fn gsl_matrix_uchar_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_uchar;
+    pub fn gsl_matrix_uchar_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_uchar;
 }
 extern "C" {
-    pub fn gsl_matrix_uchar_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_uchar;
+    pub fn gsl_matrix_uchar_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_uchar;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_alloc_from_block(
         b: *mut gsl_block_uchar,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_uchar;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_alloc_from_matrix(
         m: *mut gsl_matrix_uchar,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_uchar;
 }
 extern "C" {
     pub fn gsl_vector_uchar_alloc_row_from_matrix(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_uchar;
 }
 extern "C" {
     pub fn gsl_vector_uchar_alloc_col_from_matrix(
         m: *mut gsl_matrix_uchar,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_uchar;
 }
 extern "C" {
@@ -15385,17 +14544,17 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uchar_submatrix(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uchar_view;
 }
 extern "C" {
-    pub fn gsl_matrix_uchar_row(m: *mut gsl_matrix_uchar, i: size_t) -> _gsl_vector_uchar_view;
+    pub fn gsl_matrix_uchar_row(m: *mut gsl_matrix_uchar, i: usize) -> _gsl_vector_uchar_view;
 }
 extern "C" {
-    pub fn gsl_matrix_uchar_column(m: *mut gsl_matrix_uchar, j: size_t) -> _gsl_vector_uchar_view;
+    pub fn gsl_matrix_uchar_column(m: *mut gsl_matrix_uchar, j: usize) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_diagonal(m: *mut gsl_matrix_uchar) -> _gsl_vector_uchar_view;
@@ -15403,80 +14562,80 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uchar_subdiagonal(
         m: *mut gsl_matrix_uchar,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_superdiagonal(
         m: *mut gsl_matrix_uchar,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_subrow(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_subcolumn(
         m: *mut gsl_matrix_uchar,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_view_array(
         base: *mut ::std::os::raw::c_uchar,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_view_array_with_tda(
         base: *mut ::std::os::raw::c_uchar,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_view_vector(
         v: *mut gsl_vector_uchar,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_view_vector_with_tda(
         v: *mut gsl_vector_uchar,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uchar_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_submatrix(
         m: *const gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_row(
         m: *const gsl_matrix_uchar,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_column(
         m: *const gsl_matrix_uchar,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
@@ -15487,59 +14646,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uchar_const_subdiagonal(
         m: *const gsl_matrix_uchar,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_superdiagonal(
         m: *const gsl_matrix_uchar,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_subrow(
         m: *const gsl_matrix_uchar,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_subcolumn(
         m: *const gsl_matrix_uchar,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_view_array(
         base: *const ::std::os::raw::c_uchar,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_view_array_with_tda(
         base: *const ::std::os::raw::c_uchar,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_view_vector(
         v: *const gsl_vector_uchar,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_uchar_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_view_vector_with_tda(
         v: *const gsl_vector_uchar,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_uchar_const_view;
 }
 extern "C" {
@@ -15599,22 +14758,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uchar_swap_rows(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_swap_columns(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_swap_rowcol(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -15650,24 +14809,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_uchar_max_index(
         m: *const gsl_matrix_uchar,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_uchar_min_index(
         m: *const gsl_matrix_uchar,
-        imin: *mut size_t,
-        jmin: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
     );
 }
 extern "C" {
     pub fn gsl_matrix_uchar_minmax_index(
         m: *const gsl_matrix_uchar,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -15742,92 +14901,70 @@ extern "C" {
     pub fn gsl_matrix_uchar_get_row(
         v: *mut gsl_vector_uchar,
         m: *const gsl_matrix_uchar,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_get_col(
         v: *mut gsl_vector_uchar,
         m: *const gsl_matrix_uchar,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_set_row(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_set_col(
         m: *mut gsl_matrix_uchar,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_get(
         m: *const gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_set(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_uchar,
     );
 }
 extern "C" {
     pub fn gsl_matrix_uchar_ptr(
         m: *mut gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_matrix_uchar_const_ptr(
         m: *const gsl_matrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_uchar;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_uchar {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_uchar,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_uchar__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_uchar__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_uchar,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_uchar;
 extern "C" {
-    pub fn gsl_spmatrix_uchar_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_uchar;
+    pub fn gsl_spmatrix_uchar_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_uchar;
 }
 extern "C" {
     pub fn gsl_spmatrix_uchar_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_uchar;
 }
@@ -15836,12 +14973,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_uchar_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_uchar_nnz(m: *const gsl_spmatrix_uchar) -> size_t;
+    pub fn gsl_spmatrix_uchar_nnz(m: *const gsl_spmatrix_uchar) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_uchar_type(m: *const gsl_spmatrix_uchar) -> *const ::std::os::raw::c_char;
@@ -15910,23 +15047,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_uchar_get(
         m: *const gsl_spmatrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_spmatrix_uchar_set(
         m: *mut gsl_spmatrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_uchar_ptr(
         m: *const gsl_spmatrix_uchar,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_uchar;
 }
 extern "C" {
@@ -15939,8 +15076,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_uchar_min_index(
         m: *const gsl_spmatrix_uchar,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -16021,16 +15158,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_block_char_struct {
-    pub size: size_t,
-    pub data: *mut ::std::os::raw::c_char,
-}
+pub struct gsl_block_char_struct;
 pub type gsl_block_char = gsl_block_char_struct;
 extern "C" {
-    pub fn gsl_block_char_alloc(n: size_t) -> *mut gsl_block_char;
+    pub fn gsl_block_char_alloc(n: usize) -> *mut gsl_block_char;
 }
 extern "C" {
-    pub fn gsl_block_char_calloc(n: size_t) -> *mut gsl_block_char;
+    pub fn gsl_block_char_calloc(n: usize) -> *mut gsl_block_char;
 }
 extern "C" {
     pub fn gsl_block_char_free(b: *mut gsl_block_char);
@@ -16062,82 +15196,72 @@ extern "C" {
     pub fn gsl_block_char_raw_fread(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_char,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_char_raw_fwrite(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_char,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_char_raw_fscanf(
         stream: *mut FILE,
         b: *mut ::std::os::raw::c_char,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_block_char_raw_fprintf(
         stream: *mut FILE,
         b: *const ::std::os::raw::c_char,
-        n: size_t,
-        stride: size_t,
+        n: usize,
+        stride: usize,
         format: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_block_char_size(b: *const gsl_block_char) -> size_t;
+    pub fn gsl_block_char_size(b: *const gsl_block_char) -> usize;
 }
 extern "C" {
     pub fn gsl_block_char_data(b: *const gsl_block_char) -> *mut ::std::os::raw::c_char;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_vector_char {
-    pub size: size_t,
-    pub stride: size_t,
-    pub data: *mut ::std::os::raw::c_char,
-    pub block: *mut gsl_block_char,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_vector_char;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_char_view {
-    pub vector: gsl_vector_char,
-}
+pub struct _gsl_vector_char_view;
 pub type gsl_vector_char_view = _gsl_vector_char_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_char_const_view {
-    pub vector: gsl_vector_char,
-}
+pub struct _gsl_vector_char_const_view;
 pub type gsl_vector_char_const_view = _gsl_vector_char_const_view;
 extern "C" {
-    pub fn gsl_vector_char_alloc(n: size_t) -> *mut gsl_vector_char;
+    pub fn gsl_vector_char_alloc(n: usize) -> *mut gsl_vector_char;
 }
 extern "C" {
-    pub fn gsl_vector_char_calloc(n: size_t) -> *mut gsl_vector_char;
+    pub fn gsl_vector_char_calloc(n: usize) -> *mut gsl_vector_char;
 }
 extern "C" {
     pub fn gsl_vector_char_alloc_from_block(
         b: *mut gsl_block_char,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_char;
 }
 extern "C" {
     pub fn gsl_vector_char_alloc_from_vector(
         v: *mut gsl_vector_char,
-        offset: size_t,
-        n: size_t,
-        stride: size_t,
+        offset: usize,
+        n: usize,
+        stride: usize,
     ) -> *mut gsl_vector_char;
 }
 extern "C" {
@@ -16146,57 +15270,57 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_char_view_array(
         v: *mut ::std::os::raw::c_char,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_vector_char_view_array_with_stride(
         base: *mut ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_vector_char_const_view_array(
         v: *const ::std::os::raw::c_char,
-        n: size_t,
+        n: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_vector_char_const_view_array_with_stride(
         base: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_vector_char_subvector(
         v: *mut gsl_vector_char,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_vector_char_subvector_with_stride(
         v: *mut gsl_vector_char,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_vector_char_const_subvector(
         v: *const gsl_vector_char,
-        i: size_t,
-        n: size_t,
+        i: usize,
+        n: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_vector_char_const_subvector_with_stride(
         v: *const gsl_vector_char,
-        i: size_t,
-        stride: size_t,
-        n: size_t,
+        i: usize,
+        stride: usize,
+        n: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
@@ -16206,7 +15330,7 @@ extern "C" {
     pub fn gsl_vector_char_set_all(v: *mut gsl_vector_char, x: ::std::os::raw::c_char);
 }
 extern "C" {
-    pub fn gsl_vector_char_set_basis(v: *mut gsl_vector_char, i: size_t) -> ::std::os::raw::c_int;
+    pub fn gsl_vector_char_set_basis(v: *mut gsl_vector_char, i: usize) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_vector_char_fread(
@@ -16251,8 +15375,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_vector_char_swap_elements(
         v: *mut gsl_vector_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -16269,16 +15393,16 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_vector_char_max_index(v: *const gsl_vector_char) -> size_t;
+    pub fn gsl_vector_char_max_index(v: *const gsl_vector_char) -> usize;
 }
 extern "C" {
-    pub fn gsl_vector_char_min_index(v: *const gsl_vector_char) -> size_t;
+    pub fn gsl_vector_char_min_index(v: *const gsl_vector_char) -> usize;
 }
 extern "C" {
     pub fn gsl_vector_char_minmax_index(
         v: *const gsl_vector_char,
-        imin: *mut size_t,
-        imax: *mut size_t,
+        imin: *mut usize,
+        imax: *mut usize,
     );
 }
 extern "C" {
@@ -16344,76 +15468,65 @@ extern "C" {
     pub fn gsl_vector_char_isnonneg(v: *const gsl_vector_char) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_vector_char_get(v: *const gsl_vector_char, i: size_t) -> ::std::os::raw::c_char;
+    pub fn gsl_vector_char_get(v: *const gsl_vector_char, i: usize) -> ::std::os::raw::c_char;
 }
 extern "C" {
-    pub fn gsl_vector_char_set(v: *mut gsl_vector_char, i: size_t, x: ::std::os::raw::c_char);
+    pub fn gsl_vector_char_set(v: *mut gsl_vector_char, i: usize, x: ::std::os::raw::c_char);
 }
 extern "C" {
-    pub fn gsl_vector_char_ptr(v: *mut gsl_vector_char, i: size_t) -> *mut ::std::os::raw::c_char;
+    pub fn gsl_vector_char_ptr(v: *mut gsl_vector_char, i: usize) -> *mut ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_vector_char_const_ptr(
         v: *const gsl_vector_char,
-        i: size_t,
+        i: usize,
     ) -> *const ::std::os::raw::c_char;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_matrix_char {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub tda: size_t,
-    pub data: *mut ::std::os::raw::c_char,
-    pub block: *mut gsl_block_char,
-    pub owner: ::std::os::raw::c_int,
-}
+pub struct gsl_matrix_char;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_char_view {
-    pub matrix: gsl_matrix_char,
-}
+pub struct _gsl_matrix_char_view;
 pub type gsl_matrix_char_view = _gsl_matrix_char_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_char_const_view {
-    pub matrix: gsl_matrix_char,
-}
+pub struct _gsl_matrix_char_const_view;
 pub type gsl_matrix_char_const_view = _gsl_matrix_char_const_view;
 extern "C" {
-    pub fn gsl_matrix_char_alloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_char;
+    pub fn gsl_matrix_char_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_char;
 }
 extern "C" {
-    pub fn gsl_matrix_char_calloc(n1: size_t, n2: size_t) -> *mut gsl_matrix_char;
+    pub fn gsl_matrix_char_calloc(n1: usize, n2: usize) -> *mut gsl_matrix_char;
 }
 extern "C" {
     pub fn gsl_matrix_char_alloc_from_block(
         b: *mut gsl_block_char,
-        offset: size_t,
-        n1: size_t,
-        n2: size_t,
-        d2: size_t,
+        offset: usize,
+        n1: usize,
+        n2: usize,
+        d2: usize,
     ) -> *mut gsl_matrix_char;
 }
 extern "C" {
     pub fn gsl_matrix_char_alloc_from_matrix(
         m: *mut gsl_matrix_char,
-        k1: size_t,
-        k2: size_t,
-        n1: size_t,
-        n2: size_t,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
     ) -> *mut gsl_matrix_char;
 }
 extern "C" {
     pub fn gsl_vector_char_alloc_row_from_matrix(
         m: *mut gsl_matrix_char,
-        i: size_t,
+        i: usize,
     ) -> *mut gsl_vector_char;
 }
 extern "C" {
     pub fn gsl_vector_char_alloc_col_from_matrix(
         m: *mut gsl_matrix_char,
-        j: size_t,
+        j: usize,
     ) -> *mut gsl_vector_char;
 }
 extern "C" {
@@ -16422,96 +15535,95 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_char_submatrix(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_char_view;
 }
 extern "C" {
-    pub fn gsl_matrix_char_row(m: *mut gsl_matrix_char, i: size_t) -> _gsl_vector_char_view;
+    pub fn gsl_matrix_char_row(m: *mut gsl_matrix_char, i: usize) -> _gsl_vector_char_view;
 }
 extern "C" {
-    pub fn gsl_matrix_char_column(m: *mut gsl_matrix_char, j: size_t) -> _gsl_vector_char_view;
+    pub fn gsl_matrix_char_column(m: *mut gsl_matrix_char, j: usize) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_diagonal(m: *mut gsl_matrix_char) -> _gsl_vector_char_view;
 }
 extern "C" {
-    pub fn gsl_matrix_char_subdiagonal(m: *mut gsl_matrix_char, k: size_t)
-        -> _gsl_vector_char_view;
+    pub fn gsl_matrix_char_subdiagonal(m: *mut gsl_matrix_char, k: usize) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_superdiagonal(
         m: *mut gsl_matrix_char,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_subrow(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_subcolumn(
         m: *mut gsl_matrix_char,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_view_array(
         base: *mut ::std::os::raw::c_char,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_view_array_with_tda(
         base: *mut ::std::os::raw::c_char,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_view_vector(
         v: *mut gsl_vector_char,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_view_vector_with_tda(
         v: *mut gsl_vector_char,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_char_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_submatrix(
         m: *const gsl_matrix_char,
-        i: size_t,
-        j: size_t,
-        n1: size_t,
-        n2: size_t,
+        i: usize,
+        j: usize,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_row(
         m: *const gsl_matrix_char,
-        i: size_t,
+        i: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_column(
         m: *const gsl_matrix_char,
-        j: size_t,
+        j: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
@@ -16521,59 +15633,59 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_char_const_subdiagonal(
         m: *const gsl_matrix_char,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_superdiagonal(
         m: *const gsl_matrix_char,
-        k: size_t,
+        k: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_subrow(
         m: *const gsl_matrix_char,
-        i: size_t,
-        offset: size_t,
-        n: size_t,
+        i: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_subcolumn(
         m: *const gsl_matrix_char,
-        j: size_t,
-        offset: size_t,
-        n: size_t,
+        j: usize,
+        offset: usize,
+        n: usize,
     ) -> _gsl_vector_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_view_array(
         base: *const ::std::os::raw::c_char,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_view_array_with_tda(
         base: *const ::std::os::raw::c_char,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_view_vector(
         v: *const gsl_vector_char,
-        n1: size_t,
-        n2: size_t,
+        n1: usize,
+        n2: usize,
     ) -> _gsl_matrix_char_const_view;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_view_vector_with_tda(
         v: *const gsl_vector_char,
-        n1: size_t,
-        n2: size_t,
-        tda: size_t,
+        n1: usize,
+        n2: usize,
+        tda: usize,
     ) -> _gsl_matrix_char_const_view;
 }
 extern "C" {
@@ -16633,22 +15745,22 @@ extern "C" {
 extern "C" {
     pub fn gsl_matrix_char_swap_rows(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_char_swap_columns(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_char_swap_rowcol(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -16682,26 +15794,18 @@ extern "C" {
     );
 }
 extern "C" {
-    pub fn gsl_matrix_char_max_index(
-        m: *const gsl_matrix_char,
-        imax: *mut size_t,
-        jmax: *mut size_t,
-    );
+    pub fn gsl_matrix_char_max_index(m: *const gsl_matrix_char, imax: *mut usize, jmax: *mut usize);
 }
 extern "C" {
-    pub fn gsl_matrix_char_min_index(
-        m: *const gsl_matrix_char,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-    );
+    pub fn gsl_matrix_char_min_index(m: *const gsl_matrix_char, imin: *mut usize, jmin: *mut usize);
 }
 extern "C" {
     pub fn gsl_matrix_char_minmax_index(
         m: *const gsl_matrix_char,
-        imin: *mut size_t,
-        jmin: *mut size_t,
-        imax: *mut size_t,
-        jmax: *mut size_t,
+        imin: *mut usize,
+        jmin: *mut usize,
+        imax: *mut usize,
+        jmax: *mut usize,
     );
 }
 extern "C" {
@@ -16774,92 +15878,70 @@ extern "C" {
     pub fn gsl_matrix_char_get_row(
         v: *mut gsl_vector_char,
         m: *const gsl_matrix_char,
-        i: size_t,
+        i: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_char_get_col(
         v: *mut gsl_vector_char,
         m: *const gsl_matrix_char,
-        j: size_t,
+        j: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_char_set_row(
         m: *mut gsl_matrix_char,
-        i: size_t,
+        i: usize,
         v: *const gsl_vector_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_char_set_col(
         m: *mut gsl_matrix_char,
-        j: size_t,
+        j: usize,
         v: *const gsl_vector_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_matrix_char_get(
         m: *const gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_matrix_char_set(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_char,
     );
 }
 extern "C" {
     pub fn gsl_matrix_char_ptr(
         m: *mut gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_matrix_char_const_ptr(
         m: *const gsl_matrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *const ::std::os::raw::c_char;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_spmatrix_char {
-    pub size1: size_t,
-    pub size2: size_t,
-    pub i: *mut ::std::os::raw::c_int,
-    pub data: *mut ::std::os::raw::c_char,
-    pub p: *mut ::std::os::raw::c_int,
-    pub nzmax: size_t,
-    pub nz: size_t,
-    pub tree: *mut gsl_bst_workspace,
-    pub pool: *mut gsl_spmatrix_pool,
-    pub node_size: size_t,
-    pub work: gsl_spmatrix_char__bindgen_ty_1,
-    pub sptype: ::std::os::raw::c_int,
-    pub spflags: size_t,
-}
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub union gsl_spmatrix_char__bindgen_ty_1 {
-    pub work_void: *mut ::std::os::raw::c_void,
-    pub work_int: *mut ::std::os::raw::c_int,
-    pub work_atomic: *mut ::std::os::raw::c_char,
-    _bindgen_union_align: u64,
-}
+pub struct gsl_spmatrix_char;
 extern "C" {
-    pub fn gsl_spmatrix_char_alloc(n1: size_t, n2: size_t) -> *mut gsl_spmatrix_char;
+    pub fn gsl_spmatrix_char_alloc(n1: usize, n2: usize) -> *mut gsl_spmatrix_char;
 }
 extern "C" {
     pub fn gsl_spmatrix_char_alloc_nzmax(
-        n1: size_t,
-        n2: size_t,
-        nzmax: size_t,
+        n1: usize,
+        n2: usize,
+        nzmax: usize,
         sptype: ::std::os::raw::c_int,
     ) -> *mut gsl_spmatrix_char;
 }
@@ -16868,12 +15950,12 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_spmatrix_char_realloc(
-        nzmax: size_t,
+        nzmax: usize,
         m: *mut gsl_spmatrix_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spmatrix_char_nnz(m: *const gsl_spmatrix_char) -> size_t;
+    pub fn gsl_spmatrix_char_nnz(m: *const gsl_spmatrix_char) -> usize;
 }
 extern "C" {
     pub fn gsl_spmatrix_char_type(m: *const gsl_spmatrix_char) -> *const ::std::os::raw::c_char;
@@ -16942,23 +16024,23 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_char_get(
         m: *const gsl_spmatrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_spmatrix_char_set(
         m: *mut gsl_spmatrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         x: ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_spmatrix_char_ptr(
         m: *const gsl_spmatrix_char,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> *mut ::std::os::raw::c_char;
 }
 extern "C" {
@@ -16971,8 +16053,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_spmatrix_char_min_index(
         m: *const gsl_spmatrix_char,
-        imin_out: *mut size_t,
-        jmin_out: *mut size_t,
+        imin_out: *mut usize,
+        jmin_out: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -17064,96 +16146,84 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_uchar(data: *mut ::std::os::raw::c_uchar, stride: size_t, n: size_t);
+    pub fn gsl_sort_uchar(data: *mut ::std::os::raw::c_uchar, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_uchar(
         data1: *mut ::std::os::raw::c_uchar,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_uchar_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_uchar_smallest(
         dest: *mut ::std::os::raw::c_uchar,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_uchar_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_uchar_largest(
         dest: *mut ::std::os::raw::c_uchar,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_uchar_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_bspline_workspace {
-    pub k: size_t,
-    pub km1: size_t,
-    pub l: size_t,
-    pub nbreak: size_t,
-    pub n: size_t,
-    pub knots: *mut gsl_vector,
-    pub deltal: *mut gsl_vector,
-    pub deltar: *mut gsl_vector,
-    pub B: *mut gsl_vector,
-    pub A: *mut gsl_matrix,
-    pub dB: *mut gsl_matrix,
-}
+pub struct gsl_bspline_workspace;
 extern "C" {
-    pub fn gsl_bspline_alloc(k: size_t, nbreak: size_t) -> *mut gsl_bspline_workspace;
+    pub fn gsl_bspline_alloc(k: usize, nbreak: usize) -> *mut gsl_bspline_workspace;
 }
 extern "C" {
     pub fn gsl_bspline_free(w: *mut gsl_bspline_workspace);
 }
 extern "C" {
-    pub fn gsl_bspline_ncoeffs(w: *mut gsl_bspline_workspace) -> size_t;
+    pub fn gsl_bspline_ncoeffs(w: *mut gsl_bspline_workspace) -> usize;
 }
 extern "C" {
-    pub fn gsl_bspline_order(w: *mut gsl_bspline_workspace) -> size_t;
+    pub fn gsl_bspline_order(w: *mut gsl_bspline_workspace) -> usize;
 }
 extern "C" {
-    pub fn gsl_bspline_nbreak(w: *mut gsl_bspline_workspace) -> size_t;
+    pub fn gsl_bspline_nbreak(w: *mut gsl_bspline_workspace) -> usize;
 }
 extern "C" {
-    pub fn gsl_bspline_breakpoint(i: size_t, w: *mut gsl_bspline_workspace) -> f64;
+    pub fn gsl_bspline_breakpoint(i: usize, w: *mut gsl_bspline_workspace) -> f64;
 }
 extern "C" {
-    pub fn gsl_bspline_greville_abscissa(i: size_t, w: *mut gsl_bspline_workspace) -> f64;
+    pub fn gsl_bspline_greville_abscissa(i: usize, w: *mut gsl_bspline_workspace) -> f64;
 }
 extern "C" {
     pub fn gsl_bspline_knots(
@@ -17186,15 +16256,15 @@ extern "C" {
     pub fn gsl_bspline_eval_nonzero(
         x: f64,
         Bk: *mut gsl_vector,
-        istart: *mut size_t,
-        iend: *mut size_t,
+        istart: *mut usize,
+        iend: *mut usize,
         w: *mut gsl_bspline_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_bspline_deriv_eval(
         x: f64,
-        nderiv: size_t,
+        nderiv: usize,
         dB: *mut gsl_matrix,
         w: *mut gsl_bspline_workspace,
     ) -> ::std::os::raw::c_int;
@@ -17202,35 +16272,19 @@ extern "C" {
 extern "C" {
     pub fn gsl_bspline_deriv_eval_nonzero(
         x: f64,
-        nderiv: size_t,
+        nderiv: usize,
         dB: *mut gsl_matrix,
-        istart: *mut size_t,
-        iend: *mut size_t,
+        istart: *mut usize,
+        iend: *mut usize,
         w: *mut gsl_bspline_workspace,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_rng_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub max: ::std::os::raw::c_ulong,
-    pub min: ::std::os::raw::c_ulong,
-    pub size: size_t,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void, seed: ::std::os::raw::c_ulong),
-    >,
-    pub get: ::std::option::Option<
-        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_ulong,
-    >,
-    pub get_double:
-        ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> f64>,
-}
+pub struct gsl_rng_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_rng {
-    pub type_: *const gsl_rng_type,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_rng;
 extern "C" {
     pub static mut gsl_rng_borosh13: *const gsl_rng_type;
 }
@@ -17457,7 +16511,7 @@ extern "C" {
     pub fn gsl_rng_fwrite(stream: *mut FILE, r: *const gsl_rng) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_rng_size(r: *const gsl_rng) -> size_t;
+    pub fn gsl_rng_size(r: *const gsl_rng) -> usize;
 }
 extern "C" {
     pub fn gsl_rng_state(r: *const gsl_rng) -> *mut ::std::os::raw::c_void;
@@ -17485,31 +16539,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_function_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x_array: *mut f64,
-            dim: size_t,
-            params: *mut ::std::os::raw::c_void,
-        ) -> f64,
-    >,
-    pub dim: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_monte_function_struct;
 pub type gsl_monte_function = gsl_monte_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_plain_state {
-    pub dim: size_t,
-    pub x: *mut f64,
-}
+pub struct gsl_monte_plain_state;
 extern "C" {
     pub fn gsl_monte_plain_integrate(
         f: *const gsl_monte_function,
         xl: *const f64,
         xu: *const f64,
-        dim: size_t,
-        calls: size_t,
+        dim: usize,
+        calls: usize,
         r: *mut gsl_rng,
         state: *mut gsl_monte_plain_state,
         result: *mut f64,
@@ -17517,7 +16558,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_monte_plain_alloc(dim: size_t) -> *mut gsl_monte_plain_state;
+    pub fn gsl_monte_plain_alloc(dim: usize) -> *mut gsl_monte_plain_state;
 }
 extern "C" {
     pub fn gsl_monte_plain_init(state: *mut gsl_monte_plain_state) -> ::std::os::raw::c_int;
@@ -17527,38 +16568,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_miser_state {
-    pub min_calls: size_t,
-    pub min_calls_per_bisection: size_t,
-    pub dither: f64,
-    pub estimate_frac: f64,
-    pub alpha: f64,
-    pub dim: size_t,
-    pub estimate_style: ::std::os::raw::c_int,
-    pub depth: ::std::os::raw::c_int,
-    pub verbose: ::std::os::raw::c_int,
-    pub x: *mut f64,
-    pub xmid: *mut f64,
-    pub sigma_l: *mut f64,
-    pub sigma_r: *mut f64,
-    pub fmax_l: *mut f64,
-    pub fmax_r: *mut f64,
-    pub fmin_l: *mut f64,
-    pub fmin_r: *mut f64,
-    pub fsum_l: *mut f64,
-    pub fsum_r: *mut f64,
-    pub fsum2_l: *mut f64,
-    pub fsum2_r: *mut f64,
-    pub hits_l: *mut size_t,
-    pub hits_r: *mut size_t,
-}
+pub struct gsl_monte_miser_state;
 extern "C" {
     pub fn gsl_monte_miser_integrate(
         f: *mut gsl_monte_function,
         xl: *const f64,
         xh: *const f64,
-        dim: size_t,
-        calls: size_t,
+        dim: usize,
+        calls: usize,
         r: *mut gsl_rng,
         state: *mut gsl_monte_miser_state,
         result: *mut f64,
@@ -17566,7 +16583,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_monte_miser_alloc(dim: size_t) -> *mut gsl_monte_miser_state;
+    pub fn gsl_monte_miser_alloc(dim: usize) -> *mut gsl_monte_miser_state;
 }
 extern "C" {
     pub fn gsl_monte_miser_init(state: *mut gsl_monte_miser_state) -> ::std::os::raw::c_int;
@@ -17576,13 +16593,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_miser_params {
-    pub estimate_frac: f64,
-    pub min_calls: size_t,
-    pub min_calls_per_bisection: size_t,
-    pub alpha: f64,
-    pub dither: f64,
-}
+pub struct gsl_monte_miser_params;
 extern "C" {
     pub fn gsl_monte_miser_params_get(
         state: *const gsl_monte_miser_state,
@@ -17610,28 +16621,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_ushort_smallest(
         dest: *mut ::std::os::raw::c_ushort,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_ushort_largest(
         dest: *mut ::std::os::raw::c_ushort,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_ushort_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_ushort,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_ushort_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_ushort,
     ) -> ::std::os::raw::c_int;
 }
@@ -17646,22 +16657,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_linear_workspace {
-    pub nmax: size_t,
-    pub pmax: size_t,
-    pub n: size_t,
-    pub p: size_t,
-    pub A: *mut gsl_matrix,
-    pub Q: *mut gsl_matrix,
-    pub QSI: *mut gsl_matrix,
-    pub S: *mut gsl_vector,
-    pub t: *mut gsl_vector,
-    pub xt: *mut gsl_vector,
-    pub D: *mut gsl_vector,
-    pub rcond: f64,
-}
+pub struct gsl_multifit_linear_workspace;
 extern "C" {
-    pub fn gsl_multifit_linear_alloc(n: size_t, p: size_t) -> *mut gsl_multifit_linear_workspace;
+    pub fn gsl_multifit_linear_alloc(n: usize, p: usize) -> *mut gsl_multifit_linear_workspace;
 }
 extern "C" {
     pub fn gsl_multifit_linear_free(w: *mut gsl_multifit_linear_workspace);
@@ -17685,7 +16683,7 @@ extern "C" {
         c: *mut gsl_vector,
         cov: *mut gsl_matrix,
         chisq: *mut f64,
-        rank: *mut size_t,
+        rank: *mut usize,
         work: *mut gsl_multifit_linear_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -17703,8 +16701,7 @@ extern "C" {
 }
 extern "C" {
     #[cfg(feature = "v2_3")]
-    pub fn gsl_multifit_linear_rank(tol: f64, work: *const gsl_multifit_linear_workspace)
-        -> size_t;
+    pub fn gsl_multifit_linear_rank(tol: f64, work: *const gsl_multifit_linear_workspace) -> usize;
 }
 extern "C" {
     pub fn gsl_multifit_linear_solve(
@@ -17831,27 +16828,23 @@ extern "C" {
     pub fn gsl_multifit_linear_lcorner(
         rho: *const gsl_vector,
         eta: *const gsl_vector,
-        idx: *mut size_t,
+        idx: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_multifit_linear_lcorner2(
         reg_param: *const gsl_vector,
         eta: *const gsl_vector,
-        idx: *mut size_t,
+        idx: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_multifit_linear_Lk(
-        p: size_t,
-        k: size_t,
-        L: *mut gsl_matrix,
-    ) -> ::std::os::raw::c_int;
+    pub fn gsl_multifit_linear_Lk(p: usize, k: usize, L: *mut gsl_matrix) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_multifit_linear_Lsobolev(
-        p: size_t,
-        kmax: size_t,
+        p: usize,
+        kmax: usize,
         alpha: *const gsl_vector,
         L: *mut gsl_matrix,
         work: *mut gsl_multifit_linear_workspace,
@@ -17878,7 +16871,7 @@ extern "C" {
         c: *mut gsl_vector,
         cov: *mut gsl_matrix,
         chisq: *mut f64,
-        rank: *mut size_t,
+        rank: *mut usize,
         work: *mut gsl_multifit_linear_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -17888,7 +16881,7 @@ extern "C" {
         w: *const gsl_vector,
         y: *const gsl_vector,
         tol: f64,
-        rank: *mut size_t,
+        rank: *mut usize,
         c: *mut gsl_vector,
         cov: *mut gsl_matrix,
         chisq: *mut f64,
@@ -17901,7 +16894,7 @@ extern "C" {
         w: *const gsl_vector,
         y: *const gsl_vector,
         tol: f64,
-        rank: *mut size_t,
+        rank: *mut usize,
         c: *mut gsl_vector,
         cov: *mut gsl_matrix,
         chisq: *mut f64,
@@ -17977,53 +16970,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_robust_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub wfun: ::std::option::Option<
-        unsafe extern "C" fn(r: *const gsl_vector, w: *mut gsl_vector) -> ::std::os::raw::c_int,
-    >,
-    pub psi_deriv: ::std::option::Option<
-        unsafe extern "C" fn(r: *const gsl_vector, dpsi: *mut gsl_vector) -> ::std::os::raw::c_int,
-    >,
-    pub tuning_default: f64,
-}
+pub struct gsl_multifit_robust_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_robust_stats {
-    pub sigma_ols: f64,
-    pub sigma_mad: f64,
-    pub sigma_rob: f64,
-    pub sigma: f64,
-    pub Rsq: f64,
-    pub adj_Rsq: f64,
-    pub rmse: f64,
-    pub sse: f64,
-    pub dof: size_t,
-    pub numit: size_t,
-    pub weights: *mut gsl_vector,
-    pub r: *mut gsl_vector,
-}
+pub struct gsl_multifit_robust_stats;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_robust_workspace {
-    pub n: size_t,
-    pub p: size_t,
-    pub numit: size_t,
-    pub maxiter: size_t,
-    pub type_: *const gsl_multifit_robust_type,
-    pub tune: f64,
-    pub r: *mut gsl_vector,
-    pub weights: *mut gsl_vector,
-    pub c_prev: *mut gsl_vector,
-    pub resfac: *mut gsl_vector,
-    pub psi: *mut gsl_vector,
-    pub dpsi: *mut gsl_vector,
-    pub QSI: *mut gsl_matrix,
-    pub D: *mut gsl_vector,
-    pub workn: *mut gsl_vector,
-    pub stats: gsl_multifit_robust_stats,
-    pub multifit_p: *mut gsl_multifit_linear_workspace,
-}
+pub struct gsl_multifit_robust_workspace;
 extern "C" {
     pub static mut gsl_multifit_robust_default: *const gsl_multifit_robust_type;
 }
@@ -18048,8 +17001,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_multifit_robust_alloc(
         T: *const gsl_multifit_robust_type,
-        n: size_t,
-        p: size_t,
+        n: usize,
+        p: usize,
     ) -> *mut gsl_multifit_robust_workspace;
 }
 extern "C" {
@@ -18063,7 +17016,7 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_multifit_robust_maxiter(
-        maxiter: size_t,
+        maxiter: usize,
         w: *mut gsl_multifit_robust_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -18126,45 +17079,38 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_int_smallest(
         dest: *mut ::std::os::raw::c_int,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_int_largest(
         dest: *mut ::std::os::raw::c_int,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_int_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_int_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_int,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sf_result_struct {
-    pub val: f64,
-    pub err: f64,
-}
+pub struct gsl_sf_result_struct;
 pub type gsl_sf_result = gsl_sf_result_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sf_result_e10_struct {
-    pub val: f64,
-    pub err: f64,
-    pub e10: ::std::os::raw::c_int,
-}
+pub struct gsl_sf_result_e10_struct;
 pub type gsl_sf_result_e10 = gsl_sf_result_e10_struct;
 extern "C" {
     pub fn gsl_sf_result_smash_e(
@@ -18412,7 +17358,7 @@ pub type gsl_sf_legendre_t = ::std::os::raw::c_uint;
 extern "C" {
     pub fn gsl_sf_legendre_array(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         result_array: *mut f64,
     ) -> ::std::os::raw::c_int;
@@ -18420,7 +17366,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_array_e(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         csphase: f64,
         result_array: *mut f64,
@@ -18429,7 +17375,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv_array(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         result_array: *mut f64,
         result_deriv_array: *mut f64,
@@ -18438,7 +17384,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv_array_e(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         csphase: f64,
         result_array: *mut f64,
@@ -18448,7 +17394,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv_alt_array(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         result_array: *mut f64,
         result_deriv_array: *mut f64,
@@ -18457,7 +17403,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv_alt_array_e(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         csphase: f64,
         result_array: *mut f64,
@@ -18467,7 +17413,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv2_array(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         result_array: *mut f64,
         result_deriv_array: *mut f64,
@@ -18477,7 +17423,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv2_array_e(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         csphase: f64,
         result_array: *mut f64,
@@ -18488,7 +17434,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv2_alt_array(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         result_array: *mut f64,
         result_deriv_array: *mut f64,
@@ -18498,7 +17444,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sf_legendre_deriv2_alt_array_e(
         norm: gsl_sf_legendre_t,
-        lmax: size_t,
+        lmax: usize,
         x: f64,
         csphase: f64,
         result_array: *mut f64,
@@ -18507,87 +17453,79 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sf_legendre_array_n(lmax: size_t) -> size_t;
+    pub fn gsl_sf_legendre_array_n(lmax: usize) -> usize;
 }
 extern "C" {
-    pub fn gsl_sf_legendre_nlm(lmax: size_t) -> size_t;
+    pub fn gsl_sf_legendre_nlm(lmax: usize) -> usize;
 }
 extern "C" {
-    pub fn gsl_sf_legendre_array_index(l: size_t, m: size_t) -> size_t;
+    pub fn gsl_sf_legendre_array_index(l: usize, m: usize) -> usize;
 }
 extern "C" {
-    pub fn gsl_sort_ulong(data: *mut ::std::os::raw::c_ulong, stride: size_t, n: size_t);
+    pub fn gsl_sort_ulong(data: *mut ::std::os::raw::c_ulong, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_ulong(
         data1: *mut ::std::os::raw::c_ulong,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_ulong_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_ulong_smallest(
         dest: *mut ::std::os::raw::c_ulong,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_ulong_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_ulong_largest(
         dest: *mut ::std::os::raw::c_ulong,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_ulong_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_dht_struct {
-    pub size: size_t,
-    pub nu: f64,
-    pub xmax: f64,
-    pub kmax: f64,
-    pub j: *mut f64,
-    pub Jjj: *mut f64,
-    pub J2: *mut f64,
-}
+pub struct gsl_dht_struct;
 pub type gsl_dht = gsl_dht_struct;
 extern "C" {
-    pub fn gsl_dht_alloc(size: size_t) -> *mut gsl_dht;
+    pub fn gsl_dht_alloc(size: usize) -> *mut gsl_dht;
 }
 extern "C" {
-    pub fn gsl_dht_new(size: size_t, nu: f64, xmax: f64) -> *mut gsl_dht;
+    pub fn gsl_dht_new(size: usize, nu: f64, xmax: f64) -> *mut gsl_dht;
 }
 extern "C" {
     pub fn gsl_dht_init(t: *mut gsl_dht, nu: f64, xmax: f64) -> ::std::os::raw::c_int;
@@ -18610,33 +17548,10 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_qrng_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub max_dimension: ::std::os::raw::c_uint,
-    pub state_size:
-        ::std::option::Option<unsafe extern "C" fn(dimension: ::std::os::raw::c_uint) -> size_t>,
-    pub init_state: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dimension: ::std::os::raw::c_uint,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub get: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dimension: ::std::os::raw::c_uint,
-            x: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_qrng_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_qrng {
-    pub type_: *const gsl_qrng_type,
-    pub dimension: ::std::os::raw::c_uint,
-    pub state_size: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_qrng;
 extern "C" {
     pub static mut gsl_qrng_niederreiter_2: *const gsl_qrng_type;
 }
@@ -18671,7 +17586,7 @@ extern "C" {
     pub fn gsl_qrng_name(q: *const gsl_qrng) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
-    pub fn gsl_qrng_size(q: *const gsl_qrng) -> size_t;
+    pub fn gsl_qrng_size(q: *const gsl_qrng) -> usize;
 }
 extern "C" {
     pub fn gsl_qrng_state(q: *const gsl_qrng) -> *mut ::std::os::raw::c_void;
@@ -18686,114 +17601,110 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_mean(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_mean(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_variance(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_variance(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_sd(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_sd(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_variance_with_fixed_mean(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_sd_with_fixed_mean(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_tss(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_tss(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_tss_m(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_absdev(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_absdev(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_skew(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_skew(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_kurtosis(data: *const u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_kurtosis(data: *const u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_lag1_autocorrelation(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_covariance(
         data1: *const u128,
-        stride1: size_t,
+        stride1: usize,
         data2: *const u128,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_correlation(
         data1: *const u128,
-        stride1: size_t,
+        stride1: usize,
         data2: *const u128,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_spearman(
         data1: *const u128,
-        stride1: size_t,
+        stride1: usize,
         data2: *const u128,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_variance_m(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_sd_m(
-        data: *const u128,
-        stride: size_t,
-        n: size_t,
-        mean: f64,
-    ) -> f64;
+    pub fn gsl_stats_long_double_sd_m(data: *const u128, stride: usize, n: usize, mean: f64)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_absdev_m(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_skew_m_sd(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -18801,8 +17712,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_double_kurtosis_m_sd(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -18810,18 +17721,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_double_lag1_autocorrelation_m(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_covariance_m(
         data1: *const u128,
-        stride1: size_t,
+        stride1: usize,
         data2: *const u128,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -18829,133 +17740,133 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_double_wmean(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wvariance(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wsd(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wvariance_with_fixed_mean(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wsd_with_fixed_mean(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wtss(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wtss_m(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wabsdev(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wskew(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wkurtosis(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wvariance_m(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wsd_m(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wabsdev_m(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_wskew_m_sd(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
         wsd: f64,
     ) -> f64;
@@ -18963,10 +17874,10 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_double_wkurtosis_m_sd(
         w: *const u128,
-        wstride: size_t,
+        wstride: usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
         wsd: f64,
     ) -> f64;
@@ -18974,76 +17885,72 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_double_pvariance(
         data1: *const u128,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const u128,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_ttest(
         data1: *const u128,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const u128,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_max(data: *const u128, stride: size_t, n: size_t) -> u128;
+    pub fn gsl_stats_long_double_max(data: *const u128, stride: usize, n: usize) -> u128;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_min(data: *const u128, stride: size_t, n: size_t) -> u128;
+    pub fn gsl_stats_long_double_min(data: *const u128, stride: usize, n: usize) -> u128;
 }
 extern "C" {
     pub fn gsl_stats_long_double_minmax(
         min: *mut u128,
         max: *mut u128,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_stats_long_double_max_index(data: *const u128, stride: size_t, n: size_t) -> size_t;
+    pub fn gsl_stats_long_double_max_index(data: *const u128, stride: usize, n: usize) -> usize;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_min_index(data: *const u128, stride: size_t, n: size_t) -> size_t;
+    pub fn gsl_stats_long_double_min_index(data: *const u128, stride: usize, n: usize) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_long_double_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_stats_long_double_select(
-        data: *mut u128,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
-    ) -> u128;
+    pub fn gsl_stats_long_double_select(data: *mut u128, stride: usize, n: usize, k: usize)
+        -> u128;
 }
 extern "C" {
     pub fn gsl_stats_long_double_median_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_double_median(sorted_data: *mut u128, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_long_double_median(sorted_data: *mut u128, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_quantile_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -19051,54 +17958,54 @@ extern "C" {
     pub fn gsl_stats_long_double_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_gastwirth_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_mad0(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_mad(
         data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_Sn0_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut u128,
     ) -> u128;
 }
 extern "C" {
     pub fn gsl_stats_long_double_Sn_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut u128,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_double_Qn0_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut u128,
         work_int: *mut ::std::os::raw::c_int,
     ) -> u128;
@@ -19106,8 +18013,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_double_Qn_from_sorted_data(
         sorted_data: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut u128,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
@@ -19205,17 +18112,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_function_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub n: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multiroot_function_struct;
 pub type gsl_multiroot_function = gsl_multiroot_function_struct;
 extern "C" {
     pub fn gsl_multiroot_fdjacobian(
@@ -19228,49 +18125,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_fsolver_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            n: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            function: *mut gsl_multiroot_function,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            function: *mut gsl_multiroot_function,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multiroot_fsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_fsolver {
-    pub type_: *const gsl_multiroot_fsolver_type,
-    pub function: *mut gsl_multiroot_function,
-    pub x: *mut gsl_vector,
-    pub f: *mut gsl_vector,
-    pub dx: *mut gsl_vector,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multiroot_fsolver;
 extern "C" {
     pub fn gsl_multiroot_fsolver_alloc(
         T: *const gsl_multiroot_fsolver_type,
-        n: size_t,
+        n: usize,
     ) -> *mut gsl_multiroot_fsolver;
 }
 extern "C" {
@@ -19302,81 +18164,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_function_fdf_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub df: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            df: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub fdf: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-            df: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub n: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multiroot_function_fdf_struct;
 pub type gsl_multiroot_function_fdf = gsl_multiroot_function_fdf_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_fdfsolver_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            n: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            fdf: *mut gsl_multiroot_function_fdf,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            J: *mut gsl_matrix,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            fdf: *mut gsl_multiroot_function_fdf,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            J: *mut gsl_matrix,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multiroot_fdfsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_fdfsolver {
-    pub type_: *const gsl_multiroot_fdfsolver_type,
-    pub fdf: *mut gsl_multiroot_function_fdf,
-    pub x: *mut gsl_vector,
-    pub f: *mut gsl_vector,
-    pub J: *mut gsl_matrix,
-    pub dx: *mut gsl_vector,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multiroot_fdfsolver;
 extern "C" {
     pub fn gsl_multiroot_fdfsolver_alloc(
         T: *const gsl_multiroot_fdfsolver_type,
-        n: size_t,
+        n: usize,
     ) -> *mut gsl_multiroot_fdfsolver;
 }
 extern "C" {
@@ -19445,98 +18244,29 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_int(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_int_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_interp_accel {
-    pub cache: size_t,
-    pub miss_count: size_t,
-    pub hit_count: size_t,
-}
+pub struct gsl_interp_accel;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_interp_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub min_size: ::std::os::raw::c_uint,
-    pub alloc:
-        ::std::option::Option<unsafe extern "C" fn(size: size_t) -> *mut ::std::os::raw::c_void>,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *mut ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            size: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            size: size_t,
-            x: f64,
-            arg2: *mut gsl_interp_accel,
-            y: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            size: size_t,
-            x: f64,
-            arg2: *mut gsl_interp_accel,
-            y_p: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv2: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            size: size_t,
-            x: f64,
-            arg2: *mut gsl_interp_accel,
-            y_pp: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_integ: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            size: size_t,
-            arg2: *mut gsl_interp_accel,
-            a: f64,
-            b: f64,
-            result: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_interp_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_interp {
-    pub type_: *const gsl_interp_type,
-    pub xmin: f64,
-    pub xmax: f64,
-    pub size: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_interp;
 extern "C" {
     pub static mut gsl_interp_linear: *const gsl_interp_type;
 }
@@ -19568,14 +18298,14 @@ extern "C" {
     pub fn gsl_interp_accel_free(a: *mut gsl_interp_accel);
 }
 extern "C" {
-    pub fn gsl_interp_alloc(T: *const gsl_interp_type, n: size_t) -> *mut gsl_interp;
+    pub fn gsl_interp_alloc(T: *const gsl_interp_type, n: usize) -> *mut gsl_interp;
 }
 extern "C" {
     pub fn gsl_interp_init(
         obj: *mut gsl_interp,
         xa: *const f64,
         ya: *const f64,
-        size: size_t,
+        size: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19672,140 +18402,24 @@ extern "C" {
     pub fn gsl_interp_bsearch(
         x_array: *const f64,
         x: f64,
-        index_lo: size_t,
-        index_hi: size_t,
-    ) -> size_t;
+        index_lo: usize,
+        index_hi: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_interp_accel_find(
         a: *mut gsl_interp_accel,
         x_array: *const f64,
-        size: size_t,
+        size: usize,
         x: f64,
-    ) -> size_t;
+    ) -> usize;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_interp2d_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub min_size: ::std::os::raw::c_uint,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(xsize: size_t, ysize: size_t) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *mut ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-            x: f64,
-            y: f64,
-            arg2: *mut gsl_interp_accel,
-            arg3: *mut gsl_interp_accel,
-            z: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv_x: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-            x: f64,
-            y: f64,
-            arg2: *mut gsl_interp_accel,
-            arg3: *mut gsl_interp_accel,
-            z_p: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv_y: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-            x: f64,
-            y: f64,
-            arg2: *mut gsl_interp_accel,
-            arg3: *mut gsl_interp_accel,
-            z_p: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv_xx: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-            x: f64,
-            y: f64,
-            arg2: *mut gsl_interp_accel,
-            arg3: *mut gsl_interp_accel,
-            z_pp: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv_xy: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-            x: f64,
-            y: f64,
-            arg2: *mut gsl_interp_accel,
-            arg3: *mut gsl_interp_accel,
-            z_pp: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub eval_deriv_yy: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *const ::std::os::raw::c_void,
-            xa: *const f64,
-            ya: *const f64,
-            za: *const f64,
-            xsize: size_t,
-            ysize: size_t,
-            x: f64,
-            y: f64,
-            arg2: *mut gsl_interp_accel,
-            arg3: *mut gsl_interp_accel,
-            z_pp: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_interp2d_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_interp2d {
-    pub type_: *const gsl_interp2d_type,
-    pub xmin: f64,
-    pub xmax: f64,
-    pub ymin: f64,
-    pub ymax: f64,
-    pub xsize: size_t,
-    pub ysize: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_interp2d;
 extern "C" {
     pub static mut gsl_interp2d_bilinear: *const gsl_interp2d_type;
 }
@@ -19815,25 +18429,25 @@ extern "C" {
 extern "C" {
     pub fn gsl_interp2d_alloc(
         T: *const gsl_interp2d_type,
-        xsize: size_t,
-        ysize: size_t,
+        xsize: usize,
+        ysize: usize,
     ) -> *mut gsl_interp2d;
 }
 extern "C" {
     pub fn gsl_interp2d_name(interp: *const gsl_interp2d) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
-    pub fn gsl_interp2d_min_size(interp: *const gsl_interp2d) -> size_t;
+    pub fn gsl_interp2d_min_size(interp: *const gsl_interp2d) -> usize;
 }
 extern "C" {
-    pub fn gsl_interp2d_type_min_size(T: *const gsl_interp2d_type) -> size_t;
+    pub fn gsl_interp2d_type_min_size(T: *const gsl_interp2d_type) -> usize;
 }
 extern "C" {
     pub fn gsl_interp2d_set(
         interp: *const gsl_interp2d,
         zarr: *mut f64,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         z: f64,
     ) -> ::std::os::raw::c_int;
 }
@@ -19841,12 +18455,12 @@ extern "C" {
     pub fn gsl_interp2d_get(
         interp: *const gsl_interp2d,
         zarr: *const f64,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_interp2d_idx(interp: *const gsl_interp2d, i: size_t, j: size_t) -> size_t;
+    pub fn gsl_interp2d_idx(interp: *const gsl_interp2d, i: usize, j: usize) -> usize;
 }
 extern "C" {
     pub fn gsl_interp2d_init(
@@ -19854,8 +18468,8 @@ extern "C" {
         xa: *const f64,
         ya: *const f64,
         za: *const f64,
-        xsize: size_t,
-        ysize: size_t,
+        xsize: usize,
+        ysize: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -20051,17 +18665,12 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_spline2d {
-    pub interp_object: gsl_interp2d,
-    pub xarr: *mut f64,
-    pub yarr: *mut f64,
-    pub zarr: *mut f64,
-}
+pub struct gsl_spline2d;
 extern "C" {
     pub fn gsl_spline2d_alloc(
         T: *const gsl_interp2d_type,
-        xsize: size_t,
-        ysize: size_t,
+        xsize: usize,
+        ysize: usize,
     ) -> *mut gsl_spline2d;
 }
 extern "C" {
@@ -20070,8 +18679,8 @@ extern "C" {
         xa: *const f64,
         ya: *const f64,
         za: *const f64,
-        xsize: size_t,
-        ysize: size_t,
+        xsize: usize,
+        ysize: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -20192,7 +18801,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_spline2d_min_size(interp: *const gsl_spline2d) -> size_t;
+    pub fn gsl_spline2d_min_size(interp: *const gsl_spline2d) -> usize;
 }
 extern "C" {
     pub fn gsl_spline2d_name(interp: *const gsl_spline2d) -> *const ::std::os::raw::c_char;
@@ -20201,8 +18810,8 @@ extern "C" {
     pub fn gsl_spline2d_set(
         interp: *const gsl_spline2d,
         zarr: *mut f64,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
         z: f64,
     ) -> ::std::os::raw::c_int;
 }
@@ -20210,8 +18819,8 @@ extern "C" {
     pub fn gsl_spline2d_get(
         interp: *const gsl_spline2d,
         zarr: *const f64,
-        i: size_t,
-        j: size_t,
+        i: usize,
+        j: usize,
     ) -> f64;
 }
 extern "C" {
@@ -20229,28 +18838,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_uint_smallest(
         dest: *mut ::std::os::raw::c_uint,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_uint_largest(
         dest: *mut ::std::os::raw::c_uint,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_uint_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_uint_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
 }
@@ -20272,28 +18881,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_long_double_smallest(
         dest: *mut u128,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_long_double_largest(
         dest: *mut u128,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_long_double_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_long_double,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_long_double_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_long_double,
     ) -> ::std::os::raw::c_int;
 }
@@ -20312,28 +18921,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_smallest(
         dest: *mut f64,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_largest(
         dest: *mut f64,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
@@ -20352,28 +18961,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_float_smallest(
         dest: *mut f32,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_float_largest(
         dest: *mut f32,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_float_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_float,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_float_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_float,
     ) -> ::std::os::raw::c_int;
 }
@@ -20392,28 +19001,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_ulong_smallest(
         dest: *mut ::std::os::raw::c_ulong,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_ulong_largest(
         dest: *mut ::std::os::raw::c_ulong,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_ulong_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_ulong,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_ulong_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_ulong,
     ) -> ::std::os::raw::c_int;
 }
@@ -20432,28 +19041,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_long_smallest(
         dest: *mut ::std::os::raw::c_long,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_long_largest(
         dest: *mut ::std::os::raw::c_long,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_long_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_long,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_long_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_long,
     ) -> ::std::os::raw::c_int;
 }
@@ -20472,28 +19081,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_short_smallest(
         dest: *mut ::std::os::raw::c_short,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_short_largest(
         dest: *mut ::std::os::raw::c_short,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_short_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_short,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_short_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_short,
     ) -> ::std::os::raw::c_int;
 }
@@ -20512,28 +19121,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_uchar_smallest(
         dest: *mut ::std::os::raw::c_uchar,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_uchar_largest(
         dest: *mut ::std::os::raw::c_uchar,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_uchar_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_uchar,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_uchar_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_uchar,
     ) -> ::std::os::raw::c_int;
 }
@@ -20552,28 +19161,28 @@ extern "C" {
 extern "C" {
     pub fn gsl_sort_vector_char_smallest(
         dest: *mut ::std::os::raw::c_char,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_char_largest(
         dest: *mut ::std::os::raw::c_char,
-        k: size_t,
+        k: usize,
         v: *const gsl_vector_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_char_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_vector_char_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         v: *const gsl_vector_char,
     ) -> ::std::os::raw::c_int;
 }
@@ -21547,7 +20156,7 @@ extern "C" {
     pub fn gsl_linalg_hessenberg_submatrix(
         M: *mut gsl_matrix,
         A: *mut gsl_matrix,
-        top: size_t,
+        top: usize,
         tau: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
@@ -21659,9 +20268,9 @@ extern "C" {
 extern "C" {
     #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_decomp(
-        M: size_t,
-        lb: size_t,
-        ub: size_t,
+        M: usize,
+        lb: usize,
+        ub: usize,
         AB: *mut gsl_matrix,
         piv: *mut gsl_vector_uint,
     ) -> ::std::os::raw::c_int;
@@ -21669,8 +20278,8 @@ extern "C" {
 extern "C" {
     #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_solve(
-        lb: size_t,
-        ub: size_t,
+        lb: usize,
+        ub: usize,
         LUB: *const gsl_matrix,
         piv: *const gsl_vector_uint,
         b: *const gsl_vector,
@@ -21680,8 +20289,8 @@ extern "C" {
 extern "C" {
     #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_svx(
-        lb: size_t,
-        ub: size_t,
+        lb: usize,
+        ub: usize,
         LUB: *const gsl_matrix,
         piv: *const gsl_vector_uint,
         x: *mut gsl_vector,
@@ -21690,9 +20299,9 @@ extern "C" {
 extern "C" {
     #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_LU_band_unpack(
-        M: size_t,
-        lb: size_t,
-        ub: size_t,
+        M: usize,
+        lb: usize,
+        ub: usize,
         LUB: *const gsl_matrix,
         piv: *const gsl_vector_uint,
         L: *mut gsl_matrix,
@@ -22020,17 +20629,17 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_linalg_QR_band_decomp_L2(
-        M: size_t,
-        p: size_t,
-        q: size_t,
+        M: usize,
+        p: usize,
+        q: usize,
         AB: *mut gsl_matrix,
         tau: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_linalg_QR_band_unpack_L2(
-        p: size_t,
-        q: size_t,
+        p: usize,
+        q: usize,
         QRB: *const gsl_matrix,
         tau: *const gsl_vector,
         Q: *mut gsl_matrix,
@@ -22084,7 +20693,7 @@ extern "C" {
         tau: *const gsl_vector,
         p: *const gsl_permutation,
         b: *const gsl_vector,
-        rank: size_t,
+        rank: usize,
         x: *mut gsl_vector,
         residual: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
@@ -22131,7 +20740,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_linalg_QRPT_rank(QR: *const gsl_matrix, tol: f64) -> size_t;
+    pub fn gsl_linalg_QRPT_rank(QR: *const gsl_matrix, tol: f64) -> usize;
 }
 extern "C" {
     #[cfg(feature = "v2_2")]
@@ -22168,7 +20777,7 @@ extern "C" {
         tau_Q: *mut gsl_vector,
         tau_Z: *mut gsl_vector,
         p: *mut gsl_permutation,
-        rank: *mut size_t,
+        rank: *mut usize,
         work: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
@@ -22180,7 +20789,7 @@ extern "C" {
         tau_Z: *mut gsl_vector,
         p: *mut gsl_permutation,
         tol: f64,
-        rank: *mut size_t,
+        rank: *mut usize,
         work: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
 }
@@ -22191,7 +20800,7 @@ extern "C" {
         tau_Q: *const gsl_vector,
         tau_Z: *const gsl_vector,
         perm: *const gsl_permutation,
-        rank: size_t,
+        rank: usize,
         b: *const gsl_vector,
         x: *mut gsl_vector,
         residual: *mut gsl_vector,
@@ -22205,7 +20814,7 @@ extern "C" {
         tau_Q: *const gsl_vector,
         tau_Z: *const gsl_vector,
         perm: *const gsl_permutation,
-        rank: size_t,
+        rank: usize,
         b: *const gsl_vector,
         x: *mut gsl_vector,
         residual: *mut gsl_vector,
@@ -22219,7 +20828,7 @@ extern "C" {
         QRZT: *const gsl_matrix,
         tau_Q: *const gsl_vector,
         tau_Z: *const gsl_vector,
-        rank: size_t,
+        rank: usize,
         Q: *mut gsl_matrix,
         R: *mut gsl_matrix,
         Z: *mut gsl_matrix,
@@ -22230,7 +20839,7 @@ extern "C" {
     pub fn gsl_linalg_COD_matZ(
         QRZT: *const gsl_matrix,
         tau_Z: *const gsl_vector,
-        rank: size_t,
+        rank: usize,
         A: *mut gsl_matrix,
         work: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
@@ -22638,7 +21247,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[cfg(feature = "v2_6")]
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_cholesky_band_solvem(
         LLT: *const gsl_matrix,
         B: *const gsl_matrix,
@@ -22646,7 +21255,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[cfg(feature = "v2_6")]
+    #[cfg(feature = "v2_7")]
     pub fn gsl_linalg_cholesky_band_svxm(
         LLT: *const gsl_matrix,
         X: *mut gsl_matrix,
@@ -22902,7 +21511,7 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_linalg_invnorm1(
-        N: size_t,
+        N: usize,
         Ainvx: ::std::option::Option<
             unsafe extern "C" fn(
                 TransA: CBLAS_TRANSPOSE_t,
@@ -22964,43 +21573,22 @@ extern "C" {
     pub fn gsl_linalg_givens(a: f64, b: f64, c: *mut f64, s: *mut f64);
 }
 extern "C" {
-    pub fn gsl_linalg_givens_gv(v: *mut gsl_vector, i: size_t, j: size_t, c: f64, s: f64);
+    pub fn gsl_linalg_givens_gv(v: *mut gsl_vector, i: usize, j: usize, c: f64, s: f64);
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_splinalg_itersolve_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(n: size_t, m: size_t) -> *mut ::std::os::raw::c_void,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            A: *const gsl_spmatrix,
-            b: *const gsl_vector,
-            tol: f64,
-            x: *mut gsl_vector,
-            arg1: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub normr:
-        ::std::option::Option<unsafe extern "C" fn(arg1: *const ::std::os::raw::c_void) -> f64>,
-    pub free: ::std::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_splinalg_itersolve_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_splinalg_itersolve {
-    pub type_: *const gsl_splinalg_itersolve_type,
-    pub normr: f64,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_splinalg_itersolve;
 extern "C" {
     pub static mut gsl_splinalg_itersolve_gmres: *const gsl_splinalg_itersolve_type;
 }
 extern "C" {
     pub fn gsl_splinalg_itersolve_alloc(
         T: *const gsl_splinalg_itersolve_type,
-        n: size_t,
-        m: size_t,
+        n: usize,
+        m: usize,
     ) -> *mut gsl_splinalg_itersolve;
 }
 extern "C" {
@@ -23374,7 +21962,7 @@ extern "C" {
     pub fn gsl_sf_bessel_sequence_Jnu_e(
         nu: f64,
         mode: gsl_mode_t,
-        size: size_t,
+        size: usize,
         v: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
@@ -23653,143 +22241,138 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_ushort(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_ushort_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_stats_int_mean(data: *const ::std::os::raw::c_int, stride: size_t, n: size_t)
-        -> f64;
+    pub fn gsl_stats_int_mean(data: *const ::std::os::raw::c_int, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_variance(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_int_sd(data: *const ::std::os::raw::c_int, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_int_sd(data: *const ::std::os::raw::c_int, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_int_tss(data: *const ::std::os::raw::c_int, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_int_tss(data: *const ::std::os::raw::c_int, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_tss_m(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_int_absdev(
-        data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_int_absdev(data: *const ::std::os::raw::c_int, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_int_skew(data: *const ::std::os::raw::c_int, stride: size_t, n: size_t)
-        -> f64;
+    pub fn gsl_stats_int_skew(data: *const ::std::os::raw::c_int, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_kurtosis(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_lag1_autocorrelation(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_covariance(
         data1: *const ::std::os::raw::c_int,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_int,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_correlation(
         data1: *const ::std::os::raw::c_int,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_int,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_spearman(
         data1: *const ::std::os::raw::c_int,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_int,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_variance_m(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_sd_m(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_absdev_m(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_skew_m_sd(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -23797,8 +22380,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_int_kurtosis_m_sd(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -23806,18 +22389,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_int_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_covariance_m(
         data1: *const ::std::os::raw::c_int,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_int,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -23825,35 +22408,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_int_pvariance(
         data1: *const ::std::os::raw::c_int,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_int,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_ttest(
         data1: *const ::std::os::raw::c_int,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_int,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_max(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_stats_int_min(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -23861,60 +22444,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_int,
         max: *mut ::std::os::raw::c_int,
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_int_max_index(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_int_min_index(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_int_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_int_select(
         data: *mut ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_stats_int_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_median(
         sorted_data: *mut ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -23922,54 +22505,54 @@ extern "C" {
     pub fn gsl_stats_int_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_mad0(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_mad(
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_stats_int_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_int_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_int,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
@@ -23977,66 +22560,66 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_int_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_int,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_sort_int(data: *mut ::std::os::raw::c_int, stride: size_t, n: size_t);
+    pub fn gsl_sort_int(data: *mut ::std::os::raw::c_int, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_int(
         data1: *mut ::std::os::raw::c_int,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_int,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_int_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_int_smallest(
         dest: *mut ::std::os::raw::c_int,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_int_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_int_largest(
         dest: *mut ::std::os::raw::c_int,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_int_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_int,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -24142,37 +22725,13 @@ pub const gsl_wavelet_direction_gsl_wavelet_backward: gsl_wavelet_direction = -1
 pub type gsl_wavelet_direction = ::std::os::raw::c_int;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_wavelet_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            h1: *mut *const f64,
-            g1: *mut *const f64,
-            h2: *mut *const f64,
-            g2: *mut *const f64,
-            nc: *mut size_t,
-            offset: *mut size_t,
-            member: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_wavelet_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_wavelet {
-    pub type_: *const gsl_wavelet_type,
-    pub h1: *const f64,
-    pub g1: *const f64,
-    pub h2: *const f64,
-    pub g2: *const f64,
-    pub nc: size_t,
-    pub offset: size_t,
-}
+pub struct gsl_wavelet;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_wavelet_workspace {
-    pub scratch: *mut f64,
-    pub n: size_t,
-}
+pub struct gsl_wavelet_workspace;
 extern "C" {
     pub static mut gsl_wavelet_daubechies: *const gsl_wavelet_type;
 }
@@ -24192,7 +22751,7 @@ extern "C" {
     pub static mut gsl_wavelet_bspline_centered: *const gsl_wavelet_type;
 }
 extern "C" {
-    pub fn gsl_wavelet_alloc(T: *const gsl_wavelet_type, k: size_t) -> *mut gsl_wavelet;
+    pub fn gsl_wavelet_alloc(T: *const gsl_wavelet_type, k: usize) -> *mut gsl_wavelet;
 }
 extern "C" {
     pub fn gsl_wavelet_free(w: *mut gsl_wavelet);
@@ -24201,7 +22760,7 @@ extern "C" {
     pub fn gsl_wavelet_name(w: *const gsl_wavelet) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
-    pub fn gsl_wavelet_workspace_alloc(n: size_t) -> *mut gsl_wavelet_workspace;
+    pub fn gsl_wavelet_workspace_alloc(n: usize) -> *mut gsl_wavelet_workspace;
 }
 extern "C" {
     pub fn gsl_wavelet_workspace_free(work: *mut gsl_wavelet_workspace);
@@ -24210,8 +22769,8 @@ extern "C" {
     pub fn gsl_wavelet_transform(
         w: *const gsl_wavelet,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         dir: gsl_wavelet_direction,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
@@ -24220,8 +22779,8 @@ extern "C" {
     pub fn gsl_wavelet_transform_forward(
         w: *const gsl_wavelet,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -24229,8 +22788,8 @@ extern "C" {
     pub fn gsl_wavelet_transform_inverse(
         w: *const gsl_wavelet,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -24238,9 +22797,9 @@ extern "C" {
     pub fn gsl_wavelet2d_transform(
         w: *const gsl_wavelet,
         data: *mut f64,
-        tda: size_t,
-        size1: size_t,
-        size2: size_t,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         dir: gsl_wavelet_direction,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
@@ -24249,9 +22808,9 @@ extern "C" {
     pub fn gsl_wavelet2d_transform_forward(
         w: *const gsl_wavelet,
         data: *mut f64,
-        tda: size_t,
-        size1: size_t,
-        size2: size_t,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -24259,9 +22818,9 @@ extern "C" {
     pub fn gsl_wavelet2d_transform_inverse(
         w: *const gsl_wavelet,
         data: *mut f64,
-        tda: size_t,
-        size1: size_t,
-        size2: size_t,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -24269,9 +22828,9 @@ extern "C" {
     pub fn gsl_wavelet2d_nstransform(
         w: *const gsl_wavelet,
         data: *mut f64,
-        tda: size_t,
-        size1: size_t,
-        size2: size_t,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         dir: gsl_wavelet_direction,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
@@ -24280,9 +22839,9 @@ extern "C" {
     pub fn gsl_wavelet2d_nstransform_forward(
         w: *const gsl_wavelet,
         data: *mut f64,
-        tda: size_t,
-        size1: size_t,
-        size2: size_t,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -24290,9 +22849,9 @@ extern "C" {
     pub fn gsl_wavelet2d_nstransform_inverse(
         w: *const gsl_wavelet,
         data: *mut f64,
-        tda: size_t,
-        size1: size_t,
-        size2: size_t,
+        tda: usize,
+        size1: usize,
+        size2: usize,
         work: *mut gsl_wavelet_workspace,
     ) -> ::std::os::raw::c_int;
 }
@@ -24342,26 +22901,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_histogram {
-    pub n: size_t,
-    pub range: *mut f64,
-    pub bin: *mut f64,
-}
+pub struct gsl_histogram;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_histogram_pdf {
-    pub n: size_t,
-    pub range: *mut f64,
-    pub sum: *mut f64,
+pub struct gsl_histogram_pdf;
+extern "C" {
+    pub fn gsl_histogram_alloc(n: usize) -> *mut gsl_histogram;
 }
 extern "C" {
-    pub fn gsl_histogram_alloc(n: size_t) -> *mut gsl_histogram;
+    pub fn gsl_histogram_calloc(n: usize) -> *mut gsl_histogram;
 }
 extern "C" {
-    pub fn gsl_histogram_calloc(n: size_t) -> *mut gsl_histogram;
-}
-extern "C" {
-    pub fn gsl_histogram_calloc_uniform(n: size_t, xmin: f64, xmax: f64) -> *mut gsl_histogram;
+    pub fn gsl_histogram_calloc_uniform(n: usize, xmin: f64, xmax: f64) -> *mut gsl_histogram;
 }
 extern "C" {
     pub fn gsl_histogram_free(h: *mut gsl_histogram);
@@ -24380,16 +22931,16 @@ extern "C" {
     pub fn gsl_histogram_find(
         h: *const gsl_histogram,
         x: f64,
-        i: *mut size_t,
+        i: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_histogram_get(h: *const gsl_histogram, i: size_t) -> f64;
+    pub fn gsl_histogram_get(h: *const gsl_histogram, i: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_histogram_get_range(
         h: *const gsl_histogram,
-        i: size_t,
+        i: usize,
         lower: *mut f64,
         upper: *mut f64,
     ) -> ::std::os::raw::c_int;
@@ -24401,19 +22952,19 @@ extern "C" {
     pub fn gsl_histogram_min(h: *const gsl_histogram) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram_bins(h: *const gsl_histogram) -> size_t;
+    pub fn gsl_histogram_bins(h: *const gsl_histogram) -> usize;
 }
 extern "C" {
     pub fn gsl_histogram_reset(h: *mut gsl_histogram);
 }
 extern "C" {
-    pub fn gsl_histogram_calloc_range(n: size_t, range: *mut f64) -> *mut gsl_histogram;
+    pub fn gsl_histogram_calloc_range(n: usize, range: *mut f64) -> *mut gsl_histogram;
 }
 extern "C" {
     pub fn gsl_histogram_set_ranges(
         h: *mut gsl_histogram,
         range: *const f64,
-        size: size_t,
+        size: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -24436,13 +22987,13 @@ extern "C" {
     pub fn gsl_histogram_max_val(h: *const gsl_histogram) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram_max_bin(h: *const gsl_histogram) -> size_t;
+    pub fn gsl_histogram_max_bin(h: *const gsl_histogram) -> usize;
 }
 extern "C" {
     pub fn gsl_histogram_min_val(h: *const gsl_histogram) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram_min_bin(h: *const gsl_histogram) -> size_t;
+    pub fn gsl_histogram_min_bin(h: *const gsl_histogram) -> usize;
 }
 extern "C" {
     pub fn gsl_histogram_equal_bins_p(
@@ -24510,7 +23061,7 @@ extern "C" {
     pub fn gsl_histogram_fscanf(stream: *mut FILE, h: *mut gsl_histogram) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_histogram_pdf_alloc(n: size_t) -> *mut gsl_histogram_pdf;
+    pub fn gsl_histogram_pdf_alloc(n: usize) -> *mut gsl_histogram_pdf;
 }
 extern "C" {
     pub fn gsl_histogram_pdf_init(
@@ -24526,45 +23077,25 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ntuple {
-    pub file: *mut FILE,
-    pub ntuple_data: *mut ::std::os::raw::c_void,
-    pub size: size_t,
-}
+pub struct gsl_ntuple;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ntuple_select_fn {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(
-            ntuple_data: *mut ::std::os::raw::c_void,
-            params: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_ntuple_select_fn;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ntuple_value_fn {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(
-            ntuple_data: *mut ::std::os::raw::c_void,
-            params: *mut ::std::os::raw::c_void,
-        ) -> f64,
-    >,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_ntuple_value_fn;
 extern "C" {
     pub fn gsl_ntuple_open(
         filename: *mut ::std::os::raw::c_char,
         ntuple_data: *mut ::std::os::raw::c_void,
-        size: size_t,
+        size: usize,
     ) -> *mut gsl_ntuple;
 }
 extern "C" {
     pub fn gsl_ntuple_create(
         filename: *mut ::std::os::raw::c_char,
         ntuple_data: *mut ::std::os::raw::c_void,
-        size: size_t,
+        size: usize,
     ) -> *mut gsl_ntuple;
 }
 extern "C" {
@@ -24588,139 +23119,128 @@ extern "C" {
     pub fn gsl_ntuple_close(ntuple: *mut gsl_ntuple) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_stats_long_mean(
-        data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_long_mean(data: *const ::std::os::raw::c_long, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_variance(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_sd(data: *const ::std::os::raw::c_long, stride: size_t, n: size_t)
-        -> f64;
+    pub fn gsl_stats_long_sd(data: *const ::std::os::raw::c_long, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_tss(
-        data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_long_tss(data: *const ::std::os::raw::c_long, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_tss_m(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_absdev(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_long_skew(
-        data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_long_skew(data: *const ::std::os::raw::c_long, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_kurtosis(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_lag1_autocorrelation(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_covariance(
         data1: *const ::std::os::raw::c_long,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_long,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_correlation(
         data1: *const ::std::os::raw::c_long,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_long,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_spearman(
         data1: *const ::std::os::raw::c_long,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_long,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_variance_m(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_sd_m(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_absdev_m(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_skew_m_sd(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -24728,8 +23248,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_kurtosis_m_sd(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -24737,18 +23257,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_covariance_m(
         data1: *const ::std::os::raw::c_long,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_long,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -24756,35 +23276,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_pvariance(
         data1: *const ::std::os::raw::c_long,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_long,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_ttest(
         data1: *const ::std::os::raw::c_long,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_long,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_max(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_stats_long_min(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
@@ -24792,60 +23312,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_long,
         max: *mut ::std::os::raw::c_long,
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_long_max_index(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_long_min_index(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_long_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_long_select(
         data: *mut ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_stats_long_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_median(
         sorted_data: *mut ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -24853,54 +23373,54 @@ extern "C" {
     pub fn gsl_stats_long_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_mad0(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_mad(
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_long,
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
     pub fn gsl_stats_long_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_long,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_long_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_long,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_long;
@@ -24908,8 +23428,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_long_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_long,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
@@ -24930,59 +23450,59 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_short(data: *mut ::std::os::raw::c_short, stride: size_t, n: size_t);
+    pub fn gsl_sort_short(data: *mut ::std::os::raw::c_short, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_short(
         data1: *mut ::std::os::raw::c_short,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_short,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_short_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_short_smallest(
         dest: *mut ::std::os::raw::c_short,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_short_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_short_largest(
         dest: *mut ::std::os::raw::c_short,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_short_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -25130,33 +23650,24 @@ pub type gsl_fft_direction = ::std::os::raw::c_int;
 extern "C" {
     pub fn gsl_fft_real_radix2_transform(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_real_wavetable {
-    pub n: size_t,
-    pub nf: size_t,
-    pub factor: [size_t; 64usize],
-    pub twiddle: [*mut gsl_complex; 64usize],
-    pub trig: *mut gsl_complex,
-}
+pub struct gsl_fft_real_wavetable;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_fft_real_workspace {
-    pub n: size_t,
-    pub scratch: *mut f64,
-}
+pub struct gsl_fft_real_workspace;
 extern "C" {
-    pub fn gsl_fft_real_wavetable_alloc(n: size_t) -> *mut gsl_fft_real_wavetable;
+    pub fn gsl_fft_real_wavetable_alloc(n: usize) -> *mut gsl_fft_real_wavetable;
 }
 extern "C" {
     pub fn gsl_fft_real_wavetable_free(wavetable: *mut gsl_fft_real_wavetable);
 }
 extern "C" {
-    pub fn gsl_fft_real_workspace_alloc(n: size_t) -> *mut gsl_fft_real_workspace;
+    pub fn gsl_fft_real_workspace_alloc(n: usize) -> *mut gsl_fft_real_workspace;
 }
 extern "C" {
     pub fn gsl_fft_real_workspace_free(workspace: *mut gsl_fft_real_workspace);
@@ -25164,8 +23675,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_real_transform(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_real_wavetable,
         work: *mut gsl_fft_real_workspace,
     ) -> ::std::os::raw::c_int;
@@ -25174,8 +23685,8 @@ extern "C" {
     pub fn gsl_fft_real_unpack(
         real_coefficient: *const f64,
         complex_coefficient: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -25743,18 +24254,18 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_complex(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_complex_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -25790,144 +24301,133 @@ extern "C" {
     pub fn gsl_sf_log_1plusx_mx(x: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_sort_uint(data: *mut ::std::os::raw::c_uint, stride: size_t, n: size_t);
+    pub fn gsl_sort_uint(data: *mut ::std::os::raw::c_uint, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_uint(
         data1: *mut ::std::os::raw::c_uint,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_uint,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_uint_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_uint_smallest(
         dest: *mut ::std::os::raw::c_uint,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_uint_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_uint_largest(
         dest: *mut ::std::os::raw::c_uint,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_uint_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_forward(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_backward(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_inverse(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_transform(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         sign: gsl_fft_direction,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_dif_forward(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_dif_backward(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_dif_inverse(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_float_radix2_dif_transform(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         sign: gsl_fft_direction,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_complex_wavetable_float {
-    pub n: size_t,
-    pub nf: size_t,
-    pub factor: [size_t; 64usize],
-    pub twiddle: [*mut gsl_complex_float; 64usize],
-    pub trig: *mut gsl_complex_float,
-}
+pub struct gsl_fft_complex_wavetable_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_fft_complex_workspace_float {
-    pub n: size_t,
-    pub scratch: *mut f32,
-}
+pub struct gsl_fft_complex_workspace_float;
 extern "C" {
-    pub fn gsl_fft_complex_wavetable_float_alloc(n: size_t)
-        -> *mut gsl_fft_complex_wavetable_float;
+    pub fn gsl_fft_complex_wavetable_float_alloc(n: usize) -> *mut gsl_fft_complex_wavetable_float;
 }
 extern "C" {
     pub fn gsl_fft_complex_wavetable_float_free(wavetable: *mut gsl_fft_complex_wavetable_float);
 }
 extern "C" {
-    pub fn gsl_fft_complex_workspace_float_alloc(n: size_t)
-        -> *mut gsl_fft_complex_workspace_float;
+    pub fn gsl_fft_complex_workspace_float_alloc(n: usize) -> *mut gsl_fft_complex_workspace_float;
 }
 extern "C" {
     pub fn gsl_fft_complex_workspace_float_free(workspace: *mut gsl_fft_complex_workspace_float);
@@ -25941,8 +24441,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_float_forward(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable_float,
         work: *mut gsl_fft_complex_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -25950,8 +24450,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_float_backward(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable_float,
         work: *mut gsl_fft_complex_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -25959,8 +24459,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_float_inverse(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable_float,
         work: *mut gsl_fft_complex_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -25968,8 +24468,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_float_transform(
         data: gsl_complex_packed_array_float,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable_float,
         work: *mut gsl_fft_complex_workspace_float,
         sign: gsl_fft_direction,
@@ -25988,318 +24488,318 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_long_double(data: *mut u128, stride: size_t, n: size_t);
+    pub fn gsl_sort_long_double(data: *mut u128, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_long_double(
         data1: *mut u128,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut u128,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_sort_long_double_index(p: *mut size_t, data: *const u128, stride: size_t, n: size_t);
+    pub fn gsl_sort_long_double_index(p: *mut usize, data: *const u128, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort_long_double_smallest(
         dest: *mut u128,
-        k: size_t,
+        k: usize,
         src: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_long_double_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_long_double_largest(
         dest: *mut u128,
-        k: size_t,
+        k: usize,
         src: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_long_double_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort(data: *mut f64, stride: size_t, n: size_t);
+    pub fn gsl_sort(data: *mut f64, stride: usize, n: usize);
 }
 extern "C" {
-    pub fn gsl_sort2(data1: *mut f64, stride1: size_t, data2: *mut f64, stride2: size_t, n: size_t);
+    pub fn gsl_sort2(data1: *mut f64, stride1: usize, data2: *mut f64, stride2: usize, n: usize);
 }
 extern "C" {
-    pub fn gsl_sort_index(p: *mut size_t, data: *const f64, stride: size_t, n: size_t);
+    pub fn gsl_sort_index(p: *mut usize, data: *const f64, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort_smallest(
         dest: *mut f64,
-        k: size_t,
+        k: usize,
         src: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_largest(
         dest: *mut f64,
-        k: size_t,
+        k: usize,
         src: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_float(data: *mut f32, stride: size_t, n: size_t);
+    pub fn gsl_sort_float(data: *mut f32, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_float(
         data1: *mut f32,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut f32,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_sort_float_index(p: *mut size_t, data: *const f32, stride: size_t, n: size_t);
+    pub fn gsl_sort_float_index(p: *mut usize, data: *const f32, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort_float_smallest(
         dest: *mut f32,
-        k: size_t,
+        k: usize,
         src: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_float_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_float_largest(
         dest: *mut f32,
-        k: size_t,
+        k: usize,
         src: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_float_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_long(data: *mut ::std::os::raw::c_long, stride: size_t, n: size_t);
+    pub fn gsl_sort_long(data: *mut ::std::os::raw::c_long, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_long(
         data1: *mut ::std::os::raw::c_long,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_long,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_long_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_long_smallest(
         dest: *mut ::std::os::raw::c_long,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_long_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_long_largest(
         dest: *mut ::std::os::raw::c_long,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_long_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_ushort(data: *mut ::std::os::raw::c_ushort, stride: size_t, n: size_t);
+    pub fn gsl_sort_ushort(data: *mut ::std::os::raw::c_ushort, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_ushort(
         data1: *mut ::std::os::raw::c_ushort,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_ushort_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_ushort_smallest(
         dest: *mut ::std::os::raw::c_ushort,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_ushort_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_ushort_largest(
         dest: *mut ::std::os::raw::c_ushort,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_ushort_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sort_char(data: *mut ::std::os::raw::c_char, stride: size_t, n: size_t);
+    pub fn gsl_sort_char(data: *mut ::std::os::raw::c_char, stride: usize, n: usize);
 }
 extern "C" {
     pub fn gsl_sort2_char(
         data1: *mut ::std::os::raw::c_char,
-        stride1: size_t,
+        stride1: usize,
         data2: *mut ::std::os::raw::c_char,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_char_index(
-        p: *mut size_t,
+        p: *mut usize,
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_sort_char_smallest(
         dest: *mut ::std::os::raw::c_char,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_char_smallest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_char_largest(
         dest: *mut ::std::os::raw::c_char,
-        k: size_t,
+        k: usize,
         src: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_sort_char_largest_index(
-        p: *mut size_t,
-        k: size_t,
+        p: *mut usize,
+        k: usize,
         src: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 pub type gsl_comparison_fn_t = ::std::option::Option<
@@ -26311,17 +24811,17 @@ pub type gsl_comparison_fn_t = ::std::option::Option<
 extern "C" {
     pub fn gsl_heapsort(
         array: *mut ::std::os::raw::c_void,
-        count: size_t,
-        size: size_t,
+        count: usize,
+        size: usize,
         compare: gsl_comparison_fn_t,
     );
 }
 extern "C" {
     pub fn gsl_heapsort_index(
-        p: *mut size_t,
+        p: *mut usize,
         array: *const ::std::os::raw::c_void,
-        count: size_t,
-        size: size_t,
+        count: usize,
+        size: usize,
         compare: gsl_comparison_fn_t,
     ) -> ::std::os::raw::c_int;
 }
@@ -26336,62 +24836,29 @@ pub type gsl_movstat_end_t = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_movstat_accum {
-    pub size: ::std::option::Option<unsafe extern "C" fn(n: size_t) -> size_t>,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            n: size_t,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub insert: ::std::option::Option<
-        unsafe extern "C" fn(x: f64, vstate: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
-    >,
-    pub delete_oldest: ::std::option::Option<
-        unsafe extern "C" fn(vstate: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
-    >,
-    pub get: ::std::option::Option<
-        unsafe extern "C" fn(
-            params: *mut ::std::os::raw::c_void,
-            result: *mut f64,
-            vstate: *const ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_movstat_accum;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_movstat_function {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(n: size_t, x: *mut f64, params: *mut ::std::os::raw::c_void) -> f64,
-    >,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_movstat_function;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_movstat_workspace {
-    pub H: size_t,
-    pub J: size_t,
-    pub K: size_t,
-    pub work: *mut f64,
-    pub state: *mut ::std::os::raw::c_void,
-    pub state_size: size_t,
+pub struct gsl_movstat_workspace;
+extern "C" {
+    #[cfg(feature = "v2_5")]
+    pub fn gsl_movstat_alloc(K: usize) -> *mut gsl_movstat_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_movstat_alloc(K: size_t) -> *mut gsl_movstat_workspace;
-}
-extern "C" {
-    #[cfg(feature = "v2_5")]
-    pub fn gsl_movstat_alloc2(H: size_t, J: size_t) -> *mut gsl_movstat_workspace;
+    pub fn gsl_movstat_alloc2(H: usize, J: usize) -> *mut gsl_movstat_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
     pub fn gsl_movstat_alloc_with_size(
-        accum_state_size: size_t,
-        H: size_t,
-        J: size_t,
+        accum_state_size: usize,
+        H: usize,
+        J: usize,
     ) -> *mut gsl_movstat_workspace;
 }
 extern "C" {
@@ -26425,11 +24892,11 @@ extern "C" {
     pub fn gsl_movstat_fill(
         endtype: gsl_movstat_end_t,
         x: *const gsl_vector,
-        idx: size_t,
-        H: size_t,
-        J: size_t,
+        idx: usize,
+        H: usize,
+        J: usize,
         window: *mut f64,
-    ) -> size_t;
+    ) -> usize;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
@@ -26625,14 +25092,10 @@ pub type gsl_filter_scale_t = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_filter_gaussian_workspace {
-    pub K: size_t,
-    pub kernel: *mut f64,
-    pub movstat_workspace_p: *mut gsl_movstat_workspace,
-}
+pub struct gsl_filter_gaussian_workspace;
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_filter_gaussian_alloc(K: size_t) -> *mut gsl_filter_gaussian_workspace;
+    pub fn gsl_filter_gaussian_alloc(K: usize) -> *mut gsl_filter_gaussian_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
@@ -26643,7 +25106,7 @@ extern "C" {
     pub fn gsl_filter_gaussian(
         endtype: gsl_filter_end_t,
         alpha: f64,
-        order: size_t,
+        order: usize,
         x: *const gsl_vector,
         y: *mut gsl_vector,
         w: *mut gsl_filter_gaussian_workspace,
@@ -26653,7 +25116,7 @@ extern "C" {
     #[cfg(feature = "v2_5")]
     pub fn gsl_filter_gaussian_kernel(
         alpha: f64,
-        order: size_t,
+        order: usize,
         normalize: ::std::os::raw::c_int,
         kernel: *mut gsl_vector,
     ) -> ::std::os::raw::c_int;
@@ -26661,12 +25124,10 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_filter_median_workspace {
-    pub movstat_workspace_p: *mut gsl_movstat_workspace,
-}
+pub struct gsl_filter_median_workspace;
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_filter_median_alloc(K: size_t) -> *mut gsl_filter_median_workspace;
+    pub fn gsl_filter_median_alloc(K: usize) -> *mut gsl_filter_median_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
@@ -26684,17 +25145,10 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_filter_rmedian_workspace {
-    pub H: size_t,
-    pub K: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-    pub window: *mut f64,
-    pub minmaxacc: *const gsl_movstat_accum,
-    pub movstat_workspace_p: *mut gsl_movstat_workspace,
-}
+pub struct gsl_filter_rmedian_workspace;
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_filter_rmedian_alloc(K: size_t) -> *mut gsl_filter_rmedian_workspace;
+    pub fn gsl_filter_rmedian_alloc(K: usize) -> *mut gsl_filter_rmedian_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
@@ -26712,12 +25166,10 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_filter_impulse_workspace {
-    pub movstat_workspace_p: *mut gsl_movstat_workspace,
-}
+pub struct gsl_filter_impulse_workspace;
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_filter_impulse_alloc(K: size_t) -> *mut gsl_filter_impulse_workspace;
+    pub fn gsl_filter_impulse_alloc(K: usize) -> *mut gsl_filter_impulse_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
@@ -26733,145 +25185,134 @@ extern "C" {
         y: *mut gsl_vector,
         xmedian: *mut gsl_vector,
         xsigma: *mut gsl_vector,
-        noutlier: *mut size_t,
+        noutlier: *mut usize,
         ioutlier: *mut gsl_vector_int,
         w: *mut gsl_filter_impulse_workspace,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_stats_char_mean(
-        data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_char_mean(data: *const ::std::os::raw::c_char, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_variance(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_char_sd(data: *const ::std::os::raw::c_char, stride: size_t, n: size_t)
-        -> f64;
+    pub fn gsl_stats_char_sd(data: *const ::std::os::raw::c_char, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_char_tss(
-        data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_char_tss(data: *const ::std::os::raw::c_char, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_tss_m(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_absdev(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_char_skew(
-        data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_char_skew(data: *const ::std::os::raw::c_char, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_kurtosis(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_lag1_autocorrelation(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_covariance(
         data1: *const ::std::os::raw::c_char,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_char,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_correlation(
         data1: *const ::std::os::raw::c_char,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_char,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_spearman(
         data1: *const ::std::os::raw::c_char,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_char,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_variance_m(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_sd_m(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_absdev_m(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_skew_m_sd(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -26879,8 +25320,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_char_kurtosis_m_sd(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -26888,18 +25329,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_char_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_covariance_m(
         data1: *const ::std::os::raw::c_char,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_char,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -26907,35 +25348,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_char_pvariance(
         data1: *const ::std::os::raw::c_char,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_char,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_ttest(
         data1: *const ::std::os::raw::c_char,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_char,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_max(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_stats_char_min(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_char;
 }
 extern "C" {
@@ -26943,60 +25384,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_char,
         max: *mut ::std::os::raw::c_char,
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_char_max_index(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_char_min_index(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_char_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_char_select(
         data: *mut ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_stats_char_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_median(
         sorted_data: *mut ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -27004,54 +25445,54 @@ extern "C" {
     pub fn gsl_stats_char_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_mad0(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_mad(
         data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn gsl_stats_char_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_char,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_char_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_char,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_char;
@@ -27059,8 +25500,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_char_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_char,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
@@ -27068,70 +25509,24 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_linear_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc:
-        ::std::option::Option<unsafe extern "C" fn(p: size_t) -> *mut ::std::os::raw::c_void>,
-    pub reset: ::std::option::Option<
-        unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
-    >,
-    pub accumulate: ::std::option::Option<
-        unsafe extern "C" fn(
-            X: *mut gsl_matrix,
-            y: *mut gsl_vector,
-            arg1: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub solve: ::std::option::Option<
-        unsafe extern "C" fn(
-            lambda: f64,
-            c: *mut gsl_vector,
-            rnorm: *mut f64,
-            snorm: *mut f64,
-            arg1: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub rcond: ::std::option::Option<
-        unsafe extern "C" fn(
-            rcond: *mut f64,
-            arg1: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub lcurve: ::std::option::Option<
-        unsafe extern "C" fn(
-            reg_param: *mut gsl_vector,
-            rho: *mut gsl_vector,
-            eta: *mut gsl_vector,
-            arg1: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub matrix_ptr: ::std::option::Option<
-        unsafe extern "C" fn(arg1: *const ::std::os::raw::c_void) -> *const gsl_matrix,
-    >,
-    pub rhs_ptr: ::std::option::Option<
-        unsafe extern "C" fn(arg1: *const ::std::os::raw::c_void) -> *const gsl_vector,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multilarge_linear_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_linear_workspace {
-    pub type_: *const gsl_multilarge_linear_type,
-    pub state: *mut ::std::os::raw::c_void,
-    pub p: size_t,
-}
+pub struct gsl_multilarge_linear_workspace;
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_linear_normal: *const gsl_multilarge_linear_type;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_linear_tsqr: *const gsl_multilarge_linear_type;
 }
 extern "C" {
     #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_linear_alloc(
         T: *const gsl_multilarge_linear_type,
-        p: size_t,
+        p: usize,
     ) -> *mut gsl_multilarge_linear_workspace;
 }
 extern "C" {
@@ -27176,7 +25571,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[cfg(feature = "v2_1")]
+    #[cfg(feature = "v2_2")]
     pub fn gsl_multilarge_linear_lcurve(
         reg_param: *mut gsl_vector,
         rho: *mut gsl_vector,
@@ -27259,79 +25654,26 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    #[cfg(feature = "v2_1")]
+    #[cfg(feature = "v2_7")]
     pub fn gsl_multilarge_linear_matrix_ptr(
         work: *const gsl_multilarge_linear_workspace,
     ) -> *const gsl_matrix;
 }
 extern "C" {
-    #[cfg(feature = "v2_1")]
+    #[cfg(feature = "v2_7")]
     pub fn gsl_multilarge_linear_rhs_ptr(
         work: *const gsl_multilarge_linear_workspace,
     ) -> *const gsl_vector;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv_system {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(
-            t: f64,
-            y: *const f64,
-            dydt: *mut f64,
-            params: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub jacobian: ::std::option::Option<
-        unsafe extern "C" fn(
-            t: f64,
-            y: *const f64,
-            dfdy: *mut f64,
-            dfdt: *mut f64,
-            params: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub dimension: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_odeiv_system;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv_step_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub can_use_dydt_in: ::std::os::raw::c_int,
-    pub gives_exact_dydt_out: ::std::os::raw::c_int,
-    pub alloc:
-        ::std::option::Option<unsafe extern "C" fn(dim: size_t) -> *mut ::std::os::raw::c_void>,
-    pub apply: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dim: size_t,
-            t: f64,
-            h: f64,
-            y: *mut f64,
-            yerr: *mut f64,
-            dydt_in: *const f64,
-            dydt_out: *mut f64,
-            dydt: *const gsl_odeiv_system,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub reset: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dim: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub order: ::std::option::Option<
-        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_uint,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_odeiv_step_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv_step {
-    pub type_: *const gsl_odeiv_step_type,
-    pub dimension: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_odeiv_step;
 extern "C" {
     pub static mut gsl_odeiv_step_rk2: *const gsl_odeiv_step_type;
 }
@@ -27366,7 +25708,7 @@ extern "C" {
     pub static mut gsl_odeiv_step_gear2: *const gsl_odeiv_step_type;
 }
 extern "C" {
-    pub fn gsl_odeiv_step_alloc(T: *const gsl_odeiv_step_type, dim: size_t) -> *mut gsl_odeiv_step;
+    pub fn gsl_odeiv_step_alloc(T: *const gsl_odeiv_step_type, dim: usize) -> *mut gsl_odeiv_step;
 }
 extern "C" {
     pub fn gsl_odeiv_step_reset(s: *mut gsl_odeiv_step) -> ::std::os::raw::c_int;
@@ -27394,37 +25736,10 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv_control_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<unsafe extern "C" fn() -> *mut ::std::os::raw::c_void>,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            eps_abs: f64,
-            eps_rel: f64,
-            a_y: f64,
-            a_dydt: f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub hadjust: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dim: size_t,
-            ord: ::std::os::raw::c_uint,
-            y: *const f64,
-            yerr: *const f64,
-            yp: *const f64,
-            h: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_odeiv_control_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv_control {
-    pub type_: *const gsl_odeiv_control_type,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_odeiv_control;
 extern "C" {
     pub fn gsl_odeiv_control_alloc(T: *const gsl_odeiv_control_type) -> *mut gsl_odeiv_control;
 }
@@ -27474,23 +25789,14 @@ extern "C" {
         a_y: f64,
         a_dydt: f64,
         scale_abs: *const f64,
-        dim: size_t,
+        dim: usize,
     ) -> *mut gsl_odeiv_control;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv_evolve {
-    pub dimension: size_t,
-    pub y0: *mut f64,
-    pub yerr: *mut f64,
-    pub dydt_in: *mut f64,
-    pub dydt_out: *mut f64,
-    pub last_step: f64,
-    pub count: ::std::os::raw::c_ulong,
-    pub failed_steps: ::std::os::raw::c_ulong,
-}
+pub struct gsl_odeiv_evolve;
 extern "C" {
-    pub fn gsl_odeiv_evolve_alloc(dim: size_t) -> *mut gsl_odeiv_evolve;
+    pub fn gsl_odeiv_evolve_alloc(dim: usize) -> *mut gsl_odeiv_evolve;
 }
 extern "C" {
     pub fn gsl_odeiv_evolve_apply(
@@ -27512,92 +25818,33 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_short(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_short_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_system {
-    pub function: ::std::option::Option<
-        unsafe extern "C" fn(
-            t: f64,
-            y: *const f64,
-            dydt: *mut f64,
-            params: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub jacobian: ::std::option::Option<
-        unsafe extern "C" fn(
-            t: f64,
-            y: *const f64,
-            dfdy: *mut f64,
-            dfdt: *mut f64,
-            params: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub dimension: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_odeiv2_system;
 pub type gsl_odeiv2_step = gsl_odeiv2_step_struct;
 pub type gsl_odeiv2_control = gsl_odeiv2_control_struct;
 pub type gsl_odeiv2_evolve = gsl_odeiv2_evolve_struct;
 pub type gsl_odeiv2_driver = gsl_odeiv2_driver_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_step_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub can_use_dydt_in: ::std::os::raw::c_int,
-    pub gives_exact_dydt_out: ::std::os::raw::c_int,
-    pub alloc:
-        ::std::option::Option<unsafe extern "C" fn(dim: size_t) -> *mut ::std::os::raw::c_void>,
-    pub apply: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dim: size_t,
-            t: f64,
-            h: f64,
-            y: *mut f64,
-            yerr: *mut f64,
-            dydt_in: *const f64,
-            dydt_out: *mut f64,
-            dydt: *const gsl_odeiv2_system,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set_driver: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            d: *const gsl_odeiv2_driver,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub reset: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dim: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub order: ::std::option::Option<
-        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_uint,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_odeiv2_step_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_step_struct {
-    pub type_: *const gsl_odeiv2_step_type,
-    pub dimension: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_odeiv2_step_struct;
 extern "C" {
     pub static mut gsl_odeiv2_step_rk2: *const gsl_odeiv2_step_type;
 }
@@ -27634,7 +25881,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_odeiv2_step_alloc(
         T: *const gsl_odeiv2_step_type,
-        dim: size_t,
+        dim: usize,
     ) -> *mut gsl_odeiv2_step;
 }
 extern "C" {
@@ -27669,53 +25916,10 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_control_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<unsafe extern "C" fn() -> *mut ::std::os::raw::c_void>,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            eps_abs: f64,
-            eps_rel: f64,
-            a_y: f64,
-            a_dydt: f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub hadjust: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            dim: size_t,
-            ord: ::std::os::raw::c_uint,
-            y: *const f64,
-            yerr: *const f64,
-            yp: *const f64,
-            h: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub errlevel: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            y: f64,
-            dydt: f64,
-            h: f64,
-            ind: size_t,
-            errlev: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set_driver: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            d: *const gsl_odeiv2_driver,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_odeiv2_control_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_control_struct {
-    pub type_: *const gsl_odeiv2_control_type,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_odeiv2_control_struct;
 extern "C" {
     pub fn gsl_odeiv2_control_alloc(T: *const gsl_odeiv2_control_type) -> *mut gsl_odeiv2_control;
 }
@@ -27750,7 +25954,7 @@ extern "C" {
         y: f64,
         dydt: f64,
         h: f64,
-        ind: size_t,
+        ind: usize,
         errlev: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
@@ -27781,24 +25985,14 @@ extern "C" {
         a_y: f64,
         a_dydt: f64,
         scale_abs: *const f64,
-        dim: size_t,
+        dim: usize,
     ) -> *mut gsl_odeiv2_control;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_evolve_struct {
-    pub dimension: size_t,
-    pub y0: *mut f64,
-    pub yerr: *mut f64,
-    pub dydt_in: *mut f64,
-    pub dydt_out: *mut f64,
-    pub last_step: f64,
-    pub count: ::std::os::raw::c_ulong,
-    pub failed_steps: ::std::os::raw::c_ulong,
-    pub driver: *const gsl_odeiv2_driver,
-}
+pub struct gsl_odeiv2_evolve_struct;
 extern "C" {
-    pub fn gsl_odeiv2_evolve_alloc(dim: size_t) -> *mut gsl_odeiv2_evolve;
+    pub fn gsl_odeiv2_evolve_alloc(dim: usize) -> *mut gsl_odeiv2_evolve;
 }
 extern "C" {
     pub fn gsl_odeiv2_evolve_apply(
@@ -27837,17 +26031,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_odeiv2_driver_struct {
-    pub sys: *const gsl_odeiv2_system,
-    pub s: *mut gsl_odeiv2_step,
-    pub c: *mut gsl_odeiv2_control,
-    pub e: *mut gsl_odeiv2_evolve,
-    pub h: f64,
-    pub hmin: f64,
-    pub hmax: f64,
-    pub n: ::std::os::raw::c_ulong,
-    pub nmax: ::std::os::raw::c_ulong,
-}
+pub struct gsl_odeiv2_driver_struct;
 extern "C" {
     pub fn gsl_odeiv2_driver_alloc_y_new(
         sys: *const gsl_odeiv2_system,
@@ -28102,140 +26286,137 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_short_mean(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_variance(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_short_sd(
-        data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_short_sd(data: *const ::std::os::raw::c_short, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_tss(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_tss_m(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_absdev(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_skew(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_kurtosis(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_lag1_autocorrelation(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_covariance(
         data1: *const ::std::os::raw::c_short,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_short,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_correlation(
         data1: *const ::std::os::raw::c_short,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_short,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_spearman(
         data1: *const ::std::os::raw::c_short,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_short,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_variance_m(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_sd_m(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_absdev_m(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_skew_m_sd(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -28243,8 +26424,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_short_kurtosis_m_sd(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -28252,18 +26433,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_short_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_covariance_m(
         data1: *const ::std::os::raw::c_short,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_short,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -28271,35 +26452,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_short_pvariance(
         data1: *const ::std::os::raw::c_short,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_short,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_ttest(
         data1: *const ::std::os::raw::c_short,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_short,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_max(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_stats_short_min(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_short;
 }
 extern "C" {
@@ -28307,60 +26488,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_short,
         max: *mut ::std::os::raw::c_short,
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_short_max_index(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_short_min_index(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_short_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_short_select(
         data: *mut ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_stats_short_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_median(
         sorted_data: *mut ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -28368,54 +26549,54 @@ extern "C" {
     pub fn gsl_stats_short_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_mad0(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_mad(
         data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_short,
     ) -> ::std::os::raw::c_short;
 }
 extern "C" {
     pub fn gsl_stats_short_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_short,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_short_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_short,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_short;
@@ -28423,26 +26604,26 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_short_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_short,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_short,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_permute_float(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_float_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -28472,140 +26653,137 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ulong_mean(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_variance(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_ulong_sd(
-        data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_ulong_sd(data: *const ::std::os::raw::c_ulong, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_tss(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_tss_m(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_absdev(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_skew(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_kurtosis(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_lag1_autocorrelation(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_covariance(
         data1: *const ::std::os::raw::c_ulong,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_correlation(
         data1: *const ::std::os::raw::c_ulong,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_spearman(
         data1: *const ::std::os::raw::c_ulong,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_variance_m(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_sd_m(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_absdev_m(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_skew_m_sd(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -28613,8 +26791,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ulong_kurtosis_m_sd(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -28622,18 +26800,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ulong_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_covariance_m(
         data1: *const ::std::os::raw::c_ulong,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -28641,35 +26819,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ulong_pvariance(
         data1: *const ::std::os::raw::c_ulong,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_ttest(
         data1: *const ::std::os::raw::c_ulong,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_ulong,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_max(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_stats_ulong_min(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
@@ -28677,60 +26855,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_ulong,
         max: *mut ::std::os::raw::c_ulong,
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_ulong_max_index(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_ulong_min_index(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_ulong_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_ulong_select(
         data: *mut ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_stats_ulong_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_median(
         sorted_data: *mut ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -28738,54 +26916,54 @@ extern "C" {
     pub fn gsl_stats_ulong_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_mad0(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_mad(
         data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ulong,
     ) -> ::std::os::raw::c_ulong;
 }
 extern "C" {
     pub fn gsl_stats_ulong_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ulong,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ulong_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ulong,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_ulong;
@@ -28793,29 +26971,24 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ulong_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ulong,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_spline {
-    pub interp: *mut gsl_interp,
-    pub x: *mut f64,
-    pub y: *mut f64,
-    pub size: size_t,
-}
+pub struct gsl_spline;
 extern "C" {
-    pub fn gsl_spline_alloc(T: *const gsl_interp_type, size: size_t) -> *mut gsl_spline;
+    pub fn gsl_spline_alloc(T: *const gsl_interp_type, size: usize) -> *mut gsl_spline;
 }
 extern "C" {
     pub fn gsl_spline_init(
         spline: *mut gsl_spline,
         xa: *const f64,
         ya: *const f64,
-        size: size_t,
+        size: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -28914,18 +27087,18 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_uint(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_uint_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 pub const GSL_VEGAS_MODE_IMPORTANCE: ::std::os::raw::c_int = 1;
@@ -28934,45 +27107,14 @@ pub const GSL_VEGAS_MODE_STRATIFIED: ::std::os::raw::c_int = -1;
 pub type _bindgen_ty_4 = ::std::os::raw::c_int;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_vegas_state {
-    pub dim: size_t,
-    pub bins_max: size_t,
-    pub bins: ::std::os::raw::c_uint,
-    pub boxes: ::std::os::raw::c_uint,
-    pub xi: *mut f64,
-    pub xin: *mut f64,
-    pub delx: *mut f64,
-    pub weight: *mut f64,
-    pub vol: f64,
-    pub x: *mut f64,
-    pub bin: *mut ::std::os::raw::c_int,
-    pub box_: *mut ::std::os::raw::c_int,
-    pub d: *mut f64,
-    pub alpha: f64,
-    pub mode: ::std::os::raw::c_int,
-    pub verbose: ::std::os::raw::c_int,
-    pub iterations: ::std::os::raw::c_uint,
-    pub stage: ::std::os::raw::c_int,
-    pub jac: f64,
-    pub wtd_int_sum: f64,
-    pub sum_wgts: f64,
-    pub chi_sum: f64,
-    pub chisq: f64,
-    pub result: f64,
-    pub sigma: f64,
-    pub it_start: ::std::os::raw::c_uint,
-    pub it_num: ::std::os::raw::c_uint,
-    pub samples: ::std::os::raw::c_uint,
-    pub calls_per_box: ::std::os::raw::c_uint,
-    pub ostream: *mut FILE,
-}
+pub struct gsl_monte_vegas_state;
 extern "C" {
     pub fn gsl_monte_vegas_integrate(
         f: *mut gsl_monte_function,
         xl: *mut f64,
         xu: *mut f64,
-        dim: size_t,
-        calls: size_t,
+        dim: usize,
+        calls: usize,
         r: *mut gsl_rng,
         state: *mut gsl_monte_vegas_state,
         result: *mut f64,
@@ -28980,7 +27122,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_monte_vegas_alloc(dim: size_t) -> *mut gsl_monte_vegas_state;
+    pub fn gsl_monte_vegas_alloc(dim: usize) -> *mut gsl_monte_vegas_state;
 }
 extern "C" {
     pub fn gsl_monte_vegas_init(state: *mut gsl_monte_vegas_state) -> ::std::os::raw::c_int;
@@ -29000,14 +27142,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_monte_vegas_params {
-    pub alpha: f64,
-    pub iterations: size_t,
-    pub stage: ::std::os::raw::c_int,
-    pub mode: ::std::os::raw::c_int,
-    pub verbose: ::std::os::raw::c_int,
-    pub ostream: *mut FILE,
-}
+pub struct gsl_monte_vegas_params;
 extern "C" {
     pub fn gsl_monte_vegas_params_get(
         state: *const gsl_monte_vegas_state,
@@ -29137,90 +27272,90 @@ extern "C" {
     pub fn gsl_sf_airy_zero_Bi_deriv(s: ::std::os::raw::c_uint) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_mean(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_mean(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_variance(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_variance(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_sd(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_sd(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_variance_with_fixed_mean(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_sd_with_fixed_mean(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_tss(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_tss(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_tss_m(data: *const f64, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_tss_m(data: *const f64, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_absdev(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_absdev(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_skew(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_skew(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_kurtosis(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_kurtosis(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_lag1_autocorrelation(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_lag1_autocorrelation(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_covariance(
         data1: *const f64,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f64,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_correlation(
         data1: *const f64,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f64,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_spearman(
         data1: *const f64,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f64,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_variance_m(data: *const f64, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_variance_m(data: *const f64, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_sd_m(data: *const f64, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_sd_m(data: *const f64, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_absdev_m(data: *const f64, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_absdev_m(data: *const f64, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_skew_m_sd(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -29228,8 +27363,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_kurtosis_m_sd(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -29237,18 +27372,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_lag1_autocorrelation_m(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_covariance_m(
         data1: *const f64,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f64,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -29256,133 +27391,133 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_wmean(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wvariance(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wsd(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wvariance_with_fixed_mean(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wsd_with_fixed_mean(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wtss(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wtss_m(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wabsdev(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wskew(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wkurtosis(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wvariance_m(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wsd_m(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wabsdev_m(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_wskew_m_sd(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
         wsd: f64,
     ) -> f64;
@@ -29390,10 +27525,10 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_wkurtosis_m_sd(
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
         wsd: f64,
     ) -> f64;
@@ -29401,73 +27536,73 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_pvariance(
         data1: *const f64,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const f64,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ttest(
         data1: *const f64,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const f64,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_max(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_max(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_min(data: *const f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_min(data: *const f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_minmax(
         min: *mut f64,
         max: *mut f64,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_stats_max_index(data: *const f64, stride: size_t, n: size_t) -> size_t;
+    pub fn gsl_stats_max_index(data: *const f64, stride: usize, n: usize) -> usize;
 }
 extern "C" {
-    pub fn gsl_stats_min_index(data: *const f64, stride: size_t, n: size_t) -> size_t;
+    pub fn gsl_stats_min_index(data: *const f64, stride: usize, n: usize) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_stats_select(data: *mut f64, stride: size_t, n: size_t, k: size_t) -> f64;
+    pub fn gsl_stats_select(data: *mut f64, stride: usize, n: usize, k: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_median_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_stats_median(sorted_data: *mut f64, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_median(sorted_data: *mut f64, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_quantile_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -29476,31 +27611,31 @@ extern "C" {
     pub fn gsl_stats_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
     pub fn gsl_stats_gastwirth_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_stats_mad0(data: *const f64, stride: size_t, n: size_t, work: *mut f64) -> f64;
+    pub fn gsl_stats_mad0(data: *const f64, stride: usize, n: usize, work: *mut f64) -> f64;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_stats_mad(data: *const f64, stride: size_t, n: size_t, work: *mut f64) -> f64;
+    pub fn gsl_stats_mad(data: *const f64, stride: usize, n: usize, work: *mut f64) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_Sn0_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
@@ -29508,16 +27643,16 @@ extern "C" {
     #[cfg(feature = "v2_5")]
     pub fn gsl_stats_Sn_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_Qn0_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
@@ -29526,103 +27661,97 @@ extern "C" {
     #[cfg(feature = "v2_5")]
     pub fn gsl_stats_Qn_from_sorted_data(
         sorted_data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_mean(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_mean(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_variance(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_variance(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_sd(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_sd(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_variance_with_fixed_mean(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_sd_with_fixed_mean(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_tss(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_tss(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_tss_m(data: *const f32, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_float_tss_m(data: *const f32, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_absdev(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_absdev(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_skew(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_skew(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_kurtosis(data: *const f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_kurtosis(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_lag1_autocorrelation(data: *const f32, stride: size_t, n: size_t)
-        -> f64;
+    pub fn gsl_stats_float_lag1_autocorrelation(data: *const f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_covariance(
         data1: *const f32,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f32,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_correlation(
         data1: *const f32,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f32,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_spearman(
         data1: *const f32,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f32,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_variance_m(
-        data: *const f32,
-        stride: size_t,
-        n: size_t,
-        mean: f64,
-    ) -> f64;
+    pub fn gsl_stats_float_variance_m(data: *const f32, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_sd_m(data: *const f32, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_float_sd_m(data: *const f32, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_absdev_m(data: *const f32, stride: size_t, n: size_t, mean: f64) -> f64;
+    pub fn gsl_stats_float_absdev_m(data: *const f32, stride: usize, n: usize, mean: f64) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_skew_m_sd(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -29630,8 +27759,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_float_kurtosis_m_sd(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -29639,18 +27768,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_float_lag1_autocorrelation_m(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_covariance_m(
         data1: *const f32,
-        stride1: size_t,
+        stride1: usize,
         data2: *const f32,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -29658,133 +27787,133 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_float_wmean(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wvariance(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wsd(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wvariance_with_fixed_mean(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wsd_with_fixed_mean(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wtss(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wtss_m(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wabsdev(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wskew(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wkurtosis(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wvariance_m(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wsd_m(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wabsdev_m(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_wskew_m_sd(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
         wsd: f64,
     ) -> f64;
@@ -29792,10 +27921,10 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_float_wkurtosis_m_sd(
         w: *const f32,
-        wstride: size_t,
+        wstride: usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wmean: f64,
         wsd: f64,
     ) -> f64;
@@ -29803,71 +27932,71 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_float_pvariance(
         data1: *const f32,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const f32,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_ttest(
         data1: *const f32,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const f32,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_max(data: *const f32, stride: size_t, n: size_t) -> f32;
+    pub fn gsl_stats_float_max(data: *const f32, stride: usize, n: usize) -> f32;
 }
 extern "C" {
-    pub fn gsl_stats_float_min(data: *const f32, stride: size_t, n: size_t) -> f32;
+    pub fn gsl_stats_float_min(data: *const f32, stride: usize, n: usize) -> f32;
 }
 extern "C" {
     pub fn gsl_stats_float_minmax(
         min: *mut f32,
         max: *mut f32,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_stats_float_max_index(data: *const f32, stride: size_t, n: size_t) -> size_t;
+    pub fn gsl_stats_float_max_index(data: *const f32, stride: usize, n: usize) -> usize;
 }
 extern "C" {
-    pub fn gsl_stats_float_min_index(data: *const f32, stride: size_t, n: size_t) -> size_t;
+    pub fn gsl_stats_float_min_index(data: *const f32, stride: usize, n: usize) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_float_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
-    pub fn gsl_stats_float_select(data: *mut f32, stride: size_t, n: size_t, k: size_t) -> f32;
+    pub fn gsl_stats_float_select(data: *mut f32, stride: usize, n: usize, k: usize) -> f32;
 }
 extern "C" {
     pub fn gsl_stats_float_median_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_median(sorted_data: *mut f32, stride: size_t, n: size_t) -> f64;
+    pub fn gsl_stats_float_median(sorted_data: *mut f32, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_quantile_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -29875,45 +28004,44 @@ extern "C" {
     pub fn gsl_stats_float_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_gastwirth_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_mad0(data: *const f32, stride: size_t, n: size_t, work: *mut f64)
-        -> f64;
+    pub fn gsl_stats_float_mad0(data: *const f32, stride: usize, n: usize, work: *mut f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_float_mad(data: *const f32, stride: size_t, n: size_t, work: *mut f64) -> f64;
+    pub fn gsl_stats_float_mad(data: *const f32, stride: usize, n: usize, work: *mut f64) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_Sn0_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f32,
     ) -> f32;
 }
 extern "C" {
     pub fn gsl_stats_float_Sn_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f32,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_float_Qn0_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f32,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f32;
@@ -29921,146 +28049,135 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_float_Qn_from_sorted_data(
         sorted_data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f32,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_uint_mean(
-        data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_uint_mean(data: *const ::std::os::raw::c_uint, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_variance(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_uint_sd(data: *const ::std::os::raw::c_uint, stride: size_t, n: size_t)
-        -> f64;
+    pub fn gsl_stats_uint_sd(data: *const ::std::os::raw::c_uint, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_uint_tss(
-        data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_uint_tss(data: *const ::std::os::raw::c_uint, stride: usize, n: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_tss_m(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_absdev(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_uint_skew(
-        data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_uint_skew(data: *const ::std::os::raw::c_uint, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_kurtosis(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_lag1_autocorrelation(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_covariance(
         data1: *const ::std::os::raw::c_uint,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uint,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_correlation(
         data1: *const ::std::os::raw::c_uint,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uint,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_spearman(
         data1: *const ::std::os::raw::c_uint,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uint,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_variance_m(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_sd_m(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_absdev_m(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_skew_m_sd(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -30068,8 +28185,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uint_kurtosis_m_sd(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -30077,18 +28194,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uint_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_covariance_m(
         data1: *const ::std::os::raw::c_uint,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uint,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -30096,35 +28213,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uint_pvariance(
         data1: *const ::std::os::raw::c_uint,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_uint,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_ttest(
         data1: *const ::std::os::raw::c_uint,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_uint,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_max(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_stats_uint_min(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
@@ -30132,60 +28249,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_uint,
         max: *mut ::std::os::raw::c_uint,
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_uint_max_index(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_uint_min_index(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_uint_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_uint_select(
         data: *mut ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_stats_uint_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_median(
         sorted_data: *mut ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -30193,54 +28310,54 @@ extern "C" {
     pub fn gsl_stats_uint_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_mad0(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_mad(
         data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uint,
     ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn gsl_stats_uint_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uint,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uint_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uint,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_uint;
@@ -30248,8 +28365,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uint_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uint,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uint,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
@@ -30257,140 +28374,140 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ushort_mean(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_variance(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_sd(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_tss(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_tss_m(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_absdev(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_skew(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_kurtosis(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_lag1_autocorrelation(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_covariance(
         data1: *const ::std::os::raw::c_ushort,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_correlation(
         data1: *const ::std::os::raw::c_ushort,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_spearman(
         data1: *const ::std::os::raw::c_ushort,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_variance_m(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_sd_m(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_absdev_m(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_skew_m_sd(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -30398,8 +28515,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ushort_kurtosis_m_sd(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -30407,18 +28524,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ushort_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_covariance_m(
         data1: *const ::std::os::raw::c_ushort,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -30426,35 +28543,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ushort_pvariance(
         data1: *const ::std::os::raw::c_ushort,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_ttest(
         data1: *const ::std::os::raw::c_ushort,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_ushort,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_max(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_stats_ushort_min(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_ushort;
 }
 extern "C" {
@@ -30462,60 +28579,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_ushort,
         max: *mut ::std::os::raw::c_ushort,
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_ushort_max_index(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_ushort_min_index(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_ushort_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_ushort_select(
         data: *mut ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_stats_ushort_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_median(
         sorted_data: *mut ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -30523,54 +28640,54 @@ extern "C" {
     pub fn gsl_stats_ushort_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_mad0(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_mad(
         data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ushort,
     ) -> ::std::os::raw::c_ushort;
 }
 extern "C" {
     pub fn gsl_stats_ushort_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ushort,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_ushort_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ushort,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_ushort;
@@ -30578,8 +28695,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_ushort_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_ushort,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_ushort,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
@@ -30587,140 +28704,137 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uchar_mean(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_variance(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
-    pub fn gsl_stats_uchar_sd(
-        data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
-    ) -> f64;
+    pub fn gsl_stats_uchar_sd(data: *const ::std::os::raw::c_uchar, stride: usize, n: usize)
+        -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_variance_with_fixed_mean(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_sd_with_fixed_mean(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_tss(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_tss_m(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_absdev(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_skew(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_kurtosis(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_lag1_autocorrelation(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_covariance(
         data1: *const ::std::os::raw::c_uchar,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_correlation(
         data1: *const ::std::os::raw::c_uchar,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_spearman(
         data1: *const ::std::os::raw::c_uchar,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_variance_m(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_sd_m(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_absdev_m(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_skew_m_sd(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -30728,8 +28842,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uchar_kurtosis_m_sd(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
         sd: f64,
     ) -> f64;
@@ -30737,18 +28851,18 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uchar_lag1_autocorrelation_m(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         mean: f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_covariance_m(
         data1: *const ::std::os::raw::c_uchar,
-        stride1: size_t,
+        stride1: usize,
         data2: *const ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n: size_t,
+        stride2: usize,
+        n: usize,
         mean1: f64,
         mean2: f64,
     ) -> f64;
@@ -30756,35 +28870,35 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uchar_pvariance(
         data1: *const ::std::os::raw::c_uchar,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_ttest(
         data1: *const ::std::os::raw::c_uchar,
-        stride1: size_t,
-        n1: size_t,
+        stride1: usize,
+        n1: usize,
         data2: *const ::std::os::raw::c_uchar,
-        stride2: size_t,
-        n2: size_t,
+        stride2: usize,
+        n2: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_max(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_stats_uchar_min(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
@@ -30792,60 +28906,60 @@ extern "C" {
         min: *mut ::std::os::raw::c_uchar,
         max: *mut ::std::os::raw::c_uchar,
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_uchar_max_index(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_uchar_min_index(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
-    ) -> size_t;
+        stride: usize,
+        n: usize,
+    ) -> usize;
 }
 extern "C" {
     pub fn gsl_stats_uchar_minmax_index(
-        min_index: *mut size_t,
-        max_index: *mut size_t,
+        min_index: *mut usize,
+        max_index: *mut usize,
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     );
 }
 extern "C" {
     pub fn gsl_stats_uchar_select(
         data: *mut ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
-        k: size_t,
+        stride: usize,
+        n: usize,
+        k: usize,
     ) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_stats_uchar_median_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_median(
         sorted_data: *mut ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_quantile_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         f: f64,
     ) -> f64;
 }
@@ -30853,54 +28967,54 @@ extern "C" {
     pub fn gsl_stats_uchar_trmean_from_sorted_data(
         trim: f64,
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_gastwirth_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_mad0(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_mad(
         data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut f64,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_Sn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uchar,
     ) -> ::std::os::raw::c_uchar;
 }
 extern "C" {
     pub fn gsl_stats_uchar_Sn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uchar,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_stats_uchar_Qn0_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uchar,
         work_int: *mut ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_uchar;
@@ -30908,26 +29022,26 @@ extern "C" {
 extern "C" {
     pub fn gsl_stats_uchar_Qn_from_sorted_data(
         sorted_data: *const ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         work: *mut ::std::os::raw::c_uchar,
         work_int: *mut ::std::os::raw::c_int,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_permute_complex_long_double(
-        p: *const size_t,
+        p: *const usize,
         data: *mut u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_complex_long_double_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -30956,34 +29070,34 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_char(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_char_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_char,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_long(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_long_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_long,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -31006,10 +29120,10 @@ extern "C" {
 extern "C" {
     pub fn gsl_poly_eval_derivs(
         c: *const f64,
-        lenc: size_t,
+        lenc: usize,
         x: f64,
         res: *mut f64,
-        lenres: size_t,
+        lenres: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -31017,11 +29131,11 @@ extern "C" {
         dd: *mut f64,
         x: *const f64,
         y: *const f64,
-        size: size_t,
+        size: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_poly_dd_eval(dd: *const f64, xa: *const f64, size: size_t, x: f64) -> f64;
+    pub fn gsl_poly_dd_eval(dd: *const f64, xa: *const f64, size: usize, x: f64) -> f64;
 }
 extern "C" {
     pub fn gsl_poly_dd_taylor(
@@ -31029,7 +29143,7 @@ extern "C" {
         xp: f64,
         dd: *const f64,
         x: *const f64,
-        size: size_t,
+        size: usize,
         w: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
@@ -31040,7 +29154,7 @@ extern "C" {
         xa: *const f64,
         ya: *const f64,
         dya: *const f64,
-        size: size_t,
+        size: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -31083,12 +29197,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_poly_complex_workspace {
-    pub nc: size_t,
-    pub matrix: *mut f64,
-}
+pub struct gsl_poly_complex_workspace;
 extern "C" {
-    pub fn gsl_poly_complex_workspace_alloc(n: size_t) -> *mut gsl_poly_complex_workspace;
+    pub fn gsl_poly_complex_workspace_alloc(n: usize) -> *mut gsl_poly_complex_workspace;
 }
 extern "C" {
     pub fn gsl_poly_complex_workspace_free(w: *mut gsl_poly_complex_workspace);
@@ -31096,7 +29207,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_poly_complex_solve(
         a: *const f64,
-        n: size_t,
+        n: usize,
         w: *mut gsl_poly_complex_workspace,
         z: gsl_complex_packed_ptr,
     ) -> ::std::os::raw::c_int;
@@ -31935,13 +30046,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_symm_workspace {
-    pub size: size_t,
-    pub d: *mut f64,
-    pub sd: *mut f64,
-}
+pub struct gsl_eigen_symm_workspace;
 extern "C" {
-    pub fn gsl_eigen_symm_alloc(n: size_t) -> *mut gsl_eigen_symm_workspace;
+    pub fn gsl_eigen_symm_alloc(n: usize) -> *mut gsl_eigen_symm_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_symm_free(w: *mut gsl_eigen_symm_workspace);
@@ -31955,15 +30062,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_symmv_workspace {
-    pub size: size_t,
-    pub d: *mut f64,
-    pub sd: *mut f64,
-    pub gc: *mut f64,
-    pub gs: *mut f64,
-}
+pub struct gsl_eigen_symmv_workspace;
 extern "C" {
-    pub fn gsl_eigen_symmv_alloc(n: size_t) -> *mut gsl_eigen_symmv_workspace;
+    pub fn gsl_eigen_symmv_alloc(n: usize) -> *mut gsl_eigen_symmv_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_symmv_free(w: *mut gsl_eigen_symmv_workspace);
@@ -31978,14 +30079,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_herm_workspace {
-    pub size: size_t,
-    pub d: *mut f64,
-    pub sd: *mut f64,
-    pub tau: *mut f64,
-}
+pub struct gsl_eigen_herm_workspace;
 extern "C" {
-    pub fn gsl_eigen_herm_alloc(n: size_t) -> *mut gsl_eigen_herm_workspace;
+    pub fn gsl_eigen_herm_alloc(n: usize) -> *mut gsl_eigen_herm_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_herm_free(w: *mut gsl_eigen_herm_workspace);
@@ -31999,16 +30095,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_hermv_workspace {
-    pub size: size_t,
-    pub d: *mut f64,
-    pub sd: *mut f64,
-    pub tau: *mut f64,
-    pub gc: *mut f64,
-    pub gs: *mut f64,
-}
+pub struct gsl_eigen_hermv_workspace;
 extern "C" {
-    pub fn gsl_eigen_hermv_alloc(n: size_t) -> *mut gsl_eigen_hermv_workspace;
+    pub fn gsl_eigen_hermv_alloc(n: usize) -> *mut gsl_eigen_hermv_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_hermv_free(w: *mut gsl_eigen_hermv_workspace);
@@ -32023,15 +30112,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_francis_workspace {
-    pub size: size_t,
-    pub max_iterations: size_t,
-    pub n_iter: size_t,
-    pub n_evals: size_t,
-    pub compute_t: ::std::os::raw::c_int,
-    pub H: *mut gsl_matrix,
-    pub Z: *mut gsl_matrix,
-}
+pub struct gsl_eigen_francis_workspace;
 extern "C" {
     pub fn gsl_eigen_francis_alloc() -> *mut gsl_eigen_francis_workspace;
 }
@@ -32061,17 +30142,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_nonsymm_workspace {
-    pub size: size_t,
-    pub diag: *mut gsl_vector,
-    pub tau: *mut gsl_vector,
-    pub Z: *mut gsl_matrix,
-    pub do_balance: ::std::os::raw::c_int,
-    pub n_evals: size_t,
-    pub francis_workspace_p: *mut gsl_eigen_francis_workspace,
-}
+pub struct gsl_eigen_nonsymm_workspace;
 extern "C" {
-    pub fn gsl_eigen_nonsymm_alloc(n: size_t) -> *mut gsl_eigen_nonsymm_workspace;
+    pub fn gsl_eigen_nonsymm_alloc(n: usize) -> *mut gsl_eigen_nonsymm_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_nonsymm_free(w: *mut gsl_eigen_nonsymm_workspace);
@@ -32100,16 +30173,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_nonsymmv_workspace {
-    pub size: size_t,
-    pub work: *mut gsl_vector,
-    pub work2: *mut gsl_vector,
-    pub work3: *mut gsl_vector,
-    pub Z: *mut gsl_matrix,
-    pub nonsymm_workspace_p: *mut gsl_eigen_nonsymm_workspace,
-}
+pub struct gsl_eigen_nonsymmv_workspace;
 extern "C" {
-    pub fn gsl_eigen_nonsymmv_alloc(n: size_t) -> *mut gsl_eigen_nonsymmv_workspace;
+    pub fn gsl_eigen_nonsymmv_alloc(n: usize) -> *mut gsl_eigen_nonsymmv_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_nonsymmv_free(w: *mut gsl_eigen_nonsymmv_workspace);
@@ -32139,12 +30205,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_gensymm_workspace {
-    pub size: size_t,
-    pub symm_workspace_p: *mut gsl_eigen_symm_workspace,
-}
+pub struct gsl_eigen_gensymm_workspace;
 extern "C" {
-    pub fn gsl_eigen_gensymm_alloc(n: size_t) -> *mut gsl_eigen_gensymm_workspace;
+    pub fn gsl_eigen_gensymm_alloc(n: usize) -> *mut gsl_eigen_gensymm_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_gensymm_free(w: *mut gsl_eigen_gensymm_workspace);
@@ -32165,12 +30228,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_gensymmv_workspace {
-    pub size: size_t,
-    pub symmv_workspace_p: *mut gsl_eigen_symmv_workspace,
-}
+pub struct gsl_eigen_gensymmv_workspace;
 extern "C" {
-    pub fn gsl_eigen_gensymmv_alloc(n: size_t) -> *mut gsl_eigen_gensymmv_workspace;
+    pub fn gsl_eigen_gensymmv_alloc(n: usize) -> *mut gsl_eigen_gensymmv_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_gensymmv_free(w: *mut gsl_eigen_gensymmv_workspace);
@@ -32186,12 +30246,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_genherm_workspace {
-    pub size: size_t,
-    pub herm_workspace_p: *mut gsl_eigen_herm_workspace,
-}
+pub struct gsl_eigen_genherm_workspace;
 extern "C" {
-    pub fn gsl_eigen_genherm_alloc(n: size_t) -> *mut gsl_eigen_genherm_workspace;
+    pub fn gsl_eigen_genherm_alloc(n: usize) -> *mut gsl_eigen_genherm_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_genherm_free(w: *mut gsl_eigen_genherm_workspace);
@@ -32212,12 +30269,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_genhermv_workspace {
-    pub size: size_t,
-    pub hermv_workspace_p: *mut gsl_eigen_hermv_workspace,
-}
+pub struct gsl_eigen_genhermv_workspace;
 extern "C" {
-    pub fn gsl_eigen_genhermv_alloc(n: size_t) -> *mut gsl_eigen_genhermv_workspace;
+    pub fn gsl_eigen_genhermv_alloc(n: usize) -> *mut gsl_eigen_genhermv_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_genhermv_free(w: *mut gsl_eigen_genhermv_workspace);
@@ -32233,27 +30287,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_gen_workspace {
-    pub size: size_t,
-    pub work: *mut gsl_vector,
-    pub n_evals: size_t,
-    pub max_iterations: size_t,
-    pub n_iter: size_t,
-    pub eshift: f64,
-    pub needtop: ::std::os::raw::c_int,
-    pub atol: f64,
-    pub btol: f64,
-    pub ascale: f64,
-    pub bscale: f64,
-    pub H: *mut gsl_matrix,
-    pub R: *mut gsl_matrix,
-    pub compute_s: ::std::os::raw::c_int,
-    pub compute_t: ::std::os::raw::c_int,
-    pub Q: *mut gsl_matrix,
-    pub Z: *mut gsl_matrix,
-}
+pub struct gsl_eigen_gen_workspace;
 extern "C" {
-    pub fn gsl_eigen_gen_alloc(n: size_t) -> *mut gsl_eigen_gen_workspace;
+    pub fn gsl_eigen_gen_alloc(n: usize) -> *mut gsl_eigen_gen_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_gen_free(w: *mut gsl_eigen_gen_workspace);
@@ -32288,20 +30324,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_eigen_genv_workspace {
-    pub size: size_t,
-    pub work1: *mut gsl_vector,
-    pub work2: *mut gsl_vector,
-    pub work3: *mut gsl_vector,
-    pub work4: *mut gsl_vector,
-    pub work5: *mut gsl_vector,
-    pub work6: *mut gsl_vector,
-    pub Q: *mut gsl_matrix,
-    pub Z: *mut gsl_matrix,
-    pub gen_workspace_p: *mut gsl_eigen_gen_workspace,
-}
+pub struct gsl_eigen_genv_workspace;
 extern "C" {
-    pub fn gsl_eigen_genv_alloc(n: size_t) -> *mut gsl_eigen_genv_workspace;
+    pub fn gsl_eigen_genv_alloc(n: usize) -> *mut gsl_eigen_genv_workspace;
 }
 extern "C" {
     pub fn gsl_eigen_genv_free(w: *mut gsl_eigen_genv_workspace);
@@ -32433,24 +30458,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sf_mathieu_workspace {
-    pub size: size_t,
-    pub even_order: size_t,
-    pub odd_order: size_t,
-    pub extra_values: ::std::os::raw::c_int,
-    pub qa: f64,
-    pub qb: f64,
-    pub aa: *mut f64,
-    pub bb: *mut f64,
-    pub dd: *mut f64,
-    pub ee: *mut f64,
-    pub tt: *mut f64,
-    pub e2: *mut f64,
-    pub zz: *mut f64,
-    pub eval: *mut gsl_vector,
-    pub evec: *mut gsl_matrix,
-    pub wmat: *mut gsl_eigen_symmv_workspace,
-}
+pub struct gsl_sf_mathieu_workspace;
 extern "C" {
     pub fn gsl_sf_mathieu_a_array(
         order_min: ::std::os::raw::c_int,
@@ -32506,7 +30514,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_sf_mathieu_alloc(nn: size_t, qq: f64) -> *mut gsl_sf_mathieu_workspace;
+    pub fn gsl_sf_mathieu_alloc(nn: usize, qq: f64) -> *mut gsl_sf_mathieu_workspace;
 }
 extern "C" {
     pub fn gsl_sf_mathieu_free(workspace: *mut gsl_sf_mathieu_workspace);
@@ -32762,50 +30770,41 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_long_double(
-        p: *const size_t,
+        p: *const usize,
         data: *mut u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_long_double_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut u128,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_real_float_radix2_transform(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_real_wavetable_float {
-    pub n: size_t,
-    pub nf: size_t,
-    pub factor: [size_t; 64usize],
-    pub twiddle: [*mut gsl_complex_float; 64usize],
-    pub trig: *mut gsl_complex_float,
-}
+pub struct gsl_fft_real_wavetable_float;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_fft_real_workspace_float {
-    pub n: size_t,
-    pub scratch: *mut f32,
-}
+pub struct gsl_fft_real_workspace_float;
 extern "C" {
-    pub fn gsl_fft_real_wavetable_float_alloc(n: size_t) -> *mut gsl_fft_real_wavetable_float;
+    pub fn gsl_fft_real_wavetable_float_alloc(n: usize) -> *mut gsl_fft_real_wavetable_float;
 }
 extern "C" {
     pub fn gsl_fft_real_wavetable_float_free(wavetable: *mut gsl_fft_real_wavetable_float);
 }
 extern "C" {
-    pub fn gsl_fft_real_workspace_float_alloc(n: size_t) -> *mut gsl_fft_real_workspace_float;
+    pub fn gsl_fft_real_workspace_float_alloc(n: usize) -> *mut gsl_fft_real_workspace_float;
 }
 extern "C" {
     pub fn gsl_fft_real_workspace_float_free(workspace: *mut gsl_fft_real_workspace_float);
@@ -32813,8 +30812,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_real_float_transform(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_real_wavetable_float,
         work: *mut gsl_fft_real_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -32823,43 +30822,37 @@ extern "C" {
     pub fn gsl_fft_real_float_unpack(
         real_float_coefficient: *const f32,
         complex_coefficient: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_radix2_backward(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_radix2_inverse(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_radix2_transform(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_halfcomplex_wavetable_float {
-    pub n: size_t,
-    pub nf: size_t,
-    pub factor: [size_t; 64usize],
-    pub twiddle: [*mut gsl_complex_float; 64usize],
-    pub trig: *mut gsl_complex_float,
-}
+pub struct gsl_fft_halfcomplex_wavetable_float;
 extern "C" {
     pub fn gsl_fft_halfcomplex_wavetable_float_alloc(
-        n: size_t,
+        n: usize,
     ) -> *mut gsl_fft_halfcomplex_wavetable_float;
 }
 extern "C" {
@@ -32870,8 +30863,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_backward(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_halfcomplex_wavetable_float,
         work: *mut gsl_fft_real_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -32879,8 +30872,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_inverse(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_halfcomplex_wavetable_float,
         work: *mut gsl_fft_real_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -32888,8 +30881,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_transform(
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_halfcomplex_wavetable_float,
         work: *mut gsl_fft_real_workspace_float,
     ) -> ::std::os::raw::c_int;
@@ -32898,16 +30891,16 @@ extern "C" {
     pub fn gsl_fft_halfcomplex_float_unpack(
         halfcomplex_coefficient: *const f32,
         complex_coefficient: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_float_radix2_unpack(
         halfcomplex_coefficient: *const f32,
         complex_coefficient: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -32968,53 +30961,32 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_workspace {
-    pub limit: size_t,
-    pub size: size_t,
-    pub nrmax: size_t,
-    pub i: size_t,
-    pub maximum_level: size_t,
-    pub alist: *mut f64,
-    pub blist: *mut f64,
-    pub rlist: *mut f64,
-    pub elist: *mut f64,
-    pub order: *mut size_t,
-    pub level: *mut size_t,
-}
+pub struct gsl_integration_workspace;
 extern "C" {
-    pub fn gsl_integration_workspace_alloc(n: size_t) -> *mut gsl_integration_workspace;
+    pub fn gsl_integration_workspace_alloc(n: usize) -> *mut gsl_integration_workspace;
 }
 extern "C" {
     pub fn gsl_integration_workspace_free(w: *mut gsl_integration_workspace);
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_qaws_table {
-    pub alpha: f64,
-    pub beta: f64,
-    pub mu: ::std::os::raw::c_int,
-    pub nu: ::std::os::raw::c_int,
-    pub ri: [f64; 25usize],
-    pub rj: [f64; 25usize],
-    pub rg: [f64; 25usize],
-    pub rh: [f64; 25usize],
-}
+pub struct gsl_integration_qaws_table;
 extern "C" {
     pub fn gsl_integration_qaws_table_alloc(
         alpha: f64,
@@ -33040,20 +31012,13 @@ pub const gsl_integration_qawo_enum_GSL_INTEG_SINE: gsl_integration_qawo_enum = 
 pub type gsl_integration_qawo_enum = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_qawo_table {
-    pub n: size_t,
-    pub omega: f64,
-    pub L: f64,
-    pub par: f64,
-    pub sine: gsl_integration_qawo_enum,
-    pub chebmo: *mut f64,
-}
+pub struct gsl_integration_qawo_table;
 extern "C" {
     pub fn gsl_integration_qawo_table_alloc(
         omega: f64,
         L: f64,
         sine: gsl_integration_qawo_enum,
-        n: size_t,
+        n: usize,
     ) -> *mut gsl_integration_qawo_table;
 }
 extern "C" {
@@ -33192,7 +31157,7 @@ extern "C" {
         epsrel: f64,
         result: *mut f64,
         abserr: *mut f64,
-        neval: *mut size_t,
+        neval: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -33202,7 +31167,7 @@ extern "C" {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         key: ::std::os::raw::c_int,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
@@ -33214,7 +31179,7 @@ extern "C" {
         f: *mut gsl_function,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33226,7 +31191,7 @@ extern "C" {
         a: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33238,7 +31203,7 @@ extern "C" {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33251,7 +31216,7 @@ extern "C" {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33261,10 +31226,10 @@ extern "C" {
     pub fn gsl_integration_qagp(
         f: *const gsl_function,
         pts: *mut f64,
-        npts: size_t,
+        npts: usize,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33278,7 +31243,7 @@ extern "C" {
         c: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33292,7 +31257,7 @@ extern "C" {
         t: *mut gsl_integration_qaws_table,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         result: *mut f64,
         abserr: *mut f64,
@@ -33304,7 +31269,7 @@ extern "C" {
         a: f64,
         epsabs: f64,
         epsrel: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         wf: *mut gsl_integration_qawo_table,
         result: *mut f64,
@@ -33316,7 +31281,7 @@ extern "C" {
         f: *mut gsl_function,
         a: f64,
         epsabs: f64,
-        limit: size_t,
+        limit: usize,
         workspace: *mut gsl_integration_workspace,
         cycle_workspace: *mut gsl_integration_workspace,
         wf: *mut gsl_integration_qawo_table,
@@ -33326,14 +31291,9 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_glfixed_table {
-    pub n: size_t,
-    pub x: *mut f64,
-    pub w: *mut f64,
-    pub precomputed: ::std::os::raw::c_int,
-}
+pub struct gsl_integration_glfixed_table;
 extern "C" {
-    pub fn gsl_integration_glfixed_table_alloc(n: size_t) -> *mut gsl_integration_glfixed_table;
+    pub fn gsl_integration_glfixed_table_alloc(n: usize) -> *mut gsl_integration_glfixed_table;
 }
 extern "C" {
     pub fn gsl_integration_glfixed_table_free(t: *mut gsl_integration_glfixed_table);
@@ -33350,7 +31310,7 @@ extern "C" {
     pub fn gsl_integration_glfixed_point(
         a: f64,
         b: f64,
-        i: size_t,
+        i: usize,
         xi: *mut f64,
         wi: *mut f64,
         t: *const gsl_integration_glfixed_table,
@@ -33358,27 +31318,12 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_integration_cquad_ival {
-    pub a: f64,
-    pub b: f64,
-    pub c: [f64; 64usize],
-    pub fx: [f64; 33usize],
-    pub igral: f64,
-    pub err: f64,
-    pub depth: ::std::os::raw::c_int,
-    pub rdepth: ::std::os::raw::c_int,
-    pub ndiv: ::std::os::raw::c_int,
-}
+pub struct gsl_integration_cquad_ival;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_cquad_workspace {
-    pub size: size_t,
-    pub ivals: *mut gsl_integration_cquad_ival,
-    pub heap: *mut size_t,
-}
+pub struct gsl_integration_cquad_workspace;
 extern "C" {
-    pub fn gsl_integration_cquad_workspace_alloc(n: size_t)
-        -> *mut gsl_integration_cquad_workspace;
+    pub fn gsl_integration_cquad_workspace_alloc(n: usize) -> *mut gsl_integration_cquad_workspace;
 }
 extern "C" {
     pub fn gsl_integration_cquad_workspace_free(w: *mut gsl_integration_cquad_workspace);
@@ -33393,26 +31338,23 @@ extern "C" {
         ws: *mut gsl_integration_cquad_workspace,
         result: *mut f64,
         abserr: *mut f64,
-        nevals: *mut size_t,
+        nevals: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_5")]
-pub struct gsl_integration_romberg_workspace {
-    pub n: size_t,
-    pub work1: *mut f64,
-    pub work2: *mut f64,
-}
+pub struct gsl_integration_romberg_workspace;
 extern "C" {
     #[cfg(feature = "v2_5")]
-    pub fn gsl_integration_romberg_alloc(n: size_t) -> *mut gsl_integration_romberg_workspace;
+    pub fn gsl_integration_romberg_alloc(n: usize) -> *mut gsl_integration_romberg_workspace;
 }
 extern "C" {
     #[cfg(feature = "v2_5")]
     pub fn gsl_integration_romberg_free(w: *mut gsl_integration_romberg_workspace);
 }
 extern "C" {
+    #[cfg(feature = "v2_5")]
     pub fn gsl_integration_romberg(
         f: *const gsl_function,
         a: f64,
@@ -33420,51 +31362,19 @@ extern "C" {
         epsabs: f64,
         epsrel: f64,
         result: *mut f64,
-        neval: *mut size_t,
+        neval: *mut usize,
         w: *mut gsl_integration_romberg_workspace,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_fixed_params {
-    pub alpha: f64,
-    pub beta: f64,
-    pub a: f64,
-    pub b: f64,
-    pub zemu: f64,
-    pub shft: f64,
-    pub slp: f64,
-    pub al: f64,
-    pub be: f64,
-}
+pub struct gsl_integration_fixed_params;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_fixed_type {
-    pub check: ::std::option::Option<
-        unsafe extern "C" fn(
-            n: size_t,
-            params: *const gsl_integration_fixed_params,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            n: size_t,
-            diag: *mut f64,
-            subdiag: *mut f64,
-            params: *mut gsl_integration_fixed_params,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_integration_fixed_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_integration_fixed_workspace {
-    pub n: size_t,
-    pub weights: *mut f64,
-    pub x: *mut f64,
-    pub diag: *mut f64,
-    pub subdiag: *mut f64,
-    pub type_: *const gsl_integration_fixed_type,
-}
+pub struct gsl_integration_fixed_workspace;
 extern "C" {
     pub static mut gsl_integration_fixed_legendre: *const gsl_integration_fixed_type;
 }
@@ -33495,7 +31405,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_integration_fixed_alloc(
         type_: *const gsl_integration_fixed_type,
-        n: size_t,
+        n: usize,
         a: f64,
         b: f64,
         alpha: f64,
@@ -33506,7 +31416,7 @@ extern "C" {
     pub fn gsl_integration_fixed_free(w: *mut gsl_integration_fixed_workspace);
 }
 extern "C" {
-    pub fn gsl_integration_fixed_n(w: *const gsl_integration_fixed_workspace) -> size_t;
+    pub fn gsl_integration_fixed_n(w: *const gsl_integration_fixed_workspace) -> usize;
 }
 extern "C" {
     pub fn gsl_integration_fixed_nodes(w: *const gsl_integration_fixed_workspace) -> *mut f64;
@@ -33536,51 +31446,41 @@ extern "C" {
 extern "C" {
     pub fn gsl_dft_complex_float_forward(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f32,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_float_backward(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f32,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_float_inverse(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f32,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_float_transform(
         data: *const f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f32,
         sign: gsl_fft_direction,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sum_levin_u_workspace {
-    pub size: size_t,
-    pub i: size_t,
-    pub terms_used: size_t,
-    pub sum_plain: f64,
-    pub q_num: *mut f64,
-    pub q_den: *mut f64,
-    pub dq_num: *mut f64,
-    pub dq_den: *mut f64,
-    pub dsum: *mut f64,
-}
+pub struct gsl_sum_levin_u_workspace;
 extern "C" {
-    pub fn gsl_sum_levin_u_alloc(n: size_t) -> *mut gsl_sum_levin_u_workspace;
+    pub fn gsl_sum_levin_u_alloc(n: usize) -> *mut gsl_sum_levin_u_workspace;
 }
 extern "C" {
     pub fn gsl_sum_levin_u_free(w: *mut gsl_sum_levin_u_workspace);
@@ -33588,7 +31488,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sum_levin_u_accel(
         array: *const f64,
-        n: size_t,
+        n: usize,
         w: *mut gsl_sum_levin_u_workspace,
         sum_accel: *mut f64,
         abserr: *mut f64,
@@ -33597,9 +31497,9 @@ extern "C" {
 extern "C" {
     pub fn gsl_sum_levin_u_minmax(
         array: *const f64,
-        n: size_t,
-        min_terms: size_t,
-        max_terms: size_t,
+        n: usize,
+        min_terms: usize,
+        max_terms: usize,
         w: *mut gsl_sum_levin_u_workspace,
         sum_accel: *mut f64,
         abserr: *mut f64,
@@ -33608,25 +31508,17 @@ extern "C" {
 extern "C" {
     pub fn gsl_sum_levin_u_step(
         term: f64,
-        n: size_t,
-        nmax: size_t,
+        n: usize,
+        nmax: usize,
         w: *mut gsl_sum_levin_u_workspace,
         sum_accel: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_sum_levin_utrunc_workspace {
-    pub size: size_t,
-    pub i: size_t,
-    pub terms_used: size_t,
-    pub sum_plain: f64,
-    pub q_num: *mut f64,
-    pub q_den: *mut f64,
-    pub dsum: *mut f64,
-}
+pub struct gsl_sum_levin_utrunc_workspace;
 extern "C" {
-    pub fn gsl_sum_levin_utrunc_alloc(n: size_t) -> *mut gsl_sum_levin_utrunc_workspace;
+    pub fn gsl_sum_levin_utrunc_alloc(n: usize) -> *mut gsl_sum_levin_utrunc_workspace;
 }
 extern "C" {
     pub fn gsl_sum_levin_utrunc_free(w: *mut gsl_sum_levin_utrunc_workspace);
@@ -33634,7 +31526,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sum_levin_utrunc_accel(
         array: *const f64,
-        n: size_t,
+        n: usize,
         w: *mut gsl_sum_levin_utrunc_workspace,
         sum_accel: *mut f64,
         abserr_trunc: *mut f64,
@@ -33643,9 +31535,9 @@ extern "C" {
 extern "C" {
     pub fn gsl_sum_levin_utrunc_minmax(
         array: *const f64,
-        n: size_t,
-        min_terms: size_t,
-        max_terms: size_t,
+        n: usize,
+        min_terms: usize,
+        max_terms: usize,
         w: *mut gsl_sum_levin_utrunc_workspace,
         sum_accel: *mut f64,
         abserr_trunc: *mut f64,
@@ -33654,7 +31546,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_sum_levin_utrunc_step(
         term: f64,
-        n: size_t,
+        n: usize,
         w: *mut gsl_sum_levin_utrunc_workspace,
         sum_accel: *mut f64,
     ) -> ::std::os::raw::c_int;
@@ -33662,84 +31554,75 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_radix2_forward(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_backward(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_inverse(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_transform(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         sign: gsl_fft_direction,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_dif_forward(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_dif_backward(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_dif_inverse(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_complex_radix2_dif_transform(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         sign: gsl_fft_direction,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_complex_wavetable {
-    pub n: size_t,
-    pub nf: size_t,
-    pub factor: [size_t; 64usize],
-    pub twiddle: [*mut gsl_complex; 64usize],
-    pub trig: *mut gsl_complex,
-}
+pub struct gsl_fft_complex_wavetable;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_fft_complex_workspace {
-    pub n: size_t,
-    pub scratch: *mut f64,
-}
+pub struct gsl_fft_complex_workspace;
 extern "C" {
-    pub fn gsl_fft_complex_wavetable_alloc(n: size_t) -> *mut gsl_fft_complex_wavetable;
+    pub fn gsl_fft_complex_wavetable_alloc(n: usize) -> *mut gsl_fft_complex_wavetable;
 }
 extern "C" {
     pub fn gsl_fft_complex_wavetable_free(wavetable: *mut gsl_fft_complex_wavetable);
 }
 extern "C" {
-    pub fn gsl_fft_complex_workspace_alloc(n: size_t) -> *mut gsl_fft_complex_workspace;
+    pub fn gsl_fft_complex_workspace_alloc(n: usize) -> *mut gsl_fft_complex_workspace;
 }
 extern "C" {
     pub fn gsl_fft_complex_workspace_free(workspace: *mut gsl_fft_complex_workspace);
@@ -33753,8 +31636,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_forward(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable,
         work: *mut gsl_fft_complex_workspace,
     ) -> ::std::os::raw::c_int;
@@ -33762,8 +31645,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_backward(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable,
         work: *mut gsl_fft_complex_workspace,
     ) -> ::std::os::raw::c_int;
@@ -33771,8 +31654,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_inverse(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable,
         work: *mut gsl_fft_complex_workspace,
     ) -> ::std::os::raw::c_int;
@@ -33780,8 +31663,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_complex_transform(
         data: gsl_complex_packed_array,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_complex_wavetable,
         work: *mut gsl_fft_complex_workspace,
         sign: gsl_fft_direction,
@@ -33861,47 +31744,10 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_min_fminimizer_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_function,
-            x_minimum: f64,
-            f_minimum: f64,
-            x_lower: f64,
-            f_lower: f64,
-            x_upper: f64,
-            f_upper: f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_function,
-            x_minimum: *mut f64,
-            f_minimum: *mut f64,
-            x_lower: *mut f64,
-            f_lower: *mut f64,
-            x_upper: *mut f64,
-            f_upper: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_min_fminimizer_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_min_fminimizer {
-    pub type_: *const gsl_min_fminimizer_type,
-    pub function: *mut gsl_function,
-    pub x_minimum: f64,
-    pub x_lower: f64,
-    pub x_upper: f64,
-    pub f_minimum: f64,
-    pub f_lower: f64,
-    pub f_upper: f64,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_min_fminimizer;
 extern "C" {
     pub fn gsl_min_fminimizer_alloc(T: *const gsl_min_fminimizer_type) -> *mut gsl_min_fminimizer;
 }
@@ -33982,7 +31828,7 @@ pub type gsl_min_bracketing_function = ::std::option::Option<
         f_lower: *mut f64,
         x_upper: *mut f64,
         f_upper: *mut f64,
-        eval_max: size_t,
+        eval_max: usize,
     ) -> ::std::os::raw::c_int,
 >;
 extern "C" {
@@ -33994,37 +31840,25 @@ extern "C" {
         f_lower: *mut f64,
         x_upper: *mut f64,
         f_upper: *mut f64,
-        eval_max: size_t,
+        eval_max: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_histogram2d {
-    pub nx: size_t,
-    pub ny: size_t,
-    pub xrange: *mut f64,
-    pub yrange: *mut f64,
-    pub bin: *mut f64,
-}
+pub struct gsl_histogram2d;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_histogram2d_pdf {
-    pub nx: size_t,
-    pub ny: size_t,
-    pub xrange: *mut f64,
-    pub yrange: *mut f64,
-    pub sum: *mut f64,
+pub struct gsl_histogram2d_pdf;
+extern "C" {
+    pub fn gsl_histogram2d_alloc(nx: usize, ny: usize) -> *mut gsl_histogram2d;
 }
 extern "C" {
-    pub fn gsl_histogram2d_alloc(nx: size_t, ny: size_t) -> *mut gsl_histogram2d;
-}
-extern "C" {
-    pub fn gsl_histogram2d_calloc(nx: size_t, ny: size_t) -> *mut gsl_histogram2d;
+    pub fn gsl_histogram2d_calloc(nx: usize, ny: usize) -> *mut gsl_histogram2d;
 }
 extern "C" {
     pub fn gsl_histogram2d_calloc_uniform(
-        nx: size_t,
-        ny: size_t,
+        nx: usize,
+        ny: usize,
         xmin: f64,
         xmax: f64,
         ymin: f64,
@@ -34054,17 +31888,17 @@ extern "C" {
         h: *const gsl_histogram2d,
         x: f64,
         y: f64,
-        i: *mut size_t,
-        j: *mut size_t,
+        i: *mut usize,
+        j: *mut usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_histogram2d_get(h: *const gsl_histogram2d, i: size_t, j: size_t) -> f64;
+    pub fn gsl_histogram2d_get(h: *const gsl_histogram2d, i: usize, j: usize) -> f64;
 }
 extern "C" {
     pub fn gsl_histogram2d_get_xrange(
         h: *const gsl_histogram2d,
-        i: size_t,
+        i: usize,
         xlower: *mut f64,
         xupper: *mut f64,
     ) -> ::std::os::raw::c_int;
@@ -34072,7 +31906,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_histogram2d_get_yrange(
         h: *const gsl_histogram2d,
-        j: size_t,
+        j: usize,
         ylower: *mut f64,
         yupper: *mut f64,
     ) -> ::std::os::raw::c_int;
@@ -34084,7 +31918,7 @@ extern "C" {
     pub fn gsl_histogram2d_xmin(h: *const gsl_histogram2d) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram2d_nx(h: *const gsl_histogram2d) -> size_t;
+    pub fn gsl_histogram2d_nx(h: *const gsl_histogram2d) -> usize;
 }
 extern "C" {
     pub fn gsl_histogram2d_ymax(h: *const gsl_histogram2d) -> f64;
@@ -34093,15 +31927,15 @@ extern "C" {
     pub fn gsl_histogram2d_ymin(h: *const gsl_histogram2d) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram2d_ny(h: *const gsl_histogram2d) -> size_t;
+    pub fn gsl_histogram2d_ny(h: *const gsl_histogram2d) -> usize;
 }
 extern "C" {
     pub fn gsl_histogram2d_reset(h: *mut gsl_histogram2d);
 }
 extern "C" {
     pub fn gsl_histogram2d_calloc_range(
-        nx: size_t,
-        ny: size_t,
+        nx: usize,
+        ny: usize,
         xrange: *mut f64,
         yrange: *mut f64,
     ) -> *mut gsl_histogram2d;
@@ -34119,9 +31953,9 @@ extern "C" {
     pub fn gsl_histogram2d_set_ranges(
         h: *mut gsl_histogram2d,
         xrange: *const f64,
-        xsize: size_t,
+        xsize: usize,
         yrange: *const f64,
-        ysize: size_t,
+        ysize: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -34137,13 +31971,13 @@ extern "C" {
     pub fn gsl_histogram2d_max_val(h: *const gsl_histogram2d) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram2d_max_bin(h: *const gsl_histogram2d, i: *mut size_t, j: *mut size_t);
+    pub fn gsl_histogram2d_max_bin(h: *const gsl_histogram2d, i: *mut usize, j: *mut usize);
 }
 extern "C" {
     pub fn gsl_histogram2d_min_val(h: *const gsl_histogram2d) -> f64;
 }
 extern "C" {
-    pub fn gsl_histogram2d_min_bin(h: *const gsl_histogram2d, i: *mut size_t, j: *mut size_t);
+    pub fn gsl_histogram2d_min_bin(h: *const gsl_histogram2d, i: *mut usize, j: *mut usize);
 }
 extern "C" {
     pub fn gsl_histogram2d_xmean(h: *const gsl_histogram2d) -> f64;
@@ -34226,7 +32060,7 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_histogram2d_pdf_alloc(nx: size_t, ny: size_t) -> *mut gsl_histogram2d_pdf;
+    pub fn gsl_histogram2d_pdf_alloc(nx: usize, ny: usize) -> *mut gsl_histogram2d_pdf;
 }
 extern "C" {
     pub fn gsl_histogram2d_pdf_init(
@@ -34311,13 +32145,13 @@ extern "C" {
     pub fn gsl_ran_chisq_pdf(x: f64, nu: f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_ran_dirichlet(r: *const gsl_rng, K: size_t, alpha: *const f64, theta: *mut f64);
+    pub fn gsl_ran_dirichlet(r: *const gsl_rng, K: usize, alpha: *const f64, theta: *mut f64);
 }
 extern "C" {
-    pub fn gsl_ran_dirichlet_pdf(K: size_t, alpha: *const f64, theta: *const f64) -> f64;
+    pub fn gsl_ran_dirichlet_pdf(K: usize, alpha: *const f64, theta: *const f64) -> f64;
 }
 extern "C" {
-    pub fn gsl_ran_dirichlet_lnpdf(K: size_t, alpha: *const f64, theta: *const f64) -> f64;
+    pub fn gsl_ran_dirichlet_lnpdf(K: usize, alpha: *const f64, theta: *const f64) -> f64;
 }
 extern "C" {
     pub fn gsl_ran_erlang(r: *const gsl_rng, a: f64, n: f64) -> f64;
@@ -34540,7 +32374,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_ran_multinomial(
         r: *const gsl_rng,
-        K: size_t,
+        K: usize,
         N: ::std::os::raw::c_uint,
         p: *const f64,
         n: *mut ::std::os::raw::c_uint,
@@ -34548,14 +32382,14 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_ran_multinomial_pdf(
-        K: size_t,
+        K: usize,
         p: *const f64,
         n: *const ::std::os::raw::c_uint,
     ) -> f64;
 }
 extern "C" {
     pub fn gsl_ran_multinomial_lnpdf(
-        K: size_t,
+        K: usize,
         p: *const f64,
         n: *const ::std::os::raw::c_uint,
     ) -> f64;
@@ -34588,7 +32422,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_ran_poisson_array(
         r: *const gsl_rng,
-        n: size_t,
+        n: usize,
         array: *mut ::std::os::raw::c_uint,
         mu: f64,
     );
@@ -34642,69 +32476,65 @@ extern "C" {
     pub fn gsl_ran_dir_3d(r: *const gsl_rng, x: *mut f64, y: *mut f64, z: *mut f64);
 }
 extern "C" {
-    pub fn gsl_ran_dir_nd(r: *const gsl_rng, n: size_t, x: *mut f64);
+    pub fn gsl_ran_dir_nd(r: *const gsl_rng, n: usize, x: *mut f64);
 }
 extern "C" {
     pub fn gsl_ran_shuffle(
         r: *const gsl_rng,
         base: *mut ::std::os::raw::c_void,
-        nmembm: size_t,
-        size: size_t,
+        nmembm: usize,
+        size: usize,
     );
 }
 extern "C" {
     pub fn gsl_ran_choose(
         r: *const gsl_rng,
         dest: *mut ::std::os::raw::c_void,
-        k: size_t,
+        k: usize,
         src: *mut ::std::os::raw::c_void,
-        n: size_t,
-        size: size_t,
+        n: usize,
+        size: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_ran_sample(
         r: *const gsl_rng,
         dest: *mut ::std::os::raw::c_void,
-        k: size_t,
+        k: usize,
         src: *mut ::std::os::raw::c_void,
-        n: size_t,
-        size: size_t,
+        n: usize,
+        size: usize,
     );
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ran_discrete_t {
-    pub K: size_t,
-    pub A: *mut size_t,
-    pub F: *mut f64,
-}
+pub struct gsl_ran_discrete_t;
 extern "C" {
-    pub fn gsl_ran_discrete_preproc(K: size_t, P: *const f64) -> *mut gsl_ran_discrete_t;
+    pub fn gsl_ran_discrete_preproc(K: usize, P: *const f64) -> *mut gsl_ran_discrete_t;
 }
 extern "C" {
     pub fn gsl_ran_discrete_free(g: *mut gsl_ran_discrete_t);
 }
 extern "C" {
-    pub fn gsl_ran_discrete(r: *const gsl_rng, g: *const gsl_ran_discrete_t) -> size_t;
+    pub fn gsl_ran_discrete(r: *const gsl_rng, g: *const gsl_ran_discrete_t) -> usize;
 }
 extern "C" {
-    pub fn gsl_ran_discrete_pdf(k: size_t, g: *const gsl_ran_discrete_t) -> f64;
+    pub fn gsl_ran_discrete_pdf(k: usize, g: *const gsl_ran_discrete_t) -> f64;
 }
 extern "C" {
     pub fn gsl_permute_ulong(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_ulong_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_ulong,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -34729,38 +32559,11 @@ pub const GSL_MESSAGE_MASK_H: ::std::os::raw::c_uint = 128;
 pub type _bindgen_ty_6 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_function_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void) -> f64,
-    >,
-    pub n: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multimin_function_struct;
 pub type gsl_multimin_function = gsl_multimin_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_function_fdf_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void) -> f64,
-    >,
-    pub df: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            df: *mut gsl_vector,
-        ),
-    >,
-    pub fdf: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut f64,
-            df: *mut gsl_vector,
-        ),
-    >,
-    pub n: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multimin_function_fdf_struct;
 pub type gsl_multimin_function_fdf = gsl_multimin_function_fdf_struct;
 extern "C" {
     pub fn gsl_multimin_diff(
@@ -34771,49 +32574,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_fminimizer_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            n: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_multimin_function,
-            x: *const gsl_vector,
-            size: *mut f64,
-            step_size: *const gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_multimin_function,
-            x: *mut gsl_vector,
-            size: *mut f64,
-            fval: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multimin_fminimizer_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_fminimizer {
-    pub type_: *const gsl_multimin_fminimizer_type,
-    pub f: *mut gsl_multimin_function,
-    pub fval: f64,
-    pub x: *mut gsl_vector,
-    pub size: f64,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multimin_fminimizer;
 extern "C" {
     pub fn gsl_multimin_fminimizer_alloc(
         T: *const gsl_multimin_fminimizer_type,
-        n: size_t,
+        n: usize,
     ) -> *mut gsl_multimin_fminimizer;
 }
 extern "C" {
@@ -34854,56 +32622,14 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_fdfminimizer_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            n: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            fdf: *mut gsl_multimin_function_fdf,
-            x: *const gsl_vector,
-            f: *mut f64,
-            gradient: *mut gsl_vector,
-            step_size: f64,
-            tol: f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            fdf: *mut gsl_multimin_function_fdf,
-            x: *mut gsl_vector,
-            f: *mut f64,
-            gradient: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub restart: ::std::option::Option<
-        unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multimin_fdfminimizer_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_fdfminimizer {
-    pub type_: *const gsl_multimin_fdfminimizer_type,
-    pub fdf: *mut gsl_multimin_function_fdf,
-    pub f: f64,
-    pub x: *mut gsl_vector,
-    pub gradient: *mut gsl_vector,
-    pub dx: *mut gsl_vector,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multimin_fdfminimizer;
 extern "C" {
     pub fn gsl_multimin_fdfminimizer_alloc(
         T: *const gsl_multimin_fdfminimizer_type,
-        n: size_t,
+        n: usize,
     ) -> *mut gsl_multimin_fdfminimizer;
 }
 extern "C" {
@@ -34980,256 +32706,42 @@ pub type gsl_multilarge_nlinear_fdtype = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_fdf {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub df: ::std::option::Option<
-        unsafe extern "C" fn(
-            TransJ: CBLAS_TRANSPOSE_t,
-            x: *const gsl_vector,
-            u: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            v: *mut gsl_vector,
-            JTJ: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub fvv: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            v: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            fvv: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub n: size_t,
-    pub p: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-    pub nevalf: size_t,
-    pub nevaldfu: size_t,
-    pub nevaldf2: size_t,
-    pub nevalfvv: size_t,
-}
+pub struct gsl_multilarge_nlinear_fdf;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_trs {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            params: *const ::std::os::raw::c_void,
-            n: size_t,
-            p: size_t,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub preloop: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub step: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            delta: f64,
-            dx: *mut gsl_vector,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub preduction: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            dx: *const gsl_vector,
-            pred: *mut f64,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(vstate: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multilarge_nlinear_trs;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_scale {
-    pub name: *const ::std::os::raw::c_char,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            JTJ: *const gsl_matrix,
-            diag: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub update: ::std::option::Option<
-        unsafe extern "C" fn(
-            JTJ: *const gsl_matrix,
-            diag: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_multilarge_nlinear_scale;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_solver {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(n: size_t, p: size_t) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub presolve: ::std::option::Option<
-        unsafe extern "C" fn(
-            mu: f64,
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub solve: ::std::option::Option<
-        unsafe extern "C" fn(
-            g: *const gsl_vector,
-            x: *mut gsl_vector,
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub rcond: ::std::option::Option<
-        unsafe extern "C" fn(
-            rcond: *mut f64,
-            JTJ: *const gsl_matrix,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub covar: ::std::option::Option<
-        unsafe extern "C" fn(
-            JTJ: *const gsl_matrix,
-            covar: *mut gsl_matrix,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(vstate: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multilarge_nlinear_solver;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_parameters {
-    pub trs: *const gsl_multilarge_nlinear_trs,
-    pub scale: *const gsl_multilarge_nlinear_scale,
-    pub solver: *const gsl_multilarge_nlinear_solver,
-    pub fdtype: gsl_multilarge_nlinear_fdtype,
-    pub factor_up: f64,
-    pub factor_down: f64,
-    pub avmax: f64,
-    pub h_df: f64,
-    pub h_fvv: f64,
-    pub max_iter: size_t,
-    pub tol: f64,
-}
+pub struct gsl_multilarge_nlinear_parameters;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            params: *const gsl_multilarge_nlinear_parameters,
-            n: size_t,
-            p: size_t,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            wts: *const gsl_vector,
-            fdf: *mut gsl_multilarge_nlinear_fdf,
-            x: *const gsl_vector,
-            f: *mut gsl_vector,
-            g: *mut gsl_vector,
-            JTJ: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            wts: *const gsl_vector,
-            fdf: *mut gsl_multilarge_nlinear_fdf,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            g: *mut gsl_vector,
-            JTJ: *mut gsl_matrix,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub rcond: ::std::option::Option<
-        unsafe extern "C" fn(
-            rcond: *mut f64,
-            JTJ: *const gsl_matrix,
-            state: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub covar: ::std::option::Option<
-        unsafe extern "C" fn(
-            JTJ: *const gsl_matrix,
-            covar: *mut gsl_matrix,
-            state: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub avratio:
-        ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> f64>,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multilarge_nlinear_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_trust_state {
-    pub x: *const gsl_vector,
-    pub f: *const gsl_vector,
-    pub g: *const gsl_vector,
-    pub JTJ: *const gsl_matrix,
-    pub diag: *const gsl_vector,
-    pub sqrt_wts: *const gsl_vector,
-    pub mu: *const f64,
-    pub params: *const gsl_multilarge_nlinear_parameters,
-    pub solver_state: *mut ::std::os::raw::c_void,
-    pub fdf: *mut gsl_multilarge_nlinear_fdf,
-    pub avratio: *mut f64,
-}
+pub struct gsl_multilarge_nlinear_trust_state;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 #[cfg(feature = "v2_1")]
-pub struct gsl_multilarge_nlinear_workspace {
-    pub type_: *const gsl_multilarge_nlinear_type,
-    pub fdf: *mut gsl_multilarge_nlinear_fdf,
-    pub x: *mut gsl_vector,
-    pub f: *mut gsl_vector,
-    pub dx: *mut gsl_vector,
-    pub g: *mut gsl_vector,
-    pub JTJ: *mut gsl_matrix,
-    pub sqrt_wts_work: *mut gsl_vector,
-    pub sqrt_wts: *mut gsl_vector,
-    pub n: size_t,
-    pub p: size_t,
-    pub niter: size_t,
-    pub params: gsl_multilarge_nlinear_parameters,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multilarge_nlinear_workspace;
 extern "C" {
     #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_alloc(
         T: *const gsl_multilarge_nlinear_type,
         params: *const gsl_multilarge_nlinear_parameters,
-        n: size_t,
-        p: size_t,
+        n: usize,
+        p: usize,
     ) -> *mut gsl_multilarge_nlinear_workspace;
 }
 extern "C" {
@@ -35284,13 +32796,13 @@ extern "C" {
 extern "C" {
     #[cfg(feature = "v2_1")]
     pub fn gsl_multilarge_nlinear_driver(
-        maxiter: size_t,
+        maxiter: usize,
         xtol: f64,
         gtol: f64,
         ftol: f64,
         callback: ::std::option::Option<
             unsafe extern "C" fn(
-                iter: size_t,
+                iter: usize,
                 params: *mut ::std::os::raw::c_void,
                 w: *const gsl_multilarge_nlinear_workspace,
             ),
@@ -35326,7 +32838,7 @@ extern "C" {
 }
 extern "C" {
     #[cfg(feature = "v2_1")]
-    pub fn gsl_multilarge_nlinear_niter(w: *const gsl_multilarge_nlinear_workspace) -> size_t;
+    pub fn gsl_multilarge_nlinear_niter(w: *const gsl_multilarge_nlinear_workspace) -> usize;
 }
 extern "C" {
     #[cfg(feature = "v2_1")]
@@ -35410,54 +32922,60 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trust: *const gsl_multilarge_nlinear_type;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trs_lm: *const gsl_multilarge_nlinear_trs;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trs_lmaccel: *const gsl_multilarge_nlinear_trs;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trs_dogleg: *const gsl_multilarge_nlinear_trs;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trs_ddogleg: *const gsl_multilarge_nlinear_trs;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trs_subspace2D: *const gsl_multilarge_nlinear_trs;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_trs_cgst: *const gsl_multilarge_nlinear_trs;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_scale_levenberg: *const gsl_multilarge_nlinear_scale;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_scale_marquardt: *const gsl_multilarge_nlinear_scale;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_scale_more: *const gsl_multilarge_nlinear_scale;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_solver_cholesky: *const gsl_multilarge_nlinear_solver;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_solver_mcholesky: *const gsl_multilarge_nlinear_solver;
 }
 extern "C" {
+    #[cfg(feature = "v2_1")]
     pub static mut gsl_multilarge_nlinear_solver_none: *const gsl_multilarge_nlinear_solver;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_rstat_quantile_workspace {
-    pub p: f64,
-    pub q: [f64; 5usize],
-    pub npos: [::std::os::raw::c_int; 5usize],
-    pub np: [f64; 5usize],
-    pub dnp: [f64; 5usize],
-    pub n: size_t,
-}
+pub struct gsl_rstat_quantile_workspace;
 extern "C" {
     pub fn gsl_rstat_quantile_alloc(p: f64) -> *mut gsl_rstat_quantile_workspace;
 }
@@ -35479,16 +32997,7 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_rstat_workspace {
-    pub min: f64,
-    pub max: f64,
-    pub mean: f64,
-    pub M2: f64,
-    pub M3: f64,
-    pub M4: f64,
-    pub n: size_t,
-    pub median_workspace_p: *mut gsl_rstat_quantile_workspace,
-}
+pub struct gsl_rstat_workspace;
 extern "C" {
     pub fn gsl_rstat_alloc() -> *mut gsl_rstat_workspace;
 }
@@ -35496,7 +33005,7 @@ extern "C" {
     pub fn gsl_rstat_free(w: *mut gsl_rstat_workspace);
 }
 extern "C" {
-    pub fn gsl_rstat_n(w: *const gsl_rstat_workspace) -> size_t;
+    pub fn gsl_rstat_n(w: *const gsl_rstat_workspace) -> usize;
 }
 extern "C" {
     pub fn gsl_rstat_add(x: f64, w: *mut gsl_rstat_workspace) -> ::std::os::raw::c_int;
@@ -35537,66 +33046,16 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_root_fsolver_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_function,
-            root: *mut f64,
-            x_lower: f64,
-            x_upper: f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_function,
-            root: *mut f64,
-            x_lower: *mut f64,
-            x_upper: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_root_fsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_root_fsolver {
-    pub type_: *const gsl_root_fsolver_type,
-    pub function: *mut gsl_function,
-    pub root: f64,
-    pub x_lower: f64,
-    pub x_upper: f64,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_root_fsolver;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_root_fdfsolver_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_function_fdf,
-            root: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            f: *mut gsl_function_fdf,
-            root: *mut f64,
-        ) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_root_fdfsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_root_fdfsolver {
-    pub type_: *const gsl_root_fdfsolver_type,
-    pub fdf: *mut gsl_function_fdf,
-    pub root: f64,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_root_fdfsolver;
 extern "C" {
     pub fn gsl_root_fsolver_alloc(T: *const gsl_root_fsolver_type) -> *mut gsl_root_fsolver;
 }
@@ -35684,10 +33143,10 @@ extern "C" {
 extern "C" {
     pub fn gsl_fit_linear(
         x: *const f64,
-        xstride: size_t,
+        xstride: usize,
         y: *const f64,
-        ystride: size_t,
-        n: size_t,
+        ystride: usize,
+        n: usize,
         c0: *mut f64,
         c1: *mut f64,
         cov00: *mut f64,
@@ -35699,12 +33158,12 @@ extern "C" {
 extern "C" {
     pub fn gsl_fit_wlinear(
         x: *const f64,
-        xstride: size_t,
+        xstride: usize,
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         y: *const f64,
-        ystride: size_t,
-        n: size_t,
+        ystride: usize,
+        n: usize,
         c0: *mut f64,
         c1: *mut f64,
         cov00: *mut f64,
@@ -35728,10 +33187,10 @@ extern "C" {
 extern "C" {
     pub fn gsl_fit_mul(
         x: *const f64,
-        xstride: size_t,
+        xstride: usize,
         y: *const f64,
-        ystride: size_t,
-        n: size_t,
+        ystride: usize,
+        n: usize,
         c1: *mut f64,
         cov11: *mut f64,
         sumsq: *mut f64,
@@ -35740,12 +33199,12 @@ extern "C" {
 extern "C" {
     pub fn gsl_fit_wmul(
         x: *const f64,
-        xstride: size_t,
+        xstride: usize,
         w: *const f64,
-        wstride: size_t,
+        wstride: usize,
         y: *const f64,
-        ystride: size_t,
-        n: size_t,
+        ystride: usize,
+        n: usize,
         c1: *mut f64,
         cov11: *mut f64,
         sumsq: *mut f64,
@@ -35763,35 +33222,29 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_radix2_backward(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_radix2_inverse(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_radix2_transform(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_halfcomplex_wavetable {
-    pub n: size_t,
-    pub nf: size_t,
-    pub factor: [size_t; 64usize],
-    pub twiddle: [*mut gsl_complex; 64usize],
-    pub trig: *mut gsl_complex,
-}
+pub struct gsl_fft_halfcomplex_wavetable;
 extern "C" {
-    pub fn gsl_fft_halfcomplex_wavetable_alloc(n: size_t) -> *mut gsl_fft_halfcomplex_wavetable;
+    pub fn gsl_fft_halfcomplex_wavetable_alloc(n: usize) -> *mut gsl_fft_halfcomplex_wavetable;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_wavetable_free(wavetable: *mut gsl_fft_halfcomplex_wavetable);
@@ -35799,8 +33252,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_backward(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_halfcomplex_wavetable,
         work: *mut gsl_fft_real_workspace,
     ) -> ::std::os::raw::c_int;
@@ -35808,8 +33261,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_inverse(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_halfcomplex_wavetable,
         work: *mut gsl_fft_real_workspace,
     ) -> ::std::os::raw::c_int;
@@ -35817,8 +33270,8 @@ extern "C" {
 extern "C" {
     pub fn gsl_fft_halfcomplex_transform(
         data: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         wavetable: *const gsl_fft_halfcomplex_wavetable,
         work: *mut gsl_fft_real_workspace,
     ) -> ::std::os::raw::c_int;
@@ -35827,64 +33280,57 @@ extern "C" {
     pub fn gsl_fft_halfcomplex_unpack(
         halfcomplex_coefficient: *const f64,
         complex_coefficient: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_fft_halfcomplex_radix2_unpack(
         halfcomplex_coefficient: *const f64,
         complex_coefficient: *mut f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_forward(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_backward(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_inverse(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f64,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_dft_complex_transform(
         data: *const f64,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
         result: *mut f64,
         sign: gsl_fft_direction,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_cheb_series_struct {
-    pub c: *mut f64,
-    pub order: size_t,
-    pub a: f64,
-    pub b: f64,
-    pub order_sp: size_t,
-    pub f: *mut f64,
-}
+pub struct gsl_cheb_series_struct;
 pub type gsl_cheb_series = gsl_cheb_series_struct;
 extern "C" {
-    pub fn gsl_cheb_alloc(order: size_t) -> *mut gsl_cheb_series;
+    pub fn gsl_cheb_alloc(order: usize) -> *mut gsl_cheb_series;
 }
 extern "C" {
     pub fn gsl_cheb_free(cs: *mut gsl_cheb_series);
@@ -35898,10 +33344,10 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_cheb_order(cs: *const gsl_cheb_series) -> size_t;
+    pub fn gsl_cheb_order(cs: *const gsl_cheb_series) -> usize;
 }
 extern "C" {
-    pub fn gsl_cheb_size(cs: *const gsl_cheb_series) -> size_t;
+    pub fn gsl_cheb_size(cs: *const gsl_cheb_series) -> usize;
 }
 extern "C" {
     pub fn gsl_cheb_coeffs(cs: *const gsl_cheb_series) -> *mut f64;
@@ -35918,12 +33364,12 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_cheb_eval_n(cs: *const gsl_cheb_series, order: size_t, x: f64) -> f64;
+    pub fn gsl_cheb_eval_n(cs: *const gsl_cheb_series, order: usize, x: f64) -> f64;
 }
 extern "C" {
     pub fn gsl_cheb_eval_n_err(
         cs: *const gsl_cheb_series,
-        order: size_t,
+        order: usize,
         x: f64,
         result: *mut f64,
         abserr: *mut f64,
@@ -35955,49 +33401,45 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_permute_complex_float(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_complex_float_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut f32,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_uchar(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn gsl_permute_uchar_inverse(
-        p: *const size_t,
+        p: *const usize,
         data: *mut ::std::os::raw::c_uchar,
-        stride: size_t,
-        n: size_t,
+        stride: usize,
+        n: usize,
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_combination_struct {
-    pub n: size_t,
-    pub k: size_t,
-    pub data: *mut size_t,
-}
+pub struct gsl_combination_struct;
 pub type gsl_combination = gsl_combination_struct;
 extern "C" {
-    pub fn gsl_combination_alloc(n: size_t, k: size_t) -> *mut gsl_combination;
+    pub fn gsl_combination_alloc(n: usize, k: usize) -> *mut gsl_combination;
 }
 extern "C" {
-    pub fn gsl_combination_calloc(n: size_t, k: size_t) -> *mut gsl_combination;
+    pub fn gsl_combination_calloc(n: usize, k: usize) -> *mut gsl_combination;
 }
 extern "C" {
     pub fn gsl_combination_init_first(c: *mut gsl_combination);
@@ -36040,13 +33482,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_combination_n(c: *const gsl_combination) -> size_t;
+    pub fn gsl_combination_n(c: *const gsl_combination) -> usize;
 }
 extern "C" {
-    pub fn gsl_combination_k(c: *const gsl_combination) -> size_t;
+    pub fn gsl_combination_k(c: *const gsl_combination) -> usize;
 }
 extern "C" {
-    pub fn gsl_combination_data(c: *const gsl_combination) -> *mut size_t;
+    pub fn gsl_combination_data(c: *const gsl_combination) -> *mut usize;
 }
 extern "C" {
     pub fn gsl_combination_valid(c: *mut gsl_combination) -> ::std::os::raw::c_int;
@@ -36058,21 +33500,17 @@ extern "C" {
     pub fn gsl_combination_prev(c: *mut gsl_combination) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_combination_get(c: *const gsl_combination, i: size_t) -> size_t;
+    pub fn gsl_combination_get(c: *const gsl_combination, i: usize) -> usize;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiset_struct {
-    pub n: size_t,
-    pub k: size_t,
-    pub data: *mut size_t,
-}
+pub struct gsl_multiset_struct;
 pub type gsl_multiset = gsl_multiset_struct;
 extern "C" {
-    pub fn gsl_multiset_alloc(n: size_t, k: size_t) -> *mut gsl_multiset;
+    pub fn gsl_multiset_alloc(n: usize, k: usize) -> *mut gsl_multiset;
 }
 extern "C" {
-    pub fn gsl_multiset_calloc(n: size_t, k: size_t) -> *mut gsl_multiset;
+    pub fn gsl_multiset_calloc(n: usize, k: usize) -> *mut gsl_multiset;
 }
 extern "C" {
     pub fn gsl_multiset_init_first(c: *mut gsl_multiset);
@@ -36106,13 +33544,13 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_multiset_n(c: *const gsl_multiset) -> size_t;
+    pub fn gsl_multiset_n(c: *const gsl_multiset) -> usize;
 }
 extern "C" {
-    pub fn gsl_multiset_k(c: *const gsl_multiset) -> size_t;
+    pub fn gsl_multiset_k(c: *const gsl_multiset) -> usize;
 }
 extern "C" {
-    pub fn gsl_multiset_data(c: *const gsl_multiset) -> *mut size_t;
+    pub fn gsl_multiset_data(c: *const gsl_multiset) -> *mut usize;
 }
 extern "C" {
     pub fn gsl_multiset_valid(c: *mut gsl_multiset) -> ::std::os::raw::c_int;
@@ -36124,7 +33562,7 @@ extern "C" {
     pub fn gsl_multiset_prev(c: *mut gsl_multiset) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gsl_multiset_get(c: *const gsl_multiset, i: size_t) -> size_t;
+    pub fn gsl_multiset_get(c: *const gsl_multiset, i: usize) -> usize;
 }
 pub const GSL_IEEE_TYPE_NAN: ::std::os::raw::c_uint = 1;
 pub const GSL_IEEE_TYPE_INF: ::std::os::raw::c_uint = 2;
@@ -36134,20 +33572,10 @@ pub const GSL_IEEE_TYPE_ZERO: ::std::os::raw::c_uint = 5;
 pub type _bindgen_ty_7 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_ieee_float_rep {
-    pub sign: ::std::os::raw::c_int,
-    pub mantissa: [::std::os::raw::c_char; 24usize],
-    pub exponent: ::std::os::raw::c_int,
-    pub type_: ::std::os::raw::c_int,
-}
+pub struct gsl_ieee_float_rep;
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_ieee_double_rep {
-    pub sign: ::std::os::raw::c_int,
-    pub mantissa: [::std::os::raw::c_char; 53usize],
-    pub exponent: ::std::os::raw::c_int,
-    pub type_: ::std::os::raw::c_int,
-}
+pub struct gsl_ieee_double_rep;
 extern "C" {
     pub fn gsl_ieee_printf_float(x: *const f32);
 }
@@ -36222,14 +33650,14 @@ extern "C" {
 extern "C" {
     pub fn gsl_spblas_scatter(
         A: *const gsl_spmatrix,
-        j: size_t,
+        j: usize,
         alpha: f64,
         w: *mut ::std::os::raw::c_int,
         x: *mut f64,
         mark: ::std::os::raw::c_int,
         C: *mut gsl_spmatrix,
-        nz: size_t,
-    ) -> size_t;
+        nz: usize,
+    ) -> usize;
 }
 pub type gsl_siman_Efunc_t =
     ::std::option::Option<unsafe extern "C" fn(xp: *mut ::std::os::raw::c_void) -> f64>;
@@ -36251,15 +33679,7 @@ pub type gsl_siman_destroy_t =
     ::std::option::Option<unsafe extern "C" fn(xp: *mut ::std::os::raw::c_void)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_siman_params_t {
-    pub n_tries: ::std::os::raw::c_int,
-    pub iters_fixed_T: ::std::os::raw::c_int,
-    pub step_size: f64,
-    pub k: f64,
-    pub t_initial: f64,
-    pub mu_t: f64,
-    pub t_min: f64,
-}
+pub struct gsl_siman_params_t;
 extern "C" {
     pub fn gsl_siman_solve(
         r: *const gsl_rng,
@@ -36271,7 +33691,7 @@ extern "C" {
         copyfunc: gsl_siman_copy_t,
         copy_constructor: gsl_siman_copy_construct_t,
         destructor: gsl_siman_destroy_t,
-        element_size: size_t,
+        element_size: usize,
         params: gsl_siman_params_t,
     );
 }
@@ -36283,7 +33703,7 @@ extern "C" {
         take_step: gsl_siman_step_t,
         distance: gsl_siman_metric_t,
         print_position: gsl_siman_print_t,
-        element_size: size_t,
+        element_size: usize,
         params: gsl_siman_params_t,
     );
 }
@@ -36292,218 +33712,34 @@ pub const gsl_multifit_nlinear_fdtype_GSL_MULTIFIT_NLINEAR_CTRDIFF: gsl_multifit
 pub type gsl_multifit_nlinear_fdtype = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_fdf {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub df: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            df: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub fvv: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            v: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            fvv: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub n: size_t,
-    pub p: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-    pub nevalf: size_t,
-    pub nevaldf: size_t,
-    pub nevalfvv: size_t,
-}
+pub struct gsl_multifit_nlinear_fdf;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_trs {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            params: *const ::std::os::raw::c_void,
-            n: size_t,
-            p: size_t,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub preloop: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub step: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            delta: f64,
-            dx: *mut gsl_vector,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub preduction: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            dx: *const gsl_vector,
-            pred: *mut f64,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(vstate: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multifit_nlinear_trs;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_scale {
-    pub name: *const ::std::os::raw::c_char,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(J: *const gsl_matrix, diag: *mut gsl_vector) -> ::std::os::raw::c_int,
-    >,
-    pub update: ::std::option::Option<
-        unsafe extern "C" fn(J: *const gsl_matrix, diag: *mut gsl_vector) -> ::std::os::raw::c_int,
-    >,
-}
+pub struct gsl_multifit_nlinear_scale;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_solver {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(n: size_t, p: size_t) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub presolve: ::std::option::Option<
-        unsafe extern "C" fn(
-            mu: f64,
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub solve: ::std::option::Option<
-        unsafe extern "C" fn(
-            f: *const gsl_vector,
-            x: *mut gsl_vector,
-            vtrust_state: *const ::std::os::raw::c_void,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub rcond: ::std::option::Option<
-        unsafe extern "C" fn(
-            rcond: *mut f64,
-            vstate: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(vstate: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multifit_nlinear_solver;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_parameters {
-    pub trs: *const gsl_multifit_nlinear_trs,
-    pub scale: *const gsl_multifit_nlinear_scale,
-    pub solver: *const gsl_multifit_nlinear_solver,
-    pub fdtype: gsl_multifit_nlinear_fdtype,
-    pub factor_up: f64,
-    pub factor_down: f64,
-    pub avmax: f64,
-    pub h_df: f64,
-    pub h_fvv: f64,
-}
+pub struct gsl_multifit_nlinear_parameters;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            params: *const gsl_multifit_nlinear_parameters,
-            n: size_t,
-            p: size_t,
-        ) -> *mut ::std::os::raw::c_void,
-    >,
-    pub init: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            wts: *const gsl_vector,
-            fdf: *mut gsl_multifit_nlinear_fdf,
-            x: *const gsl_vector,
-            f: *mut gsl_vector,
-            J: *mut gsl_matrix,
-            g: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            wts: *const gsl_vector,
-            fdf: *mut gsl_multifit_nlinear_fdf,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            J: *mut gsl_matrix,
-            g: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub rcond: ::std::option::Option<
-        unsafe extern "C" fn(
-            rcond: *mut f64,
-            state: *mut ::std::os::raw::c_void,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub avratio:
-        ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void) -> f64>,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multifit_nlinear_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_trust_state {
-    pub x: *const gsl_vector,
-    pub f: *const gsl_vector,
-    pub g: *const gsl_vector,
-    pub J: *const gsl_matrix,
-    pub diag: *const gsl_vector,
-    pub sqrt_wts: *const gsl_vector,
-    pub mu: *const f64,
-    pub params: *const gsl_multifit_nlinear_parameters,
-    pub solver_state: *mut ::std::os::raw::c_void,
-    pub fdf: *mut gsl_multifit_nlinear_fdf,
-    pub avratio: *mut f64,
-}
+pub struct gsl_multifit_nlinear_trust_state;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_nlinear_workspace {
-    pub type_: *const gsl_multifit_nlinear_type,
-    pub fdf: *mut gsl_multifit_nlinear_fdf,
-    pub x: *mut gsl_vector,
-    pub f: *mut gsl_vector,
-    pub dx: *mut gsl_vector,
-    pub g: *mut gsl_vector,
-    pub J: *mut gsl_matrix,
-    pub sqrt_wts_work: *mut gsl_vector,
-    pub sqrt_wts: *mut gsl_vector,
-    pub niter: size_t,
-    pub params: gsl_multifit_nlinear_parameters,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multifit_nlinear_workspace;
 extern "C" {
     pub fn gsl_multifit_nlinear_alloc(
         T: *const gsl_multifit_nlinear_type,
         params: *const gsl_multifit_nlinear_parameters,
-        n: size_t,
-        p: size_t,
+        n: usize,
+        p: usize,
     ) -> *mut gsl_multifit_nlinear_workspace;
 }
 extern "C" {
@@ -36537,13 +33773,13 @@ extern "C" {
 }
 extern "C" {
     pub fn gsl_multifit_nlinear_driver(
-        maxiter: size_t,
+        maxiter: usize,
         xtol: f64,
         gtol: f64,
         ftol: f64,
         callback: ::std::option::Option<
             unsafe extern "C" fn(
-                iter: size_t,
+                iter: usize,
                 params: *mut ::std::os::raw::c_void,
                 w: *const gsl_multifit_nlinear_workspace,
             ),
@@ -36572,7 +33808,7 @@ extern "C" {
     ) -> *mut gsl_vector;
 }
 extern "C" {
-    pub fn gsl_multifit_nlinear_niter(w: *const gsl_multifit_nlinear_workspace) -> size_t;
+    pub fn gsl_multifit_nlinear_niter(w: *const gsl_multifit_nlinear_workspace) -> usize;
 }
 extern "C" {
     pub fn gsl_multifit_nlinear_rcond(
@@ -36722,66 +33958,19 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_function_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub n: size_t,
-    pub p: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multifit_function_struct;
 pub type gsl_multifit_function = gsl_multifit_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_fsolver_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            n: size_t,
-            p: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            function: *mut gsl_multifit_function,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            function: *mut gsl_multifit_function,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multifit_fsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_fsolver {
-    pub type_: *const gsl_multifit_fsolver_type,
-    pub function: *mut gsl_multifit_function,
-    pub x: *mut gsl_vector,
-    pub f: *mut gsl_vector,
-    pub dx: *mut gsl_vector,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multifit_fsolver;
 extern "C" {
     pub fn gsl_multifit_fsolver_alloc(
         T: *const gsl_multifit_fsolver_type,
-        n: size_t,
-        p: size_t,
+        n: usize,
+        p: usize,
     ) -> *mut gsl_multifit_fsolver;
 }
 extern "C" {
@@ -36800,7 +33989,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_multifit_fsolver_driver(
         s: *mut gsl_multifit_fsolver,
-        maxiter: size_t,
+        maxiter: usize,
         epsabs: f64,
         epsrel: f64,
     ) -> ::std::os::raw::c_int;
@@ -36815,100 +34004,19 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_function_fdf_struct {
-    pub f: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub df: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            df: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub fdf: ::std::option::Option<
-        unsafe extern "C" fn(
-            x: *const gsl_vector,
-            params: *mut ::std::os::raw::c_void,
-            f: *mut gsl_vector,
-            df: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub n: size_t,
-    pub p: size_t,
-    pub params: *mut ::std::os::raw::c_void,
-    pub nevalf: size_t,
-    pub nevaldf: size_t,
-}
+pub struct gsl_multifit_function_fdf_struct;
 pub type gsl_multifit_function_fdf = gsl_multifit_function_fdf_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_fdfsolver_type {
-    pub name: *const ::std::os::raw::c_char,
-    pub size: size_t,
-    pub alloc: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            n: size_t,
-            p: size_t,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub set: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            wts: *const gsl_vector,
-            fdf: *mut gsl_multifit_function_fdf,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub iterate: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            wts: *const gsl_vector,
-            fdf: *mut gsl_multifit_function_fdf,
-            x: *mut gsl_vector,
-            f: *mut gsl_vector,
-            dx: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub gradient: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            g: *mut gsl_vector,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub jac: ::std::option::Option<
-        unsafe extern "C" fn(
-            state: *mut ::std::os::raw::c_void,
-            J: *mut gsl_matrix,
-        ) -> ::std::os::raw::c_int,
-    >,
-    pub free: ::std::option::Option<unsafe extern "C" fn(state: *mut ::std::os::raw::c_void)>,
-}
+pub struct gsl_multifit_fdfsolver_type;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_fdfsolver {
-    pub type_: *const gsl_multifit_fdfsolver_type,
-    pub fdf: *mut gsl_multifit_function_fdf,
-    pub x: *mut gsl_vector,
-    pub f: *mut gsl_vector,
-    pub dx: *mut gsl_vector,
-    pub g: *mut gsl_vector,
-    pub sqrt_wts: *mut gsl_vector,
-    pub niter: size_t,
-    pub state: *mut ::std::os::raw::c_void,
-}
+pub struct gsl_multifit_fdfsolver;
 extern "C" {
     pub fn gsl_multifit_fdfsolver_alloc(
         T: *const gsl_multifit_fdfsolver_type,
-        n: size_t,
-        p: size_t,
+        n: usize,
+        p: usize,
     ) -> *mut gsl_multifit_fdfsolver;
 }
 extern "C" {
@@ -36932,7 +34040,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_multifit_fdfsolver_driver(
         s: *mut gsl_multifit_fdfsolver,
-        maxiter: size_t,
+        maxiter: usize,
         xtol: f64,
         gtol: f64,
         ftol: f64,
@@ -36960,7 +34068,7 @@ extern "C" {
     pub fn gsl_multifit_fdfsolver_residual(s: *const gsl_multifit_fdfsolver) -> *mut gsl_vector;
 }
 extern "C" {
-    pub fn gsl_multifit_fdfsolver_niter(s: *const gsl_multifit_fdfsolver) -> size_t;
+    pub fn gsl_multifit_fdfsolver_niter(s: *const gsl_multifit_fdfsolver) -> usize;
 }
 extern "C" {
     pub fn gsl_multifit_eval_wf(
@@ -37017,23 +34125,12 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multifit_fdfridge {
-    pub n: size_t,
-    pub p: size_t,
-    pub lambda: f64,
-    pub L_diag: *const gsl_vector,
-    pub L: *const gsl_matrix,
-    pub f: *mut gsl_vector,
-    pub wts: *mut gsl_vector,
-    pub s: *mut gsl_multifit_fdfsolver,
-    pub fdf: *mut gsl_multifit_function_fdf,
-    pub fdftik: gsl_multifit_function_fdf,
-}
+pub struct gsl_multifit_fdfridge;
 extern "C" {
     pub fn gsl_multifit_fdfridge_alloc(
         T: *const gsl_multifit_fdfsolver_type,
-        n: size_t,
-        p: size_t,
+        n: usize,
+        p: usize,
     ) -> *mut gsl_multifit_fdfridge;
 }
 extern "C" {
@@ -37051,7 +34148,7 @@ extern "C" {
     pub fn gsl_multifit_fdfridge_residual(w: *const gsl_multifit_fdfridge) -> *mut gsl_vector;
 }
 extern "C" {
-    pub fn gsl_multifit_fdfridge_niter(w: *const gsl_multifit_fdfridge) -> size_t;
+    pub fn gsl_multifit_fdfridge_niter(w: *const gsl_multifit_fdfridge) -> usize;
 }
 extern "C" {
     pub fn gsl_multifit_fdfridge_set(
@@ -37110,7 +34207,7 @@ extern "C" {
 extern "C" {
     pub fn gsl_multifit_fdfridge_driver(
         w: *mut gsl_multifit_fdfridge,
-        maxiter: size_t,
+        maxiter: usize,
         xtol: f64,
         gtol: f64,
         ftol: f64,
