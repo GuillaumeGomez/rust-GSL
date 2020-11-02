@@ -128,19 +128,19 @@ impl Drop for ChebSeries {
 }
 
 impl ffi::FFI<sys::gsl_cheb_series> for ChebSeries {
-    fn wrap(c: *mut sys::gsl_cheb_series) -> ChebSeries {
+    fn wrap(c: *mut sys::gsl_cheb_series) -> Self {
         unsafe { Self { c } }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_cheb_series) -> ChebSeries {
+    fn soft_wrap(r: *mut sys::gsl_cheb_series) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(c: &ChebSeries) -> *const sys::gsl_cheb_series {
-        c.c as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_cheb_series {
+        self.c as *const _
     }
 
-    fn unwrap_unique(c: &mut ChebSeries) -> *mut sys::gsl_cheb_series {
-        c.c
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_cheb_series {
+        self.c
     }
 }

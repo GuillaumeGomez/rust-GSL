@@ -113,7 +113,12 @@ pub mod select {
 
     /// This function stores the indices of the k smallest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
     /// the corresponding data is in ascending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_smallest_index(p: &mut [usize], k: usize, src: &[f64], stride: usize) -> enums::Value {
+    pub fn sort_smallest_index(
+        p: &mut [usize],
+        k: usize,
+        src: &[f64],
+        stride: usize,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_sort_smallest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
         })
@@ -121,7 +126,12 @@ pub mod select {
 
     /// This function stores the indices of the k largest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
     /// the corresponding data is in descending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_largest_index(p: &mut [usize], k: usize, src: &[f64], stride: usize) -> enums::Value {
+    pub fn sort_largest_index(
+        p: &mut [usize],
+        k: usize,
+        src: &[f64],
+        stride: usize,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_sort_largest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
         })

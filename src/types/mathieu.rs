@@ -196,19 +196,19 @@ impl Drop for MathieuWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_sf_mathieu_workspace> for MathieuWorkspace {
-    fn wrap(r: *mut sys::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
-        MathieuWorkspace { work: r }
+    fn wrap(work: *mut sys::gsl_sf_mathieu_workspace) -> Self {
+        Self { work }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_sf_mathieu_workspace) -> MathieuWorkspace {
+    fn soft_wrap(r: *mut sys::gsl_sf_mathieu_workspace) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(v: &MathieuWorkspace) -> *const sys::gsl_sf_mathieu_workspace {
-        v.work as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_sf_mathieu_workspace {
+        self.work as *const _
     }
 
-    fn unwrap_unique(v: &mut MathieuWorkspace) -> *mut sys::gsl_sf_mathieu_workspace {
-        v.work
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_sf_mathieu_workspace {
+        self.work
     }
 }

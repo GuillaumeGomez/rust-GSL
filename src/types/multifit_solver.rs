@@ -222,20 +222,20 @@ pub struct MultiFitFSolverType {
 }
 
 impl ffi::FFI<sys::gsl_multifit_fsolver_type> for MultiFitFSolverType {
-    fn wrap(r: *mut sys::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
-        MultiFitFSolverType { s: r }
+    fn wrap(s: *mut sys::gsl_multifit_fsolver_type) -> Self {
+        Self { s }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_multifit_fsolver_type) -> MultiFitFSolverType {
+    fn soft_wrap(r: *mut sys::gsl_multifit_fsolver_type) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(s: &MultiFitFSolverType) -> *const sys::gsl_multifit_fsolver_type {
-        s.s as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_multifit_fsolver_type {
+        self.s as *const _
     }
 
-    fn unwrap_unique(s: &mut MultiFitFSolverType) -> *mut sys::gsl_multifit_fsolver_type {
-        s.s
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_multifit_fsolver_type {
+        self.s
     }
 }
 
@@ -307,20 +307,20 @@ impl Drop for MultiFitFSolver {
 }
 
 impl ffi::FFI<sys::gsl_multifit_fsolver> for MultiFitFSolver {
-    fn wrap(s: *mut sys::gsl_multifit_fsolver) -> MultiFitFSolver {
-        MultiFitFSolver { s: s }
+    fn wrap(s: *mut sys::gsl_multifit_fsolver) -> Self {
+        Self { s }
     }
 
-    fn soft_wrap(s: *mut sys::gsl_multifit_fsolver) -> MultiFitFSolver {
+    fn soft_wrap(s: *mut sys::gsl_multifit_fsolver) -> Self {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &MultiFitFSolver) -> *const sys::gsl_multifit_fsolver {
-        s.s as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_multifit_fsolver {
+        self.s as *const _
     }
 
-    fn unwrap_unique(s: &mut MultiFitFSolver) -> *mut sys::gsl_multifit_fsolver {
-        s.s
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_multifit_fsolver {
+        self.s
     }
 }
 

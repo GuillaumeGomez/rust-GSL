@@ -173,7 +173,12 @@ pub mod radix2 {
         })
     }
 
-    pub fn transform(data: &mut [f64], stride: usize, n: usize, sign: ::FftDirection) -> enums::Value {
+    pub fn transform(
+        data: &mut [f64],
+        stride: usize,
+        n: usize,
+        sign: ::FftDirection,
+    ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_fft_complex_radix2_transform(data.as_mut_ptr(), stride, n, sign.into())
         })

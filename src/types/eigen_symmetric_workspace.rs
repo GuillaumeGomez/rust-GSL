@@ -139,20 +139,20 @@ impl Drop for EigenSymmetricWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_symm_workspace> for EigenSymmetricWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_symm_workspace) -> EigenSymmetricWorkspace {
-        EigenSymmetricWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_symm_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_symm_workspace) -> EigenSymmetricWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_symm_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenSymmetricWorkspace) -> *const sys::gsl_eigen_symm_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_symm_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenSymmetricWorkspace) -> *mut sys::gsl_eigen_symm_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_symm_workspace {
+        self.w
     }
 }
 
@@ -205,20 +205,20 @@ impl Drop for EigenSymmetricVWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_symmv_workspace> for EigenSymmetricVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_symmv_workspace) -> EigenSymmetricVWorkspace {
-        EigenSymmetricVWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_symmv_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_symmv_workspace) -> EigenSymmetricVWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_symmv_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenSymmetricVWorkspace) -> *const sys::gsl_eigen_symmv_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_symmv_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenSymmetricVWorkspace) -> *mut sys::gsl_eigen_symmv_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_symmv_workspace {
+        self.w
     }
 }
 
@@ -263,20 +263,20 @@ impl Drop for EigenHermitianWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_herm_workspace> for EigenHermitianWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_herm_workspace) -> EigenHermitianWorkspace {
-        EigenHermitianWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_herm_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_herm_workspace) -> EigenHermitianWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_herm_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenHermitianWorkspace) -> *const sys::gsl_eigen_herm_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_herm_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenHermitianWorkspace) -> *mut sys::gsl_eigen_herm_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_herm_workspace {
+        self.w
     }
 }
 
@@ -331,20 +331,20 @@ impl Drop for EigenHermitianVWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_hermv_workspace> for EigenHermitianVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_hermv_workspace) -> EigenHermitianVWorkspace {
-        EigenHermitianVWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_hermv_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_hermv_workspace) -> EigenHermitianVWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_hermv_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenHermitianVWorkspace) -> *const sys::gsl_eigen_hermv_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_hermv_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenHermitianVWorkspace) -> *mut sys::gsl_eigen_hermv_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_hermv_workspace {
+        self.w
     }
 }
 
@@ -443,20 +443,20 @@ impl Drop for EigenNonSymmWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_nonsymm_workspace> for EigenNonSymmWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_nonsymm_workspace) -> EigenNonSymmWorkspace {
-        EigenNonSymmWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_nonsymm_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_nonsymm_workspace) -> EigenNonSymmWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_nonsymm_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenNonSymmWorkspace) -> *const sys::gsl_eigen_nonsymm_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_nonsymm_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenNonSymmWorkspace) -> *mut sys::gsl_eigen_nonsymm_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_nonsymm_workspace {
+        self.w
     }
 }
 
@@ -537,20 +537,20 @@ impl Drop for EigenNonSymmVWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_nonsymmv_workspace> for EigenNonSymmVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_nonsymmv_workspace) -> EigenNonSymmVWorkspace {
-        EigenNonSymmVWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_nonsymmv_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_nonsymmv_workspace) -> EigenNonSymmVWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_nonsymmv_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenNonSymmVWorkspace) -> *const sys::gsl_eigen_nonsymmv_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_nonsymmv_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenNonSymmVWorkspace) -> *mut sys::gsl_eigen_nonsymmv_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_nonsymmv_workspace {
+        self.w
     }
 }
 
@@ -599,20 +599,20 @@ impl Drop for EigenGenSymmWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_gensymm_workspace> for EigenGenSymmWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_gensymm_workspace) -> EigenGenSymmWorkspace {
-        EigenGenSymmWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_gensymm_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_gensymm_workspace) -> EigenGenSymmWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_gensymm_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenGenSymmWorkspace) -> *const sys::gsl_eigen_gensymm_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_gensymm_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenGenSymmWorkspace) -> *mut sys::gsl_eigen_gensymm_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_gensymm_workspace {
+        self.w
     }
 }
 
@@ -664,20 +664,20 @@ impl Drop for EigenGenSymmVWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_gensymmv_workspace> for EigenGenSymmVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_gensymmv_workspace) -> EigenGenSymmVWorkspace {
-        EigenGenSymmVWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_gensymmv_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_gensymmv_workspace) -> EigenGenSymmVWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_gensymmv_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenGenSymmVWorkspace) -> *const sys::gsl_eigen_gensymmv_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_gensymmv_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenGenSymmVWorkspace) -> *mut sys::gsl_eigen_gensymmv_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_gensymmv_workspace {
+        self.w
     }
 }
 
@@ -726,20 +726,20 @@ impl Drop for EigenGenHermWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_genherm_workspace> for EigenGenHermWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_genherm_workspace) -> EigenGenHermWorkspace {
-        EigenGenHermWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_genherm_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_genherm_workspace) -> EigenGenHermWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_genherm_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenGenHermWorkspace) -> *const sys::gsl_eigen_genherm_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_genherm_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenGenHermWorkspace) -> *mut sys::gsl_eigen_genherm_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_genherm_workspace {
+        self.w
     }
 }
 
@@ -790,20 +790,20 @@ impl Drop for EigenGenHermVWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_genhermv_workspace> for EigenGenHermVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_genhermv_workspace) -> EigenGenHermVWorkspace {
-        EigenGenHermVWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_genhermv_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_genhermv_workspace) -> EigenGenHermVWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_genhermv_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenGenHermVWorkspace) -> *const sys::gsl_eigen_genhermv_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_genhermv_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenGenHermVWorkspace) -> *mut sys::gsl_eigen_genhermv_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_genhermv_workspace {
+        self.w
     }
 }
 
@@ -904,20 +904,20 @@ impl Drop for EigenGenWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_gen_workspace> for EigenGenWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_gen_workspace) -> EigenGenWorkspace {
-        EigenGenWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_gen_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_gen_workspace) -> EigenGenWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_gen_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenGenWorkspace) -> *const sys::gsl_eigen_gen_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_gen_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenGenWorkspace) -> *mut sys::gsl_eigen_gen_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_gen_workspace {
+        self.w
     }
 }
 
@@ -1001,20 +1001,20 @@ impl Drop for EigenGenVWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_eigen_genv_workspace> for EigenGenVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_genv_workspace) -> EigenGenVWorkspace {
-        EigenGenVWorkspace { w: t }
+    fn wrap(t: *mut sys::gsl_eigen_genv_workspace) -> Self {
+        Self { w: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_eigen_genv_workspace) -> EigenGenVWorkspace {
+    fn soft_wrap(t: *mut sys::gsl_eigen_genv_workspace) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &EigenGenVWorkspace) -> *const sys::gsl_eigen_genv_workspace {
-        t.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_eigen_genv_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(t: &mut EigenGenVWorkspace) -> *mut sys::gsl_eigen_genv_workspace {
-        t.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_genv_workspace {
+        self.w
     }
 }
 

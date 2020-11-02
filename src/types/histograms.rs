@@ -276,20 +276,20 @@ impl Drop for Histogram {
 }
 
 impl ffi::FFI<sys::gsl_histogram> for Histogram {
-    fn wrap(h: *mut sys::gsl_histogram) -> Histogram {
-        Histogram { h: h }
+    fn wrap(h: *mut sys::gsl_histogram) -> Self {
+        Self { h }
     }
 
-    fn soft_wrap(h: *mut sys::gsl_histogram) -> Histogram {
+    fn soft_wrap(h: *mut sys::gsl_histogram) -> Self {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &Histogram) -> *const sys::gsl_histogram {
-        h.h as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_histogram {
+        self.h as *const _
     }
 
-    fn unwrap_unique(h: &mut Histogram) -> *mut sys::gsl_histogram {
-        h.h
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_histogram {
+        self.h
     }
 }
 
@@ -341,20 +341,20 @@ impl Drop for HistogramPdf {
 }
 
 impl ffi::FFI<sys::gsl_histogram_pdf> for HistogramPdf {
-    fn wrap(h: *mut sys::gsl_histogram_pdf) -> HistogramPdf {
-        HistogramPdf { h: h }
+    fn wrap(h: *mut sys::gsl_histogram_pdf) -> Self {
+        Self { h }
     }
 
-    fn soft_wrap(h: *mut sys::gsl_histogram_pdf) -> HistogramPdf {
+    fn soft_wrap(h: *mut sys::gsl_histogram_pdf) -> Self {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &HistogramPdf) -> *const sys::gsl_histogram_pdf {
-        h.h as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_histogram_pdf {
+        self.h as *const _
     }
 
-    fn unwrap_unique(h: &mut HistogramPdf) -> *mut sys::gsl_histogram_pdf {
-        h.h
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_histogram_pdf {
+        self.h
     }
 }
 
@@ -623,20 +623,20 @@ impl Drop for Histogram2D {
 }
 
 impl ffi::FFI<sys::gsl_histogram2d> for Histogram2D {
-    fn wrap(h: *mut sys::gsl_histogram2d) -> Histogram2D {
-        Histogram2D { h: h }
+    fn wrap(h: *mut sys::gsl_histogram2d) -> Self {
+        Self { h }
     }
 
-    fn soft_wrap(h: *mut sys::gsl_histogram2d) -> Histogram2D {
+    fn soft_wrap(h: *mut sys::gsl_histogram2d) -> Self {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &Histogram2D) -> *const sys::gsl_histogram2d {
-        h.h as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_histogram2d {
+        self.h as *const _
     }
 
-    fn unwrap_unique(h: &mut Histogram2D) -> *mut sys::gsl_histogram2d {
-        h.h
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_histogram2d {
+        self.h
     }
 }
 
@@ -688,19 +688,19 @@ impl Drop for Histogram2DPdf {
 }
 
 impl ffi::FFI<sys::gsl_histogram2d_pdf> for Histogram2DPdf {
-    fn wrap(h: *mut sys::gsl_histogram2d_pdf) -> Histogram2DPdf {
-        Histogram2DPdf { h: h }
+    fn wrap(h: *mut sys::gsl_histogram2d_pdf) -> Self {
+        Self { h }
     }
 
-    fn soft_wrap(h: *mut sys::gsl_histogram2d_pdf) -> Histogram2DPdf {
+    fn soft_wrap(h: *mut sys::gsl_histogram2d_pdf) -> Self {
         Self::wrap(h)
     }
 
-    fn unwrap_shared(h: &Histogram2DPdf) -> *const sys::gsl_histogram2d_pdf {
-        h.h as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_histogram2d_pdf {
+        self.h as *const _
     }
 
-    fn unwrap_unique(h: &mut Histogram2DPdf) -> *mut sys::gsl_histogram2d_pdf {
-        h.h
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_histogram2d_pdf {
+        self.h
     }
 }

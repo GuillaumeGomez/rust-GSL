@@ -723,20 +723,20 @@ impl Drop for Rng {
 }
 
 impl ffi::FFI<sys::gsl_rng> for Rng {
-    fn wrap(r: *mut sys::gsl_rng) -> Rng {
-        Rng { r: r }
+    fn wrap(r: *mut sys::gsl_rng) -> Self {
+        Self { r }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_rng) -> Rng {
+    fn soft_wrap(r: *mut sys::gsl_rng) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(m: &Rng) -> *const sys::gsl_rng {
-        m.r as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_rng {
+        self.r as *const _
     }
 
-    fn unwrap_unique(m: &mut Rng) -> *mut sys::gsl_rng {
-        m.r
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_rng {
+        self.r
     }
 }
 
@@ -841,20 +841,20 @@ impl RngType {
 }
 
 impl ffi::FFI<sys::gsl_rng_type> for RngType {
-    fn wrap(r: *mut sys::gsl_rng_type) -> RngType {
-        RngType { ptr: r }
+    fn wrap(ptr: *mut sys::gsl_rng_type) -> Self {
+        RngType { ptr }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_rng_type) -> RngType {
-        RngType { ptr: r }
+    fn soft_wrap(ptr: *mut sys::gsl_rng_type) -> Self {
+        Self::wrap(ptr)
     }
 
-    fn unwrap_shared(m: &RngType) -> *const sys::gsl_rng_type {
-        m.ptr
+    fn unwrap_shared(&self) -> *const sys::gsl_rng_type {
+        self.ptr
     }
 
-    fn unwrap_unique(m: &mut RngType) -> *mut sys::gsl_rng_type {
-        m.ptr as usize as *mut _
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_rng_type {
+        panic!("Should not be used")
     }
 }
 

@@ -96,20 +96,20 @@ impl Drop for Wavelet {
 }
 
 impl ffi::FFI<sys::gsl_wavelet> for Wavelet {
-    fn wrap(w: *mut sys::gsl_wavelet) -> Wavelet {
-        Wavelet { w: w }
+    fn wrap(w: *mut sys::gsl_wavelet) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_wavelet) -> Wavelet {
+    fn soft_wrap(w: *mut sys::gsl_wavelet) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &Wavelet) -> *const sys::gsl_wavelet {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_wavelet {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut Wavelet) -> *mut sys::gsl_wavelet {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_wavelet {
+        self.w
     }
 }
 
@@ -210,19 +210,19 @@ impl Drop for WaveletWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_wavelet_workspace> for WaveletWorkspace {
-    fn wrap(w: *mut sys::gsl_wavelet_workspace) -> WaveletWorkspace {
-        WaveletWorkspace { w: w }
+    fn wrap(w: *mut sys::gsl_wavelet_workspace) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_wavelet_workspace) -> WaveletWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_wavelet_workspace) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &WaveletWorkspace) -> *const sys::gsl_wavelet_workspace {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_wavelet_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut WaveletWorkspace) -> *mut sys::gsl_wavelet_workspace {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_wavelet_workspace {
+        self.w
     }
 }

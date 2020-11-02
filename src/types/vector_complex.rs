@@ -240,20 +240,20 @@ impl Debug for VectorComplexF64 {
 }
 
 impl ffi::FFI<sys::gsl_vector_complex> for VectorComplexF64 {
-    fn wrap(r: *mut sys::gsl_vector_complex) -> VectorComplexF64 {
-        VectorComplexF64 { vec: r }
+    fn wrap(r: *mut sys::gsl_vector_complex) -> Self {
+        Self { vec: r }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_vector_complex) -> VectorComplexF64 {
+    fn soft_wrap(r: *mut sys::gsl_vector_complex) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(v: &VectorComplexF64) -> *const sys::gsl_vector_complex {
-        v.vec as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_vector_complex {
+        self.vec as *const _
     }
 
-    fn unwrap_unique(v: &mut VectorComplexF64) -> *mut sys::gsl_vector_complex {
-        v.vec
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_vector_complex {
+        self.vec
     }
 }
 
@@ -489,19 +489,19 @@ impl Debug for VectorComplexF32 {
 }
 
 impl ffi::FFI<sys::gsl_vector_complex_float> for VectorComplexF32 {
-    fn wrap(r: *mut sys::gsl_vector_complex_float) -> VectorComplexF32 {
-        VectorComplexF32 { vec: r }
+    fn wrap(vec: *mut sys::gsl_vector_complex_float) -> Self {
+        Self { vec }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_vector_complex_float) -> VectorComplexF32 {
-        Self::wrap(r)
+    fn soft_wrap(vec: *mut sys::gsl_vector_complex_float) -> Self {
+        Self::wrap(vec)
     }
 
-    fn unwrap_shared(v: &VectorComplexF32) -> *const sys::gsl_vector_complex_float {
-        v.vec as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_vector_complex_float {
+        self.vec as *const _
     }
 
-    fn unwrap_unique(v: &mut VectorComplexF32) -> *mut sys::gsl_vector_complex_float {
-        v.vec
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_vector_complex_float {
+        self.vec
     }
 }

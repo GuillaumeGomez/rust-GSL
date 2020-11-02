@@ -128,20 +128,20 @@ impl Drop for DiscreteHankel {
 }
 
 impl ffi::FFI<sys::gsl_dht> for DiscreteHankel {
-    fn wrap(t: *mut sys::gsl_dht) -> DiscreteHankel {
-        DiscreteHankel { t: t }
+    fn wrap(t: *mut sys::gsl_dht) -> Self {
+        Self { t: t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_dht) -> DiscreteHankel {
+    fn soft_wrap(t: *mut sys::gsl_dht) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &DiscreteHankel) -> *const sys::gsl_dht {
-        t.t as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_dht {
+        self.t as *const _
     }
 
-    fn unwrap_unique(t: &mut DiscreteHankel) -> *mut sys::gsl_dht {
-        t.t
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_dht {
+        self.t
     }
 }
 

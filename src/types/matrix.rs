@@ -78,7 +78,13 @@ impl MatrixView {
     /// is still in use.
     ///
     /// The function gsl_matrix_const_submatrix is equivalent to gsl_matrix_submatrix but can be used for matrices which are declared const.
-    pub fn from_matrix(m: &mut MatrixF64, k1: usize, k2: usize, n1: usize, n2: usize) -> MatrixView {
+    pub fn from_matrix(
+        m: &mut MatrixF64,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
+    ) -> MatrixView {
         unsafe {
             MatrixView {
                 mat: sys::gsl_matrix_submatrix(m.mat, k1, k2, n1, n2).matrix,
@@ -533,26 +539,26 @@ impl Debug for MatrixF64 {
 }
 
 impl ffi::FFI<sys::gsl_matrix> for MatrixF64 {
-    fn wrap(r: *mut sys::gsl_matrix) -> MatrixF64 {
-        MatrixF64 {
-            mat: r,
+    fn wrap(mat: *mut sys::gsl_matrix) -> Self {
+        Self {
+            mat,
             can_free: true,
         }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_matrix) -> MatrixF64 {
-        MatrixF64 {
-            mat: r,
+    fn soft_wrap(mat: *mut sys::gsl_matrix) -> Self {
+        Self {
+            mat,
             can_free: false,
         }
     }
 
-    fn unwrap_shared(m: &MatrixF64) -> *const sys::gsl_matrix {
-        m.mat as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_matrix {
+        self.mat as *const _
     }
 
-    fn unwrap_unique(m: &mut MatrixF64) -> *mut sys::gsl_matrix {
-        m.mat
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_matrix {
+        self.mat
     }
 }
 
@@ -887,25 +893,25 @@ impl Debug for MatrixF32 {
 }
 
 impl ffi::FFI<sys::gsl_matrix_float> for MatrixF32 {
-    fn wrap(r: *mut sys::gsl_matrix_float) -> MatrixF32 {
-        MatrixF32 {
-            mat: r,
+    fn wrap(mat: *mut sys::gsl_matrix_float) -> Self {
+        Self {
+            mat,
             can_free: true,
         }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_matrix_float) -> MatrixF32 {
-        MatrixF32 {
-            mat: r,
+    fn soft_wrap(mat: *mut sys::gsl_matrix_float) -> Self {
+        Self {
+            mat,
             can_free: false,
         }
     }
 
-    fn unwrap_shared(m: &MatrixF32) -> *const sys::gsl_matrix_float {
-        m.mat as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_matrix_float {
+        self.mat as *const _
     }
 
-    fn unwrap_unique(m: &mut MatrixF32) -> *mut sys::gsl_matrix_float {
-        m.mat
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_matrix_float {
+        self.mat
     }
 }

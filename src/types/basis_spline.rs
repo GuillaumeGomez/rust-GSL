@@ -148,19 +148,19 @@ impl Drop for BSpLineWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_bspline_workspace> for BSpLineWorkspace {
-    fn wrap(r: *mut sys::gsl_bspline_workspace) -> BSpLineWorkspace {
-        BSpLineWorkspace { w: r }
+    fn wrap(r: *mut sys::gsl_bspline_workspace) -> Self {
+        Self { w: r }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_bspline_workspace) -> BSpLineWorkspace {
+    fn soft_wrap(r: *mut sys::gsl_bspline_workspace) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(bsp: &BSpLineWorkspace) -> *const sys::gsl_bspline_workspace {
-        bsp.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_bspline_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(bsp: &mut BSpLineWorkspace) -> *mut sys::gsl_bspline_workspace {
-        bsp.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_bspline_workspace {
+        self.w
     }
 }

@@ -165,20 +165,20 @@ impl Drop for PlainMonteCarlo {
 }
 
 impl ffi::FFI<sys::gsl_monte_plain_state> for PlainMonteCarlo {
-    fn wrap(s: *mut sys::gsl_monte_plain_state) -> PlainMonteCarlo {
-        PlainMonteCarlo { s: s }
+    fn wrap(s: *mut sys::gsl_monte_plain_state) -> Self {
+        Self { s }
     }
 
-    fn soft_wrap(s: *mut sys::gsl_monte_plain_state) -> PlainMonteCarlo {
+    fn soft_wrap(s: *mut sys::gsl_monte_plain_state) -> Self {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &PlainMonteCarlo) -> *const sys::gsl_monte_plain_state {
-        s.s as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_monte_plain_state {
+        self.s as *const _
     }
 
-    fn unwrap_unique(s: &mut PlainMonteCarlo) -> *mut sys::gsl_monte_plain_state {
-        s.s
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_monte_plain_state {
+        self.s
     }
 }
 
@@ -302,20 +302,20 @@ impl Drop for MiserMonteCarlo {
 }
 
 impl ffi::FFI<sys::gsl_monte_miser_state> for MiserMonteCarlo {
-    fn wrap(s: *mut sys::gsl_monte_miser_state) -> MiserMonteCarlo {
-        MiserMonteCarlo { s: s }
+    fn wrap(s: *mut sys::gsl_monte_miser_state) -> Self {
+        Self { s }
     }
 
-    fn soft_wrap(s: *mut sys::gsl_monte_miser_state) -> MiserMonteCarlo {
+    fn soft_wrap(s: *mut sys::gsl_monte_miser_state) -> Self {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &MiserMonteCarlo) -> *const sys::gsl_monte_miser_state {
-        s.s as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_monte_miser_state {
+        self.s as *const _
     }
 
-    fn unwrap_unique(s: &mut MiserMonteCarlo) -> *mut sys::gsl_monte_miser_state {
-        s.s
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_monte_miser_state {
+        self.s
     }
 }
 
@@ -605,20 +605,20 @@ impl Drop for VegasMonteCarlo {
 }
 
 impl ffi::FFI<sys::gsl_monte_vegas_state> for VegasMonteCarlo {
-    fn wrap(s: *mut sys::gsl_monte_vegas_state) -> VegasMonteCarlo {
-        VegasMonteCarlo { s: s }
+    fn wrap(s: *mut sys::gsl_monte_vegas_state) -> Self {
+        Self { s }
     }
 
-    fn soft_wrap(s: *mut sys::gsl_monte_vegas_state) -> VegasMonteCarlo {
+    fn soft_wrap(s: *mut sys::gsl_monte_vegas_state) -> Self {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &VegasMonteCarlo) -> *const sys::gsl_monte_vegas_state {
-        s.s as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_monte_vegas_state {
+        self.s as *const _
     }
 
-    fn unwrap_unique(s: &mut VegasMonteCarlo) -> *mut sys::gsl_monte_vegas_state {
-        s.s
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_monte_vegas_state {
+        self.s
     }
 }
 

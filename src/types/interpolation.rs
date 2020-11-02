@@ -150,20 +150,20 @@ impl Drop for Interp {
 }
 
 impl ffi::FFI<sys::gsl_interp> for Interp {
-    fn wrap(interp: *mut sys::gsl_interp) -> Interp {
-        Interp { interp: interp }
+    fn wrap(interp: *mut sys::gsl_interp) -> Self {
+        Self { interp }
     }
 
-    fn soft_wrap(interp: *mut sys::gsl_interp) -> Interp {
+    fn soft_wrap(interp: *mut sys::gsl_interp) -> Self {
         Self::wrap(interp)
     }
 
-    fn unwrap_shared(interp: &Interp) -> *const sys::gsl_interp {
-        interp.interp as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_interp {
+        self.interp as *const _
     }
 
-    fn unwrap_unique(interp: &mut Interp) -> *mut sys::gsl_interp {
-        interp.interp
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_interp {
+        self.interp
     }
 }
 
@@ -223,20 +223,20 @@ impl InterpType {
 }
 
 impl ffi::FFI<sys::gsl_interp_type> for InterpType {
-    fn wrap(t: *mut sys::gsl_interp_type) -> InterpType {
-        InterpType { t: t }
+    fn wrap(t: *mut sys::gsl_interp_type) -> Self {
+        Self { t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_interp_type) -> InterpType {
+    fn soft_wrap(t: *mut sys::gsl_interp_type) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &InterpType) -> *const sys::gsl_interp_type {
-        t.t as *const sys::gsl_interp_type
+    fn unwrap_shared(&self) -> *const sys::gsl_interp_type {
+        self.t as *const sys::gsl_interp_type
     }
 
-    fn unwrap_unique(t: &mut InterpType) -> *mut sys::gsl_interp_type {
-        t.t as *mut sys::gsl_interp_type
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_interp_type {
+        self.t as *mut sys::gsl_interp_type
     }
 }
 
@@ -327,19 +327,19 @@ impl Drop for Spline {
 }
 
 impl ffi::FFI<sys::gsl_spline> for Spline {
-    fn wrap(spline: *mut sys::gsl_spline) -> Spline {
-        Spline { spline: spline }
+    fn wrap(spline: *mut sys::gsl_spline) -> Self {
+        Self { spline }
     }
 
-    fn soft_wrap(spline: *mut sys::gsl_spline) -> Spline {
+    fn soft_wrap(spline: *mut sys::gsl_spline) -> Self {
         Self::wrap(spline)
     }
 
-    fn unwrap_shared(spline: &Spline) -> *const sys::gsl_spline {
-        spline.spline as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_spline {
+        self.spline as *const _
     }
 
-    fn unwrap_unique(spline: &mut Spline) -> *mut sys::gsl_spline {
-        spline.spline
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_spline {
+        self.spline
     }
 }

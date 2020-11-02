@@ -89,7 +89,12 @@ impl VectorView {
     /// ```
     /// The function gsl_vector_const_subvector_with_stride is equivalent to gsl_vector_subvector_with_stride but can be used for vectors which
     /// are declared const.
-    pub fn from_vector_with_stride(v: &VectorF64, offset: usize, stride: usize, n: usize) -> VectorView {
+    pub fn from_vector_with_stride(
+        v: &VectorF64,
+        offset: usize,
+        stride: usize,
+        n: usize,
+    ) -> VectorView {
         unsafe {
             VectorView {
                 v: sys::gsl_vector_subvector_with_stride(v.vec, offset, stride, n),
@@ -427,26 +432,26 @@ impl Debug for VectorF32 {
 }
 
 impl ffi::FFI<sys::gsl_vector_float> for VectorF32 {
-    fn wrap(r: *mut sys::gsl_vector_float) -> VectorF32 {
-        VectorF32 {
-            vec: r,
+    fn wrap(vec: *mut sys::gsl_vector_float) -> Self {
+        Self {
+            vec,
             can_free: true,
         }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_vector_float) -> VectorF32 {
-        VectorF32 {
-            vec: r,
+    fn soft_wrap(vec: *mut sys::gsl_vector_float) -> Self {
+        Self {
+            vec,
             can_free: false,
         }
     }
 
-    fn unwrap_shared(v: &VectorF32) -> *const sys::gsl_vector_float {
-        v.vec as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_vector_float {
+        self.vec as *const _
     }
 
-    fn unwrap_unique(v: &mut VectorF32) -> *mut sys::gsl_vector_float {
-        v.vec
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_vector_float {
+        self.vec
     }
 }
 
@@ -725,25 +730,25 @@ impl Debug for VectorF64 {
 }
 
 impl ffi::FFI<sys::gsl_vector> for VectorF64 {
-    fn wrap(r: *mut sys::gsl_vector) -> VectorF64 {
-        VectorF64 {
-            vec: r,
+    fn wrap(vec: *mut sys::gsl_vector) -> Self {
+        Self {
+            vec,
             can_free: true,
         }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_vector) -> VectorF64 {
-        VectorF64 {
-            vec: r,
+    fn soft_wrap(vec: *mut sys::gsl_vector) -> Self {
+        Self {
+            vec,
             can_free: false,
         }
     }
 
-    fn unwrap_shared(v: &VectorF64) -> *const sys::gsl_vector {
-        v.vec as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_vector {
+        self.vec as *const _
     }
 
-    fn unwrap_unique(v: &mut VectorF64) -> *mut sys::gsl_vector {
-        v.vec
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_vector {
+        self.vec
     }
 }

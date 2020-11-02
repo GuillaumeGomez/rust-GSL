@@ -280,7 +280,14 @@ pub fn wvariance(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usiz
 }
 
 /// This function returns the estimated variance of the weighted dataset data using the given weighted mean wmean.
-pub fn wvariance_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
+pub fn wvariance_m(
+    w: &[f64],
+    wstride: usize,
+    data: &[f64],
+    stride: usize,
+    n: usize,
+    wmean: f64,
+) -> f64 {
     unsafe { sys::gsl_stats_wvariance_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
 }
 
@@ -360,7 +367,14 @@ pub fn wabsdev(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize)
 }
 
 /// This function computes the absolute deviation of the weighted dataset data about the given weighted mean wmean.
-pub fn wabsdev_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
+pub fn wabsdev_m(
+    w: &[f64],
+    wstride: usize,
+    data: &[f64],
+    stride: usize,
+    n: usize,
+    wmean: f64,
+) -> f64 {
     unsafe { sys::gsl_stats_wabsdev_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
 }
 
@@ -446,7 +460,13 @@ pub fn min_index(data: &[f64], stride: usize, n: usize) -> usize {
 }
 
 /// This function returns the indexes min_index, max_index of the minimum and maximum values in data in a single pass.
-pub fn minmax_index(min_index: &mut usize, max_index: &mut usize, data: &[f64], stride: usize, n: usize) {
+pub fn minmax_index(
+    min_index: &mut usize,
+    max_index: &mut usize,
+    data: &[f64],
+    stride: usize,
+    n: usize,
+) {
     unsafe { sys::gsl_stats_minmax_index(min_index, max_index, data.as_ptr(), stride, n) }
 }
 

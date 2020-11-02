@@ -60,19 +60,19 @@ impl Drop for RanDiscrete {
 }
 
 impl ffi::FFI<sys::gsl_ran_discrete_t> for RanDiscrete {
-    fn wrap(r: *mut sys::gsl_ran_discrete_t) -> RanDiscrete {
-        RanDiscrete { ran: r }
+    fn wrap(ran: *mut sys::gsl_ran_discrete_t) -> Self {
+        Self { ran }
     }
 
-    fn soft_wrap(v: *mut sys::gsl_ran_discrete_t) -> RanDiscrete {
+    fn soft_wrap(v: *mut sys::gsl_ran_discrete_t) -> Self {
         Self::wrap(v)
     }
 
-    fn unwrap_shared(v: &RanDiscrete) -> *const sys::gsl_ran_discrete_t {
-        v.ran as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_ran_discrete_t {
+        self.ran as *const _
     }
 
-    fn unwrap_unique(v: &mut RanDiscrete) -> *mut sys::gsl_ran_discrete_t {
-        v.ran
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_ran_discrete_t {
+        self.ran
     }
 }

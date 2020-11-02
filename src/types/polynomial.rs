@@ -56,19 +56,19 @@ impl Drop for PolyComplex {
 }
 
 impl ffi::FFI<sys::gsl_poly_complex_workspace> for PolyComplex {
-    fn wrap(w: *mut sys::gsl_poly_complex_workspace) -> PolyComplex {
-        PolyComplex { w: w }
+    fn wrap(w: *mut sys::gsl_poly_complex_workspace) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_poly_complex_workspace) -> PolyComplex {
+    fn soft_wrap(w: *mut sys::gsl_poly_complex_workspace) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &PolyComplex) -> *const sys::gsl_poly_complex_workspace {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_poly_complex_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut PolyComplex) -> *mut sys::gsl_poly_complex_workspace {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_poly_complex_workspace {
+        self.w
     }
 }

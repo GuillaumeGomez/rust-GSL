@@ -39,8 +39,8 @@ pub fn lreg(smin: f64, smax: f64, reg_param: &mut VectorF64) -> Value {
 pub fn lcorner(rho: &VectorF64, eta: &VectorF64, idx: &mut usize) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_lcorner(
-            rho.unwrap_unique(),
-            eta.unwrap_unique(),
+            rho.unwrap_shared(),
+            eta.unwrap_shared(),
             idx,
         ))
     }
@@ -49,8 +49,8 @@ pub fn lcorner(rho: &VectorF64, eta: &VectorF64, idx: &mut usize) -> Value {
 pub fn lcorner2(reg_param: &VectorF64, eta: &VectorF64, idx: &mut usize) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_lcorner2(
-            reg_param.unwrap_unique(),
-            eta.unwrap_unique(),
+            reg_param.unwrap_shared(),
+            eta.unwrap_shared(),
             idx,
         ))
     }

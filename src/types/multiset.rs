@@ -145,32 +145,32 @@ impl Drop for MultiSet {
 }
 
 impl ffi::FFI<sys::gsl_multiset> for MultiSet {
-    fn wrap(c: *mut sys::gsl_multiset) -> MultiSet {
+    fn wrap(c: *mut sys::gsl_multiset) -> Self {
         unsafe {
             if (*c).data.is_null() {
-                MultiSet {
-                    c: c,
+                Self {
+                    c,
                     // dirty trick to avoid a failure
                     data: CSlice::new(c as *mut _, 0),
                 }
             } else {
-                MultiSet {
-                    c: c,
+                Self {
+                    c,
                     data: CSlice::new((*c).data, (*c).k as _),
                 }
             }
         }
     }
 
-    fn soft_wrap(c: *mut sys::gsl_multiset) -> MultiSet {
+    fn soft_wrap(c: *mut sys::gsl_multiset) -> Self {
         Self::wrap(c)
     }
 
-    fn unwrap_shared(c: &MultiSet) -> *const sys::gsl_multiset {
-        c.c as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_multiset {
+        self.c as *const _
     }
 
-    fn unwrap_unique(c: &mut MultiSet) -> *mut sys::gsl_multiset {
-        c.c
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_multiset {
+        self.c
     }
 }

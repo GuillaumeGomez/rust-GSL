@@ -47,25 +47,23 @@ impl Drop for FftComplexWaveTable {
 }
 
 impl ffi::FFI<sys::gsl_fft_complex_wavetable> for FftComplexWaveTable {
-    fn wrap(w: *mut sys::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
-        unsafe {
-            FftComplexWaveTable {
-                w: w,
-                f: CSlice::new((*w).factor.as_mut_ptr(), 64),
-            }
+    fn wrap(w: *mut sys::gsl_fft_complex_wavetable) -> Self {
+        Self {
+            w: w,
+            f: unsafe { CSlice::new((*w).factor.as_mut_ptr(), 64) },
         }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_fft_complex_wavetable) -> FftComplexWaveTable {
+    fn soft_wrap(w: *mut sys::gsl_fft_complex_wavetable) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &FftComplexWaveTable) -> *const sys::gsl_fft_complex_wavetable {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_fft_complex_wavetable {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut FftComplexWaveTable) -> *mut sys::gsl_fft_complex_wavetable {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_fft_complex_wavetable {
+        self.w
     }
 }
 
@@ -94,19 +92,19 @@ impl Drop for FftComplexWorkspace {
 }
 
 impl ffi::FFI<sys::gsl_fft_complex_workspace> for FftComplexWorkspace {
-    fn wrap(w: *mut sys::gsl_fft_complex_workspace) -> FftComplexWorkspace {
-        FftComplexWorkspace { w: w }
+    fn wrap(w: *mut sys::gsl_fft_complex_workspace) -> Self {
+        Self { w: w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_fft_complex_workspace) -> FftComplexWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_fft_complex_workspace) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &FftComplexWorkspace) -> *const sys::gsl_fft_complex_workspace {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_fft_complex_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut FftComplexWorkspace) -> *mut sys::gsl_fft_complex_workspace {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_fft_complex_workspace {
+        self.w
     }
 }

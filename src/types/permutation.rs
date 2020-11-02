@@ -208,25 +208,23 @@ impl Drop for Permutation {
 }
 
 impl ffi::FFI<sys::gsl_permutation> for Permutation {
-    fn wrap(p: *mut sys::gsl_permutation) -> Permutation {
-        unsafe {
-            Permutation {
-                p: p,
-                d: CSlice::new((*p).data, (*p).size as _),
-            }
+    fn wrap(p: *mut sys::gsl_permutation) -> Self {
+        Self {
+            p: p,
+            d: unsafe { CSlice::new((*p).data, (*p).size as _) },
         }
     }
 
-    fn soft_wrap(p: *mut sys::gsl_permutation) -> Permutation {
+    fn soft_wrap(p: *mut sys::gsl_permutation) -> Self {
         Self::wrap(p)
     }
 
-    fn unwrap_shared(p: &Permutation) -> *const sys::gsl_permutation {
-        p.p as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_permutation {
+        self.p as *const _
     }
 
-    fn unwrap_unique(p: &mut Permutation) -> *mut sys::gsl_permutation {
-        p.p
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_permutation {
+        self.p
     }
 }
 

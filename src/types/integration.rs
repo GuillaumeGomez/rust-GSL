@@ -118,22 +118,20 @@ impl Drop for IntegrationFixedWorkspace {
 }
 
 impl FFI<sys::gsl_integration_fixed_workspace> for IntegrationFixedWorkspace {
-    fn wrap(w: *mut sys::gsl_integration_fixed_workspace) -> IntegrationFixedWorkspace {
-        IntegrationFixedWorkspace { w: w }
+    fn wrap(w: *mut sys::gsl_integration_fixed_workspace) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_integration_fixed_workspace) -> IntegrationFixedWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_integration_fixed_workspace) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationFixedWorkspace) -> *const sys::gsl_integration_fixed_workspace {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_integration_fixed_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(
-        w: &mut IntegrationFixedWorkspace,
-    ) -> *mut sys::gsl_integration_fixed_workspace {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_integration_fixed_workspace {
+        self.w
     }
 }
 
@@ -501,20 +499,20 @@ impl Drop for IntegrationWorkspace {
 }
 
 impl FFI<sys::gsl_integration_workspace> for IntegrationWorkspace {
-    fn wrap(w: *mut sys::gsl_integration_workspace) -> IntegrationWorkspace {
-        IntegrationWorkspace { w: w }
+    fn wrap(w: *mut sys::gsl_integration_workspace) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_integration_workspace) -> IntegrationWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_integration_workspace) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationWorkspace) -> *const sys::gsl_integration_workspace {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_integration_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut IntegrationWorkspace) -> *mut sys::gsl_integration_workspace {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_integration_workspace {
+        self.w
     }
 }
 
@@ -618,20 +616,20 @@ impl Drop for IntegrationQawsTable {
 }
 
 impl FFI<sys::gsl_integration_qaws_table> for IntegrationQawsTable {
-    fn wrap(w: *mut sys::gsl_integration_qaws_table) -> IntegrationQawsTable {
-        IntegrationQawsTable { w: w }
+    fn wrap(w: *mut sys::gsl_integration_qaws_table) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_integration_qaws_table) -> IntegrationQawsTable {
+    fn soft_wrap(w: *mut sys::gsl_integration_qaws_table) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationQawsTable) -> *const sys::gsl_integration_qaws_table {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_integration_qaws_table {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut IntegrationQawsTable) -> *mut sys::gsl_integration_qaws_table {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_integration_qaws_table {
+        self.w
     }
 }
 
@@ -746,20 +744,20 @@ impl Drop for IntegrationQawoTable {
 }
 
 impl FFI<sys::gsl_integration_qawo_table> for IntegrationQawoTable {
-    fn wrap(w: *mut sys::gsl_integration_qawo_table) -> IntegrationQawoTable {
-        IntegrationQawoTable { w: w }
+    fn wrap(w: *mut sys::gsl_integration_qawo_table) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_integration_qawo_table) -> IntegrationQawoTable {
+    fn soft_wrap(w: *mut sys::gsl_integration_qawo_table) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &IntegrationQawoTable) -> *const sys::gsl_integration_qawo_table {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_integration_qawo_table {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut IntegrationQawoTable) -> *mut sys::gsl_integration_qawo_table {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_integration_qawo_table {
+        self.w
     }
 }
 
@@ -849,20 +847,20 @@ impl Drop for CquadWorkspace {
 }
 
 impl FFI<sys::gsl_integration_cquad_workspace> for CquadWorkspace {
-    fn wrap(w: *mut sys::gsl_integration_cquad_workspace) -> CquadWorkspace {
-        CquadWorkspace { w: w }
+    fn wrap(w: *mut sys::gsl_integration_cquad_workspace) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_integration_cquad_workspace) -> CquadWorkspace {
+    fn soft_wrap(w: *mut sys::gsl_integration_cquad_workspace) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &CquadWorkspace) -> *const sys::gsl_integration_cquad_workspace {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_integration_cquad_workspace {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut CquadWorkspace) -> *mut sys::gsl_integration_cquad_workspace {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_integration_cquad_workspace {
+        self.w
     }
 }
 
@@ -928,19 +926,19 @@ impl Drop for GLFixedTable {
 }
 
 impl FFI<sys::gsl_integration_glfixed_table> for GLFixedTable {
-    fn wrap(w: *mut sys::gsl_integration_glfixed_table) -> GLFixedTable {
-        GLFixedTable { w: w }
+    fn wrap(w: *mut sys::gsl_integration_glfixed_table) -> Self {
+        Self { w }
     }
 
-    fn soft_wrap(w: *mut sys::gsl_integration_glfixed_table) -> GLFixedTable {
+    fn soft_wrap(w: *mut sys::gsl_integration_glfixed_table) -> Self {
         Self::wrap(w)
     }
 
-    fn unwrap_shared(w: &GLFixedTable) -> *const sys::gsl_integration_glfixed_table {
-        w.w as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_integration_glfixed_table {
+        self.w as *const _
     }
 
-    fn unwrap_unique(w: &mut GLFixedTable) -> *mut sys::gsl_integration_glfixed_table {
-        w.w
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_integration_glfixed_table {
+        self.w
     }
 }

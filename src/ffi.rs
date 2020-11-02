@@ -5,6 +5,6 @@
 pub trait FFI<T> {
     fn wrap(r: *mut T) -> Self;
     fn soft_wrap(r: *mut T) -> Self;
-    fn unwrap_shared(&Self) -> *const T;
-    fn unwrap_unique(&mut Self) -> *mut T;
+    fn unwrap_shared(&self) -> *const T;
+    fn unwrap_unique(&mut self) -> *mut T;
 }

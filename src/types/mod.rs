@@ -69,6 +69,7 @@ pub mod minimizer;
 pub mod monte_carlo;
 pub mod multifit_linear;
 pub mod multifit_solver;
+#[cfg(feature = "v2_1")]
 pub mod multilarge_linear;
 pub mod multiset;
 pub mod n_tuples;

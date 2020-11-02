@@ -280,20 +280,20 @@ impl Debug for MatrixComplexF64 {
 }
 
 impl ffi::FFI<sys::gsl_matrix_complex> for MatrixComplexF64 {
-    fn wrap(r: *mut sys::gsl_matrix_complex) -> MatrixComplexF64 {
-        MatrixComplexF64 { mat: r }
+    fn wrap(mat: *mut sys::gsl_matrix_complex) -> Self {
+        Self { mat }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_matrix_complex) -> MatrixComplexF64 {
-        Self::wrap(r)
+    fn soft_wrap(mat: *mut sys::gsl_matrix_complex) -> Self {
+        Self::wrap(mat)
     }
 
-    fn unwrap_shared(m: &MatrixComplexF64) -> *const sys::gsl_matrix_complex {
-        m.mat as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_matrix_complex {
+        self.mat as *const _
     }
 
-    fn unwrap_unique(m: &mut MatrixComplexF64) -> *mut sys::gsl_matrix_complex {
-        m.mat
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_matrix_complex {
+        self.mat
     }
 }
 
@@ -573,19 +573,19 @@ impl Debug for MatrixComplexF32 {
 }
 
 impl ffi::FFI<sys::gsl_matrix_complex_float> for MatrixComplexF32 {
-    fn wrap(r: *mut sys::gsl_matrix_complex_float) -> MatrixComplexF32 {
-        MatrixComplexF32 { mat: r }
+    fn wrap(mat: *mut sys::gsl_matrix_complex_float) -> Self {
+        Self { mat }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_matrix_complex_float) -> MatrixComplexF32 {
-        Self::wrap(r)
+    fn soft_wrap(mat: *mut sys::gsl_matrix_complex_float) -> Self {
+        Self::wrap(mat)
     }
 
-    fn unwrap_shared(m: &MatrixComplexF32) -> *const sys::gsl_matrix_complex_float {
-        m.mat as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_matrix_complex_float {
+        self.mat as *const _
     }
 
-    fn unwrap_unique(m: &mut MatrixComplexF32) -> *mut sys::gsl_matrix_complex_float {
-        m.mat
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_matrix_complex_float {
+        self.mat
     }
 }

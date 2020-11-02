@@ -262,20 +262,20 @@ impl Drop for ODEiv2Step {
 }
 
 impl ffi::FFI<sys::gsl_odeiv2_step> for ODEiv2Step {
-    fn wrap(s: *mut sys::gsl_odeiv2_step) -> ODEiv2Step {
-        ODEiv2Step { s: s }
+    fn wrap(s: *mut sys::gsl_odeiv2_step) -> Self {
+        Self { s }
     }
 
-    fn soft_wrap(s: *mut sys::gsl_odeiv2_step) -> ODEiv2Step {
+    fn soft_wrap(s: *mut sys::gsl_odeiv2_step) -> Self {
         Self::wrap(s)
     }
 
-    fn unwrap_shared(s: &ODEiv2Step) -> *const sys::gsl_odeiv2_step {
-        s.s
+    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_step {
+        self.s
     }
 
-    fn unwrap_unique(s: &mut ODEiv2Step) -> *mut sys::gsl_odeiv2_step {
-        s.s
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_step {
+        self.s
     }
 }
 
@@ -396,20 +396,20 @@ impl ODEiv2StepType {
 }
 
 impl ffi::FFI<sys::gsl_odeiv2_step_type> for ODEiv2StepType {
-    fn wrap(t: *mut sys::gsl_odeiv2_step_type) -> ODEiv2StepType {
-        ODEiv2StepType { t: t }
+    fn wrap(t: *mut sys::gsl_odeiv2_step_type) -> Self {
+        Self { t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_odeiv2_step_type) -> ODEiv2StepType {
+    fn soft_wrap(t: *mut sys::gsl_odeiv2_step_type) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &ODEiv2StepType) -> *const sys::gsl_odeiv2_step_type {
-        t.t as *const sys::gsl_odeiv2_step_type
+    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_step_type {
+        self.t as *const sys::gsl_odeiv2_step_type
     }
 
-    fn unwrap_unique(t: &mut ODEiv2StepType) -> *mut sys::gsl_odeiv2_step_type {
-        t.t as *mut sys::gsl_odeiv2_step_type
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_step_type {
+        self.t as *mut sys::gsl_odeiv2_step_type
     }
 }
 
@@ -603,20 +603,20 @@ impl Drop for ODEiv2Control {
 }
 
 impl ffi::FFI<sys::gsl_odeiv2_control> for ODEiv2Control {
-    fn wrap(c: *mut sys::gsl_odeiv2_control) -> ODEiv2Control {
-        ODEiv2Control { c: c }
+    fn wrap(c: *mut sys::gsl_odeiv2_control) -> Self {
+        Self { c }
     }
 
-    fn soft_wrap(c: *mut sys::gsl_odeiv2_control) -> ODEiv2Control {
+    fn soft_wrap(c: *mut sys::gsl_odeiv2_control) -> Self {
         Self::wrap(c)
     }
 
-    fn unwrap_shared(c: &ODEiv2Control) -> *const sys::gsl_odeiv2_control {
-        c.c
+    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_control {
+        self.c
     }
 
-    fn unwrap_unique(c: &mut ODEiv2Control) -> *mut sys::gsl_odeiv2_control {
-        c.c
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_control {
+        self.c
     }
 }
 
@@ -645,20 +645,20 @@ pub struct ODEiv2ControlType {
 // }
 
 impl ffi::FFI<sys::gsl_odeiv2_control_type> for ODEiv2ControlType {
-    fn wrap(t: *mut sys::gsl_odeiv2_control_type) -> ODEiv2ControlType {
-        ODEiv2ControlType { t: t }
+    fn wrap(t: *mut sys::gsl_odeiv2_control_type) -> Self {
+        Self { t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_odeiv2_control_type) -> ODEiv2ControlType {
+    fn soft_wrap(t: *mut sys::gsl_odeiv2_control_type) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &ODEiv2ControlType) -> *const sys::gsl_odeiv2_control_type {
-        t.t as *const sys::gsl_odeiv2_control_type
+    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_control_type {
+        self.t
     }
 
-    fn unwrap_unique(t: &mut ODEiv2ControlType) -> *mut sys::gsl_odeiv2_control_type {
-        t.t as *mut sys::gsl_odeiv2_control_type
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_control_type {
+        panic!("Should never be used")
     }
 }
 
@@ -760,20 +760,20 @@ impl Drop for ODEiv2Evolve {
 }
 
 impl ffi::FFI<sys::gsl_odeiv2_evolve> for ODEiv2Evolve {
-    fn wrap(e: *mut sys::gsl_odeiv2_evolve) -> ODEiv2Evolve {
-        ODEiv2Evolve { e: e }
+    fn wrap(e: *mut sys::gsl_odeiv2_evolve) -> Self {
+        Self { e }
     }
 
-    fn soft_wrap(e: *mut sys::gsl_odeiv2_evolve) -> ODEiv2Evolve {
+    fn soft_wrap(e: *mut sys::gsl_odeiv2_evolve) -> Self {
         Self::wrap(e)
     }
 
-    fn unwrap_shared(e: &ODEiv2Evolve) -> *const sys::gsl_odeiv2_evolve {
-        e.e as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_evolve {
+        self.e as *const _
     }
 
-    fn unwrap_unique(e: &mut ODEiv2Evolve) -> *mut sys::gsl_odeiv2_evolve {
-        e.e
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_evolve {
+        self.e
     }
 }
 
@@ -937,7 +937,13 @@ impl<'a> ODEiv2Driver<'a> {
 
     /// This function evolves the driver system d from t with n steps of size h. If the function is unable to complete the calculation, an
     /// error code from gsl_odeiv2_evolve_apply_fixed_step is returned, and t and y contain the values from last successful step.
-    pub fn apply_fixed_step(&mut self, t: &mut f64, h: f64, n: usize, y: &mut [f64]) -> enums::Value {
+    pub fn apply_fixed_step(
+        &mut self,
+        t: &mut f64,
+        h: f64,
+        n: usize,
+        y: &mut [f64],
+    ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_odeiv2_driver_apply_fixed_step(self.d, t, h, n as _, y.as_mut_ptr())
         })

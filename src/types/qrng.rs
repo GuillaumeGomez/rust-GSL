@@ -109,23 +109,23 @@ impl Drop for QRng {
 }
 
 impl ffi::FFI<sys::gsl_qrng> for QRng {
-    fn wrap(q: *mut sys::gsl_qrng) -> QRng {
-        QRng {
-            q: q,
+    fn wrap(q: *mut sys::gsl_qrng) -> Self {
+        Self {
+            q,
             data: unsafe { CSlice::new(q as *mut c_char, 0) },
         }
     }
 
-    fn soft_wrap(q: *mut sys::gsl_qrng) -> QRng {
+    fn soft_wrap(q: *mut sys::gsl_qrng) -> Self {
         Self::wrap(q)
     }
 
-    fn unwrap_shared(q: &QRng) -> *const sys::gsl_qrng {
-        q.q as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_qrng {
+        self.q as *const _
     }
 
-    fn unwrap_unique(q: &mut QRng) -> *mut sys::gsl_qrng {
-        q.q
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_qrng {
+        self.q
     }
 }
 
@@ -175,19 +175,19 @@ impl QRngType {
 }
 
 impl ffi::FFI<sys::gsl_qrng_type> for QRngType {
-    fn wrap(t: *mut sys::gsl_qrng_type) -> QRngType {
-        QRngType { t: t }
+    fn wrap(t: *mut sys::gsl_qrng_type) -> Self {
+        Self { t }
     }
 
-    fn soft_wrap(t: *mut sys::gsl_qrng_type) -> QRngType {
+    fn soft_wrap(t: *mut sys::gsl_qrng_type) -> Self {
         Self::wrap(t)
     }
 
-    fn unwrap_shared(t: &QRngType) -> *const sys::gsl_qrng_type {
-        t.t as *const sys::gsl_qrng_type
+    fn unwrap_shared(&self) -> *const sys::gsl_qrng_type {
+        self.t
     }
 
-    fn unwrap_unique(t: &mut QRngType) -> *mut sys::gsl_qrng_type {
-        t.t as *mut sys::gsl_qrng_type
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_qrng_type {
+        panic!("Should not be used!")
     }
 }

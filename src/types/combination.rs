@@ -156,25 +156,23 @@ impl Drop for Combination {
 }
 
 impl ffi::FFI<sys::gsl_combination> for Combination {
-    fn wrap(c: *mut sys::gsl_combination) -> Combination {
-        unsafe {
-            Combination {
-                c: c,
-                data: CSlice::new((*c).data, (*c).k as _),
-            }
+    fn wrap(c: *mut sys::gsl_combination) -> Self {
+        Self {
+            c: c,
+            data: unsafe { CSlice::new((*c).data, (*c).k as _) },
         }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_combination) -> Combination {
+    fn soft_wrap(r: *mut sys::gsl_combination) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(c: &Combination) -> *const sys::gsl_combination {
-        c.c as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_combination {
+        self.c as *const _
     }
 
-    fn unwrap_unique(c: &mut Combination) -> *mut sys::gsl_combination {
-        c.c
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_combination {
+        self.c
     }
 }
 
