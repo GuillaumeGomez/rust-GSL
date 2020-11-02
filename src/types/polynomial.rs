@@ -10,11 +10,13 @@ described in this section uses an iterative method to find the approximate locat
 !*/
 
 use enums;
-use ffi;
+use ffi::FFI;
 
-pub struct PolyComplex {
-    w: *mut sys::gsl_poly_complex_workspace,
-}
+ffi_wrapper!(
+    PolyComplex,
+    *mut sys::gsl_poly_complex_workspace,
+    gsl_poly_complex_workspace_free
+);
 
 impl PolyComplex {
     /// This function allocates space for a gsl_poly_complex_workspace struct and a workspace suitable for solving a polynomial with n coefficients
@@ -28,7 +30,7 @@ impl PolyComplex {
         if tmp.is_null() {
             None
         } else {
-            Some(PolyComplex { w: tmp })
+            Some(PolyComplex::wrap(tmp))
         }
     }
 
@@ -43,32 +45,12 @@ impl PolyComplex {
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
     pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_poly_complex_solve(a.as_ptr(), a.len() as _, self.w, z.as_mut_ptr())
+            sys::gsl_poly_complex_solve(
+                a.as_ptr(),
+                a.len() as _,
+                self.unwrap_unique(),
+                z.as_mut_ptr(),
+            )
         })
-    }
-}
-
-impl Drop for PolyComplex {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_poly_complex_workspace_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_poly_complex_workspace> for PolyComplex {
-    fn wrap(w: *mut sys::gsl_poly_complex_workspace) -> Self {
-        Self { w }
-    }
-
-    fn soft_wrap(w: *mut sys::gsl_poly_complex_workspace) -> Self {
-        Self::wrap(w)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_poly_complex_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_poly_complex_workspace {
-        self.w
     }
 }

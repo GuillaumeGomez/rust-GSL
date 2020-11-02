@@ -31,11 +31,9 @@ Communications of the ACM 16(4), 254–256 (1973)
 !*/
 
 use enums;
-use ffi::{self, FFI};
+use ffi::FFI;
 
-pub struct ChebSeries {
-    c: *mut sys::gsl_cheb_series,
-}
+ffi_wrapper!(ChebSeries, *mut sys::gsl_cheb_series, gsl_cheb_free);
 
 impl ChebSeries {
     pub fn new(n: usize) -> Option<ChebSeries> {
@@ -44,7 +42,7 @@ impl ChebSeries {
         if tmp.is_null() {
             None
         } else {
-            Some(Self { c: tmp })
+            Some(Self { inner: tmp })
         }
     }
 
@@ -54,23 +52,23 @@ impl ChebSeries {
     pub fn init<F: Fn(f64) -> f64>(&mut self, f: F, a: f64, b: f64) -> enums::Value {
         let function = wrap_callback!(f, F);
 
-        enums::Value::from(unsafe { sys::gsl_cheb_init(FFI::unwrap_unique(self), &function, a, b) })
+        enums::Value::from(unsafe { sys::gsl_cheb_init(self.unwrap_unique(), &function, a, b) })
     }
 
     /// This function returns the order of Chebyshev series cs.
     pub fn order(&self) -> usize {
-        unsafe { sys::gsl_cheb_order(self.c) }
+        unsafe { sys::gsl_cheb_order(self.unwrap_shared()) }
     }
 
     /// This function returns the size of the Chebyshev coefficient array c[] for the Chebyshev
     /// series cs.
     pub fn size(&self) -> usize {
-        unsafe { sys::gsl_cheb_size(self.c) }
+        unsafe { sys::gsl_cheb_size(self.unwrap_shared()) }
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x.
     pub fn eval(&self, x: f64) -> f64 {
-        unsafe { sys::gsl_cheb_eval(self.c, x) }
+        unsafe { sys::gsl_cheb_eval(self.unwrap_shared(), x) }
     }
 
     /// This function computes the Chebyshev series cs at a given point x, estimating both the
@@ -82,14 +80,15 @@ impl ChebSeries {
         let mut result = 0.;
         let mut abs_err = 0.;
 
-        let ret = unsafe { sys::gsl_cheb_eval_err(self.c, x, &mut result, &mut abs_err) };
+        let ret =
+            unsafe { sys::gsl_cheb_eval_err(self.unwrap_shared(), x, &mut result, &mut abs_err) };
         (::Value::from(ret), result, abs_err)
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given
     /// order order.
     pub fn eval_n(&self, order: usize, x: f64) -> f64 {
-        unsafe { sys::gsl_cheb_eval_n(self.c, order, x) }
+        unsafe { sys::gsl_cheb_eval_n(self.unwrap_shared(), order, x) }
     }
 
     /// This function evaluates a Chebyshev series cs at a given point x, estimating both the series
@@ -101,7 +100,9 @@ impl ChebSeries {
         let mut result = 0.;
         let mut abs_err = 0.;
 
-        let ret = unsafe { sys::gsl_cheb_eval_n_err(self.c, order, x, &mut result, &mut abs_err) };
+        let ret = unsafe {
+            sys::gsl_cheb_eval_n_err(self.unwrap_shared(), order, x, &mut result, &mut abs_err)
+        };
         (::Value::from(ret), result, abs_err)
     }
 
@@ -109,7 +110,9 @@ impl ChebSeries {
     /// in the previously allocated deriv. The two series cs and deriv must have been allocated with
     /// the same order.
     pub fn calc_deriv(&self, deriv: &mut ChebSeries) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_cheb_calc_deriv(deriv.c, self.c) })
+        enums::Value::from(unsafe {
+            sys::gsl_cheb_calc_deriv(deriv.unwrap_unique(), self.unwrap_shared())
+        })
     }
 
     /// This function computes the integral of the series cs, storing the integral coefficients in
@@ -117,30 +120,8 @@ impl ChebSeries {
     /// the same order. The lower limit of the integration is taken to be the left hand end of the
     /// range a.
     pub fn calc_integ(&self, integ: &mut ChebSeries) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_cheb_calc_integ(integ.c, self.c) })
-    }
-}
-
-impl Drop for ChebSeries {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_cheb_free(self.c) };
-    }
-}
-
-impl ffi::FFI<sys::gsl_cheb_series> for ChebSeries {
-    fn wrap(c: *mut sys::gsl_cheb_series) -> Self {
-        unsafe { Self { c } }
-    }
-
-    fn soft_wrap(r: *mut sys::gsl_cheb_series) -> Self {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_cheb_series {
-        self.c as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_cheb_series {
-        self.c
+        enums::Value::from(unsafe {
+            sys::gsl_cheb_calc_integ(integ.unwrap_unique(), self.unwrap_shared())
+        })
     }
 }

@@ -5,27 +5,11 @@
 use crate::{MatrixF64, Value, VectorF64};
 use ffi::FFI;
 
-pub struct MultifitLinear {
-    inner: *mut sys::gsl_multifit_linear_workspace,
-}
-
-impl FFI<sys::gsl_multifit_linear_workspace> for MultifitLinear {
-    fn wrap(inner: *mut sys::gsl_multifit_linear_workspace) -> Self {
-        Self { inner }
-    }
-
-    fn soft_wrap(r: *mut sys::gsl_multifit_linear_workspace) -> Self {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_multifit_linear_workspace {
-        self.inner as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_multifit_linear_workspace {
-        self.inner
-    }
-}
+ffi_wrapper!(
+    MultifitLinear,
+    *mut sys::gsl_multifit_linear_workspace,
+    gsl_multifit_linear_free
+);
 
 impl MultifitLinear {
     pub fn alloc(n: usize, p: usize) -> Option<MultifitLinear> {
@@ -479,7 +463,14 @@ impl MultifitLinear {
     }
 
     pub fn linear_gcv_calc(&mut self, lambda: f64, UTy: &VectorF64, delta0: f64) -> f64 {
-        unsafe { sys::gsl_multifit_linear_gcv_calc(lambda, UTy.unwrap_shared(), delta0, self.unwrap_unique()) }
+        unsafe {
+            sys::gsl_multifit_linear_gcv_calc(
+                lambda,
+                UTy.unwrap_shared(),
+                delta0,
+                self.unwrap_unique(),
+            )
+        }
     }
 
     pub fn linear_gcv(
@@ -499,17 +490,6 @@ impl MultifitLinear {
                 g_lambda,
                 self.unwrap_unique(),
             ))
-        }
-    }
-}
-
-impl Drop for MultifitLinear {
-    fn drop(&mut self) {
-        if !self.inner.is_null() {
-            unsafe {
-                sys::gsl_multifit_linear_free(self.inner);
-            }
-            self.inner = ::std::ptr::null_mut();
         }
     }
 }

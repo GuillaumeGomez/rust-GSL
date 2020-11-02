@@ -20,7 +20,7 @@ Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–
 
 use c_vec::CSlice;
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use std::os::raw::c_char;
 
 pub struct QRng {
@@ -32,8 +32,8 @@ impl QRng {
     /// This function returns a pointer to a newly-created instance of a quasi-random sequence generator of type T and dimension d. If
     /// there is insufficient memory to create the generator then the function returns a null pointer and the error handler is invoked
     /// with an error code of ::NoMem.
-    pub fn new(t: &QRngType, d: u32) -> Option<QRng> {
-        let tmp = unsafe { sys::gsl_qrng_alloc(t.t, d) };
+    pub fn new(t: QRngType, d: u32) -> Option<QRng> {
+        let tmp = unsafe { sys::gsl_qrng_alloc(t.unwrap_shared(), d) };
 
         if tmp.is_null() {
             None
@@ -129,65 +129,28 @@ impl ffi::FFI<sys::gsl_qrng> for QRng {
     }
 }
 
-#[derive(Clone, Copy)]
-pub struct QRngType {
-    t: *const sys::gsl_qrng_type,
-}
+ffi_wrapper!(QRngType, *const sys::gsl_qrng_type);
 
 impl QRngType {
     /// This generator uses the algorithm described in Bratley, Fox, Niederreiter, ACM Trans. Model. Comp. Sim. 2, 195 (1992). It is valid
     /// up to 12 dimensions.
     pub fn niederreiter_2() -> QRngType {
-        unsafe {
-            QRngType {
-                t: sys::gsl_qrng_niederreiter_2,
-            }
-        }
+        ffi_wrap!(gsl_qrng_niederreiter_2)
     }
 
     /// This generator uses the Sobol sequence described in Antonov, Saleev, USSR Comput. Maths. Math. Phys. 19, 252 (1980). It is valid
     /// up to 40 dimensions.
     pub fn sobol() -> QRngType {
-        unsafe {
-            QRngType {
-                t: sys::gsl_qrng_sobol,
-            }
-        }
+        ffi_wrap!(gsl_qrng_sobol)
     }
 
     /// These generators use the Halton and reverse Halton sequences described in J.H. Halton, Numerische Mathematik 2, 84-90 (1960) and
     /// B. Vandewoestyne and R. Cools Computational and Applied Mathematics 189, 1&2, 341-361 (2006). They are valid up to 1229 dimensions.
     pub fn halton() -> QRngType {
-        unsafe {
-            QRngType {
-                t: sys::gsl_qrng_halton,
-            }
-        }
+        ffi_wrap!(gsl_qrng_halton)
     }
 
     pub fn reversehalton() -> QRngType {
-        unsafe {
-            QRngType {
-                t: sys::gsl_qrng_reversehalton,
-            }
-        }
-    }
-}
-
-impl ffi::FFI<sys::gsl_qrng_type> for QRngType {
-    fn wrap(t: *mut sys::gsl_qrng_type) -> Self {
-        Self { t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_qrng_type) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_qrng_type {
-        self.t
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_qrng_type {
-        panic!("Should not be used!")
+        ffi_wrap!(gsl_qrng_reversehalton)
     }
 }

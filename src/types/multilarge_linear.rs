@@ -5,27 +5,7 @@
 use crate::{MatrixF64, Value, VectorF64};
 use ffi::FFI;
 
-pub struct MultilargeLinearType {
-    inner: *const sys::gsl_multilarge_linear_type,
-}
-
-impl FFI<sys::gsl_multilarge_linear_type> for MultilargeLinearType {
-    fn wrap(_r: *mut sys::gsl_multilarge_linear_type) -> Self {
-        unimplemented!()
-    }
-
-    fn soft_wrap(_r: *mut sys::gsl_multilarge_linear_type) -> Self {
-        unimplemented!()
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_multilarge_linear_type {
-        self.inner
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_multilarge_linear_type {
-        unimplemented!()
-    }
-}
+ffi_wrapper!(MultilargeLinearType, *const sys::gsl_multilarge_linear_type);
 
 impl MultilargeLinearType {
     pub fn normal() -> MultilargeLinearType {
@@ -45,27 +25,11 @@ impl MultilargeLinearType {
     }
 }
 
-pub struct MultilargeLinear {
-    inner: *mut sys::gsl_multilarge_linear_workspace,
-}
-
-impl FFI<sys::gsl_multilarge_linear_workspace> for MultilargeLinear {
-    fn wrap(inner: *mut sys::gsl_multilarge_linear_workspace) -> Self {
-        Self { inner }
-    }
-
-    fn soft_wrap(r: *mut sys::gsl_multilarge_linear_workspace) -> Self {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_multilarge_linear_workspace {
-        self.inner as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_multilarge_linear_workspace {
-        self.inner
-    }
-}
+ffi_wrapper!(
+    MultilargeLinear,
+    *mut sys::gsl_multilarge_linear_workspace,
+    gsl_multilarge_linear_free
+);
 
 impl MultilargeLinear {
     pub fn alloc(t: MultilargeLinearType, p: usize) -> Option<MultilargeLinear> {
@@ -104,17 +68,6 @@ impl MultilargeLinear {
                 y.unwrap_unique(),
                 self.unwrap_unique(),
             ))
-        }
-    }
-}
-
-impl Drop for MultilargeLinear {
-    fn drop(&mut self) {
-        if !self.inner.is_null() {
-            unsafe {
-                sys::gsl_multilarge_linear_free(self.inner);
-            }
-            self.inner = ::std::ptr::null_mut();
         }
     }
 }

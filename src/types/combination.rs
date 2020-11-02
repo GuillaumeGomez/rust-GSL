@@ -20,12 +20,12 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 
 use c_vec::CSlice;
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 
 pub struct Combination {
-    c: *mut sys::gsl_combination,
+    inner: *mut sys::gsl_combination,
     data: CSlice<usize>,
 }
 
@@ -44,12 +44,12 @@ impl Combination {
             unsafe {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
-                        c: tmp,
+                        inner: tmp,
                         data: CSlice::new((*tmp).data, (*tmp).k as _),
                     })
                 } else {
                     Some(Combination {
-                        c: tmp,
+                        inner: tmp,
                         data: CSlice::new(tmp as *mut _, 0usize),
                     })
                 }
@@ -69,12 +69,12 @@ impl Combination {
             unsafe {
                 if !(*tmp).data.is_null() {
                     Some(Combination {
-                        c: tmp,
+                        inner: tmp,
                         data: CSlice::new((*tmp).data, (*tmp).k as _),
                     })
                 } else {
                     Some(Combination {
-                        c: tmp,
+                        inner: tmp,
                         data: CSlice::new(tmp as *mut _, 0usize),
                     })
                 }
@@ -85,35 +85,37 @@ impl Combination {
     /// This function initializes the combination c to the lexicographically first combination, i.e.
     /// (0,1,2,...,k-1).
     pub fn init_first(&mut self) {
-        unsafe { sys::gsl_combination_init_first(self.c) }
+        unsafe { sys::gsl_combination_init_first(self.unwrap_unique()) }
     }
 
     /// This function initializes the combination c to the lexicographically last combination, i.e.
     /// (n-k,n-k+1,…,n-1).
     pub fn init_last(&mut self) {
-        unsafe { sys::gsl_combination_init_last(self.c) }
+        unsafe { sys::gsl_combination_init_last(self.unwrap_unique()) }
     }
 
     /// This function copies the elements of the combination self into the combination dest. The two
     /// combinations must have the same size.
     pub fn copy(&self, dest: &mut Combination) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_combination_memcpy(dest.c, self.c) })
+        enums::Value::from(unsafe {
+            sys::gsl_combination_memcpy(dest.unwrap_unique(), self.unwrap_shared())
+        })
     }
 
     /// This function returns the value of the i-th element of the combination self. If i lies
     /// outside the allowed range of 0 to k-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: usize) -> usize {
-        unsafe { sys::gsl_combination_get(self.c, i) }
+        unsafe { sys::gsl_combination_get(self.unwrap_shared(), i) }
     }
 
     /// This function returns the range (n) of the combination self.
     pub fn n(&self) -> usize {
-        unsafe { sys::gsl_combination_n(self.c) }
+        unsafe { sys::gsl_combination_n(self.unwrap_shared()) }
     }
 
     /// This function returns the number of elements (k) in the combination self.
     pub fn k(&self) -> usize {
-        unsafe { sys::gsl_combination_k(self.c) }
+        unsafe { sys::gsl_combination_k(self.unwrap_shared()) }
     }
 
     /// This function returns a pointer to the array of elements in the combination self.
@@ -129,7 +131,8 @@ impl Combination {
     /// This function checks that the combination self is valid. The k elements should lie in the
     /// range 0 to n-1, with each value occurring once at most and in increasing order.
     pub fn is_valid(&self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_combination_valid(self.c) })
+        // Little hack because `gsl_combination_valid` doesn't in fact need a mutable object...
+        enums::Value::from(unsafe { sys::gsl_combination_valid(self.inner) })
     }
 
     /// This function advances the combination self to the next combination in lexicographic order
@@ -137,29 +140,29 @@ impl Combination {
     /// leaves self unmodified. Starting with the first combination and repeatedly applying this
     /// function will iterate through all possible combinations of a given order.
     pub fn next(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_combination_next(self.c) })
+        enums::Value::from(unsafe { sys::gsl_combination_next(self.unwrap_unique()) })
     }
 
     /// This function steps backwards from the combination self to the previous combination in
     /// lexicographic order, returning `Success`. If no previous combination is available it returns
     /// `Failure` and leaves self unmodified.
     pub fn prev(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_combination_prev(self.c) })
+        enums::Value::from(unsafe { sys::gsl_combination_prev(self.unwrap_unique()) })
     }
 }
 
 impl Drop for Combination {
     fn drop(&mut self) {
-        unsafe { sys::gsl_combination_free(self.c) };
-        self.c = ::std::ptr::null_mut();
+        unsafe { sys::gsl_combination_free(self.inner) };
+        self.inner = ::std::ptr::null_mut();
     }
 }
 
 impl ffi::FFI<sys::gsl_combination> for Combination {
-    fn wrap(c: *mut sys::gsl_combination) -> Self {
+    fn wrap(inner: *mut sys::gsl_combination) -> Self {
         Self {
-            c: c,
-            data: unsafe { CSlice::new((*c).data, (*c).k as _) },
+            inner,
+            data: unsafe { CSlice::new((*inner).data, (*inner).k as _) },
         }
     }
 
@@ -168,11 +171,11 @@ impl ffi::FFI<sys::gsl_combination> for Combination {
     }
 
     fn unwrap_shared(&self) -> *const sys::gsl_combination {
-        self.c as *const _
+        self.inner as *const _
     }
 
     fn unwrap_unique(&mut self) -> *mut sys::gsl_combination {
-        self.c
+        self.inner
     }
 }
 

@@ -60,7 +60,7 @@ Differential/Algebraic Equation Solvers.â€, ACM Trans. Math. Software 31, 363â€
 !*/
 
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use libc::c_void;
 
 /// Description of a system of ODEs.
@@ -154,28 +154,26 @@ extern "C" fn jacobian_handler(
     .into()
 }
 
-pub struct ODEiv2Step {
-    s: *mut sys::gsl_odeiv2_step,
-}
+ffi_wrapper!(ODEiv2Step, *mut sys::gsl_odeiv2_step, gsl_odeiv2_step_free);
 
 impl ODEiv2Step {
     /// This function returns a pointer to a newly allocated instance of a stepping function of type T for a system of dim dimensions.
     /// Please note that if you use a stepper method that requires access to a driver object, it is advisable to use a driver allocation
     /// method, which automatically allocates a stepper, too.
-    pub fn new(t: &ODEiv2StepType, dim: usize) -> Option<ODEiv2Step> {
-        let tmp = unsafe { sys::gsl_odeiv2_step_alloc(ffi::FFI::unwrap_shared(t), dim) };
+    pub fn new(t: ODEiv2StepType, dim: usize) -> Option<ODEiv2Step> {
+        let tmp = unsafe { sys::gsl_odeiv2_step_alloc(t.unwrap_shared(), dim) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Step { s: tmp })
+            Some(ODEiv2Step::wrap(tmp))
         }
     }
 
     /// This function resets the stepping function s. It should be used whenever the next use of s will not be a continuation of a previous
     /// step.
     pub fn reset(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_odeiv2_step_reset(self.s) })
+        enums::Value::from(unsafe { sys::gsl_odeiv2_step_reset(self.unwrap_unique()) })
     }
 
     /// This function returns a pointer to the name of the stepping function. For example,
@@ -185,7 +183,7 @@ impl ODEiv2Step {
     /// ```
     /// would print something like step method is 'rkf45'.
     pub fn name(&self) -> Option<String> {
-        let tmp = unsafe { sys::gsl_odeiv2_step_name(self.s) };
+        let tmp = unsafe { sys::gsl_odeiv2_step_name(self.unwrap_shared()) };
 
         if tmp.is_null() {
             None
@@ -201,14 +199,14 @@ impl ODEiv2Step {
     /// This function returns the order of the stepping function on the previous step. The order can vary if the stepping function itself is
     /// adaptive.
     pub fn order(&self) -> u32 {
-        unsafe { sys::gsl_odeiv2_step_order(self.s) }
+        unsafe { sys::gsl_odeiv2_step_order(self.unwrap_shared()) }
     }
 
     /// This function sets a pointer of the driver object d for stepper s, to allow the stepper to access control (and evolve) object through
     /// the driver object. This is a requirement for some steppers, to get the desired error level for internal iteration of stepper.
     /// Allocation of a driver object calls this function automatically.
     pub fn set_driver(&mut self, d: &ODEiv2Driver) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_odeiv2_step_set_driver(self.s, d.d) })
+        enums::Value::from(unsafe { sys::gsl_odeiv2_step_set_driver(self.unwrap_unique(), d.d) })
     }
 
     /// This function applies the stepping function s to the system of equations defined by sys, using the step-size h to advance the system
@@ -240,7 +238,7 @@ impl ODEiv2Step {
 
         let ret = unsafe {
             sys::gsl_odeiv2_step_apply(
-                self.s,
+                self.unwrap_unique(),
                 t,
                 h,
                 y.as_mut_ptr(),
@@ -254,132 +252,64 @@ impl ODEiv2Step {
     }
 }
 
-impl Drop for ODEiv2Step {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_odeiv2_step_free(self.s) };
-        self.s = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_odeiv2_step> for ODEiv2Step {
-    fn wrap(s: *mut sys::gsl_odeiv2_step) -> Self {
-        Self { s }
-    }
-
-    fn soft_wrap(s: *mut sys::gsl_odeiv2_step) -> Self {
-        Self::wrap(s)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_step {
-        self.s
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_step {
-        self.s
-    }
-}
-
-#[derive(Clone, Copy)]
-pub struct ODEiv2StepType {
-    t: *const sys::gsl_odeiv2_step_type,
-}
+ffi_wrapper!(ODEiv2StepType, *const sys::gsl_odeiv2_step_type);
 
 impl ODEiv2StepType {
     /// Explicit embedded Runge-Kutta (2, 3) method.
     pub fn rk2() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rk2,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rk2)
     }
 
     /// Explicit 4th order (classical) Runge-Kutta. Error estimation is carried out by the step doubling method. For more efficient
     /// estimate of the error, use the embedded methods described below.
     pub fn rk4() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rk4,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rk4)
     }
 
     /// Explicit embedded Runge-Kutta-Fehlberg (4, 5) method. This method is a good general-purpose integrator.
     pub fn rk45() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rkf45,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rkf45)
     }
 
     /// Explicit embedded Runge-Kutta Cash-Karp (4, 5) method.
     pub fn rkck() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rkck,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rkck)
     }
 
     /// Explicit embedded Runge-Kutta Prince-Dormand (8, 9) method.
     pub fn rk8pd() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rk8pd,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rk8pd)
     }
 
     /// Implicit Gaussian first order Runge-Kutta. Also known as implicit Euler or backward Euler method. Error estimation is carried out by
     /// the step doubling method. This algorithm requires the Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn rk1imp() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rk1imp,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rk1imp)
     }
 
     /// Implicit Gaussian second order Runge-Kutta. Also known as implicit mid-point rule. Error estimation is carried out by the step doubling
     /// method. This stepper requires the Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn rk2imp() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rk2imp,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rk2imp)
     }
 
     /// Implicit Gaussian 4th order Runge-Kutta. Error estimation is carried out by the step doubling method. This algorithm requires the
     /// Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn rk4imp() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_rk4imp,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_rk4imp)
     }
 
     /// Implicit Bulirsch-Stoer method of Bader and Deuflhard. The method is generally suitable for stiff problems. This stepper requires
     /// the Jacobian.
     pub fn bsimp() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_bsimp,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_bsimp)
     }
 
     /// A variable-coefficient linear multistep Adams method in Nordsieck form. This stepper uses explicit Adams-Bashforth (predictor) and
     /// implicit Adams-Moulton (corrector) methods in P(EC)^m functional iteration mode. Method order varies dynamically between 1 and 12.
     /// This stepper requires the access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn msadams() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_msadams,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_msadams)
     }
 
     /// A variable-coefficient linear multistep backward differentiation formula (BDF) method in Nordsieck form. This stepper uses the explicit
@@ -387,35 +317,15 @@ impl ODEiv2StepType {
     /// non-linear equations. Method order varies dynamically between 1 and 5. The method is generally suitable for stiff problems. This
     /// stepper requires the Jacobian and the access to the driver object via gsl_odeiv2_step_set_driver.
     pub fn msbdf() -> ODEiv2StepType {
-        unsafe {
-            ODEiv2StepType {
-                t: sys::gsl_odeiv2_step_msbdf,
-            }
-        }
+        ffi_wrap!(gsl_odeiv2_step_msbdf)
     }
 }
 
-impl ffi::FFI<sys::gsl_odeiv2_step_type> for ODEiv2StepType {
-    fn wrap(t: *mut sys::gsl_odeiv2_step_type) -> Self {
-        Self { t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_odeiv2_step_type) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_step_type {
-        self.t as *const sys::gsl_odeiv2_step_type
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_step_type {
-        self.t as *mut sys::gsl_odeiv2_step_type
-    }
-}
-
-pub struct ODEiv2Control {
-    c: *mut sys::gsl_odeiv2_control,
-}
+ffi_wrapper!(
+    ODEiv2Control,
+    *mut sys::gsl_odeiv2_control,
+    gsl_odeiv2_control_free
+);
 
 impl ODEiv2Control {
     /// The standard control object is a four parameter heuristic based on absolute and relative errors eps_abs and eps_rel, and scaling
@@ -449,7 +359,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Control { c: tmp })
+            Some(ODEiv2Control::wrap(tmp))
         }
     }
 
@@ -461,7 +371,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Control { c: tmp })
+            Some(ODEiv2Control::wrap(tmp))
         }
     }
 
@@ -474,7 +384,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Control { c: tmp })
+            Some(ODEiv2Control::wrap(tmp))
         }
     }
 
@@ -505,7 +415,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Control { c: tmp })
+            Some(ODEiv2Control::wrap(tmp))
         }
     }
 
@@ -517,7 +427,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Control { c: tmp })
+            Some(ODEiv2Control::wrap(tmp))
         }
     }
 
@@ -525,7 +435,7 @@ impl ODEiv2Control {
     /// (scaling factor for y) and a_dydt (scaling factor for derivatives).
     pub fn init(&mut self, eps_abs: f64, eps_rel: f64, a_y: f64, a_dydt: f64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_odeiv2_control_init(self.c, eps_abs, eps_rel, a_y, a_dydt)
+            sys::gsl_odeiv2_control_init(self.unwrap_unique(), eps_abs, eps_rel, a_y, a_dydt)
         })
     }
 
@@ -536,7 +446,7 @@ impl ODEiv2Control {
     /// the largest step-size which satisfies the user-specified accuracy requirements for the current point.
     pub fn hadjust(
         &mut self,
-        s: &ODEiv2Step,
+        s: &mut ODEiv2Step,
         y: &[f64],
         yerr: &[f64],
         dydt: &[f64],
@@ -544,8 +454,8 @@ impl ODEiv2Control {
     ) -> ::ODEiv {
         ::ODEiv::from(unsafe {
             sys::gsl_odeiv2_control_hadjust(
-                self.c,
-                s.s,
+                self.unwrap_unique(),
+                s.unwrap_unique(),
                 y.as_ptr(),
                 yerr.as_ptr(),
                 dydt.as_ptr(),
@@ -561,7 +471,7 @@ impl ODEiv2Control {
     /// ```
     /// would print something like control method is 'standard'
     pub fn name(&self) -> Option<String> {
-        let tmp = unsafe { sys::gsl_odeiv2_control_name(self.c) };
+        let tmp = unsafe { sys::gsl_odeiv2_control_name(self.unwrap_shared()) };
 
         if tmp.is_null() {
             None
@@ -585,45 +495,17 @@ impl ODEiv2Control {
         errlev: &mut f64,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_odeiv2_control_errlevel(self.c, y, dydt, h, ind, errlev)
+            sys::gsl_odeiv2_control_errlevel(self.unwrap_unique(), y, dydt, h, ind, errlev)
         })
     }
 
     /// This function sets a pointer of the driver object d for control object c.
     pub fn set_driver(&mut self, d: &ODEiv2Driver) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_odeiv2_control_set_driver(self.c, d.d) })
+        enums::Value::from(unsafe { sys::gsl_odeiv2_control_set_driver(self.unwrap_unique(), d.d) })
     }
 }
 
-impl Drop for ODEiv2Control {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_odeiv2_control_free(self.c) };
-        self.c = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_odeiv2_control> for ODEiv2Control {
-    fn wrap(c: *mut sys::gsl_odeiv2_control) -> Self {
-        Self { c }
-    }
-
-    fn soft_wrap(c: *mut sys::gsl_odeiv2_control) -> Self {
-        Self::wrap(c)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_control {
-        self.c
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_control {
-        self.c
-    }
-}
-
-#[derive(Clone, Copy)]
-pub struct ODEiv2ControlType {
-    t: *const sys::gsl_odeiv2_control_type,
-}
+ffi_wrapper!(ODEiv2ControlType, *const sys::gsl_odeiv2_control_type);
 
 // TODO!!!
 // impl ODEiv2ControlType {
@@ -644,27 +526,11 @@ pub struct ODEiv2ControlType {
 //     }
 // }
 
-impl ffi::FFI<sys::gsl_odeiv2_control_type> for ODEiv2ControlType {
-    fn wrap(t: *mut sys::gsl_odeiv2_control_type) -> Self {
-        Self { t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_odeiv2_control_type) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_control_type {
-        self.t
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_control_type {
-        panic!("Should never be used")
-    }
-}
-
-pub struct ODEiv2Evolve {
-    e: *mut sys::gsl_odeiv2_evolve,
-}
+ffi_wrapper!(
+    ODEiv2Evolve,
+    *mut sys::gsl_odeiv2_evolve,
+    gsl_odeiv2_evolve_free
+);
 
 impl ODEiv2Evolve {
     /// This function returns a pointer to a newly allocated instance of an evolution function for a system of dim dimensions.
@@ -674,7 +540,7 @@ impl ODEiv2Evolve {
         if tmp.is_null() {
             None
         } else {
-            Some(ODEiv2Evolve { e: tmp })
+            Some(ODEiv2Evolve::wrap(tmp))
         }
     }
 
@@ -698,8 +564,8 @@ impl ODEiv2Evolve {
     /// to be exceeded by the time-step. On the final time-step the value of t will be set to t1 exactly.
     pub fn apply(
         &mut self,
-        c: &ODEiv2Control,
-        s: &ODEiv2Step,
+        c: &mut ODEiv2Control,
+        s: &mut ODEiv2Step,
         sys: &mut ODEiv2System,
         t: &mut f64,
         t1: f64,
@@ -710,7 +576,16 @@ impl ODEiv2Evolve {
         let psys = &sys_raw as *const _;
 
         let ret = unsafe {
-            sys::gsl_odeiv2_evolve_apply(self.e, c.c, s.s, psys, t, t1, h, y.as_mut_ptr())
+            sys::gsl_odeiv2_evolve_apply(
+                self.unwrap_unique(),
+                c.unwrap_unique(),
+                s.unwrap_unique(),
+                psys,
+                t,
+                t1,
+                h,
+                y.as_mut_ptr(),
+            )
         };
         enums::Value::from(ret)
     }
@@ -720,8 +595,8 @@ impl ODEiv2Evolve {
     /// returns enums::value::Failure. Otherwise the value returned by user function is returned.
     pub fn apply_fixed_step(
         &mut self,
-        c: &ODEiv2Control,
-        s: &ODEiv2Step,
+        c: &mut ODEiv2Control,
+        s: &mut ODEiv2Step,
         sys: &mut ODEiv2System,
         t: &mut f64,
         h: f64,
@@ -731,7 +606,15 @@ impl ODEiv2Evolve {
         let psys = &sys_raw as *const _;
 
         let ret = unsafe {
-            sys::gsl_odeiv2_evolve_apply_fixed_step(self.e, c.c, s.s, psys, t, h, y.as_mut_ptr())
+            sys::gsl_odeiv2_evolve_apply_fixed_step(
+                self.unwrap_unique(),
+                c.unwrap_unique(),
+                s.unwrap_unique(),
+                psys,
+                t,
+                h,
+                y.as_mut_ptr(),
+            )
         };
         enums::Value::from(ret)
     }
@@ -739,7 +622,7 @@ impl ODEiv2Evolve {
     /// This function resets the evolution function e. It should be used whenever the next use of e will not be a continuation of a previous
     /// step.
     pub fn reset(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_odeiv2_evolve_reset(self.e) })
+        enums::Value::from(unsafe { sys::gsl_odeiv2_evolve_reset(self.unwrap_unique()) })
     }
 
     /// This function sets a pointer of the driver object d for evolve object e.
@@ -748,32 +631,7 @@ impl ODEiv2Evolve {
     /// in sequence. For example, if a step-change in an external driving force occurs at times t_a, t_b and t_c then evolution should be carried
     /// out over the ranges (t_0,t_a), (t_a,t_b), (t_b,t_c), and (t_c,t_1) separately and not directly over the range (t_0,t_1).
     pub fn set_driver(&mut self, d: &ODEiv2Driver) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_odeiv2_evolve_set_driver(self.e, d.d) })
-    }
-}
-
-impl Drop for ODEiv2Evolve {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_odeiv2_evolve_free(self.e) };
-        self.e = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_odeiv2_evolve> for ODEiv2Evolve {
-    fn wrap(e: *mut sys::gsl_odeiv2_evolve) -> Self {
-        Self { e }
-    }
-
-    fn soft_wrap(e: *mut sys::gsl_odeiv2_evolve) -> Self {
-        Self::wrap(e)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_odeiv2_evolve {
-        self.e as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_odeiv2_evolve {
-        self.e
+        enums::Value::from(unsafe { sys::gsl_odeiv2_evolve_set_driver(self.unwrap_unique(), d.d) })
     }
 }
 
@@ -800,7 +658,9 @@ impl<'a> ODEiv2Driver<'a> {
     ) -> Option<ODEiv2Driver<'a>> {
         let sys_raw = Box::new(sys.to_raw());
         let psys = &*sys_raw as *const _;
-        let tmp = unsafe { sys::gsl_odeiv2_driver_alloc_y_new(psys, t.t, hstart, epsabs, epsrel) };
+        let tmp = unsafe {
+            sys::gsl_odeiv2_driver_alloc_y_new(psys, t.unwrap_shared(), hstart, epsabs, epsrel)
+        };
 
         if tmp.is_null() {
             None
@@ -825,7 +685,9 @@ impl<'a> ODEiv2Driver<'a> {
     ) -> Option<ODEiv2Driver<'a>> {
         let sys_raw = Box::new(sys.to_raw());
         let psys = &*sys_raw as *const _;
-        let tmp = unsafe { sys::gsl_odeiv2_driver_alloc_yp_new(psys, t.t, hstart, epsabs, epsrel) };
+        let tmp = unsafe {
+            sys::gsl_odeiv2_driver_alloc_yp_new(psys, t.unwrap_shared(), hstart, epsabs, epsrel)
+        };
 
         if tmp.is_null() {
             None
@@ -854,7 +716,13 @@ impl<'a> ODEiv2Driver<'a> {
         let psys = &*sys_raw as *const _;
         let tmp = unsafe {
             sys::gsl_odeiv2_driver_alloc_standard_new(
-                psys, t.t, hstart, epsabs, epsrel, a_y, a_dydt,
+                psys,
+                t.unwrap_shared(),
+                hstart,
+                epsabs,
+                epsrel,
+                a_y,
+                a_dydt,
             )
         };
 
@@ -887,7 +755,7 @@ impl<'a> ODEiv2Driver<'a> {
         let tmp = unsafe {
             sys::gsl_odeiv2_driver_alloc_scaled_new(
                 psys,
-                t.t,
+                t.unwrap_shared(),
                 hstart,
                 epsabs,
                 epsrel,

@@ -5,7 +5,13 @@
 use crate::{MatrixF64, Value, VectorF64};
 use ffi::FFI;
 
-pub fn applyW(x: &MatrixF64, w: &VectorF64, y: &VectorF64, wx: &mut MatrixF64, wy: &mut VectorF64) -> Value {
+pub fn applyW(
+    x: &MatrixF64,
+    w: &VectorF64,
+    y: &VectorF64,
+    wx: &mut MatrixF64,
+    wy: &mut VectorF64,
+) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_applyW(
             x.unwrap_shared(),
@@ -57,16 +63,16 @@ pub fn lcorner2(reg_param: &VectorF64, eta: &VectorF64, idx: &mut usize) -> Valu
 }
 
 pub fn Lk(p: usize, k: usize, l: &mut MatrixF64) -> Value {
-    unsafe {
-        Value::from(sys::gsl_multifit_linear_Lk(
-            p,
-            k,
-            l.unwrap_unique(),
-        ))
-    }
+    unsafe { Value::from(sys::gsl_multifit_linear_Lk(p, k, l.unwrap_unique())) }
 }
 
-pub fn linear_est(x: &VectorF64, c: &VectorF64, cov: &MatrixF64, y: &mut f64, y_err: &mut f64) -> Value {
+pub fn linear_est(
+    x: &VectorF64,
+    c: &VectorF64,
+    cov: &MatrixF64,
+    y: &mut f64,
+    y_err: &mut f64,
+) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_est(
             x.unwrap_shared(),

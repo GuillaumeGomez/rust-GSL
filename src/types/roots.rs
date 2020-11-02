@@ -41,41 +41,24 @@ solvers is held in a gsl_root_fdfsolver struct. The updates require both the fun
 its derivative (hence the name fdf) to be supplied by the user.
 !*/
 
-use ffi;
+use ffi::FFI;
 use libc::{c_double, c_void};
 
 use std::boxed::Box;
 use std::mem::transmute;
 
-/// The root bracketing algorithms described in this section require an initial interval which is
-/// guaranteed to contain a root—if a and b are the endpoints of the interval then f (a) must
-/// differ in sign from f (b). This ensures that the function crosses zero at least once in the
-/// interval. If a valid initial interval is used then these algorithm cannot fail, provided the
-/// function is well-behaved.
-///
-/// Note that a bracketing algorithm cannot find roots of even degree, since these do not
-/// cross the x-axis.
-pub struct RootFSolverType {
-    s: *const sys::gsl_root_fsolver_type,
-}
+ffi_wrapper!(
+    RootFSolverType,
+    *const sys::gsl_root_fsolver_type,
+    "The root bracketing algorithms described in this section require an initial interval which is
+guaranteed to contain a root—if a and b are the endpoints of the interval then f (a) must
+differ in sign from f (b). This ensures that the function crosses zero at least once in the
+interval. If a valid initial interval is used then these algorithm cannot fail, provided the
+function is well-behaved.
 
-impl ffi::FFI<sys::gsl_root_fsolver_type> for RootFSolverType {
-    fn wrap(_r: *mut sys::gsl_root_fsolver_type) -> Self {
-        unimplemented!()
-    }
-
-    fn soft_wrap(_r: *mut sys::gsl_root_fsolver_type) -> Self {
-        unimplemented!()
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_root_fsolver_type {
-        self.s
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_root_fsolver_type {
-        unimplemented!()
-    }
-}
+Note that a bracketing algorithm cannot find roots of even degree, since these do not
+cross the x-axis."
+);
 
 impl RootFSolverType {
     /// The bisection algorithm is the simplest method of bracketing the roots of a function.
@@ -88,9 +71,7 @@ impl RootFSolverType {
     ///
     /// At any time the current estimate of the root is taken as the midpoint of the interval.
     pub fn bisection() -> RootFSolverType {
-        RootFSolverType {
-            s: unsafe { sys::gsl_root_fsolver_bisection },
-        }
+        ffi_wrap!(gsl_root_fsolver_bisection)
     }
 
     /// The false position algorithm is a method of finding roots based on linear interpolation.
@@ -106,9 +87,7 @@ impl RootFSolverType {
     /// The best estimate of the root is taken from the linear interpolation of the interval on
     /// the current iteration.
     pub fn brent() -> RootFSolverType {
-        RootFSolverType {
-            s: unsafe { sys::gsl_root_fsolver_brent },
-        }
+        ffi_wrap!(gsl_root_fsolver_brent)
     }
 
     /// The Brent-Dekker method (referred to here as Brent’s method) combines an interpo-
@@ -126,15 +105,15 @@ impl RootFSolverType {
     ///
     /// The best estimate of the root is taken from the most recent interpolation or bisection.
     pub fn falsepos() -> RootFSolverType {
-        RootFSolverType {
-            s: unsafe { sys::gsl_root_fsolver_falsepos },
-        }
+        ffi_wrap!(gsl_root_fsolver_falsepos)
     }
 }
 
-pub struct RootFSolver {
-    s: *mut sys::gsl_root_fsolver,
-}
+ffi_wrapper!(
+    RootFSolver,
+    *mut sys::gsl_root_fsolver,
+    gsl_root_fsolver_free
+);
 
 impl RootFSolver {
     /// This function returns a pointer to a newly allocated instance of a solver of type T.
@@ -142,12 +121,12 @@ impl RootFSolver {
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     pub fn new(t: &RootFSolverType) -> Option<RootFSolver> {
-        let tmp = unsafe { sys::gsl_root_fsolver_alloc(ffi::FFI::unwrap_shared(t)) };
+        let tmp = unsafe { sys::gsl_root_fsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(RootFSolver { s: tmp })
+            Some(RootFSolver::wrap(tmp))
         }
     }
 
@@ -172,7 +151,7 @@ impl RootFSolver {
                 >(inner::<F> as *const ())),
                 params: params as *mut _,
             };
-            let r = sys::gsl_root_fsolver_set(self.s, &mut func, x_lower, x_upper);
+            let r = sys::gsl_root_fsolver_set(self.unwrap_unique(), &mut func, x_lower, x_upper);
             // We free the closure now that we're done using it.
             Box::from_raw(params);
             r
@@ -190,13 +169,13 @@ impl RootFSolver {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_root_fsolver_iterate(self.s) })
+        ::Value::from(unsafe { sys::gsl_root_fsolver_iterate(self.unwrap_unique()) })
     }
 
     /// Returns the solver type name.
     pub fn name(&self) -> String {
         unsafe {
-            let tmp = sys::gsl_root_fsolver_name(self.s);
+            let tmp = sys::gsl_root_fsolver_name(self.unwrap_shared());
 
             String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
@@ -204,58 +183,30 @@ impl RootFSolver {
 
     /// This function returns the current estimate of the root for the solver s.
     pub fn root(&self) -> f64 {
-        unsafe { sys::gsl_root_fsolver_root(self.s) }
+        unsafe { sys::gsl_root_fsolver_root(self.unwrap_shared()) }
     }
 
     /// These functions return the current bracketing interval for the solver s.
     pub fn x_lower(&self) -> f64 {
-        unsafe { sys::gsl_root_fsolver_x_lower(self.s) }
+        unsafe { sys::gsl_root_fsolver_x_lower(self.unwrap_shared()) }
     }
 
     /// These functions return the current bracketing interval for the solver s.
     pub fn x_upper(&self) -> f64 {
-        unsafe { sys::gsl_root_fsolver_x_upper(self.s) }
+        unsafe { sys::gsl_root_fsolver_x_upper(self.unwrap_shared()) }
     }
 }
 
-impl Drop for RootFSolver {
-    fn drop(&mut self) {
-        if !self.s.is_null() {
-            unsafe {
-                sys::gsl_root_fsolver_free(self.s);
-            }
-            self.s = ::std::ptr::null_mut();
-        }
-    }
-}
+ffi_wrapper!(
+    RootFdfSolverType,
+    *const sys::gsl_root_fdfsolver_type,
+    "The root polishing algorithms described in this section require an initial guess for the
+location of the root. There is no absolute guarantee of convergence—the function must be
+suitable for this technique and the initial guess must be sufficiently close to the root
+for it to work. When these conditions are satisfied then convergence is quadratic.
 
-/// The root polishing algorithms described in this section require an initial guess for the
-/// location of the root. There is no absolute guarantee of convergence—the function must be
-/// suitable for this technique and the initial guess must be sufficiently close to the root
-/// for it to work. When these conditions are satisfied then convergence is quadratic.
-///
-/// These algorithms make use of both the function and its derivative.
-pub struct RootFdfSolverType {
-    s: *const sys::gsl_root_fdfsolver_type,
-}
-
-impl ffi::FFI<sys::gsl_root_fdfsolver_type> for RootFdfSolverType {
-    fn wrap(_r: *mut sys::gsl_root_fdfsolver_type) -> Self {
-        unimplemented!()
-    }
-
-    fn soft_wrap(_r: *mut sys::gsl_root_fdfsolver_type) -> Self {
-        unimplemented!()
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_root_fdfsolver_type {
-        self.s
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_root_fdfsolver_type {
-        unimplemented!()
-    }
-}
+These algorithms make use of both the function and its derivative."
+);
 
 impl RootFdfSolverType {
     /// Newton’s Method is the standard root-polishing algorithm. The algorithm begins
@@ -263,31 +214,27 @@ impl RootFdfSolverType {
     /// the function f is drawn at that position. The point where this line crosses the x-axis
     /// becomes the new guess.
     pub fn newton() -> RootFdfSolverType {
-        RootFdfSolverType {
-            s: unsafe { sys::gsl_root_fdfsolver_newton },
-        }
+        ffi_wrap!(gsl_root_fdfsolver_newton)
     }
 
     /// The secant method is a simplified version of Newton’s method which does not require
     /// the computation of the derivative on every step.
     pub fn secant() -> RootFdfSolverType {
-        RootFdfSolverType {
-            s: unsafe { sys::gsl_root_fdfsolver_secant },
-        }
+        ffi_wrap!(gsl_root_fdfsolver_secant)
     }
 
     /// The Steffenson Method 1 provides the fastest convergence of all the routines. It com-
     /// bines the basic Newton algorithm with an Aitken “delta-squared” acceleration.
     pub fn steffenson() -> RootFdfSolverType {
-        RootFdfSolverType {
-            s: unsafe { sys::gsl_root_fdfsolver_steffenson },
-        }
+        ffi_wrap!(gsl_root_fdfsolver_steffenson)
     }
 }
 
-pub struct RootFdfSolver {
-    s: *mut sys::gsl_root_fdfsolver,
-}
+ffi_wrapper!(
+    RootFdfSolver,
+    *mut sys::gsl_root_fdfsolver,
+    gsl_root_fdfsolver_free
+);
 
 impl RootFdfSolver {
     /// This function returns a pointer to a newly allocated instance of a derivative-based
@@ -296,12 +243,12 @@ impl RootFdfSolver {
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     pub fn new(t: &RootFdfSolverType) -> Option<RootFdfSolver> {
-        let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(ffi::FFI::unwrap_shared(t)) };
+        let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(RootFdfSolver { s: tmp })
+            Some(RootFdfSolver::wrap(tmp))
         }
     }
 
@@ -370,7 +317,7 @@ impl RootFdfSolver {
                 >(inner_fdf::<FDF> as *const ())),
                 params: params as *mut _,
             };
-            let r = sys::gsl_root_fdfsolver_set(self.s, &mut func, root);
+            let r = sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut func, root);
             // We free the closure now that we're done using it.
             let tmp = Box::from_raw(params);
             Box::from_raw(tmp.0);
@@ -391,13 +338,13 @@ impl RootFdfSolver {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_root_fdfsolver_iterate(self.s) })
+        ::Value::from(unsafe { sys::gsl_root_fdfsolver_iterate(self.unwrap_unique()) })
     }
 
     /// Returns the solver type name.
     pub fn name(&self) -> Option<&str> {
         unsafe {
-            let ptr = sys::gsl_root_fdfsolver_name(self.s);
+            let ptr = sys::gsl_root_fdfsolver_name(self.unwrap_shared());
 
             if ptr.is_null() {
                 return None;
@@ -415,17 +362,6 @@ impl RootFdfSolver {
 
     /// This function returns the current estimate of the root for the solver s.
     pub fn root(&self) -> f64 {
-        unsafe { sys::gsl_root_fdfsolver_root(self.s) }
-    }
-}
-
-impl Drop for RootFdfSolver {
-    fn drop(&mut self) {
-        if !self.s.is_null() {
-            unsafe {
-                sys::gsl_root_fdfsolver_free(self.s);
-            }
-            self.s = ::std::ptr::null_mut();
-        }
+        unsafe { sys::gsl_root_fdfsolver_root(self.unwrap_shared()) }
     }
 }

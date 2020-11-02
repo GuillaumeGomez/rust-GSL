@@ -17,14 +17,12 @@ For more information on the Mathieu functions, see Abramowitz and Stegun, Chapte
 !*/
 
 use enums;
-use ffi;
+use ffi::FFI;
 use std::mem::MaybeUninit;
 
-/// The Mathieu functions can be computed for a single order or for multiple orders, using array-based routines.
-/// The array-based routines require a preallocated workspace.
-pub struct MathieuWorkspace {
-    work: *mut sys::gsl_sf_mathieu_workspace,
-}
+ffi_wrapper!(MathieuWorkspace, *mut sys::gsl_sf_mathieu_workspace, gsl_sf_mathieu_free,
+"The Mathieu functions can be computed for a single order or for multiple orders, using array-based
+routines. The array-based routines require a preallocated workspace.");
 
 impl MathieuWorkspace {
     /// This function returns a workspace for the array versions of the Mathieu routines.
@@ -35,7 +33,7 @@ impl MathieuWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(MathieuWorkspace { work: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -68,7 +66,7 @@ impl MathieuWorkspace {
                 order_min,
                 order_max,
                 q,
-                self.work,
+                self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
         })
@@ -87,7 +85,7 @@ impl MathieuWorkspace {
                 order_min,
                 order_max,
                 q,
-                self.work,
+                self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
         })
@@ -119,7 +117,14 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sf_mathieu_ce_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_ce_array(
+                nmin,
+                nmax,
+                q,
+                x,
+                self.unwrap_unique(),
+                result_array.as_mut_ptr(),
+            )
         })
     }
 
@@ -133,7 +138,14 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sf_mathieu_se_array(nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_se_array(
+                nmin,
+                nmax,
+                q,
+                x,
+                self.unwrap_unique(),
+                result_array.as_mut_ptr(),
+            )
         })
     }
 
@@ -168,7 +180,15 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sf_mathieu_Mc_array(j, nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_Mc_array(
+                j,
+                nmin,
+                nmax,
+                q,
+                x,
+                self.unwrap_unique(),
+                result_array.as_mut_ptr(),
+            )
         })
     }
 
@@ -183,32 +203,15 @@ impl MathieuWorkspace {
         result_array: &mut [f64],
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sf_mathieu_Ms_array(j, nmin, nmax, q, x, self.work, result_array.as_mut_ptr())
+            sys::gsl_sf_mathieu_Ms_array(
+                j,
+                nmin,
+                nmax,
+                q,
+                x,
+                self.unwrap_unique(),
+                result_array.as_mut_ptr(),
+            )
         })
-    }
-}
-
-impl Drop for MathieuWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_sf_mathieu_free(self.work) };
-        self.work = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_sf_mathieu_workspace> for MathieuWorkspace {
-    fn wrap(work: *mut sys::gsl_sf_mathieu_workspace) -> Self {
-        Self { work }
-    }
-
-    fn soft_wrap(r: *mut sys::gsl_sf_mathieu_workspace) -> Self {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_sf_mathieu_workspace {
-        self.work as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_sf_mathieu_workspace {
-        self.work
     }
 }

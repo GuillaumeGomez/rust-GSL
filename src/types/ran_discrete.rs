@@ -19,12 +19,14 @@ A much better approach is due to Alastair J. Walker (An efficient method for gen
 This method can be used to speed up some of the discrete random number generators below, such as the binomial distribution. To use it for something like the Poisson Distribution, a modification would have to be made, since it only takes a finite set of K outcomes.
 !*/
 
-use ffi;
+use ffi::FFI;
 use types::Rng;
 
-pub struct RanDiscrete {
-    ran: *mut sys::gsl_ran_discrete_t,
-}
+ffi_wrapper!(
+    RanDiscrete,
+    *mut sys::gsl_ran_discrete_t,
+    gsl_ran_discrete_free
+);
 
 impl RanDiscrete {
     /// This function returns a pointer to a structure that contains the lookup table for the discrete random number generator. The array P[] contains the probabilities of the discrete events;
@@ -36,43 +38,18 @@ impl RanDiscrete {
         if tmp.is_null() {
             None
         } else {
-            Some(RanDiscrete { ran: tmp })
+            Some(RanDiscrete::wrap(tmp))
         }
     }
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
     pub fn discrete(&self, r: &mut Rng) -> usize {
-        unsafe { sys::gsl_ran_discrete(ffi::FFI::unwrap_unique(r), self.ran) }
+        unsafe { sys::gsl_ran_discrete(r.unwrap_unique(), self.unwrap_shared()) }
     }
 
     /// Returns the probability P[k] of observing the variable k. Since P[k] is not stored as part of the lookup table, it must be recomputed; this computation takes O(K),
     /// so if K is large and you care about the original array P[k] used to create the lookup table, then you should just keep this original array P[k] around.
     pub fn discrete_pdf(&self, k: usize) -> f64 {
-        unsafe { sys::gsl_ran_discrete_pdf(k, self.ran) }
-    }
-}
-
-impl Drop for RanDiscrete {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_ran_discrete_free(self.ran) };
-        self.ran = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_ran_discrete_t> for RanDiscrete {
-    fn wrap(ran: *mut sys::gsl_ran_discrete_t) -> Self {
-        Self { ran }
-    }
-
-    fn soft_wrap(v: *mut sys::gsl_ran_discrete_t) -> Self {
-        Self::wrap(v)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_ran_discrete_t {
-        self.ran as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_ran_discrete_t {
-        self.ran
+        unsafe { sys::gsl_ran_discrete_pdf(k, self.unwrap_shared()) }
     }
 }

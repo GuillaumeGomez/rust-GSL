@@ -3,10 +3,10 @@
 //
 
 use c_vec::CSlice;
-use ffi;
+use ffi::{self, FFI};
 
 pub struct FftComplexWaveTable {
-    w: *mut sys::gsl_fft_complex_wavetable,
+    inner: *mut sys::gsl_fft_complex_wavetable,
     f: CSlice<usize>,
 }
 
@@ -27,7 +27,7 @@ impl FftComplexWaveTable {
         } else {
             unsafe {
                 Some(FftComplexWaveTable {
-                    w: tmp,
+                    inner: tmp,
                     f: CSlice::new((*tmp).factor.as_mut_ptr(), 64),
                 })
             }
@@ -41,16 +41,16 @@ impl FftComplexWaveTable {
 
 impl Drop for FftComplexWaveTable {
     fn drop(&mut self) {
-        unsafe { sys::gsl_fft_complex_wavetable_free(self.w) };
-        self.w = ::std::ptr::null_mut();
+        unsafe { sys::gsl_fft_complex_wavetable_free(self.inner) };
+        self.inner = ::std::ptr::null_mut();
     }
 }
 
 impl ffi::FFI<sys::gsl_fft_complex_wavetable> for FftComplexWaveTable {
-    fn wrap(w: *mut sys::gsl_fft_complex_wavetable) -> Self {
+    fn wrap(inner: *mut sys::gsl_fft_complex_wavetable) -> Self {
         Self {
-            w: w,
-            f: unsafe { CSlice::new((*w).factor.as_mut_ptr(), 64) },
+            inner,
+            f: unsafe { CSlice::new((*inner).factor.as_mut_ptr(), 64) },
         }
     }
 
@@ -59,17 +59,19 @@ impl ffi::FFI<sys::gsl_fft_complex_wavetable> for FftComplexWaveTable {
     }
 
     fn unwrap_shared(&self) -> *const sys::gsl_fft_complex_wavetable {
-        self.w as *const _
+        self.inner as *const _
     }
 
     fn unwrap_unique(&mut self) -> *mut sys::gsl_fft_complex_wavetable {
-        self.w
+        self.inner
     }
 }
 
-pub struct FftComplexWorkspace {
-    w: *mut sys::gsl_fft_complex_workspace,
-}
+ffi_wrapper!(
+    FftComplexWorkspace,
+    *mut sys::gsl_fft_complex_workspace,
+    gsl_fft_complex_workspace_free
+);
 
 impl FftComplexWorkspace {
     /// This function allocates a workspace for a complex transform of length n.
@@ -79,32 +81,7 @@ impl FftComplexWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(FftComplexWorkspace { w: tmp })
+            Some(FftComplexWorkspace { inner: tmp })
         }
-    }
-}
-
-impl Drop for FftComplexWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_fft_complex_workspace_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_fft_complex_workspace> for FftComplexWorkspace {
-    fn wrap(w: *mut sys::gsl_fft_complex_workspace) -> Self {
-        Self { w: w }
-    }
-
-    fn soft_wrap(w: *mut sys::gsl_fft_complex_workspace) -> Self {
-        Self::wrap(w)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_fft_complex_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_fft_complex_workspace {
-        self.w
     }
 }

@@ -96,12 +96,14 @@ used is the QZ method due to Moler and Stewart (see references).
 !*/
 
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use types::{MatrixComplexF64, MatrixF64, VectorComplexF64, VectorF64};
 
-pub struct EigenSymmetricWorkspace {
-    w: *mut sys::gsl_eigen_symm_workspace,
-}
+ffi_wrapper!(
+    EigenSymmetricWorkspace,
+    *mut sys::gsl_eigen_symm_workspace,
+    gsl_eigen_symm_free
+);
 
 impl EigenSymmetricWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real symmetric
@@ -112,7 +114,7 @@ impl EigenSymmetricWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenSymmetricWorkspace { w: tmp })
+            Some(EigenSymmetricWorkspace { inner: tmp })
         }
     }
 
@@ -120,45 +122,22 @@ impl EigenSymmetricWorkspace {
     /// lower triangular part of `A` are destroyed during the computation, but the strict upper
     /// triangular part is not referenced. The eigenvalues are stored in the vector `eval` and are
     /// unordered.
-    pub fn symm(&self, A: &mut MatrixF64, eval: &mut VectorF64) -> enums::Value {
+    pub fn symm(&mut self, A: &mut MatrixF64, eval: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_symm(
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenSymmetricWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_symm_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_symm_workspace> for EigenSymmetricWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_symm_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_symm_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_symm_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_symm_workspace {
-        self.w
-    }
-}
-
-pub struct EigenSymmetricVWorkspace {
-    w: *mut sys::gsl_eigen_symmv_workspace,
-}
+ffi_wrapper!(
+    EigenSymmetricVWorkspace,
+    *mut sys::gsl_eigen_symmv_workspace,
+    gsl_eigen_symmv_free
+);
 
 impl EigenSymmetricVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
@@ -169,7 +148,7 @@ impl EigenSymmetricVWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenSymmetricVWorkspace { w: tmp })
+            Some(EigenSymmetricVWorkspace { inner: tmp })
         }
     }
 
@@ -181,7 +160,7 @@ impl EigenSymmetricVWorkspace {
     /// eigenvalue. The eigenvectors are guaranteed to be mutually orthogonal and normalised to unit
     /// magnitude.
     pub fn symmv(
-        &self,
+        &mut self,
         A: &mut MatrixF64,
         eval: &mut VectorF64,
         evec: &mut MatrixF64,
@@ -191,40 +170,17 @@ impl EigenSymmetricVWorkspace {
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(evec),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenSymmetricVWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_symmv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_symmv_workspace> for EigenSymmetricVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_symmv_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_symmv_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_symmv_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_symmv_workspace {
-        self.w
-    }
-}
-
-pub struct EigenHermitianWorkspace {
-    w: *mut sys::gsl_eigen_herm_workspace,
-}
+ffi_wrapper!(
+    EigenHermitianWorkspace,
+    *mut sys::gsl_eigen_herm_workspace,
+    gsl_eigen_herm_free
+);
 
 impl EigenHermitianWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
@@ -235,7 +191,7 @@ impl EigenHermitianWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenHermitianWorkspace { w: tmp })
+            Some(EigenHermitianWorkspace { inner: tmp })
         }
     }
 
@@ -249,40 +205,17 @@ impl EigenHermitianWorkspace {
             sys::gsl_eigen_herm(
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenHermitianWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_herm_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_herm_workspace> for EigenHermitianWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_herm_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_herm_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_herm_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_herm_workspace {
-        self.w
-    }
-}
-
-pub struct EigenHermitianVWorkspace {
-    w: *mut sys::gsl_eigen_hermv_workspace,
-}
+ffi_wrapper!(
+    EigenHermitianVWorkspace,
+    *mut sys::gsl_eigen_hermv_workspace,
+    gsl_eigen_hermv_free
+);
 
 impl EigenHermitianVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
@@ -293,7 +226,7 @@ impl EigenHermitianVWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenHermitianVWorkspace { w: tmp })
+            Some(EigenHermitianVWorkspace { inner: tmp })
         }
     }
 
@@ -317,40 +250,17 @@ impl EigenHermitianVWorkspace {
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(evec),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenHermitianVWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_hermv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_hermv_workspace> for EigenHermitianVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_hermv_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_hermv_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_hermv_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_hermv_workspace {
-        self.w
-    }
-}
-
-pub struct EigenNonSymmWorkspace {
-    w: *mut sys::gsl_eigen_nonsymm_workspace,
-}
+ffi_wrapper!(
+    EigenNonSymmWorkspace,
+    *mut sys::gsl_eigen_nonsymm_workspace,
+    gsl_eigen_nonsymm_free
+);
 
 impl EigenNonSymmWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
@@ -361,7 +271,7 @@ impl EigenNonSymmWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenNonSymmWorkspace { w: tmp })
+            Some(EigenNonSymmWorkspace { inner: tmp })
         }
     }
 
@@ -392,7 +302,7 @@ impl EigenNonSymmWorkspace {
     /// with Z = D Q. Note that Z will not be orthogonal. For this reason, balancing is not
     /// performed by default.
     pub fn params(&mut self, compute_t: i32, balance: i32) {
-        unsafe { sys::gsl_eigen_nonsymm_params(compute_t, balance, self.w) }
+        unsafe { sys::gsl_eigen_nonsymm_params(compute_t, balance, self.unwrap_unique()) }
     }
 
     /// This function computes the eigenvalues of the real nonsymmetric matrix `A` and stores them
@@ -407,7 +317,7 @@ impl EigenNonSymmWorkspace {
             sys::gsl_eigen_nonsymm(
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
@@ -425,44 +335,21 @@ impl EigenNonSymmWorkspace {
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(Z),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 
     pub fn n_evals(&self) -> usize {
-        unsafe { (*self.w).n_evals }
+        unsafe { (*self.unwrap_shared()).n_evals }
     }
 }
 
-impl Drop for EigenNonSymmWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_nonsymm_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_nonsymm_workspace> for EigenNonSymmWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_nonsymm_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_nonsymm_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_nonsymm_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_nonsymm_workspace {
-        self.w
-    }
-}
-
-pub struct EigenNonSymmVWorkspace {
-    w: *mut sys::gsl_eigen_nonsymmv_workspace,
-}
+ffi_wrapper!(
+    EigenNonSymmVWorkspace,
+    *mut sys::gsl_eigen_nonsymmv_workspace,
+    gsl_eigen_nonsymmv_free
+);
 
 impl EigenNonSymmVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
@@ -473,7 +360,7 @@ impl EigenNonSymmVWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenNonSymmVWorkspace { w: tmp })
+            Some(EigenNonSymmVWorkspace { inner: tmp })
         }
     }
 
@@ -482,7 +369,7 @@ impl EigenNonSymmVWorkspace {
     /// is applied to the matrix. See gsl_eigen_nonsymm_params for more information. Balancing is
     /// turned off by default since it does not preserve the orthogonality of the Schur vectors.
     pub fn params(&mut self, balance: i32) {
-        unsafe { sys::gsl_eigen_nonsymmv_params(balance, self.w) }
+        unsafe { sys::gsl_eigen_nonsymmv_params(balance, self.unwrap_unique()) }
     }
 
     /// This function computes eigenvalues and right eigenvectors of the n-by-n real nonsymmetric
@@ -503,7 +390,7 @@ impl EigenNonSymmVWorkspace {
                 ffi::FFI::unwrap_unique(A),
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(evec),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
@@ -523,40 +410,17 @@ impl EigenNonSymmVWorkspace {
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(evec),
                 ffi::FFI::unwrap_unique(Z),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenNonSymmVWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_nonsymmv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_nonsymmv_workspace> for EigenNonSymmVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_nonsymmv_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_nonsymmv_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_nonsymmv_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_nonsymmv_workspace {
-        self.w
-    }
-}
-
-pub struct EigenGenSymmWorkspace {
-    w: *mut sys::gsl_eigen_gensymm_workspace,
-}
+ffi_wrapper!(
+    EigenGenSymmWorkspace,
+    *mut sys::gsl_eigen_gensymm_workspace,
+    gsl_eigen_gensymm_free
+);
 
 impl EigenGenSymmWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
@@ -567,7 +431,7 @@ impl EigenGenSymmWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenSymmWorkspace { w: tmp })
+            Some(EigenGenSymmWorkspace { inner: tmp })
         }
     }
 
@@ -585,40 +449,17 @@ impl EigenGenSymmWorkspace {
                 ffi::FFI::unwrap_unique(&mut A),
                 ffi::FFI::unwrap_unique(B),
                 ffi::FFI::unwrap_unique(eval),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenGenSymmWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_gensymm_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_gensymm_workspace> for EigenGenSymmWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_gensymm_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_gensymm_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_gensymm_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_gensymm_workspace {
-        self.w
-    }
-}
-
-pub struct EigenGenSymmVWorkspace {
-    w: *mut sys::gsl_eigen_gensymmv_workspace,
-}
+ffi_wrapper!(
+    EigenGenSymmVWorkspace,
+    *mut sys::gsl_eigen_gensymmv_workspace,
+    gsl_eigen_gensymmv_free
+);
 
 impl EigenGenSymmVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
@@ -629,7 +470,7 @@ impl EigenGenSymmVWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenSymmVWorkspace { w: tmp })
+            Some(EigenGenSymmVWorkspace { inner: tmp })
         }
     }
 
@@ -650,40 +491,17 @@ impl EigenGenSymmVWorkspace {
                 ffi::FFI::unwrap_unique(B),
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(evec),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenGenSymmVWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_gensymmv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_gensymmv_workspace> for EigenGenSymmVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_gensymmv_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_gensymmv_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_gensymmv_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_gensymmv_workspace {
-        self.w
-    }
-}
-
-pub struct EigenGenHermWorkspace {
-    w: *mut sys::gsl_eigen_genherm_workspace,
-}
+ffi_wrapper!(
+    EigenGenHermWorkspace,
+    *mut sys::gsl_eigen_genherm_workspace,
+    gsl_eigen_genherm_free
+);
 
 impl EigenGenHermWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
@@ -694,7 +512,7 @@ impl EigenGenHermWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenHermWorkspace { w: tmp })
+            Some(EigenGenHermWorkspace { inner: tmp })
         }
     }
 
@@ -712,40 +530,17 @@ impl EigenGenHermWorkspace {
                 ffi::FFI::unwrap_unique(&mut A),
                 ffi::FFI::unwrap_unique(B),
                 ffi::FFI::unwrap_unique(eval),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenGenHermWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_genherm_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_genherm_workspace> for EigenGenHermWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_genherm_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_genherm_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_genherm_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_genherm_workspace {
-        self.w
-    }
-}
-
-pub struct EigenGenHermVWorkspace {
-    w: *mut sys::gsl_eigen_genhermv_workspace,
-}
+ffi_wrapper!(
+    EigenGenHermVWorkspace,
+    *mut sys::gsl_eigen_genhermv_workspace,
+    gsl_eigen_genhermv_free
+);
 
 impl EigenGenHermVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
@@ -756,7 +551,7 @@ impl EigenGenHermVWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenHermVWorkspace { w: tmp })
+            Some(EigenGenHermVWorkspace { inner: tmp })
         }
     }
 
@@ -776,40 +571,17 @@ impl EigenGenHermVWorkspace {
                 ffi::FFI::unwrap_unique(B),
                 ffi::FFI::unwrap_unique(eval),
                 ffi::FFI::unwrap_unique(evec),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenGenHermVWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_genhermv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_genhermv_workspace> for EigenGenHermVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_genhermv_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_genhermv_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_genhermv_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_genhermv_workspace {
-        self.w
-    }
-}
-
-pub struct EigenGenWorkspace {
-    w: *mut sys::gsl_eigen_gen_workspace,
-}
+ffi_wrapper!(
+    EigenGenWorkspace,
+    *mut sys::gsl_eigen_gen_workspace,
+    gsl_eigen_gen_free
+);
 
 impl EigenGenWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
@@ -820,7 +592,7 @@ impl EigenGenWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenWorkspace { w: tmp })
+            Some(EigenGenWorkspace { inner: tmp })
         }
     }
 
@@ -840,7 +612,7 @@ impl EigenGenWorkspace {
     /// The balance parameter is currently ignored, since generalized balancing is not yet
     /// implemented.
     pub fn params(&mut self, compute_s: i32, compute_t: i32, balance: i32) {
-        unsafe { sys::gsl_eigen_gen_params(compute_s, compute_t, balance, self.w) }
+        unsafe { sys::gsl_eigen_gen_params(compute_s, compute_t, balance, self.unwrap_unique()) }
     }
 
     /// This function computes the eigenvalues of the real generalized nonsymmetric matrix pair
@@ -866,7 +638,7 @@ impl EigenGenWorkspace {
                 ffi::FFI::unwrap_unique(B),
                 ffi::FFI::unwrap_unique(alpha),
                 ffi::FFI::unwrap_unique(beta),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
@@ -890,40 +662,17 @@ impl EigenGenWorkspace {
                 ffi::FFI::unwrap_unique(beta),
                 ffi::FFI::unwrap_unique(Q),
                 ffi::FFI::unwrap_unique(Z),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
 }
 
-impl Drop for EigenGenWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_gen_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_gen_workspace> for EigenGenWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_gen_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_gen_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_gen_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_gen_workspace {
-        self.w
-    }
-}
-
-pub struct EigenGenVWorkspace {
-    w: *mut sys::gsl_eigen_genv_workspace,
-}
+ffi_wrapper!(
+    EigenGenVWorkspace,
+    *mut sys::gsl_eigen_genv_workspace,
+    gsl_eigen_genv_free
+);
 
 impl EigenGenVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
@@ -934,7 +683,7 @@ impl EigenGenVWorkspace {
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenVWorkspace { w: tmp })
+            Some(EigenGenVWorkspace { inner: tmp })
         }
     }
 
@@ -961,7 +710,7 @@ impl EigenGenVWorkspace {
                 ffi::FFI::unwrap_unique(alpha),
                 ffi::FFI::unwrap_unique(beta),
                 ffi::FFI::unwrap_unique(evec),
-                self.w,
+                self.unwrap_unique(),
             )
         })
     }
@@ -987,34 +736,9 @@ impl EigenGenVWorkspace {
                 ffi::FFI::unwrap_unique(evec),
                 ffi::FFI::unwrap_unique(Q),
                 ffi::FFI::unwrap_unique(Z),
-                self.w,
+                self.unwrap_unique(),
             )
         })
-    }
-}
-
-impl Drop for EigenGenVWorkspace {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_eigen_genv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_eigen_genv_workspace> for EigenGenVWorkspace {
-    fn wrap(t: *mut sys::gsl_eigen_genv_workspace) -> Self {
-        Self { w: t }
-    }
-
-    fn soft_wrap(t: *mut sys::gsl_eigen_genv_workspace) -> Self {
-        Self::wrap(t)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_eigen_genv_workspace {
-        self.w as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_eigen_genv_workspace {
-        self.w
     }
 }
 

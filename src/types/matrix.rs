@@ -51,7 +51,7 @@ B. Stroustrup, The C++ Programming Language (3rd Ed), Section 22.4 Vector Arithm
 !*/
 
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 use types::{VectorF32, VectorF64};
@@ -220,58 +220,64 @@ impl MatrixF64 {
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, y: usize, x: usize) -> f64 {
-        unsafe { sys::gsl_matrix_get(self.mat, y, x) }
+        unsafe { sys::gsl_matrix_get(self.unwrap_shared(), y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
     pub fn set(&mut self, y: usize, x: usize, value: f64) -> &MatrixF64 {
-        unsafe { sys::gsl_matrix_set(self.mat, y, x, value) };
+        unsafe { sys::gsl_matrix_set(self.unwrap_unique(), y, x, value) };
         self
     }
 
     /// This function sets all the elements of the matrix to the value x.
     pub fn set_all(&mut self, x: f64) -> &MatrixF64 {
-        unsafe { sys::gsl_matrix_set_all(self.mat, x) };
+        unsafe { sys::gsl_matrix_set_all(self.unwrap_unique(), x) };
         self
     }
 
     /// This function sets all the elements of the matrix to zero.
     pub fn set_zero(&mut self) -> &MatrixF64 {
-        unsafe { sys::gsl_matrix_set_zero(self.mat) };
+        unsafe { sys::gsl_matrix_set_zero(self.unwrap_unique()) };
         self
     }
 
     /// This function sets the elements of the matrix to the corresponding elements of the identity matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
     pub fn set_identity(&mut self) -> &MatrixF64 {
-        unsafe { sys::gsl_matrix_set_identity(self.mat) };
+        unsafe { sys::gsl_matrix_set_identity(self.unwrap_unique()) };
         self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_memcpy(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_memcpy(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &mut MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_memcpy(other.mat, self.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_memcpy(other.unwrap_unique(), self.unwrap_shared())
+        })
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
     pub fn swap(&mut self, other: &mut MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_swap(self.unwrap_unique(), other.unwrap_unique())
+        })
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
     pub fn get_row(&self, y: usize) -> Option<(VectorF64, enums::Value)> {
-        let tmp = unsafe { sys::gsl_vector_alloc((*self.mat).size2) };
+        let tmp = unsafe { sys::gsl_vector_alloc((*self.unwrap_shared()).size2) };
 
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { sys::gsl_matrix_get_row(tmp, self.mat, y) };
+            let ret = unsafe { sys::gsl_matrix_get_row(tmp, self.unwrap_shared(), y) };
 
             Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
         }
@@ -279,12 +285,12 @@ impl MatrixF64 {
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
     pub fn get_col(&self, x: usize) -> Option<(VectorF64, enums::Value)> {
-        let tmp = unsafe { sys::gsl_vector_alloc((*self.mat).size1) };
+        let tmp = unsafe { sys::gsl_vector_alloc((*self.unwrap_shared()).size1) };
 
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { sys::gsl_matrix_get_col(tmp, self.mat, x) };
+            let ret = unsafe { sys::gsl_matrix_get_col(tmp, self.unwrap_shared(), x) };
 
             Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
         }
@@ -294,7 +300,7 @@ impl MatrixF64 {
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_set_row(self.mat, y, ffi::FFI::unwrap_shared(v))
+            sys::gsl_matrix_set_row(self.unwrap_unique(), y, ffi::FFI::unwrap_shared(v))
         })
     }
 
@@ -302,35 +308,36 @@ impl MatrixF64 {
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_set_col(self.mat, x, ffi::FFI::unwrap_shared(v))
+            sys::gsl_matrix_set_col(self.unwrap_unique(), x, ffi::FFI::unwrap_shared(v))
         })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
     pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap_rows(self.mat, y1, y2) })
+        enums::Value::from(unsafe { sys::gsl_matrix_swap_rows(self.unwrap_unique(), y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
     pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap_columns(self.mat, x1, x2) })
+        enums::Value::from(unsafe { sys::gsl_matrix_swap_columns(self.unwrap_unique(), x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
     pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap_rowcol(self.mat, i, j) })
+        enums::Value::from(unsafe { sys::gsl_matrix_swap_rowcol(self.unwrap_unique(), i, j) })
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(MatrixF64, enums::Value)> {
-        let dest = unsafe { sys::gsl_matrix_alloc((*self.mat).size2, (*self.mat).size1) };
+        let ptr = self.unwrap_shared();
+        let dest = unsafe { sys::gsl_matrix_alloc((*ptr).size2, (*ptr).size1) };
 
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { sys::gsl_matrix_transpose_memcpy(dest, self.mat) };
+            let ret = unsafe { sys::gsl_matrix_transpose_memcpy(dest, ptr) };
 
             Some((
                 MatrixF64 {
@@ -345,58 +352,66 @@ impl MatrixF64 {
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
     pub fn transpose(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_transpose(self.mat) })
+        enums::Value::from(unsafe { sys::gsl_matrix_transpose(self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_add(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_add(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_sub(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_sub(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_mul_elements(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_mul_elements(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_div_elements(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_div_elements(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
     pub fn scale(&mut self, x: f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_scale(self.mat, x) })
+        enums::Value::from(unsafe { sys::gsl_matrix_scale(self.unwrap_unique(), x) })
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
     pub fn add_constant(&mut self, x: f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_add_constant(self.mat, x) })
+        enums::Value::from(unsafe { sys::gsl_matrix_add_constant(self.unwrap_unique(), x) })
     }
 
     /// This function returns the maximum value in the self matrix.
     pub fn max(&self) -> f64 {
-        unsafe { sys::gsl_matrix_max(self.mat) }
+        unsafe { sys::gsl_matrix_max(self.unwrap_shared()) }
     }
 
     /// This function returns the minimum value in the self matrix.
     pub fn min(&self) -> f64 {
-        unsafe { sys::gsl_matrix_min(self.mat) }
+        unsafe { sys::gsl_matrix_min(self.unwrap_shared()) }
     }
 
     /// This function returns the minimum and maximum values in the self matrix, storing them in min_out and max_out.
     pub fn minmax(&self) -> (f64, f64) {
         let mut min_out = 0.;
         let mut max_out = 0.;
-        unsafe { sys::gsl_matrix_minmax(self.mat, &mut min_out, &mut max_out) };
+        unsafe { sys::gsl_matrix_minmax(self.unwrap_shared(), &mut min_out, &mut max_out) };
         (min_out, max_out)
     }
 
@@ -406,7 +421,7 @@ impl MatrixF64 {
         let mut imax = 0;
         let mut jmax = 0;
 
-        unsafe { sys::gsl_matrix_max_index(self.mat, &mut imax, &mut jmax) };
+        unsafe { sys::gsl_matrix_max_index(self.unwrap_shared(), &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -416,7 +431,7 @@ impl MatrixF64 {
         let mut imax = 0;
         let mut jmax = 0;
 
-        unsafe { sys::gsl_matrix_min_index(self.mat, &mut imax, &mut jmax) };
+        unsafe { sys::gsl_matrix_min_index(self.unwrap_shared(), &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -429,14 +444,20 @@ impl MatrixF64 {
         let mut jmax = 0;
 
         unsafe {
-            sys::gsl_matrix_minmax_index(self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax)
+            sys::gsl_matrix_minmax_index(
+                self.unwrap_shared(),
+                &mut imin,
+                &mut jmin,
+                &mut imax,
+                &mut jmax,
+            )
         };
         (imin, jmin, imax, jmax)
     }
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        match unsafe { sys::gsl_matrix_isnull(self.mat) } {
+        match unsafe { sys::gsl_matrix_isnull(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -444,7 +465,7 @@ impl MatrixF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { sys::gsl_matrix_ispos(self.mat) } {
+        match unsafe { sys::gsl_matrix_ispos(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -452,7 +473,7 @@ impl MatrixF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { sys::gsl_matrix_isneg(self.mat) } {
+        match unsafe { sys::gsl_matrix_isneg(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -460,7 +481,7 @@ impl MatrixF64 {
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { sys::gsl_matrix_isnonneg(self.mat) } {
+        match unsafe { sys::gsl_matrix_isnonneg(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -468,34 +489,34 @@ impl MatrixF64 {
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixF64) -> bool {
-        match unsafe { sys::gsl_matrix_equal(self.mat, other.mat) } {
+        match unsafe { sys::gsl_matrix_equal(self.unwrap_shared(), other.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
     }
 
     pub fn size1(&self) -> usize {
-        if self.mat.is_null() {
+        if self.unwrap_shared().is_null() {
             0
         } else {
-            unsafe { (*self.mat).size1 }
+            unsafe { (*self.unwrap_shared()).size1 }
         }
     }
 
     pub fn size2(&self) -> usize {
-        if self.mat.is_null() {
+        if self.unwrap_shared().is_null() {
             0
         } else {
-            unsafe { (*self.mat).size2 }
+            unsafe { (*self.unwrap_shared()).size2 }
         }
     }
 
     pub fn clone(&self) -> Option<MatrixF64> {
         unsafe {
-            if self.mat.is_null() {
+            if self.unwrap_shared().is_null() {
                 None
             } else {
-                match MatrixF64::new((*self.mat).size1, (*self.mat).size2) {
+                match MatrixF64::new((*self.unwrap_shared()).size1, (*self.unwrap_shared()).size2) {
                     Some(mut m) => {
                         m.copy_from(self);
                         Some(m)
@@ -513,28 +534,6 @@ impl Drop for MatrixF64 {
             unsafe { sys::gsl_matrix_free(self.mat) };
             self.mat = ::std::ptr::null_mut();
         }
-    }
-}
-
-impl Debug for MatrixF64 {
-    #[allow(unused_must_use)]
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        unsafe {
-            for y in 0..(*self.mat).size1 {
-                write!(f, "[");
-                for x in 0..(*self.mat).size2 {
-                    if x < (*self.mat).size2 - 1 {
-                        write!(f, "{}, ", self.get(y, x));
-                    } else {
-                        write!(f, "{}", self.get(y, x));
-                    }
-                }
-                if y < (*self.mat).size1 - 1 {
-                    write!(f, "]\n");
-                }
-            }
-        }
-        write!(f, "]")
     }
 }
 
@@ -559,6 +558,28 @@ impl ffi::FFI<sys::gsl_matrix> for MatrixF64 {
 
     fn unwrap_unique(&mut self) -> *mut sys::gsl_matrix {
         self.mat
+    }
+}
+
+impl Debug for MatrixF64 {
+    #[allow(unused_must_use)]
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        unsafe {
+            for y in 0..(*self.mat).size1 {
+                write!(f, "[");
+                for x in 0..(*self.mat).size2 {
+                    if x < (*self.mat).size2 - 1 {
+                        write!(f, "{}, ", self.get(y, x));
+                    } else {
+                        write!(f, "{}", self.get(y, x));
+                    }
+                }
+                if y < (*self.mat).size1 - 1 {
+                    write!(f, "]\n");
+                }
+            }
+        }
+        write!(f, "]")
     }
 }
 
@@ -591,58 +612,64 @@ impl MatrixF32 {
     /// This function returns the (i,j)-th element of the matrix.
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, y: usize, x: usize) -> f32 {
-        unsafe { sys::gsl_matrix_float_get(self.mat, y, x) }
+        unsafe { sys::gsl_matrix_float_get(self.unwrap_shared(), y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is invoked.
     pub fn set(&mut self, y: usize, x: usize, value: f32) -> &MatrixF32 {
-        unsafe { sys::gsl_matrix_float_set(self.mat, y, x, value) };
+        unsafe { sys::gsl_matrix_float_set(self.unwrap_unique(), y, x, value) };
         self
     }
 
     /// This function sets all the elements of the matrix to the value x.
     pub fn set_all(&mut self, x: f32) -> &MatrixF32 {
-        unsafe { sys::gsl_matrix_float_set_all(self.mat, x) };
+        unsafe { sys::gsl_matrix_float_set_all(self.unwrap_unique(), x) };
         self
     }
 
     /// This function sets all the elements of the matrix to zero.
     pub fn set_zero(&mut self) -> &MatrixF32 {
-        unsafe { sys::gsl_matrix_float_set_zero(self.mat) };
+        unsafe { sys::gsl_matrix_float_set_zero(self.unwrap_unique()) };
         self
     }
 
     /// This function sets the elements of the matrix to the corresponding elements of the identity matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
     pub fn set_identity(&mut self) -> &MatrixF32 {
-        unsafe { sys::gsl_matrix_float_set_identity(self.mat) };
+        unsafe { sys::gsl_matrix_float_set_identity(self.unwrap_unique()) };
         self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
     pub fn copy_from(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_memcpy(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_memcpy(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
     pub fn copy_to(&self, other: &mut MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_memcpy(other.mat, self.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_memcpy(other.unwrap_unique(), self.unwrap_shared())
+        })
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
     pub fn swap(&mut self, other: &mut MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_swap(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_swap(self.unwrap_unique(), other.unwrap_unique())
+        })
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
     pub fn get_row(&self, y: usize) -> Option<(enums::Value, VectorF32)> {
-        let tmp = unsafe { sys::gsl_vector_float_alloc((*self.mat).size2) };
+        let tmp = unsafe { sys::gsl_vector_float_alloc((*self.unwrap_shared()).size2) };
 
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { sys::gsl_matrix_float_get_row(tmp, self.mat, y) };
+            let ret = unsafe { sys::gsl_matrix_float_get_row(tmp, self.unwrap_shared(), y) };
 
             Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
@@ -650,12 +677,12 @@ impl MatrixF32 {
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
     pub fn get_col(&self, x: usize) -> Option<(enums::Value, VectorF32)> {
-        let tmp = unsafe { sys::gsl_vector_float_alloc((*self.mat).size1) };
+        let tmp = unsafe { sys::gsl_vector_float_alloc((*self.unwrap_shared()).size1) };
 
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { sys::gsl_matrix_float_get_col(tmp, self.mat, x) };
+            let ret = unsafe { sys::gsl_matrix_float_get_col(tmp, self.unwrap_shared(), x) };
 
             Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
         }
@@ -665,7 +692,7 @@ impl MatrixF32 {
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_float_set_row(self.mat, y, ffi::FFI::unwrap_shared(v))
+            sys::gsl_matrix_float_set_row(self.unwrap_unique(), y, ffi::FFI::unwrap_shared(v))
         })
     }
 
@@ -673,34 +700,37 @@ impl MatrixF32 {
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorF32) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_float_set_col(self.mat, x, ffi::FFI::unwrap_shared(v))
+            sys::gsl_matrix_float_set_col(self.unwrap_unique(), x, ffi::FFI::unwrap_shared(v))
         })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
     pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rows(self.mat, y1, y2) })
+        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rows(self.unwrap_unique(), y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
     pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_columns(self.mat, x1, x2) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_swap_columns(self.unwrap_unique(), x1, x2)
+        })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
     pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rowcol(self.mat, i, j) })
+        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rowcol(self.unwrap_unique(), i, j) })
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<(enums::Value, MatrixF32)> {
-        let dest = unsafe { sys::gsl_matrix_float_alloc((*self.mat).size2, (*self.mat).size1) };
+        let ptr = self.unwrap_shared();
+        let dest = unsafe { sys::gsl_matrix_float_alloc((*ptr).size2, (*ptr).size1) };
 
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { sys::gsl_matrix_float_transpose_memcpy(dest, self.mat) };
+            let ret = unsafe { sys::gsl_matrix_float_transpose_memcpy(dest, ptr) };
 
             Some((
                 enums::Value::from(ret),
@@ -714,59 +744,69 @@ impl MatrixF32 {
 
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn transpose(&self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_transpose(self.mat) })
+    pub fn transpose(&mut self) -> enums::Value {
+        enums::Value::from(unsafe { sys::gsl_matrix_float_transpose(self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn add(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_add(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_add(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn sub(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_sub(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_sub(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_mul_elements(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_mul_elements(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_div_elements(self.mat, other.mat) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_div_elements(self.unwrap_unique(), other.unwrap_shared())
+        })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
     pub fn scale(&mut self, x: f32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_scale(self.mat, x as _) })
+        enums::Value::from(unsafe { sys::gsl_matrix_float_scale(self.unwrap_unique(), x as _) })
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
     pub fn add_constant(&mut self, x: f32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_add_constant(self.mat, x as _) })
+        enums::Value::from(unsafe {
+            sys::gsl_matrix_float_add_constant(self.unwrap_unique(), x as _)
+        })
     }
 
     /// This function returns the maximum value in the self matrix.
     pub fn max(&self) -> f32 {
-        unsafe { sys::gsl_matrix_float_max(self.mat) }
+        unsafe { sys::gsl_matrix_float_max(self.unwrap_shared()) }
     }
 
     /// This function returns the minimum value in the self matrix.
     pub fn min(&self) -> f32 {
-        unsafe { sys::gsl_matrix_float_min(self.mat) }
+        unsafe { sys::gsl_matrix_float_min(self.unwrap_shared()) }
     }
 
     /// This function returns the minimum and maximum values in the self matrix, storing them in min_out and max_out.
     pub fn minmax(&self) -> (f32, f32) {
         let mut min_out = 0.;
         let mut max_out = 0.;
-        unsafe { sys::gsl_matrix_float_minmax(self.mat, &mut min_out, &mut max_out) };
+        unsafe { sys::gsl_matrix_float_minmax(self.unwrap_shared(), &mut min_out, &mut max_out) };
         (min_out as _, max_out as _)
     }
 
@@ -776,7 +816,7 @@ impl MatrixF32 {
         let mut imax = 0;
         let mut jmax = 0;
 
-        unsafe { sys::gsl_matrix_float_max_index(self.mat, &mut imax, &mut jmax) };
+        unsafe { sys::gsl_matrix_float_max_index(self.unwrap_shared(), &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -786,7 +826,7 @@ impl MatrixF32 {
         let mut imax = 0;
         let mut jmax = 0;
 
-        unsafe { sys::gsl_matrix_float_min_index(self.mat, &mut imax, &mut jmax) };
+        unsafe { sys::gsl_matrix_float_min_index(self.unwrap_shared(), &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -799,14 +839,20 @@ impl MatrixF32 {
         let mut jmax = 0;
 
         unsafe {
-            sys::gsl_matrix_float_minmax_index(self.mat, &mut imin, &mut jmin, &mut imax, &mut jmax)
+            sys::gsl_matrix_float_minmax_index(
+                self.unwrap_shared(),
+                &mut imin,
+                &mut jmin,
+                &mut imax,
+                &mut jmax,
+            )
         };
         (imin, jmin, imax, jmax)
     }
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        match unsafe { sys::gsl_matrix_float_isnull(self.mat) } {
+        match unsafe { sys::gsl_matrix_float_isnull(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -814,7 +860,7 @@ impl MatrixF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        match unsafe { sys::gsl_matrix_float_ispos(self.mat) } {
+        match unsafe { sys::gsl_matrix_float_ispos(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -822,7 +868,7 @@ impl MatrixF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        match unsafe { sys::gsl_matrix_float_isneg(self.mat) } {
+        match unsafe { sys::gsl_matrix_float_isneg(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -830,7 +876,7 @@ impl MatrixF32 {
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        match unsafe { sys::gsl_matrix_float_isnonneg(self.mat) } {
+        match unsafe { sys::gsl_matrix_float_isnonneg(self.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
@@ -838,18 +884,19 @@ impl MatrixF32 {
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &MatrixF32) -> bool {
-        match unsafe { sys::gsl_matrix_float_equal(self.mat, other.mat) } {
+        match unsafe { sys::gsl_matrix_float_equal(self.unwrap_shared(), other.unwrap_shared()) } {
             1 => true,
             _ => false,
         }
     }
 
     pub fn clone(&self) -> Option<MatrixF32> {
-        unsafe {
-            if self.mat.is_null() {
-                None
-            } else {
-                match MatrixF32::new((*self.mat).size1, (*self.mat).size2) {
+        let ptr = self.unwrap_shared();
+        if ptr.is_null() {
+            None
+        } else {
+            unsafe {
+                match MatrixF32::new((*ptr).size1, (*ptr).size2) {
                     Some(mut m) => {
                         m.copy_from(self);
                         Some(m)
