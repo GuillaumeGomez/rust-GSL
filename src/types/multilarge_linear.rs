@@ -10,20 +10,20 @@ pub struct MultilargeLinearType {
 }
 
 impl FFI<sys::gsl_multilarge_linear_type> for MultilargeLinearType {
-    fn wrap(r: *mut sys::gsl_multilarge_linear_type) -> Self {
-        panic!("Shouldn't be used!")
+    fn wrap(_r: *mut sys::gsl_multilarge_linear_type) -> Self {
+        unimplemented!()
     }
 
-    fn soft_wrap(r: *mut sys::gsl_multilarge_linear_type) -> Self {
-        panic!("Shouldn't be used!")
+    fn soft_wrap(_r: *mut sys::gsl_multilarge_linear_type) -> Self {
+        unimplemented!()
     }
 
-    fn unwrap_shared(s: &MultilargeLinear) -> *const sys::gsl_multilarge_linear_type {
-        s.inner
+    fn unwrap_shared(&self) -> *const sys::gsl_multilarge_linear_type {
+        self.inner
     }
 
-    fn unwrap_unique(s: &mut MultilargeLinear) -> *mut sys::gsl_multilarge_linear_type {
-        panic!("Shouldn't be used!")
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_multilarge_linear_type {
+        unimplemented!()
     }
 }
 
@@ -49,21 +49,21 @@ pub struct MultilargeLinear {
     inner: *mut sys::gsl_multilarge_linear_workspace,
 }
 
-impl FFI<sys::gsl_multifit_linear_workspace> for MultilargeLinear {
-    fn wrap(r: *mut sys::gsl_multifit_linear_workspace) -> Self {
-        Self { inner: r }
+impl FFI<sys::gsl_multilarge_linear_workspace> for MultilargeLinear {
+    fn wrap(inner: *mut sys::gsl_multilarge_linear_workspace) -> Self {
+        Self { inner }
     }
 
-    fn soft_wrap(r: *mut sys::gsl_multifit_linear_workspace) -> Self {
+    fn soft_wrap(r: *mut sys::gsl_multilarge_linear_workspace) -> Self {
         Self::wrap(r)
     }
 
-    fn unwrap_shared(s: &MultilargeLinear) -> *const sys::gsl_multifit_linear_workspace {
-        s.inner as *const _
+    fn unwrap_shared(&self) -> *const sys::gsl_multilarge_linear_workspace {
+        self.inner as *const _
     }
 
-    fn unwrap_unique(s: &mut MultilargeLinear) -> *mut sys::gsl_multifit_linear_workspace {
-        s.inner
+    fn unwrap_unique(&mut self) -> *mut sys::gsl_multilarge_linear_workspace {
+        self.inner
     }
 }
 
@@ -74,26 +74,6 @@ impl MultilargeLinear {
             None
         } else {
             Some(Self { inner: s })
-        }
-    }
-
-    pub fn linear(
-        &mut self,
-        x: &MatrixF64,
-        y: &VectorF64,
-        c: &mut VectorF64,
-        cov: &mut MatrixF64,
-        chisq: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear(
-                x.unwrap_shared(),
-                y.unwrap_shared(),
-                c.unwrap_unique(),
-                cov.unwrap_unique(),
-                chisq,
-                self.unwrap_unique(),
-            ))
         }
     }
 

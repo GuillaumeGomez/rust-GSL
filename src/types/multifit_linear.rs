@@ -10,8 +10,8 @@ pub struct MultifitLinear {
 }
 
 impl FFI<sys::gsl_multifit_linear_workspace> for MultifitLinear {
-    fn wrap(r: *mut sys::gsl_multifit_linear_workspace) -> MultifitLinear {
-        Self { inner: r }
+    fn wrap(inner: *mut sys::gsl_multifit_linear_workspace) -> Self {
+        Self { inner }
     }
 
     fn soft_wrap(r: *mut sys::gsl_multifit_linear_workspace) -> Self {
