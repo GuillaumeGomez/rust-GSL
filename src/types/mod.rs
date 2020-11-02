@@ -28,9 +28,12 @@ pub use self::minimizer::{Minimizer, MinimizerType};
 pub use self::monte_carlo::{
     MiserMonteCarlo, MiserParams, PlainMonteCarlo, VegasMonteCarlo, VegasParams,
 };
+pub use self::multifit_linear::MultifitLinear;
 pub use self::multifit_solver::{
     MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction, MultiFitFunctionFdf,
 };
+#[cfg(feature = "v2_1")]
+pub use self::multilarge_linear::{MultilargeLinear, MultilargeLinearType};
 pub use self::multiset::MultiSet;
 pub use self::n_tuples::{ReadNTuples, WriteNTuples};
 pub use self::ordinary_differential_equations::{
@@ -64,7 +67,9 @@ pub mod matrix;
 pub mod matrix_complex;
 pub mod minimizer;
 pub mod monte_carlo;
+pub mod multifit_linear;
 pub mod multifit_solver;
+pub mod multilarge_linear;
 pub mod multiset;
 pub mod n_tuples;
 pub mod ordinary_differential_equations;
