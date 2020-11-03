@@ -161,6 +161,7 @@ James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR�
 http://www.netlib.org/lapack/ in the lawns or lawnspdf directories.
 !*/
 
+use crate::enums;
 use crate::Value;
 use ffi::FFI;
 
@@ -1290,4 +1291,347 @@ pub fn solve_symm_cyc_tridiag(
 /// the vector D.
 pub fn balance_matrix(a: &mut ::MatrixF64, d: &mut ::VectorF64) -> Value {
     Value::from(unsafe { sys::gsl_linalg_balance_matrix(a.unwrap_unique(), d.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_decomp(a: &mut ::MatrixF64, p: &mut ::Permutation) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_pcholesky_decomp(a.unwrap_unique(), p.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_solve(
+    LDLT: &::MatrixF64,
+    p: &::Permutation,
+    b: &::VectorF64,
+    x: &mut ::VectorF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_solve(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            b.unwrap_shared(),
+            x.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_svx(LDLT: &::MatrixF64, p: &::Permutation, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_svx(LDLT.unwrap_shared(), p.unwrap_shared(), x.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_decomp2(A: &mut ::MatrixF64, p: &mut ::Permutation, S: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_decomp2(A.unwrap_unique(), p.unwrap_unique(), S.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_solve2(
+    LDLT: &::MatrixF64,
+    p: &::Permutation,
+    S: &::VectorF64,
+    b: &::VectorF64,
+    x: &mut ::VectorF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_solve2(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            S.unwrap_shared(),
+            b.unwrap_shared(),
+            x.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_svx2(
+    LDLT: &::MatrixF64,
+    p: &::Permutation,
+    S: &::VectorF64,
+    x: &mut ::VectorF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_svx2(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            S.unwrap_shared(),
+            x.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_invert(LDLT: &::MatrixF64, p: &::Permutation, Ainv: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_invert(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            Ainv.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn pcholesky_rcond(
+    LDLT: &::MatrixF64,
+    p: &::Permutation,
+    rcond: &mut f64,
+    work: &mut ::VectorF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_pcholesky_rcond(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            rcond,
+            work.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn mcholesky_decomp(A: &mut ::MatrixF64, p: &mut ::Permutation, E: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_mcholesky_decomp(A.unwrap_unique(), p.unwrap_unique(), E.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn mcholesky_solve(
+    LDLT: &::MatrixF64,
+    p: &::Permutation,
+    b: &::VectorF64,
+    x: &mut ::VectorF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_mcholesky_solve(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            b.unwrap_shared(),
+            x.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn mcholesky_svx(LDLT: &::MatrixF64, p: &::Permutation, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_mcholesky_svx(LDLT.unwrap_shared(), p.unwrap_shared(), x.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn mcholesky_rcond(
+    LDLT: &::MatrixF64,
+    p: &::Permutation,
+    rcond: &mut f64,
+    work: &mut ::VectorF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_mcholesky_rcond(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            rcond,
+            work.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn mcholesky_invert(LDLT: &::MatrixF64, p: &::Permutation, Ainv: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_mcholesky_invert(
+            LDLT.unwrap_shared(),
+            p.unwrap_shared(),
+            Ainv.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn cholesky_band_decomp(A: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_cholesky_band_decomp(A.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn cholesky_band_solve(LLT: &::MatrixF64, b: &::VectorF64, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_solve(
+            LLT.unwrap_shared(),
+            b.unwrap_shared(),
+            x.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn cholesky_band_svx(LLT: &::MatrixF64, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_svx(LLT.unwrap_shared(), x.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_7")]
+pub fn cholesky_band_solvem(LLT: &::MatrixF64, B: &::MatrixF64, X: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_solvem(
+            LLT.unwrap_shared(),
+            B.unwrap_shared(),
+            X.unwrap_unique(),
+        )
+    })
+}
+
+#[cfg(feature = "v2_7")]
+pub fn cholesky_band_svxm(LLT: &::MatrixF64, X: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_svxm(LLT.unwrap_shared(), X.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn cholesky_band_invert(LLT: &::MatrixF64, Ainv: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_invert(LLT.unwrap_shared(), Ainv.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn cholesky_band_unpack(LLT: &::MatrixF64, L: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_unpack(LLT.unwrap_shared(), L.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn cholesky_band_rcond(LLT: &::MatrixF64, rcond: &mut f64, work: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_cholesky_band_rcond(LLT.unwrap_shared(), rcond, work.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_decomp(A: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_ldlt_decomp(A.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_solve(LDLT: &::MatrixF64, b: &::VectorF64, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_ldlt_solve(LDLT.unwrap_shared(), b.unwrap_shared(), x.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_svx(LDLT: &::MatrixF64, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_ldlt_svx(LDLT.unwrap_shared(), x.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_rcond(LDLT: &::MatrixF64, rcond: &mut f64, work: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_ldlt_rcond(LDLT.unwrap_shared(), rcond, work.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_band_decomp(A: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_ldlt_band_decomp(A.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_band_solve(LDLT: &::MatrixF64, b: &::VectorF64, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_ldlt_band_solve(LDLT.unwrap_shared(), b.unwrap_shared(), x.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_band_svx(LDLT: &::MatrixF64, x: &mut ::VectorF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_ldlt_band_svx(LDLT.unwrap_shared(), x.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_band_unpack(LDLT: &::MatrixF64, L: &mut ::MatrixF64, D: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_ldlt_band_unpack(LDLT.unwrap_shared(), L.unwrap_unique(), D.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_6")]
+pub fn ldlt_band_rcond(LDLT: &::MatrixF64, rcond: &mut f64, work: &mut ::VectorF64) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_ldlt_band_rcond(LDLT.unwrap_shared(), rcond, work.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_upper_invert(T: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_tri_upper_invert(T.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_lower_invert(T: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_tri_lower_invert(T.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_upper_unit_invert(T: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_tri_upper_unit_invert(T.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_lower_unit_invert(T: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_tri_lower_unit_invert(T.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_invert(
+    Uplo: enums::CblasUplo,
+    Diag: enums::CblasDiag,
+    T: &mut ::MatrixComplexF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_complex_tri_invert(Uplo.into(), Diag.into(), T.unwrap_unique())
+    })
+}
+
+pub fn complex_tri_invert(
+    Uplo: enums::CblasUplo,
+    Diag: enums::CblasDiag,
+    T: &mut ::MatrixComplexF64,
+) -> Value {
+    Value::from(unsafe {
+        sys::gsl_linalg_complex_tri_invert(Uplo.into(), Diag.into(), T.unwrap_unique())
+    })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_LTL(L: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_tri_LTL(L.unwrap_unique()) })
+}
+
+#[cfg(feature = "v2_2")]
+pub fn tri_UL(LU: &mut ::MatrixF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_tri_UL(LU.unwrap_unique()) })
+}
+
+pub fn complex_tri_LHL(L: &mut ::MatrixComplexF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_complex_tri_LHL(L.unwrap_unique()) })
+}
+
+pub fn complex_tri_UL(LU: &mut ::MatrixComplexF64) -> Value {
+    Value::from(unsafe { sys::gsl_linalg_complex_tri_UL(LU.unwrap_unique()) })
+}
+
+pub fn givens(a: f64, b: f64, c: &mut f64, s: &mut f64) {
+    unsafe { sys::gsl_linalg_givens(a, b, c, s) }
+}
+
+pub fn givens_gv(v: &mut ::VectorF64, i: usize, j: usize, c: f64, s: f64) {
+    unsafe { sys::gsl_linalg_givens_gv(v.unwrap_unique(), i, j, c, s) }
 }
