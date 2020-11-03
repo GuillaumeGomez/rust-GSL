@@ -34,13 +34,7 @@ use crate::Value;
 use ffi::FFI;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
-
-macro_rules! doc {
-    ($doc:expr, $($t:tt)*) => (
-        #[doc = $doc]
-        $($t)*
-    );
-}
+use std::marker::PhantomData;
 
 use crate::paste::paste;
 
@@ -244,9 +238,9 @@ impl $rust_name {
 
     /// This function adds the constant value x to the elements of the self vector. The result
     /// `a_i <- a_i + x` is stored in `self`.
-    pub fn add_constant(&mut self, x: $rust_ty) -> Value {
+    pub fn add_constant(&mut self, x: f64) -> Value {
         // Funny bug: here it expects a f64 and not a f32 for gsl_vector_float...
-        Value::from(unsafe { paste! { sys::[<$name _add_constant>](self.unwrap_unique(), x as _) } })
+        Value::from(unsafe { paste! { sys::[<$name _add_constant>](self.unwrap_unique(), x) } })
     }
 
     /// This function returns the maximum value in the self vector.
@@ -354,60 +348,67 @@ paste! {
 pub struct [<$rust_name View>]<'a> {
     v: sys::[<$name _view>],
     #[allow(dead_code)]
-    phantom: &'a (),
+    phantom: PhantomData<&'a ()>,
 }
 
 impl<'a> [<$rust_name View>]<'a> {
-    /// These functions return a vector view of a subvector of another vector v. The start of the new vector is offset by offset elements
-    /// from the start of the original vector. The new vector has n elements. Mathematically, the i-th element of the new vector v’ is given by,
+    /// These functions return a vector view of a subvector of another vector v. The start of the
+    /// new vector is offset by offset elements from the start of the original vector. The new
+    /// vector has n elements. Mathematically, the i-th element of the new vector v’ is given by,
     ///
     /// v'(i) = v->data[(offset + i)*v->stride]
     ///
     /// where the index i runs from 0 to n-1.
     ///
-    /// The data pointer of the returned vector struct is set to null if the combined parameters (offset,n) overrun the end of the original
-    /// vector.
+    /// The data pointer of the returned vector struct is set to null if the combined parameters
+    /// (offset,n) overrun the end of the original vector.
     ///
-    /// The new vector is only a view of the block underlying the original vector, v. The block containing the elements of v is not owned by
-    /// the new vector. When the view goes out of scope the original vector v and its block will continue to exist. The original memory can
-    /// only be deallocated by freeing the original vector. Of course, the original vector should not be deallocated while the view is still
-    /// in use.
+    /// The new vector is only a view of the block underlying the original vector, v. The block
+    /// containing the elements of v is not owned by the new vector. When the view goes out of scope
+    /// the original vector v and its block will continue to exist. The original memory can only be
+    /// deallocated by freeing the original vector. Of course, the original vector should not be
+    /// deallocated while the view is still in use.
     ///
-    /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be used for vectors which are declared const.
+    /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be
+    /// used for vectors which are declared const.
     pub fn from_vector(v: &'a mut $rust_name, offset: usize, n: usize) -> Self {
         unsafe {
             Self {
                 v: sys::[<$name _subvector>](v.unwrap_unique(), offset, n),
-                phantom: &(),
+                phantom: PhantomData,
             }
         }
     }
 
-    /// These functions return a vector view of a subvector of another vector v with an additional stride argument. The subvector is formed
-    /// in the same way as for gsl_vector_subvector but the new vector has n elements with a step-size of stride from one element to the
-    /// next in the original vector. Mathematically, the i-th element of the new vector v’ is given by,
+    /// These functions return a vector view of a subvector of another vector v with an additional
+    /// stride argument. The subvector is formed in the same way as for gsl_vector_subvector but the
+    /// new vector has n elements with a step-size of stride from one element to the next in the
+    /// original vector. Mathematically, the i-th element of the new vector v’ is given by,
     ///
     /// v'(i) = v->data[(offset + i*stride)*v->stride]
     /// where the index i runs from 0 to n-1.
     ///
-    /// Note that subvector views give direct access to the underlying elements of the original vector. For example, the following code will
-    /// zero the even elements of the vector v of length n, while leaving the odd elements untouched,
+    /// Note that subvector views give direct access to the underlying elements of the original
+    /// vector. For example, the following code will zero the even elements of the vector v of
+    /// length n, while leaving the odd elements untouched,
     ///
     /// ```C
     /// gsl_vector_view v_even
     ///   = gsl_vector_subvector_with_stride (v, 0, 2, n/2);
     /// gsl_vector_set_zero (&v_even.vector);
     /// ```
-    /// A vector view can be passed to any subroutine which takes a vector argument just as a directly allocated vector would be, using &view.vector.
-    /// For example, the following code computes the norm of the odd elements of v using the BLAS routine DNRM2,
+    /// A vector view can be passed to any subroutine which takes a vector argument just as a
+    /// directly allocated vector would be, using &view.vector.
+    /// For example, the following code computes the norm of the odd elements of v using the BLAS
+    /// routine DNRM2,
     ///
     /// ```C
     /// gsl_vector_view v_odd
     ///   = gsl_vector_subvector_with_stride (v, 1, 2, n/2);
     /// double r = gsl_blas_dnrm2 (&v_odd.vector);
     /// ```
-    /// The function gsl_vector_const_subvector_with_stride is equivalent to gsl_vector_subvector_with_stride but can be used for vectors which
-    /// are declared const.
+    /// The function gsl_vector_const_subvector_with_stride is equivalent to
+    /// gsl_vector_subvector_with_stride but can be used for vectors which are declared const.
     pub fn from_vector_with_stride(
         v: &'a mut $rust_name,
         offset: usize,
@@ -417,45 +418,49 @@ impl<'a> [<$rust_name View>]<'a> {
         unsafe {
             Self {
                 v: sys::[<$name _subvector_with_stride>](v.vec, offset, stride, n),
-                phantom: &(),
+                phantom: PhantomData,
             }
         }
     }
 
-    /// These functions return a vector view of an array. The start of the new vector is given by base and has n elements. Mathematically,
-    /// the i-th element of the new vector v’ is given by,
+    /// These functions return a vector view of an array. The start of the new vector is given by
+    /// base and has n elements. Mathematically, the i-th element of the new vector v’ is given by,
     ///
     /// v'(i) = base[i]
     ///
     /// where the index i runs from 0 to n-1.
     ///
-    /// The array containing the elements of v is not owned by the new vector view. When the view goes out of scope the original array will
-    /// continue to exist. The original memory can only be deallocated by freeing the original pointer base. Of course, the original array
-    /// should not be deallocated while the view is still in use.
+    /// The array containing the elements of v is not owned by the new vector view. When the view
+    /// goes out of scope the original array will continue to exist. The original memory can only be
+    /// deallocated by freeing the original pointer base. Of course, the original array should not
+    /// be deallocated while the view is still in use.
     ///
-    /// The function gsl_vector_const_view_array is equivalent to gsl_vector_view_array but can be used for arrays which are declared const.
+    /// The function gsl_vector_const_view_array is equivalent to gsl_vector_view_array but can be
+    /// used for arrays which are declared const.
     pub fn from_array(base: &'a mut [f64]) -> Self {
         unsafe {
             Self {
                 v: sys::[<$name _view_array>](base.as_mut_ptr() as _, base.len() as _),
-                phantom: &(),
+                phantom: PhantomData,
             }
         }
     }
 
-    /// These functions return a vector view of an array base with an additional stride argument. The subvector is formed in the same way as
-    /// for gsl_vector_view_array but the new vector has n elements with a step-size of stride from one element to the next in the original
+    /// These functions return a vector view of an array base with an additional stride argument.
+    /// The subvector is formed in the same way as for gsl_vector_view_array but the new vector has
+    /// n elements with a step-size of stride from one element to the next in the original
     /// array. Mathematically, the i-th element of the new vector v’ is given by,
     ///
     /// v'(i) = base[i*stride]
     ///
     /// where the index i runs from 0 to n-1.
     ///
-    /// Note that the view gives direct access to the underlying elements of the original array. A vector view can be passed to any subroutine
-    /// which takes a vector argument just as a directly allocated vector would be, using &view.vector.
+    /// Note that the view gives direct access to the underlying elements of the original array. A
+    /// vector view can be passed to any subroutine which takes a vector argument just as a directly
+    /// allocated vector would be, using &view.vector.
     ///
-    /// The function gsl_vector_const_view_array_with_stride is equivalent to gsl_vector_view_array_with_stride but can be used for arrays
-    /// which are declared const.
+    /// The function gsl_vector_const_view_array_with_stride is equivalent to
+    /// gsl_vector_view_array_with_stride but can be used for arrays which are declared const.
     pub fn from_array_with_stride(base: &'a mut [$rust_ty], stride: usize) -> Self {
         unsafe {
             Self {
@@ -464,7 +469,7 @@ impl<'a> [<$rust_name View>]<'a> {
                     stride,
                     base.len() as _,
                 ),
-                phantom: &(),
+                phantom: PhantomData,
             }
         }
     }

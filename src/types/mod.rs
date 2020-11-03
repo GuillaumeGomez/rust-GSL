@@ -24,7 +24,10 @@ pub use self::integration::{
 };
 pub use self::interpolation::{Interp, InterpAccel, InterpType, Spline};
 pub use self::mathieu::MathieuWorkspace;
-pub use self::matrix::{MatrixF32, MatrixF64, MatrixView};
+pub use self::matrix::{
+    MatrixF32, MatrixF32View, MatrixF64, MatrixF64View, MatrixI32, MatrixI32View, MatrixU32,
+    MatrixU32View,
+};
 pub use self::matrix_complex::{MatrixComplexF32, MatrixComplexF64};
 pub use self::minimizer::{Minimizer, MinimizerType};
 pub use self::monte_carlo::{
