@@ -17,7 +17,7 @@ impl MultifitLinear {
         if s.is_null() {
             None
         } else {
-            Some(Self { inner: s })
+            Some(Self::wrap(s))
         }
     }
 

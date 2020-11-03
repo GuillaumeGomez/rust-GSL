@@ -2,8 +2,10 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#[cfg(feature = "v2_2")]
+use crate::MatrixF64;
 use crate::Value;
-use crate::{MatrixComplexF32, MatrixComplexF64, MatrixF32, MatrixF64, VectorF64};
+use crate::{MatrixComplexF32, MatrixComplexF64, MatrixF32, VectorF64};
 use c_vec::CSlice;
 use ffi::{self, FFI};
 use std::fmt;

@@ -615,3 +615,72 @@ impl From<sys::CBLAS_SIDE> for CblasDiag {
         }
     }
 }
+
+#[cfg(feature = "v2_5")]
+#[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
+pub enum FilterEnd {
+    PadZero,
+    PadValue,
+    Truncate,
+}
+
+#[doc(hidden)]
+#[cfg(feature = "v2_5")]
+impl Into<sys::gsl_filter_end_t> for FilterEnd {
+    fn into(self) -> sys::gsl_filter_end_t {
+        match self {
+            Self::PadZero => sys::gsl_filter_end_t_GSL_FILTER_END_PADZERO,
+            Self::PadValue => sys::gsl_filter_end_t_GSL_FILTER_END_PADVALUE,
+            Self::Truncate => sys::gsl_filter_end_t_GSL_FILTER_END_TRUNCATE,
+        }
+    }
+}
+
+#[doc(hidden)]
+#[cfg(feature = "v2_5")]
+impl From<sys::gsl_filter_end_t> for FilterEnd {
+    fn from(v: sys::gsl_filter_end_t) -> FilterEnd {
+        match v {
+            sys::gsl_filter_end_t_GSL_FILTER_END_PADZERO => Self::PadZero,
+            sys::gsl_filter_end_t_GSL_FILTER_END_PADVALUE => Self::PadValue,
+            sys::gsl_filter_end_t_GSL_FILTER_END_TRUNCATE => Self::Truncate,
+            _ => panic!("Unknown FilterEnd value"),
+        }
+    }
+}
+
+#[cfg(feature = "v2_5")]
+#[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
+pub enum FilterScale {
+    MedianAbsoluteDeviation,
+    InterQuartileRange,
+    SN,
+    QN,
+}
+
+#[doc(hidden)]
+#[cfg(feature = "v2_5")]
+impl Into<sys::gsl_filter_scale_t> for FilterScale {
+    fn into(self) -> sys::gsl_filter_scale_t {
+        match self {
+            Self::MedianAbsoluteDeviation => sys::gsl_filter_scale_t_GSL_FILTER_SCALE_MAD,
+            Self::InterQuartileRange => sys::gsl_filter_scale_t_GSL_FILTER_SCALE_IQR,
+            Self::SN => sys::gsl_filter_scale_t_GSL_FILTER_SCALE_SN,
+            Self::QN => sys::gsl_filter_scale_t_GSL_FILTER_SCALE_QN,
+        }
+    }
+}
+
+#[doc(hidden)]
+#[cfg(feature = "v2_5")]
+impl From<sys::gsl_filter_scale_t> for FilterScale {
+    fn from(v: sys::gsl_filter_scale_t) -> FilterScale {
+        match v {
+            sys::gsl_filter_scale_t_GSL_FILTER_SCALE_MAD => Self::MedianAbsoluteDeviation,
+            sys::gsl_filter_scale_t_GSL_FILTER_SCALE_IQR => Self::InterQuartileRange,
+            sys::gsl_filter_scale_t_GSL_FILTER_SCALE_SN => Self::SN,
+            sys::gsl_filter_scale_t_GSL_FILTER_SCALE_QN => Self::QN,
+            _ => panic!("Unknown FilterScale value"),
+        }
+    }
+}

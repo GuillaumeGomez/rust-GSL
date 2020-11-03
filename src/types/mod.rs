@@ -15,6 +15,8 @@ pub use self::eigen_symmetric_workspace::{
     EigenSymmetricWorkspace,
 };
 pub use self::fast_fourier_transforms::{FftComplexWaveTable, FftComplexWorkspace};
+#[cfg(feature = "v2_5")]
+pub use self::filter::{FilterGaussian, FilterImpulse, FilterMedian, FilterRMedian};
 pub use self::histograms::{Histogram, Histogram2D, Histogram2DPdf, HistogramPdf};
 pub use self::integration::{
     CquadWorkspace, GLFixedTable, IntegrationFixedType, IntegrationFixedWorkspace,
@@ -49,7 +51,10 @@ pub use self::roots::{RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolver
 pub use self::rstat::{RStat, RStatQuantile};
 pub use self::series_acceleration::{LevinUTruncWorkspace, LevinUWorkspace};
 pub use self::siman::{SimAnnealing, SimAnnealingParams};
-pub use self::vector::{VectorF32, VectorF64, VectorView};
+pub use self::vector::{
+    VectorF32, VectorF32View, VectorF64, VectorF64View, VectorI32, VectorI32View, VectorU32,
+    VectorU32View,
+};
 pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
 pub use self::wavelet_transforms::{Wavelet, WaveletType, WaveletWorkspace};
 
@@ -60,6 +65,8 @@ pub mod complex;
 pub mod discrete_hankel;
 pub mod eigen_symmetric_workspace;
 pub mod fast_fourier_transforms;
+#[cfg(feature = "v2_5")]
+pub mod filter;
 pub mod histograms;
 pub mod integration;
 pub mod interpolation;

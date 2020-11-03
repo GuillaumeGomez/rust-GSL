@@ -55,6 +55,7 @@
 extern crate c_vec;
 extern crate gsl_sys as sys;
 extern crate libc;
+extern crate paste;
 
 pub use types::{
     ChebSeries, Combination, ComplexF32, ComplexF64, CquadWorkspace, DiscreteHankel,
@@ -70,9 +71,12 @@ pub use types::{
     ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step, ODEiv2StepType, ODEiv2System,
     Permutation, PlainMonteCarlo, PolyComplex, QRng, QRngType, ReadNTuples, Result, ResultE10, Rng,
     RngType, RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType, SimAnnealing,
-    SimAnnealingParams, Spline, VectorComplexF32, VectorComplexF64, VectorF32, VectorF64,
-    VectorView, VegasMonteCarlo, VegasParams, Wavelet, WaveletType, WaveletWorkspace, WriteNTuples,
+    SimAnnealingParams, Spline, VectorComplexF32, VectorComplexF64, VectorF32, VectorF32View,
+    VectorF64, VectorF64View, VectorI32, VectorI32View, VectorU32, VectorU32View, VegasMonteCarlo,
+    VegasParams, Wavelet, WaveletType, WaveletWorkspace, WriteNTuples,
 };
+#[cfg(feature = "v2_5")]
+pub use types::{FilterGaussian, FilterImpulse, FilterMedian, FilterRMedian};
 
 pub use elementary::Elementary;
 pub use pow::Pow;
@@ -85,6 +89,9 @@ pub use self::enums::{
     EigenSort, FftDirection, GaussKonrodRule, IntegrationQawo, Mode, ODEiv, SfLegendreNorm, Value,
     VegasMode, WaveletDirection,
 };
+
+#[cfg(feature = "v2_5")]
+pub use self::enums::{FilterEnd, FilterScale};
 
 mod enums;
 mod macros;
@@ -115,6 +122,8 @@ pub mod exponential;
 pub mod exponential_integrals;
 pub mod fermi_dirac;
 pub mod fft;
+#[cfg(feature = "v2_5")]
+pub mod filter;
 pub mod fit;
 pub mod gamma_beta;
 pub mod gegenbauer;
@@ -129,6 +138,7 @@ pub mod linear_algebra;
 pub mod logarithm;
 pub mod minimizer;
 pub mod multifit;
+#[cfg(feature = "v2_1")]
 pub mod multilarge;
 pub mod multilinear;
 pub mod numerical_differentiation;
