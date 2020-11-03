@@ -129,6 +129,7 @@ pub mod linear_algebra;
 pub mod logarithm;
 pub mod minimizer;
 pub mod multifit;
+pub mod multilarge;
 pub mod multilinear;
 pub mod numerical_differentiation;
 pub mod physical_constant;

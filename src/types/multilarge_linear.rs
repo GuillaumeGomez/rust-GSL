@@ -9,19 +9,11 @@ ffi_wrapper!(MultilargeLinearType, *const sys::gsl_multilarge_linear_type);
 
 impl MultilargeLinearType {
     pub fn normal() -> MultilargeLinearType {
-        unsafe {
-            Self {
-                inner: sys::gsl_multilarge_linear_normal,
-            }
-        }
+        ffi_wrap!(gsl_multilarge_linear_normal)
     }
 
     pub fn tsqr() -> MultilargeLinearType {
-        unsafe {
-            Self {
-                inner: sys::gsl_multilarge_linear_tsqr,
-            }
-        }
+        ffi_wrap!(gsl_multilarge_linear_tsqr)
     }
 }
 
@@ -37,7 +29,7 @@ impl MultilargeLinear {
         if s.is_null() {
             None
         } else {
-            Some(Self { inner: s })
+            Some(Self::wrap(s))
         }
     }
 
@@ -69,5 +61,180 @@ impl MultilargeLinear {
                 self.unwrap_unique(),
             ))
         }
+    }
+
+    pub fn solve(
+        &mut self,
+        lambda: f64,
+        c: &mut VectorF64,
+        rnorm: &mut f64,
+        snorm: &mut f64,
+    ) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_solve(
+                lambda,
+                c.unwrap_unique(),
+                rnorm,
+                snorm,
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    pub fn rcond(&mut self, rcond: &mut f64) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_rcond(
+                rcond,
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    #[cfg(feature = "v2_2")]
+    pub fn lcurve(
+        &mut self,
+        reg_param: &mut VectorF64,
+        rho: &mut VectorF64,
+        eta: &mut VectorF64,
+    ) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_lcurve(
+                reg_param.unwrap_unique(),
+                rho.unwrap_unique(),
+                eta.unwrap_unique(),
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    pub fn wstdform1(
+        &mut self,
+        L: &VectorF64,
+        X: &MatrixF64,
+        w: &VectorF64,
+        y: &VectorF64,
+        Xs: &mut MatrixF64,
+        ys: &mut VectorF64,
+    ) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_wstdform1(
+                L.unwrap_shared(),
+                X.unwrap_shared(),
+                w.unwrap_shared(),
+                y.unwrap_shared(),
+                Xs.unwrap_unique(),
+                ys.unwrap_unique(),
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    pub fn stdform1(
+        &mut self,
+        L: &VectorF64,
+        X: &MatrixF64,
+        y: &VectorF64,
+        Xs: &mut MatrixF64,
+        ys: &mut VectorF64,
+    ) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_stdform1(
+                L.unwrap_shared(),
+                X.unwrap_shared(),
+                y.unwrap_shared(),
+                Xs.unwrap_unique(),
+                ys.unwrap_unique(),
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    pub fn wstdform2(
+        &mut self,
+        LQR: &MatrixF64,
+        Ltau: &VectorF64,
+        X: &MatrixF64,
+        w: &VectorF64,
+        y: &VectorF64,
+        Xs: &mut MatrixF64,
+        ys: &mut VectorF64,
+    ) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_wstdform2(
+                LQR.unwrap_shared(),
+                Ltau.unwrap_shared(),
+                X.unwrap_shared(),
+                w.unwrap_shared(),
+                y.unwrap_shared(),
+                Xs.unwrap_unique(),
+                ys.unwrap_unique(),
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    pub fn stdform2(
+        &mut self,
+        LQR: &MatrixF64,
+        Ltau: &VectorF64,
+        X: &MatrixF64,
+        y: &VectorF64,
+        Xs: &mut MatrixF64,
+        ys: &mut VectorF64,
+    ) -> Value {
+        unsafe {
+            Value::from(sys::gsl_multilarge_linear_stdform2(
+                LQR.unwrap_shared(),
+                Ltau.unwrap_shared(),
+                X.unwrap_shared(),
+                y.unwrap_shared(),
+                Xs.unwrap_unique(),
+                ys.unwrap_unique(),
+                self.unwrap_unique(),
+            ))
+        }
+    }
+
+    pub fn genform1(&mut self, L: &VectorF64, cs: &VectorF64, c: &mut VectorF64) -> Value {
+        Value::from(unsafe {
+            sys::gsl_multilarge_linear_genform1(
+                L.unwrap_shared(),
+                cs.unwrap_shared(),
+                c.unwrap_unique(),
+                self.unwrap_unique(),
+            )
+        })
+    }
+
+    pub fn genform2(
+        &mut self,
+        LQR: &MatrixF64,
+        Ltau: &VectorF64,
+        cs: &VectorF64,
+        c: &mut VectorF64,
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_multilarge_linear_genform2(
+                LQR.unwrap_shared(),
+                Ltau.unwrap_shared(),
+                cs.unwrap_shared(),
+                c.unwrap_unique(),
+                self.unwrap_unique(),
+            )
+        })
+    }
+
+    #[cfg(feature = "v2_7")]
+    pub fn matrix<F: FnOnce(&MatrixF64)>(&self, f: F) {
+        f(&MatrixF64::soft_wrap(unsafe {
+            sys::gsl_multilarge_linear_matrix_ptr(self.unwrap_shared()) as _
+        }))
+    }
+
+    #[cfg(feature = "v2_7")]
+    pub fn rhs<F: FnOnce(&VectorF64)>(&self, f: F) {
+        f(&VectorF64::soft_wrap(unsafe {
+            sys::gsl_multilarge_linear_rhs_ptr(self.unwrap_shared()) as _
+        }))
     }
 }

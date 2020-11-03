@@ -2,19 +2,19 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::{MatrixComplexF32, MatrixComplexF64, MatrixF32, MatrixF64, VectorF64};
 use c_vec::CSlice;
 use enums;
-use ffi;
+use ffi::{self, FFI};
 use std::fmt;
 use std::fmt::{Debug, Formatter};
-use types::VectorF64;
 
 pub struct Permutation {
     p: *mut sys::gsl_permutation,
     d: CSlice<usize>,
 }
 
-///##Permutations in cyclic form
+/// ##Permutations in cyclic form
 ///
 /// A permutation can be represented in both linear and cyclic notations. The functions described in this section convert between the two forms.
 /// The linear notation is an index mapping, and has already been described above. The cyclic notation expresses a permutation as a series of
@@ -164,6 +164,25 @@ impl Permutation {
     pub fn permute_vector_inverse(&self, v: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap_unique(v))
+        })
+    }
+
+    #[cfg(feature = "v2_2")]
+    pub fn permute_matrix(&self, A: &mut MatrixF64) -> enums::Value {
+        enums::Value::from(unsafe { sys::gsl_permute_matrix(self.p, A.unwrap_unique()) })
+    }
+
+    pub fn permute_matrix_float(&self, A: &mut MatrixF32) -> enums::Value {
+        enums::Value::from(unsafe { sys::gsl_permute_matrix_float(self.p, A.unwrap_unique()) })
+    }
+
+    pub fn permute_matrix_complex(&self, A: &mut MatrixComplexF64) -> enums::Value {
+        enums::Value::from(unsafe { sys::gsl_permute_matrix_complex(self.p, A.unwrap_unique()) })
+    }
+
+    pub fn permute_matrix_complex_float(&self, A: &mut MatrixComplexF32) -> enums::Value {
+        enums::Value::from(unsafe {
+            sys::gsl_permute_matrix_complex_float(self.p, A.unwrap_unique())
         })
     }
 
