@@ -5,7 +5,11 @@
 use crate::Value;
 use ffi::FFI;
 
-ffi_wrapper!(RStatQuantile, *mut sys::gsl_rstat_quantile_workspace, gsl_rstat_quantile_free);
+ffi_wrapper!(
+    RStatQuantile,
+    *mut sys::gsl_rstat_quantile_workspace,
+    gsl_rstat_quantile_free
+);
 
 impl RStatQuantile {
     pub fn alloc(p: f64) -> Option<RStatQuantile> {
@@ -30,7 +34,6 @@ impl RStatQuantile {
         unsafe { sys::gsl_rstat_quantile_get(self.unwrap_unique()) }
     }
 }
-
 
 ffi_wrapper!(RStat, *mut sys::gsl_rstat_workspace, gsl_rstat_free);
 
