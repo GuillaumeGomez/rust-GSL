@@ -80,7 +80,7 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 (2010), Issue 3, Article 26.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 
 /// This function applies the Gauss-Kronrod 10-point, 21-point, 43-point and 87-point integration
@@ -98,7 +98,7 @@ pub fn qng<F: Fn(f64) -> f64>(
     b: f64,
     eps_abs: f64,
     eps_rel: f64,
-) -> (::enums::Value, f64, f64, usize) {
+) -> (::Value, f64, f64, usize) {
     let mut function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
@@ -355,7 +355,7 @@ pub fn qawf<F: Fn(f64) -> f64>(
     workspace: &mut ::IntegrationWorkspace,
     cycle_workspace: &mut ::IntegrationWorkspace,
     wf: &mut ::IntegrationQawoTable,
-) -> (enums::Value, f64, f64) {
+) -> (Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
 

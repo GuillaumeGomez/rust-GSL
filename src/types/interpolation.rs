@@ -37,7 +37,7 @@ C.W. Ueberhuber, Numerical Computation (Volume 1), Chapter 9 “Interpolation”
 D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6.8, Dover (1988), ISBN 0-486-65691-8.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 
 /// Evaluation accelerator.
@@ -99,8 +99,8 @@ impl Interp {
     /// arrays xa and ya and only stores the static state computed from the data. The xa data array
     /// is always assumed to be strictly ordered, with increasing x values; the behavior for other
     /// arrangements is not defined.
-    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
+        Value::from(unsafe {
             sys::gsl_interp_init(
                 self.unwrap_unique(),
                 xa.as_ptr(),
@@ -215,8 +215,8 @@ impl Spline {
         }
     }
 
-    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
+        Value::from(unsafe {
             sys::gsl_spline_init(
                 self.unwrap_unique(),
                 xa.as_ptr(),
@@ -246,28 +246,24 @@ impl Spline {
         unsafe { sys::gsl_spline_eval(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, y)
-        })
+    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> Value {
+        Value::from(unsafe { sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, y) })
     }
 
     pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_deriv(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_spline_eval_deriv_e(self.unwrap_shared(), x, &mut acc.0, d)
-        })
+    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> Value {
+        Value::from(unsafe { sys::gsl_spline_eval_deriv_e(self.unwrap_shared(), x, &mut acc.0, d) })
     }
 
     pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_deriv2(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> Value {
+        Value::from(unsafe {
             sys::gsl_spline_eval_deriv2_e(self.unwrap_shared(), x, &mut acc.0, d2)
         })
     }
@@ -276,14 +272,8 @@ impl Spline {
         unsafe { sys::gsl_spline_eval_integ(self.unwrap_shared(), a, b, &mut acc.0) }
     }
 
-    pub fn eval_integ_e(
-        &self,
-        a: f64,
-        b: f64,
-        acc: &mut InterpAccel,
-        result: &mut f64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> Value {
+        Value::from(unsafe {
             sys::gsl_spline_eval_integ_e(self.unwrap_shared(), a, b, &mut acc.0, result)
         })
     }

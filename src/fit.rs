@@ -8,7 +8,7 @@ Linear Regression
 The functions described in this section can be used to perform least-squares fits to a straight line model, Y(c,x) = c_0 + c_1 x.
 !*/
 
-use enums;
+use crate::Value;
 
 /// This function computes the best-fit linear regression coefficients (c0,c1) of the model Y = c_0 + c_1 X for the dataset (x, y), two vectors of length n with strides xstride and ystride.
 /// The errors on y are assumed unknown so the variance-covariance matrix for the parameters (c0, c1) is estimated from the scatter of the points around the best-fit line and returned via the parameters (cov00, cov01, cov11).
@@ -25,8 +25,8 @@ pub fn linear(
     cov01: &mut f64,
     cov11: &mut f64,
     sumsq: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         ::sys::gsl_fit_linear(
             x.as_ptr(),
             xstride,
@@ -63,8 +63,8 @@ pub fn wlinear(
     cov01: &mut f64,
     cov11: &mut f64,
     chisq: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         ::sys::gsl_fit_wlinear(
             x.as_ptr(),
             xstride,
@@ -93,10 +93,8 @@ pub fn linear_est(
     cov11: f64,
     y: &mut f64,
     y_err: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
-        ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, y, y_err)
-    })
+) -> Value {
+    Value::from(unsafe { ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, y, y_err) })
 }
 
 /// This function computes the best-fit linear regression coefficient c1 of the model Y = c_1 X for the datasets (x, y), two vectors of length n with strides xstride and ystride.
@@ -111,8 +109,8 @@ pub fn mul(
     c1: &mut f64,
     cov11: &mut f64,
     sumsq: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         ::sys::gsl_fit_mul(
             x.as_ptr(),
             xstride,
@@ -143,8 +141,8 @@ pub fn wmul(
     c1: &mut f64,
     cov11: &mut f64,
     sumsq: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         ::sys::gsl_fit_wmul(
             x.as_ptr(),
             xstride,
@@ -161,6 +159,6 @@ pub fn wmul(
 }
 
 /// This function uses the best-fit linear regression coefficient c1 and its covariance cov11 to compute the fitted function y and its standard deviation y_err for the model Y = c_1 X at the point x.
-pub fn mul_est(x: f64, c1: f64, cov11: f64, y: &mut f64, y_err: &mut f64) -> enums::Value {
-    enums::Value::from(unsafe { ::sys::gsl_fit_mul_est(x, c1, cov11, y, y_err) })
+pub fn mul_est(x: f64, c1: f64, cov11: f64, y: &mut f64, y_err: &mut f64) -> Value {
+    Value::from(unsafe { ::sys::gsl_fit_mul_est(x, c1, cov11, y, y_err) })
 }

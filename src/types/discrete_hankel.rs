@@ -53,7 +53,7 @@ H. Fisk Johnson, Comp. Phys. Comm. 43, 181 (1987).
 D. Lemoine, J. Chem. Phys. 101, 3936 (1994).
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 
 ffi_wrapper!(DiscreteHankel, *mut sys::gsl_dht, gsl_dht_free);
@@ -83,8 +83,8 @@ impl DiscreteHankel {
     }
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
-    pub fn init(&mut self, nu: f64, xmax: f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_dht_init(self.unwrap_unique(), nu, xmax) })
+    pub fn init(&mut self, nu: f64, xmax: f64) -> Value {
+        Value::from(unsafe { sys::gsl_dht_init(self.unwrap_unique(), nu, xmax) })
     }
 
     /// This function applies the transform t to the array f_in whose size is equal to the size of
@@ -92,7 +92,7 @@ impl DiscreteHankel {
     ///
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2,
     /// up to numerical errors.
-    pub fn apply(&mut self, f_in: &[f64]) -> (enums::Value, Vec<f64>) {
+    pub fn apply(&mut self, f_in: &[f64]) -> (Value, Vec<f64>) {
         unsafe {
             assert!(
                 (*self.unwrap_shared()).size == f_in.len() as _,
@@ -104,7 +104,7 @@ impl DiscreteHankel {
                 f_in.as_ptr() as usize as *mut _,
                 f_out.as_mut_ptr(),
             );
-            (enums::Value::from(ret), f_out)
+            (Value::from(ret), f_out)
         }
     }
 

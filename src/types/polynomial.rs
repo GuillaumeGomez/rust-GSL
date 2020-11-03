@@ -9,7 +9,7 @@ The roots of polynomial equations cannot be found analytically beyond the specia
 described in this section uses an iterative method to find the approximate locations of roots of higher order polynomials.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 
 ffi_wrapper!(
@@ -43,8 +43,8 @@ impl PolyComplex {
     /// code of Failed. Note that due to finite precision, roots of higher multiplicity are returned as a cluster of simple roots with reduced
     /// accuracy. The solution of polynomials with higher-order roots requires specialized algorithms that take the multiplicity structure into
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
-    pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> Value {
+        Value::from(unsafe {
             sys::gsl_poly_complex_solve(
                 a.as_ptr(),
                 a.len() as _,

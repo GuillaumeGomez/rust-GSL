@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use enums;
+use crate::Value;
 use std::mem::MaybeUninit;
 
 /// These routines compute the dilogarithm for a real argument. In Lewin’s notation this is Li_2(x), the real part of the dilogarithm of a real x.
@@ -17,7 +17,7 @@ pub fn dilog(x: f64) -> f64 {
 /// It is defined by the integral representation Li_2(x) = - \Re \int_0^x ds \log(1-s) / s. Note that \Im(Li_2(x)) = 0 for x <= 1, and -\pi\log(x) for x > 1.
 ///
 /// Note that Abramowitz & Stegun refer to the Spence integral S(x)=Li_2(1-x) as the dilogarithm rather than Li_2(x).
-pub fn dilog_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn dilog_e(x: f64) -> (Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { ::sys::gsl_sf_dilog_e(x, result.as_mut_ptr()) };
 
@@ -26,7 +26,7 @@ pub fn dilog_e(x: f64) -> (enums::Value, ::types::Result) {
 
 /// This function computes the full complex-valued dilogarithm for the complex argument z = r \exp(i \theta).
 /// The real and imaginary parts of the result are returned in result_re, result_im.
-pub fn complex_dilog_e(r: f64, theta: f64) -> (enums::Value, ::types::Result, ::types::Result) {
+pub fn complex_dilog_e(r: f64, theta: f64) -> (Value, ::types::Result, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let mut result_im = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe {
@@ -34,7 +34,7 @@ pub fn complex_dilog_e(r: f64, theta: f64) -> (enums::Value, ::types::Result, ::
     };
 
     (
-        enums::Value::from(ret),
+        Value::from(ret),
         unsafe { result.assume_init() }.into(),
         unsafe { result_im.assume_init() }.into(),
     )

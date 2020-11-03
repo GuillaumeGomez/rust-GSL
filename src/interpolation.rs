@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 
 /// This function returns the index i of the array x_array such that x_array[i] <= x < x_array[i+1]. The index is searched for in the
@@ -36,7 +36,7 @@ pub fn eval_e(
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> (enums::Value, f64) {
+) -> (Value, f64) {
     let mut y = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_e(
@@ -80,8 +80,8 @@ pub fn eval_deriv_e(
     x: f64,
     acc: &mut ::InterpAccel,
     d: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_interp_eval_deriv_e(
             interp.unwrap_shared(),
             xa.as_ptr(),
@@ -122,8 +122,8 @@ pub fn eval_deriv2_e(
     x: f64,
     acc: &mut ::InterpAccel,
     d2: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_interp_eval_deriv2_e(
             interp.unwrap_shared(),
             xa.as_ptr(),
@@ -167,8 +167,8 @@ pub fn eval_integ_e(
     b: f64,
     acc: &mut ::InterpAccel,
     result: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_interp_eval_integ_e(
             interp.unwrap_shared(),
             xa.as_ptr(),

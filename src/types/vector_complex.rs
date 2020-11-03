@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
@@ -80,80 +80,78 @@ impl VectorComplexF64 {
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&mut self, other: &VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy_from(&mut self, other: &VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_memcpy(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &mut VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy_to(&self, other: &mut VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_memcpy(other.unwrap_unique(), self.unwrap_shared())
         })
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&mut self, other: &mut VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn swap(&mut self, other: &mut VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_swap(other.unwrap_unique(), self.unwrap_unique())
         })
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_vector_complex_swap_elements(self.unwrap_unique(), i, j)
-        })
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
+        Value::from(unsafe { sys::gsl_vector_complex_swap_elements(self.unwrap_unique(), i, j) })
     }
 
     /// This function reverses the order of the elements of the vector v.
-    pub fn reverse(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_vector_complex_reverse(self.unwrap_unique()) })
+    pub fn reverse(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_vector_complex_reverse(self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&mut self, other: &VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn add(&mut self, other: &VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_add(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&mut self, other: &VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sub(&mut self, other: &VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_sub(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&mut self, other: &VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn mul(&mut self, other: &VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_mul(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&mut self, other: &VectorComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn div(&mut self, other: &VectorComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_div(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&mut self, x: &ComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn scale(&mut self, x: &ComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_scale(self.unwrap_unique(), ::std::mem::transmute(*x))
         })
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&mut self, x: &ComplexF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn add_constant(&mut self, x: &ComplexF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_add_constant(self.unwrap_unique(), ::std::mem::transmute(*x))
         })
     }
@@ -329,80 +327,80 @@ impl VectorComplexF32 {
     }
 
     /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy_from(&mut self, other: &VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_memcpy(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &mut VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy_to(&self, other: &mut VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_memcpy(other.unwrap_unique(), self.unwrap_shared())
         })
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&mut self, other: &mut VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn swap(&mut self, other: &mut VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_swap(other.unwrap_unique(), self.unwrap_unique())
         })
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_swap_elements(self.unwrap_unique(), i, j)
         })
     }
 
     /// This function reverses the order of the elements of the vector v.
-    pub fn reverse(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_vector_complex_float_reverse(self.unwrap_unique()) })
+    pub fn reverse(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_vector_complex_float_reverse(self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn add(&mut self, other: &VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_add(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other vector.
     /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sub(&mut self, other: &VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_sub(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other vector.
     /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn mul(&mut self, other: &VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_mul(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&mut self, other: &VectorComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn div(&mut self, other: &VectorComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_div(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&mut self, x: &ComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn scale(&mut self, x: &ComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_scale(self.unwrap_unique(), ::std::mem::transmute(*x))
         })
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&mut self, x: &ComplexF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn add_constant(&mut self, x: &ComplexF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_vector_complex_float_add_constant(
                 self.unwrap_unique(),
                 ::std::mem::transmute(*x),

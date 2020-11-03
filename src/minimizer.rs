@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use enums;
+use crate::Value;
 
 /// This function tests for the convergence of the interval [x_lower, x_upper] with absolute error epsabs and relative error epsrel. The
 /// test returns ::Value::Success if the following condition is achieved,
@@ -23,6 +23,6 @@ use enums;
 /// ```
 ///
 /// assuming that the true minimum x_m^* is contained within the interval.
-pub fn test_interval(x_lower: f64, x_upper: f64, epsabs: f64, epsrel: f64) -> enums::Value {
-    enums::Value::from(unsafe { sys::gsl_min_test_interval(x_lower, x_upper, epsabs, epsrel) })
+pub fn test_interval(x_lower: f64, x_upper: f64, epsabs: f64, epsrel: f64) -> Value {
+    Value::from(unsafe { sys::gsl_min_test_interval(x_lower, x_upper, epsabs, epsrel) })
 }

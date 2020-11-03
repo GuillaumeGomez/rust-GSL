@@ -10,7 +10,7 @@ Cl_2(x) = - \int_0^x dt \log(2 \sin(t/2))
 It is related to the dilogarithm by Cl_2(\theta) = \Im Li_2(\exp(i\theta)).
 !*/
 
-use enums;
+use crate::Value;
 use std::mem::MaybeUninit;
 
 /// This routine computes the Clausen integral Cl_2(x).
@@ -19,7 +19,7 @@ pub fn clausen(x: f64) -> f64 {
 }
 
 /// This routine computes the Clausen integral Cl_2(x).
-pub fn clausen_e(x: f64) -> (enums::Value, ::types::Result) {
+pub fn clausen_e(x: f64) -> (Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_clausen_e(x, result.as_mut_ptr()) };
 

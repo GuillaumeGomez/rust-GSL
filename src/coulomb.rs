@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use enums;
+use crate::Value;
 use std::mem::MaybeUninit;
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
@@ -11,7 +11,7 @@ pub fn hydrogenicR_1(Z: f64, r: f64) -> f64 {
 }
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
-pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (enums::Value, ::types::Result) {
+pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_hydrogenicR_1_e(Z, r, result.as_mut_ptr()) };
 
@@ -36,7 +36,7 @@ pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
 ///
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
-pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (enums::Value, ::types::Result) {
+pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_hydrogenicR_e(n, l, Z, r, result.as_mut_ptr()) };
 
@@ -53,7 +53,7 @@ pub fn wave_FG_e(
     exp_F: &mut f64,
     exp_G: &mut f64,
 ) -> (
-    enums::Value,
+    Value,
     ::types::Result,
     ::types::Result,
     ::types::Result,
@@ -79,7 +79,7 @@ pub fn wave_FG_e(
     };
 
     (
-        enums::Value::from(ret),
+        Value::from(ret),
         unsafe { F.assume_init() }.into(),
         unsafe { Fp.assume_init() }.into(),
         unsafe { G.assume_init() }.into(),
@@ -95,8 +95,8 @@ pub fn wave_F_array(
     x: f64,
     fc_array: &mut [f64],
     F_exponent: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_sf_coulomb_wave_F_array(
             L_min,
             fc_array.len() as i32,
@@ -118,8 +118,8 @@ pub fn wave_FG_array(
     gc_array: &mut [f64],
     F_exponent: &mut f64,
     G_exponent: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_sf_coulomb_wave_FG_array(
             L_min,
             fc_array.len() as i32,
@@ -145,8 +145,8 @@ pub fn wave_FGp_array(
     gcp_array: &mut [f64],
     F_exponent: &mut f64,
     G_exponent: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_sf_coulomb_wave_FGp_array(
             L_min,
             fc_array.len() as i32,
@@ -170,8 +170,8 @@ pub fn wave_sphF_array(
     x: f64,
     fc_array: &mut [f64],
     F_exponent: &mut f64,
-) -> enums::Value {
-    enums::Value::from(unsafe {
+) -> Value {
+    Value::from(unsafe {
         sys::gsl_sf_coulomb_wave_sphF_array(
             L_min,
             fc_array.len() as i32,
@@ -184,7 +184,7 @@ pub fn wave_sphF_array(
 }
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L > -1.
-pub fn CL_e(L: f64, eta: f64) -> (enums::Value, ::types::Result) {
+pub fn CL_e(L: f64, eta: f64) -> (Value, ::types::Result) {
     let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
     let ret = unsafe { sys::gsl_sf_coulomb_CL_e(L, eta, result.as_mut_ptr()) };
 
@@ -192,8 +192,8 @@ pub fn CL_e(L: f64, eta: f64) -> (enums::Value, ::types::Result) {
 }
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L = Lmin \dots Lmin + kmax, Lmin > -1.
-pub fn CL_array(Lmin: f64, eta: f64, cl: &mut [f64]) -> enums::Value {
-    enums::Value::from(unsafe {
+pub fn CL_array(Lmin: f64, eta: f64, cl: &mut [f64]) -> Value {
+    Value::from(unsafe {
         sys::gsl_sf_coulomb_CL_array(Lmin, cl.len() as i32, eta, cl.as_mut_ptr())
     })
 }

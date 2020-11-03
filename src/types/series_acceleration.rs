@@ -49,7 +49,7 @@ A review paper on the Levin Transform is available online,
 Herbert H. H. Homeier, Scalar Levin-Type Sequence Transformations, http://arxiv.org/abs/math/0005209.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 
 ffi_wrapper!(
@@ -76,8 +76,8 @@ impl LevinUWorkspace {
     /// of the absolute error stored in abserr. The actual term-by-term sum is returned in w->sum_plain. The algorithm calculates the
     /// truncation error (the difference between two successive extrapolations) and round-off error (propagated from the individual terms)
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
-    pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> Value {
+        Value::from(unsafe {
             sys::gsl_sum_levin_u_accel(
                 array.as_ptr(),
                 array.len() as _,
@@ -124,13 +124,8 @@ impl LevinUTruncWorkspace {
     /// reaches a minimum or is sufficiently small. The difference between these two values is used as estimate of the error and is stored
     /// in abserr_trunc. To improve the reliability of the algorithm the extrapolated values are replaced by moving averages when
     /// calculating the truncation error, smoothing out any fluctuations.
-    pub fn accel(
-        &mut self,
-        array: &[f64],
-        sum_accel: &mut f64,
-        abserr_trunc: &mut f64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr_trunc: &mut f64) -> Value {
+        Value::from(unsafe {
             sys::gsl_sum_levin_utrunc_accel(
                 array.as_ptr(),
                 array.len() as _,

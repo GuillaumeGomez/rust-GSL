@@ -3,7 +3,7 @@
 //
 
 pub mod level1 {
-    use enums;
+    use crate::Value;
     use ffi::FFI;
     use types::complex::CFFI;
 
@@ -11,11 +11,7 @@ pub mod level1 {
     /// in result.
     ///
     /// Returns `result`.
-    pub fn sdsdot(
-        alpha: f32,
-        x: &::types::VectorF32,
-        y: &::types::VectorF32,
-    ) -> (enums::Value, f32) {
+    pub fn sdsdot(alpha: f32, x: &::types::VectorF32, y: &::types::VectorF32) -> (Value, f32) {
         let mut result = 0.;
         let ret = unsafe {
             sys::gsl_blas_sdsdot(alpha, x.unwrap_shared(), y.unwrap_shared(), &mut result)
@@ -27,7 +23,7 @@ pub mod level1 {
     /// result in result.
     ///
     /// Returns `result`.
-    pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32) -> (enums::Value, f32) {
+    pub fn sdot(x: &::types::VectorF32, y: &::types::VectorF32) -> (Value, f32) {
         let mut result = 0.;
         let ret = unsafe { sys::gsl_blas_sdot(x.unwrap_shared(), y.unwrap_shared(), &mut result) };
         (::Value::from(ret), result)
@@ -37,7 +33,7 @@ pub mod level1 {
     /// result in result.
     ///
     /// Returns `result`.
-    pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32) -> (enums::Value, f64) {
+    pub fn dsdot(x: &::types::VectorF32, y: &::types::VectorF32) -> (Value, f64) {
         let mut result = 0.;
         let ret = unsafe { sys::gsl_blas_dsdot(x.unwrap_shared(), y.unwrap_shared(), &mut result) };
         (::Value::from(ret), result)
@@ -47,7 +43,7 @@ pub mod level1 {
     /// result in result.
     ///
     /// Returns `result`.
-    pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64) -> (enums::Value, f64) {
+    pub fn ddot(x: &::types::VectorF64, y: &::types::VectorF64) -> (Value, f64) {
         let mut result = 0.;
         let ret = unsafe { sys::gsl_blas_ddot(x.unwrap_shared(), y.unwrap_shared(), &mut result) };
         (::Value::from(ret), result)
@@ -60,7 +56,7 @@ pub mod level1 {
     pub fn cdotu(
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
-    ) -> (enums::Value, ::types::ComplexF32) {
+    ) -> (Value, ::types::ComplexF32) {
         let mut dotu = ::types::ComplexF32::default().unwrap();
         let ret = unsafe { sys::gsl_blas_cdotu(x.unwrap_shared(), y.unwrap_shared(), &mut dotu) };
         (::Value::from(ret), ::types::ComplexF32::wrap(dotu))
@@ -73,7 +69,7 @@ pub mod level1 {
     pub fn zdotu(
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
-    ) -> (enums::Value, ::types::ComplexF64) {
+    ) -> (Value, ::types::ComplexF64) {
         let mut dotu = ::types::ComplexF64::default().unwrap();
         let ret = unsafe { sys::gsl_blas_zdotu(x.unwrap_shared(), y.unwrap_shared(), &mut dotu) };
         (::Value::from(ret), ::types::ComplexF64::wrap(dotu))
@@ -86,7 +82,7 @@ pub mod level1 {
     pub fn cdotc(
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
-    ) -> (enums::Value, ::types::ComplexF32) {
+    ) -> (Value, ::types::ComplexF32) {
         let mut dotc = ::types::ComplexF32::default().unwrap();
         let ret = unsafe { sys::gsl_blas_cdotc(x.unwrap_shared(), y.unwrap_shared(), &mut dotc) };
         (::Value::from(ret), ::types::ComplexF32::wrap(dotc))
@@ -99,7 +95,7 @@ pub mod level1 {
     pub fn zdotc(
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
-    ) -> (enums::Value, ::types::ComplexF64) {
+    ) -> (Value, ::types::ComplexF64) {
         let mut dotc = ::types::ComplexF64::default().unwrap();
         let ret = unsafe { sys::gsl_blas_zdotc(x.unwrap_shared(), y.unwrap_shared(), &mut dotc) };
         (::Value::from(ret), ::types::ComplexF64::wrap(dotc))
@@ -178,69 +174,53 @@ pub mod level1 {
     }
 
     /// This function exchanges the elements of the vectors x and y.
-    pub fn sswap(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_sswap(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn sswap(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> Value {
+        Value::from(unsafe { sys::gsl_blas_sswap(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function exchanges the elements of the vectors x and y.
-    pub fn dswap(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_dswap(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn dswap(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_blas_dswap(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function exchanges the elements of the vectors x and y.
-    pub fn cswap(
-        x: &mut ::types::VectorComplexF32,
-        y: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_cswap(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn cswap(x: &mut ::types::VectorComplexF32, y: &mut ::types::VectorComplexF32) -> Value {
+        Value::from(unsafe { sys::gsl_blas_cswap(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function exchanges the elements of the vectors x and y.
-    pub fn zswap(
-        x: &mut ::types::VectorComplexF64,
-        y: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_zswap(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn zswap(x: &mut ::types::VectorComplexF64, y: &mut ::types::VectorComplexF64) -> Value {
+        Value::from(unsafe { sys::gsl_blas_zswap(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function copy the elements of the vector x into the vector y.
-    pub fn scopy(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_scopy(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn scopy(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32) -> Value {
+        Value::from(unsafe { sys::gsl_blas_scopy(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function copy the elements of the vector x into the vector y.
-    pub fn dcopy(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_dcopy(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn dcopy(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_blas_dcopy(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function copy the elements of the vector x into the vector y.
-    pub fn ccopy(
-        x: &mut ::types::VectorComplexF32,
-        y: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_ccopy(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn ccopy(x: &mut ::types::VectorComplexF32, y: &mut ::types::VectorComplexF32) -> Value {
+        Value::from(unsafe { sys::gsl_blas_ccopy(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function copy the elements of the vector x into the vector y.
-    pub fn zcopy(
-        x: &mut ::types::VectorComplexF64,
-        y: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_blas_zcopy(x.unwrap_unique(), y.unwrap_unique()) })
+    pub fn zcopy(x: &mut ::types::VectorComplexF64, y: &mut ::types::VectorComplexF64) -> Value {
+        Value::from(unsafe { sys::gsl_blas_zcopy(x.unwrap_unique(), y.unwrap_unique()) })
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
-    pub fn saxpy(alpha: f32, x: &::types::VectorF32, y: &mut ::types::VectorF32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_blas_saxpy(alpha, x.unwrap_shared(), y.unwrap_unique())
-        })
+    pub fn saxpy(alpha: f32, x: &::types::VectorF32, y: &mut ::types::VectorF32) -> Value {
+        Value::from(unsafe { sys::gsl_blas_saxpy(alpha, x.unwrap_shared(), y.unwrap_unique()) })
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
-    pub fn daxpy(alpha: f64, x: &::types::VectorF64, y: &mut ::types::VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_blas_daxpy(alpha, x.unwrap_shared(), y.unwrap_unique())
-        })
+    pub fn daxpy(alpha: f64, x: &::types::VectorF64, y: &mut ::types::VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_blas_daxpy(alpha, x.unwrap_shared(), y.unwrap_unique()) })
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
@@ -248,8 +228,8 @@ pub mod level1 {
         alpha: &::types::ComplexF32,
         x: &::types::VectorComplexF32,
         y: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_caxpy(
                 ::std::mem::transmute(*alpha),
                 x.unwrap_shared(),
@@ -263,8 +243,8 @@ pub mod level1 {
         alpha: &::types::ComplexF64,
         x: &::types::VectorComplexF64,
         y: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zaxpy(
                 ::std::mem::transmute(*alpha),
                 x.unwrap_shared(),
@@ -310,8 +290,8 @@ pub mod level1 {
     /// [ -s  c ] [ b ]   [ 0 ]
     ///
     /// The variables a and b are overwritten by the routine.
-    pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], d: &mut [f32]) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], d: &mut [f32]) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_srotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
@@ -328,8 +308,8 @@ pub mod level1 {
     /// [ -s  c ] [ b ]   [ 0 ]
     ///
     /// The variables a and b are overwritten by the routine.
-    pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], d: &mut [f64]) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], d: &mut [f64]) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_drotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
@@ -340,39 +320,19 @@ pub mod level1 {
     }
 
     /// This function applies a Givens rotation (x', y') = (c x + s y, -s x + c y) to the vectors x, y.
-    pub fn srot(
-        a: &mut ::types::VectorF32,
-        b: &mut ::types::VectorF32,
-        c: f32,
-        d: f32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_blas_srot(a.unwrap_unique(), b.unwrap_unique(), c, d)
-        })
+    pub fn srot(a: &mut ::types::VectorF32, b: &mut ::types::VectorF32, c: f32, d: f32) -> Value {
+        Value::from(unsafe { sys::gsl_blas_srot(a.unwrap_unique(), b.unwrap_unique(), c, d) })
     }
 
     /// This function applies a Givens rotation (x', y') = (c x + s y, -s x + c y) to the vectors x, y.
-    pub fn drot(
-        a: &mut ::types::VectorF64,
-        b: &mut ::types::VectorF64,
-        c: f64,
-        d: f64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_blas_drot(a.unwrap_unique(), b.unwrap_unique(), c, d)
-        })
+    pub fn drot(a: &mut ::types::VectorF64, b: &mut ::types::VectorF64, c: f64, d: f64) -> Value {
+        Value::from(unsafe { sys::gsl_blas_drot(a.unwrap_unique(), b.unwrap_unique(), c, d) })
     }
 
     /// This function computes a modified Givens transformation.
     /// The modified Givens transformation is defined in the original Level-1 BLAS specification, given in the references.
-    pub fn srotmg(
-        d1: &mut [f32],
-        d2: &mut [f32],
-        b1: &mut [f32],
-        b2: f32,
-        P: &mut [f32],
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn srotmg(d1: &mut [f32], d2: &mut [f32], b1: &mut [f32], b2: f32, P: &mut [f32]) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_srotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
@@ -385,14 +345,8 @@ pub mod level1 {
 
     /// This function computes a modified Givens transformation.
     /// The modified Givens transformation is defined in the original Level-1 BLAS specification, given in the references.
-    pub fn drotmg(
-        d1: &mut [f64],
-        d2: &mut [f64],
-        b1: &mut [f64],
-        b2: f64,
-        P: &mut [f64],
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn drotmg(d1: &mut [f64], d2: &mut [f64], b1: &mut [f64], b2: f64, P: &mut [f64]) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_drotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
@@ -404,30 +358,23 @@ pub mod level1 {
     }
 
     /// This function applies a modified Givens transformation.
-    pub fn srotm(
-        x: &mut ::types::VectorF32,
-        y: &mut ::types::VectorF32,
-        P: &mut [f32],
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn srotm(x: &mut ::types::VectorF32, y: &mut ::types::VectorF32, P: &mut [f32]) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_srotm(x.unwrap_unique(), y.unwrap_unique(), P.as_mut_ptr())
         })
     }
 
     /// This function applies a modified Givens transformation.
-    pub fn drotm(
-        x: &mut ::types::VectorF64,
-        y: &mut ::types::VectorF64,
-        P: &mut [f64],
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn drotm(x: &mut ::types::VectorF64, y: &mut ::types::VectorF64, P: &mut [f64]) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_drotm(x.unwrap_unique(), y.unwrap_unique(), P.as_mut_ptr())
         })
     }
 }
 
 pub mod level2 {
-    use enums;
+    use crate::enums;
+    use crate::Value;
     use ffi::FFI;
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -438,8 +385,8 @@ pub mod level2 {
         x: &::types::VectorF32,
         beta: f32,
         y: &mut ::types::VectorF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_sgemv(
                 transA.into(),
                 alpha,
@@ -459,8 +406,8 @@ pub mod level2 {
         x: &::types::VectorF64,
         beta: f64,
         y: &mut ::types::VectorF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dgemv(
                 transA.into(),
                 alpha,
@@ -480,8 +427,8 @@ pub mod level2 {
         x: &::types::VectorComplexF32,
         beta: &::types::ComplexF32,
         y: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cgemv(
                 transA.into(),
                 ::std::mem::transmute(*alpha),
@@ -501,8 +448,8 @@ pub mod level2 {
         x: &::types::VectorComplexF64,
         beta: &::types::ComplexF64,
         y: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zgemv(
                 transA.into(),
                 ::std::mem::transmute(*alpha),
@@ -523,8 +470,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixF32,
         x: &mut ::types::VectorF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_strmv(
                 uplo.into(),
                 transA.into(),
@@ -544,8 +491,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixF64,
         x: &mut ::types::VectorF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dtrmv(
                 uplo.into(),
                 transA.into(),
@@ -565,8 +512,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixComplexF32,
         x: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ctrmv(
                 uplo.into(),
                 transA.into(),
@@ -586,8 +533,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixComplexF64,
         x: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ztrmv(
                 uplo.into(),
                 transA.into(),
@@ -607,8 +554,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixF32,
         x: &mut ::types::VectorF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_strsv(
                 uplo.into(),
                 transA.into(),
@@ -628,8 +575,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixF64,
         x: &mut ::types::VectorF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dtrsv(
                 uplo.into(),
                 transA.into(),
@@ -649,8 +596,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixComplexF32,
         x: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ctrsv(
                 uplo.into(),
                 transA.into(),
@@ -670,8 +617,8 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &::types::MatrixComplexF64,
         x: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ztrsv(
                 uplo.into(),
                 transA.into(),
@@ -692,8 +639,8 @@ pub mod level2 {
         x: &::types::VectorF32,
         beta: f32,
         y: &mut ::types::VectorF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ssymv(
                 uplo.into(),
                 alpha,
@@ -715,8 +662,8 @@ pub mod level2 {
         x: &::types::VectorF64,
         beta: f64,
         y: &mut ::types::VectorF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dsymv(
                 uplo.into(),
                 alpha,
@@ -738,8 +685,8 @@ pub mod level2 {
         x: &::types::VectorComplexF32,
         beta: &::types::ComplexF32,
         y: &mut ::types::VectorComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_chemv(
                 uplo.into(),
                 ::std::mem::transmute(*alpha),
@@ -761,8 +708,8 @@ pub mod level2 {
         x: &::types::VectorComplexF64,
         beta: &::types::ComplexF64,
         y: &mut ::types::VectorComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zhemv(
                 uplo.into(),
                 ::std::mem::transmute(*alpha),
@@ -780,8 +727,8 @@ pub mod level2 {
         x: &::types::VectorF32,
         y: &::types::VectorF32,
         A: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_sger(
                 alpha,
                 x.unwrap_shared(),
@@ -797,8 +744,8 @@ pub mod level2 {
         x: &::types::VectorF64,
         y: &::types::VectorF64,
         A: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dger(
                 alpha,
                 x.unwrap_shared(),
@@ -814,8 +761,8 @@ pub mod level2 {
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
         A: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cgeru(
                 ::std::mem::transmute(*alpha),
                 x.unwrap_shared(),
@@ -831,8 +778,8 @@ pub mod level2 {
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
         A: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zgeru(
                 ::std::mem::transmute(*alpha),
                 x.unwrap_shared(),
@@ -848,8 +795,8 @@ pub mod level2 {
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
         A: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cgerc(
                 ::std::mem::transmute(*alpha),
                 x.unwrap_shared(),
@@ -865,8 +812,8 @@ pub mod level2 {
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
         A: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zgerc(
                 ::std::mem::transmute(*alpha),
                 x.unwrap_shared(),
@@ -883,8 +830,8 @@ pub mod level2 {
         alpha: f32,
         x: &::types::VectorF32,
         A: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ssyr(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique())
         })
     }
@@ -896,8 +843,8 @@ pub mod level2 {
         alpha: f64,
         x: &::types::VectorF64,
         A: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dsyr(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique())
         })
     }
@@ -911,8 +858,8 @@ pub mod level2 {
         alpha: f32,
         x: &::types::VectorComplexF32,
         A: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cher(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique())
         })
     }
@@ -926,8 +873,8 @@ pub mod level2 {
         alpha: f64,
         x: &::types::VectorComplexF64,
         A: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zher(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique())
         })
     }
@@ -941,8 +888,8 @@ pub mod level2 {
         x: &::types::VectorF32,
         y: &::types::VectorF32,
         A: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ssyr2(
                 uplo.into(),
                 alpha,
@@ -962,8 +909,8 @@ pub mod level2 {
         x: &::types::VectorF64,
         y: &::types::VectorF64,
         A: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dsyr2(
                 uplo.into(),
                 alpha,
@@ -984,8 +931,8 @@ pub mod level2 {
         x: &::types::VectorComplexF32,
         y: &::types::VectorComplexF32,
         A: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cher2(
                 uplo.into(),
                 ::std::mem::transmute(*alpha),
@@ -1006,8 +953,8 @@ pub mod level2 {
         x: &::types::VectorComplexF64,
         y: &::types::VectorComplexF64,
         A: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zher2(
                 uplo.into(),
                 ::std::mem::transmute(*alpha),
@@ -1020,7 +967,8 @@ pub mod level2 {
 }
 
 pub mod level3 {
-    use enums;
+    use crate::enums;
+    use crate::Value;
     use ffi::FFI;
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
@@ -1032,8 +980,8 @@ pub mod level3 {
         B: &::types::MatrixF32,
         beta: f32,
         C: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_sgemm(
                 transA.into(),
                 transB.into(),
@@ -1055,8 +1003,8 @@ pub mod level3 {
         B: &::types::MatrixF64,
         beta: f64,
         C: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dgemm(
                 transA.into(),
                 transB.into(),
@@ -1078,8 +1026,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF32,
         beta: &::types::ComplexF32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cgemm(
                 transA.into(),
                 transB.into(),
@@ -1101,8 +1049,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF64,
         beta: &::types::ComplexF64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zgemm(
                 transA.into(),
                 transB.into(),
@@ -1125,8 +1073,8 @@ pub mod level3 {
         B: &::types::MatrixF32,
         beta: f32,
         C: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ssymm(
                 side.into(),
                 uplo.into(),
@@ -1149,8 +1097,8 @@ pub mod level3 {
         B: &::types::MatrixF64,
         beta: f64,
         C: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dsymm(
                 side.into(),
                 uplo.into(),
@@ -1173,8 +1121,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF32,
         beta: &::types::ComplexF32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_csymm(
                 side.into(),
                 uplo.into(),
@@ -1197,8 +1145,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF64,
         beta: &::types::ComplexF64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zsymm(
                 side.into(),
                 uplo.into(),
@@ -1222,8 +1170,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF32,
         beta: &::types::ComplexF32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_chemm(
                 side.into(),
                 uplo.into(),
@@ -1247,8 +1195,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF64,
         beta: &::types::ComplexF64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zhemm(
                 side.into(),
                 uplo.into(),
@@ -1273,8 +1221,8 @@ pub mod level3 {
         alpha: f32,
         A: &::types::MatrixF32,
         B: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_strmm(
                 side.into(),
                 uplo.into(),
@@ -1299,8 +1247,8 @@ pub mod level3 {
         alpha: f64,
         A: &::types::MatrixF64,
         B: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dtrmm(
                 side.into(),
                 uplo.into(),
@@ -1325,8 +1273,8 @@ pub mod level3 {
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         B: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ctrmm(
                 side.into(),
                 uplo.into(),
@@ -1351,8 +1299,8 @@ pub mod level3 {
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         B: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ztrmm(
                 side.into(),
                 uplo.into(),
@@ -1377,8 +1325,8 @@ pub mod level3 {
         alpha: f32,
         A: &::types::MatrixF32,
         B: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_strsm(
                 side.into(),
                 uplo.into(),
@@ -1403,8 +1351,8 @@ pub mod level3 {
         alpha: f64,
         A: &::types::MatrixF64,
         B: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dtrsm(
                 side.into(),
                 uplo.into(),
@@ -1429,8 +1377,8 @@ pub mod level3 {
         alpha: &::types::ComplexF32,
         A: &::types::MatrixComplexF32,
         B: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ctrsm(
                 side.into(),
                 uplo.into(),
@@ -1455,8 +1403,8 @@ pub mod level3 {
         alpha: &::types::ComplexF64,
         A: &::types::MatrixComplexF64,
         B: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ztrsm(
                 side.into(),
                 uplo.into(),
@@ -1479,8 +1427,8 @@ pub mod level3 {
         A: &::types::MatrixF32,
         beta: f32,
         C: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ssyrk(
                 uplo.into(),
                 trans.into(),
@@ -1502,8 +1450,8 @@ pub mod level3 {
         A: &::types::MatrixF64,
         beta: f64,
         C: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dsyrk(
                 uplo.into(),
                 trans.into(),
@@ -1525,8 +1473,8 @@ pub mod level3 {
         A: &::types::MatrixComplexF32,
         beta: &::types::ComplexF32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_csyrk(
                 uplo.into(),
                 trans.into(),
@@ -1548,8 +1496,8 @@ pub mod level3 {
         A: &::types::MatrixComplexF64,
         beta: &::types::ComplexF64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zsyrk(
                 uplo.into(),
                 trans.into(),
@@ -1572,8 +1520,8 @@ pub mod level3 {
         A: &::types::MatrixComplexF32,
         beta: f32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cherk(
                 uplo.into(),
                 trans.into(),
@@ -1596,8 +1544,8 @@ pub mod level3 {
         A: &::types::MatrixComplexF64,
         beta: f64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zherk(
                 uplo.into(),
                 trans.into(),
@@ -1620,8 +1568,8 @@ pub mod level3 {
         B: &::types::MatrixF32,
         beta: f32,
         C: &mut ::types::MatrixF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_ssyr2k(
                 uplo.into(),
                 trans.into(),
@@ -1645,8 +1593,8 @@ pub mod level3 {
         B: &::types::MatrixF64,
         beta: f64,
         C: &mut ::types::MatrixF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_dsyr2k(
                 uplo.into(),
                 trans.into(),
@@ -1670,8 +1618,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF32,
         beta: &::types::ComplexF32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_csyr2k(
                 uplo.into(),
                 trans.into(),
@@ -1695,8 +1643,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF64,
         beta: &::types::ComplexF64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zsyr2k(
                 uplo.into(),
                 trans.into(),
@@ -1721,8 +1669,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF32,
         beta: f32,
         C: &mut ::types::MatrixComplexF32,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_cher2k(
                 uplo.into(),
                 trans.into(),
@@ -1747,8 +1695,8 @@ pub mod level3 {
         B: &::types::MatrixComplexF64,
         beta: f64,
         C: &mut ::types::MatrixComplexF64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_blas_zher2k(
                 uplo.into(),
                 trans.into(),

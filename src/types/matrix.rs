@@ -50,7 +50,7 @@ reference,
 B. Stroustrup, The C++ Programming Language (3rd Ed), Section 22.4 Vector Arithmetic. Addison-Wesley 1997, ISBN 0-201-88954-4.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::{self, FFI};
 use std::fmt;
 use std::fmt::{Debug, Formatter};
@@ -249,28 +249,22 @@ impl MatrixF64 {
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_memcpy(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn copy_from(&mut self, other: &MatrixF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_memcpy(self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &mut MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_memcpy(other.unwrap_unique(), self.unwrap_shared())
-        })
+    pub fn copy_to(&self, other: &mut MatrixF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_memcpy(other.unwrap_unique(), self.unwrap_shared()) })
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&mut self, other: &mut MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_swap(self.unwrap_unique(), other.unwrap_unique())
-        })
+    pub fn swap(&mut self, other: &mut MatrixF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_swap(self.unwrap_unique(), other.unwrap_unique()) })
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: usize) -> Option<(VectorF64, enums::Value)> {
+    pub fn get_row(&self, y: usize) -> Option<(VectorF64, Value)> {
         let tmp = unsafe { sys::gsl_vector_alloc((*self.unwrap_shared()).size2) };
 
         if tmp.is_null() {
@@ -278,12 +272,12 @@ impl MatrixF64 {
         } else {
             let ret = unsafe { sys::gsl_matrix_get_row(tmp, self.unwrap_shared(), y) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((ffi::FFI::wrap(tmp), Value::from(ret)))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: usize) -> Option<(VectorF64, enums::Value)> {
+    pub fn get_col(&self, x: usize) -> Option<(VectorF64, Value)> {
         let tmp = unsafe { sys::gsl_vector_alloc((*self.unwrap_shared()).size1) };
 
         if tmp.is_null() {
@@ -291,45 +285,41 @@ impl MatrixF64 {
         } else {
             let ret = unsafe { sys::gsl_matrix_get_col(tmp, self.unwrap_shared(), x) };
 
-            Some((ffi::FFI::wrap(tmp), enums::Value::from(ret)))
+            Some((ffi::FFI::wrap(tmp), Value::from(ret)))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&mut self, y: usize, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_set_row(self.unwrap_unique(), y, v.unwrap_shared())
-        })
+    pub fn set_row(&mut self, y: usize, v: &VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_set_row(self.unwrap_unique(), y, v.unwrap_shared()) })
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&mut self, x: usize, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_set_col(self.unwrap_unique(), x, v.unwrap_shared())
-        })
+    pub fn set_col(&mut self, x: usize, v: &VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_set_col(self.unwrap_unique(), x, v.unwrap_shared()) })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap_rows(self.unwrap_unique(), y1, y2) })
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_swap_rows(self.unwrap_unique(), y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap_columns(self.unwrap_unique(), x1, x2) })
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_swap_columns(self.unwrap_unique(), x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_swap_rowcol(self.unwrap_unique(), i, j) })
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_swap_rowcol(self.unwrap_unique(), i, j) })
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(MatrixF64, enums::Value)> {
+    pub fn transpose_memcpy(&self) -> Option<(MatrixF64, Value)> {
         let ptr = self.unwrap_shared();
         let dest = unsafe { sys::gsl_matrix_alloc((*ptr).size2, (*ptr).size1) };
 
@@ -343,57 +333,53 @@ impl MatrixF64 {
                     mat: dest,
                     can_free: true,
                 },
-                enums::Value::from(ret),
+                Value::from(ret),
             ))
         }
     }
 
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn transpose(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_transpose(self.unwrap_unique()) })
+    pub fn transpose(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_transpose(self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_add(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn add(&mut self, other: &MatrixF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_add(self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_sub(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn sub(&mut self, other: &MatrixF64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_sub(self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn mul_elements(&mut self, other: &MatrixF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_mul_elements(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&mut self, other: &MatrixF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn div_elements(&mut self, other: &MatrixF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_div_elements(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
-    pub fn scale(&mut self, x: f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_scale(self.unwrap_unique(), x) })
+    pub fn scale(&mut self, x: f64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_scale(self.unwrap_unique(), x) })
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
-    pub fn add_constant(&mut self, x: f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_add_constant(self.unwrap_unique(), x) })
+    pub fn add_constant(&mut self, x: f64) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_add_constant(self.unwrap_unique(), x) })
     }
 
     /// This function returns the maximum value in the self matrix.
@@ -641,28 +627,28 @@ impl MatrixF32 {
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices must have the same size.
-    pub fn copy_from(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy_from(&mut self, other: &MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_memcpy(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices must have the same size.
-    pub fn copy_to(&self, other: &mut MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy_to(&self, other: &mut MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_memcpy(other.unwrap_unique(), self.unwrap_shared())
         })
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two matrices must have the same size.
-    pub fn swap(&mut self, other: &mut MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn swap(&mut self, other: &mut MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_swap(self.unwrap_unique(), other.unwrap_unique())
         })
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: usize) -> Option<(enums::Value, VectorF32)> {
+    pub fn get_row(&self, y: usize) -> Option<(Value, VectorF32)> {
         let tmp = unsafe { sys::gsl_vector_float_alloc((*self.unwrap_shared()).size2) };
 
         if tmp.is_null() {
@@ -670,12 +656,12 @@ impl MatrixF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_float_get_row(tmp, self.unwrap_shared(), y) };
 
-            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
+            Some((Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: usize) -> Option<(enums::Value, VectorF32)> {
+    pub fn get_col(&self, x: usize) -> Option<(Value, VectorF32)> {
         let tmp = unsafe { sys::gsl_vector_float_alloc((*self.unwrap_shared()).size1) };
 
         if tmp.is_null() {
@@ -683,46 +669,44 @@ impl MatrixF32 {
         } else {
             let ret = unsafe { sys::gsl_matrix_float_get_col(tmp, self.unwrap_shared(), x) };
 
-            Some((enums::Value::from(ret), ffi::FFI::wrap(tmp)))
+            Some((Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
-    pub fn set_row(&mut self, y: usize, v: &VectorF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn set_row(&mut self, y: usize, v: &VectorF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_set_row(self.unwrap_unique(), y, v.unwrap_shared())
         })
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
-    pub fn set_col(&mut self, x: usize, v: &VectorF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn set_col(&mut self, x: usize, v: &VectorF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_set_col(self.unwrap_unique(), x, v.unwrap_shared())
         })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
-    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rows(self.unwrap_unique(), y1, y2) })
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_float_swap_rows(self.unwrap_unique(), y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
-    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_float_swap_columns(self.unwrap_unique(), x1, x2)
-        })
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_float_swap_columns(self.unwrap_unique(), x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must be square for this operation to be possible.
-    pub fn swap_row_col(&mut self, i: usize, j: usize) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_swap_rowcol(self.unwrap_unique(), i, j) })
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_float_swap_rowcol(self.unwrap_unique(), i, j) })
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<(enums::Value, MatrixF32)> {
+    pub fn transpose_memcpy(&self) -> Option<(Value, MatrixF32)> {
         let ptr = self.unwrap_shared();
         let dest = unsafe { sys::gsl_matrix_float_alloc((*ptr).size2, (*ptr).size1) };
 
@@ -732,7 +716,7 @@ impl MatrixF32 {
             let ret = unsafe { sys::gsl_matrix_float_transpose_memcpy(dest, ptr) };
 
             Some((
-                enums::Value::from(ret),
+                Value::from(ret),
                 MatrixF32 {
                     mat: dest,
                     can_free: true,
@@ -743,52 +727,50 @@ impl MatrixF32 {
 
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    pub fn transpose(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_transpose(self.unwrap_unique()) })
+    pub fn transpose(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_float_transpose(self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn add(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn add(&mut self, other: &MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_add(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn sub(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sub(&mut self, other: &MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_sub(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn mul_elements(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn mul_elements(&mut self, other: &MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_mul_elements(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains unchanged. The two matrices must have the same dimensions.
-    pub fn div_elements(&mut self, other: &MatrixF32) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn div_elements(&mut self, other: &MatrixF32) -> Value {
+        Value::from(unsafe {
             sys::gsl_matrix_float_div_elements(self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The result self(i,j) <- x self(i,j) is stored in self.
-    pub fn scale(&mut self, x: f32) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_matrix_float_scale(self.unwrap_unique(), x as _) })
+    pub fn scale(&mut self, x: f32) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_float_scale(self.unwrap_unique(), x as _) })
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result self(i,j) <- self(i,j) + x is stored in self.
-    pub fn add_constant(&mut self, x: f32) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_matrix_float_add_constant(self.unwrap_unique(), x as _)
-        })
+    pub fn add_constant(&mut self, x: f32) -> Value {
+        Value::from(unsafe { sys::gsl_matrix_float_add_constant(self.unwrap_unique(), x as _) })
     }
 
     /// This function returns the maximum value in the self matrix.

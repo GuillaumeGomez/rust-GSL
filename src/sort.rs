@@ -30,7 +30,7 @@ Robert Sedgewick, Algorithms in C, Addison-Wesley, ISBN 0201514257.
 /// vector by magnitude compute a real vector containing the magnitudes of the complex elements, and sort this vector indirectly. The resulting index
 /// gives the appropriate ordering of the original complex vector.
 pub mod vectors {
-    use enums;
+    use crate::Value;
     use ffi::FFI;
     use types::{Permutation, VectorF64};
 
@@ -65,10 +65,8 @@ pub mod vectors {
     /// This function indirectly sorts the elements of the vector v into ascending order, storing the resulting permutation in p. The elements of p give the
     /// index of the vector element which would have been stored in that position if the vector had been sorted in place. The first element of p gives the index
     /// of the least element in v, and the last element of p gives the index of the greatest element in v. The vector v is not changed.
-    pub fn sort_vector_index(p: &mut Permutation, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_sort_vector_index(p.unwrap_unique(), v.unwrap_shared())
-        })
+    pub fn sort_vector_index(p: &mut Permutation, v: &VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_sort_vector_index(p.unwrap_unique(), v.unwrap_shared()) })
     }
 }
 
@@ -77,78 +75,68 @@ pub mod vectors {
 /// 10 largest values from one million data points, but not for selecting the largest 100,000 values. If the subset is a significant part of the total dataset
 /// it may be faster to sort all the elements of the dataset directly with an O(N \log N) algorithm and obtain the smallest or largest values that way.
 pub mod select {
-    use enums;
+    use crate::Value;
     use ffi::FFI;
     use types::VectorF64;
 
     /// This function copies the k smallest elements of the array src, of size n and stride stride, in ascending numerical order into the array dest. The size
     /// k of the subset must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_smallest(dest: &mut [f64], k: usize, src: &[f64], stride: usize) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_smallest(dest: &mut [f64], k: usize, src: &[f64], stride: usize) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_smallest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
         })
     }
 
     /// This function copies the k largest elements of the array src, of size n and stride stride, in descending numerical order into the array dest. k must
     /// be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_largest(dest: &mut [f64], k: usize, src: &[f64], stride: usize) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_largest(dest: &mut [f64], k: usize, src: &[f64], stride: usize) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_largest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
         })
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
-    pub fn sort_vector_smallest(dest: &mut [f64], k: usize, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_vector_smallest(dest: &mut [f64], k: usize, v: &VectorF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
-    pub fn sort_vector_largest(dest: &mut [f64], k: usize, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_vector_largest(dest: &mut [f64], k: usize, v: &VectorF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_vector_largest(dest.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 
     /// This function stores the indices of the k smallest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
     /// the corresponding data is in ascending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_smallest_index(
-        p: &mut [usize],
-        k: usize,
-        src: &[f64],
-        stride: usize,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_smallest_index(p: &mut [usize], k: usize, src: &[f64], stride: usize) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_smallest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
         })
     }
 
     /// This function stores the indices of the k largest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
     /// the corresponding data is in descending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
-    pub fn sort_largest_index(
-        p: &mut [usize],
-        k: usize,
-        src: &[f64],
-        stride: usize,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_largest_index(p: &mut [usize], k: usize, src: &[f64], stride: usize) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_largest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
         })
     }
 
     /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
     /// the vector v.
-    pub fn sort_vector_smallest_index(p: &mut [usize], k: usize, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_vector_smallest_index(p: &mut [usize], k: usize, v: &VectorF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 
     /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
     /// the vector v.
-    pub fn sort_vector_largest_index(p: &mut [usize], k: usize, v: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn sort_vector_largest_index(p: &mut [usize], k: usize, v: &VectorF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, v.unwrap_shared())
         })
     }

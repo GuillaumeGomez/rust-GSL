@@ -18,8 +18,8 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 1998, CRC Press LLC, ISBN 084933988X
 !*/
 
+use crate::Value;
 use c_vec::CSlice;
-use enums;
 use ffi::{self, FFI};
 use std::fmt;
 use std::fmt::{Debug, Formatter};
@@ -96,8 +96,8 @@ impl Combination {
 
     /// This function copies the elements of the combination self into the combination dest. The two
     /// combinations must have the same size.
-    pub fn copy(&self, dest: &mut Combination) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn copy(&self, dest: &mut Combination) -> Value {
+        Value::from(unsafe {
             sys::gsl_combination_memcpy(dest.unwrap_unique(), self.unwrap_shared())
         })
     }
@@ -130,24 +130,24 @@ impl Combination {
 
     /// This function checks that the combination self is valid. The k elements should lie in the
     /// range 0 to n-1, with each value occurring once at most and in increasing order.
-    pub fn is_valid(&self) -> enums::Value {
+    pub fn is_valid(&self) -> Value {
         // Little hack because `gsl_combination_valid` doesn't in fact need a mutable object...
-        enums::Value::from(unsafe { sys::gsl_combination_valid(self.inner) })
+        Value::from(unsafe { sys::gsl_combination_valid(self.inner) })
     }
 
     /// This function advances the combination self to the next combination in lexicographic order
     /// and returns `Success`. If no further combinations are available it returns Failure and
     /// leaves self unmodified. Starting with the first combination and repeatedly applying this
     /// function will iterate through all possible combinations of a given order.
-    pub fn next(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_combination_next(self.unwrap_unique()) })
+    pub fn next(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_combination_next(self.unwrap_unique()) })
     }
 
     /// This function steps backwards from the combination self to the previous combination in
     /// lexicographic order, returning `Success`. If no previous combination is available it returns
     /// `Failure` and leaves self unmodified.
-    pub fn prev(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_combination_prev(self.unwrap_unique()) })
+    pub fn prev(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_combination_prev(self.unwrap_unique()) })
     }
 }
 

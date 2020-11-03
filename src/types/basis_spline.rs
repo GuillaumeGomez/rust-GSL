@@ -47,7 +47,7 @@ A large collection of B-spline routines is available in the PPPACK library avail
 http://www.netlib.org/pppack, which is also part of SLATEC.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 use types::VectorF64;
 
@@ -76,8 +76,8 @@ impl BSpLineWorkspace {
 
     /// This function computes the knots associated with the given breakpoints and stores them
     /// internally in w->knots.
-    pub fn knots(&mut self, breakpts: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn knots(&mut self, breakpts: &VectorF64) -> Value {
+        Value::from(unsafe {
             sys::gsl_bspline_knots(breakpts.unwrap_shared(), self.unwrap_unique())
         })
     }
@@ -85,8 +85,8 @@ impl BSpLineWorkspace {
     /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding
     /// knot vector using the previously specified nbreak parameter.
     /// The knots are stored in w->knots.
-    pub fn knots_uniform(&mut self, a: f64, b: f64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_bspline_knots_uniform(a, b, self.unwrap_unique()) })
+    pub fn knots_uniform(&mut self, a: f64, b: f64) -> Value {
+        Value::from(unsafe { sys::gsl_bspline_knots_uniform(a, b, self.unwrap_unique()) })
     }
 
     /// This function evaluates all B-spline basis functions at the position x and stores them in
@@ -97,10 +97,8 @@ impl BSpLineWorkspace {
     ///
     /// Computing all the basis functions at once is more efficient than computing them
     /// individually, due to the nature of the defining recurrence relation.
-    pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique())
-        })
+    pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique()) })
     }
 
     /// This function evaluates all potentially nonzero B-spline basis functions at the position x
@@ -116,8 +114,8 @@ impl BSpLineWorkspace {
         Bk: &mut VectorF64,
         istart: &mut usize,
         iend: &mut usize,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
+    ) -> Value {
+        Value::from(unsafe {
             sys::gsl_bspline_eval_nonzero(x, Bk.unwrap_unique(), istart, iend, self.unwrap_unique())
         })
     }

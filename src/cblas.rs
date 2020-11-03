@@ -345,7 +345,7 @@ pub mod level1 {
 }
 
 pub mod level2 {
-    use enums;
+    use crate::enums;
 
     /// Multiplies a matrix and a vector.
     ///
@@ -2189,7 +2189,7 @@ pub mod level2 {
 }
 
 pub mod level3 {
-    use enums;
+    use crate::enums;
 
     /// General ::types::Matrix-MatrixF64 multiplication for single precision float.
     ///

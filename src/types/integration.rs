@@ -2,8 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::enums;
+use crate::Value;
 use c_vec::CSlice;
-use enums;
 use ffi::FFI;
 
 pub struct IntegrationFixedType {
@@ -785,10 +786,10 @@ impl GLFixedTable {
         unsafe { sys::gsl_integration_glfixed(&function, a, b, self.unwrap_shared()) }
     }
 
-    pub fn glfixed_point(&self, a: f64, b: f64, xi: &mut [f64], wi: &mut [f64]) -> enums::Value {
+    pub fn glfixed_point(&self, a: f64, b: f64, xi: &mut [f64], wi: &mut [f64]) -> Value {
         assert!(xi.len() == wi.len());
 
-        enums::Value::from(unsafe {
+        Value::from(unsafe {
             sys::gsl_integration_glfixed_point(
                 a,
                 b,

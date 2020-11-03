@@ -18,8 +18,8 @@ P. Bratley and B.L. Fox and H. Niederreiter, “Algorithm 738: Programs to Gener
 Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–495.
 !*/
 
+use crate::Value;
 use c_vec::CSlice;
-use enums;
 use ffi::{self, FFI};
 use std::os::raw::c_char;
 
@@ -53,8 +53,8 @@ impl QRng {
 
     /// This function stores the next point from the sequence generator self in the array x. The space available for x must match the
     /// dimension of the generator. The point x will lie in the range 0 < x_i < 1 for each x_i.
-    pub fn get(&self, x: &mut [f64]) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_qrng_get(self.q, x.as_mut_ptr()) })
+    pub fn get(&self, x: &mut [f64]) -> Value {
+        Value::from(unsafe { sys::gsl_qrng_get(self.q, x.as_mut_ptr()) })
     }
 
     /// This function returns a pointer to the name of the generator.
@@ -89,8 +89,8 @@ impl QRng {
 
     /// This function copies the quasi-random sequence generator src into the pre-existing generator dest, making dest into an exact copy
     /// of src. The two generators must be of the same type.
-    pub fn copy(&self, dest: &mut QRng) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_qrng_memcpy(dest.q, self.q) })
+    pub fn copy(&self, dest: &mut QRng) -> Value {
+        Value::from(unsafe { sys::gsl_qrng_memcpy(dest.q, self.q) })
     }
 }
 

@@ -70,7 +70,7 @@ http://csrc.nist.gov/rng/
 Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the source code to their generators (MT19937, MM&TN; TT800, MM&YK) available under the GNU General Public License. Thanks to Martin Lüscher for providing notes and source code for the RANLXS and RANLXD generators.
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 use libc::c_ulong;
 
@@ -178,10 +178,8 @@ impl Rng {
     }
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
-    pub fn copy(&self, other: &mut Rng) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_rng_memcpy(other.unwrap_unique(), self.unwrap_shared())
-        })
+    pub fn copy(&self, other: &mut Rng) -> Value {
+        Value::from(unsafe { sys::gsl_rng_memcpy(other.unwrap_unique(), self.unwrap_shared()) })
     }
 
     /// This function returns the size of the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,
@@ -244,9 +242,9 @@ impl Rng {
     ///
     /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
     /// ```
-    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> enums::Value {
+    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> Value {
         assert!(src.len() <= dest.len());
-        enums::Value::from(unsafe {
+        Value::from(unsafe {
             sys::gsl_ran_choose(
                 self.unwrap_unique(),
                 dest.as_mut_ptr() as *mut _,

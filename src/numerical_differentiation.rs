@@ -16,7 +16,7 @@ Abramowitz and Stegun, Handbook of Mathematical Functions, Section 25.3.4, and T
 S.D. Conte and Carl de Boor, Elementary Numerical Analysis: An Algorithmic Approach, McGraw-Hill, 1972.
 !*/
 
-use enums;
+use crate::Value;
 
 /// This function computes the numerical derivative of the function f at the point x using an
 /// adaptive central difference algorithm with a step-size of h. The derivative is returned in
@@ -30,7 +30,7 @@ use enums;
 /// calculation, so only 4-points are actually used.
 ///
 /// Returns `(result, abs_err)`.
-pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
+pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
@@ -52,7 +52,7 @@ pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, 
 /// corresponding 2-point rule x+h/2, x+h.
 ///
 /// Returns `(result, abs_err)`.
-pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
+pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
@@ -70,7 +70,7 @@ pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, 
 /// This function is equivalent to calling gsl_deriv_forward with a negative step-size.
 ///
 /// Returns `(result, abs_err)`.
-pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (enums::Value, f64, f64) {
+pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f64) {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);

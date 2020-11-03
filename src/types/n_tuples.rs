@@ -28,7 +28,7 @@ The selection function determines which ntuple rows are selected for histogrammi
 Further information on the use of ntuples can be found in the documentation for the CERN packages PAW and HBOOK (available online).
 !*/
 
-use enums;
+use crate::Value;
 use ffi::FFI;
 use std::ffi::CString;
 use std::mem::MaybeUninit;
@@ -61,8 +61,8 @@ impl WriteNTuples {
 
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the
     /// corresponding file.
-    pub fn write<T: Sized>(&mut self, data: &T) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn write<T: Sized>(&mut self, data: &T) -> Value {
+        Value::from(unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_write(self.n)
@@ -70,8 +70,8 @@ impl WriteNTuples {
     }
 
     /// This function is a synonym for NTuples::write.
-    pub fn bookdata<T: Sized>(&mut self, data: &T) -> enums::Value {
-        enums::Value::from(unsafe {
+    pub fn bookdata<T: Sized>(&mut self, data: &T) -> Value {
+        Value::from(unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_bookdata(self.n)
@@ -111,7 +111,7 @@ impl ReadNTuples {
 
     /// This function reads the current row of the ntuple file for ntuple and stores the values in
     /// ntuple->data.
-    pub fn read<T: Sized>(&mut self) -> (enums::Value, T) {
+    pub fn read<T: Sized>(&mut self) -> (Value, T) {
         let mut data = unsafe { MaybeUninit::<T>::uninit() };
 
         let ret = unsafe {
@@ -143,7 +143,7 @@ macro_rules! impl_project {
                 h: &mut ::Histogram,
                 value_func: V,
                 select_func: S,
-            ) -> enums::Value {
+            ) -> Value {
                 unsafe extern "C" fn value_trampoline<T: Sized, F: Fn(&T) -> f64>(
                     x: *mut ::libc::c_void,
                     params: *mut ::libc::c_void,
@@ -175,7 +175,7 @@ macro_rules! impl_project {
                     function: unsafe { ::std::mem::transmute(select_trampoline::<T, S> as usize) },
                     params: Box::into_raw(f) as *mut _,
                 };
-                enums::Value::from(unsafe {
+                Value::from(unsafe {
                     sys::gsl_ntuple_project(
                         h.unwrap_unique(),
                         self.n,

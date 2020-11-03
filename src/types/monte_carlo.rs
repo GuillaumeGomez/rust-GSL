@@ -127,7 +127,7 @@ impl PlainMonteCarlo {
     /// pass the `dim` argument and the function pointer (which became a closure) directly to the
     /// function.
     ///
-    /// It returns either Ok((result, abserr)) or Err(enums::Value).
+    /// It returns either Ok((result, abserr)) or Err(Value).
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
         f: F,
@@ -224,7 +224,7 @@ impl MiserMonteCarlo {
     /// pass the `dim` argument and the function pointer (which became a closure) directly to the
     /// function.
     ///
-    /// It returns either Ok((result, abserr)) or Err(enums::Value).
+    /// It returns either Ok((result, abserr)) or Err(Value).
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
         f: F,
@@ -378,7 +378,7 @@ impl VegasMonteCarlo {
     /// pass the `dim` argument and the function pointer (which became a closure) directly to the
     /// function.
     ///
-    /// It returns either Ok((result, abserr)) or Err(enums::Value).
+    /// It returns either Ok((result, abserr)) or Err(Value).
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
         f: F,
