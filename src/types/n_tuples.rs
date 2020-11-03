@@ -29,7 +29,7 @@ Further information on the use of ntuples can be found in the documentation for 
 !*/
 
 use enums;
-use ffi;
+use ffi::FFI;
 use std::ffi::CString;
 use std::mem::MaybeUninit;
 use std::os::raw::c_char;
@@ -177,7 +177,7 @@ macro_rules! impl_project {
                 };
                 enums::Value::from(unsafe {
                     sys::gsl_ntuple_project(
-                        ffi::FFI::unwrap_unique(h),
+                        h.unwrap_unique(),
                         self.n,
                         &mut value_function,
                         &mut select_function,

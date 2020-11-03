@@ -243,7 +243,7 @@ impl MultiFitFSolver {
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
-        let tmp = unsafe { sys::gsl_multifit_fsolver_alloc(ffi::FFI::unwrap_shared(t), n, p) };
+        let tmp = unsafe { sys::gsl_multifit_fsolver_alloc(t.unwrap_shared(), n, p) };
 
         if tmp.is_null() {
             None
@@ -260,11 +260,7 @@ impl MultiFitFSolver {
         //     }
         // }
         ::Value::from(unsafe {
-            sys::gsl_multifit_fsolver_set(
-                self.unwrap_unique(),
-                &mut f.0,
-                ffi::FFI::unwrap_shared(x),
-            )
+            sys::gsl_multifit_fsolver_set(self.unwrap_unique(), &mut f.0, x.unwrap_shared())
         })
     }
 
@@ -308,11 +304,7 @@ impl MultiFitFdfSolver {
     /// the initial guess x.
     pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &::VectorF64) -> ::Value {
         ::Value::from(unsafe {
-            sys::gsl_multifit_fdfsolver_set(
-                self.unwrap_unique(),
-                f.to_raw(),
-                ffi::FFI::unwrap_shared(x),
-            )
+            sys::gsl_multifit_fdfsolver_set(self.unwrap_unique(), f.to_raw(), x.unwrap_shared())
         })
     }
 

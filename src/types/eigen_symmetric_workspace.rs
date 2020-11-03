@@ -96,7 +96,7 @@ used is the QZ method due to Moler and Stewart (see references).
 !*/
 
 use enums;
-use ffi::{self, FFI};
+use ffi::FFI;
 use types::{MatrixComplexF64, MatrixF64, VectorComplexF64, VectorF64};
 
 ffi_wrapper!(
@@ -125,8 +125,8 @@ impl EigenSymmetricWorkspace {
     pub fn symm(&mut self, A: &mut MatrixF64, eval: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_symm(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -167,9 +167,9 @@ impl EigenSymmetricVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_symmv(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(evec),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
+                evec.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -203,8 +203,8 @@ impl EigenHermitianWorkspace {
     pub fn herm(&mut self, A: &mut MatrixComplexF64, eval: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_herm(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -247,9 +247,9 @@ impl EigenHermitianVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_hermv(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(evec),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
+                evec.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -315,8 +315,8 @@ impl EigenNonSymmWorkspace {
     pub fn nonsymm(&mut self, A: &mut MatrixF64, eval: &mut VectorComplexF64) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_nonsymm(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -332,9 +332,9 @@ impl EigenNonSymmWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_nonsymm_Z(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(Z),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
+                Z.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -387,9 +387,9 @@ impl EigenNonSymmVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_nonsymmv(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(evec),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
+                evec.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -406,10 +406,10 @@ impl EigenNonSymmVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_nonsymmv_Z(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(evec),
-                ffi::FFI::unwrap_unique(Z),
+                A.unwrap_unique(),
+                eval.unwrap_unique(),
+                evec.unwrap_unique(),
+                Z.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -446,9 +446,9 @@ impl EigenGenSymmWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_gensymm(
-                ffi::FFI::unwrap_unique(&mut A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(eval),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                eval.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -487,10 +487,10 @@ impl EigenGenSymmVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_gensymmv(
-                ffi::FFI::unwrap_unique(&mut A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(evec),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                eval.unwrap_unique(),
+                evec.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -527,9 +527,9 @@ impl EigenGenHermWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_genherm(
-                ffi::FFI::unwrap_unique(&mut A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(eval),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                eval.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -567,10 +567,10 @@ impl EigenGenHermVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_genhermv(
-                ffi::FFI::unwrap_unique(&mut A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(eval),
-                ffi::FFI::unwrap_unique(evec),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                eval.unwrap_unique(),
+                evec.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -634,10 +634,10 @@ impl EigenGenWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_gen(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(alpha),
-                ffi::FFI::unwrap_unique(beta),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                alpha.unwrap_unique(),
+                beta.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -656,12 +656,12 @@ impl EigenGenWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_gen_QZ(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(alpha),
-                ffi::FFI::unwrap_unique(beta),
-                ffi::FFI::unwrap_unique(Q),
-                ffi::FFI::unwrap_unique(Z),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                alpha.unwrap_unique(),
+                beta.unwrap_unique(),
+                Q.unwrap_unique(),
+                Z.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -705,11 +705,11 @@ impl EigenGenVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_genv(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(alpha),
-                ffi::FFI::unwrap_unique(beta),
-                ffi::FFI::unwrap_unique(evec),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                alpha.unwrap_unique(),
+                beta.unwrap_unique(),
+                evec.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })
@@ -729,13 +729,13 @@ impl EigenGenVWorkspace {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_eigen_genv_QZ(
-                ffi::FFI::unwrap_unique(A),
-                ffi::FFI::unwrap_unique(B),
-                ffi::FFI::unwrap_unique(alpha),
-                ffi::FFI::unwrap_unique(beta),
-                ffi::FFI::unwrap_unique(evec),
-                ffi::FFI::unwrap_unique(Q),
-                ffi::FFI::unwrap_unique(Z),
+                A.unwrap_unique(),
+                B.unwrap_unique(),
+                alpha.unwrap_unique(),
+                beta.unwrap_unique(),
+                evec.unwrap_unique(),
+                Q.unwrap_unique(),
+                Z.unwrap_unique(),
                 self.unwrap_unique(),
             )
         })

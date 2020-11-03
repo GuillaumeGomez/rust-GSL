@@ -27,7 +27,7 @@ level of the transform.
 /// 2 or if insufficient workspace is provided.
 pub mod one_dimension {
     use enums;
-    use ffi;
+    use ffi::FFI;
 
     pub fn transform(
         w: &::Wavelet,
@@ -39,12 +39,12 @@ pub mod one_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet_transform(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 stride,
                 n,
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -58,11 +58,11 @@ pub mod one_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet_transform_forward(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -76,11 +76,11 @@ pub mod one_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet_transform_inverse(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -100,7 +100,7 @@ pub mod one_dimension {
 /// The non-standard form of the discrete wavelet transform is typically used in image analysis.
 pub mod two_dimension {
     use enums;
-    use ffi;
+    use ffi::FFI;
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
     /// data stored in row-major form with dimensions size1 and size2 and physical row length tda. The dimensions must be equal
@@ -121,13 +121,13 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_transform(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -150,12 +150,12 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_transform_forward(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -178,12 +178,12 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_transform_inverse(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -197,10 +197,10 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_transform_matrix(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
+                w.unwrap_shared(),
+                m.unwrap_unique(),
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -213,9 +213,9 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_transform_matrix_forward(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -228,9 +228,9 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_transform_matrix_inverse(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -247,13 +247,13 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_nstransform(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -269,12 +269,12 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_nstransform_forward(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -290,12 +290,12 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_nstransform_inverse(
-                ffi::FFI::unwrap_shared(w),
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -309,10 +309,10 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_nstransform_matrix(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
+                w.unwrap_shared(),
+                m.unwrap_unique(),
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -325,9 +325,9 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_nstransform_matrix_forward(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -340,9 +340,9 @@ pub mod two_dimension {
     ) -> enums::Value {
         enums::Value::from(unsafe {
             sys::gsl_wavelet2d_nstransform_matrix_inverse(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }

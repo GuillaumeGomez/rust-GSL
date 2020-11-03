@@ -60,7 +60,7 @@ Differential/Algebraic Equation Solvers.â€, ACM Trans. Math. Software 31, 363â€
 !*/
 
 use enums;
-use ffi::{self, FFI};
+use ffi::FFI;
 use libc::c_void;
 
 /// Description of a system of ODEs.
@@ -422,7 +422,7 @@ impl ODEiv2Control {
     /// This function returns a pointer to a newly allocated instance of a control function of type T. This function is only needed for
     /// defining new types of control functions. For most purposes the standard control functions described above should be sufficient.
     pub fn alloc(t: &ODEiv2ControlType) -> Option<ODEiv2Control> {
-        let tmp = unsafe { sys::gsl_odeiv2_control_alloc(ffi::FFI::unwrap_shared(t)) };
+        let tmp = unsafe { sys::gsl_odeiv2_control_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
             None

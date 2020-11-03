@@ -247,7 +247,7 @@ pub mod radix2 {
 /// The length of the data n and the length used to compute the given wavetable do not match.
 pub mod mixed_radix {
     use enums;
-    use ffi;
+    use ffi::FFI;
     use types::{FftComplexWaveTable, FftComplexWorkspace};
 
     pub fn forward(
@@ -262,8 +262,8 @@ pub mod mixed_radix {
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_shared(wavetable),
-                ffi::FFI::unwrap_unique(work),
+                wavetable.unwrap_shared(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -281,8 +281,8 @@ pub mod mixed_radix {
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_shared(wavetable),
-                ffi::FFI::unwrap_unique(work),
+                wavetable.unwrap_shared(),
+                work.unwrap_unique(),
                 sign.into(),
             )
         })
@@ -300,8 +300,8 @@ pub mod mixed_radix {
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_shared(wavetable),
-                ffi::FFI::unwrap_unique(work),
+                wavetable.unwrap_shared(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -318,8 +318,8 @@ pub mod mixed_radix {
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_shared(wavetable),
-                ffi::FFI::unwrap_unique(work),
+                wavetable.unwrap_shared(),
+                work.unwrap_unique(),
             )
         })
     }

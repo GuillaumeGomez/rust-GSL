@@ -3,7 +3,7 @@
 //
 
 use enums;
-use ffi;
+use ffi::FFI;
 
 /// This function returns the index i of the array x_array such that x_array[i] <= x < x_array[i+1]. The index is searched for in the
 /// range [index_lo,index_hi].
@@ -16,7 +16,7 @@ pub fn bsearch(x_array: &[f64], x: f64, index_lo: usize, index_hi: usize) -> usi
 pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel) -> f64 {
     unsafe {
         sys::gsl_interp_eval(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
@@ -40,7 +40,7 @@ pub fn eval_e(
     let mut y = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_e(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
@@ -62,7 +62,7 @@ pub fn eval_deriv(
 ) -> f64 {
     unsafe {
         sys::gsl_interp_eval_deriv(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
@@ -83,7 +83,7 @@ pub fn eval_deriv_e(
 ) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_interp_eval_deriv_e(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
@@ -104,7 +104,7 @@ pub fn eval_deriv2(
 ) -> f64 {
     unsafe {
         sys::gsl_interp_eval_deriv2(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
@@ -125,7 +125,7 @@ pub fn eval_deriv2_e(
 ) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_interp_eval_deriv2_e(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             x,
@@ -147,7 +147,7 @@ pub fn eval_integ(
 ) -> f64 {
     unsafe {
         sys::gsl_interp_eval_integ(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             a,
@@ -170,7 +170,7 @@ pub fn eval_integ_e(
 ) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_interp_eval_integ_e(
-            ffi::FFI::unwrap_shared(interp),
+            interp.unwrap_shared(),
             xa.as_ptr(),
             ya.as_ptr(),
             a,

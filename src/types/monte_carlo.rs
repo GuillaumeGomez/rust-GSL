@@ -73,7 +73,7 @@ current estimate has zero error, previous estimates had zero error
 The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
-use ffi::{self, FFI};
+use ffi::FFI;
 use libc::{c_double, c_void, size_t};
 use std::marker::PhantomData;
 use std::mem::transmute;
@@ -152,7 +152,7 @@ impl PlainMonteCarlo {
                 xu.as_ptr(),
                 xl.len() as _,
                 t_calls,
-                ffi::FFI::unwrap_unique(r),
+                r.unwrap_unique(),
                 self.unwrap_unique(),
                 &mut result,
                 &mut abserr,
@@ -249,7 +249,7 @@ impl MiserMonteCarlo {
                 xu.as_ptr(),
                 xl.len() as _,
                 t_calls,
-                ffi::FFI::unwrap_unique(r),
+                r.unwrap_unique(),
                 self.unwrap_unique(),
                 &mut result,
                 &mut abserr,
@@ -403,7 +403,7 @@ impl VegasMonteCarlo {
                 xu.as_ptr() as usize as *mut _,
                 xl.len() as _,
                 t_calls,
-                ffi::FFI::unwrap_unique(r),
+                r.unwrap_unique(),
                 self.unwrap_unique(),
                 &mut result,
                 &mut abserr,

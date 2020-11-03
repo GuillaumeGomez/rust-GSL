@@ -31,7 +31,7 @@ Robert Sedgewick, Algorithms in C, Addison-Wesley, ISBN 0201514257.
 /// gives the appropriate ordering of the original complex vector.
 pub mod vectors {
     use enums;
-    use ffi;
+    use ffi::FFI;
     use types::{Permutation, VectorF64};
 
     /// This function sorts the n elements of the array data with stride stride into ascending numerical order.
@@ -47,12 +47,12 @@ pub mod vectors {
 
     /// This function sorts the elements of the vector v into ascending numerical order.
     pub fn sort_vector(v: &mut VectorF64) {
-        unsafe { sys::gsl_sort_vector(ffi::FFI::unwrap_unique(v)) }
+        unsafe { sys::gsl_sort_vector(v.unwrap_unique()) }
     }
 
     /// This function sorts the elements of the vector v1 into ascending numerical order, while making the same rearrangement of the vector v2.
     pub fn sort_vector2(v1: &mut VectorF64, v2: &mut VectorF64) {
-        unsafe { sys::gsl_sort_vector2(ffi::FFI::unwrap_unique(v1), ffi::FFI::unwrap_unique(v2)) }
+        unsafe { sys::gsl_sort_vector2(v1.unwrap_unique(), v2.unwrap_unique()) }
     }
 
     /// This function indirectly sorts the n elements of the array data with stride stride into ascending order, storing the resulting
@@ -67,7 +67,7 @@ pub mod vectors {
     /// of the least element in v, and the last element of p gives the index of the greatest element in v. The vector v is not changed.
     pub fn sort_vector_index(p: &mut Permutation, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sort_vector_index(ffi::FFI::unwrap_unique(p), ffi::FFI::unwrap_shared(v))
+            sys::gsl_sort_vector_index(p.unwrap_unique(), v.unwrap_shared())
         })
     }
 }
@@ -78,7 +78,7 @@ pub mod vectors {
 /// it may be faster to sort all the elements of the dataset directly with an O(N \log N) algorithm and obtain the smallest or largest values that way.
 pub mod select {
     use enums;
-    use ffi;
+    use ffi::FFI;
     use types::VectorF64;
 
     /// This function copies the k smallest elements of the array src, of size n and stride stride, in ascending numerical order into the array dest. The size
@@ -100,14 +100,14 @@ pub mod select {
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
     pub fn sort_vector_smallest(dest: &mut [f64], k: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, ffi::FFI::unwrap_shared(v))
+            sys::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 
     /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
     pub fn sort_vector_largest(dest: &mut [f64], k: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sort_vector_largest(dest.as_mut_ptr(), k, ffi::FFI::unwrap_shared(v))
+            sys::gsl_sort_vector_largest(dest.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 
@@ -141,7 +141,7 @@ pub mod select {
     /// the vector v.
     pub fn sort_vector_smallest_index(p: &mut [usize], k: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap_shared(v))
+            sys::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 
@@ -149,7 +149,7 @@ pub mod select {
     /// the vector v.
     pub fn sort_vector_largest_index(p: &mut [usize], k: usize, v: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, ffi::FFI::unwrap_shared(v))
+            sys::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, v.unwrap_shared())
         })
     }
 }

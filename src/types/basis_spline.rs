@@ -48,7 +48,7 @@ http://www.netlib.org/pppack, which is also part of SLATEC.
 !*/
 
 use enums;
-use ffi::{self, FFI};
+use ffi::FFI;
 use types::VectorF64;
 
 ffi_wrapper!(
@@ -78,7 +78,7 @@ impl BSpLineWorkspace {
     /// internally in w->knots.
     pub fn knots(&mut self, breakpts: &VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_bspline_knots(ffi::FFI::unwrap_shared(breakpts), self.unwrap_unique())
+            sys::gsl_bspline_knots(breakpts.unwrap_shared(), self.unwrap_unique())
         })
     }
 
@@ -99,7 +99,7 @@ impl BSpLineWorkspace {
     /// individually, due to the nature of the defining recurrence relation.
     pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_bspline_eval(x, ffi::FFI::unwrap_unique(B), self.unwrap_unique())
+            sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique())
         })
     }
 
@@ -118,13 +118,7 @@ impl BSpLineWorkspace {
         iend: &mut usize,
     ) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_bspline_eval_nonzero(
-                x,
-                ffi::FFI::unwrap_unique(Bk),
-                istart,
-                iend,
-                self.unwrap_unique(),
-            )
+            sys::gsl_bspline_eval_nonzero(x, Bk.unwrap_unique(), istart, iend, self.unwrap_unique())
         })
     }
 

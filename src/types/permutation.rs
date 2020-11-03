@@ -155,16 +155,14 @@ impl Permutation {
     /// matrix from the right, v' = v P. The j-th column of the permutation matrix P is given by the p_j-th column of the identity matrix.
     /// The permutation p and the vector v must have the same length.
     pub fn permute_vector(&mut self, v: &mut VectorF64) -> enums::Value {
-        enums::Value::from(unsafe { sys::gsl_permute_vector(self.p, ffi::FFI::unwrap_unique(v)) })
+        enums::Value::from(unsafe { sys::gsl_permute_vector(self.p, v.unwrap_unique()) })
     }
 
     /// This function applies the inverse of the permutation p to the elements of the vector v, considered as a row-vector acted on by an inverse permutation
     /// matrix from the right, v' = v P^T. Note that for permutation matrices the inverse is the same as the transpose. The j-th column of the permutation
     /// matrix P is given by the p_j-th column of the identity matrix. The permutation p and the vector v must have the same length.
     pub fn permute_vector_inverse(&self, v: &mut VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            sys::gsl_permute_vector_inverse(self.p, ffi::FFI::unwrap_unique(v))
-        })
+        enums::Value::from(unsafe { sys::gsl_permute_vector_inverse(self.p, v.unwrap_unique()) })
     }
 
     #[cfg(feature = "v2_2")]

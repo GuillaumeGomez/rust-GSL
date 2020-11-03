@@ -20,7 +20,7 @@ The LAPACK source code can be found at the website above along with an online co
 !*/
 
 use enums;
-use ffi;
+use ffi::FFI;
 use types::{MatrixComplexF64, MatrixF64, VectorComplexF64, VectorF64};
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding real eigenvectors stored in the columns
@@ -31,11 +31,7 @@ pub fn symmv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_eigen_symmv_sort(
-            ffi::FFI::unwrap_unique(eval),
-            ffi::FFI::unwrap_unique(evec),
-            sort_type.into(),
-        )
+        sys::gsl_eigen_symmv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
     })
 }
 
@@ -47,11 +43,7 @@ pub fn hermv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_eigen_hermv_sort(
-            ffi::FFI::unwrap_unique(eval),
-            ffi::FFI::unwrap_unique(evec),
-            sort_type.into(),
-        )
+        sys::gsl_eigen_hermv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
     })
 }
 
@@ -64,11 +56,7 @@ pub fn nonsymmv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_eigen_nonsymmv_sort(
-            ffi::FFI::unwrap_unique(eval),
-            ffi::FFI::unwrap_unique(evec),
-            sort_type.into(),
-        )
+        sys::gsl_eigen_nonsymmv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
     })
 }
 
@@ -80,11 +68,7 @@ pub fn gensymmv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_eigen_gensymmv_sort(
-            ffi::FFI::unwrap_unique(eval),
-            ffi::FFI::unwrap_unique(evec),
-            sort_type.into(),
-        )
+        sys::gsl_eigen_gensymmv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
     })
 }
 
@@ -96,11 +80,7 @@ pub fn genhermv_sort(
     sort_type: ::EigenSort,
 ) -> enums::Value {
     enums::Value::from(unsafe {
-        sys::gsl_eigen_genhermv_sort(
-            ffi::FFI::unwrap_unique(eval),
-            ffi::FFI::unwrap_unique(evec),
-            sort_type.into(),
-        )
+        sys::gsl_eigen_genhermv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
     })
 }
 
@@ -115,9 +95,9 @@ pub fn genv_sort(
 ) -> enums::Value {
     enums::Value::from(unsafe {
         sys::gsl_eigen_genv_sort(
-            ffi::FFI::unwrap_unique(alpha),
-            ffi::FFI::unwrap_unique(beta),
-            ffi::FFI::unwrap_unique(evec),
+            alpha.unwrap_unique(),
+            beta.unwrap_unique(),
+            evec.unwrap_unique(),
             sort_type.into(),
         )
     })

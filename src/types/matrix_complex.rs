@@ -118,7 +118,7 @@ impl MatrixComplexF64 {
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorComplexF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_set_row(self.unwrap_unique(), y, ffi::FFI::unwrap_shared(v))
+            sys::gsl_matrix_complex_set_row(self.unwrap_unique(), y, v.unwrap_shared())
         })
     }
 
@@ -126,7 +126,7 @@ impl MatrixComplexF64 {
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorComplexF64) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_set_col(self.unwrap_unique(), x, ffi::FFI::unwrap_shared(v))
+            sys::gsl_matrix_complex_set_col(self.unwrap_unique(), x, v.unwrap_shared())
         })
     }
 
@@ -428,11 +428,7 @@ impl MatrixComplexF32 {
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &VectorComplexF32) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_set_row(
-                self.unwrap_unique(),
-                y,
-                ffi::FFI::unwrap_shared(v),
-            )
+            sys::gsl_matrix_complex_float_set_row(self.unwrap_unique(), y, v.unwrap_shared())
         })
     }
 
@@ -440,11 +436,7 @@ impl MatrixComplexF32 {
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &VectorComplexF32) -> enums::Value {
         enums::Value::from(unsafe {
-            sys::gsl_matrix_complex_float_set_col(
-                self.unwrap_unique(),
-                x,
-                ffi::FFI::unwrap_shared(v),
-            )
+            sys::gsl_matrix_complex_float_set_col(self.unwrap_unique(), x, v.unwrap_shared())
         })
     }
 
