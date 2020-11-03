@@ -2,13 +2,13 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::{MatrixF64, Value, VectorF64};
+use crate::Value;
 use ffi::FFI;
 
 ffi_wrapper!(RStatQuantile, *mut sys::gsl_rstat_quantile_workspace, gsl_rstat_quantile_free);
 
-impl RStat {
-    pub fn alloc(p: f64) -> Option<RStat> {
+impl RStatQuantile {
+    pub fn alloc(p: f64) -> Option<RStatQuantile> {
         let s = unsafe { sys::gsl_rstat_quantile_alloc(p) };
         if s.is_null() {
             None
@@ -81,8 +81,8 @@ impl RStat {
         unsafe { sys::gsl_rstat_sd_mean(self.unwrap_shared()) }
     }
 
-    pub fn median(&self) -> f64 {
-        unsafe { sys::gsl_rstat_median(self.unwrap_shared()) }
+    pub fn median(&mut self) -> f64 {
+        unsafe { sys::gsl_rstat_median(self.unwrap_unique()) }
     }
 
     pub fn skew(&self) -> f64 {
@@ -93,7 +93,7 @@ impl RStat {
         unsafe { sys::gsl_rstat_kurtosis(self.unwrap_shared()) }
     }
 
-    pub fn reset(&mutself) -> f64 {
-        unsafe { sys::gsl_rstat_reset(self.unwrap_unique()) }
+    pub fn reset(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_rstat_reset(self.unwrap_unique()) })
     }
 }
