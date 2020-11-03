@@ -166,7 +166,7 @@ fn should_strip_struct(line: &str) -> bool {
     && !line.contains("pub struct gsl_multifit_fdfsolver ")
     && !line.contains("pub struct gsl_matrix")
     && !line.contains("pub struct gsl_sf_result_e10_struct ")
-    && !line.contains("pub struct _gsl_matrix_view")
+    && !line.contains("pub struct _gsl_matrix_")
     && !line.contains("pub struct gsl_interp_accel ")
     && !line.contains("pub struct gsl_complex")
     && !line.contains("pub struct gsl_combination_struct ")

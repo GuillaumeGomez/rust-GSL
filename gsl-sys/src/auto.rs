@@ -3549,11 +3549,15 @@ pub struct gsl_matrix_complex_long_double {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_long_double_view;
+pub struct _gsl_matrix_complex_long_double_view {
+    pub matrix: gsl_matrix_complex_long_double,
+}
 pub type gsl_matrix_complex_long_double_view = _gsl_matrix_complex_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_long_double_const_view;
+pub struct _gsl_matrix_complex_long_double_const_view {
+    pub matrix: gsl_matrix_complex_long_double,
+}
 pub type gsl_matrix_complex_long_double_const_view = _gsl_matrix_complex_long_double_const_view;
 extern "C" {
     pub fn gsl_matrix_complex_long_double_alloc(
@@ -4824,11 +4828,15 @@ pub struct gsl_matrix_complex {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_view;
+pub struct _gsl_matrix_complex_view {
+    pub matrix: gsl_matrix_complex,
+}
 pub type gsl_matrix_complex_view = _gsl_matrix_complex_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_const_view;
+pub struct _gsl_matrix_complex_const_view {
+    pub matrix: gsl_matrix_complex,
+}
 pub type gsl_matrix_complex_const_view = _gsl_matrix_complex_const_view;
 extern "C" {
     pub fn gsl_matrix_complex_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_complex;
@@ -6131,11 +6139,15 @@ pub struct gsl_matrix_complex_float {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_float_view;
+pub struct _gsl_matrix_complex_float_view {
+    pub matrix: gsl_matrix_complex_float,
+}
 pub type gsl_matrix_complex_float_view = _gsl_matrix_complex_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_complex_float_const_view;
+pub struct _gsl_matrix_complex_float_const_view {
+    pub matrix: gsl_matrix_complex_float,
+}
 pub type gsl_matrix_complex_float_const_view = _gsl_matrix_complex_float_const_view;
 extern "C" {
     pub fn gsl_matrix_complex_float_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_complex_float;
@@ -6797,11 +6809,15 @@ pub struct gsl_matrix_long_double {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_double_view;
+pub struct _gsl_matrix_long_double_view {
+    pub matrix: gsl_matrix_long_double,
+}
 pub type gsl_matrix_long_double_view = _gsl_matrix_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_double_const_view;
+pub struct _gsl_matrix_long_double_const_view {
+    pub matrix: gsl_matrix_long_double,
+}
 pub type gsl_matrix_long_double_const_view = _gsl_matrix_long_double_const_view;
 extern "C" {
     pub fn gsl_matrix_long_double_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_long_double;
@@ -7503,7 +7519,9 @@ pub struct _gsl_matrix_view {
 pub type gsl_matrix_view = _gsl_matrix_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_const_view;
+pub struct _gsl_matrix_const_view {
+    pub matrix: gsl_matrix,
+}
 pub type gsl_matrix_const_view = _gsl_matrix_const_view;
 extern "C" {
     pub fn gsl_matrix_alloc(n1: usize, n2: usize) -> *mut gsl_matrix;
@@ -8056,11 +8074,15 @@ pub struct gsl_matrix_float {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_float_view;
+pub struct _gsl_matrix_float_view {
+    pub matrix: gsl_matrix_float,
+}
 pub type gsl_matrix_float_view = _gsl_matrix_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_float_const_view;
+pub struct _gsl_matrix_float_const_view {
+    pub matrix: gsl_matrix_float,
+}
 pub type gsl_matrix_float_const_view = _gsl_matrix_float_const_view;
 extern "C" {
     pub fn gsl_matrix_float_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_float;
@@ -9037,11 +9059,15 @@ pub struct gsl_matrix_ulong {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ulong_view;
+pub struct _gsl_matrix_ulong_view {
+    pub matrix: gsl_matrix_ulong,
+}
 pub type gsl_matrix_ulong_view = _gsl_matrix_ulong_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ulong_const_view;
+pub struct _gsl_matrix_ulong_const_view {
+    pub matrix: gsl_matrix_ulong,
+}
 pub type gsl_matrix_ulong_const_view = _gsl_matrix_ulong_const_view;
 extern "C" {
     pub fn gsl_matrix_ulong_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_ulong;
@@ -9709,11 +9735,15 @@ pub struct gsl_matrix_long {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_view;
+pub struct _gsl_matrix_long_view {
+    pub matrix: gsl_matrix_long,
+}
 pub type gsl_matrix_long_view = _gsl_matrix_long_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_long_const_view;
+pub struct _gsl_matrix_long_const_view {
+    pub matrix: gsl_matrix_long,
+}
 pub type gsl_matrix_long_const_view = _gsl_matrix_long_const_view;
 extern "C" {
     pub fn gsl_matrix_long_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_long;
@@ -10699,11 +10729,15 @@ pub struct gsl_matrix_uint {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uint_view;
+pub struct _gsl_matrix_uint_view {
+    pub matrix: gsl_matrix_uint,
+}
 pub type gsl_matrix_uint_view = _gsl_matrix_uint_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uint_const_view;
+pub struct _gsl_matrix_uint_const_view {
+    pub matrix: gsl_matrix_uint,
+}
 pub type gsl_matrix_uint_const_view = _gsl_matrix_uint_const_view;
 extern "C" {
     pub fn gsl_matrix_uint_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_uint;
@@ -11683,11 +11717,15 @@ pub struct gsl_matrix_int {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_int_view;
+pub struct _gsl_matrix_int_view {
+    pub matrix: gsl_matrix_int,
+}
 pub type gsl_matrix_int_view = _gsl_matrix_int_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_int_const_view;
+pub struct _gsl_matrix_int_const_view {
+    pub matrix: gsl_matrix_int,
+}
 pub type gsl_matrix_int_const_view = _gsl_matrix_int_const_view;
 extern "C" {
     pub fn gsl_matrix_int_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_int;
@@ -12674,11 +12712,15 @@ pub struct gsl_matrix_ushort {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ushort_view;
+pub struct _gsl_matrix_ushort_view {
+    pub matrix: gsl_matrix_ushort,
+}
 pub type gsl_matrix_ushort_view = _gsl_matrix_ushort_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_ushort_const_view;
+pub struct _gsl_matrix_ushort_const_view {
+    pub matrix: gsl_matrix_ushort,
+}
 pub type gsl_matrix_ushort_const_view = _gsl_matrix_ushort_const_view;
 extern "C" {
     pub fn gsl_matrix_ushort_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_ushort;
@@ -13689,11 +13731,15 @@ pub struct gsl_matrix_short {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_short_view;
+pub struct _gsl_matrix_short_view {
+    pub matrix: gsl_matrix_short,
+}
 pub type gsl_matrix_short_view = _gsl_matrix_short_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_short_const_view;
+pub struct _gsl_matrix_short_const_view {
+    pub matrix: gsl_matrix_short,
+}
 pub type gsl_matrix_short_const_view = _gsl_matrix_short_const_view;
 extern "C" {
     pub fn gsl_matrix_short_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_short;
@@ -14697,11 +14743,15 @@ pub struct gsl_matrix_uchar {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uchar_view;
+pub struct _gsl_matrix_uchar_view {
+    pub matrix: gsl_matrix_uchar,
+}
 pub type gsl_matrix_uchar_view = _gsl_matrix_uchar_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_uchar_const_view;
+pub struct _gsl_matrix_uchar_const_view {
+    pub matrix: gsl_matrix_uchar,
+}
 pub type gsl_matrix_uchar_const_view = _gsl_matrix_uchar_const_view;
 extern "C" {
     pub fn gsl_matrix_uchar_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_uchar;
@@ -15701,11 +15751,15 @@ pub struct gsl_matrix_char {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_char_view;
+pub struct _gsl_matrix_char_view {
+    pub matrix: gsl_matrix_char,
+}
 pub type gsl_matrix_char_view = _gsl_matrix_char_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_matrix_char_const_view;
+pub struct _gsl_matrix_char_const_view {
+    pub matrix: gsl_matrix_char,
+}
 pub type gsl_matrix_char_const_view = _gsl_matrix_char_const_view;
 extern "C" {
     pub fn gsl_matrix_char_alloc(n1: usize, n2: usize) -> *mut gsl_matrix_char;
