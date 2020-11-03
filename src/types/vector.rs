@@ -35,11 +35,329 @@ use ffi::FFI;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 
-pub struct VectorView {
-    v: sys::gsl_vector_view,
+macro_rules! doc {
+    ($doc:expr, $($t:tt)*) => (
+        #[doc = $doc]
+        $($t)*
+    );
 }
 
-impl VectorView {
+use crate::paste::paste;
+
+macro_rules! gsl_vec {
+    ($rust_name:ident, $name:ident, $rust_ty:ident) => (
+
+pub struct $rust_name {
+    vec: *mut sys::$name,
+    can_free: bool,
+}
+
+impl Drop for $rust_name {
+    fn drop(&mut self) {
+        if self.can_free {
+            unsafe { paste! { sys::[<$name _free>](self.vec) } };
+            self.vec = ::std::ptr::null_mut();
+        }
+    }
+}
+
+impl Debug for $rust_name {
+    #[allow(unused_must_use)]
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        let ptr = self.unwrap_shared();
+        if ptr.is_null() {
+            write!(f, "<null>")
+        } else {
+            write!(f, "[");
+            unsafe {
+                for x in 0..(*ptr).size {
+                    if x < (*ptr).size - 1 {
+                        write!(f, "{}, ", self.get(x));
+                    } else {
+                        write!(f, "{}", self.get(x));
+                    }
+                }
+            }
+            write!(f, "]")
+        }
+    }
+}
+
+impl FFI<sys::$name> for $rust_name {
+    fn wrap(vec: *mut sys::$name) -> Self {
+        Self {
+            vec,
+            can_free: true,
+        }
+    }
+
+    fn soft_wrap(vec: *mut sys::$name) -> Self {
+        Self {
+            vec,
+            can_free: false,
+        }
+    }
+
+    fn unwrap_shared(&self) -> *const sys::$name {
+        self.vec as *const _
+    }
+
+    fn unwrap_unique(&mut self) -> *mut sys::$name {
+        self.vec
+    }
+}
+
+impl $rust_name {
+    doc! {
+        concat!("create a new ", stringify!($rust_name), " with all elements set to zero"),
+        pub fn new(size: usize) -> Option<$rust_name> {
+            let tmp = unsafe { paste! { sys::[<$name _calloc>](size) } };
+
+            if tmp.is_null() {
+                None
+            } else {
+                Some($rust_name::wrap(tmp))
+            }
+        }
+    }
+
+    pub fn from_slice(slice: &[$rust_ty]) -> Option<$rust_name> {
+        let tmp = unsafe { paste! { sys::[<$name _alloc>](slice.len() as _) } };
+
+        if tmp.is_null() {
+            None
+        } else {
+            let mut v = Self::wrap(tmp);
+
+            for (pos, tmp) in slice.iter().enumerate() {
+                v.set(pos as _, *tmp);
+            }
+            Some(v)
+        }
+    }
+
+    pub fn len(&self) -> usize {
+        let ptr = self.unwrap_shared();
+        if ptr.is_null() {
+            0
+        } else {
+            unsafe { (*ptr).size }
+        }
+    }
+
+    /// This function returns the i-th element of a vector v. If i lies outside the allowed range
+    /// of 0 to n-1 then the error handler is invoked and 0 is returned.
+    pub fn get(&self, i: usize) -> $rust_ty {
+        unsafe { paste! { sys::[<$name _get>](self.unwrap_shared(), i) } }
+    }
+
+    /// This function sets the value of the i-th element of a vector v to x. If i lies outside the
+    /// allowed range of 0 to n-1 then the error handler is invoked.
+    pub fn set(&mut self, i: usize, x: $rust_ty) -> &mut $rust_name {
+        unsafe { paste! { sys::[<$name _set>](self.unwrap_unique(), i, x) } };
+        self
+    }
+
+    /// This function sets all the elements of the vector v to the value x.
+    pub fn set_all(&mut self, x: $rust_ty) -> &mut $rust_name {
+        unsafe { paste! { sys::[<$name _set_all>](self.unwrap_unique(), x) } };
+        self
+    }
+
+    /// This function sets all the elements of the vector v to zero.
+    pub fn set_zero(&mut self) -> &mut $rust_name {
+        unsafe { paste! { sys::[<$name _set_zero>](self.unwrap_unique()) } };
+        self
+    }
+
+    /// This function makes a basis vector by setting all the elements of the vector v to zero
+    /// except for the i-th element which is set to one.
+    pub fn set_basis(&mut self, i: usize) -> &mut $rust_name {
+        unsafe { paste! { sys::[<$name _set_basis>](self.unwrap_unique(), i) } };
+        self
+    }
+
+    /// This function copies the elements of the other vector into the self vector. The two vectors
+    /// must have the same length.
+    pub fn copy_from(&mut self, other: &$rust_name) -> Value {
+        Value::from(
+            unsafe { paste! { sys::[<$name _memcpy>](
+                self.unwrap_unique(),
+                other.unwrap_shared()) } })
+    }
+
+    /// This function copies the elements of the self vector into the other vector. The two vectors
+    /// must have the same length.
+    pub fn copy_to(&self, other: &mut $rust_name) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) } })
+    }
+
+    /// This function exchanges the elements of the vectors by copying. The two vectors must have
+    /// the same length.
+    pub fn swap(&mut self, other: &mut $rust_name) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique()) } })
+    }
+
+    /// This function exchanges the i-th and j-th elements of the vector v in-place.
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _swap_elements>](self.unwrap_unique(), i, j) } })
+    }
+
+    /// This function reverses the order of the elements of the vector v.
+    pub fn reverse(&mut self) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _reverse>](self.unwrap_unique()) } })
+    }
+
+    /// This function adds the elements of the other vector to the elements of the self vector.
+    /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors
+    /// must have the same length.
+    pub fn add(&mut self, other: &$rust_name) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) } })
+    }
+
+    /// This function subtracts the elements of the self vector from the elements of the other
+    /// vector. The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two
+    /// vectors must have the same length.
+    pub fn sub(&mut self, other: &$rust_name) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) } })
+    }
+
+    /// This function multiplies the elements of the self vector a by the elements of the other
+    /// vector. The result `a_i <- a_i * b_i` is stored in self and other remains unchanged. The two
+    /// vectors must have the same length.
+    pub fn mul(&mut self, other: &$rust_name) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared()) } })
+    }
+
+    /// This function divides the elements of the self vector by the elements of the other vector.
+    /// The result `a_i <- a_i / b_i` is stored in self and other remains unchanged. The two vectors
+    /// must have the same length.
+    pub fn div(&mut self, other: &$rust_name) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared()) } })
+    }
+
+    /// This function multiplies the elements of the self vector by the constant factor x. The
+    /// result `a_i <- a_i` is stored in `self`.
+    pub fn scale(&mut self, x: $rust_ty) -> Value {
+        Value::from(unsafe { paste! { sys::[<$name _scale>](self.unwrap_unique(), x) } })
+    }
+
+    /// This function adds the constant value x to the elements of the self vector. The result
+    /// `a_i <- a_i + x` is stored in `self`.
+    pub fn add_constant(&mut self, x: $rust_ty) -> Value {
+        // Funny bug: here it expects a f64 and not a f32 for gsl_vector_float...
+        Value::from(unsafe { paste! { sys::[<$name _add_constant>](self.unwrap_unique(), x as _) } })
+    }
+
+    /// This function returns the maximum value in the self vector.
+    pub fn max(&self) -> $rust_ty {
+        unsafe { paste! { sys::[<$name _max>](self.unwrap_shared()) } }
+    }
+
+    /// This function returns the minimum value in the self vector.
+    pub fn min(&self) -> $rust_ty {
+        unsafe { paste! { sys::[<$name _min>](self.unwrap_shared()) } }
+    }
+
+    /// This function returns the minimum and maximum values in the self vector.
+    pub fn minmax(&self) -> ($rust_ty, $rust_ty) {
+        let mut min_out = 0 as _;
+        let mut max_out = 0 as _;
+
+        unsafe {
+            paste! { sys::[<$name _minmax>](self.unwrap_shared(), &mut min_out, &mut max_out) };
+        }
+        (min_out, max_out)
+    }
+
+    /// This function returns the index of the maximum value in the self vector.
+    /// When there are several equal maximum elements then the lowest index is returned.
+    pub fn max_index(&self) -> usize {
+        unsafe { paste! { sys::[<$name _max_index>](self.unwrap_shared()) } }
+    }
+
+    /// This function returns the index of the minimum value in the self vector.
+    /// When there are several equal minimum elements then the lowest index is returned.
+    pub fn min_index(&self) -> usize {
+        unsafe { paste! { sys::[<$name _min_index>](self.unwrap_shared()) } }
+    }
+
+    /// This function returns the indices of the minimum and maximum values in the self vector.
+    /// When there are several equal minimum or maximum elements then the lowest indices are
+    /// returned.
+    pub fn minmax_index(&self) -> (usize, usize) {
+        let mut imin = 0;
+        let mut imax = 0;
+
+        unsafe { paste! { sys::[<$name _minmax_index>](self.unwrap_shared(), &mut imin, &mut imax) } };
+        (imin, imax)
+    }
+
+    /// This function returns true if all the elements of the self vector are equal to 0.
+    pub fn is_null(&self) -> bool {
+        unsafe { paste! { sys::[<$name _isnull>](self.unwrap_shared()) == 1 } }
+    }
+
+    /// This function returns true if all the elements of the self vector are stricly positive.
+    pub fn is_pos(&self) -> bool {
+        unsafe { paste! { sys::[<$name _ispos>](self.unwrap_shared()) == 1 } }
+    }
+
+    /// This function returns true if all the elements of the self vector are stricly negative.
+    pub fn is_neg(&self) -> bool {
+        unsafe { paste! { sys::[<$name _isneg>](self.unwrap_shared()) == 1 } }
+    }
+
+    /// This function returns true if all the elements of the self vector are stricly non-negative.
+    pub fn is_non_neg(&self) -> bool {
+        unsafe { paste! { sys::[<$name _isnonneg>](self.unwrap_shared()) == 1 } }
+    }
+
+    pub fn equal(&self, other: &$rust_name) -> bool {
+        unsafe { paste! { sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1 } }
+    }
+
+    // I'll find a way to do that later
+    /*pub fn as_slice<'a>(&self) -> &'a [f64] {
+        unsafe {
+            if self.unwrap_unique().is_null() {
+                let tmp : Vec<f64> = Vec::new();
+
+                tmp.as_ref()
+            } else {
+                let tmp : CSlice<f64> = CSlice::new((*self.unwrap_unique()).data, (*self.unwrap_unique()).size as usize);
+
+                tmp.as_ref()
+            }
+        }
+    }*/
+
+    pub fn clone(&self) -> Option<$rust_name> {
+        let ptr = self.unwrap_shared();
+        if ptr.is_null() {
+            None
+        } else {
+            unsafe {
+                match $rust_name::new((*ptr).size) {
+                    Some(mut v) => {
+                        v.copy_from(self);
+                        Some(v)
+                    }
+                    None => None,
+                }
+            }
+        }
+    }
+}
+
+paste! {
+pub struct [<$rust_name View>]<'a> {
+    v: sys::[<$name _view>],
+    #[allow(dead_code)]
+    phantom: &'a (),
+}
+
+impl<'a> [<$rust_name View>]<'a> {
     /// These functions return a vector view of a subvector of another vector v. The start of the new vector is offset by offset elements
     /// from the start of the original vector. The new vector has n elements. Mathematically, the i-th element of the new vector v’ is given by,
     ///
@@ -56,10 +374,11 @@ impl VectorView {
     /// in use.
     ///
     /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be used for vectors which are declared const.
-    pub fn from_vector(v: &VectorF64, offset: usize, n: usize) -> VectorView {
+    pub fn from_vector(v: &'a mut $rust_name, offset: usize, n: usize) -> Self {
         unsafe {
-            VectorView {
-                v: sys::gsl_vector_subvector(v.vec, offset, n),
+            Self {
+                v: sys::[<$name _subvector>](v.unwrap_unique(), offset, n),
+                phantom: &(),
             }
         }
     }
@@ -90,14 +409,15 @@ impl VectorView {
     /// The function gsl_vector_const_subvector_with_stride is equivalent to gsl_vector_subvector_with_stride but can be used for vectors which
     /// are declared const.
     pub fn from_vector_with_stride(
-        v: &VectorF64,
+        v: &'a mut $rust_name,
         offset: usize,
         stride: usize,
         n: usize,
-    ) -> VectorView {
+    ) -> Self {
         unsafe {
-            VectorView {
-                v: sys::gsl_vector_subvector_with_stride(v.vec, offset, stride, n),
+            Self {
+                v: sys::[<$name _subvector_with_stride>](v.vec, offset, stride, n),
+                phantom: &(),
             }
         }
     }
@@ -114,10 +434,11 @@ impl VectorView {
     /// should not be deallocated while the view is still in use.
     ///
     /// The function gsl_vector_const_view_array is equivalent to gsl_vector_view_array but can be used for arrays which are declared const.
-    pub fn from_array(base: &mut [f64]) -> VectorView {
+    pub fn from_array(base: &'a mut [f64]) -> Self {
         unsafe {
-            VectorView {
-                v: sys::gsl_vector_view_array(base.as_mut_ptr(), base.len() as _),
+            Self {
+                v: sys::[<$name _view_array>](base.as_mut_ptr() as _, base.len() as _),
+                phantom: &(),
             }
         }
     }
@@ -135,606 +456,33 @@ impl VectorView {
     ///
     /// The function gsl_vector_const_view_array_with_stride is equivalent to gsl_vector_view_array_with_stride but can be used for arrays
     /// which are declared const.
-    pub fn from_array_with_stride(base: &mut [f64], stride: usize) -> VectorView {
+    pub fn from_array_with_stride(base: &'a mut [$rust_ty], stride: usize) -> Self {
         unsafe {
-            VectorView {
-                v: sys::gsl_vector_view_array_with_stride(
+            Self {
+                v: sys::[<$name _view_array_with_stride>](
                     base.as_mut_ptr(),
                     stride,
                     base.len() as _,
                 ),
+                phantom: &(),
             }
         }
     }
 
-    pub fn vector(&mut self) -> VectorF64 {
-        unsafe {
-            VectorF64 {
-                vec: ::std::mem::transmute(&mut self.v),
-                can_free: false,
-            }
-        }
-    }
-}
-
-pub struct VectorF32 {
-    vec: *mut sys::gsl_vector_float,
-    can_free: bool,
-}
-
-impl VectorF32 {
-    /// create a new VectorF32 with all elements set to zero
-    pub fn new(size: usize) -> Option<VectorF32> {
-        let tmp = unsafe { sys::gsl_vector_float_calloc(size) };
-
-        if tmp.is_null() {
-            None
-        } else {
-            Some(VectorF32::wrap(tmp))
-        }
-    }
-
-    pub fn from_slice(slice: &[f32]) -> Option<VectorF32> {
-        let tmp = unsafe { sys::gsl_vector_float_alloc(slice.len() as _) };
-
-        if tmp.is_null() {
-            None
-        } else {
-            let mut v = VectorF32::wrap(tmp);
-
-            for (pos, tmp) in slice.iter().enumerate() {
-                v.set(pos as _, *tmp);
-            }
-            Some(v)
-        }
-    }
-
-    pub fn len(&self) -> usize {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
-            0
-        } else {
-            unsafe { (*ptr).size }
-        }
-    }
-
-    /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> f32 {
-        unsafe { sys::gsl_vector_float_get(self.unwrap_shared(), i) }
-    }
-
-    /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&mut self, i: usize, x: f32) -> &mut VectorF32 {
-        unsafe { sys::gsl_vector_float_set(self.unwrap_unique(), i, x) };
-        self
-    }
-
-    /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&mut self, x: f32) -> &mut VectorF32 {
-        unsafe { sys::gsl_vector_float_set_all(self.unwrap_unique(), x) };
-        self
-    }
-
-    /// This function sets all the elements of the vector v to zero.
-    pub fn set_zero(&mut self) -> &mut VectorF32 {
-        unsafe { sys::gsl_vector_float_set_zero(self.unwrap_unique()) };
-        self
-    }
-
-    /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&mut self, i: usize) -> &mut VectorF32 {
-        unsafe { sys::gsl_vector_float_set_basis(self.unwrap_unique(), i) };
-        self
-    }
-
-    /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&mut self, other: &VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_memcpy(self.unwrap_unique(), other.unwrap_shared())
-        })
-    }
-
-    /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &mut VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_memcpy(other.unwrap_unique(), self.unwrap_shared())
-        })
-    }
-
-    /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&mut self, other: &mut VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_swap(other.unwrap_unique(), self.unwrap_unique())
-        })
-    }
-
-    /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
-        Value::from(unsafe { sys::gsl_vector_float_swap_elements(self.unwrap_unique(), i, j) })
-    }
-
-    /// This function reverses the order of the elements of the vector v.
-    pub fn reverse(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_vector_float_reverse(self.unwrap_unique()) })
-    }
-
-    /// This function adds the elements of the other vector to the elements of the self vector.
-    /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&mut self, other: &VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_add(self.unwrap_unique(), other.unwrap_shared())
-        })
-    }
-
-    /// This function subtracts the elements of the self vector from the elements of the other vector.
-    /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&mut self, other: &VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_sub(self.unwrap_unique(), other.unwrap_shared())
-        })
-    }
-
-    /// This function multiplies the elements of the self vector a by the elements of the other vector.
-    /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&mut self, other: &VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_mul(self.unwrap_unique(), other.unwrap_shared())
-        })
-    }
-
-    /// This function divides the elements of the self vector by the elements of the other vector.
-    /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&mut self, other: &VectorF32) -> Value {
-        Value::from(unsafe {
-            sys::gsl_vector_float_div(self.unwrap_unique(), other.unwrap_shared())
-        })
-    }
-
-    /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&mut self, x: f32) -> Value {
-        Value::from(unsafe { sys::gsl_vector_float_scale(self.unwrap_unique(), x) })
-    }
-
-    /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&mut self, x: f32) -> Value {
-        Value::from(unsafe { sys::gsl_vector_float_add_constant(self.unwrap_unique(), x as _) })
-    }
-
-    /// This function returns the maximum value in the self vector.
-    pub fn max(&self) -> f32 {
-        unsafe { sys::gsl_vector_float_max(self.unwrap_shared()) }
-    }
-
-    /// This function returns the minimum value in the self vector.
-    pub fn min(&self) -> f32 {
-        unsafe { sys::gsl_vector_float_min(self.unwrap_shared()) }
-    }
-
-    /// This function returns the minimum and maximum values in the self vector, storing them in min_out and max_out.
-    pub fn minmax(&self) -> (f32, f32) {
-        let mut min_out = 0.;
-        let mut max_out = 0.;
-
-        unsafe {
-            sys::gsl_vector_float_minmax(self.unwrap_shared(), &mut min_out, &mut max_out);
-        }
-        (min_out, max_out)
-    }
-
-    /// This function returns the index of the maximum value in the self vector.
-    /// When there are several equal maximum elements then the lowest index is returned.
-    pub fn max_index(&self) -> usize {
-        unsafe { sys::gsl_vector_float_max_index(self.unwrap_shared()) }
-    }
-
-    /// This function returns the index of the minimum value in the self vector.
-    /// When there are several equal minimum elements then the lowest index is returned.
-    pub fn min_index(&self) -> usize {
-        unsafe { sys::gsl_vector_float_min_index(self.unwrap_shared()) }
-    }
-
-    /// This function returns the indices of the minimum and maximum values in the self vector, storing them in imin and imax.
-    /// When there are several equal minimum or maximum elements then the lowest indices are returned.
-    pub fn minmax_index(&self) -> (usize, usize) {
-        let mut imin = 0;
-        let mut imax = 0;
-
-        unsafe { sys::gsl_vector_float_minmax_index(self.unwrap_shared(), &mut imin, &mut imax) };
-        (imin, imax)
-    }
-
-    /// This function returns true if all the elements of the self vector are equal to 0.
-    pub fn is_null(&self) -> bool {
-        unsafe { sys::gsl_vector_float_isnull(self.unwrap_shared()) == 1 }
-    }
-
-    /// This function returns true if all the elements of the self vector are stricly positive.
-    pub fn is_pos(&self) -> bool {
-        unsafe { sys::gsl_vector_float_ispos(self.unwrap_shared()) == 1 }
-    }
-
-    /// This function returns true if all the elements of the self vector are stricly negative.
-    pub fn is_neg(&self) -> bool {
-        unsafe { sys::gsl_vector_float_isneg(self.unwrap_shared()) == 1 }
-    }
-
-    /// This function returns true if all the elements of the self vector are stricly non-negative.
-    pub fn is_non_neg(&self) -> bool {
-        unsafe { sys::gsl_vector_float_isnonneg(self.unwrap_shared()) == 1 }
-    }
-
-    pub fn equal(&self, other: &VectorF32) -> bool {
-        unsafe { sys::gsl_vector_float_equal(self.unwrap_shared(), other.unwrap_shared()) == 1 }
-    }
-
-    // I'll find a way to do that later
-    /*pub fn as_slice<'a>(&self) -> &'a [f32] {
-        unsafe {
-            if self.unwrap_unique().is_null() {
-                let tmp : Vec<f32> = Vec::new();
-
-                tmp.as_ref()
-            } else {
-                let tmp : CSlice<f32> = CSlice::new((*self.unwrap_unique()).data, (*self.unwrap_unique()).size as usize);
-
-                tmp.as_ref()
-            }
-        }
-    }*/
-
-    pub fn clone(&self) -> Option<VectorF32> {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
-            None
-        } else {
+    pub fn vector(&mut self) -> $rust_name {
+        $rust_name::soft_wrap(
             unsafe {
-                match VectorF32::new((*ptr).size) {
-                    Some(mut v) => {
-                        v.copy_from(self);
-                        Some(v)
-                    }
-                    None => None,
-                }
+                ::std::mem::transmute::<&mut sys::[<$name _view>], &mut sys::$name>(&mut self.v) as *mut _
             }
-        }
+        )
     }
+} // end of impl block
+} // end of paste! block
+
+    ); // end of gsl_vec macro
 }
 
-impl Drop for VectorF32 {
-    fn drop(&mut self) {
-        if self.can_free {
-            unsafe { sys::gsl_vector_float_free(self.vec) };
-            self.vec = ::std::ptr::null_mut();
-        }
-    }
-}
-
-impl Debug for VectorF32 {
-    #[allow(unused_must_use)]
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
-            write!(f, "<null>")
-        } else {
-            write!(f, "[");
-            unsafe {
-                for x in 0..(*ptr).size {
-                    if x < (*ptr).size - 1 {
-                        write!(f, "{}, ", self.get(x));
-                    } else {
-                        write!(f, "{}", self.get(x));
-                    }
-                }
-            }
-            write!(f, "]")
-        }
-    }
-}
-
-impl FFI<sys::gsl_vector_float> for VectorF32 {
-    fn wrap(vec: *mut sys::gsl_vector_float) -> Self {
-        Self {
-            vec,
-            can_free: true,
-        }
-    }
-
-    fn soft_wrap(vec: *mut sys::gsl_vector_float) -> Self {
-        Self {
-            vec,
-            can_free: false,
-        }
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_vector_float {
-        self.unwrap_unique() as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_vector_float {
-        self.unwrap_unique()
-    }
-}
-
-pub struct VectorF64 {
-    vec: *mut sys::gsl_vector,
-    can_free: bool,
-}
-
-impl VectorF64 {
-    /// create a new VectorF64 with all elements set to zero
-    pub fn new(size: usize) -> Option<VectorF64> {
-        let tmp = unsafe { sys::gsl_vector_calloc(size) };
-
-        if tmp.is_null() {
-            None
-        } else {
-            Some(VectorF64::wrap(tmp))
-        }
-    }
-
-    pub fn from_slice(slice: &[f64]) -> Option<VectorF64> {
-        let tmp = unsafe { sys::gsl_vector_alloc(slice.len() as _) };
-
-        if tmp.is_null() {
-            None
-        } else {
-            let mut v = VectorF64::wrap(tmp);
-
-            for (pos, tmp) in slice.iter().enumerate() {
-                v.set(pos as _, *tmp);
-            }
-            Some(v)
-        }
-    }
-
-    pub fn len(&self) -> usize {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
-            0
-        } else {
-            unsafe { (*ptr).size }
-        }
-    }
-
-    /// This function returns the i-th element of a vector v. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked and 0 is returned.
-    pub fn get(&self, i: usize) -> f64 {
-        unsafe { sys::gsl_vector_get(self.unwrap_shared(), i) }
-    }
-
-    /// This function sets the value of the i-th element of a vector v to x. If i lies outside the allowed range of 0 to n-1 then the error handler is invoked.
-    pub fn set(&mut self, i: usize, x: f64) -> &mut VectorF64 {
-        unsafe { sys::gsl_vector_set(self.unwrap_unique(), i, x) };
-        self
-    }
-
-    /// This function sets all the elements of the vector v to the value x.
-    pub fn set_all(&mut self, x: f64) -> &mut VectorF64 {
-        unsafe { sys::gsl_vector_set_all(self.unwrap_unique(), x) };
-        self
-    }
-
-    /// This function sets all the elements of the vector v to zero.
-    pub fn set_zero(&mut self) -> &mut VectorF64 {
-        unsafe { sys::gsl_vector_set_zero(self.unwrap_unique()) };
-        self
-    }
-
-    /// This function makes a basis vector by setting all the elements of the vector v to zero except for the i-th element which is set to one.
-    pub fn set_basis(&mut self, i: usize) -> &mut VectorF64 {
-        unsafe { sys::gsl_vector_set_basis(self.unwrap_unique(), i) };
-        self
-    }
-
-    /// This function copies the elements of the other vector into the self vector. The two vectors must have the same length.
-    pub fn copy_from(&mut self, other: &VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_memcpy(self.unwrap_unique(), other.unwrap_unique()) })
-    }
-
-    /// This function copies the elements of the self vector into the other vector. The two vectors must have the same length.
-    pub fn copy_to(&self, other: &mut VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_memcpy(other.unwrap_unique(), self.unwrap_shared()) })
-    }
-
-    /// This function exchanges the elements of the vectors by copying. The two vectors must have the same length.
-    pub fn swap(&mut self, other: &mut VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_swap(other.unwrap_unique(), self.unwrap_unique()) })
-    }
-
-    /// This function exchanges the i-th and j-th elements of the vector v in-place.
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
-        Value::from(unsafe { sys::gsl_vector_swap_elements(self.unwrap_unique(), i, j) })
-    }
-
-    /// This function reverses the order of the elements of the vector v.
-    pub fn reverse(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_vector_reverse(self.unwrap_unique()) })
-    }
-
-    /// This function adds the elements of the other vector to the elements of the self vector.
-    /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn add(&mut self, other: &VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_add(self.unwrap_unique(), other.unwrap_shared()) })
-    }
-
-    /// This function subtracts the elements of the self vector from the elements of the other vector.
-    /// The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn sub(&mut self, other: &VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_sub(self.unwrap_unique(), other.unwrap_shared()) })
-    }
-
-    /// This function multiplies the elements of the self vector a by the elements of the other vector.
-    /// The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn mul(&mut self, other: &VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_mul(self.unwrap_unique(), other.unwrap_shared()) })
-    }
-
-    /// This function divides the elements of the self vector by the elements of the other vector.
-    /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors must have the same length.
-    pub fn div(&mut self, other: &VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_div(self.unwrap_unique(), other.unwrap_shared()) })
-    }
-
-    /// This function multiplies the elements of the self vector by the constant factor x. The result a_i <- a_i is stored in self.
-    pub fn scale(&mut self, x: f64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_scale(self.unwrap_unique(), x) })
-    }
-
-    /// This function adds the constant value x to the elements of the self vector. The result a_i <- a_i + x is stored in self.
-    pub fn add_constant(&mut self, x: f64) -> Value {
-        Value::from(unsafe { sys::gsl_vector_add_constant(self.unwrap_unique(), x) })
-    }
-
-    /// This function returns the maximum value in the self vector.
-    pub fn max(&self) -> f64 {
-        unsafe { sys::gsl_vector_max(self.unwrap_shared()) }
-    }
-
-    /// This function returns the minimum value in the self vector.
-    pub fn min(&self) -> f64 {
-        unsafe { sys::gsl_vector_min(self.unwrap_shared()) }
-    }
-
-    /// This function returns the minimum and maximum values in the self vector, storing them in min_out and max_out.
-    pub fn minmax(&self) -> (f64, f64) {
-        let mut min_out = 0.;
-        let mut max_out = 0.;
-
-        unsafe {
-            sys::gsl_vector_minmax(self.unwrap_shared(), &mut min_out, &mut max_out);
-        }
-        (min_out, max_out)
-    }
-
-    /// This function returns the index of the maximum value in the self vector.
-    /// When there are several equal maximum elements then the lowest index is returned.
-    pub fn max_index(&self) -> usize {
-        unsafe { sys::gsl_vector_max_index(self.unwrap_shared()) }
-    }
-
-    /// This function returns the index of the minimum value in the self vector.
-    /// When there are several equal minimum elements then the lowest index is returned.
-    pub fn min_index(&self) -> usize {
-        unsafe { sys::gsl_vector_min_index(self.unwrap_shared()) }
-    }
-
-    /// This function returns the indices of the minimum and maximum values in the self vector, storing them in imin and imax.
-    /// When there are several equal minimum or maximum elements then the lowest indices are returned.
-    pub fn minmax_index(&self) -> (usize, usize) {
-        let mut imin = 0;
-        let mut imax = 0;
-
-        unsafe { sys::gsl_vector_minmax_index(self.unwrap_shared(), &mut imin, &mut imax) };
-        (imin, imax)
-    }
-
-    /// This function returns true if all the elements of the self vector are equal to 0.
-    pub fn is_null(&self) -> bool {
-        unsafe { sys::gsl_vector_isnull(self.unwrap_shared()) == 1 }
-    }
-
-    /// This function returns true if all the elements of the self vector are stricly positive.
-    pub fn is_pos(&self) -> bool {
-        unsafe { sys::gsl_vector_ispos(self.unwrap_shared()) == 1 }
-    }
-
-    /// This function returns true if all the elements of the self vector are stricly negative.
-    pub fn is_neg(&self) -> bool {
-        unsafe { sys::gsl_vector_isneg(self.unwrap_shared()) == 1 }
-    }
-
-    /// This function returns true if all the elements of the self vector are stricly non-negative.
-    pub fn is_non_neg(&self) -> bool {
-        unsafe { sys::gsl_vector_isnonneg(self.unwrap_shared()) == 1 }
-    }
-
-    pub fn equal(&self, other: &VectorF64) -> bool {
-        unsafe { sys::gsl_vector_equal(self.unwrap_shared(), other.unwrap_shared()) == 1 }
-    }
-
-    // I'll find a way to do that later
-    /*pub fn as_slice<'a>(&self) -> &'a [f64] {
-        unsafe {
-            if self.unwrap_unique().is_null() {
-                let tmp : Vec<f64> = Vec::new();
-
-                tmp.as_ref()
-            } else {
-                let tmp : CSlice<f64> = CSlice::new((*self.unwrap_unique()).data, (*self.unwrap_unique()).size as usize);
-
-                tmp.as_ref()
-            }
-        }
-    }*/
-
-    pub fn clone(&self) -> Option<VectorF64> {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
-            None
-        } else {
-            unsafe {
-                match VectorF64::new((*ptr).size) {
-                    Some(mut v) => {
-                        v.copy_from(self);
-                        Some(v)
-                    }
-                    None => None,
-                }
-            }
-        }
-    }
-}
-
-impl Drop for VectorF64 {
-    fn drop(&mut self) {
-        if self.can_free {
-            unsafe { sys::gsl_vector_free(self.vec) };
-            self.vec = ::std::ptr::null_mut();
-        }
-    }
-}
-
-impl Debug for VectorF64 {
-    #[allow(unused_must_use)]
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
-            write!(f, "<null>")
-        } else {
-            write!(f, "[");
-            unsafe {
-                for x in 0..(*ptr).size {
-                    if x < (*ptr).size - 1 {
-                        write!(f, "{}, ", self.get(x));
-                    } else {
-                        write!(f, "{}", self.get(x));
-                    }
-                }
-            }
-            write!(f, "]")
-        }
-    }
-}
-
-impl FFI<sys::gsl_vector> for VectorF64 {
-    fn wrap(vec: *mut sys::gsl_vector) -> Self {
-        Self {
-            vec,
-            can_free: true,
-        }
-    }
-
-    fn soft_wrap(vec: *mut sys::gsl_vector) -> Self {
-        Self {
-            vec,
-            can_free: false,
-        }
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_vector {
-        self.unwrap_unique() as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_vector {
-        self.unwrap_unique()
-    }
-}
+gsl_vec!(VectorF32, gsl_vector_float, f32);
+gsl_vec!(VectorF64, gsl_vector, f64);
+gsl_vec!(VectorI32, gsl_vector_int, i32);
+gsl_vec!(VectorU32, gsl_vector_uint, u32);
