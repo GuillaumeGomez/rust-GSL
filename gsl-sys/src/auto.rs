@@ -418,11 +418,15 @@ pub struct gsl_vector_long {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_view;
+pub struct _gsl_vector_long_view {
+    pub vector: gsl_vector_long,
+}
 pub type gsl_vector_long_view = _gsl_vector_long_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_const_view;
+pub struct _gsl_vector_long_const_view {
+    pub vector: gsl_vector_long,
+}
 pub type gsl_vector_long_const_view = _gsl_vector_long_const_view;
 extern "C" {
     pub fn gsl_vector_long_alloc(n: usize) -> *mut gsl_vector_long;
@@ -1129,11 +1133,15 @@ pub struct gsl_vector_long_double {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_double_view;
+pub struct _gsl_vector_long_double_view {
+    pub vector: gsl_vector_long_double,
+}
 pub type gsl_vector_long_double_view = _gsl_vector_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_long_double_const_view;
+pub struct _gsl_vector_long_double_const_view {
+    pub vector: gsl_vector_long_double,
+}
 pub type gsl_vector_long_double_const_view = _gsl_vector_long_double_const_view;
 extern "C" {
     pub fn gsl_vector_long_double_alloc(n: usize) -> *mut gsl_vector_long_double;
@@ -1473,11 +1481,15 @@ pub struct gsl_vector_complex_long_double {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_long_double_view;
+pub struct _gsl_vector_complex_long_double_view {
+    pub vector: gsl_vector_complex_long_double,
+}
 pub type gsl_vector_complex_long_double_view = _gsl_vector_complex_long_double_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_long_double_const_view;
+pub struct _gsl_vector_complex_long_double_const_view {
+    pub vector: gsl_vector_complex_long_double,
+}
 pub type gsl_vector_complex_long_double_const_view = _gsl_vector_complex_long_double_const_view;
 extern "C" {
     pub fn gsl_vector_complex_long_double_alloc(n: usize) -> *mut gsl_vector_complex_long_double;
@@ -4299,11 +4311,15 @@ pub struct gsl_vector {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_view;
+pub struct _gsl_vector_view {
+    pub vector: gsl_vector,
+}
 pub type gsl_vector_view = _gsl_vector_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_const_view;
+pub struct _gsl_vector_const_view {
+    pub vector: gsl_vector,
+}
 pub type gsl_vector_const_view = _gsl_vector_const_view;
 extern "C" {
     pub fn gsl_vector_alloc(n: usize) -> *mut gsl_vector;
@@ -4584,11 +4600,15 @@ pub struct gsl_vector_complex {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_view;
+pub struct _gsl_vector_complex_view {
+    pub vector: gsl_vector_complex,
+}
 pub type gsl_vector_complex_view = _gsl_vector_complex_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_const_view;
+pub struct _gsl_vector_complex_const_view {
+    pub vector: gsl_vector_complex,
+}
 pub type gsl_vector_complex_const_view = _gsl_vector_complex_const_view;
 extern "C" {
     pub fn gsl_vector_complex_alloc(n: usize) -> *mut gsl_vector_complex;
@@ -5538,11 +5558,15 @@ pub struct gsl_vector_float {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_float_view;
+pub struct _gsl_vector_float_view {
+    pub vector: gsl_vector_float,
+}
 pub type gsl_vector_float_view = _gsl_vector_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_float_const_view;
+pub struct _gsl_vector_float_const_view {
+    pub vector: gsl_vector_float,
+}
 pub type gsl_vector_float_const_view = _gsl_vector_float_const_view;
 extern "C" {
     pub fn gsl_vector_float_alloc(n: usize) -> *mut gsl_vector_float;
@@ -5864,11 +5888,15 @@ pub struct gsl_vector_complex_float {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_float_view;
+pub struct _gsl_vector_complex_float_view {
+    pub vector: gsl_vector_complex_float,
+}
 pub type gsl_vector_complex_float_view = _gsl_vector_complex_float_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_complex_float_const_view;
+pub struct _gsl_vector_complex_float_const_view {
+    pub vector: gsl_vector_complex_float,
+}
 pub type gsl_vector_complex_float_const_view = _gsl_vector_complex_float_const_view;
 extern "C" {
     pub fn gsl_vector_complex_float_alloc(n: usize) -> *mut gsl_vector_complex_float;
@@ -8799,11 +8827,15 @@ pub struct gsl_vector_ulong {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ulong_view;
+pub struct _gsl_vector_ulong_view {
+    pub vector: gsl_vector_ulong,
+}
 pub type gsl_vector_ulong_view = _gsl_vector_ulong_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ulong_const_view;
+pub struct _gsl_vector_ulong_const_view {
+    pub vector: gsl_vector_ulong,
+}
 pub type gsl_vector_ulong_const_view = _gsl_vector_ulong_const_view;
 extern "C" {
     pub fn gsl_vector_ulong_alloc(n: usize) -> *mut gsl_vector_ulong;
@@ -10471,11 +10503,15 @@ pub struct gsl_vector_uint {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uint_view;
+pub struct _gsl_vector_uint_view {
+    pub vector: gsl_vector_uint,
+}
 pub type gsl_vector_uint_view = _gsl_vector_uint_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uint_const_view;
+pub struct _gsl_vector_uint_const_view {
+    pub vector: gsl_vector_uint,
+}
 pub type gsl_vector_uint_const_view = _gsl_vector_uint_const_view;
 extern "C" {
     pub fn gsl_vector_uint_alloc(n: usize) -> *mut gsl_vector_uint;
@@ -11461,11 +11497,15 @@ pub struct gsl_vector_int {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_int_view;
+pub struct _gsl_vector_int_view {
+    pub vector: gsl_vector_int,
+}
 pub type gsl_vector_int_view = _gsl_vector_int_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_int_const_view;
+pub struct _gsl_vector_int_const_view {
+    pub vector: gsl_vector_int,
+}
 pub type gsl_vector_int_const_view = _gsl_vector_int_const_view;
 extern "C" {
     pub fn gsl_vector_int_alloc(n: usize) -> *mut gsl_vector_int;
@@ -12444,11 +12484,15 @@ pub struct gsl_vector_ushort {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ushort_view;
+pub struct _gsl_vector_ushort_view {
+    pub vector: gsl_vector_ushort,
+}
 pub type gsl_vector_ushort_view = _gsl_vector_ushort_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_ushort_const_view;
+pub struct _gsl_vector_ushort_const_view {
+    pub vector: gsl_vector_ushort,
+}
 pub type gsl_vector_ushort_const_view = _gsl_vector_ushort_const_view;
 extern "C" {
     pub fn gsl_vector_ushort_alloc(n: usize) -> *mut gsl_vector_ushort;
@@ -13471,11 +13515,15 @@ pub struct gsl_vector_short {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_short_view;
+pub struct _gsl_vector_short_view {
+    pub vector: gsl_vector_short,
+}
 pub type gsl_vector_short_view = _gsl_vector_short_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_short_const_view;
+pub struct _gsl_vector_short_const_view {
+    pub vector: gsl_vector_short,
+}
 pub type gsl_vector_short_const_view = _gsl_vector_short_const_view;
 extern "C" {
     pub fn gsl_vector_short_alloc(n: usize) -> *mut gsl_vector_short;
@@ -14483,11 +14531,15 @@ pub struct gsl_vector_uchar {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uchar_view;
+pub struct _gsl_vector_uchar_view {
+    pub vector: gsl_vector_uchar,
+}
 pub type gsl_vector_uchar_view = _gsl_vector_uchar_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_uchar_const_view;
+pub struct _gsl_vector_uchar_const_view {
+    pub vector: gsl_vector_uchar,
+}
 pub type gsl_vector_uchar_const_view = _gsl_vector_uchar_const_view;
 extern "C" {
     pub fn gsl_vector_uchar_alloc(n: usize) -> *mut gsl_vector_uchar;
@@ -15493,11 +15545,15 @@ pub struct gsl_vector_char {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_char_view;
+pub struct _gsl_vector_char_view {
+    pub vector: gsl_vector_char,
+}
 pub type gsl_vector_char_view = _gsl_vector_char_view;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _gsl_vector_char_const_view;
+pub struct _gsl_vector_char_const_view {
+    pub vector: gsl_vector_char,
+}
 pub type gsl_vector_char_const_view = _gsl_vector_char_const_view;
 extern "C" {
     pub fn gsl_vector_char_alloc(n: usize) -> *mut gsl_vector_char;
