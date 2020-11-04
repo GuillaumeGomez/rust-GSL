@@ -12,7 +12,7 @@ ffi_wrapper!(
 );
 
 impl RStatQuantileWorkspace {
-    pub fn alloc(p: f64) -> Option<Self> {
+    pub fn new(p: f64) -> Option<Self> {
         let s = unsafe { sys::gsl_rstat_quantile_alloc(p) };
         if s.is_null() {
             None
@@ -38,7 +38,7 @@ impl RStatQuantileWorkspace {
 ffi_wrapper!(RStatWorkspace, *mut sys::gsl_rstat_workspace, gsl_rstat_free);
 
 impl RStatWorkspace {
-    pub fn alloc() -> Option<Self> {
+    pub fn new() -> Option<Self> {
         let s = unsafe { sys::gsl_rstat_alloc() };
         if s.is_null() {
             None

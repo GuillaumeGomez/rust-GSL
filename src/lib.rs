@@ -125,6 +125,7 @@ pub mod psi;
 pub mod roots;
 pub mod sort;
 pub mod statistics;
+pub mod stats;
 pub mod synchrotron;
 pub mod transport;
 pub mod trigonometric;

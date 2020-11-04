@@ -12,7 +12,7 @@ ffi_wrapper!(
 );
 
 impl MultifitLinearWorkspace {
-    pub fn alloc(n: usize, p: usize) -> Option<Self> {
+    pub fn new(n: usize, p: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_multifit_linear_alloc(n, p) };
         if s.is_null() {
             None

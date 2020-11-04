@@ -24,7 +24,7 @@ ffi_wrapper!(
 );
 
 impl MultilargeLinearWorkspace {
-    pub fn alloc(t: MultilargeLinearType, p: usize) -> Option<Self> {
+    pub fn new(t: MultilargeLinearType, p: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_multilarge_linear_alloc(t.unwrap_shared(), p) };
         if s.is_null() {
             None

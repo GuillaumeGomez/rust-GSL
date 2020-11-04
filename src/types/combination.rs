@@ -19,15 +19,14 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 !*/
 
 use crate::Value;
-use c_vec::CSlice;
-use ffi::{self, FFI};
-use std::fmt;
-use std::fmt::{Debug, Formatter};
+use ffi::FFI;
+use std::fmt::{self, Debug, Formatter};
 
-pub struct Combination {
-    inner: *mut sys::gsl_combination,
-    data: CSlice<usize>,
-}
+ffi_wrapper!(
+    Combination,
+    *mut sys::gsl_combination,
+    gsl_combination_free
+);
 
 impl Combination {
     /// This function allocates memory for a new combination with parameters n, k. The combination
@@ -35,50 +34,26 @@ impl Combination {
     /// `Combination::new_init_first` if you want to create a combination which is initialized to
     /// the lexicographically first combination. A null pointer is returned if insufficient memory
     /// is available to create the combination.
-    pub fn new(n: usize, k: usize) -> Option<Combination> {
+    pub fn new(n: usize, k: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_combination_alloc(n, k) };
 
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                if !(*tmp).data.is_null() {
-                    Some(Combination {
-                        inner: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as _),
-                    })
-                } else {
-                    Some(Combination {
-                        inner: tmp,
-                        data: CSlice::new(tmp as *mut _, 0usize),
-                    })
-                }
-            }
+            Some(Self::wrap(tmp))
         }
     }
 
     /// This function allocates memory for a new combination with parameters n, k and initializes it
     /// to the lexicographically first combination. A null pointer is returned if insufficient
     /// memory is available to create the combination.
-    pub fn new_init_first(n: usize, k: usize) -> Option<Combination> {
+    pub fn new_clean(n: usize, k: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                if !(*tmp).data.is_null() {
-                    Some(Combination {
-                        inner: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as _),
-                    })
-                } else {
-                    Some(Combination {
-                        inner: tmp,
-                        data: CSlice::new(tmp as *mut _, 0usize),
-                    })
-                }
-            }
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -118,14 +93,18 @@ impl Combination {
         unsafe { sys::gsl_combination_k(self.unwrap_shared()) }
     }
 
-    /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_slice<'r>(&'r self) -> &'r [usize] {
-        self.data.as_ref()
+    pub fn as_slice(&self) -> &[usize] {
+        unsafe {
+            let data = sys::gsl_combination_data(self.unwrap_shared());
+            ::std::slice::from_raw_parts(data, self.k())
+        }
     }
 
-    /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [usize] {
-        self.data.as_mut()
+    pub fn as_mut_slice(&mut self) -> &mut [usize] {
+        unsafe {
+            let data = sys::gsl_combination_data(self.unwrap_shared());
+            ::std::slice::from_raw_parts_mut(data, self.k())
+        }
     }
 
     /// This function checks that the combination self is valid. The k elements should lie in the
@@ -151,43 +130,16 @@ impl Combination {
     }
 }
 
-impl Drop for Combination {
-    fn drop(&mut self) {
-        unsafe { sys::gsl_combination_free(self.inner) };
-        self.inner = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<sys::gsl_combination> for Combination {
-    fn wrap(inner: *mut sys::gsl_combination) -> Self {
-        Self {
-            inner,
-            data: unsafe { CSlice::new((*inner).data, (*inner).k as _) },
-        }
-    }
-
-    fn soft_wrap(r: *mut sys::gsl_combination) -> Self {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(&self) -> *const sys::gsl_combination {
-        self.inner as *const _
-    }
-
-    fn unwrap_unique(&mut self) -> *mut sys::gsl_combination {
-        self.inner
-    }
-}
-
 impl Debug for Combination {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");
-        for tmp in 0..self.data.len() {
-            if tmp == 0 {
-                write!(f, "{}", self.data.get(tmp).unwrap());
+        let s = self.as_slice();
+        for (pos, v) in s.iter().enumerate() {
+            if pos == 0 {
+                write!(f, "{}", v).unwrap();
             } else {
-                write!(f, ", {}", self.data.get(tmp).unwrap());
+                write!(f, " {}", v).unwrap();
             }
         }
         write!(f, "]")

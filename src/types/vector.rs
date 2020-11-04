@@ -139,6 +139,14 @@ impl $rust_name {
         }
     }
 
+    pub fn data(&self) -> &[$rust_ty] {
+        unsafe { ::std::slice::from_raw_parts((*self.unwrap_shared()).data, self.len()) }
+    }
+
+    pub fn data_mut(&mut self) -> &mut [$rust_ty] {
+        unsafe { ::std::slice::from_raw_parts_mut((*self.unwrap_shared()).data, self.len()) }
+    }
+
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range
     /// of 0 to n-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: usize) -> $rust_ty {

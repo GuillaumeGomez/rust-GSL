@@ -160,9 +160,9 @@ impl Into<libc::c_int> for Value {
 impl From<libc::c_int> for Value {
     fn from(v: libc::c_int) -> Value {
         match v {
-            sys::GSL_SUCCESS => Self::Continue,
+            sys::GSL_SUCCESS => Self::Success,
             sys::GSL_FAILURE => Self::Failure,
-            sys::GSL_CONTINUE => Self::Success,
+            sys::GSL_CONTINUE => Self::Continue,
             sys::GSL_EDOM => Self::Domain,
             sys::GSL_ERANGE => Self::Range,
             sys::GSL_EFAULT => Self::Fault,

@@ -12,7 +12,7 @@ ffi_wrapper!(
 );
 
 impl FilterGaussianWorkspace {
-    pub fn alloc(K: usize) -> Option<Self> {
+    pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_gaussian_alloc(K) };
         if s.is_null() {
             None
@@ -54,7 +54,7 @@ ffi_wrapper!(
 );
 
 impl FilterMedianWorkspace {
-    pub fn alloc(K: usize) -> Option<Self> {
+    pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_median_alloc(K) };
         if s.is_null() {
             None
@@ -82,7 +82,7 @@ ffi_wrapper!(
 );
 
 impl FilterRMedianWorkspace {
-    pub fn alloc(K: usize) -> Option<Self> {
+    pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_rmedian_alloc(K) };
         if s.is_null() {
             None
@@ -110,7 +110,7 @@ ffi_wrapper!(
 );
 
 impl FilterImpulseWorkspace {
-    pub fn alloc(K: usize) -> Option<Self> {
+    pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_impulse_alloc(K) };
         if s.is_null() {
             None

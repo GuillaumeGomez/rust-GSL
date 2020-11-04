@@ -421,7 +421,7 @@ impl ODEiv2Control {
 
     /// This function returns a pointer to a newly allocated instance of a control function of type T. This function is only needed for
     /// defining new types of control functions. For most purposes the standard control functions described above should be sufficient.
-    pub fn alloc(t: &ODEiv2ControlType) -> Option<ODEiv2Control> {
+    pub fn new(t: ODEiv2ControlType) -> Option<ODEiv2Control> {
         let tmp = unsafe { sys::gsl_odeiv2_control_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
