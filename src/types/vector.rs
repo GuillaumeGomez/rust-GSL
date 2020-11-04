@@ -61,7 +61,7 @@ impl Debug for $rust_name {
         if ptr.is_null() {
             write!(f, "<null>")
         } else {
-            write!(f, "{:?}", self.as_slice())
+            write!(f, "{:?}", self.as_slice().expect("conversion to slice failed"))
         }
     }
 }
@@ -128,12 +128,22 @@ impl $rust_name {
         }
     }
 
-    pub fn as_slice(&self) -> &[$rust_ty] {
-        unsafe { ::std::slice::from_raw_parts((*self.unwrap_shared()).data, self.len()) }
+    pub fn as_slice(&self) -> Option<&[$rust_ty]> {
+        let ptr = unsafe { (*self.unwrap_shared()).data };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(unsafe { ::std::slice::from_raw_parts(ptr, self.len()) })
+        }
     }
 
-    pub fn as_slice_mut(&mut self) -> &mut [$rust_ty] {
-        unsafe { ::std::slice::from_raw_parts_mut((*self.unwrap_shared()).data, self.len()) }
+    pub fn as_slice_mut(&mut self) -> Option<&mut [$rust_ty]> {
+        let ptr = unsafe { (*self.unwrap_shared()).data };
+        if ptr.is_null() {
+            None
+        } else {
+            Some(unsafe { ::std::slice::from_raw_parts_mut(ptr, self.len()) })
+        }
     }
 
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range
@@ -333,6 +343,24 @@ pub struct [<$rust_name View>]<'a> {
 }
 
 impl<'a> [<$rust_name View>]<'a> {
+    #[doc(hidden)]
+    pub(crate) fn wrap<F: FnOnce(Option<Self>)>(v: sys::[<$name _view>], f: F) {
+        let tmp = Self {
+            v,
+            phantom: PhantomData,
+        };
+        let is_none = {
+            let v = &tmp.v.vector;
+            let tmp = $rust_name::soft_wrap(v as *const _ as usize as *mut _);
+            tmp.as_slice().is_none()
+        };
+        if is_none {
+            f(None)
+        } else {
+            f(Some(tmp))
+        }
+    }
+
     /// These functions return a vector view of a subvector of another vector v. The start of the
     /// new vector is offset by offset elements from the start of the original vector. The new
     /// vector has n elements. Mathematically, the i-th element of the new vector v’ is given by,
@@ -455,12 +483,14 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 
-    pub fn vector(&mut self) -> $rust_name {
-        $rust_name::soft_wrap(
-            unsafe {
-                ::std::mem::transmute::<&mut sys::[<$name _view>], &mut sys::$name>(&mut self.v) as *mut _
-            }
-        )
+    pub fn vector<F: FnOnce(Option<$rust_name>)>(&mut self, f: F) {
+        let v = &mut self.v.vector;
+        let tmp = $rust_name::soft_wrap(v as *mut _);
+        if tmp.as_slice().is_none() {
+            f(None)
+        } else {
+            f(Some(tmp))
+        }
     }
 } // end of impl block
 } // end of paste! block

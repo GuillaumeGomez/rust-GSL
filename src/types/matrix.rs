@@ -56,10 +56,11 @@ use ffi::{self, FFI};
 use std::fmt::{self, Debug, Formatter};
 use std::marker::PhantomData;
 use types::{VectorF32, VectorF64, VectorI32, VectorU32};
+use types::{VectorF32View, VectorF64View, VectorI32View, VectorU32View};
 
 macro_rules! gsl_matrix {
     ($rust_name:ident, $name:ident, $rust_ty:ident, $vec_name:ident, $vec_c_name:ident) => (
-
+paste! {
 pub struct $rust_name {
     mat: *mut sys::$name,
     can_free: bool,
@@ -69,7 +70,7 @@ impl $rust_name {
     doc! {
         concat!("Creates a new ", stringify!($rust_name), " with all elements set to zero"),
         pub fn new(n1: usize, n2: usize) -> Option<$rust_name> {
-            let tmp = unsafe { paste! { sys::[<$name _calloc>](n1, n2) } };
+            let tmp = unsafe { sys::[<$name _calloc>](n1, n2) };
 
             if tmp.is_null() {
                 None
@@ -83,26 +84,26 @@ impl $rust_name {
     /// If y or x lie outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler is
     /// invoked and 0 is returned.
     pub fn get(&self, y: usize, x: usize) -> $rust_ty {
-        unsafe { paste! { sys::[<$name _get>](self.unwrap_shared(), y, x) } }
+        unsafe { sys::[<$name _get>](self.unwrap_shared(), y, x) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
     /// If y or x lies outside the allowed range of 0 to n1-1 and 0 to n2-1 then the error handler
     /// is invoked.
     pub fn set(&mut self, y: usize, x: usize, value: $rust_ty) -> &$rust_name {
-        unsafe { paste! { sys::[<$name _set>](self.unwrap_unique(), y, x, value) } };
+        unsafe { sys::[<$name _set>](self.unwrap_unique(), y, x, value) };
         self
     }
 
     /// This function sets all the elements of the matrix to the value x.
     pub fn set_all(&mut self, x: $rust_ty) -> &$rust_name {
-        unsafe { paste! { sys::[<$name _set_all>](self.unwrap_unique(), x) } };
+        unsafe { sys::[<$name _set_all>](self.unwrap_unique(), x) };
         self
     }
 
     /// This function sets all the elements of the matrix to zero.
     pub fn set_zero(&mut self) -> &$rust_name {
-        unsafe { paste! { sys::[<$name _set_zero>](self.unwrap_unique()) } };
+        unsafe { sys::[<$name _set_zero>](self.unwrap_unique()) };
         self
     }
 
@@ -110,36 +111,36 @@ impl $rust_name {
     /// matrix, m(i,j) = \delta(i,j), i.e. a unit diagonal with all off-diagonal elements zero.
     /// This applies to both square and rectangular matrices.
     pub fn set_identity(&mut self) -> &$rust_name {
-        unsafe { paste! { sys::[<$name _set_identity>](self.unwrap_unique()) } };
+        unsafe { sys::[<$name _set_identity>](self.unwrap_unique()) };
         self
     }
 
     /// This function copies the elements of the other matrix into the self matrix. The two matrices
     /// must have the same size.
     pub fn copy_from(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _memcpy>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _memcpy>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices
     /// must have the same size.
     pub fn copy_to(&self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) })
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two
     /// matrices must have the same size.
     pub fn swap(&mut self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _swap>](self.unwrap_unique(), other.unwrap_unique()) } })
+        Value::from(unsafe { sys::[<$name _swap>](self.unwrap_unique(), other.unwrap_unique()) })
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
     pub fn get_row(&self, y: usize) -> Option<($vec_name, Value)> {
-        let tmp = unsafe { paste! { sys::[<$vec_c_name _alloc>](self.size2()) } };
+        let tmp = unsafe { sys::[<$vec_c_name _alloc>](self.size2()) };
 
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { paste! { sys::[<$name _get_row>](tmp, self.unwrap_shared(), y) } };
+            let ret = unsafe { sys::[<$name _get_row>](tmp, self.unwrap_shared(), y) };
 
             Some((ffi::FFI::wrap(tmp), Value::from(ret)))
         }
@@ -147,12 +148,12 @@ impl $rust_name {
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
     pub fn get_col(&self, x: usize) -> Option<($vec_name, Value)> {
-        let tmp = unsafe { paste! { sys::[<$vec_c_name _alloc>](self.size1()) } };
+        let tmp = unsafe { sys::[<$vec_c_name _alloc>](self.size1()) };
 
         if tmp.is_null() {
             None
         } else {
-            let ret = unsafe { paste! { sys::[<$name _get_col>](tmp, self.unwrap_shared(), x) } };
+            let ret = unsafe { sys::[<$name _get_col>](tmp, self.unwrap_shared(), x) };
 
             Some((ffi::FFI::wrap(tmp), Value::from(ret)))
         }
@@ -161,41 +162,41 @@ impl $rust_name {
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     pub fn set_row(&mut self, y: usize, v: &$vec_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _set_row>](self.unwrap_unique(), y, v.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _set_row>](self.unwrap_unique(), y, v.unwrap_shared()) })
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     pub fn set_col(&mut self, x: usize, v: &$vec_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _set_col>](self.unwrap_unique(), x, v.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _set_col>](self.unwrap_unique(), x, v.unwrap_shared()) })
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
     pub fn swap_rows(&mut self, y1: usize, y2: usize) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _swap_rows>](self.unwrap_unique(), y1, y2) } })
+        Value::from(unsafe { sys::[<$name _swap_rows>](self.unwrap_unique(), y1, y2) })
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
     pub fn swap_columns(&mut self, x1: usize, x2: usize) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _swap_columns>](self.unwrap_unique(), x1, x2) } })
+        Value::from(unsafe { sys::[<$name _swap_columns>](self.unwrap_unique(), x1, x2) })
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
     pub fn swap_row_col(&mut self, i: usize, j: usize) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _swap_rowcol>](self.unwrap_unique(), i, j) } })
+        Value::from(unsafe { sys::[<$name _swap_rowcol>](self.unwrap_unique(), i, j) })
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match
     /// the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<($rust_name, Value)> {
-        let dest = unsafe { paste! { sys::[<$name _alloc>](self.size2(), self.size1()) } };
+        let dest = unsafe { sys::[<$name _alloc>](self.size2(), self.size1()) };
 
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { paste! { sys::[<$name _transpose_memcpy>](dest, self.unwrap_shared()) } };
+            let ret = unsafe { sys::[<$name _transpose_memcpy>](dest, self.unwrap_shared()) };
 
             Some(($rust_name::wrap(dest), Value::from(ret)))
         }
@@ -204,21 +205,21 @@ impl $rust_name {
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix
     /// in-place. The matrix must be square for this operation to be possible.
     pub fn transpose(&mut self) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _transpose>](self.unwrap_unique()) } })
+        Value::from(unsafe { sys::[<$name _transpose>](self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other matrix to the elements of the self matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in self and other remains
     /// unchanged. The two matrices must have the same dimensions.
     pub fn add(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the self
     /// matrix. The result self(i,j) <- self(i,j) - other(i,j) is stored in self and other remains
     /// unchanged. The two matrices must have the same dimensions.
     pub fn sub(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other
@@ -226,7 +227,7 @@ impl $rust_name {
     /// unchanged. The two matrices must have the same dimensions.
     pub fn mul_elements(&mut self, other: &$rust_name) -> Value {
         Value::from(unsafe {
-            paste! { sys::[<$name _mul_elements>](self.unwrap_unique(), other.unwrap_shared()) }
+            sys::[<$name _mul_elements>](self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
@@ -235,41 +236,41 @@ impl $rust_name {
     /// unchanged. The two matrices must have the same dimensions.
     pub fn div_elements(&mut self, other: &$rust_name) -> Value {
         Value::from(unsafe {
-            paste! { sys::[<$name _div_elements>](self.unwrap_unique(), other.unwrap_shared()) }
+            sys::[<$name _div_elements>](self.unwrap_unique(), other.unwrap_shared())
         })
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The
     /// result self(i,j) <- x self(i,j) is stored in self.
     pub fn scale(&mut self, x: f64) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _scale>](self.unwrap_unique(), x) } })
+        Value::from(unsafe { sys::[<$name _scale>](self.unwrap_unique(), x) })
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result
     /// self(i,j) <- self(i,j) + x is stored in self.
     pub fn add_constant(&mut self, x: f64) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _add_constant>](self.unwrap_unique(), x) } })
+        Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
     }
 
     pub fn add_diagonal(&mut self, x: f64) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _add_constant>](self.unwrap_unique(), x) } })
+        Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
     }
 
     /// This function returns the maximum value in the self matrix.
     pub fn max(&self) -> $rust_ty {
-        unsafe { paste! { sys::[<$name _max>](self.unwrap_shared()) } }
+        unsafe { sys::[<$name _max>](self.unwrap_shared()) }
     }
 
     /// This function returns the minimum value in the self matrix.
     pub fn min(&self) -> $rust_ty {
-        unsafe { paste! { sys::[<$name _min>](self.unwrap_shared()) } }
+        unsafe { sys::[<$name _min>](self.unwrap_shared()) }
     }
 
     /// This function returns the minimum and maximum values in the self matrix.
     pub fn minmax(&self) -> ($rust_ty, $rust_ty) {
         let mut min_out = 0 as _;
         let mut max_out = 0 as _;
-        unsafe { paste! { sys::[<$name _minmax>](self.unwrap_shared(), &mut min_out, &mut max_out) } };
+        unsafe { sys::[<$name _minmax>](self.unwrap_shared(), &mut min_out, &mut max_out) };
         (min_out, max_out)
     }
 
@@ -280,7 +281,7 @@ impl $rust_name {
         let mut imax = 0;
         let mut jmax = 0;
 
-        unsafe { paste! { sys::[<$name _max_index>](self.unwrap_shared(), &mut imax, &mut jmax) } };
+        unsafe { sys::[<$name _max_index>](self.unwrap_shared(), &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -291,7 +292,7 @@ impl $rust_name {
         let mut imax = 0;
         let mut jmax = 0;
 
-        unsafe { paste! { sys::[<$name _min_index>](self.unwrap_shared(), &mut imax, &mut jmax) } };
+        unsafe { sys::[<$name _min_index>](self.unwrap_shared(), &mut imax, &mut jmax) };
         (imax, jmax)
     }
 
@@ -305,40 +306,68 @@ impl $rust_name {
         let mut jmax = 0;
 
         unsafe {
-            paste! { sys::[<$name _minmax_index>](
+            sys::[<$name _minmax_index>](
                 self.unwrap_shared(),
                 &mut imin,
                 &mut jmin,
                 &mut imax,
                 &mut jmax,
-            ) }
+            )
         };
         (imin, jmin, imax, jmax)
     }
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
     pub fn is_null(&self) -> bool {
-        unsafe { paste! { sys::[<$name _isnull>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _isnull>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all the elements of the self matrix are stricly positive.
     pub fn is_pos(&self) -> bool {
-        unsafe { paste! { sys::[<$name _ispos>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _ispos>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all the elements of the self matrix are stricly negative.
     pub fn is_neg(&self) -> bool {
-        unsafe { paste! { sys::[<$name _isneg>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _isneg>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all the elements of the self matrix are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        unsafe { paste! { sys::[<$name _isnonneg>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _isnonneg>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all elements of the two matrix are equal.
     pub fn equal(&self, other: &$rust_name) -> bool {
-        unsafe { paste! { sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1 }
+    }
+
+    pub fn row<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, i: usize, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _row>](self.unwrap_unique(), i) }, f)
+    }
+
+    pub fn column<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, j: usize, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _column>](self.unwrap_unique(), j) }, f)
+    }
+
+    pub fn diagonal<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _diagonal>](self.unwrap_unique()) }, f)
+    }
+
+    pub fn subdiagonal<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, k: usize, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _subdiagonal>](self.unwrap_unique(), k) }, f)
+    }
+
+    pub fn superdiagonal<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, k: usize, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _superdiagonal>](self.unwrap_unique(), k) }, f)
+    }
+
+    pub fn subrow<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, i: usize, offset: usize, n: usize, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _subrow>](self.unwrap_unique(), i, offset, n) }, f)
+    }
+
+    pub fn subcolumn<F: FnOnce(Option<[<$vec_name View>]>)>(&mut self, i: usize, offset: usize, n: usize, f: F) {
+        [<$vec_name View>]::wrap(unsafe { sys::[<$name _subcolumn>](self.unwrap_unique(), i, offset, n) }, f)
     }
 
     pub fn size1(&self) -> usize {
@@ -377,7 +406,7 @@ impl $rust_name {
 impl Drop for $rust_name {
     fn drop(&mut self) {
         if self.can_free {
-            unsafe { paste! { sys::[<$name _free>](self.mat) } };
+            unsafe { sys::[<$name _free>](self.mat) };
             self.mat = ::std::ptr::null_mut();
         }
     }
@@ -436,7 +465,6 @@ impl Debug for $rust_name {
     }
 }
 
-paste! {
 pub struct [<$rust_name View>]<'a> {
     mat: sys::[<$name _view>],
     #[allow(dead_code)]
@@ -583,10 +611,9 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 
-    pub fn matrix(&mut self) -> $rust_name {
-        unsafe {
-            $rust_name::soft_wrap(::std::mem::transmute(&mut self.mat.matrix))
-        }
+    pub fn matrix<F: FnOnce($rust_name)>(&mut self, f: F) {
+        let tmp = &mut self.mat.matrix;
+        f($rust_name::soft_wrap(tmp as *mut _))
     }
 } // end of impl block
 } // end of paste! block
