@@ -24756,7 +24756,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
-pub struct gsl_fft_complex_wavetable_float;
+pub struct gsl_fft_complex_wavetable_float {
+    pub n: usize,
+    pub nf: usize,
+    pub factor: [usize; 64usize],
+    pub twiddle: [*mut gsl_complex_float; 64usize],
+    pub trig: *mut gsl_complex_float,
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_fft_complex_workspace_float;

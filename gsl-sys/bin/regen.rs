@@ -170,7 +170,7 @@ fn should_strip_struct(line: &str) -> bool {
     && !line.contains("pub struct gsl_interp_accel ")
     && !line.contains("pub struct gsl_complex")
     && !line.contains("pub struct gsl_combination_struct ")
-    && !line.contains("pub struct gsl_fft_complex_wavetable ")
+    && !line.contains("pub struct gsl_fft_complex_wavetable")
     && !line.contains("pub struct gsl_dht_struct ")
     && !line.contains("pub struct gsl_eigen_nonsymm_workspace ")
     && !line.contains("pub struct gsl_histogram ")
