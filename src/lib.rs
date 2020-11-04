@@ -52,7 +52,6 @@
 #![allow(non_snake_case)]
 #![allow(unused_unsafe)]
 
-extern crate c_vec;
 extern crate gsl_sys as sys;
 extern crate libc;
 extern crate paste;

@@ -308,21 +308,6 @@ impl $rust_name {
         unsafe { paste! { sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1 } }
     }
 
-    // I'll find a way to do that later
-    /*pub fn as_slice<'a>(&self) -> &'a [f64] {
-        unsafe {
-            if self.unwrap_unique().is_null() {
-                let tmp : Vec<f64> = Vec::new();
-
-                tmp.as_ref()
-            } else {
-                let tmp : CSlice<f64> = CSlice::new((*self.unwrap_unique()).data, (*self.unwrap_unique()).size as usize);
-
-                tmp.as_ref()
-            }
-        }
-    }*/
-
     pub fn clone(&self) -> Option<$rust_name> {
         if self.unwrap_shared().is_null() {
             None
