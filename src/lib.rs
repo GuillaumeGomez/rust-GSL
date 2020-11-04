@@ -57,27 +57,7 @@ extern crate gsl_sys as sys;
 extern crate libc;
 extern crate paste;
 
-pub use types::{
-    ChebSeries, Combination, ComplexF32, ComplexF64, CquadWorkspace, DiscreteHankel,
-    EigenGenHermVWorkspace, EigenGenHermWorkspace, EigenGenSymmVWorkspace, EigenGenSymmWorkspace,
-    EigenGenVWorkspace, EigenGenWorkspace, EigenHermitianVWorkspace, EigenHermitianWorkspace,
-    EigenNonSymmVWorkspace, EigenNonSymmWorkspace, EigenSymmetricVWorkspace,
-    EigenSymmetricWorkspace, FftComplexWaveTable, FftComplexWorkspace, GLFixedTable, Histogram,
-    Histogram2D, Histogram2DPdf, HistogramPdf, IntegrationFixedType, IntegrationFixedWorkspace,
-    IntegrationQawoTable, IntegrationQawsTable, IntegrationWorkspace, Interp, InterpAccel,
-    InterpType, LevinUTruncWorkspace, LevinUWorkspace, MatrixComplexF32, MatrixComplexF64,
-    MatrixF32, MatrixF32View, MatrixF64, MatrixF64View, MatrixI32, MatrixI32View, MatrixU32,
-    MatrixU32View, Minimizer, MinimizerType, MiserMonteCarlo, MiserParams, MultiFitFdfSolver,
-    MultiFitFdfSolverType, MultiFitFunction, MultiFitFunctionFdf, MultiSet, ODEiv2Control,
-    ODEiv2Driver, ODEiv2Evolve, ODEiv2Step, ODEiv2StepType, ODEiv2System, Permutation,
-    PlainMonteCarlo, PolyComplex, QRng, QRngType, ReadNTuples, Result, ResultE10, Rng, RngType,
-    RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType, SimAnnealing,
-    SimAnnealingParams, Spline, VectorComplexF32, VectorComplexF64, VectorF32, VectorF32View,
-    VectorF64, VectorF64View, VectorI32, VectorI32View, VectorU32, VectorU32View, VegasMonteCarlo,
-    VegasParams, Wavelet, WaveletType, WaveletWorkspace, WriteNTuples,
-};
-#[cfg(feature = "v2_5")]
-pub use types::{FilterGaussian, FilterImpulse, FilterMedian, FilterRMedian};
+pub use types::*;
 
 pub use elementary::Elementary;
 pub use pow::Pow;
@@ -86,13 +66,7 @@ pub use types::rng;
 pub use utilities::IOStream;
 
 // enums part
-pub use self::enums::{
-    EigenSort, FftDirection, GaussKonrodRule, IntegrationQawo, Mode, ODEiv, SfLegendreNorm, Value,
-    VegasMode, WaveletDirection,
-};
-
-#[cfg(feature = "v2_5")]
-pub use self::enums::{FilterEnd, FilterScale};
+pub use self::enums::*;
 
 mod enums;
 mod macros;

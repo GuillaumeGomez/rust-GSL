@@ -13,24 +13,24 @@ use crate::Value;
 use ffi::FFI;
 
 ffi_wrapper!(
-    PolyComplex,
+    PolyComplexWorkspace,
     *mut sys::gsl_poly_complex_workspace,
     gsl_poly_complex_workspace_free
 );
 
-impl PolyComplex {
+impl PolyComplexWorkspace {
     /// This function allocates space for a gsl_poly_complex_workspace struct and a workspace suitable for solving a polynomial with n coefficients
     /// using the routine gsl_poly_complex_solve.
     ///
     /// The function returns a pointer to the newly allocated gsl_poly_complex_workspace if no errors were detected, and a null pointer in the case
     /// of error.
-    pub fn new(n: usize) -> Option<PolyComplex> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_poly_complex_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(PolyComplex::wrap(tmp))
+            Some(Self::wrap(tmp))
         }
     }
 

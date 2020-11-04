@@ -6,13 +6,13 @@ use crate::Value;
 use ffi::FFI;
 
 ffi_wrapper!(
-    RStatQuantile,
+    RStatQuantileWorkspace,
     *mut sys::gsl_rstat_quantile_workspace,
     gsl_rstat_quantile_free
 );
 
-impl RStatQuantile {
-    pub fn alloc(p: f64) -> Option<RStatQuantile> {
+impl RStatQuantileWorkspace {
+    pub fn alloc(p: f64) -> Option<Self> {
         let s = unsafe { sys::gsl_rstat_quantile_alloc(p) };
         if s.is_null() {
             None
@@ -35,10 +35,10 @@ impl RStatQuantile {
     }
 }
 
-ffi_wrapper!(RStat, *mut sys::gsl_rstat_workspace, gsl_rstat_free);
+ffi_wrapper!(RStatWorkspace, *mut sys::gsl_rstat_workspace, gsl_rstat_free);
 
-impl RStat {
-    pub fn alloc() -> Option<RStat> {
+impl RStatWorkspace {
+    pub fn alloc() -> Option<Self> {
         let s = unsafe { sys::gsl_rstat_alloc() };
         if s.is_null() {
             None

@@ -6,13 +6,13 @@ use crate::{FilterEnd, FilterScale, Value, VectorF64, VectorI32};
 use ffi::FFI;
 
 ffi_wrapper!(
-    FilterGaussian,
+    FilterGaussianWorkspace,
     *mut sys::gsl_filter_gaussian_workspace,
     gsl_filter_gaussian_free
 );
 
-impl FilterGaussian {
-    pub fn alloc(K: usize) -> Option<FilterGaussian> {
+impl FilterGaussianWorkspace {
+    pub fn alloc(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_gaussian_alloc(K) };
         if s.is_null() {
             None
@@ -48,13 +48,13 @@ impl FilterGaussian {
 }
 
 ffi_wrapper!(
-    FilterMedian,
+    FilterMedianWorkspace,
     *mut sys::gsl_filter_median_workspace,
     gsl_filter_median_free
 );
 
-impl FilterMedian {
-    pub fn alloc(K: usize) -> Option<FilterMedian> {
+impl FilterMedianWorkspace {
+    pub fn alloc(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_median_alloc(K) };
         if s.is_null() {
             None
@@ -76,13 +76,13 @@ impl FilterMedian {
 }
 
 ffi_wrapper!(
-    FilterRMedian,
+    FilterRMedianWorkspace,
     *mut sys::gsl_filter_rmedian_workspace,
     gsl_filter_rmedian_free
 );
 
-impl FilterRMedian {
-    pub fn alloc(K: usize) -> Option<FilterRMedian> {
+impl FilterRMedianWorkspace {
+    pub fn alloc(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_rmedian_alloc(K) };
         if s.is_null() {
             None
@@ -104,13 +104,13 @@ impl FilterRMedian {
 }
 
 ffi_wrapper!(
-    FilterImpulse,
+    FilterImpulseWorkspace,
     *mut sys::gsl_filter_impulse_workspace,
     gsl_filter_impulse_free
 );
 
-impl FilterImpulse {
-    pub fn alloc(K: usize) -> Option<FilterImpulse> {
+impl FilterImpulseWorkspace {
+    pub fn alloc(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_impulse_alloc(K) };
         if s.is_null() {
             None

@@ -6,13 +6,13 @@ use crate::{MatrixF64, Value, VectorF64};
 use ffi::FFI;
 
 ffi_wrapper!(
-    MultifitLinear,
+    MultifitLinearWorkspace,
     *mut sys::gsl_multifit_linear_workspace,
     gsl_multifit_linear_free
 );
 
-impl MultifitLinear {
-    pub fn alloc(n: usize, p: usize) -> Option<MultifitLinear> {
+impl MultifitLinearWorkspace {
+    pub fn alloc(n: usize, p: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_multifit_linear_alloc(n, p) };
         if s.is_null() {
             None

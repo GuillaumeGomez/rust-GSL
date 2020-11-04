@@ -87,7 +87,7 @@ impl Rng {
     ///
     /// The generator is automatically initialized with the default seed, gsl_rng_default_seed. This is zero by default but can be changed either directly or by using the environment variable
     /// GSL_RNG_SEED (see [`Random number environment variables`](https://www.gnu.org/software/gsl/manual/html_node/Random-number-environment-variables.html#Random-number-environment-variables)).
-    pub fn new(T: &RngType) -> Option<Rng> {
+    pub fn new(T: RngType) -> Option<Rng> {
         let tmp = unsafe { sys::gsl_rng_alloc(T.unwrap_shared()) };
 
         if tmp.is_null() {

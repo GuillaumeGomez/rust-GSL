@@ -16,7 +16,7 @@ pub use self::eigen_symmetric_workspace::{
 };
 pub use self::fast_fourier_transforms::{FftComplexWaveTable, FftComplexWorkspace};
 #[cfg(feature = "v2_5")]
-pub use self::filter::{FilterGaussian, FilterImpulse, FilterMedian, FilterRMedian};
+pub use self::filter::{FilterGaussianWorkspace, FilterImpulseWorkspace, FilterMedianWorkspace, FilterRMedianWorkspace};
 pub use self::histograms::{Histogram, Histogram2D, Histogram2DPdf, HistogramPdf};
 pub use self::integration::{
     CquadWorkspace, GLFixedTable, IntegrationFixedType, IntegrationFixedWorkspace,
@@ -33,25 +33,25 @@ pub use self::minimizer::{Minimizer, MinimizerType};
 pub use self::monte_carlo::{
     MiserMonteCarlo, MiserParams, PlainMonteCarlo, VegasMonteCarlo, VegasParams,
 };
-pub use self::multifit_linear::MultifitLinear;
+pub use self::multifit_linear::MultifitLinearWorkspace;
 pub use self::multifit_solver::{
     MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction, MultiFitFunctionFdf,
 };
 #[cfg(feature = "v2_1")]
-pub use self::multilarge_linear::{MultilargeLinear, MultilargeLinearType};
+pub use self::multilarge_linear::{MultilargeLinearWorkspace, MultilargeLinearType};
 pub use self::multiset::MultiSet;
 pub use self::n_tuples::{ReadNTuples, WriteNTuples};
 pub use self::ordinary_differential_equations::{
     ODEiv2Control, ODEiv2Driver, ODEiv2Evolve, ODEiv2Step, ODEiv2StepType, ODEiv2System,
 };
 pub use self::permutation::Permutation;
-pub use self::polynomial::PolyComplex;
+pub use self::polynomial::PolyComplexWorkspace;
 pub use self::qrng::{QRng, QRngType};
 pub use self::ran_discrete::RanDiscrete;
 pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
 pub use self::roots::{RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType};
-pub use self::rstat::{RStat, RStatQuantile};
+pub use self::rstat::{RStatWorkspace, RStatQuantileWorkspace};
 pub use self::series_acceleration::{LevinUTruncWorkspace, LevinUWorkspace};
 pub use self::siman::{SimAnnealing, SimAnnealingParams};
 pub use self::vector::{
