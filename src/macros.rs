@@ -84,12 +84,12 @@ macro_rules! ffi_wrapper {
         }
 
         impl FFI<$ty> for $name {
-            fn wrap(_inner: *mut $ty) -> Self {
-                unimplemented!()
+            fn wrap(inner: *mut $ty) -> Self {
+                Self { inner }
             }
 
-            fn soft_wrap(_inner: *mut $ty) -> Self {
-                unimplemented!()
+            fn soft_wrap(inner: *mut $ty) -> Self {
+                Self { inner }
             }
 
             #[inline]

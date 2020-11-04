@@ -803,7 +803,7 @@ impl RngType {
                     if (*tmp).is_null() {
                         break;
                     }
-                    ret.push(RngType::soft_wrap(*tmp as *mut sys::gsl_rng_type));
+                    ret.push(RngType::wrap(*tmp as *mut sys::gsl_rng_type));
                     it += 1;
                 }
             }
