@@ -134,7 +134,7 @@ impl $rust_name {
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
     pub fn get_row(&self, y: usize) -> Option<($vec_name, Value)> {
-        let tmp = unsafe { paste! { sys::[<$vec_c_name _alloc>]((*self.unwrap_shared()).size2) } };
+        let tmp = unsafe { paste! { sys::[<$vec_c_name _alloc>](self.size2()) } };
 
         if tmp.is_null() {
             None
@@ -147,7 +147,7 @@ impl $rust_name {
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
     pub fn get_col(&self, x: usize) -> Option<($vec_name, Value)> {
-        let tmp = unsafe { paste! { sys::[<$vec_c_name _alloc>]((*self.unwrap_shared()).size1) } };
+        let tmp = unsafe { paste! { sys::[<$vec_c_name _alloc>](self.size1()) } };
 
         if tmp.is_null() {
             None
@@ -190,13 +190,12 @@ impl $rust_name {
     /// This function works for all matrices provided that the dimensions of the matrix dest match
     /// the transposed dimensions of the matrix.
     pub fn transpose_memcpy(&self) -> Option<($rust_name, Value)> {
-        let ptr = self.unwrap_shared();
-        let dest = unsafe { paste! { sys::[<$name _alloc>]((*ptr).size2, (*ptr).size1) } };
+        let dest = unsafe { paste! { sys::[<$name _alloc>](self.size2(), self.size1()) } };
 
         if dest.is_null() {
             None
         } else {
-            let ret = unsafe { paste! { sys::[<$name _transpose_memcpy>](dest, ptr) } };
+            let ret = unsafe { paste! { sys::[<$name _transpose_memcpy>](dest, self.unwrap_shared()) } };
 
             Some(($rust_name::wrap(dest), Value::from(ret)))
         }
@@ -363,7 +362,7 @@ impl $rust_name {
             if self.unwrap_shared().is_null() {
                 None
             } else {
-                match Self::new((*self.unwrap_shared()).size1, (*self.unwrap_shared()).size2) {
+                match Self::new(self.size1(), self.size2()) {
                     Some(mut m) => {
                         m.copy_from(self);
                         Some(m)
@@ -415,17 +414,19 @@ impl Debug for $rust_name {
         if ptr.is_null() {
             write!(f, "<null>")
         } else {
+            let size1 = self.size1();
+            let size2 = self.size2();
             unsafe {
-                for y in 0..(*ptr).size1 {
+                for y in 0..size1 {
                     write!(f, "[");
-                    for x in 0..(*ptr).size2 {
-                        if x < (*ptr).size2 - 1 {
+                    for x in 0..size2 {
+                        if x < size2 - 1 {
                             write!(f, "{}, ", self.get(y, x));
                         } else {
                             write!(f, "{}", self.get(y, x));
                         }
                     }
-                    if y < (*self.mat).size1 - 1 {
+                    if y < size1 - 1 {
                         write!(f, "]\n");
                     }
                 }

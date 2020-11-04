@@ -4,7 +4,6 @@
 
 use crate::enums;
 use crate::Value;
-use c_vec::CSlice;
 use ffi::FFI;
 
 pub struct IntegrationFixedType {
@@ -84,23 +83,23 @@ impl IntegrationFixedWorkspace {
     }
 
     pub fn n(&self) -> usize {
-        unsafe { sys::gsl_integration_fixed_n(FFI::unwrap_shared(self)) }
+        unsafe { sys::gsl_integration_fixed_n(self.unwrap_shared()) }
     }
 
-    pub fn nodes(&self) -> Option<CSlice<f64>> {
-        let tmp = unsafe { sys::gsl_integration_fixed_nodes(FFI::unwrap_shared(self)) };
+    pub fn nodes(&self) -> Option<&[f64]> {
+        let tmp = unsafe { sys::gsl_integration_fixed_nodes(self.unwrap_shared()) };
         if tmp.is_null() {
             return None;
         }
-        unsafe { Some(CSlice::new(tmp, self.n() as _)) }
+        unsafe { Some(::std::slice::from_raw_parts(tmp, self.n())) }
     }
 
-    pub fn weights(&self) -> Option<CSlice<f64>> {
-        let tmp = unsafe { sys::gsl_integration_fixed_weights(FFI::unwrap_shared(self)) };
+    pub fn weights(&self) -> Option<&[f64]> {
+        let tmp = unsafe { sys::gsl_integration_fixed_weights(self.unwrap_shared()) };
         if tmp.is_null() {
             return None;
         }
-        unsafe { Some(CSlice::new(tmp, self.n() as _)) }
+        unsafe { Some(::std::slice::from_raw_parts(tmp, self.n())) }
     }
 
     pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> (::Value, f64) {
@@ -108,7 +107,7 @@ impl IntegrationFixedWorkspace {
         let function = wrap_callback!(f, F);
 
         let ret =
-            unsafe { sys::gsl_integration_fixed(&function, &mut result, FFI::unwrap_shared(self)) };
+            unsafe { sys::gsl_integration_fixed(&function, &mut result, self.unwrap_shared()) };
         (::Value::from(ret), result)
     }
 }
@@ -202,7 +201,7 @@ impl IntegrationWorkspace {
                 epsrel,
                 limit,
                 key.into(),
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -242,7 +241,7 @@ impl IntegrationWorkspace {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -289,7 +288,7 @@ impl IntegrationWorkspace {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -330,7 +329,7 @@ impl IntegrationWorkspace {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -371,7 +370,7 @@ impl IntegrationWorkspace {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -412,7 +411,7 @@ impl IntegrationWorkspace {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -458,7 +457,7 @@ impl IntegrationWorkspace {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -550,11 +549,11 @@ impl IntegrationQawsTable {
                 &mut function,
                 a,
                 b,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(workspace),
+                workspace.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
             )
@@ -662,8 +661,8 @@ impl IntegrationQawoTable {
                 epsabs,
                 epsrel,
                 limit,
-                FFI::unwrap_unique(workspace),
-                FFI::unwrap_unique(self),
+                workspace.unwrap_unique(),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abserr,
             )
@@ -738,7 +737,7 @@ impl CquadWorkspace {
                 b,
                 epsabs,
                 epsrel,
-                FFI::unwrap_unique(self),
+                self.unwrap_unique(),
                 &mut result,
                 &mut abs_err,
                 &mut n_evals,

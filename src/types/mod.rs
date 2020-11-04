@@ -14,9 +14,13 @@ pub use self::eigen_symmetric_workspace::{
     EigenNonSymmVWorkspace, EigenNonSymmWorkspace, EigenSymmetricVWorkspace,
     EigenSymmetricWorkspace,
 };
-pub use self::fast_fourier_transforms::{FftComplexWaveTable, FftComplexWorkspace};
+pub use self::fast_fourier_transforms::{
+    FftComplexF32WaveTable, FftComplexF32Workspace, FftComplexF64WaveTable, FftComplexF64Workspace,
+};
 #[cfg(feature = "v2_5")]
-pub use self::filter::{FilterGaussianWorkspace, FilterImpulseWorkspace, FilterMedianWorkspace, FilterRMedianWorkspace};
+pub use self::filter::{
+    FilterGaussianWorkspace, FilterImpulseWorkspace, FilterMedianWorkspace, FilterRMedianWorkspace,
+};
 pub use self::histograms::{Histogram, Histogram2D, Histogram2DPdf, HistogramPdf};
 pub use self::integration::{
     CquadWorkspace, GLFixedTable, IntegrationFixedType, IntegrationFixedWorkspace,
@@ -38,7 +42,7 @@ pub use self::multifit_solver::{
     MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction, MultiFitFunctionFdf,
 };
 #[cfg(feature = "v2_1")]
-pub use self::multilarge_linear::{MultilargeLinearWorkspace, MultilargeLinearType};
+pub use self::multilarge_linear::{MultilargeLinearType, MultilargeLinearWorkspace};
 pub use self::multiset::MultiSet;
 pub use self::n_tuples::{ReadNTuples, WriteNTuples};
 pub use self::ordinary_differential_equations::{
@@ -51,7 +55,7 @@ pub use self::ran_discrete::RanDiscrete;
 pub use self::result::{Result, ResultE10};
 pub use self::rng::{Rng, RngType};
 pub use self::roots::{RootFSolver, RootFSolverType, RootFdfSolver, RootFdfSolverType};
-pub use self::rstat::{RStatWorkspace, RStatQuantileWorkspace};
+pub use self::rstat::{RStatQuantileWorkspace, RStatWorkspace};
 pub use self::series_acceleration::{LevinUTruncWorkspace, LevinUWorkspace};
 pub use self::siman::{SimAnnealing, SimAnnealingParams};
 pub use self::vector::{

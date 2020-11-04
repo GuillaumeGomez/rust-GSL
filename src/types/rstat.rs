@@ -35,7 +35,11 @@ impl RStatQuantileWorkspace {
     }
 }
 
-ffi_wrapper!(RStatWorkspace, *mut sys::gsl_rstat_workspace, gsl_rstat_free);
+ffi_wrapper!(
+    RStatWorkspace,
+    *mut sys::gsl_rstat_workspace,
+    gsl_rstat_free
+);
 
 impl RStatWorkspace {
     pub fn new() -> Option<Self> {

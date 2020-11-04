@@ -22,11 +22,7 @@ use crate::Value;
 use ffi::FFI;
 use std::fmt::{self, Debug, Formatter};
 
-ffi_wrapper!(
-    Combination,
-    *mut sys::gsl_combination,
-    gsl_combination_free
-);
+ffi_wrapper!(Combination, *mut sys::gsl_combination, gsl_combination_free);
 
 impl Combination {
     /// This function allocates memory for a new combination with parameters n, k. The combination
@@ -47,7 +43,7 @@ impl Combination {
     /// This function allocates memory for a new combination with parameters n, k and initializes it
     /// to the lexicographically first combination. A null pointer is returned if insufficient
     /// memory is available to create the combination.
-    pub fn new_clean(n: usize, k: usize) -> Option<Self> {
+    pub fn new_with_init(n: usize, k: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {

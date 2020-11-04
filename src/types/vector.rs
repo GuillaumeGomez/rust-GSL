@@ -56,23 +56,12 @@ impl Drop for $rust_name {
 }
 
 impl Debug for $rust_name {
-    #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         let ptr = self.unwrap_shared();
         if ptr.is_null() {
             write!(f, "<null>")
         } else {
-            write!(f, "[");
-            unsafe {
-                for x in 0..(*ptr).size {
-                    if x < (*ptr).size - 1 {
-                        write!(f, "{}, ", self.get(x));
-                    } else {
-                        write!(f, "{}", self.get(x));
-                    }
-                }
-            }
-            write!(f, "]")
+            write!(f, "{:?}", self.as_slice())
         }
     }
 }
@@ -139,11 +128,11 @@ impl $rust_name {
         }
     }
 
-    pub fn data(&self) -> &[$rust_ty] {
+    pub fn as_slice(&self) -> &[$rust_ty] {
         unsafe { ::std::slice::from_raw_parts((*self.unwrap_shared()).data, self.len()) }
     }
 
-    pub fn data_mut(&mut self) -> &mut [$rust_ty] {
+    pub fn as_slice_mut(&mut self) -> &mut [$rust_ty] {
         unsafe { ::std::slice::from_raw_parts_mut((*self.unwrap_shared()).data, self.len()) }
     }
 
@@ -335,12 +324,11 @@ impl $rust_name {
     }*/
 
     pub fn clone(&self) -> Option<$rust_name> {
-        let ptr = self.unwrap_shared();
-        if ptr.is_null() {
+        if self.unwrap_shared().is_null() {
             None
         } else {
             unsafe {
-                match $rust_name::new((*ptr).size) {
+                match $rust_name::new(self.len()) {
                     Some(mut v) => {
                         v.copy_from(self);
                         Some(v)
