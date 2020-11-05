@@ -749,6 +749,10 @@ impl RngType {
         }
     }
 
+    pub fn default() -> Self {
+        ffi_wrap!(gsl_rng_default)
+    }
+
     /// wrapper for max element
     pub fn max(&self) -> usize {
         let ptr = self.unwrap_shared();
@@ -832,10 +836,6 @@ impl RngType {
             Some(RngType::wrap(tmp as *mut sys::gsl_rng_type))
         }
     }
-}
-
-pub fn default() -> RngType {
-    ffi_wrap!(gsl_rng_default)
 }
 
 /// The functions described above make no reference to the actual algorithm used. This is deliberate so that you can switch algorithms without having
