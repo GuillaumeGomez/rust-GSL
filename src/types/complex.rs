@@ -376,6 +376,14 @@ impl ComplexF64 {
     pub fn arccoth(&self) -> ComplexF64 {
         unsafe { ::sys::gsl_complex_arccoth(self.unwrap()).wrap() }
     }
+
+    pub fn real(&self) -> f64 {
+        self.dat[0]
+    }
+
+    pub fn imaginary(&self) -> f64 {
+        self.dat[1]
+    }
 }
 
 impl Debug for ComplexF64 {
@@ -798,6 +806,14 @@ impl ComplexF32 {
     /// \arccoth(z) = \arctanh(1/z).
     pub fn arccoth(&self) -> ComplexF32 {
         unsafe { ::sys::gsl_complex_arccoth(self.unwrap()).wrap() }
+    }
+
+    pub fn real(&self) -> f32 {
+        self.dat[0]
+    }
+
+    pub fn imaginary(&self) -> f32 {
+        self.dat[1]
     }
 }
 
