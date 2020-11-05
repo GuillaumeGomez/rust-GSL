@@ -39,6 +39,10 @@ impl $rust_name {
         }
     }
 
+    pub fn nf(&self) -> usize {
+        unsafe { (*self.unwrap_shared()).nf }
+    }
+
     pub fn factor(&self) -> &[usize] {
         unsafe { &(*self.unwrap_shared()).factor }
     }
