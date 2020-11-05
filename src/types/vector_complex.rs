@@ -7,17 +7,62 @@ use crate::Value;
 use ffi::FFI;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
-use types::{ComplexF32, ComplexF64};
+use std::marker::PhantomData;
 
 macro_rules! gsl_vec_complex {
-    ($rust_name:ident, $name:ident, $complex:ident) => {
+    ($rust_name:ident, $name:ident, $complex:ident, $rust_ty:ident) => {
         paste! {
 
-        ffi_wrapper!(
-            $rust_name,
-            *mut sys::$name,
-            [<$name _free>]
-        );
+        use types::$complex;
+
+        pub struct $rust_name {
+            vec: *mut sys::$name,
+            can_free: bool,
+        }
+
+        impl Drop for $rust_name {
+            fn drop(&mut self) {
+                if self.can_free {
+                    unsafe { sys::[<$name _free>](self.vec) };
+                    self.vec = ::std::ptr::null_mut();
+                }
+            }
+        }
+
+        impl Debug for $rust_name {
+            fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+                let ptr = self.unwrap_shared();
+                if ptr.is_null() {
+                    write!(f, "<null>")
+                } else {
+                    write!(f, "{:?}", self.as_slice().expect("conversion to slice failed"))
+                }
+            }
+        }
+
+        impl FFI<sys::$name> for $rust_name {
+            fn wrap(vec: *mut sys::$name) -> Self {
+                Self {
+                    vec,
+                    can_free: true,
+                }
+            }
+
+            fn soft_wrap(vec: *mut sys::$name) -> Self {
+                Self {
+                    vec,
+                    can_free: false,
+                }
+            }
+
+            fn unwrap_shared(&self) -> *const sys::$name {
+                self.vec as *const _
+            }
+
+            fn unwrap_unique(&mut self) -> *mut sys::$name {
+                self.vec
+            }
+        }
 
         impl $rust_name {
             doc! {
@@ -54,6 +99,24 @@ macro_rules! gsl_vec_complex {
                     0
                 } else {
                     unsafe { (*ptr).size }
+                }
+            }
+
+            pub fn as_slice(&self) -> Option<&[$rust_ty]> {
+                let ptr = unsafe { (*self.unwrap_shared()).data };
+                if ptr.is_null() {
+                    None
+                } else {
+                    Some(unsafe { ::std::slice::from_raw_parts(ptr, self.len()) })
+                }
+            }
+
+            pub fn as_slice_mut(&mut self) -> Option<&mut [$rust_ty]> {
+                let ptr = unsafe { (*self.unwrap_shared()).data };
+                if ptr.is_null() {
+                    None
+                } else {
+                    Some(unsafe { ::std::slice::from_raw_parts_mut(ptr, self.len()) })
                 }
             }
 
@@ -227,31 +290,167 @@ macro_rules! gsl_vec_complex {
             }
         }
 
-        impl Debug for $rust_name {
-            fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-                let ptr = self.unwrap_shared();
-                if ptr.is_null() {
-                    write!(f, "<null>")
+        pub struct [<$rust_name View>]<'a> {
+            v: sys::[<$name _view>],
+            #[allow(dead_code)]
+            phantom: PhantomData<&'a ()>,
+        }
+
+        impl<'a> [<$rust_name View>]<'a> {
+            #[doc(hidden)]
+            pub(crate) fn wrap<F: FnOnce(Option<Self>)>(v: sys::[<$name _view>], f: F) {
+                let tmp = Self {
+                    v,
+                    phantom: PhantomData,
+                };
+                let is_none = {
+                    let v = &tmp.v.vector;
+                    let tmp = $rust_name::soft_wrap(v as *const _ as usize as *mut _);
+                    tmp.as_slice().is_none()
+                };
+                if is_none {
+                    f(None)
                 } else {
-                    unsafe {
-                        write!(f, "[").unwrap();
-                        let size = self.len();
-                        for x in 0..size {
-                            if x < size - 1 {
-                                write!(f, "{:?}, ", self.get(x)).unwrap();
-                            } else {
-                                write!(f, "{:?}", self.get(x)).unwrap();
-                            }
-                        }
-                    }
-                    write!(f, "]")
+                    f(Some(tmp))
                 }
             }
-        }
+
+            /// These functions return a vector view of a subvector of another vector v. The start of the
+            /// new vector is offset by offset elements from the start of the original vector. The new
+            /// vector has n elements. Mathematically, the i-th element of the new vector v’ is given by,
+            ///
+            /// v'(i) = v->data[(offset + i)*v->stride]
+            ///
+            /// where the index i runs from 0 to n-1.
+            ///
+            /// The data pointer of the returned vector struct is set to null if the combined parameters
+            /// (offset,n) overrun the end of the original vector.
+            ///
+            /// The new vector is only a view of the block underlying the original vector, v. The block
+            /// containing the elements of v is not owned by the new vector. When the view goes out of scope
+            /// the original vector v and its block will continue to exist. The original memory can only be
+            /// deallocated by freeing the original vector. Of course, the original vector should not be
+            /// deallocated while the view is still in use.
+            ///
+            /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be
+            /// used for vectors which are declared const.
+            pub fn from_vector(v: &'a mut $rust_name, offset: usize, n: usize) -> Self {
+                unsafe {
+                    Self {
+                        v: sys::[<$name _subvector>](v.unwrap_unique(), offset, n),
+                        phantom: PhantomData,
+                    }
+                }
+            }
+
+            /// These functions return a vector view of a subvector of another vector v with an additional
+            /// stride argument. The subvector is formed in the same way as for gsl_vector_subvector but the
+            /// new vector has n elements with a step-size of stride from one element to the next in the
+            /// original vector. Mathematically, the i-th element of the new vector v’ is given by,
+            ///
+            /// v'(i) = v->data[(offset + i*stride)*v->stride]
+            /// where the index i runs from 0 to n-1.
+            ///
+            /// Note that subvector views give direct access to the underlying elements of the original
+            /// vector. For example, the following code will zero the even elements of the vector v of
+            /// length n, while leaving the odd elements untouched,
+            ///
+            /// ```C
+            /// gsl_vector_view v_even
+            ///   = gsl_vector_subvector_with_stride (v, 0, 2, n/2);
+            /// gsl_vector_set_zero (&v_even.vector);
+            /// ```
+            /// A vector view can be passed to any subroutine which takes a vector argument just as a
+            /// directly allocated vector would be, using &view.vector.
+            /// For example, the following code computes the norm of the odd elements of v using the BLAS
+            /// routine DNRM2,
+            ///
+            /// ```C
+            /// gsl_vector_view v_odd
+            ///   = gsl_vector_subvector_with_stride (v, 1, 2, n/2);
+            /// double r = gsl_blas_dnrm2 (&v_odd.vector);
+            /// ```
+            /// The function gsl_vector_const_subvector_with_stride is equivalent to
+            /// gsl_vector_subvector_with_stride but can be used for vectors which are declared const.
+            pub fn from_vector_with_stride(
+                v: &'a mut $rust_name,
+                offset: usize,
+                stride: usize,
+                n: usize,
+            ) -> Self {
+                unsafe {
+                    Self {
+                        v: sys::[<$name _subvector_with_stride>](v.vec, offset, stride, n),
+                        phantom: PhantomData,
+                    }
+                }
+            }
+
+            /// These functions return a vector view of an array. The start of the new vector is given by
+            /// base and has n elements. Mathematically, the i-th element of the new vector v’ is given by,
+            ///
+            /// v'(i) = base[i]
+            ///
+            /// where the index i runs from 0 to n-1.
+            ///
+            /// The array containing the elements of v is not owned by the new vector view. When the view
+            /// goes out of scope the original array will continue to exist. The original memory can only be
+            /// deallocated by freeing the original pointer base. Of course, the original array should not
+            /// be deallocated while the view is still in use.
+            ///
+            /// The function gsl_vector_const_view_array is equivalent to gsl_vector_view_array but can be
+            /// used for arrays which are declared const.
+            pub fn from_array(base: &'a mut [f64]) -> Self {
+                unsafe {
+                    Self {
+                        v: sys::[<$name _view_array>](base.as_mut_ptr() as _, base.len() as _),
+                        phantom: PhantomData,
+                    }
+                }
+            }
+
+            /// These functions return a vector view of an array base with an additional stride argument.
+            /// The subvector is formed in the same way as for gsl_vector_view_array but the new vector has
+            /// n elements with a step-size of stride from one element to the next in the original
+            /// array. Mathematically, the i-th element of the new vector v’ is given by,
+            ///
+            /// v'(i) = base[i*stride]
+            ///
+            /// where the index i runs from 0 to n-1.
+            ///
+            /// Note that the view gives direct access to the underlying elements of the original array. A
+            /// vector view can be passed to any subroutine which takes a vector argument just as a directly
+            /// allocated vector would be, using &view.vector.
+            ///
+            /// The function gsl_vector_const_view_array_with_stride is equivalent to
+            /// gsl_vector_view_array_with_stride but can be used for arrays which are declared const.
+            pub fn from_array_with_stride(base: &'a mut [$rust_ty], stride: usize) -> Self {
+                unsafe {
+                    Self {
+                        v: sys::[<$name _view_array_with_stride>](
+                            base.as_mut_ptr(),
+                            stride,
+                            base.len() as _,
+                        ),
+                        phantom: PhantomData,
+                    }
+                }
+            }
+
+            pub fn vector<F: FnOnce(Option<$rust_name>)>(&mut self, f: F) {
+                let v = &mut self.v.vector;
+                let tmp = $rust_name::soft_wrap(v as *mut _);
+                if tmp.as_slice().is_none() {
+                    f(None)
+                } else {
+                    f(Some(tmp))
+                }
+            }
+        } // end of impl block
 
         } // end of paste! block
     }; // end of macro block
 }
 
-gsl_vec_complex!(VectorComplexF32, gsl_vector_complex_float, ComplexF32);
-gsl_vec_complex!(VectorComplexF64, gsl_vector_complex, ComplexF64);
+gsl_vec_complex!(VectorComplexF32, gsl_vector_complex_float, ComplexF32, f32);
+gsl_vec_complex!(VectorComplexF64, gsl_vector_complex, ComplexF64, f64);

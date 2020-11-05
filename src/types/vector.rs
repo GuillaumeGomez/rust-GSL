@@ -40,6 +40,7 @@ use crate::paste::paste;
 
 macro_rules! gsl_vec {
     ($rust_name:ident, $name:ident, $rust_ty:ident) => (
+paste! {
 
 pub struct $rust_name {
     vec: *mut sys::$name,
@@ -49,7 +50,7 @@ pub struct $rust_name {
 impl Drop for $rust_name {
     fn drop(&mut self) {
         if self.can_free {
-            unsafe { paste! { sys::[<$name _free>](self.vec) } };
+            unsafe { sys::[<$name _free>](self.vec) };
             self.vec = ::std::ptr::null_mut();
         }
     }
@@ -94,7 +95,7 @@ impl $rust_name {
     doc! {
         concat!("create a new ", stringify!($rust_name), " with all elements set to zero"),
         pub fn new(size: usize) -> Option<$rust_name> {
-            let tmp = unsafe { paste! { sys::[<$name _calloc>](size) } };
+            let tmp = unsafe { sys::[<$name _calloc>](size) };
 
             if tmp.is_null() {
                 None
@@ -105,7 +106,7 @@ impl $rust_name {
     }
 
     pub fn from_slice(slice: &[$rust_ty]) -> Option<$rust_name> {
-        let tmp = unsafe { paste! { sys::[<$name _alloc>](slice.len() as _) } };
+        let tmp = unsafe { sys::[<$name _alloc>](slice.len() as _) };
 
         if tmp.is_null() {
             None
@@ -149,32 +150,32 @@ impl $rust_name {
     /// This function returns the i-th element of a vector v. If i lies outside the allowed range
     /// of 0 to n-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: usize) -> $rust_ty {
-        unsafe { paste! { sys::[<$name _get>](self.unwrap_shared(), i) } }
+        unsafe { sys::[<$name _get>](self.unwrap_shared(), i) }
     }
 
     /// This function sets the value of the i-th element of a vector v to x. If i lies outside the
     /// allowed range of 0 to n-1 then the error handler is invoked.
     pub fn set(&mut self, i: usize, x: $rust_ty) -> &mut $rust_name {
-        unsafe { paste! { sys::[<$name _set>](self.unwrap_unique(), i, x) } };
+        unsafe { sys::[<$name _set>](self.unwrap_unique(), i, x) };
         self
     }
 
     /// This function sets all the elements of the vector v to the value x.
     pub fn set_all(&mut self, x: $rust_ty) -> &mut $rust_name {
-        unsafe { paste! { sys::[<$name _set_all>](self.unwrap_unique(), x) } };
+        unsafe { sys::[<$name _set_all>](self.unwrap_unique(), x) };
         self
     }
 
     /// This function sets all the elements of the vector v to zero.
     pub fn set_zero(&mut self) -> &mut $rust_name {
-        unsafe { paste! { sys::[<$name _set_zero>](self.unwrap_unique()) } };
+        unsafe { sys::[<$name _set_zero>](self.unwrap_unique()) };
         self
     }
 
     /// This function makes a basis vector by setting all the elements of the vector v to zero
     /// except for the i-th element which is set to one.
     pub fn set_basis(&mut self, i: usize) -> &mut $rust_name {
-        unsafe { paste! { sys::[<$name _set_basis>](self.unwrap_unique(), i) } };
+        unsafe { sys::[<$name _set_basis>](self.unwrap_unique(), i) };
         self
     }
 
@@ -182,82 +183,82 @@ impl $rust_name {
     /// must have the same length.
     pub fn copy_from(&mut self, other: &$rust_name) -> Value {
         Value::from(
-            unsafe { paste! { sys::[<$name _memcpy>](
+            unsafe { sys::[<$name _memcpy>](
                 self.unwrap_unique(),
-                other.unwrap_shared()) } })
+                other.unwrap_shared()) })
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors
     /// must have the same length.
     pub fn copy_to(&self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) })
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have
     /// the same length.
     pub fn swap(&mut self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique()) } })
+        Value::from(unsafe { sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique()) })
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
     pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _swap_elements>](self.unwrap_unique(), i, j) } })
+        Value::from(unsafe { sys::[<$name _swap_elements>](self.unwrap_unique(), i, j) })
     }
 
     /// This function reverses the order of the elements of the vector v.
     pub fn reverse(&mut self) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _reverse>](self.unwrap_unique()) } })
+        Value::from(unsafe { sys::[<$name _reverse>](self.unwrap_unique()) })
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors
     /// must have the same length.
     pub fn add(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other
     /// vector. The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two
     /// vectors must have the same length.
     pub fn sub(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other
     /// vector. The result `a_i <- a_i * b_i` is stored in self and other remains unchanged. The two
     /// vectors must have the same length.
     pub fn mul(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result `a_i <- a_i / b_i` is stored in self and other remains unchanged. The two vectors
     /// must have the same length.
     pub fn div(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared()) } })
+        Value::from(unsafe { sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared()) })
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The
     /// result `a_i <- a_i` is stored in `self`.
     pub fn scale(&mut self, x: $rust_ty) -> Value {
-        Value::from(unsafe { paste! { sys::[<$name _scale>](self.unwrap_unique(), x) } })
+        Value::from(unsafe { sys::[<$name _scale>](self.unwrap_unique(), x) })
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result
     /// `a_i <- a_i + x` is stored in `self`.
     pub fn add_constant(&mut self, x: f64) -> Value {
         // Funny bug: here it expects a f64 and not a f32 for gsl_vector_float...
-        Value::from(unsafe { paste! { sys::[<$name _add_constant>](self.unwrap_unique(), x) } })
+        Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
     }
 
     /// This function returns the maximum value in the self vector.
     pub fn max(&self) -> $rust_ty {
-        unsafe { paste! { sys::[<$name _max>](self.unwrap_shared()) } }
+        unsafe { sys::[<$name _max>](self.unwrap_shared()) }
     }
 
     /// This function returns the minimum value in the self vector.
     pub fn min(&self) -> $rust_ty {
-        unsafe { paste! { sys::[<$name _min>](self.unwrap_shared()) } }
+        unsafe { sys::[<$name _min>](self.unwrap_shared()) }
     }
 
     /// This function returns the minimum and maximum values in the self vector.
@@ -266,7 +267,7 @@ impl $rust_name {
         let mut max_out = 0 as _;
 
         unsafe {
-            paste! { sys::[<$name _minmax>](self.unwrap_shared(), &mut min_out, &mut max_out) };
+            sys::[<$name _minmax>](self.unwrap_shared(), &mut min_out, &mut max_out);
         }
         (min_out, max_out)
     }
@@ -274,13 +275,13 @@ impl $rust_name {
     /// This function returns the index of the maximum value in the self vector.
     /// When there are several equal maximum elements then the lowest index is returned.
     pub fn max_index(&self) -> usize {
-        unsafe { paste! { sys::[<$name _max_index>](self.unwrap_shared()) } }
+        unsafe { sys::[<$name _max_index>](self.unwrap_shared()) }
     }
 
     /// This function returns the index of the minimum value in the self vector.
     /// When there are several equal minimum elements then the lowest index is returned.
     pub fn min_index(&self) -> usize {
-        unsafe { paste! { sys::[<$name _min_index>](self.unwrap_shared()) } }
+        unsafe { sys::[<$name _min_index>](self.unwrap_shared()) }
     }
 
     /// This function returns the indices of the minimum and maximum values in the self vector.
@@ -290,32 +291,32 @@ impl $rust_name {
         let mut imin = 0;
         let mut imax = 0;
 
-        unsafe { paste! { sys::[<$name _minmax_index>](self.unwrap_shared(), &mut imin, &mut imax) } };
+        unsafe { sys::[<$name _minmax_index>](self.unwrap_shared(), &mut imin, &mut imax) };
         (imin, imax)
     }
 
     /// This function returns true if all the elements of the self vector are equal to 0.
     pub fn is_null(&self) -> bool {
-        unsafe { paste! { sys::[<$name _isnull>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _isnull>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all the elements of the self vector are stricly positive.
     pub fn is_pos(&self) -> bool {
-        unsafe { paste! { sys::[<$name _ispos>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _ispos>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all the elements of the self vector are stricly negative.
     pub fn is_neg(&self) -> bool {
-        unsafe { paste! { sys::[<$name _isneg>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _isneg>](self.unwrap_shared()) == 1 }
     }
 
     /// This function returns true if all the elements of the self vector are stricly non-negative.
     pub fn is_non_neg(&self) -> bool {
-        unsafe { paste! { sys::[<$name _isnonneg>](self.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _isnonneg>](self.unwrap_shared()) == 1 }
     }
 
     pub fn equal(&self, other: &$rust_name) -> bool {
-        unsafe { paste! { sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1 } }
+        unsafe { sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1 }
     }
 
     pub fn clone(&self) -> Option<$rust_name> {
@@ -335,7 +336,6 @@ impl $rust_name {
     }
 }
 
-paste! {
 pub struct [<$rust_name View>]<'a> {
     v: sys::[<$name _view>],
     #[allow(dead_code)]
@@ -493,9 +493,9 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 } // end of impl block
-} // end of paste! block
 
-    ); // end of gsl_vec macro
+} // end of paste! block
+); // end of gsl_vec macro
 }
 
 gsl_vec!(VectorF32, gsl_vector_float, f32);

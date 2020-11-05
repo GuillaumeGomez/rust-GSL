@@ -62,7 +62,9 @@ pub use self::vector::{
     VectorF32, VectorF32View, VectorF64, VectorF64View, VectorI32, VectorI32View, VectorU32,
     VectorU32View,
 };
-pub use self::vector_complex::{VectorComplexF32, VectorComplexF64};
+pub use self::vector_complex::{
+    VectorComplexF32, VectorComplexF32View, VectorComplexF64, VectorComplexF64View,
+};
 pub use self::wavelet_transforms::{Wavelet, WaveletType, WaveletWorkspace};
 
 pub mod basis_spline;
