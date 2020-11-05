@@ -11,7 +11,7 @@ pub use self::discrete_hankel::DiscreteHankel;
 pub use self::eigen_symmetric_workspace::{
     EigenGenHermVWorkspace, EigenGenHermWorkspace, EigenGenSymmVWorkspace, EigenGenSymmWorkspace,
     EigenGenVWorkspace, EigenGenWorkspace, EigenHermitianVWorkspace, EigenHermitianWorkspace,
-    EigenNonSymmVWorkspace, EigenNonSymmWorkspace, EigenSymmetricVWorkspace,
+    EigenNonSymmetricVWorkspace, EigenNonSymmetricWorkspace, EigenSymmetricVWorkspace,
     EigenSymmetricWorkspace,
 };
 pub use self::fast_fourier_transforms::{

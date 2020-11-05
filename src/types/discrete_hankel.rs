@@ -60,25 +60,25 @@ ffi_wrapper!(DiscreteHankel, *mut sys::gsl_dht, gsl_dht_free);
 
 impl DiscreteHankel {
     /// This function allocates a Discrete Hankel transform object of size `size`.
-    pub fn new(size: usize) -> Option<DiscreteHankel> {
+    pub fn new(size: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_dht_alloc(size) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(DiscreteHankel { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
     /// This function allocates a Discrete Hankel transform object of size `size` and initializes it
     /// for the given values of `nu` and `xmax`.
-    pub fn new_with_init(size: usize, nu: f64, xmax: f64) -> Option<DiscreteHankel> {
+    pub fn new_with_init(size: usize, nu: f64, xmax: f64) -> Option<Self> {
         let tmp = unsafe { sys::gsl_dht_new(size, nu, xmax) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(DiscreteHankel { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 

@@ -36,13 +36,13 @@ use ffi::FFI;
 ffi_wrapper!(ChebSeries, *mut sys::gsl_cheb_series, gsl_cheb_free);
 
 impl ChebSeries {
-    pub fn new(n: usize) -> Option<ChebSeries> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_cheb_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(Self { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 

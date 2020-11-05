@@ -64,13 +64,13 @@ impl BSpLineWorkspace {
     /// functions.
     ///
     /// Cubic B-splines are specified by k = 4. The size of the workspace is O(5k + nbreak).
-    pub fn new(k: usize, nbreak: usize) -> Option<BSpLineWorkspace> {
+    pub fn new(k: usize, nbreak: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_bspline_alloc(k, nbreak) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(BSpLineWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 

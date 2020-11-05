@@ -108,13 +108,13 @@ ffi_wrapper!(
 impl EigenSymmetricWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real symmetric
     /// matrices. The size of the workspace is O(2n).
-    pub fn new(n: usize) -> Option<EigenSymmetricWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_symm_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenSymmetricWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -142,13 +142,13 @@ ffi_wrapper!(
 impl EigenSymmetricVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real symmetric matrices. The size of the workspace is O(4n).
-    pub fn new(n: usize) -> Option<EigenSymmetricVWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_symmv_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenSymmetricVWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -185,13 +185,13 @@ ffi_wrapper!(
 impl EigenHermitianWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
     /// matrices. The size of the workspace is O(3n).
-    pub fn new(n: usize) -> Option<EigenHermitianWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_herm_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenHermitianWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -220,13 +220,13 @@ ffi_wrapper!(
 impl EigenHermitianVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// complex hermitian matrices. The size of the workspace is O(5n).
-    pub fn new(n: usize) -> Option<EigenHermitianVWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_hermv_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenHermitianVWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -257,21 +257,21 @@ impl EigenHermitianVWorkspace {
 }
 
 ffi_wrapper!(
-    EigenNonSymmWorkspace,
+    EigenNonSymmetricWorkspace,
     *mut sys::gsl_eigen_nonsymm_workspace,
     gsl_eigen_nonsymm_free
 );
 
-impl EigenNonSymmWorkspace {
+impl EigenNonSymmetricWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
     /// matrices. The size of the workspace is O(3n).
-    pub fn new(n: usize) -> Option<EigenNonSymmWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_nonsymm_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenNonSymmWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -346,21 +346,21 @@ impl EigenNonSymmWorkspace {
 }
 
 ffi_wrapper!(
-    EigenNonSymmVWorkspace,
+    EigenNonSymmetricVWorkspace,
     *mut sys::gsl_eigen_nonsymmv_workspace,
     gsl_eigen_nonsymmv_free
 );
 
-impl EigenNonSymmVWorkspace {
+impl EigenNonSymmetricVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real nonsymmetric matrices. The size of the workspace is O(5n).
-    pub fn new(n: usize) -> Option<EigenNonSymmVWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_nonsymmv_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenNonSymmVWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -425,13 +425,13 @@ ffi_wrapper!(
 impl EigenGenSymmWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// symmetric-definite eigensystems. The size of the workspace is O(2n).
-    pub fn new(n: usize) -> Option<EigenGenSymmWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_gensymm_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenSymmWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -459,13 +459,13 @@ ffi_wrapper!(
 impl EigenGenSymmVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real generalized symmetric-definite eigensystems. The size of the workspace is O(4n).
-    pub fn new(n: usize) -> Option<EigenGenSymmVWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_gensymmv_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenSymmVWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -501,13 +501,13 @@ ffi_wrapper!(
 impl EigenGenHermWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
     /// hermitian-definite eigensystems. The size of the workspace is O(3n).
-    pub fn new(n: usize) -> Option<EigenGenHermWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_genherm_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenHermWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -540,13 +540,13 @@ ffi_wrapper!(
 impl EigenGenHermVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
     /// hermitian-definite eigensystems. The size of the workspace is O(3n).
-    pub fn new(n: usize) -> Option<EigenGenHermVWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_genhermv_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenHermVWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -581,13 +581,13 @@ ffi_wrapper!(
 impl EigenGenWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// nonsymmetric eigensystems. The size of the workspace is O(n).
-    pub fn new(n: usize) -> Option<EigenGenWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_gen_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -672,13 +672,13 @@ ffi_wrapper!(
 impl EigenGenVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// nonsymmetric eigensystems. The size of the workspace is O(n).
-    pub fn new(n: usize) -> Option<EigenGenVWorkspace> {
+    pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_genv_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(EigenGenVWorkspace { inner: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
