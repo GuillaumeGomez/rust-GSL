@@ -483,13 +483,23 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 
-    pub fn vector<F: FnOnce(Option<$rust_name>)>(&mut self, f: F) {
-        let v = &mut self.v.vector;
-        let tmp = $rust_name::soft_wrap(v as *mut _);
+    pub fn vector<F: FnOnce(Option<&$rust_name>)>(&self, f: F) {
+        let v = &self.v.vector;
+        let tmp = $rust_name::soft_wrap(v as *const _ as usize as *mut _);
         if tmp.as_slice().is_none() {
             f(None)
         } else {
-            f(Some(tmp))
+            f(Some(&tmp))
+        }
+    }
+
+    pub fn vector_mut<F: FnOnce(Option<&mut $rust_name>)>(&mut self, f: F) {
+        let v = &mut self.v.vector;
+        let mut tmp = $rust_name::soft_wrap(v as *mut _);
+        if tmp.as_slice().is_none() {
+            f(None)
+        } else {
+            f(Some(&mut tmp))
         }
     }
 } // end of impl block
