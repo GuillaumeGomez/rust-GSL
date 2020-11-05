@@ -54,6 +54,11 @@ name = "fftmr"
 path = "./fftmr.rs"
 
 [[bin]]
+name = "filt_edge"
+path = "./filt_edge.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
 name = "integration"
 path = "./integration.rs"
 
