@@ -53,7 +53,9 @@ impl IntegrationFixedWorkspace {
         alpha: f64,
         beta: f64,
     ) -> Option<IntegrationFixedWorkspace> {
-        let tmp = unsafe { sys::gsl_integration_fixed_alloc(type_.unwrap_shared(), n, a, b, alpha, beta) };
+        let tmp = unsafe {
+            sys::gsl_integration_fixed_alloc(type_.unwrap_shared(), n, a, b, alpha, beta)
+        };
 
         if tmp.is_null() {
             None

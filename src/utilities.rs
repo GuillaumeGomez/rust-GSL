@@ -1,9 +1,9 @@
 /// Utilities for interfacing with GSL/C
 use std::ffi::CString;
 use std::fs::OpenOptions;
+use std::io;
 use std::os::raw::c_char;
 use std::path::Path;
-use std::io;
 
 use libc::{fclose, fopen, FILE};
 

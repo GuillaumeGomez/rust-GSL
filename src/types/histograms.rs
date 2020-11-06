@@ -207,9 +207,7 @@ impl Histogram {
 
     /// This function returns true if the all of the individual bin ranges of the two histograms are identical, and false otherwise.
     pub fn equal_bins_p(&self, other: &Histogram) -> bool {
-        unsafe {
-            sys::gsl_histogram_equal_bins_p(self.unwrap_shared(), other.unwrap_shared()) != 0
-        }
+        unsafe { sys::gsl_histogram_equal_bins_p(self.unwrap_shared(), other.unwrap_shared()) != 0 }
     }
 
     /// This function adds the contents of the bins in histogram other to the corresponding bins of self histogram, i.e. h'_1(i) = h_1(i) + h_2(i).

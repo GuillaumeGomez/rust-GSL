@@ -5,61 +5,76 @@
 /*!
 #One dimensional Minimization
 
-This chapter describes routines for finding minima of arbitrary one-dimensional functions. The library provides low level components for a
-variety of iterative minimizers and convergence tests. These can be combined by the user to achieve the desired solution, with full access
-to the intermediate steps of the algorithms. Each class of methods uses the same framework, so that you can switch between minimizers at
-runtime without needing to recompile your program. Each instance of a minimizer keeps track of its own state, allowing the minimizers to be
-used in multi-threaded programs.
+This chapter describes routines for finding minima of arbitrary one-dimensional functions. The
+library provides low level components for a variety of iterative minimizers and convergence tests.
+These can be combined by the user to achieve the desired solution, with full access to the
+intermediate steps of the algorithms. Each class of methods uses the same framework, so that you can
+switch between minimizers at runtime without needing to recompile your program. Each instance of a
+minimizer keeps track of its own state, allowing the minimizers to be used in multi-threaded
+programs.
 
 ##Overview
 
-The minimization algorithms begin with a bounded region known to contain a minimum. The region is described by a lower bound a and an upper
-bound b, with an estimate of the location of the minimum x.
+The minimization algorithms begin with a bounded region known to contain a minimum. The region is
+described by a lower bound a and an upper bound b, with an estimate of the location of the minimum
+x.
 
-The value of the function at x must be less than the value of the function at the ends of the interval,
+The value of the function at x must be less than the value of the function at the ends of the
+interval,
 
 f(a) > f(x) < f(b)
-This condition guarantees that a minimum is contained somewhere within the interval. On each iteration a new point x' is selected using one
-of the available algorithms. If the new point is a better estimate of the minimum, i.e. where f(x') < f(x), then the current estimate of
-the minimum x is updated. The new point also allows the size of the bounded interval to be reduced, by choosing the most compact set of
-points which satisfies the constraint f(a) > f(x) < f(b). The interval is reduced until it encloses the true minimum to a desired tolerance.
-This provides a best estimate of the location of the minimum and a rigorous error estimate.
 
-Several bracketing algorithms are available within a single framework. The user provides a high-level driver for the algorithm, and the library
-provides the individual functions necessary for each of the steps. There are three main phases of the iteration. The steps are,
+This condition guarantees that a minimum is contained somewhere within the interval. On each
+iteration a new point x' is selected using one of the available algorithms. If the new point is a
+better estimate of the minimum, i.e. where f(x') < f(x), then the current estimate of the minimum x
+is updated. The new point also allows the size of the bounded interval to be reduced, by choosing
+the most compact set of points which satisfies the constraint f(a) > f(x) < f(b). The interval is
+reduced until it encloses the true minimum to a desired tolerance. This provides a best estimate of
+the location of the minimum and a rigorous error estimate.
+
+Several bracketing algorithms are available within a single framework. The user provides a
+high-level driver for the algorithm, and the library provides the individual functions necessary for
+each of the steps. There are three main phases of the iteration. The steps are,
 
  * initialize minimizer state, s, for algorithm T
  * update s using the iteration T
  * test s for convergence, and repeat iteration if necessary
 
-The state for the minimizers is held in a gsl_min_fminimizer struct. The updating procedure uses only function evaluations (not derivatives).
+The state for the minimizers is held in a gsl_min_fminimizer struct. The updating procedure uses
+only function evaluations (not derivatives).
 
 ##Caveats
 
-Note that minimization functions can only search for one minimum at a time. When there are several minima in the search area, the first minimum
-to be found will be returned; however it is difficult to predict which of the minima this will be. In most cases, no error will be reported if
-you try to find a minimum in an area where there is more than one.
+Note that minimization functions can only search for one minimum at a time. When there are several
+minima in the search area, the first minimum to be found will be returned; however it is difficult
+to predict which of the minima this will be. In most cases, no error will be reported if you try to
+find a minimum in an area where there is more than one.
 
-With all minimization algorithms it can be difficult to determine the location of the minimum to full numerical precision. The behavior of the
-function in the region of the minimum x^* can be approximated by a Taylor expansion,
+With all minimization algorithms it can be difficult to determine the location of the minimum to
+full numerical precision. The behavior of the function in the region of the minimum x^* can be
+approximated by a Taylor expansion,
 
 y = f(x^*) + (1/2) f''(x^*) (x - x^*)^2
 
-and the second term of this expansion can be lost when added to the first term at finite precision. This magnifies the error in locating x^*,
-making it proportional to \sqrt \epsilon (where \epsilon is the relative accuracy of the floating point numbers). For functions with higher
-order minima, such as x^4, the magnification of the error is correspondingly worse. The best that can be achieved is to converge to the limit
-of numerical accuracy in the function values, rather than the location of the minimum itself.
+and the second term of this expansion can be lost when added to the first term at finite precision.
+This magnifies the error in locating x^*, making it proportional to sqrt epsilon (where epsilon
+is the relative accuracy of the floating point numbers). For functions with higher order minima,
+such as x^4, the magnification of the error is correspondingly worse. The best that can be achieved
+is to converge to the limit of numerical accuracy in the function values, rather than the location
+of the minimum itself.
 
 ##Providing the function to minimize
 
-You must provide a continuous function of one variable for the minimizers to operate on. In order to allow for general parameters the functions
-are defined by a gsl_function data type (see [Providing the function to solve](http://www.gnu.org/software/gsl/manual/html_node/Providing-the-function-to-solve.html#Providing-the-function-to-solve)).
+You must provide a continuous function of one variable for the minimizers to operate on. In order to
+allow for general parameters the functions are defined by a gsl_function data type (see
+[Providing the function to solve](http://www.gnu.org/software/gsl/manual/html_node/Providing-the-function-to-solve.html#Providing-the-function-to-solve)).
 
 ##Iteration
 
-The following functions drive the iteration of each algorithm. Each function performs one iteration to update the state of any minimizer of
-the corresponding type. The same functions work for all minimizers so that different methods can be substituted at runtime without modifications
-to the code.
+The following functions drive the iteration of each algorithm. Each function performs one iteration
+to update the state of any minimizer of the corresponding type. The same functions work for all
+minimizers so that different methods can be substituted at runtime without modifications to the
+code.
 
 ##Stopping Parameters
 
@@ -69,20 +84,26 @@ A minimization procedure should stop when one of the following conditions is tru
  * A user-specified maximum number of iterations has been reached.
  * An error has occurred.
 
-The handling of these conditions is under user control. The function below allows the user to test the precision of the current result.
+The handling of these conditions is under user control. The function below allows the user to test
+the precision of the current result.
 
 ##Minimization Algorithms
 
-The minimization algorithms described in this section require an initial interval which is guaranteed to contain a minimum—if a and b are the
-endpoints of the interval and x is an estimate of the minimum then f(a) > f(x) < f(b). This ensures that the function has at least one minimum
-somewhere in the interval. If a valid initial interval is used then these algorithm cannot fail, provided the function is well-behaved.
+The minimization algorithms described in this section require an initial interval which is
+guaranteed to contain a minimum—if a and b are the endpoints of the interval and x is an estimate of
+the minimum then f(a) > f(x) < f(b). This ensures that the function has at least one minimum
+somewhere in the interval. If a valid initial interval is used then these algorithm cannot fail,
+provided the function is well-behaved.
 !*/
 
+use ffi::FFI;
 use sys;
 
-pub struct Minimizer {
-    w: *mut sys::gsl_min_fminimizer,
-}
+ffi_wrapper!(
+    Minimizer,
+    *mut sys::gsl_min_fminimizer,
+    gsl_min_fminimizer_free
+);
 
 impl Minimizer {
     /// This function returns a pointer to a newly allocated instance of a minimizer of type T. For
@@ -97,13 +118,13 @@ impl Minimizer {
     ///
     /// If there is insufficient memory to create the minimizer then the function returns a null
     /// pointer and the error handler is invoked with an error code of ::NoMem.
-    pub fn new(t: &MinimizerType) -> Option<Minimizer> {
-        let ptr = unsafe { sys::gsl_min_fminimizer_alloc(t.w) };
+    pub fn new(t: MinimizerType) -> Option<Minimizer> {
+        let ptr = unsafe { sys::gsl_min_fminimizer_alloc(t.unwrap_shared()) };
 
         if ptr.is_null() {
             None
         } else {
-            Some(Self { w: ptr })
+            Some(Self::wrap(ptr))
         }
     }
 
@@ -121,7 +142,13 @@ impl Minimizer {
     ) -> ::Value {
         let mut function = wrap_callback!(f, F);
         ::Value::from(unsafe {
-            sys::gsl_min_fminimizer_set(self.w, &mut function, x_minimum, x_lower, x_upper)
+            sys::gsl_min_fminimizer_set(
+                self.unwrap_unique(),
+                &mut function,
+                x_minimum,
+                x_lower,
+                x_upper,
+            )
         })
     }
 
@@ -140,7 +167,7 @@ impl Minimizer {
         let mut function = wrap_callback!(f, F);
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set_with_values(
-                self.w,
+                self.unwrap_unique(),
                 &mut function,
                 x_minimum,
                 f_minimum,
@@ -153,7 +180,7 @@ impl Minimizer {
     }
 
     pub fn name(&self) -> Option<String> {
-        let n = unsafe { sys::gsl_min_fminimizer_name(self.w) };
+        let n = unsafe { sys::gsl_min_fminimizer_name(self.unwrap_shared()) };
         if n.is_null() {
             return None;
         }
@@ -169,31 +196,31 @@ impl Minimizer {
     }
 
     pub fn x_minimum(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_x_minimum(self.w) }
+        unsafe { sys::gsl_min_fminimizer_x_minimum(self.unwrap_shared()) }
     }
 
     pub fn x_lower(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_x_lower(self.w) }
+        unsafe { sys::gsl_min_fminimizer_x_lower(self.unwrap_shared()) }
     }
 
     pub fn x_upper(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_x_upper(self.w) }
+        unsafe { sys::gsl_min_fminimizer_x_upper(self.unwrap_shared()) }
     }
 
     pub fn f_minimum(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_f_minimum(self.w) }
+        unsafe { sys::gsl_min_fminimizer_f_minimum(self.unwrap_shared()) }
     }
 
     pub fn f_lower(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_f_lower(self.w) }
+        unsafe { sys::gsl_min_fminimizer_f_lower(self.unwrap_shared()) }
     }
 
     pub fn f_upper(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_f_upper(self.w) }
+        unsafe { sys::gsl_min_fminimizer_f_upper(self.unwrap_shared()) }
     }
 
     pub fn minimum(&self) -> f64 {
-        unsafe { sys::gsl_min_fminimizer_minimum(self.w) }
+        unsafe { sys::gsl_min_fminimizer_minimum(self.unwrap_shared()) }
     }
 
     /// This function performs a single iteration of the minimizer s. If the iteration encounters an
@@ -209,44 +236,22 @@ impl Minimizer {
     /// and the current interval bounding the minimum. This information can be accessed with the
     /// following auxiliary functions,
     pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_min_fminimizer_iterate(self.w) })
+        ::Value::from(unsafe { sys::gsl_min_fminimizer_iterate(self.unwrap_unique()) })
     }
 }
 
-impl Drop for Minimizer {
-    fn drop(&mut self) {
-        unsafe {
-            sys::gsl_min_fminimizer_free(self.w);
-        }
-    }
-}
-
-pub struct MinimizerType {
-    w: *const sys::gsl_min_fminimizer_type,
-}
+ffi_wrapper!(MinimizerType, *const sys::gsl_min_fminimizer_type);
 
 impl MinimizerType {
     pub fn goldensection() -> Self {
-        unsafe {
-            Self {
-                w: sys::gsl_min_fminimizer_goldensection,
-            }
-        }
+        ffi_wrap!(gsl_min_fminimizer_goldensection)
     }
 
     pub fn brent() -> Self {
-        unsafe {
-            Self {
-                w: sys::gsl_min_fminimizer_brent,
-            }
-        }
+        ffi_wrap!(gsl_min_fminimizer_brent)
     }
 
     pub fn quad_golden() -> Self {
-        unsafe {
-            Self {
-                w: sys::gsl_min_fminimizer_quad_golden,
-            }
-        }
+        ffi_wrap!(gsl_min_fminimizer_quad_golden)
     }
 }
