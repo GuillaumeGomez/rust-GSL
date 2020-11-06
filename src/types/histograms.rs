@@ -207,11 +207,8 @@ impl Histogram {
 
     /// This function returns true if the all of the individual bin ranges of the two histograms are identical, and false otherwise.
     pub fn equal_bins_p(&self, other: &Histogram) -> bool {
-        match unsafe {
-            sys::gsl_histogram_equal_bins_p(self.unwrap_shared(), other.unwrap_shared())
-        } {
-            0i32 => false,
-            _ => true,
+        unsafe {
+            sys::gsl_histogram_equal_bins_p(self.unwrap_shared(), other.unwrap_shared()) != 0
         }
     }
 
@@ -258,9 +255,9 @@ impl Histogram {
             let n = (*self.unwrap_shared()).n as isize;
 
             for i in 0isize..n {
-                write!(
+                writeln!(
                     stream,
-                    "{} {} {}\n",
+                    "{} {} {}",
                     *(*self.unwrap_shared()).range.offset(i),
                     *(*self.unwrap_shared()).range.offset(i + 1),
                     *(*self.unwrap_shared()).range.offset(i),
@@ -528,11 +525,8 @@ impl Histogram2D {
 
     /// This function returns 1 if all the individual bin ranges of the two histograms are identical, and 0 otherwise.
     pub fn equal_bins_p(&self, other: &Histogram2D) -> bool {
-        match unsafe {
-            sys::gsl_histogram2d_equal_bins_p(self.unwrap_shared(), other.unwrap_shared())
-        } {
-            0 => false,
-            _ => true,
+        unsafe {
+            sys::gsl_histogram2d_equal_bins_p(self.unwrap_shared(), other.unwrap_shared()) != 0
         }
     }
 

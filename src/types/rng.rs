@@ -166,15 +166,30 @@ impl Rng {
         unsafe { sys::gsl_rng_min(self.unwrap_shared()) as _ }
     }
 
-    /// This function returns a pointer to the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,
+    /// This function returns a pointer to the state of generator r. You can use this information
+    /// to access the state directly. For example, the following code will write the state of a
+    /// generator to a stream,
     ///
     /// ```C
     /// void * state = gsl_rng_state (r);
     /// size_t n = gsl_rng_size (r);
     /// fwrite (state, n, 1, stream);
     /// ```
-    pub fn state<'r, T>(&self) -> &'r mut T {
-        unsafe { ::std::mem::transmute(sys::gsl_rng_state(self.unwrap_shared())) }
+    pub fn state<T>(&self) -> &T {
+        unsafe { &(*(sys::gsl_rng_state(self.unwrap_shared()) as *const T)) }
+    }
+
+    /// This function returns a pointer to the state of generator r. You can use this information
+    /// to access the state directly. For example, the following code will write the state of a
+    /// generator to a stream,
+    ///
+    /// ```C
+    /// void * state = gsl_rng_state (r);
+    /// size_t n = gsl_rng_size (r);
+    /// fwrite (state, n, 1, stream);
+    /// ```
+    pub fn state_mut<T>(&mut self) -> &mut T {
+        unsafe { &mut (*(sys::gsl_rng_state(self.unwrap_shared()) as *mut T)) }
     }
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.

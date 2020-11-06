@@ -12,7 +12,7 @@ pub fn hydrogenicR_1(Z: f64, r: f64) -> f64 {
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
 pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_hydrogenicR_1_e(Z, r, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -37,7 +37,7 @@ pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
 pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_hydrogenicR_e(n, l, Z, r, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -59,10 +59,10 @@ pub fn wave_FG_e(
     ::types::Result,
     ::types::Result,
 ) {
-    let mut F = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
-    let mut Fp = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
-    let mut G = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
-    let mut Gp = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut F = MaybeUninit::<sys::gsl_sf_result>::uninit();
+    let mut Fp = MaybeUninit::<sys::gsl_sf_result>::uninit();
+    let mut G = MaybeUninit::<sys::gsl_sf_result>::uninit();
+    let mut Gp = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         sys::gsl_sf_coulomb_wave_FG_e(
             eta,
@@ -185,7 +185,7 @@ pub fn wave_sphF_array(
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L > -1.
 pub fn CL_e(L: f64, eta: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_coulomb_CL_e(L, eta, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())

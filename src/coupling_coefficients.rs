@@ -35,7 +35,7 @@ pub fn _3j_e(
     two_mb: i32,
     two_mc: i32,
 ) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         ::sys::gsl_sf_coupling_3j_e(
             two_ja,
@@ -75,7 +75,7 @@ pub fn _6j_e(
     two_je: i32,
     two_jf: i32,
 ) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         ::sys::gsl_sf_coupling_6j_e(
             two_ja,
@@ -132,7 +132,7 @@ pub fn _9j_e(
     two_jh: i32,
     two_ji: i32,
 ) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         ::sys::gsl_sf_coupling_9j_e(
             two_ja,

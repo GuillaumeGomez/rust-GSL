@@ -99,14 +99,14 @@ pub fn qng<F: Fn(f64) -> f64>(
     eps_abs: f64,
     eps_rel: f64,
 ) -> (::Value, f64, f64, usize) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut n_eval = 0;
 
     let ret = unsafe {
         sys::gsl_integration_qng(
-            &mut function,
+            &function,
             a,
             b,
             eps_abs,
@@ -126,7 +126,7 @@ pub fn qng<F: Fn(f64) -> f64>(
 ///
 /// Returns `(result, abs_err, resabs, resasc)`.
 pub fn qk15<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut resabs = 0.;
@@ -134,7 +134,7 @@ pub fn qk15<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
     unsafe {
         sys::gsl_integration_qk15(
-            &mut function,
+            &function,
             a,
             b,
             &mut result,
@@ -148,7 +148,7 @@ pub fn qk15<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
 /// Returns `(result, abs_err, resabs, resasc)`.
 pub fn qk21<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut resabs = 0.;
@@ -156,7 +156,7 @@ pub fn qk21<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
     unsafe {
         sys::gsl_integration_qk21(
-            &mut function,
+            &function,
             a,
             b,
             &mut result,
@@ -170,7 +170,7 @@ pub fn qk21<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
 /// Returns `(result, abs_err, resabs, resasc)`.
 pub fn qk31<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut resabs = 0.;
@@ -178,7 +178,7 @@ pub fn qk31<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
     unsafe {
         sys::gsl_integration_qk31(
-            &mut function,
+            &function,
             a,
             b,
             &mut result,
@@ -192,7 +192,7 @@ pub fn qk31<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
 /// Returns `(result, abs_err, resabs, resasc)`.
 pub fn qk41<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut resabs = 0.;
@@ -200,7 +200,7 @@ pub fn qk41<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
     unsafe {
         sys::gsl_integration_qk41(
-            &mut function,
+            &function,
             a,
             b,
             &mut result,
@@ -214,7 +214,7 @@ pub fn qk41<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
 /// Returns `(result, abs_err, resabs, resasc)`.
 pub fn qk51<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut resabs = 0.;
@@ -222,7 +222,7 @@ pub fn qk51<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
     unsafe {
         sys::gsl_integration_qk51(
-            &mut function,
+            &function,
             a,
             b,
             &mut result,
@@ -236,7 +236,7 @@ pub fn qk51<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
 /// Returns `(result, abs_err, resabs, resasc)`.
 pub fn qk61<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
-    let mut function = wrap_callback!(f, F);
+    let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
     let mut resabs = 0.;
@@ -244,7 +244,7 @@ pub fn qk61<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 
     unsafe {
         sys::gsl_integration_qk61(
-            &mut function,
+            &function,
             a,
             b,
             &mut result,

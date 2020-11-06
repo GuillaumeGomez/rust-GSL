@@ -84,9 +84,9 @@ impl<'a> ODEiv2System<'a> {
         function: &'a mut dyn FnMut(f64, &[f64], &mut [f64]) -> Value,
     ) -> ODEiv2System<'a> {
         ODEiv2System {
-            function: function,
+            function,
             jacobian: None,
-            dimension: dimension,
+            dimension,
         }
     }
 
@@ -97,13 +97,14 @@ impl<'a> ODEiv2System<'a> {
         jacobian: &'a mut dyn FnMut(f64, &[f64], &mut [f64], &mut [f64]) -> Value,
     ) -> ODEiv2System<'a> {
         ODEiv2System {
-            function: function,
+            function,
             jacobian: Some(jacobian),
-            dimension: dimension,
+            dimension,
         }
     }
 
-    /// Return `sys::gsl_odeiv2_system` structure.
+    /// Returns `sys::gsl_odeiv2_system` structure.
+    #[allow(clippy::wrong_self_convention)]
     fn to_raw(&mut self) -> sys::gsl_odeiv2_system {
         sys::gsl_odeiv2_system {
             function: Some(function_handler),

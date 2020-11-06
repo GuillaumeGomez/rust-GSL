@@ -29,7 +29,7 @@ pub mod legendre {
         /// This routine computes the complete elliptic integral K(k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
         pub fn ellint_Kcomp_e(k: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret = unsafe { ::sys::gsl_sf_ellint_Kcomp_e(k, mode.into(), result.as_mut_ptr()) };
 
             (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -44,7 +44,7 @@ pub mod legendre {
         /// This routine computes the complete elliptic integral E(k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
         pub fn ellint_Ecomp_e(k: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret = unsafe { ::sys::gsl_sf_ellint_Ecomp_e(k, mode.into(), result.as_mut_ptr()) };
 
             (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -59,7 +59,7 @@ pub mod legendre {
         /// This routine computes the complete elliptic integral \Pi(k,n) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
         pub fn ellint_Pcomp_e(k: f64, n: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret =
                 unsafe { ::sys::gsl_sf_ellint_Pcomp_e(k, n, mode.into(), result.as_mut_ptr()) };
 
@@ -80,7 +80,7 @@ pub mod legendre {
         /// This routine computes the incomplete elliptic integral F(\phi,k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
         pub fn ellint_F_e(phi: f64, k: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret = unsafe { ::sys::gsl_sf_ellint_F_e(phi, k, mode.into(), result.as_mut_ptr()) };
 
             (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -95,7 +95,7 @@ pub mod legendre {
         /// This routine computes the incomplete elliptic integral E(\phi,k) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
         pub fn ellint_E_e(phi: f64, k: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret = unsafe { ::sys::gsl_sf_ellint_E_e(phi, k, mode.into(), result.as_mut_ptr()) };
 
             (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -110,7 +110,7 @@ pub mod legendre {
         /// This routine computes the incomplete elliptic integral \Pi(\phi,k,n) to the accuracy specified by the mode variable mode.
         /// Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
         pub fn ellint_P_e(phi: f64, k: f64, n: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret =
                 unsafe { ::sys::gsl_sf_ellint_P_e(phi, k, n, mode.into(), result.as_mut_ptr()) };
 
@@ -130,7 +130,7 @@ pub mod legendre {
         ///
         /// The argument n is not used and will be removed in a future release.
         pub fn ellint_D_e(phi: f64, k: f64, mode: ::Mode) -> (Value, ::types::Result) {
-            let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+            let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
             let ret = unsafe { ::sys::gsl_sf_ellint_D_e(phi, k, mode.into(), result.as_mut_ptr()) };
 
             (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -159,7 +159,7 @@ pub mod carlson {
 
     /// This routine computes the incomplete elliptic integral RC(x,y) to the accuracy specified by the mode variable mode.
     pub fn ellint_RC_e(x: f64, y: f64, mode: ::Mode) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { ::sys::gsl_sf_ellint_RC_e(x, y, mode.into(), result.as_mut_ptr()) };
 
         (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -172,7 +172,7 @@ pub mod carlson {
 
     /// This routine computes the incomplete elliptic integral RD(x,y,z) to the accuracy specified by the mode variable mode.
     pub fn ellint_RD_e(x: f64, y: f64, z: f64, mode: ::Mode) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { ::sys::gsl_sf_ellint_RD_e(x, y, z, mode.into(), result.as_mut_ptr()) };
 
         (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -185,7 +185,7 @@ pub mod carlson {
 
     /// This routine computes the incomplete elliptic integral RF(x,y,z) to the accuracy specified by the mode variable mode.
     pub fn ellint_RF_e(x: f64, y: f64, z: f64, mode: ::Mode) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { ::sys::gsl_sf_ellint_RF_e(x, y, z, mode.into(), result.as_mut_ptr()) };
 
         (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -198,7 +198,7 @@ pub mod carlson {
 
     /// This routine computes the incomplete elliptic integral RJ(x,y,z,p) to the accuracy specified by the mode variable mode.
     pub fn ellint_RJ_e(x: f64, y: f64, z: f64, p: f64, mode: ::Mode) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret =
             unsafe { ::sys::gsl_sf_ellint_RJ_e(x, y, z, p, mode.into(), result.as_mut_ptr()) };
 

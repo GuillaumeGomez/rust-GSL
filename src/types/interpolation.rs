@@ -48,6 +48,7 @@ impl InterpAccel {
     /// This function returns a pointer to an accelerator object, which is a kind of iterator for
     /// interpolation lookups. It tracks the state of lookups, thus allowing for application of
     /// various acceleration strategies.
+    #[allow(clippy::new_without_default)]
     pub fn new() -> InterpAccel {
         InterpAccel(sys::gsl_interp_accel {
             cache: 0,

@@ -410,14 +410,14 @@ impl MultiFitFunctionFdf {
             f: None,
             df: None,
             fdf: None,
-            n: n,
-            p: p,
+            n,
+            p,
             intern: sys::gsl_multifit_function_fdf {
                 f: Some(f),
                 df: Some(df),
                 fdf: Some(fdf),
-                n: n,
-                p: p,
+                n,
+                p,
                 params: ::std::ptr::null_mut(),
                 nevalf,
                 nevaldf,
@@ -425,6 +425,7 @@ impl MultiFitFunctionFdf {
         }
     }
 
+    #[allow(clippy::wrong_self_convention)]
     fn to_raw(&mut self) -> *mut sys::gsl_multifit_function_fdf {
         self.intern.n = self.n;
         self.intern.p = self.p;
@@ -438,17 +439,15 @@ unsafe extern "C" fn f(
     params: *mut c_void,
     pf: *mut sys::gsl_vector,
 ) -> libc::c_int {
-    unsafe {
-        let t = params as *mut MultiFitFunctionFdf;
-        if let Some(ref i_f) = (*t).f {
-            i_f(
-                ffi::FFI::soft_wrap(x as usize as *mut _),
-                ffi::FFI::soft_wrap(pf),
-            )
-            .into()
-        } else {
-            ::Value::Success.into()
-        }
+    let t = params as *mut MultiFitFunctionFdf;
+    if let Some(ref i_f) = (*t).f {
+        i_f(
+            ffi::FFI::soft_wrap(x as usize as *mut _),
+            ffi::FFI::soft_wrap(pf),
+        )
+        .into()
+    } else {
+        ::Value::Success.into()
     }
 }
 
@@ -457,17 +456,15 @@ unsafe extern "C" fn df(
     params: *mut c_void,
     pdf: *mut sys::gsl_matrix,
 ) -> libc::c_int {
-    unsafe {
-        let t = params as *mut MultiFitFunctionFdf;
-        if let Some(ref i_df) = (*t).df {
-            i_df(
-                ffi::FFI::soft_wrap(x as usize as *mut _),
-                ffi::FFI::soft_wrap(pdf),
-            )
-            .into()
-        } else {
-            ::Value::Success.into()
-        }
+    let t = params as *mut MultiFitFunctionFdf;
+    if let Some(ref i_df) = (*t).df {
+        i_df(
+            ffi::FFI::soft_wrap(x as usize as *mut _),
+            ffi::FFI::soft_wrap(pdf),
+        )
+        .into()
+    } else {
+        ::Value::Success.into()
     }
 }
 
@@ -477,17 +474,15 @@ unsafe extern "C" fn fdf(
     pf: *mut sys::gsl_vector,
     pdf: *mut sys::gsl_matrix,
 ) -> libc::c_int {
-    unsafe {
-        let t = params as *mut MultiFitFunctionFdf;
-        if let Some(ref i_fdf) = (*t).fdf {
-            i_fdf(
-                ffi::FFI::soft_wrap(x as usize as *mut _),
-                ffi::FFI::soft_wrap(pf),
-                ffi::FFI::soft_wrap(pdf),
-            )
-            .into()
-        } else {
-            ::Value::Success.into()
-        }
+    let t = params as *mut MultiFitFunctionFdf;
+    if let Some(ref i_fdf) = (*t).fdf {
+        i_fdf(
+            ffi::FFI::soft_wrap(x as usize as *mut _),
+            ffi::FFI::soft_wrap(pf),
+            ffi::FFI::soft_wrap(pdf),
+        )
+        .into()
+    } else {
+        ::Value::Success.into()
     }
 }

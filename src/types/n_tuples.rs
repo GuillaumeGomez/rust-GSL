@@ -112,14 +112,14 @@ impl ReadNTuples {
     /// This function reads the current row of the ntuple file for ntuple and stores the values in
     /// ntuple->data.
     pub fn read<T: Sized>(&mut self) -> (Value, T) {
-        let mut data = unsafe { MaybeUninit::<T>::uninit() };
+        let mut data = MaybeUninit::<T>::uninit();
 
         let ret = unsafe {
             (*self.n).ntuple_data = data.as_mut_ptr() as *mut _;
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_read(self.n)
         };
-        (::Value::from(ret), unsafe { data.assume_init() }.into())
+        (::Value::from(ret), unsafe { data.assume_init() })
     }
 }
 

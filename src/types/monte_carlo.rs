@@ -139,15 +139,15 @@ impl PlainMonteCarlo {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
-        let f: Box<Box<F>> = Box::new(Box::new(f));
+        let f: Box<F> = Box::new(f);
         let ret = unsafe {
-            let mut func = sys::gsl_monte_function {
+            let func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
             sys::gsl_monte_plain_integrate(
-                &mut func,
+                &func,
                 xl.as_ptr(),
                 xu.as_ptr(),
                 xl.len() as _,
@@ -236,7 +236,7 @@ impl MiserMonteCarlo {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
-        let f: Box<Box<F>> = Box::new(Box::new(f));
+        let f: Box<F> = Box::new(f);
         let ret = unsafe {
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
@@ -390,7 +390,7 @@ impl VegasMonteCarlo {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
-        let f: Box<Box<F>> = Box::new(Box::new(f));
+        let f: Box<F> = Box::new(f);
         let ret = unsafe {
             let mut func = sys::gsl_monte_function {
                 f: transmute(monte_trampoline::<F> as usize),
@@ -560,10 +560,7 @@ impl VegasVerbosity {
     }
 
     fn is_off(&self) -> bool {
-        match *self {
-            VegasVerbosity::Off => true,
-            _ => false,
-        }
+        matches!(*self, VegasVerbosity::Off)
     }
 }
 
@@ -572,7 +569,7 @@ unsafe extern "C" fn monte_trampoline<F: FnMut(&[f64]) -> f64>(
     dim: size_t,
     param: *mut c_void,
 ) -> c_double {
-    let f: &mut Box<F> = transmute(param);
+    let f: &mut F = &mut *(param as *mut F);
     f(slice::from_raw_parts(x, dim as usize))
 }
 

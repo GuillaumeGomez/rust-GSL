@@ -25,7 +25,7 @@ pub mod polynomials {
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
     pub fn legendre_P1_e(x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_P1_e(x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -33,7 +33,7 @@ pub mod polynomials {
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
     pub fn legendre_P2_e(x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_P2_e(x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -41,7 +41,7 @@ pub mod polynomials {
 
     /// This function evaluates the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3.
     pub fn legendre_P3_e(x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_P3_e(x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -54,7 +54,7 @@ pub mod polynomials {
 
     /// This function evaluates the Legendre polynomial P_l(x) for a specific value of l, x subject to l >= 0, |x| <= 1
     pub fn legendre_Pl_e(l: i32, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_Pl_e(l, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -90,7 +90,7 @@ pub mod polynomials {
 
     /// This function computes the Legendre function Q_0(x) for x > -1, x != 1
     pub fn legendre_Q0_e(x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_Q0_e(x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -103,7 +103,7 @@ pub mod polynomials {
 
     /// This function computes the Legendre function Q_0(x) for x > -1, x != 1.
     pub fn legendre_Q1_e(x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_Q1_e(x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -116,7 +116,7 @@ pub mod polynomials {
 
     /// This function computes the Legendre function Q_l(x) for x > -1, x != 1 and l >= 0.
     pub fn legendre_Ql_e(l: i32, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_Ql_e(l, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -141,7 +141,7 @@ pub mod associated_polynomials {
 
     /// This routine computes the associated Legendre polynomial P_l^m(x) for m >= 0, l >= m, |x| <= 1.
     pub fn legendre_Plm_e(l: i32, m: i32, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_Plm_e(l, m, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -158,7 +158,7 @@ pub mod associated_polynomials {
     /// The parameters must satisfy m >= 0, l >= m, |x| <= 1.
     /// This routine avoids the overflows that occur for the standard normalization of P_l^m(x).
     pub fn legendre_sphPlm_e(l: i32, m: i32, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_sphPlm_e(l, m, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -215,7 +215,7 @@ pub mod conical {
 
     /// This routine computes the irregular Spherical Conical Function P^{1/2}_{-1/2 + i \lambda}(x) for x > -1.
     pub fn half_e(lambda: f64, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_conicalP_half_e(lambda, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -228,7 +228,7 @@ pub mod conical {
 
     /// This routine computes the regular Spherical Conical Function P^{-1/2}_{-1/2 + i \lambda}(x) for x > -1.
     pub fn mhalf_e(lambda: f64, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_conicalP_mhalf_e(lambda, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -241,7 +241,7 @@ pub mod conical {
 
     /// This routine computes the conical function P^0_{-1/2 + i \lambda}(x) for x > -1.
     pub fn _0_e(lambda: f64, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_conicalP_0_e(lambda, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -254,7 +254,7 @@ pub mod conical {
 
     /// This routine computes the conical function P^1_{-1/2 + i \lambda}(x) for x > -1.
     pub fn _1_e(lambda: f64, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_conicalP_1_e(lambda, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -267,7 +267,7 @@ pub mod conical {
 
     /// This routine computes the Regular Spherical Conical Function P^{-1/2-l}_{-1/2 + i \lambda}(x) for x > -1, l >= -1.
     pub fn sph_reg_e(l: i32, lambda: f64, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_conicalP_sph_reg_e(l, lambda, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -280,7 +280,7 @@ pub mod conical {
 
     /// This routine computes the Regular Cylindrical Conical Function P^{-m}_{-1/2 + i \lambda}(x) for x > -1, m >= -1.
     pub fn cyl_reg_e(m: i32, lambda: f64, x: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_conicalP_cyl_reg_e(m, lambda, x, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -302,7 +302,7 @@ pub mod radial {
     /// This routine computes the zeroth radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space, L^{H3d}_0(\lambda,\eta) := \sin(\lambda\eta)/(\lambda\sinh(\eta)) for \eta >= 0.
     /// In the flat limit this takes the form L^{H3d}_0(\lambda,\eta) = j_0(\lambda\eta).
     pub fn legendre_H3d_0_e(lambda: f64, eta: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_H3d_0_e(lambda, eta, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -319,7 +319,7 @@ pub mod radial {
     /// (\coth(\eta) - \lambda \cot(\lambda\eta)) for \eta >= 0.
     /// In the flat limit this takes the form L^{H3d}_1(\lambda,\eta) = j_1(\lambda\eta).
     pub fn legendre_H3d_1_e(lambda: f64, eta: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_H3d_1_e(lambda, eta, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())
@@ -332,7 +332,7 @@ pub mod radial {
 
     /// This routine computes the l-th radial eigenfunction of the Laplacian on the 3-dimensional hyperbolic space \eta >= 0, l >= 0. In the flat limit this takes the form L^{H3d}_l(\lambda,\eta) = j_l(\lambda\eta).
     pub fn legendre_H3d_e(l: i32, lambda: f64, eta: f64) -> (Value, ::types::Result) {
-        let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+        let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_legendre_H3d_e(l, lambda, eta, result.as_mut_ptr()) };
 
         (Value::from(ret), unsafe { result.assume_init() }.into())

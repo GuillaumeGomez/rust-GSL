@@ -1,12 +1,14 @@
 /// Utilities for interfacing with GSL/C
 use std::ffi::CString;
-use std::fs::File;
+use std::fs::OpenOptions;
 use std::os::raw::c_char;
 use std::path::Path;
+use std::io;
 
 use libc::{fclose, fopen, FILE};
 
 #[allow(dead_code)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Mode {
     Write,
     Read,
@@ -20,12 +22,9 @@ pub struct IOStream {
 
 impl IOStream {
     /// Open a file in write mode.
-    pub fn fwrite_handle<P: AsRef<Path>>(file: &P) -> Result<IOStream, ::std::io::ErrorKind> {
+    pub fn fwrite_handle<P: AsRef<Path>>(file: &P) -> io::Result<IOStream> {
         {
-            let f = File::open(file);
-            if f.is_err() {
-                return Err(f.unwrap_err().kind());
-            }
+            OpenOptions::new().write(true).open(file)?;
         }
         let path = CString::new(file.as_ref().to_str().unwrap()).unwrap();
         unsafe {
@@ -37,10 +36,7 @@ impl IOStream {
     }
 
     pub fn write_mode(&self) -> bool {
-        match self.mode {
-            Mode::Write => true,
-            Mode::Read => false,
-        }
+        self.mode == Mode::Write
     }
 
     #[doc(hidden)]

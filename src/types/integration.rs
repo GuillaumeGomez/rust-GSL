@@ -6,55 +6,35 @@ use crate::enums;
 use crate::Value;
 use ffi::FFI;
 
-pub struct IntegrationFixedType {
-    w: *const sys::gsl_integration_fixed_type,
-}
+ffi_wrapper!(IntegrationFixedType, *const sys::gsl_integration_fixed_type);
 
 impl IntegrationFixedType {
     pub fn legendre() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_legendre },
-        }
+        ffi_wrap!(gsl_integration_fixed_legendre)
     }
     pub fn chebyshev() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_chebyshev },
-        }
+        ffi_wrap!(gsl_integration_fixed_chebyshev)
     }
     pub fn chebyshev2() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_chebyshev2 },
-        }
+        ffi_wrap!(gsl_integration_fixed_chebyshev2)
     }
     pub fn gegenbauer() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_gegenbauer },
-        }
+        ffi_wrap!(gsl_integration_fixed_gegenbauer)
     }
     pub fn jacobi() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_jacobi },
-        }
+        ffi_wrap!(gsl_integration_fixed_jacobi)
     }
     pub fn laguerre() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_laguerre },
-        }
+        ffi_wrap!(gsl_integration_fixed_laguerre)
     }
     pub fn hermite() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_hermite },
-        }
+        ffi_wrap!(gsl_integration_fixed_hermite)
     }
     pub fn exponential() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_exponential },
-        }
+        ffi_wrap!(gsl_integration_fixed_exponential)
     }
     pub fn rational() -> IntegrationFixedType {
-        IntegrationFixedType {
-            w: unsafe { sys::gsl_integration_fixed_rational },
-        }
+        ffi_wrap!(gsl_integration_fixed_rational)
     }
 }
 
@@ -66,14 +46,14 @@ ffi_wrapper!(
 
 impl IntegrationFixedWorkspace {
     pub fn new(
-        type_: &IntegrationFixedType,
+        type_: IntegrationFixedType,
         n: usize,
         a: f64,
         b: f64,
         alpha: f64,
         beta: f64,
     ) -> Option<IntegrationFixedWorkspace> {
-        let tmp = unsafe { sys::gsl_integration_fixed_alloc(type_.w, n, a, b, alpha, beta) };
+        let tmp = unsafe { sys::gsl_integration_fixed_alloc(type_.unwrap_shared(), n, a, b, alpha, beta) };
 
         if tmp.is_null() {
             None
@@ -725,14 +705,14 @@ impl CquadWorkspace {
         epsabs: f64,
         epsrel: f64,
     ) -> (::Value, f64, f64, usize) {
-        let mut function = wrap_callback!(f, F);
+        let function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut n_evals = 0;
 
         let ret = unsafe {
             sys::gsl_integration_cquad(
-                &mut function,
+                &function,
                 a,
                 b,
                 epsabs,

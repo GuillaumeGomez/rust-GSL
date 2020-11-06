@@ -323,14 +323,12 @@ impl $rust_name {
         if self.unwrap_shared().is_null() {
             None
         } else {
-            unsafe {
-                match $rust_name::new(self.len()) {
-                    Some(mut v) => {
-                        v.copy_from(self);
-                        Some(v)
-                    }
-                    None => None,
+            match $rust_name::new(self.len()) {
+                Some(mut v) => {
+                    v.copy_from(self);
+                    Some(v)
                 }
+                None => None,
             }
         }
     }

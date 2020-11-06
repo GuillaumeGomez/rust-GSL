@@ -387,17 +387,15 @@ impl $rust_name {
     }
 
     pub fn clone(&self) -> Option<Self> {
-        unsafe {
-            if self.unwrap_shared().is_null() {
-                None
-            } else {
-                match Self::new(self.size1(), self.size2()) {
-                    Some(mut m) => {
-                        m.copy_from(self);
-                        Some(m)
-                    }
-                    None => None,
+        if self.unwrap_shared().is_null() {
+            None
+        } else {
+            match Self::new(self.size1(), self.size2()) {
+                Some(mut m) => {
+                    m.copy_from(self);
+                    Some(m)
                 }
+                None => None,
             }
         }
     }
@@ -445,19 +443,17 @@ impl Debug for $rust_name {
         } else {
             let size1 = self.size1();
             let size2 = self.size2();
-            unsafe {
-                for y in 0..size1 {
-                    write!(f, "[");
-                    for x in 0..size2 {
-                        if x < size2 - 1 {
-                            write!(f, "{}, ", self.get(y, x));
-                        } else {
-                            write!(f, "{}", self.get(y, x));
-                        }
+            for y in 0..size1 {
+                write!(f, "[");
+                for x in 0..size2 {
+                    if x < size2 - 1 {
+                        write!(f, "{}, ", self.get(y, x));
+                    } else {
+                        write!(f, "{}", self.get(y, x));
                     }
-                    if y < size1 - 1 {
-                        write!(f, "]\n");
-                    }
+                }
+                if y < size1 - 1 {
+                    write!(f, "]\n");
                 }
             }
             write!(f, "]")

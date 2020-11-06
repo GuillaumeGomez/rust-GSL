@@ -27,7 +27,7 @@ pub fn laguerre_3(a: f64, x: f64) -> f64 {
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
 pub fn laguerre_1_e(a: f64, x: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_laguerre_1_e(a, x, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -35,7 +35,7 @@ pub fn laguerre_1_e(a: f64, x: f64) -> (Value, ::types::Result) {
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
 pub fn laguerre_2_e(a: f64, x: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_laguerre_2_e(a, x, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -43,7 +43,7 @@ pub fn laguerre_2_e(a: f64, x: f64) -> (Value, ::types::Result) {
 
 /// This function evaluates the generalized Laguerre polynomials L^a_1(x), L^a_2(x), L^a_3(x) using explicit representations.
 pub fn laguerre_3_e(a: f64, x: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_laguerre_3_e(a, x, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())
@@ -56,7 +56,7 @@ pub fn laguerre_n(n: i32, a: f64, x: f64) -> f64 {
 
 /// the generalized Laguerre polynomials L^a_n(x) for a > -1, n >= 0.
 pub fn laguerre_n_e(n: i32, a: f64, x: f64) -> (Value, ::types::Result) {
-    let mut result = unsafe { MaybeUninit::<sys::gsl_sf_result>::uninit() };
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_laguerre_n_e(n, a, x, result.as_mut_ptr()) };
 
     (::Value::from(ret), unsafe { result.assume_init() }.into())
