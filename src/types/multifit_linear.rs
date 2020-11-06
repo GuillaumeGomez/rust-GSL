@@ -89,26 +89,28 @@ impl MultifitLinearWorkspace {
         unsafe { sys::gsl_multifit_linear_rank(tol, self.unwrap_shared()) }
     }
 
+    /// Returns `(rnorm, snorm, Value)`.
     pub fn linear_solve(
         &mut self,
         lambda: f64,
         x: &MatrixF64,
         y: &VectorF64,
         c: &mut VectorF64,
-        rnorm: &mut f64,
-        snorm: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear_solve(
+    ) -> (f64, f64, Value) {
+        let mut rnorm = 0.;
+        let mut snorm = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_linear_solve(
                 lambda,
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 c.unwrap_unique(),
-                rnorm,
-                snorm,
+                &mut rnorm,
+                &mut snorm,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (rnorm, snorm, Value::from(ret))
     }
 
     pub fn linear_stdform1(
@@ -473,23 +475,25 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    /// Returns `(lambda, g_lambda, Value)`.
     pub fn linear_gcv(
         &mut self,
         y: &VectorF64,
         reg_param: &mut VectorF64,
         g: &mut VectorF64,
-        lambda: &mut f64,
-        g_lambda: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear_gcv(
+    ) -> (f64, f64, Value) {
+        let mut lambda = 0.;
+        let mut g_lambda = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_linear_gcv(
                 y.unwrap_shared(),
                 reg_param.unwrap_unique(),
                 g.unwrap_unique(),
-                lambda,
-                g_lambda,
+                &mut lambda,
+                &mut g_lambda,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (lambda, g_lambda, Value::from(ret))
     }
 }
