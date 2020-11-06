@@ -59,6 +59,11 @@ path = "./filt_edge.rs"
 required-features = ["GSL/v2_5"]
 
 [[bin]]
+name = "fitreg"
+path = "./fitreg.rs"
+required-features = ["GSL/v2_1"]
+
+[[bin]]
 name = "integration"
 path = "./integration.rs"
 
