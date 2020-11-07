@@ -88,6 +88,10 @@ path = "./gaussfilt2.rs"
 required-features = ["GSL/v2_5"]
 
 [[bin]]
+name = "histogram2d"
+path = "./histogram2d.rs"
+
+[[bin]]
 name = "integration"
 path = "./integration.rs"
 
