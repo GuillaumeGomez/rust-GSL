@@ -64,6 +64,24 @@ path = "./fitreg.rs"
 required-features = ["GSL/v2_1"]
 
 [[bin]]
+name = "fitreg2"
+path = "./fitreg2.rs"
+required-features = ["GSL/v2_1"]
+
+[[bin]]
+name = "fitting"
+path = "./fitting.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
+name = "fitting3"
+path = "./fitting3.rs"
+
+[[bin]]
+name = "gaussfilt"
+path = "./gaussfilt.rs"
+
+[[bin]]
 name = "integration"
 path = "./integration.rs"
 

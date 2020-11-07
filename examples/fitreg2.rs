@@ -4,55 +4,56 @@
 
 extern crate rgsl;
 
-use rgsl::{multifit, MatrixF64, MultifitLinearWorkspace, Rng, RngType, VectorF64};
+use rgsl::{multifit, MatrixF64, MultifitLinearWorkspace, VectorF64};
 
-const N: usize = 1000; // number of observations
-const P: usize = 2; // number of model parameters
+const N: usize = 10; // number of observations
+const P: usize = 8; // number of model parameters
 const NPOINTS: usize = 200; // number of points on L-curve and GCV curve
 
+fn hibert_matrix() -> Option<MatrixF64> {
+    let mut x = MatrixF64::new(N, P)?;
+    let n = x.size1();
+    let m = x.size2();
+
+    for i in 0..n {
+        for j in 0..m {
+            x.set(i, j, 1. / ((i + j) as f64 + 1.));
+        }
+    }
+    Some(x)
+}
+
 fn main() {
-    let mut r = Rng::new(RngType::default()).expect("Rng::new failed");
-    let mut x = MatrixF64::new(N, P).expect("MatrixF64::new failed");
     let mut y = VectorF64::new(N).expect("MatrixF64::new failed");
 
+    // construct Hilbert matrix and rhs vector
+    let mut x = hibert_matrix().expect("hibert_matrix failed");
+
+    let mut val = 1.;
     for i in 0..N {
-        // generate first random variable u
-        let ui = 5. * r.gaussian(1.);
-
-        // set v = u + noise
-        let vi = ui + r.gaussian(0.001);
-
-        // set y = u + v + noise
-        let yi = ui + vi + r.gaussian(1.);
-
-        // since u =~ v, the matrix X is ill-conditioned
-        x.set(i, 0, ui);
-        x.set(i, 1, vi);
-
-        // rhs vector
-        y.set(i, yi);
+        y.set(i, val);
+        val *= -1.;
     }
 
     let mut w = MultifitLinearWorkspace::new(N, P).expect("MultifitLinearWorkspace::new failed");
     // OLS solution
-    let mut c = VectorF64::new(P).expect("VectorF64::new failed");
+    let mut c = VectorF64::new(P).expect("VectorF64::new");
     // regularized solution (L-curve)
-    let mut c_lcurve = VectorF64::new(P).expect("VectorF64::new failed");
+    let mut c_lcurve = VectorF64::new(P).expect("VectorF64::new");
     // regularized solution (GCV)
-    let mut c_gcv = VectorF64::new(P).expect("VectorF64::new failed");
+    let mut c_gcv = VectorF64::new(P).expect("VectorF64::new");
 
-    let mut reg_param = VectorF64::new(NPOINTS).expect("VectorF64::new failed");
+    let mut reg_param = VectorF64::new(NPOINTS).expect("VectorF64::new");
     // residual norms
-    let mut rho = VectorF64::new(NPOINTS).expect("VectorF64::new failed");
+    let mut rho = VectorF64::new(NPOINTS).expect("VectorF64::new");
     // solution norms
-    let mut eta = VectorF64::new(NPOINTS).expect("VectorF64::new failed");
+    let mut eta = VectorF64::new(NPOINTS).expect("VectorF64::new");
     // GCV function values
-    let mut g = VectorF64::new(NPOINTS).expect("VectorF64::new failed");
+    let mut g = VectorF64::new(NPOINTS).expect("VectorF64::new");
 
     // compute SVD of X
     w.linear_svd(&mut x);
 
-    // Get reciprocal condition number of X
     let rcond = w.linear_rcond();
     eprintln!("matrix condition number = {}", 1. / rcond);
     eprintln!("");
@@ -62,7 +63,6 @@ fn main() {
     let chisq = rnorm.powi(2);
 
     eprintln!("\n=== Unregularized fit ===");
-    eprintln!("best fit: y = {} u + {} v", c.get(0), c.get(1));
     eprintln!("residual norm = {}", rnorm);
     eprintln!("solution norm = {}", snorm);
     eprintln!("chisq/dof = {}", chisq / (N - P) as f64);
@@ -80,11 +80,6 @@ fn main() {
 
     eprintln!("\n=== Regularized fit (L-curve) ===");
     eprintln!("optimal lambda: {}", lambda_l);
-    eprintln!(
-        "best fit: y = {} u + {} v",
-        c_lcurve.get(0),
-        c_lcurve.get(1)
-    );
     eprintln!("residual norm = {}", rnorm);
     eprintln!("solution norm = {}", snorm);
     eprintln!("chisq/dof = {}", chisq / (N - P) as f64);
