@@ -101,6 +101,10 @@ name = "integration"
 path = "./integration.rs"
 
 [[bin]]
+name = "integration2"
+path = "./integration2.rs"
+
+[[bin]]
 name = "rng"
 path = "./rng.rs"
 
