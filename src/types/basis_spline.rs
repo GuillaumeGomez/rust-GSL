@@ -109,8 +109,8 @@ impl BSpLineWorkspace {
     /// linear combinations of the B_i(x) to be computed without unnecessary terms (such linear
     /// combinations occur, for example, when evaluating an interpolated function).
     ///
-    /// Returns `(istart, iend, Value)`.
-    pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> (usize, usize, Value) {
+    /// Returns `(Value, istart, iend)`.
+    pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> (Value, usize, usize) {
         let mut istart = 0;
         let mut iend = 0;
         let ret = unsafe {
@@ -122,7 +122,7 @@ impl BSpLineWorkspace {
                 self.unwrap_unique(),
             )
         };
-        (istart, iend, Value::from(ret))
+        (Value::from(ret), istart, iend)
     }
 
     /// This function returns the number of B-spline coefficients given by n = nbreak + k - 2.

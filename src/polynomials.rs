@@ -173,12 +173,12 @@ pub mod quadratic_equations {
     /// may cause a discrete change in the number of roots. However, for polynomials with small
     /// integer coefficients the discriminant can always be computed exactly.
     ///
-    /// Returns `(x0, x1)`.
-    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> (f64, f64, ::Value) {
+    /// Returns `(Value, x0, x1)`.
+    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> (::Value, f64, f64) {
         let mut x0 = 0.;
         let mut x1 = 0.;
         let ret = unsafe { sys::gsl_poly_solve_quadratic(a, b, c, &mut x0, &mut x1) };
-        (x0, x1, ::Value::from(ret))
+        (::Value::from(ret), x0, x1)
     }
 
     /// This function finds the complex roots of the quadratic equation,
@@ -217,13 +217,13 @@ pub mod cubic_equations {
     /// case, finite precision may cause equal or closely-spaced real roots to move off the
     /// real axis into the complex plane, leading to a discrete change in the number of real roots.
     ///
-    /// Returns `(x0, x1, x2, Value)`.
-    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> (f64, f64, f64, ::Value) {
+    /// Returns `(Value, x0, x1, x2)`.
+    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> (::Value, f64, f64, f64) {
         let mut x0 = 0.;
         let mut x1 = 0.;
         let mut x2 = 0.;
         let ret = unsafe { sys::gsl_poly_solve_cubic(a, b, c, &mut x0, &mut x1, &mut x2) };
-        (x0, x1, x2, ::Value::from(ret))
+        (::Value::from(ret), x0, x1, x2)
     }
 
     /// This function finds the complex roots of the cubic equation,

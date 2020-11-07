@@ -61,7 +61,7 @@ fn main() {
     }
 
     // do the fit
-    let (chisq, _) = mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov);
+    let (_, chisq) = mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov);
 
     let dof = N - NCOEFFS;
     let tss = stats::wtss(
@@ -81,7 +81,7 @@ fn main() {
     let mut xi = 0.;
     while xi < 15. {
         bw.eval(xi, &mut b);
-        let (yi, _, _) = multilinear::linear_est(&b, &c, &cov);
+        let (_, yi, _) = multilinear::linear_est(&b, &c, &cov);
         println!("{} {}", xi, yi);
         xi += 0.1;
     }

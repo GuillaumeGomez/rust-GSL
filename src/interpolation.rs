@@ -75,14 +75,14 @@ pub fn eval_deriv(
 /// This function returns the derivative d of an interpolated function for a given point x, using
 /// the interpolation object interp, data arrays xa and ya and the accelerator acc.
 ///
-/// Returns `(d, Value)`.
+/// Returns `(Value, d)`.
 pub fn eval_deriv_e(
     interp: &::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> (f64, Value) {
+) -> (Value, f64) {
     let mut d = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_deriv_e(
@@ -94,7 +94,7 @@ pub fn eval_deriv_e(
             &mut d,
         )
     };
-    (d, Value::from(ret))
+    (Value::from(ret), d)
 }
 
 /// This function returns the second derivative d2 of an interpolated function for a given point x,
@@ -120,14 +120,14 @@ pub fn eval_deriv2(
 /// This function returns the second derivative d2 of an interpolated function for a given point x,
 /// using the interpolation object interp, data arrays xa and ya and the accelerator acc.
 ///
-/// Returns `(d2, Value)`.
+/// Returns `(Value, d2)`.
 pub fn eval_deriv2_e(
     interp: &::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> (f64, Value) {
+) -> (Value, f64) {
     let mut d2 = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_deriv2_e(
@@ -139,7 +139,7 @@ pub fn eval_deriv2_e(
             &mut d2,
         )
     };
-    (d2, Value::from(ret))
+    (Value::from(ret), d2)
 }
 
 /// This function returns the numerical integral result of an interpolated function over the range
@@ -167,7 +167,7 @@ pub fn eval_integ(
 /// This function returns the numerical integral result of an interpolated function over the range
 /// [a, b], using the interpolation object interp, data arrays xa and ya and the accelerator acc.
 ///
-/// Returns `(result, Value)`.
+/// Returns `(Value, result)`.
 pub fn eval_integ_e(
     interp: &::Interp,
     xa: &[f64],
@@ -175,7 +175,7 @@ pub fn eval_integ_e(
     a: f64,
     b: f64,
     acc: &mut ::InterpAccel,
-) -> (f64, Value) {
+) -> (Value, f64) {
     let mut result = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_integ_e(
@@ -188,5 +188,5 @@ pub fn eval_integ_e(
             &mut result,
         )
     };
-    (result, Value::from(ret))
+    (Value::from(ret), result)
 }

@@ -134,7 +134,7 @@ impl $rust_name {
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
-    pub fn get_row(&self, y: usize) -> Option<($vec_name, Value)> {
+    pub fn get_row(&self, y: usize) -> Option<(Value, $vec_name)> {
         let tmp = unsafe { sys::[<$vec_c_name _alloc>](self.size2()) };
 
         if tmp.is_null() {
@@ -142,12 +142,12 @@ impl $rust_name {
         } else {
             let ret = unsafe { sys::[<$name _get_row>](tmp, self.unwrap_shared(), y) };
 
-            Some((ffi::FFI::wrap(tmp), Value::from(ret)))
+            Some((Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
-    pub fn get_col(&self, x: usize) -> Option<($vec_name, Value)> {
+    pub fn get_col(&self, x: usize) -> Option<(Value, $vec_name)> {
         let tmp = unsafe { sys::[<$vec_c_name _alloc>](self.size1()) };
 
         if tmp.is_null() {
@@ -155,7 +155,7 @@ impl $rust_name {
         } else {
             let ret = unsafe { sys::[<$name _get_col>](tmp, self.unwrap_shared(), x) };
 
-            Some((ffi::FFI::wrap(tmp), Value::from(ret)))
+            Some((Value::from(ret), ffi::FFI::wrap(tmp)))
         }
     }
 
@@ -190,7 +190,7 @@ impl $rust_name {
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match
     /// the transposed dimensions of the matrix.
-    pub fn transpose_memcpy(&self) -> Option<($rust_name, Value)> {
+    pub fn transpose_memcpy(&self) -> Option<(Value, $rust_name)> {
         let dest = unsafe { sys::[<$name _alloc>](self.size2(), self.size1()) };
 
         if dest.is_null() {
@@ -198,7 +198,7 @@ impl $rust_name {
         } else {
             let ret = unsafe { sys::[<$name _transpose_memcpy>](dest, self.unwrap_shared()) };
 
-            Some(($rust_name::wrap(dest), Value::from(ret)))
+            Some((Value::from(ret), $rust_name::wrap(dest)))
         }
     }
 

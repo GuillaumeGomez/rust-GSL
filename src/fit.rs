@@ -23,14 +23,14 @@ use crate::Value;
 /// [`Correlation`](http://www.gnu.org/software/gsl/manual/html_node/Correlation.html#Correlation)),
 /// it does not depend on the fit.
 ///
-/// Returns `(c0, c1, cov00, cov01, cov11, sumsq, Value)`.
+/// Returns `(Value, c0, c1, cov00, cov01, cov11, sumsq)`.
 pub fn linear(
     x: &[f64],
     xstride: usize,
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (f64, f64, f64, f64, f64, f64, Value) {
+) -> (Value, f64, f64, f64, f64, f64, f64) {
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -52,7 +52,7 @@ pub fn linear(
             &mut sumsq,
         )
     };
-    (c0, c1, cov00, cov01, cov11, sumsq, Value::from(ret))
+    (Value::from(ret), c0, c1, cov00, cov01, cov11, sumsq)
 }
 
 /// This function computes the best-fit linear regression coefficients (c0,c1) of the model
@@ -67,7 +67,7 @@ pub fn linear(
 /// the parameters (cov00, cov01, cov11).
 /// The weighted sum of squares of the residuals from the best-fit line, \chi^2, is returned in chisq.
 ///
-/// Returns `(c0, c1, cov00, cov01, cov11, chisq, Value)`.
+/// Returns `(Value, c0, c1, cov00, cov01, cov11, chisq)`.
 pub fn wlinear(
     x: &[f64],
     xstride: usize,
@@ -76,7 +76,7 @@ pub fn wlinear(
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (f64, f64, f64, f64, f64, f64, Value) {
+) -> (Value, f64, f64, f64, f64, f64, f64) {
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -100,14 +100,14 @@ pub fn wlinear(
             &mut chisq,
         )
     };
-    (c0, c1, cov00, cov01, cov11, chisq, Value::from(ret))
+    (Value::from(ret), c0, c1, cov00, cov01, cov11, chisq)
 }
 
 /// This function uses the best-fit linear regression coefficients c0, c1 and their covariance
 /// cov00, cov01, cov11 to compute the fitted function y and its standard deviation y_err for the
 /// model Y = c_0 + c_1 X at the point x.
 ///
-/// Returns `(y, y_err, Value)`.
+/// Returns `(Value, y, y_err)`.
 pub fn linear_est(
     x: f64,
     c0: f64,
@@ -115,12 +115,12 @@ pub fn linear_est(
     cov00: f64,
     cov01: f64,
     cov11: f64,
-) -> (f64, f64, Value) {
+) -> (Value, f64, f64) {
     let mut y = 0.;
     let mut y_err = 0.;
     let ret =
         unsafe { ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
-    (y, y_err, Value::from(ret))
+    (Value::from(ret), y, y_err)
 }
 
 /// This function computes the best-fit linear regression coefficient c1 of the model Y = c_1 X for
@@ -129,14 +129,14 @@ pub fn linear_est(
 /// scatter of the points around the best-fit line and returned via the parameter cov11.
 /// The sum of squares of the residuals from the best-fit line is returned in sumsq.
 ///
-/// Returns `(c1, cov11, sumsq, Value)`.
+/// Returns `(Value, c1, cov11, sumsq)`.
 pub fn mul(
     x: &[f64],
     xstride: usize,
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (f64, f64, f64, Value) {
+) -> (Value, f64, f64, f64) {
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
@@ -152,10 +152,10 @@ pub fn mul(
             &mut sumsq,
         )
     };
-    (c1, cov11, sumsq, Value::from(ret))
+    (Value::from(ret), c1, cov11, sumsq)
 }
 
-/// Returns `(c1, cov11, sumsq, Value)`.
+/// Returns `(Value, c1, cov11, sumsq)`.
 pub fn wmul(
     x: &[f64],
     xstride: usize,
@@ -164,7 +164,7 @@ pub fn wmul(
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (f64, f64, f64, Value) {
+) -> (Value, f64, f64, f64) {
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
@@ -182,17 +182,17 @@ pub fn wmul(
             &mut sumsq,
         )
     };
-    (c1, cov11, sumsq, Value::from(ret))
+    (Value::from(ret), c1, cov11, sumsq)
 }
 
 /// This function uses the best-fit linear regression coefficient c1 and its covariance cov11 to
 /// compute the fitted function y and its standard deviation y_err for the model Y = c_1 X at the
 /// point x.
 ///
-/// Returns `(y, y_err, Value)`.
-pub fn mul_est(x: f64, c1: f64, cov11: f64) -> (f64, f64, Value) {
+/// Returns `(Value, y, y_err)`.
+pub fn mul_est(x: f64, c1: f64, cov11: f64) -> (Value, f64, f64) {
     let mut y = 0.;
     let mut y_err = 0.;
     let ret = unsafe { ::sys::gsl_fit_mul_est(x, c1, cov11, &mut y, &mut y_err) };
-    (y, y_err, Value::from(ret))
+    (Value::from(ret), y, y_err)
 }

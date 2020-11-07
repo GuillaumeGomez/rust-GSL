@@ -26,7 +26,7 @@ fn main() {
         let u = r.uniform();
         let v = r.uniform();
 
-        let (x, y, _) = p.sample(u, v);
+        let (_, x, y) = p.sample(u, v);
 
         println!("{} {}", x, y);
     }

@@ -77,8 +77,8 @@ impl LevinUWorkspace {
     /// truncation error (the difference between two successive extrapolations) and round-off error (propagated from the individual terms)
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
     ///
-    /// Returns `(sum_accel, abserr, Value)`.
-    pub fn accel(&mut self, array: &[f64]) -> (f64, f64, Value) {
+    /// Returns `(Value, sum_accel, abserr)`.
+    pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
         let mut sum_accel = 0.;
         let mut abserr = 0.;
         let ret = unsafe {
@@ -90,7 +90,7 @@ impl LevinUWorkspace {
                 &mut abserr,
             )
         };
-        (sum_accel, abserr, Value::from(ret))
+        (Value::from(ret), sum_accel, abserr)
     }
 
     pub fn sum_plain(&self) -> f64 {
@@ -130,8 +130,8 @@ impl LevinUTruncWorkspace {
     /// in abserr_trunc. To improve the reliability of the algorithm the extrapolated values are replaced by moving averages when
     /// calculating the truncation error, smoothing out any fluctuations.
     ///
-    /// Returns `(sum_accel, abserr_trunc, Value)`.
-    pub fn accel(&mut self, array: &[f64]) -> (f64, f64, Value) {
+    /// Returns `(Value, sum_accel, abserr_trunc)`.
+    pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
         let mut sum_accel = 0.;
         let mut abserr_trunc = 0.;
         let ret = unsafe {
@@ -143,7 +143,7 @@ impl LevinUTruncWorkspace {
                 &mut abserr_trunc,
             )
         };
-        (sum_accel, abserr_trunc, Value::from(ret))
+        (Value::from(ret), sum_accel, abserr_trunc)
     }
 
     pub fn sum_plain(&self) -> f64 {

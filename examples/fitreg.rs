@@ -58,7 +58,7 @@ fn main() {
     eprintln!("");
 
     // unregularized (standard) least squares fit, lambda = 0
-    let (rnorm, snorm, _) = w.linear_solve(0., &x, &y, &mut c);
+    let (_, rnorm, snorm) = w.linear_solve(0., &x, &y, &mut c);
     let chisq = rnorm.powi(2);
 
     eprintln!("\n=== Unregularized fit ===");
@@ -69,13 +69,13 @@ fn main() {
 
     // calculate L-curve and find its corner
     w.linear_lcurve(&y, &mut reg_param, &mut rho, &mut eta);
-    let (reg_idx, _) = multifit::linear_lcorner(&rho, &eta);
+    let (_, reg_idx) = multifit::linear_lcorner(&rho, &eta);
 
     // store optimal regularization parameter
     let lambda_l = reg_param.get(reg_idx);
 
     // regularize with lambda_l
-    let (rnorm, snorm, _) = w.linear_solve(lambda_l, &x, &y, &mut c_lcurve);
+    let (_, rnorm, snorm) = w.linear_solve(lambda_l, &x, &y, &mut c_lcurve);
     let chisq = rnorm.powi(2) + (lambda_l * snorm).powi(2);
 
     eprintln!("\n=== Regularized fit (L-curve) ===");
@@ -90,10 +90,10 @@ fn main() {
     eprintln!("chisq/dof = {}", chisq / (N - P) as f64);
 
     // calculate GCV curve and find its minimum
-    let (lambda_gcv, g_gcv, _) = w.linear_gcv(&y, &mut reg_param, &mut g);
+    let (_, lambda_gcv, g_gcv) = w.linear_gcv(&y, &mut reg_param, &mut g);
 
     // regularize with lambda_gcv
-    let (rnorm, snorm, _) = w.linear_solve(lambda_gcv, &x, &y, &mut c_gcv);
+    let (_, rnorm, snorm) = w.linear_solve(lambda_gcv, &x, &y, &mut c_gcv);
     let chisq = rnorm.powi(2) + (lambda_gcv * snorm).powi(2);
 
     eprintln!("\n=== Regularized fit (GCV) ===\n");

@@ -134,14 +134,14 @@ impl Histogram {
     /// indicate success. If i lies outside the valid range of indices for the histogram then
     /// the error handler is called and the function returns an error code of Value::Dom.
     ///
-    /// Returns `(lower, upper, Value)`.
-    pub fn get_range(&self, i: usize) -> (f64, f64, Value) {
+    /// Returns `(Value, lower, upper)`.
+    pub fn get_range(&self, i: usize) -> (Value, f64, f64) {
         let mut lower = 0.;
         let mut upper = 0.;
         let ret = unsafe {
             sys::gsl_histogram_get_range(self.unwrap_shared(), i, &mut lower, &mut upper)
         };
-        (lower, upper, Value::from(ret))
+        (Value::from(ret), lower, upper)
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins of the self histogram. They provide a way
@@ -174,11 +174,11 @@ impl Histogram {
     /// and returns ::Value::Success. If x lies outside the valid range of the histogram then the
     /// function returns Value::Dom and the error handler is invoked.
     ///
-    /// Returns `(i, Value)`.
-    pub fn find(&self, x: f64) -> (usize, Value) {
+    /// Returns `(Value, i)`.
+    pub fn find(&self, x: f64) -> (Value, usize) {
         let mut i = 0;
         let ret = unsafe { sys::gsl_histogram_find(self.unwrap_shared(), x, &mut i) };
-        (i, Value::from(ret))
+        (Value::from(ret), i)
     }
 
     /// This function returns the maximum value contained in the histogram bins.
@@ -416,14 +416,14 @@ impl Histogram2D {
     /// return 0 to indicate success. If i or j lies outside the valid range of indices for the
     /// histogram then the error handler is called with an error code of Value::Dom.
     ///
-    /// Returns `(xlower, xupper, Value)`.
-    pub fn get_xrange(&self, i: usize) -> (f64, f64, Value) {
+    /// Returns `(Value, xlower, xupper)`.
+    pub fn get_xrange(&self, i: usize) -> (Value, f64, f64) {
         let mut xlower = 0.;
         let mut xupper = 0.;
         let ret = unsafe {
             sys::gsl_histogram2d_get_xrange(self.unwrap_shared(), i, &mut xlower, &mut xupper)
         };
-        (xlower, xupper, Value::from(ret))
+        (Value::from(ret), xlower, xupper)
     }
 
     /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and
@@ -434,14 +434,14 @@ impl Histogram2D {
     /// return 0 to indicate success. If i or j lies outside the valid range of indices for the
     /// histogram then the error handler is called with an error code of Value::Dom.
     ///
-    /// Returns `(ylower, yupper, Value)`.
-    pub fn get_yrange(&self, j: usize) -> (f64, f64, Value) {
+    /// Returns `(Value, ylower, yupper)`.
+    pub fn get_yrange(&self, j: usize) -> (Value, f64, f64) {
         let mut ylower = 0.;
         let mut yupper = 0.;
         let ret = unsafe {
             sys::gsl_histogram2d_get_yrange(self.unwrap_shared(), j, &mut ylower, &mut yupper)
         };
-        (ylower, yupper, Value::from(ret))
+        (Value::from(ret), ylower, yupper)
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
@@ -492,12 +492,12 @@ impl Histogram2D {
     /// (x,y) lies outside the valid range of the histogram then the function returns Value::Dom and
     /// the error handler is invoked.
     ///
-    /// Returns `(i, j, Value)`.
-    pub fn find(&self, x: f64, y: f64) -> (usize, usize, Value) {
+    /// Returns `(Value, i, j)`.
+    pub fn find(&self, x: f64, y: f64) -> (Value, usize, usize) {
         let mut i = 0;
         let mut j = 0;
         let ret = unsafe { sys::gsl_histogram2d_find(self.unwrap_shared(), x, y, &mut i, &mut j) };
-        (i, j, Value::from(ret))
+        (Value::from(ret), i, j)
     }
 
     /// This function returns the maximum value contained in the histogram bins.
@@ -662,13 +662,13 @@ impl Histogram2DPdf {
     /// This function uses two uniform random numbers between zero and one, r1 and r2, to compute a
     /// single random sample from the two-dimensional probability distribution p.
     ///
-    /// Returns `(x, y, Value)`.
-    pub fn sample(&self, r1: f64, r2: f64) -> (f64, f64, Value) {
+    /// Returns `(Value, x, y)`.
+    pub fn sample(&self, r1: f64, r2: f64) -> (Value, f64, f64) {
         let mut x = 0.;
         let mut y = 0.;
         let ret = unsafe {
             sys::gsl_histogram2d_pdf_sample(self.unwrap_shared(), r1, r2, &mut x, &mut y)
         };
-        (x, y, Value::from(ret))
+        (Value::from(ret), x, y)
     }
 }

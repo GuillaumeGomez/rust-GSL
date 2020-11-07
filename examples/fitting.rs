@@ -13,7 +13,7 @@ fn main() {
     let y = &[12., 11., 14., 13.];
     let w = &[0.1, 0.2, 0.3, 0.4];
 
-    let (c0, c1, cov00, cov01, cov11, chisq, _) = fit::wlinear(x, 1, w, 1, y, 1, N);
+    let (_, c0, c1, cov00, cov01, cov11, chisq) = fit::wlinear(x, 1, w, 1, y, 1, N);
 
     println!("# best fit: Y = {} + {} X", c0, c1);
     println!("# covariance matrix:");
@@ -28,7 +28,7 @@ fn main() {
 
     for i in -30..130 {
         let xf = x[0] + (i as f64 / 100.) * (x[N - 1] - x[0]);
-        let (yf, yf_err, _) = fit::linear_est(xf, c0, c1, cov00, cov01, cov11);
+        let (_, yf, yf_err) = fit::linear_est(xf, c0, c1, cov00, cov01, cov11);
 
         println!("fit: {} {}", xf, yf);
         println!("hi : {} {}", xf, yf + yf_err);

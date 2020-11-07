@@ -1376,13 +1376,13 @@ pub fn pcholesky_invert(LDLT: &::MatrixF64, p: &::Permutation, Ainv: &mut ::Matr
     })
 }
 
-/// Returns `(rcond, Value)`.
+/// Returns `(Value, rcond)`.
 #[cfg(feature = "v2_2")]
 pub fn pcholesky_rcond(
     LDLT: &::MatrixF64,
     p: &::Permutation,
     work: &mut ::VectorF64,
-) -> (f64, Value) {
+) -> (Value, f64) {
     let mut rcond = 0.;
     let ret = unsafe {
         sys::gsl_linalg_pcholesky_rcond(
@@ -1392,7 +1392,7 @@ pub fn pcholesky_rcond(
             work.unwrap_unique(),
         )
     };
-    (rcond, Value::from(ret))
+    (Value::from(ret), rcond)
 }
 
 #[cfg(feature = "v2_2")]
@@ -1426,13 +1426,13 @@ pub fn mcholesky_svx(LDLT: &::MatrixF64, p: &::Permutation, x: &mut ::VectorF64)
     })
 }
 
-/// Returns `(rcond, Value)`.
+/// Returns `(Value, rcond)`.
 #[cfg(feature = "v2_2")]
 pub fn mcholesky_rcond(
     LDLT: &::MatrixF64,
     p: &::Permutation,
     work: &mut ::VectorF64,
-) -> (f64, Value) {
+) -> (Value, f64) {
     let mut rcond = 0.;
     let ret = unsafe {
         sys::gsl_linalg_mcholesky_rcond(
@@ -1442,7 +1442,7 @@ pub fn mcholesky_rcond(
             work.unwrap_unique(),
         )
     };
-    (rcond, Value::from(ret))
+    (Value::from(ret), rcond)
 }
 
 #[cfg(feature = "v2_2")]
@@ -1511,14 +1511,14 @@ pub fn cholesky_band_unpack(LLT: &::MatrixF64, L: &mut ::MatrixF64) -> Value {
     })
 }
 
-/// Returns `(rcond, Value)`.
+/// Returns `(Value, rcond)`.
 #[cfg(feature = "v2_6")]
-pub fn cholesky_band_rcond(LLT: &::MatrixF64, work: &mut ::VectorF64) -> (f64, Value) {
+pub fn cholesky_band_rcond(LLT: &::MatrixF64, work: &mut ::VectorF64) -> (Value, f64) {
     let mut rcond = 0.;
     let ret = unsafe {
         sys::gsl_linalg_cholesky_band_rcond(LLT.unwrap_shared(), &mut rcond, work.unwrap_unique())
     };
-    (rcond, Value::from(ret))
+    (Value::from(ret), rcond)
 }
 
 #[cfg(feature = "v2_6")]
@@ -1538,14 +1538,14 @@ pub fn ldlt_svx(LDLT: &::MatrixF64, x: &mut ::VectorF64) -> Value {
     Value::from(unsafe { sys::gsl_linalg_ldlt_svx(LDLT.unwrap_shared(), x.unwrap_unique()) })
 }
 
-/// Returns `(rcond, Value)`.
+/// Returns `(Value, rcond)`.
 #[cfg(feature = "v2_6")]
-pub fn ldlt_rcond(LDLT: &::MatrixF64, work: &mut ::VectorF64) -> (f64, Value) {
+pub fn ldlt_rcond(LDLT: &::MatrixF64, work: &mut ::VectorF64) -> (Value, f64) {
     let mut rcond = 0.;
     let ret = unsafe {
         sys::gsl_linalg_ldlt_rcond(LDLT.unwrap_shared(), &mut rcond, work.unwrap_unique())
     };
-    (rcond, Value::from(ret))
+    (Value::from(ret), rcond)
 }
 
 #[cfg(feature = "v2_6")]
@@ -1572,14 +1572,14 @@ pub fn ldlt_band_unpack(LDLT: &::MatrixF64, L: &mut ::MatrixF64, D: &mut ::Vecto
     })
 }
 
-/// Returns `(rcond, Value)`.
+/// Returns `(Value, rcond)`.
 #[cfg(feature = "v2_6")]
-pub fn ldlt_band_rcond(LDLT: &::MatrixF64, work: &mut ::VectorF64) -> (f64, Value) {
+pub fn ldlt_band_rcond(LDLT: &::MatrixF64, work: &mut ::VectorF64) -> (Value, f64) {
     let mut rcond = 0.;
     let ret = unsafe {
         sys::gsl_linalg_ldlt_band_rcond(LDLT.unwrap_shared(), &mut rcond, work.unwrap_unique())
     };
-    (rcond, Value::from(ret))
+    (Value::from(ret), rcond)
 }
 
 #[cfg(feature = "v2_2")]
