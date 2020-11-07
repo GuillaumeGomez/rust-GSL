@@ -119,6 +119,7 @@ impl FilterImpulseWorkspace {
         }
     }
 
+    /// Returns `(noutlier, Value)`.
     pub fn impulse(
         &mut self,
         endtype: FilterEnd,
@@ -128,10 +129,10 @@ impl FilterImpulseWorkspace {
         y: &mut VectorF64,
         xmedian: &mut VectorF64,
         xsigma: &mut VectorF64,
-        noutlier: &mut usize,
         ioutlier: &mut VectorI32,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> (usize, Value) {
+        let mut noutlier = 0;
+        let ret = unsafe {
             sys::gsl_filter_impulse(
                 endtype.into(),
                 scale_type.into(),
@@ -140,10 +141,11 @@ impl FilterImpulseWorkspace {
                 y.unwrap_unique(),
                 xmedian.unwrap_unique(),
                 xsigma.unwrap_unique(),
-                noutlier,
+                &mut noutlier,
                 ioutlier.unwrap_unique(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        (noutlier, Value::from(ret))
     }
 }
