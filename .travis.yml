@@ -33,4 +33,4 @@ script:
   - cargo check --features v2_6
   - cargo check --features v2_7
   - cd examples
-  - cargo build
+  - cargo check --features GSL/v2_7
