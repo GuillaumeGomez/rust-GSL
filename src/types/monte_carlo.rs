@@ -420,16 +420,15 @@ impl VegasMonteCarlo {
         unsafe { sys::gsl_monte_vegas_chisq(self.unwrap_unique()) }
     }
 
-    /// This function returns the raw (unaveraged) values of the integral result and its error sigma from
-    /// the most recent iteration of the algorithm.
-    pub fn runval(&mut self, result: &mut f64, sigma: &mut f64) {
-        unsafe {
-            sys::gsl_monte_vegas_runval(
-                self.unwrap_unique(),
-                result as *mut c_double,
-                sigma as *mut c_double,
-            )
-        }
+    /// This function returns the raw (unaveraged) values of the integral result and its error sigma
+    /// from the most recent iteration of the algorithm.
+    ///
+    /// Returns `(result, sigma)`.
+    pub fn runval(&mut self) -> (f64, f64) {
+        let mut result = 0.;
+        let mut sigma = 0.;
+        unsafe { sys::gsl_monte_vegas_runval(self.unwrap_unique(), &mut result, &mut sigma) };
+        (result, sigma)
     }
 
     pub fn get_params(&self) -> VegasParams {

@@ -63,31 +63,27 @@ impl MultilargeLinearWorkspace {
         }
     }
 
-    pub fn solve(
-        &mut self,
-        lambda: f64,
-        c: &mut VectorF64,
-        rnorm: &mut f64,
-        snorm: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_solve(
+    /// Returns `(rnorm, snorm, Value)`.
+    pub fn solve(&mut self, lambda: f64, c: &mut VectorF64) -> (f64, f64, Value) {
+        let mut rnorm = 0.;
+        let mut snorm = 0.;
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_solve(
                 lambda,
                 c.unwrap_unique(),
-                rnorm,
-                snorm,
+                &mut rnorm,
+                &mut snorm,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (rnorm, snorm, Value::from(ret))
     }
 
-    pub fn rcond(&mut self, rcond: &mut f64) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_rcond(
-                rcond,
-                self.unwrap_unique(),
-            ))
-        }
+    /// Returns `(rcond, Value)`.
+    pub fn rcond(&mut self) -> (f64, Value) {
+        let mut rcond = 0.;
+        let ret = unsafe { sys::gsl_multilarge_linear_rcond(&mut rcond, self.unwrap_unique()) };
+        (rcond, Value::from(ret))
     }
 
     #[cfg(feature = "v2_2")]

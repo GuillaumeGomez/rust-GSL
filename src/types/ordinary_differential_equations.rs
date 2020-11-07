@@ -485,12 +485,17 @@ impl ODEiv2Control {
         }
     }
 
-    /// This function calculates the desired error level of the ind-th component to errlev. It requires the value (y) and value of the derivative
-    /// (dydt) of the component, and the current step size h.
-    pub fn errlevel(&mut self, y: f64, dydt: f64, h: f64, ind: usize, errlev: &mut f64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_odeiv2_control_errlevel(self.unwrap_unique(), y, dydt, h, ind, errlev)
-        })
+    /// This function calculates the desired error level of the ind-th component to errlev. It
+    /// requires the value (y) and value of the derivative (dydt) of the component, and the current
+    /// step size h.
+    ///
+    /// Returns `(errlev, Value)`.
+    pub fn errlevel(&mut self, y: f64, dydt: f64, h: f64, ind: usize) -> (f64, Value) {
+        let mut errlev = 0.;
+        let ret = unsafe {
+            sys::gsl_odeiv2_control_errlevel(self.unwrap_unique(), y, dydt, h, ind, &mut errlev)
+        };
+        (errlev, Value::from(ret))
     }
 
     /// This function sets a pointer of the driver object d for control object c.

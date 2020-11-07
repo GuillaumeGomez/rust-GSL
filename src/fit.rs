@@ -118,7 +118,8 @@ pub fn linear_est(
 ) -> (f64, f64, Value) {
     let mut y = 0.;
     let mut y_err = 0.;
-    let ret = unsafe { ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
+    let ret =
+        unsafe { ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
     (y, y_err, Value::from(ret))
 }
 

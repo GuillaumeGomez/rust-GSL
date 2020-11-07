@@ -126,13 +126,22 @@ impl Histogram {
         unsafe { sys::gsl_histogram_get(self.unwrap_shared(), i) }
     }
 
-    /// This function finds the upper and lower range limits of the i-th bin of the self histogram. If the index i is valid then the corresponding
-    /// range limits are stored in lower and upper. The lower limit is inclusive (i.e. events with this coordinate are included in the bin) and
-    /// the upper limit is exclusive (i.e. events with the coordinate of the upper limit are excluded and fall in the neighboring higher bin,
-    /// if it exists). The function returns 0 to indicate success. If i lies outside the valid range of indices for the histogram then
+    /// This function finds the upper and lower range limits of the i-th bin of the self histogram.
+    /// If the index i is valid then the corresponding range limits are stored in lower and upper.
+    /// The lower limit is inclusive (i.e. events with this coordinate are included in the bin) and
+    /// the upper limit is exclusive (i.e. events with the coordinate of the upper limit are
+    /// excluded and fall in the neighboring higher bin, if it exists). The function returns 0 to
+    /// indicate success. If i lies outside the valid range of indices for the histogram then
     /// the error handler is called and the function returns an error code of Value::Dom.
-    pub fn get_range(&self, i: usize, lower: &mut f64, upper: &mut f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_get_range(self.unwrap_shared(), i, lower, upper) })
+    ///
+    /// Returns `(lower, upper, Value)`.
+    pub fn get_range(&self, i: usize) -> (f64, f64, Value) {
+        let mut lower = 0.;
+        let mut upper = 0.;
+        let ret = unsafe {
+            sys::gsl_histogram_get_range(self.unwrap_shared(), i, &mut lower, &mut upper)
+        };
+        (lower, upper, Value::from(ret))
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins of the self histogram. They provide a way
@@ -158,12 +167,18 @@ impl Histogram {
         unsafe { sys::gsl_histogram_reset(self.unwrap_unique()) }
     }
 
-    /// This function finds and sets the index i to the bin number which covers the coordinate x in the self histogram. The bin is located using
-    /// a binary search. The search includes an optimization for histograms with uniform range, and will return the correct bin immediately in
-    /// this case. If x is found in the range of the histogram then the function sets the index i and returns ::Value::Success. If x lies outside
-    /// the valid range of the histogram then the function returns Value::Dom and the error handler is invoked.
-    pub fn find(&self, x: f64, i: &mut usize) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_find(self.unwrap_shared(), x, i) })
+    /// This function finds and sets the index i to the bin number which covers the coordinate x in
+    /// the self histogram. The bin is located using a binary search. The search includes an
+    /// optimization for histograms with uniform range, and will return the correct bin immediately
+    /// in this case. If x is found in the range of the histogram then the function sets the index i
+    /// and returns ::Value::Success. If x lies outside the valid range of the histogram then the
+    /// function returns Value::Dom and the error handler is invoked.
+    ///
+    /// Returns `(i, Value)`.
+    pub fn find(&self, x: f64) -> (usize, Value) {
+        let mut i = 0;
+        let ret = unsafe { sys::gsl_histogram_find(self.unwrap_shared(), x, &mut i) };
+        (i, Value::from(ret))
     }
 
     /// This function returns the maximum value contained in the histogram bins.
@@ -393,26 +408,40 @@ impl Histogram2D {
         unsafe { sys::gsl_histogram2d_get(self.unwrap_shared(), i, j) }
     }
 
-    /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and y directions of the histogram h. The range
-    /// limits are stored in xlower and xupper or ylower and yupper. The lower limits are inclusive (i.e. events with these coordinates are included
-    /// in the bin) and the upper limits are exclusive (i.e. events with the value of the upper limit are not included and fall in the neighboring
-    /// higher bin, if it exists). The functions return 0 to indicate success. If i or j lies outside the valid range of indices for the histogram
-    /// then the error handler is called with an error code of Value::Dom.
-    pub fn get_xrange(&self, i: usize, xlower: &mut f64, xupper: &mut f64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_get_xrange(self.unwrap_shared(), i, xlower, xupper)
-        })
+    /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and
+    /// y directions of the histogram h. The range limits are stored in xlower and xupper or ylower
+    /// and yupper. The lower limits are inclusive (i.e. events with these coordinates are included
+    /// in the bin) and the upper limits are exclusive (i.e. events with the value of the upper
+    /// limit are not included and fall in the neighboring higher bin, if it exists). The functions
+    /// return 0 to indicate success. If i or j lies outside the valid range of indices for the
+    /// histogram then the error handler is called with an error code of Value::Dom.
+    ///
+    /// Returns `(xlower, xupper, Value)`.
+    pub fn get_xrange(&self, i: usize) -> (f64, f64, Value) {
+        let mut xlower = 0.;
+        let mut xupper = 0.;
+        let ret = unsafe {
+            sys::gsl_histogram2d_get_xrange(self.unwrap_shared(), i, &mut xlower, &mut xupper)
+        };
+        (xlower, xupper, Value::from(ret))
     }
 
-    /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and y directions of the histogram h. The range
-    /// limits are stored in xlower and xupper or ylower and yupper. The lower limits are inclusive (i.e. events with these coordinates are included
-    /// in the bin) and the upper limits are exclusive (i.e. events with the value of the upper limit are not included and fall in the neighboring
-    /// higher bin, if it exists). The functions return 0 to indicate success. If i or j lies outside the valid range of indices for the histogram
-    /// then the error handler is called with an error code of Value::Dom.
-    pub fn get_yrange(&self, j: usize, ylower: &mut f64, yupper: &mut f64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_get_yrange(self.unwrap_shared(), j, ylower, yupper)
-        })
+    /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and
+    /// y directions of the histogram h. The range limits are stored in xlower and xupper or ylower
+    /// and yupper. The lower limits are inclusive (i.e. events with these coordinates are included
+    /// in the bin) and the upper limits are exclusive (i.e. events with the value of the upper
+    /// limit are not included and fall in the neighboring higher bin, if it exists). The functions
+    /// return 0 to indicate success. If i or j lies outside the valid range of indices for the
+    /// histogram then the error handler is called with an error code of Value::Dom.
+    ///
+    /// Returns `(ylower, yupper, Value)`.
+    pub fn get_yrange(&self, j: usize) -> (f64, f64, Value) {
+        let mut ylower = 0.;
+        let mut yupper = 0.;
+        let ret = unsafe {
+            sys::gsl_histogram2d_get_yrange(self.unwrap_shared(), j, &mut ylower, &mut yupper)
+        };
+        (ylower, yupper, Value::from(ret))
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
@@ -456,12 +485,19 @@ impl Histogram2D {
         unsafe { sys::gsl_histogram2d_reset(self.unwrap_unique()) }
     }
 
-    /// This function finds and sets the indices i and j to the bin which covers the coordinates (x,y). The bin is located using a binary search.
-    /// The search includes an optimization for histograms with uniform ranges, and will return the correct bin immediately in this case. If
-    /// (x,y) is found then the function sets the indices (i,j) and returns ::Value::Success. If (x,y) lies outside the valid range of the histogram
-    /// then the function returns Value::Dom and the error handler is invoked.
-    pub fn find(&self, x: f64, y: f64, i: &mut usize, j: &mut usize) -> Value {
-        Value::from(unsafe { sys::gsl_histogram2d_find(self.unwrap_shared(), x, y, i, j) })
+    /// This function finds and sets the indices i and j to the bin which covers the coordinates
+    /// (x,y). The bin is located using a binary search. The search includes an optimization for
+    /// histograms with uniform ranges, and will return the correct bin immediately in this case. If
+    /// (x,y) is found then the function sets the indices (i,j) and returns ::Value::Success. If
+    /// (x,y) lies outside the valid range of the histogram then the function returns Value::Dom and
+    /// the error handler is invoked.
+    ///
+    /// Returns `(i, j, Value)`.
+    pub fn find(&self, x: f64, y: f64) -> (usize, usize, Value) {
+        let mut i = 0;
+        let mut j = 0;
+        let ret = unsafe { sys::gsl_histogram2d_find(self.unwrap_shared(), x, y, &mut i, &mut j) };
+        (i, j, Value::from(ret))
     }
 
     /// This function returns the maximum value contained in the histogram bins.
@@ -469,10 +505,16 @@ impl Histogram2D {
         unsafe { sys::gsl_histogram2d_max_val(self.unwrap_shared()) }
     }
 
-    /// This function finds the indices of the bin containing the maximum value in the histogram h and stores the result in (i,j). In the case
-    /// where several bins contain the same maximum value the first bin found is returned.
-    pub fn max_bin(&self, i: &mut usize, j: &mut usize) {
-        unsafe { sys::gsl_histogram2d_max_bin(self.unwrap_shared(), i, j) }
+    /// This function finds the indices of the bin containing the maximum value in the histogram h
+    /// and stores the result in (i,j). In the case where several bins contain the same maximum
+    /// value the first bin found is returned.
+    ///
+    /// Returns `(i, j)`.
+    pub fn max_bin(&self) -> (usize, usize) {
+        let mut i = 0;
+        let mut j = 0;
+        unsafe { sys::gsl_histogram2d_max_bin(self.unwrap_shared(), &mut i, &mut j) };
+        (i, j)
     }
 
     /// This function returns the minimum value contained in the histogram bins.
@@ -480,10 +522,16 @@ impl Histogram2D {
         unsafe { sys::gsl_histogram2d_min_val(self.unwrap_shared()) }
     }
 
-    /// This function finds the indices of the bin containing the minimum value in the histogram h and stores the result in (i,j). In the case
-    /// where several bins contain the same maximum value the first bin found is returned.
-    pub fn min_bin(&self, i: &mut usize, j: &mut usize) {
-        unsafe { sys::gsl_histogram2d_min_bin(self.unwrap_shared(), i, j) }
+    /// This function finds the indices of the bin containing the minimum value in the histogram h
+    /// and stores the result in (i,j). In the case where several bins contain the same maximum
+    /// value the first bin found is returned.
+    ///
+    /// Returns `(i, j)`.
+    pub fn min_bin(&self) -> (usize, usize) {
+        let mut i = 0;
+        let mut j = 0;
+        unsafe { sys::gsl_histogram2d_min_bin(self.unwrap_shared(), &mut i, &mut j) };
+        (i, j)
     }
 
     /// This function returns the mean of the histogrammed x variable, where the histogram is regarded as a probability distribution. Negative
@@ -611,9 +659,16 @@ impl Histogram2DPdf {
         })
     }
 
-    /// This function uses two uniform random numbers between zero and one, r1 and r2, to compute a single random sample from the two-dimensional
-    /// probability distribution p.
-    pub fn sample(&self, r1: f64, r2: f64, x: &mut f64, y: &mut f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram2d_pdf_sample(self.unwrap_shared(), r1, r2, x, y) })
+    /// This function uses two uniform random numbers between zero and one, r1 and r2, to compute a
+    /// single random sample from the two-dimensional probability distribution p.
+    ///
+    /// Returns `(x, y, Value)`.
+    pub fn sample(&self, r1: f64, r2: f64) -> (f64, f64, Value) {
+        let mut x = 0.;
+        let mut y = 0.;
+        let ret = unsafe {
+            sys::gsl_histogram2d_pdf_sample(self.unwrap_shared(), r1, r2, &mut x, &mut y)
+        };
+        (x, y, Value::from(ret))
     }
 }

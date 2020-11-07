@@ -754,10 +754,15 @@ impl GLFixedTable {
     /// For i in [0, …, t->n - 1], this function obtains the i-th Gauss-Legendre point xi and weight
     /// wi on the interval [a,b]. The points and weights are ordered by increasing point value. A
     /// function f may be integrated on [a,b] by summing wi * f(xi) over i.
-    pub fn point(&self, a: f64, b: f64, i: usize, xi: &mut f64, wi: &mut f64) -> ::Value {
-        ::Value::from(unsafe {
-            sys::gsl_integration_glfixed_point(a, b, i, xi, wi, self.unwrap_shared())
-        })
+    ///
+    /// Returns `(xi, wi, Value)`.
+    pub fn point(&self, a: f64, b: f64, i: usize) -> (f64, f64, ::Value) {
+        let mut xi = 0.;
+        let mut wi = 0.;
+        let ret = unsafe {
+            sys::gsl_integration_glfixed_point(a, b, i, &mut xi, &mut wi, self.unwrap_shared())
+        };
+        (xi, wi, ::Value::from(ret))
     }
 
     /// This function applies the Gauss-Legendre integration rule contained in table self and

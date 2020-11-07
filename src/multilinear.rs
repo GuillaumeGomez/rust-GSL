@@ -42,46 +42,42 @@ pub fn lreg(smin: f64, smax: f64, reg_param: &mut VectorF64) -> Value {
     }
 }
 
-pub fn lcorner(rho: &VectorF64, eta: &VectorF64, idx: &mut usize) -> Value {
-    unsafe {
-        Value::from(sys::gsl_multifit_linear_lcorner(
-            rho.unwrap_shared(),
-            eta.unwrap_shared(),
-            idx,
-        ))
-    }
+/// Returns `(idx, Value)`.
+pub fn lcorner(rho: &VectorF64, eta: &VectorF64) -> (usize, Value) {
+    let mut idx = 0;
+    let ret = unsafe {
+        sys::gsl_multifit_linear_lcorner(rho.unwrap_shared(), eta.unwrap_shared(), &mut idx)
+    };
+    (idx, Value::from(ret))
 }
 
-pub fn lcorner2(reg_param: &VectorF64, eta: &VectorF64, idx: &mut usize) -> Value {
-    unsafe {
-        Value::from(sys::gsl_multifit_linear_lcorner2(
-            reg_param.unwrap_shared(),
-            eta.unwrap_shared(),
-            idx,
-        ))
-    }
+/// Returns `(idx, Value)`.
+pub fn lcorner2(reg_param: &VectorF64, eta: &VectorF64) -> (usize, Value) {
+    let mut idx = 0;
+    let ret = unsafe {
+        sys::gsl_multifit_linear_lcorner2(reg_param.unwrap_shared(), eta.unwrap_shared(), &mut idx)
+    };
+    (idx, Value::from(ret))
 }
 
 pub fn Lk(p: usize, k: usize, l: &mut MatrixF64) -> Value {
     unsafe { Value::from(sys::gsl_multifit_linear_Lk(p, k, l.unwrap_unique())) }
 }
 
-pub fn linear_est(
-    x: &VectorF64,
-    c: &VectorF64,
-    cov: &MatrixF64,
-    y: &mut f64,
-    y_err: &mut f64,
-) -> Value {
-    unsafe {
-        Value::from(sys::gsl_multifit_linear_est(
+/// Returns `(y, y_err)`.
+pub fn linear_est(x: &VectorF64, c: &VectorF64, cov: &MatrixF64) -> (f64, f64, Value) {
+    let mut y = 0.;
+    let mut y_err = 0.;
+    let ret = unsafe {
+        sys::gsl_multifit_linear_est(
             x.unwrap_shared(),
             c.unwrap_shared(),
             cov.unwrap_shared(),
-            y,
-            y_err,
-        ))
-    }
+            &mut y,
+            &mut y_err,
+        )
+    };
+    (y, y_err, Value::from(ret))
 }
 
 pub fn linear_residuals(x: &MatrixF64, y: &VectorF64, c: &VectorF64, r: &mut VectorF64) -> Value {

@@ -26,7 +26,7 @@ fn main() {
     let n = 6;
     let m = 10;
     let w = rgsl::IntegrationFixedWorkspace::new(
-        &rgsl::IntegrationFixedType::hermite(),
+        rgsl::IntegrationFixedType::hermite(),
         n,
         0.,
         1.,

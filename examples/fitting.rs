@@ -4,7 +4,7 @@
 
 extern crate rgsl;
 
-use rgsl::{fit, MatrixF64, MultifitLinearWorkspace, VectorF64};
+use rgsl::fit;
 
 const N: usize = 4;
 
@@ -17,7 +17,7 @@ fn main() {
 
     println!("# best fit: Y = {} + {} X", c0, c1);
     println!("# covariance matrix:");
-    println!("# [ {}, {}\n#   {}, {}]",  cov00, cov01, cov01, cov11);
+    println!("# [ {}, {}\n#   {}, {}]", cov00, cov01, cov01, cov11);
     println!("# chisq = {}", chisq);
 
     for i in 0..N {

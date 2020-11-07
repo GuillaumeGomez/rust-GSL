@@ -160,17 +160,25 @@ pub mod quadratic_equations {
     ///
     /// a x^2 + b x + c = 0
     ///
-    /// The number of real roots (either zero, one or two) is returned, and their locations are stored in x0 and x1. If no real roots are found
-    /// then x0 and x1 are not modified. If one real root is found (i.e. if a=0) then it is stored in x0. When two real roots are found they
-    /// are stored in x0 and x1 in ascending order. The case of coincident roots is not considered special. For example (x-1)^2=0 will have
-    /// two roots, which happen to have exactly equal values.
+    /// The number of real roots (either zero, one or two) is returned, and their locations are
+    /// stored in x0 and x1. If no real roots are found then x0 and x1 are not modified. If one real
+    /// root is found (i.e. if a=0) then it is stored in x0. When two real roots are found they
+    /// are stored in x0 and x1 in ascending order. The case of coincident roots is not considered
+    /// special. For example (x-1)^2=0 will have two roots, which happen to have exactly equal
+    /// values.
     ///
-    /// The number of roots found depends on the sign of the discriminant b^2 - 4 a c. This will be subject to rounding and cancellation errors
-    /// when computed in double precision, and will also be subject to errors if the coefficients of the polynomial are inexact. These errors
-    /// may cause a discrete change in the number of roots. However, for polynomials with small integer coefficients the discriminant can always
-    /// be computed exactly.
-    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64, x0: &mut f64, x1: &mut f64) -> i32 {
-        unsafe { sys::gsl_poly_solve_quadratic(a, b, c, x0, x1) }
+    /// The number of roots found depends on the sign of the discriminant b^2 - 4 a c. This will be
+    /// subject to rounding and cancellation errors when computed in double precision, and will also
+    /// be subject to errors if the coefficients of the polynomial are inexact. These errors
+    /// may cause a discrete change in the number of roots. However, for polynomials with small
+    /// integer coefficients the discriminant can always be computed exactly.
+    ///
+    /// Returns `(x0, x1)`.
+    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> (f64, f64, ::Value) {
+        let mut x0 = 0.;
+        let mut x1 = 0.;
+        let ret = unsafe { sys::gsl_poly_solve_quadratic(a, b, c, &mut x0, &mut x1) };
+        (x0, x1, ::Value::from(ret))
     }
 
     /// This function finds the complex roots of the quadratic equation,
@@ -186,8 +194,10 @@ pub mod quadratic_equations {
         c: f64,
         z0: &mut ComplexF64,
         z1: &mut ComplexF64,
-    ) -> i32 {
-        unsafe { sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) }
+    ) -> ::Value {
+        ::Value::from(unsafe {
+            sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1))
+        })
     }
 }
 
@@ -199,28 +209,30 @@ pub mod cubic_equations {
     ///
     /// x^3 + a x^2 + b x + c = 0
     ///
-    /// with a leading coefficient of unity. The number of real roots (either one or three) is returned, and their locations are stored in x0,
-    /// x1 and x2. If one real root is found then only x0 is modified. When three real roots are found they are stored in x0, x1 and x2 in
-    /// ascending order. The case of coincident roots is not considered special. For example, the equation (x-1)^3=0 will have three roots
-    /// with exactly equal values. As in the quadratic case, finite precision may cause equal or closely-spaced real roots to move off the
+    /// with a leading coefficient of unity. The number of real roots (either one or three) is
+    /// returned, and their locations are stored in x0, x1 and x2. If one real root is found then
+    /// only x0 is modified. When three real roots are found they are stored in x0, x1 and x2 in
+    /// ascending order. The case of coincident roots is not considered special. For example, the
+    /// equation (x-1)^3=0 will have three roots with exactly equal values. As in the quadratic
+    /// case, finite precision may cause equal or closely-spaced real roots to move off the
     /// real axis into the complex plane, leading to a discrete change in the number of real roots.
-    pub fn poly_solve_cubic(
-        a: f64,
-        b: f64,
-        c: f64,
-        x0: &mut f64,
-        x1: &mut f64,
-        x2: &mut f64,
-    ) -> i32 {
-        unsafe { sys::gsl_poly_solve_cubic(a, b, c, x0, x1, x2) }
+    ///
+    /// Returns `(x0, x1, x2, Value)`.
+    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> (f64, f64, f64, ::Value) {
+        let mut x0 = 0.;
+        let mut x1 = 0.;
+        let mut x2 = 0.;
+        let ret = unsafe { sys::gsl_poly_solve_cubic(a, b, c, &mut x0, &mut x1, &mut x2) };
+        (x0, x1, x2, ::Value::from(ret))
     }
 
     /// This function finds the complex roots of the cubic equation,
     ///
     /// z^3 + a z^2 + b z + c = 0
     ///
-    /// The number of complex roots is returned (always three) and the locations of the roots are stored in z0, z1 and z2. The roots are returned
-    /// in ascending order, sorted first by their real components and then by their imaginary components.
+    /// The number of complex roots is returned (always three) and the locations of the roots are
+    /// stored in z0, z1 and z2. The roots are returned in ascending order, sorted first by their
+    /// real components and then by their imaginary components.
     pub fn poly_complex_solve_cubic(
         a: f64,
         b: f64,
@@ -228,9 +240,9 @@ pub mod cubic_equations {
         z0: &mut ComplexF64,
         z1: &mut ComplexF64,
         z2: &mut ComplexF64,
-    ) -> i32 {
-        unsafe {
+    ) -> ::Value {
+        ::Value::from(unsafe {
             sys::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
-        }
+        })
     }
 }

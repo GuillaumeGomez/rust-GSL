@@ -690,8 +690,13 @@ impl Rng {
     /// and then reject those that are outside the unit circle), and then dividing by \sqrt{x^2 + y^2}. A much cleverer approach, attributed to von Neumann
     /// (See Knuth, v2, 3rd ed, p140, exercise 23), requires neither trig nor a square root. In this approach, u and v are chosen at random from the interior of
     /// a unit circle, and then x=(u^2-v^2)/(u^2+v^2) and y=2uv/(u^2+v^2).
-    pub fn dir_2d(&mut self, x: &mut f64, y: &mut f64) {
-        unsafe { sys::gsl_ran_dir_2d(self.unwrap_unique(), x, y) }
+    ///
+    /// Returns `(x, y)`.
+    pub fn dir_2d(&mut self) -> (f64, f64) {
+        let mut x = 0.;
+        let mut y = 0.;
+        unsafe { sys::gsl_ran_dir_2d(self.unwrap_unique(), &mut x, &mut y) };
+        (x, y)
     }
 
     /// This function returns a random direction vector v = (x,y) in two dimensions. The vector is normalized such that |v|^2 = x^2 + y^2 = 1.
@@ -702,15 +707,26 @@ impl Rng {
     /// and then reject those that are outside the unit circle), and then dividing by \sqrt{x^2 + y^2}. A much cleverer approach, attributed to von Neumann
     /// (See Knuth, v2, 3rd ed, p140, exercise 23), requires neither trig nor a square root. In this approach, u and v are chosen at random from the interior of
     /// a unit circle, and then x=(u^2-v^2)/(u^2+v^2) and y=2uv/(u^2+v^2).
-    pub fn dir_2d_trig_method(&mut self, x: &mut f64, y: &mut f64) {
-        unsafe { sys::gsl_ran_dir_2d_trig_method(self.unwrap_unique(), x, y) }
+    ///
+    /// Returns `(x, y)`.
+    pub fn dir_2d_trig_method(&mut self) -> (f64, f64) {
+        let mut x = 0.;
+        let mut y = 0.;
+        unsafe { sys::gsl_ran_dir_2d_trig_method(self.unwrap_unique(), &mut x, &mut y) };
+        (x, y)
     }
 
     /// This function returns a random direction vector v = (x,y,z) in three dimensions. The vector is normalized such that |v|^2 = x^2 + y^2 + z^2 = 1.
     /// The method employed is due to Robert E. Knop (CACM 13, 326 (1970)), and explained in Knuth, v2, 3rd ed, p136. It uses the surprising fact that the
     /// distribution projected along any axis is actually uniform (this is only true for 3 dimensions).
-    pub fn dir_3d(&mut self, x: &mut f64, y: &mut f64, z: &mut f64) {
-        unsafe { sys::gsl_ran_dir_3d(self.unwrap_unique(), x, y, z) }
+    ///
+    /// Returns `(x, y, z)`.
+    pub fn dir_3d(&mut self) -> (f64, f64, f64) {
+        let mut x = 0.;
+        let mut y = 0.;
+        let mut z = 0.;
+        unsafe { sys::gsl_ran_dir_3d(self.unwrap_unique(), &mut x, &mut y, &mut z) };
+        (x, y, z)
     }
 
     /// This function returns a random direction vector v = (x_1,x_2,...,x_n) in n dimensions. The vector is normalized such that |v|^2 = x_1^2 + x_2^2 + ... + x_n^2 = 1.

@@ -247,35 +247,47 @@ impl Spline {
         unsafe { sys::gsl_spline_eval(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel, y: &mut f64) -> Value {
-        Value::from(unsafe { sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, y) })
+    /// Returns `(y, Value)`.
+    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel) -> (f64, Value) {
+        let mut y = 0.;
+        let ret = unsafe { sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, &mut y) };
+        (y, Value::from(ret))
     }
 
     pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_deriv(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel, d: &mut f64) -> Value {
-        Value::from(unsafe { sys::gsl_spline_eval_deriv_e(self.unwrap_shared(), x, &mut acc.0, d) })
+    /// Returns `(d, Value)`.
+    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel) -> (f64, Value) {
+        let mut d = 0.;
+        let ret =
+            unsafe { sys::gsl_spline_eval_deriv_e(self.unwrap_shared(), x, &mut acc.0, &mut d) };
+        (d, Value::from(ret))
     }
 
     pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_deriv2(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel, d2: &mut f64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_spline_eval_deriv2_e(self.unwrap_shared(), x, &mut acc.0, d2)
-        })
+    /// Returns `(d2, Value)`.
+    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel) -> (f64, Value) {
+        let mut d2 = 0.;
+        let ret =
+            unsafe { sys::gsl_spline_eval_deriv2_e(self.unwrap_shared(), x, &mut acc.0, &mut d2) };
+        (d2, Value::from(ret))
     }
 
     pub fn eval_integ(&self, a: f64, b: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_integ(self.unwrap_shared(), a, b, &mut acc.0) }
     }
 
-    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel, result: &mut f64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_spline_eval_integ_e(self.unwrap_shared(), a, b, &mut acc.0, result)
-        })
+    /// Returns `(d2, Value)`.
+    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel) -> (f64, Value) {
+        let mut result = 0.;
+        let ret = unsafe {
+            sys::gsl_spline_eval_integ_e(self.unwrap_shared(), a, b, &mut acc.0, &mut result)
+        };
+        (result, Value::from(ret))
     }
 }

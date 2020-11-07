@@ -61,8 +61,7 @@ fn main() {
     }
 
     // do the fit
-    let mut chisq = 0.;
-    mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov, &mut chisq);
+    let (chisq, _) = mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov);
 
     let dof = N - NCOEFFS;
     let tss = stats::wtss(
@@ -80,11 +79,9 @@ fn main() {
 
     // output the smoothed curve
     let mut xi = 0.;
-    let mut yi = 0.;
-    let mut yerr = 0.;
     while xi < 15. {
         bw.eval(xi, &mut b);
-        multilinear::linear_est(&b, &c, &cov, &mut yi, &mut yerr);
+        let (yi, _, _) = multilinear::linear_est(&b, &c, &cov);
         println!("{} {}", xi, yi);
         xi += 0.1;
     }

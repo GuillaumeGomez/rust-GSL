@@ -21,26 +21,29 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    /// Returns `(chisq, Value)`.
     pub fn linear(
         &mut self,
         x: &MatrixF64,
         y: &VectorF64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-        chisq: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear(
+    ) -> (f64, Value) {
+        let mut chisq = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_linear(
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 c.unwrap_unique(),
                 cov.unwrap_unique(),
-                chisq,
+                &mut chisq,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (chisq, Value::from(ret))
     }
 
+    /// Returns `(chisq, rank, Value)`.
     #[cfg(feature = "v2_3")]
     pub fn linear_tsvd(
         &mut self,
@@ -49,21 +52,22 @@ impl MultifitLinearWorkspace {
         tol: f64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-        chisq: &mut f64,
-        rank: &mut usize,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear_tsvd(
+    ) -> (f64, usize, Value) {
+        let mut chisq = 0.;
+        let mut rank = 0;
+        let ret = unsafe {
+            sys::gsl_multifit_linear_tsvd(
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 tol,
                 c.unwrap_unique(),
                 cov.unwrap_unique(),
-                chisq,
-                rank,
+                &mut chisq,
+                &mut rank,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (chisq, rank, Value::from(ret))
     }
 
     pub fn linear_svd(&mut self, x: &MatrixF64) -> Value {
@@ -302,6 +306,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    /// Returns `(chisq, Value)`.
     pub fn wlinear(
         &mut self,
         x: &MatrixF64,
@@ -309,21 +314,23 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-        chisq: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_wlinear(
+    ) -> (f64, Value) {
+        let mut chisq = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_wlinear(
                 x.unwrap_shared(),
                 w.unwrap_shared(),
                 y.unwrap_shared(),
                 c.unwrap_unique(),
                 cov.unwrap_unique(),
-                chisq,
+                &mut chisq,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (chisq, Value::from(ret))
     }
 
+    /// Returns `(chisq, rank, Value)`.
     #[cfg(feature = "v2_3")]
     pub fn wlinear_tsvd(
         &mut self,
@@ -333,74 +340,79 @@ impl MultifitLinearWorkspace {
         tol: f64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-        chisq: &mut f64,
-        rank: &mut usize,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_wlinear_tsvd(
+    ) -> (f64, usize, Value) {
+        let mut chisq = 0.;
+        let mut rank = 0;
+        let ret = unsafe {
+            sys::gsl_multifit_wlinear_tsvd(
                 x.unwrap_shared(),
                 w.unwrap_shared(),
                 y.unwrap_shared(),
                 tol,
                 c.unwrap_unique(),
                 cov.unwrap_unique(),
-                chisq,
-                rank,
+                &mut chisq,
+                &mut rank,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (chisq, rank, Value::from(ret))
     }
 
+    /// Returns `(rank, chisq, Value)`.
     pub fn wlinear_svd(
         &mut self,
         x: &MatrixF64,
         w: &VectorF64,
         y: &VectorF64,
         tol: f64,
-        rank: &mut usize,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-        chisq: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_wlinear_svd(
+    ) -> (usize, f64, Value) {
+        let mut rank = 0;
+        let mut chisq = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_wlinear_svd(
                 x.unwrap_shared(),
                 w.unwrap_shared(),
                 y.unwrap_shared(),
                 tol,
-                rank,
+                &mut rank,
                 c.unwrap_unique(),
                 cov.unwrap_unique(),
-                chisq,
+                &mut chisq,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (rank, chisq, Value::from(ret))
     }
 
+    /// Returns `(rank, chisq, Value)`.
     pub fn wlinear_usvd(
         &mut self,
         x: &MatrixF64,
         w: &VectorF64,
         y: &VectorF64,
         tol: f64,
-        rank: &mut usize,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-        chisq: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_wlinear_usvd(
+    ) -> (usize, f64, Value) {
+        let mut rank = 0;
+        let mut chisq = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_wlinear_usvd(
                 x.unwrap_shared(),
                 w.unwrap_shared(),
                 y.unwrap_shared(),
                 tol,
-                rank,
+                &mut rank,
                 c.unwrap_unique(),
                 cov.unwrap_unique(),
-                chisq,
+                &mut chisq,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (rank, chisq, Value::from(ret))
     }
 
     #[cfg(feature = "v2_1")]
@@ -408,22 +420,24 @@ impl MultifitLinearWorkspace {
         unsafe { sys::gsl_multifit_linear_rcond(self.unwrap_unique()) }
     }
 
+    /// Returns `(delta0, Value)`.
     pub fn linear_gcv_init(
         &mut self,
         y: &VectorF64,
         reg_param: &mut VectorF64,
         UTy: &mut VectorF64,
-        delta0: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear_gcv_init(
+    ) -> (f64, Value) {
+        let mut delta0 = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_linear_gcv_init(
                 y.unwrap_shared(),
                 reg_param.unwrap_unique(),
                 UTy.unwrap_unique(),
-                delta0,
+                &mut delta0,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (delta0, Value::from(ret))
     }
 
     pub fn linear_gcv_curve(
@@ -444,24 +458,26 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    /// Returns `(lambda, Value)`.
     pub fn linear_gcv_min(
         &mut self,
         reg_param: &VectorF64,
         UTy: &VectorF64,
         g: &VectorF64,
         delta0: f64,
-        lambda: &mut f64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multifit_linear_gcv_min(
+    ) -> (f64, Value) {
+        let mut lambda = 0.;
+        let ret = unsafe {
+            sys::gsl_multifit_linear_gcv_min(
                 reg_param.unwrap_shared(),
                 UTy.unwrap_shared(),
                 g.unwrap_shared(),
                 delta0,
-                lambda,
+                &mut lambda,
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        (lambda, Value::from(ret))
     }
 
     pub fn linear_gcv_calc(&mut self, lambda: f64, UTy: &VectorF64, delta0: f64) -> f64 {
