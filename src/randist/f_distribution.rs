@@ -10,48 +10,27 @@ X = { (Y_1 / \nu_1) \over (Y_2 / \nu_2) }
 has an F-distribution F(x;\nu_1,\nu_2).
 !*/
 
-use ffi;
-use types::Rng;
-
-/// This function returns a random variate from the F-distribution with degrees of freedom nu1 and nu2. The distribution function is,
-///
-/// ```latex
-/// p(x) dx =
-/// { Gamma((\nu_1 + \nu_2)/2)
-///
-///         over Gamma(nu_1/2) Gamma(nu_2/2) }
-///
-/// \nu_1^{\nu_1/2} \nu_2^{\nu_2/2}
-///
-///    x^{\nu_1/2 - 1} (\nu_2 + \nu_1 x)^{-\nu_1/2 -\nu_2/2}
-/// ```
-///
-/// for x >= 0.
-pub fn fdist(r: &mut Rng, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_ran_fdist(ffi::FFI::unwrap_unique(r), nu1, nu2) }
-}
-
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.
 pub fn fdist_pdf(x: f64, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_ran_fdist_pdf(x, nu1, nu2) }
+    unsafe { sys::gsl_ran_fdist_pdf(x, nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.
 pub fn fdist_P(x: f64, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_cdf_fdist_P(x, nu1, nu2) }
+    unsafe { sys::gsl_cdf_fdist_P(x, nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.
 pub fn fdist_Q(x: f64, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_cdf_fdist_Q(x, nu1, nu2) }
+    unsafe { sys::gsl_cdf_fdist_Q(x, nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.
 pub fn fdist_Pinv(P: f64, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_cdf_fdist_Pinv(P, nu1, nu2) }
+    unsafe { sys::gsl_cdf_fdist_Pinv(P, nu1, nu2) }
 }
 
 /// This function computes the cumulative distribution functions P(x), Q(x) and their inverses for the F-distribution with nu1 and nu2 degrees of freedom.
 pub fn fdist_Qinv(Q: f64, nu1: f64, nu2: f64) -> f64 {
-    unsafe { ffi::gsl_cdf_fdist_Qinv(Q, nu1, nu2) }
+    unsafe { sys::gsl_cdf_fdist_Qinv(Q, nu1, nu2) }
 }

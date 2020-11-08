@@ -18,16 +18,11 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 1998, CRC Press LLC, ISBN 084933988X
 !*/
 
-use c_vec::CSlice;
-use enums;
-use ffi;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
+use crate::Value;
+use ffi::FFI;
+use std::fmt::{self, Debug, Formatter};
 
-pub struct Combination {
-    c: *mut ffi::gsl_combination,
-    data: CSlice<usize>,
-}
+ffi_wrapper!(Combination, *mut sys::gsl_combination, gsl_combination_free);
 
 impl Combination {
     /// This function allocates memory for a new combination with parameters n, k. The combination
@@ -35,146 +30,99 @@ impl Combination {
     /// `Combination::new_init_first` if you want to create a combination which is initialized to
     /// the lexicographically first combination. A null pointer is returned if insufficient memory
     /// is available to create the combination.
-    pub fn new(n: usize, k: usize) -> Option<Combination> {
-        let tmp = unsafe { ffi::gsl_combination_alloc(n, k) };
+    pub fn new(n: usize, k: usize) -> Option<Self> {
+        let tmp = unsafe { sys::gsl_combination_alloc(n, k) };
 
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                if !(*tmp).data.is_null() {
-                    Some(Combination {
-                        c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
-                    })
-                } else {
-                    Some(Combination {
-                        c: tmp,
-                        data: CSlice::new(tmp as *mut usize, 0usize),
-                    })
-                }
-            }
+            Some(Self::wrap(tmp))
         }
     }
 
     /// This function allocates memory for a new combination with parameters n, k and initializes it
     /// to the lexicographically first combination. A null pointer is returned if insufficient
     /// memory is available to create the combination.
-    pub fn new_init_first(n: usize, k: usize) -> Option<Combination> {
-        let tmp = unsafe { ffi::gsl_combination_calloc(n, k) };
+    pub fn new_with_init(n: usize, k: usize) -> Option<Self> {
+        let tmp = unsafe { sys::gsl_combination_calloc(n, k) };
 
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                if !(*tmp).data.is_null() {
-                    Some(Combination {
-                        c: tmp,
-                        data: CSlice::new((*tmp).data, (*tmp).k as usize),
-                    })
-                } else {
-                    Some(Combination {
-                        c: tmp,
-                        data: CSlice::new(tmp as *mut usize, 0usize),
-                    })
-                }
-            }
+            Some(Self::wrap(tmp))
         }
     }
 
     /// This function initializes the combination c to the lexicographically first combination, i.e.
     /// (0,1,2,...,k-1).
     pub fn init_first(&mut self) {
-        unsafe { ffi::gsl_combination_init_first(self.c) }
+        unsafe { sys::gsl_combination_init_first(self.unwrap_unique()) }
     }
 
     /// This function initializes the combination c to the lexicographically last combination, i.e.
     /// (n-k,n-k+1,…,n-1).
     pub fn init_last(&mut self) {
-        unsafe { ffi::gsl_combination_init_last(self.c) }
+        unsafe { sys::gsl_combination_init_last(self.unwrap_unique()) }
     }
 
     /// This function copies the elements of the combination self into the combination dest. The two
     /// combinations must have the same size.
-    pub fn copy(&self, dest: &mut Combination) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_combination_memcpy(dest.c, self.c) })
+    pub fn copy(&self, dest: &mut Combination) -> Value {
+        Value::from(unsafe {
+            sys::gsl_combination_memcpy(dest.unwrap_unique(), self.unwrap_shared())
+        })
     }
 
     /// This function returns the value of the i-th element of the combination self. If i lies
     /// outside the allowed range of 0 to k-1 then the error handler is invoked and 0 is returned.
     pub fn get(&self, i: usize) -> usize {
-        unsafe { ffi::gsl_combination_get(self.c, i) }
+        unsafe { sys::gsl_combination_get(self.unwrap_shared(), i) }
     }
 
     /// This function returns the range (n) of the combination self.
     pub fn n(&self) -> usize {
-        unsafe { ffi::gsl_combination_n(self.c) }
+        unsafe { sys::gsl_combination_n(self.unwrap_shared()) }
     }
 
     /// This function returns the number of elements (k) in the combination self.
     pub fn k(&self) -> usize {
-        unsafe { ffi::gsl_combination_k(self.c) }
+        unsafe { sys::gsl_combination_k(self.unwrap_shared()) }
     }
 
-    /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_slice<'r>(&'r self) -> &'r [usize] {
-        self.data.as_ref()
+    pub fn as_slice(&self) -> &[usize] {
+        unsafe {
+            let data = sys::gsl_combination_data(self.unwrap_shared());
+            ::std::slice::from_raw_parts(data, self.k())
+        }
     }
 
-    /// This function returns a pointer to the array of elements in the combination self.
-    pub fn as_mut_slice<'r>(&'r mut self) -> &'r mut [usize] {
-        self.data.as_mut()
+    pub fn as_mut_slice(&mut self) -> &mut [usize] {
+        unsafe {
+            let data = sys::gsl_combination_data(self.unwrap_shared());
+            ::std::slice::from_raw_parts_mut(data, self.k())
+        }
     }
 
     /// This function checks that the combination self is valid. The k elements should lie in the
     /// range 0 to n-1, with each value occurring once at most and in increasing order.
-    pub fn is_valid(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_combination_valid(self.c) })
+    pub fn is_valid(&self) -> Value {
+        // Little hack because `gsl_combination_valid` doesn't in fact need a mutable object...
+        Value::from(unsafe { sys::gsl_combination_valid(self.inner) })
     }
 
     /// This function advances the combination self to the next combination in lexicographic order
     /// and returns `Success`. If no further combinations are available it returns Failure and
     /// leaves self unmodified. Starting with the first combination and repeatedly applying this
     /// function will iterate through all possible combinations of a given order.
-    pub fn next(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_combination_next(self.c) })
+    pub fn next(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_combination_next(self.unwrap_unique()) })
     }
 
     /// This function steps backwards from the combination self to the previous combination in
     /// lexicographic order, returning `Success`. If no previous combination is available it returns
     /// `Failure` and leaves self unmodified.
-    pub fn prev(&mut self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_combination_prev(self.c) })
-    }
-}
-
-impl Drop for Combination {
-    fn drop(&mut self) {
-        unsafe { ffi::gsl_combination_free(self.c) };
-        self.c = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<ffi::gsl_combination> for Combination {
-    fn wrap(c: *mut ffi::gsl_combination) -> Combination {
-        unsafe {
-            Combination {
-                c: c,
-                data: CSlice::new((*c).data, (*c).k as usize),
-            }
-        }
-    }
-
-    fn soft_wrap(r: *mut ffi::gsl_combination) -> Combination {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(c: &Combination) -> *const ffi::gsl_combination {
-        c.c as *const _
-    }
-
-    fn unwrap_unique(c: &mut Combination) -> *mut ffi::gsl_combination {
-        c.c
+    pub fn prev(&mut self) -> Value {
+        Value::from(unsafe { sys::gsl_combination_prev(self.unwrap_unique()) })
     }
 }
 
@@ -182,11 +130,12 @@ impl Debug for Combination {
     #[allow(unused_must_use)]
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[");
-        for tmp in 0..self.data.len() {
-            if tmp == 0 {
-                write!(f, "{}", self.data.get(tmp).unwrap());
+        let s = self.as_slice();
+        for (pos, v) in s.iter().enumerate() {
+            if pos == 0 {
+                write!(f, "{}", v).unwrap();
             } else {
-                write!(f, ", {}", self.data.get(tmp).unwrap());
+                write!(f, " {}", v).unwrap();
             }
         }
         write!(f, "]")

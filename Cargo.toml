@@ -2,7 +2,6 @@
 name = "GSL"
 version = "1.1.1"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
-
 description = "A rust binding for the GSL (the GNU scientific library)"
 repository = "https://github.com/GuillaumeGomez/rust-GSL"
 documentation = "https://docs.rs/crate/GSL/"
@@ -10,18 +9,24 @@ readme = "README.md"
 keywords = ["mathematics", "library", "GSL"]
 license = "GPL-3.0+"
 
-build = "build.rs"
-
 [dependencies]
-c_vec = "~1.0"
 libc = "~0.2"
+GSL-sys = { path = "gsl-sys" }
+paste = "1.0"
 
-[build-dependencies]
-pkg-config = "0.3"
+[features]
+v2_1 = ["GSL-sys/v2_1"]
+v2_2 = ["GSL-sys/v2_2", "v2_1"]
+v2_3 = ["GSL-sys/v2_3", "v2_2"]
+v2_4 = ["GSL-sys/v2_4", "v2_3"]
+v2_5 = ["GSL-sys/v2_5", "v2_4"]
+v2_6 = ["GSL-sys/v2_6", "v2_5"]
+v2_7 = ["GSL-sys/v2_7", "v2_6"]
+dox = ["v2_7", "GSL-sys/dox"]
+
+[package.metadata.docs.rs]
+features = ["dox"]
 
 [lib]
 name = "rgsl"
 crate-type = ["dylib", "rlib"]
-
-[features]
-v2 = []

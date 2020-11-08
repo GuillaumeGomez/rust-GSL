@@ -74,8 +74,8 @@ where
         params: SimAnnealingParams,
     ) -> SimAnnealing<T> {
         SimAnnealing {
-            x0_p: x0_p,
-            params: params,
+            x0_p,
+            params,
             Efunc_t: ef,
             step_t: take_step,
             metric_t: distance,
@@ -456,7 +456,7 @@ where
             }
             let u = rng.uniform() * *sum_probs.last().unwrap();
             for i in 0..self.params.n_tries {
-                if &u < &sum_probs[i] {
+                if u < sum_probs[i] {
                     x = new_x[i].clone();
                     break;
                 }
@@ -508,17 +508,17 @@ impl SimAnnealingParams {
         step_size: f64,
         k: f64,
         t_initial: f64,
-        mut_t: f64,
+        mu_t: f64,
         t_min: f64,
     ) -> SimAnnealingParams {
         SimAnnealingParams {
-            n_tries: n_tries,
+            n_tries,
             iters_fixed_T: iters,
-            step_size: step_size,
-            k: k,
-            t_initial: t_initial,
-            mu_t: mut_t,
-            t_min: t_min,
+            step_size,
+            k,
+            t_initial,
+            mu_t,
+            t_min,
         }
     }
 }

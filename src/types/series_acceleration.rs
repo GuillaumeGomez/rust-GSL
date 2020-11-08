@@ -49,23 +49,25 @@ A review paper on the Levin Transform is available online,
 Herbert H. H. Homeier, Scalar Levin-Type Sequence Transformations, http://arxiv.org/abs/math/0005209.
 !*/
 
-use enums;
-use ffi;
+use crate::Value;
+use ffi::FFI;
 
-/// Workspace for Levin U Transform with error estimation
-pub struct LevinUWorkspace {
-    w: *mut ffi::gsl_sum_levin_u_workspace,
-}
+ffi_wrapper!(
+    LevinUWorkspace,
+    *mut sys::gsl_sum_levin_u_workspace,
+    gsl_sum_levin_u_free,
+    "Workspace for Levin U Transform with error estimation."
+);
 
 impl LevinUWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms. The size of the workspace is O(2n^2 + 3n).
     pub fn new(n: usize) -> Option<LevinUWorkspace> {
-        let tmp = unsafe { ffi::gsl_sum_levin_u_alloc(n) };
+        let tmp = unsafe { sys::gsl_sum_levin_u_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(LevinUWorkspace { w: tmp })
+            Some(LevinUWorkspace::wrap(tmp))
         }
     }
 
@@ -74,72 +76,50 @@ impl LevinUWorkspace {
     /// of the absolute error stored in abserr. The actual term-by-term sum is returned in w->sum_plain. The algorithm calculates the
     /// truncation error (the difference between two successive extrapolations) and round-off error (propagated from the individual terms)
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
-    pub fn accel(&mut self, array: &[f64], sum_accel: &mut f64, abserr: &mut f64) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_sum_levin_u_accel(
+    ///
+    /// Returns `(Value, sum_accel, abserr)`.
+    pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
+        let mut sum_accel = 0.;
+        let mut abserr = 0.;
+        let ret = unsafe {
+            sys::gsl_sum_levin_u_accel(
                 array.as_ptr(),
-                array.len() as usize,
-                self.w,
-                sum_accel,
-                abserr,
+                array.len() as _,
+                self.unwrap_unique(),
+                &mut sum_accel,
+                &mut abserr,
             )
-        })
+        };
+        (Value::from(ret), sum_accel, abserr)
     }
 
     pub fn sum_plain(&self) -> f64 {
-        unsafe { (*self.w).sum_plain }
+        unsafe { (*self.unwrap_shared()).sum_plain }
     }
 
     pub fn terms_used(&self) -> usize {
-        unsafe { (*self.w).terms_used }
+        unsafe { (*self.unwrap_shared()).terms_used }
     }
 
     pub fn size(&self) -> usize {
-        unsafe { (*self.w).size }
+        unsafe { (*self.unwrap_shared()).size }
     }
 }
 
-impl Drop for LevinUWorkspace {
-    fn drop(&mut self) {
-        unsafe { ffi::gsl_sum_levin_u_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<ffi::gsl_sum_levin_u_workspace> for LevinUWorkspace {
-    fn wrap(w: *mut ffi::gsl_sum_levin_u_workspace) -> LevinUWorkspace {
-        LevinUWorkspace { w: w }
-    }
-
-    fn soft_wrap(w: *mut ffi::gsl_sum_levin_u_workspace) -> LevinUWorkspace {
-        Self::wrap(w)
-    }
-
-    fn unwrap_shared(w: &LevinUWorkspace) -> *const ffi::gsl_sum_levin_u_workspace {
-        w.w as *const _
-    }
-
-    fn unwrap_unique(w: &mut LevinUWorkspace) -> *mut ffi::gsl_sum_levin_u_workspace {
-        w.w
-    }
-}
-
-/// The following functions perform the same calculation without estimating the errors. They require O(N) storage instead of O(N^2).
-/// This may be useful for summing many similar series where the size of the error has already been estimated reliably and is not
-/// expected to change.
-pub struct LevinUTruncWorkspace {
-    w: *mut ffi::gsl_sum_levin_utrunc_workspace,
-}
+ffi_wrapper!(LevinUTruncWorkspace, *mut sys::gsl_sum_levin_utrunc_workspace, gsl_sum_levin_utrunc_free,
+"The following functions perform the same calculation without estimating the errors. They require
+`O(N)` storage instead of `O(N^2)`. This may be useful for summing many similar series where the
+size of the error has already been estimated reliably and is not expected to change.");
 
 impl LevinUTruncWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms, without error estimation. The size of the workspace is O(3n).
     pub fn new(n: usize) -> Option<LevinUTruncWorkspace> {
-        let tmp = unsafe { ffi::gsl_sum_levin_utrunc_alloc(n) };
+        let tmp = unsafe { sys::gsl_sum_levin_utrunc_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(LevinUTruncWorkspace { w: tmp })
+            Some(LevinUTruncWorkspace::wrap(tmp))
         }
     }
 
@@ -149,57 +129,32 @@ impl LevinUTruncWorkspace {
     /// reaches a minimum or is sufficiently small. The difference between these two values is used as estimate of the error and is stored
     /// in abserr_trunc. To improve the reliability of the algorithm the extrapolated values are replaced by moving averages when
     /// calculating the truncation error, smoothing out any fluctuations.
-    pub fn accel(
-        &mut self,
-        array: &[f64],
-        sum_accel: &mut f64,
-        abserr_trunc: &mut f64,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_sum_levin_utrunc_accel(
+    ///
+    /// Returns `(Value, sum_accel, abserr_trunc)`.
+    pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
+        let mut sum_accel = 0.;
+        let mut abserr_trunc = 0.;
+        let ret = unsafe {
+            sys::gsl_sum_levin_utrunc_accel(
                 array.as_ptr(),
                 array.len() as _,
-                self.w,
-                sum_accel,
-                abserr_trunc,
+                self.unwrap_unique(),
+                &mut sum_accel,
+                &mut abserr_trunc,
             )
-        })
+        };
+        (Value::from(ret), sum_accel, abserr_trunc)
     }
 
     pub fn sum_plain(&self) -> f64 {
-        unsafe { (*self.w).sum_plain }
+        unsafe { (*self.unwrap_shared()).sum_plain }
     }
 
     pub fn terms_used(&self) -> usize {
-        unsafe { (*self.w).terms_used }
+        unsafe { (*self.unwrap_shared()).terms_used }
     }
 
     pub fn size(&self) -> usize {
-        unsafe { (*self.w).size }
-    }
-}
-
-impl Drop for LevinUTruncWorkspace {
-    fn drop(&mut self) {
-        unsafe { ffi::gsl_sum_levin_utrunc_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<ffi::gsl_sum_levin_utrunc_workspace> for LevinUTruncWorkspace {
-    fn wrap(w: *mut ffi::gsl_sum_levin_utrunc_workspace) -> LevinUTruncWorkspace {
-        LevinUTruncWorkspace { w: w }
-    }
-
-    fn soft_wrap(w: *mut ffi::gsl_sum_levin_utrunc_workspace) -> LevinUTruncWorkspace {
-        Self::wrap(w)
-    }
-
-    fn unwrap_shared(w: &LevinUTruncWorkspace) -> *const ffi::gsl_sum_levin_utrunc_workspace {
-        w.w as *const _
-    }
-
-    fn unwrap_unique(w: &mut LevinUTruncWorkspace) -> *mut ffi::gsl_sum_levin_utrunc_workspace {
-        w.w
+        unsafe { (*self.unwrap_shared()).size }
     }
 }

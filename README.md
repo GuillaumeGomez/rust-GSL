@@ -1,11 +1,10 @@
-rust-GSL [![Build Status](https://api.travis-ci.org/GuillaumeGomez/rust-GSL.png?branch=master)](https://travis-ci.org/GuillaumeGomez/rust-GSL) [![Gitter](https://badges.gitter.im/JoinChat.svg)](https://gitter.im/GuillaumeGomez/rust-GSL?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-========
+# rust-GSL
 
-A __Rust__ binding for the [GSL library] (the GNU Scientific Library).
+A __Rust__ binding for the [GSL library][GSL library] (the GNU Scientific Library).
 
 ## Installation
 
-This binding requires the [GSL library] library to be installed:
+This binding requires the [GSL library] library (version >= 2) to be installed:
 
 ### Linux
 
@@ -22,75 +21,34 @@ brew install gsl
 
 ### Windows
 
-Instructions from https://www.gnu.org/software/gsl/extras/native_win_builds.html:
+Instructions are available there: <https://www.gnu.org/software/gsl/extras/native_win_builds.html>.
 
-```
-Building GSL on Windows Using Native Tools
+## Usage
 
-Several packages are available for building GSL on Windows using Microsoft Visual Studio with the native Microsoft and Intel compilers.
-
-1. Using Visual Studio Build Files
-
-These files are designed for building the repository version of GSL using Visual Studio 2015. No additional build tools are required.
-
-     https://github.com/BrianGladman/gsl
-
-2. Using Perl Generated Visual Studio Project Files
-
-This approach, which offers project files for Visual Studio 2010 and 2012, has been tested with GSL versions from 1.8 to 2.3. This can also be used to obtain build files for later version of Visual Studio since these can load files intended for use in the earlier versions of Visual Studio. This approach requires that Perl is installed.
-
-     https://github.com/aweatherguy/GSL-on-Windows
-
-3. Using Cmake
-
-Cmake can produce build files for most versions of Visual Studio and for MSBUILD. A Cmake installation is required
-
-     https://github.com/ampl/gsl/commit/0cf47581583de7ed4ee1cf0a095066af0d2f97d1
-
-This approach will be especially useful for Visual Studio 2017, which has built-in support for Cmake build files.
-
-4. Installation using NuGet
-
-For those using NuGet there are win32 and x64 installation packages at:
-
-     https://www.nuget.org/packages/gsl-msvc14-x86/
-
-     https://www.nuget.org/packages/gsl-msvc14-x64/
-```
-
-This crate works with Cargo and is on [crates.io]. Just add the
-following to your `Cargo.toml` file:
+This crate works with Cargo and is on [crates.io]. Just add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
 GSL = "1.1"
 ```
 
-Add the following line to your source code:
-
-```rust
-extern crate rgsl;
-```
+You can see examples in the `examples` folder.
 
 ## Building
 
-Just run `cargo build`. However, if you have issues with GSL version 2.x, try building it with:
+Just run `cargo build`. However, if you want to use a specific version, you'll need to use the
+`cargo` features. For example:
 
 ```bash
-cargo build --features v2
+cargo build --features v2_1
 ```
 
 If a project depends on this version, don't forget to add in your `Cargo.toml`:
 
 ```toml
-[features]
-v2 = ["GSL/v2"]
-```
-
-If you always want to run the v2 features you can, instead, use the following in your `Cargo.toml`: 
-```toml
-[features]
-default = ["GSL/v2"]
+[dependencies.GSL]
+version = "1"
+features = ["v2_1"]
 ```
 
 ## Documentation
@@ -105,13 +63,8 @@ Then open this file with an internet browser: `file:///{rgsl_location}/target/do
 
 You can also access the latest build of the documentation via the internet [here](https://docs.rs/crate/GSL/).
 
-## Donations
-
-If you appreciate my work and want to support me, you can do it here:
-
-[![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/GuillaumeGomez)
-
 ## License
+
 __rust-GSL__ is a wrapper for __GSL__, therefore inherits the [GPL license](http://www.gnu.org/copyleft/gpl.html).
 
 [crates.io]: https://crates.io/crates/GSL

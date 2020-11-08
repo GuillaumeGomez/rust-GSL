@@ -47,16 +47,15 @@ A large collection of B-spline routines is available in the PPPACK library avail
 http://www.netlib.org/pppack, which is also part of SLATEC.
 !*/
 
-use enums;
-use ffi;
-#[cfg(feature = "v2")]
+use crate::Value;
+use ffi::FFI;
 use types::VectorF64;
-#[cfg(not(feature = "v2"))]
-use types::{MatrixF64, VectorF64};
 
-pub struct BSpLineWorkspace {
-    w: *mut ffi::gsl_bspline_workspace,
-}
+ffi_wrapper!(
+    BSpLineWorkspace,
+    *mut sys::gsl_bspline_workspace,
+    gsl_bspline_free
+);
 
 impl BSpLineWorkspace {
     /// This function allocates a workspace for computing B-splines of order k.
@@ -65,29 +64,29 @@ impl BSpLineWorkspace {
     /// functions.
     ///
     /// Cubic B-splines are specified by k = 4. The size of the workspace is O(5k + nbreak).
-    pub fn new(k: usize, nbreak: usize) -> Option<BSpLineWorkspace> {
-        let tmp = unsafe { ffi::gsl_bspline_alloc(k, nbreak) };
+    pub fn new(k: usize, nbreak: usize) -> Option<Self> {
+        let tmp = unsafe { sys::gsl_bspline_alloc(k, nbreak) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(BSpLineWorkspace { w: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
     /// This function computes the knots associated with the given breakpoints and stores them
     /// internally in w->knots.
-    pub fn knots(&mut self, breakpts: &VectorF64) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_bspline_knots(ffi::FFI::unwrap_shared(breakpts), self.w)
+    pub fn knots(&mut self, breakpts: &VectorF64) -> Value {
+        Value::from(unsafe {
+            sys::gsl_bspline_knots(breakpts.unwrap_shared(), self.unwrap_unique())
         })
     }
 
     /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding
     /// knot vector using the previously specified nbreak parameter.
     /// The knots are stored in w->knots.
-    pub fn knots_uniform(&mut self, a: f64, b: f64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_bspline_knots_uniform(a, b, self.w) })
+    pub fn knots_uniform(&mut self, a: f64, b: f64) -> Value {
+        Value::from(unsafe { sys::gsl_bspline_knots_uniform(a, b, self.unwrap_unique()) })
     }
 
     /// This function evaluates all B-spline basis functions at the position x and stores them in
@@ -98,8 +97,8 @@ impl BSpLineWorkspace {
     ///
     /// Computing all the basis functions at once is more efficient than computing them
     /// individually, due to the nature of the defining recurrence relation.
-    pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_bspline_eval(x, ffi::FFI::unwrap_unique(B), self.w) })
+    pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> Value {
+        Value::from(unsafe { sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique()) })
     }
 
     /// This function evaluates all potentially nonzero B-spline basis functions at the position x
@@ -109,21 +108,26 @@ impl BSpLineWorkspace {
     /// By returning only the nonzero basis functions, this function allows quantities involving
     /// linear combinations of the B_i(x) to be computed without unnecessary terms (such linear
     /// combinations occur, for example, when evaluating an interpolated function).
-    pub fn eval_non_zero(
-        &mut self,
-        x: f64,
-        Bk: &mut VectorF64,
-        istart: &mut usize,
-        iend: &mut usize,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_bspline_eval_nonzero(x, ffi::FFI::unwrap_unique(Bk), istart, iend, self.w)
-        })
+    ///
+    /// Returns `(Value, istart, iend)`.
+    pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> (Value, usize, usize) {
+        let mut istart = 0;
+        let mut iend = 0;
+        let ret = unsafe {
+            sys::gsl_bspline_eval_nonzero(
+                x,
+                Bk.unwrap_unique(),
+                &mut istart,
+                &mut iend,
+                self.unwrap_unique(),
+            )
+        };
+        (Value::from(ret), istart, iend)
     }
 
     /// This function returns the number of B-spline coefficients given by n = nbreak + k - 2.
     pub fn ncoeffs(&mut self) -> usize {
-        unsafe { ffi::gsl_bspline_ncoeffs(self.w) }
+        unsafe { sys::gsl_bspline_ncoeffs(self.unwrap_unique()) }
     }
 
     /// The Greville abscissae are defined to be the mean location of k-1 consecutive knots in the
@@ -139,140 +143,6 @@ impl BSpLineWorkspace {
     /// For the ill-defined case when k=1, the implementation chooses to return breakpoint interval
     /// midpoints.
     pub fn greville_abscissa(&mut self, i: usize) -> f64 {
-        unsafe { ffi::gsl_bspline_greville_abscissa(i, self.w) }
-    }
-}
-
-impl Drop for BSpLineWorkspace {
-    fn drop(&mut self) {
-        unsafe { ffi::gsl_bspline_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<ffi::gsl_bspline_workspace> for BSpLineWorkspace {
-    fn wrap(r: *mut ffi::gsl_bspline_workspace) -> BSpLineWorkspace {
-        BSpLineWorkspace { w: r }
-    }
-
-    fn soft_wrap(r: *mut ffi::gsl_bspline_workspace) -> BSpLineWorkspace {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(bsp: &BSpLineWorkspace) -> *const ffi::gsl_bspline_workspace {
-        bsp.w as *const _
-    }
-
-    fn unwrap_unique(bsp: &mut BSpLineWorkspace) -> *mut ffi::gsl_bspline_workspace {
-        bsp.w
-    }
-}
-
-#[cfg(not(feature = "v2"))]
-pub struct BSpLineDerivWorkspace {
-    w: *mut ffi::gsl_bspline_deriv_workspace,
-}
-
-#[cfg(not(feature = "v2"))]
-impl BSpLineDerivWorkspace {
-    /// This function allocates a workspace for computing the derivatives of a B-spline basis
-    /// function of order k.
-    ///
-    /// The size of the workspace is O(2k^2).
-    pub fn new(k: usize) -> Option<BSpLineDerivWorkspace> {
-        let tmp = unsafe { ffi::gsl_bspline_deriv_alloc(k) };
-
-        if tmp.is_null() {
-            None
-        } else {
-            Some(BSpLineDerivWorkspace { w: tmp })
-        }
-    }
-
-    /// This function evaluates all B-spline basis function derivatives of orders 0 through nderiv
-    /// (inclusive) at the position x and stores them in the matrix dB.
-    /// The (i,j)-th element of dB is d^jB_i(x)/dx^j. The matrix dB must be of size n = nbreak + k -
-    /// 2 by nderiv + 1.
-    /// The value n may also be obtained by calling gsl_bspline_ncoeffs. Note that function
-    /// evaluations are included as the zeroth order derivatives in dB.
-    /// Computing all the basis function derivatives at once is more efficient than computing them
-    /// individually, due to the nature of the defining recurrence relation.
-    pub fn eval(
-        &mut self,
-        x: f64,
-        nderiv: usize,
-        dB: &mut MatrixF64,
-        w: &mut BSpLineWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_bspline_deriv_eval(
-                x,
-                nderiv,
-                ffi::FFI::unwrap_unique(dB),
-                ffi::FFI::unwrap_unique(w),
-                self.w,
-            )
-        })
-    }
-
-    /// This function evaluates all potentially nonzero B-spline basis function derivatives of
-    /// orders 0 through nderiv (inclusive) at the position x and stores them in the matrix dB.
-    ///
-    /// The (i,j)-th element of dB is d^j/dx^j B_(istart+i)(x). The last row of dB contains d^j/dx^j
-    /// B_(iend)(x).
-    ///
-    /// The matrix dB must be of size k by at least nderiv + 1. Note that function evaluations are
-    /// included as the zeroth order derivatives in dB.
-    ///
-    /// By returning only the nonzero basis functions, this function allows quantities involving
-    /// linear combinations of the B_i(x) and their derivatives to be computed without unnecessary
-    /// terms.
-    pub fn eval_non_zero(
-        &mut self,
-        x: f64,
-        nderiv: usize,
-        dB: &mut MatrixF64,
-        istart: &mut usize,
-        iend: &mut usize,
-        w: &mut BSpLineWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_bspline_deriv_eval_nonzero(
-                x,
-                nderiv,
-                ffi::FFI::unwrap_unique(dB),
-                istart,
-                iend,
-                ffi::FFI::unwrap_unique(w),
-                self.w,
-            )
-        })
-    }
-}
-
-#[cfg(not(feature = "v2"))]
-impl Drop for BSpLineDerivWorkspace {
-    fn drop(&mut self) {
-        unsafe { ffi::gsl_bspline_deriv_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-#[cfg(not(feature = "v2"))]
-impl ffi::FFI<ffi::gsl_bspline_deriv_workspace> for BSpLineDerivWorkspace {
-    fn wrap(r: *mut ffi::gsl_bspline_deriv_workspace) -> BSpLineDerivWorkspace {
-        BSpLineDerivWorkspace { w: r }
-    }
-
-    fn soft_wrap(r: *mut ffi::gsl_bspline_deriv_workspace) -> BSpLineDerivWorkspace {
-        Self::wrap(r)
-    }
-
-    fn unwrap_shared(bsp: &BSpLineDerivWorkspace) -> *const ffi::gsl_bspline_deriv_workspace {
-        bsp.w as *const _
-    }
-
-    fn unwrap_unique(bsp: &mut BSpLineDerivWorkspace) -> *mut ffi::gsl_bspline_deriv_workspace {
-        bsp.w
+        unsafe { sys::gsl_bspline_greville_abscissa(i, self.unwrap_unique()) }
     }
 }

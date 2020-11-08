@@ -10,8 +10,7 @@ extern crate rgsl;
 
 use rgsl::ChebSeries;
 
-#[allow(unused_variables)]
-fn f(x: f64, param: &mut i32) -> f64 {
+fn f(x: f64) -> f64 {
     if x < 0.5 {
         0.25
     } else {
@@ -23,11 +22,11 @@ fn main() {
     let n = 10000i32;
     let mut cs = ChebSeries::new(40).unwrap();
 
-    cs.init(f, 0f64, 1f64, &mut 1i32);
+    cs.init(f, 0., 1.);
     for i in 0..n {
         let x = i as f64 / n as f64;
         let r10 = cs.eval_n(10, x);
         let r40 = cs.eval(x);
-        println!("{} {} {} {}", x, f(x, &mut 0i32), r10, r40);
+        println!("{} {} {} {}", x, f(x), r10, r40);
     }
 }

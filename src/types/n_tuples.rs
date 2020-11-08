@@ -28,139 +28,165 @@ The selection function determines which ntuple rows are selected for histogrammi
 Further information on the use of ntuples can be found in the documentation for the CERN packages PAW and HBOOK (available online).
 !*/
 
-use enums;
-use ffi;
-use libc::{feof, fread};
+use crate::Value;
+use ffi::FFI;
 use std::ffi::CString;
-use std::marker::PhantomData;
+use std::mem::MaybeUninit;
 use std::os::raw::c_char;
+use std::path::Path;
 
-pub struct NTuples<T> {
-    n: *mut ffi::gsl_ntuple,
-    p: PhantomData<T>,
+pub struct WriteNTuples {
+    n: *mut sys::gsl_ntuple,
 }
 
-impl<T> NTuples<T> {
-    /// This function creates a new write-only ntuple file filename for ntuples of size size and returns a pointer to the newly created ntuple
-    /// struct. Any existing file with the same name is truncated to zero length and overwritten. A pointer to memory for the current ntuple
-    /// row ntuple_data must be supplied—this is used to copy ntuples in and out of the file.
-    pub fn create(filename: &str, data: &mut T) -> Option<NTuples<T>> {
-        let t_data = unsafe { ::std::mem::transmute(data) };
+impl WriteNTuples {
+    /// This function creates a new write-only ntuple file filename for ntuples of size size and
+    /// returns a pointer to the newly created ntuple struct. Any existing file with the same name
+    /// is truncated to zero length and overwritten. A pointer to memory for the current ntuple
+    /// row ntuple_data must be supplied-this is used to copy ntuples in and out of the file.
+    pub fn create<P: AsRef<Path>>(filename: P) -> Option<WriteNTuples> {
+        let filename = filename.as_ref();
+        let filename = filename.to_str().expect("Failed to convert path to str");
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            ffi::gsl_ntuple_create(
-                c_str.as_ptr() as *mut c_char,
-                t_data,
-                ::std::mem::size_of::<T>() as usize,
-            )
+            sys::gsl_ntuple_create(c_str.as_ptr() as *mut c_char, ::std::ptr::null_mut(), 0)
         };
 
         if tmp.is_null() {
             None
         } else {
-            Some(NTuples {
-                n: tmp,
-                p: PhantomData,
-            })
+            Some(Self { n: tmp })
         }
     }
 
-    /// This function opens an existing ntuple file filename for reading and returns a pointer to a corresponding ntuple struct. The ntuples
-    /// in the file must have size size. A pointer to memory for the current ntuple row ntuple_data must be supplied—this is used to copy
-    /// ntuples in and out of the file.
-    pub fn open(filename: &str, data: &mut T) -> Option<NTuples<T>> {
-        let t_data = unsafe { ::std::mem::transmute(data) };
-        let c_str = CString::new(filename.as_bytes()).unwrap();
-        let tmp = unsafe {
-            ffi::gsl_ntuple_open(
-                c_str.as_ptr() as *mut c_char,
-                t_data,
-                ::std::mem::size_of::<T>() as usize,
-            )
-        };
-
-        if tmp.is_null() {
-            None
-        } else {
-            Some(NTuples {
-                n: tmp,
-                p: PhantomData,
-            })
-        }
-    }
-
-    /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the corresponding file.
-    pub fn write(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_ntuple_write(self.n) })
+    /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the
+    /// corresponding file.
+    pub fn write<T: Sized>(&mut self, data: &T) -> Value {
+        Value::from(unsafe {
+            (*self.n).ntuple_data = data as *const T as usize as *mut _;
+            (*self.n).size = ::std::mem::size_of::<T>() as _;
+            sys::gsl_ntuple_write(self.n)
+        })
     }
 
     /// This function is a synonym for NTuples::write.
-    pub fn bookdata(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_ntuple_bookdata(self.n) })
-    }
-
-    /// This function reads the current row of the ntuple file for ntuple and stores the values in ntuple->data.
-    pub fn read(&self) -> enums::Value {
-        enums::Value::from(unsafe { ffi::gsl_ntuple_read(self.n) })
-    }
-
-    pub fn project<U, V>(
-        &self,
-        h: &mut ::Histogram,
-        value_func: ::value_function<T, U>,
-        value_arg: &mut U,
-        select_func: ::select_function<T, V>,
-        select_arg: &mut V,
-    ) -> enums::Value {
-        unsafe {
-            loop {
-                let nread = fread((*self.n).ntuple_data, (*self.n).size, 1, (*self.n).file);
-
-                if nread == 0 && feof((*self.n).file) != 0 {
-                    break;
-                }
-
-                if nread != 1 {
-                    rgsl_error!("failed to read ntuple for projection", ::Value::Failed);
-                }
-
-                if select_func(::std::mem::transmute((*self.n).ntuple_data), select_arg) {
-                    ffi::gsl_histogram_increment(
-                        ffi::FFI::unwrap_unique(h),
-                        value_func(::std::mem::transmute((*self.n).ntuple_data), value_arg),
-                    );
-                }
-            }
-
-            ::Value::Success
-        }
+    pub fn bookdata<T: Sized>(&mut self, data: &T) -> Value {
+        Value::from(unsafe {
+            (*self.n).ntuple_data = data as *const T as usize as *mut _;
+            (*self.n).size = ::std::mem::size_of::<T>() as _;
+            sys::gsl_ntuple_bookdata(self.n)
+        })
     }
 }
 
-impl<T> Drop for NTuples<T> {
+impl Drop for WriteNTuples {
     fn drop(&mut self) {
-        unsafe { ffi::gsl_ntuple_close(self.n) };
-        self.n = ::std::ptr::null_mut();
+        unsafe { sys::gsl_ntuple_close(self.n) };
     }
 }
 
-impl<T> ffi::FFI<ffi::gsl_ntuple> for NTuples<T> {
-    fn wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
-        NTuples {
-            n: n,
-            p: PhantomData,
+pub struct ReadNTuples {
+    n: *mut sys::gsl_ntuple,
+}
+
+impl ReadNTuples {
+    /// This function opens an existing ntuple file filename for reading and returns a pointer to a
+    /// corresponding ntuple struct. The ntuples in the file must have size size. A pointer to
+    /// memory for the current ntuple row ntuple_data must be supplied—this is used to copy ntuples
+    /// in and out of the file.
+    pub fn open<P: AsRef<Path>>(filename: P) -> Option<ReadNTuples> {
+        let filename = filename.as_ref();
+        let filename = filename.to_str().expect("Failed to convert path to str");
+        let c_str = CString::new(filename.as_bytes()).unwrap();
+        let tmp = unsafe {
+            sys::gsl_ntuple_open(c_str.as_ptr() as *mut c_char, ::std::ptr::null_mut(), 0)
+        };
+
+        if tmp.is_null() {
+            None
+        } else {
+            Some(Self { n: tmp })
         }
     }
 
-    fn soft_wrap(n: *mut ffi::gsl_ntuple) -> NTuples<T> {
-        Self::wrap(n)
-    }
+    /// This function reads the current row of the ntuple file for ntuple and stores the values in
+    /// ntuple->data.
+    pub fn read<T: Sized>(&mut self) -> (Value, T) {
+        let mut data = MaybeUninit::<T>::uninit();
 
-    fn unwrap_shared(n: &NTuples<T>) -> *const ffi::gsl_ntuple {
-        n.n as *const _
-    }
-
-    fn unwrap_unique(n: &mut NTuples<T>) -> *mut ffi::gsl_ntuple {
-        n.n
+        let ret = unsafe {
+            (*self.n).ntuple_data = data.as_mut_ptr() as *mut _;
+            (*self.n).size = ::std::mem::size_of::<T>() as _;
+            sys::gsl_ntuple_read(self.n)
+        };
+        (::Value::from(ret), unsafe { data.assume_init() })
     }
 }
+
+impl Drop for ReadNTuples {
+    fn drop(&mut self) {
+        unsafe { sys::gsl_ntuple_close(self.n) };
+    }
+}
+
+macro_rules! impl_project {
+    ($name:ident) => {
+        impl $name {
+            /// This function updates the histogram `h` from the ntuple `ntuple` using the functions
+            /// `value_func` and `select_func`. For each ntuple row where the selection function
+            /// `select_func` is non-zero the corresponding value of that row is computed using the function
+            /// `value_func` and added to the histogram. Those ntuple rows where `select_func` returns
+            /// `false` are ignored. New entries are added to the histogram, so subsequent calls can be used
+            /// to accumulate further data in the same histogram.
+            pub fn project<T: Sized, V: Fn(&T) -> f64, S: Fn(&T) -> bool>(
+                &self,
+                h: &mut ::Histogram,
+                value_func: V,
+                select_func: S,
+            ) -> Value {
+                unsafe extern "C" fn value_trampoline<T: Sized, F: Fn(&T) -> f64>(
+                    x: *mut ::libc::c_void,
+                    params: *mut ::libc::c_void,
+                ) -> f64 {
+                    let f: &F = &*(params as *const F);
+                    let x: &T = &*(x as *const T);
+                    f(x)
+                }
+                unsafe extern "C" fn select_trampoline<T: Sized, F: Fn(&T) -> bool>(
+                    x: *mut ::libc::c_void,
+                    params: *mut ::libc::c_void,
+                ) -> i32 {
+                    let f: &F = &*(params as *const F);
+                    let x: &T = &*(x as *const T);
+                    if f(x) {
+                        1
+                    } else {
+                        0
+                    }
+                }
+
+                let f: Box<V> = Box::new(value_func);
+                let mut value_function = sys::gsl_ntuple_value_fn {
+                    function: unsafe { ::std::mem::transmute(value_trampoline::<T, V> as usize) },
+                    params: Box::into_raw(f) as *mut _,
+                };
+                let f: Box<S> = Box::new(select_func);
+                let mut select_function = sys::gsl_ntuple_select_fn {
+                    function: unsafe { ::std::mem::transmute(select_trampoline::<T, S> as usize) },
+                    params: Box::into_raw(f) as *mut _,
+                };
+                Value::from(unsafe {
+                    sys::gsl_ntuple_project(
+                        h.unwrap_unique(),
+                        self.n,
+                        &mut value_function,
+                        &mut select_function,
+                    )
+                })
+            }
+        }
+    };
+}
+
+impl_project!(WriteNTuples);
+impl_project!(ReadNTuples);

@@ -3,15 +3,27 @@ name = "gsl-examples"
 version = "0.4.6"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 
-[features]
-v2 = ["GSL/v2"]
-
 [dependencies.GSL]
 path = "../"
 
 [dependencies]
-num = "^0.1"
 libc = "~0.2"
+
+[[bin]]
+name = "blas"
+path = "./blas.rs"
+
+[[bin]]
+name = "bspline"
+path = "./bspline.rs"
+
+[[bin]]
+name = "cblas"
+path = "./cblas.rs"
+
+[[bin]]
+name = "cdf"
+path = "./cdf.rs"
 
 [[bin]]
 name = "chebyshev_approximation"
@@ -22,92 +34,88 @@ name = "combination"
 path = "./combination.rs"
 
 [[bin]]
+name = "diff"
+path = "./diff.rs"
+
+[[bin]]
+name = "eigen"
+path = "./eigen.rs"
+
+[[bin]]
+name = "eigen_nonsymm"
+path = "./eigen_nonsymm.rs"
+
+[[bin]]
+name = "fft"
+path = "./fft.rs"
+
+[[bin]]
+name = "fftmr"
+path = "./fftmr.rs"
+
+[[bin]]
+name = "filt_edge"
+path = "./filt_edge.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
+name = "fitreg"
+path = "./fitreg.rs"
+required-features = ["GSL/v2_1"]
+
+[[bin]]
+name = "fitreg2"
+path = "./fitreg2.rs"
+required-features = ["GSL/v2_1"]
+
+[[bin]]
+name = "fitting"
+path = "./fitting.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
+name = "fitting3"
+path = "./fitting3.rs"
+
+[[bin]]
+name = "gaussfilt"
+path = "./gaussfilt.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
+name = "gaussfilt2"
+path = "./gaussfilt2.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
+name = "histogram2d"
+path = "./histogram2d.rs"
+
+[[bin]]
+name = "impulse"
+path = "./impulse.rs"
+required-features = ["GSL/v2_5"]
+
+[[bin]]
 name = "integration"
 path = "./integration.rs"
 
 [[bin]]
-name = "interpolation"
-path = "./interpolation.rs"
+name = "integration2"
+path = "./integration2.rs"
 
 [[bin]]
-name = "linear_algebra"
-path = "./linear_algebra.rs"
+name = "intro"
+path = "./intro.rs"
 
 [[bin]]
-name = "minimization"
-path = "./minimization.rs"
-
-[[bin]]
-name = "monte_carlo"
-path = "./monte_carlo.rs"
-
-[[bin]]
-name = "multifit_solver"
-path = "./multifit_solver.rs"
-
-[[bin]]
-name = "multisets"
-path = "./multisets.rs"
-
-[[bin]]
-name = "n_tuples"
-path = "./n_tuples.rs"
-
-[[bin]]
-name = "numerical_differentiation"
-path = "./numerical_differentiation.rs"
-
-[[bin]]
-name = "ordinary_differential_equations"
-path = "./ordinary_differential_equations.rs"
-
-[[bin]]
-name = "permutation"
-path = "./permutation.rs"
-
-[[bin]]
-name = "physical_constant"
-path = "./physical_constant.rs"
-
-[[bin]]
-name = "qrng"
-path = "./qrng.rs"
-
-[[bin]]
-name = "radix"
-path = "./radix.rs"
-
-[[bin]]
-name = "random_number_distribution"
-path = "./random_number_distribution.rs"
+name = "largefit"
+path = "./largefit.rs"
+required-features = ["GSL/v2_2"]
 
 [[bin]]
 name = "rng"
 path = "./rng.rs"
-
-[[bin]]
-name = "roots_of_polynomial"
-path = "./roots_of_polynomial.rs"
-
-[[bin]]
-name = "roots"
-path = "./roots.rs"
-
-[[bin]]
-name = "series_acceleration"
-path = "./series_acceleration.rs"
-
-[[bin]]
-name = "simple"
-path = "./simple.rs"
-
-[[bin]]
-name = "simulated_annealing"
-path = "./siman.rs"
-
-[[bin]]
-name = "sorting"
-path = "./sorting.rs"
 
 [[bin]]
 name = "statistics"
@@ -116,7 +124,3 @@ path = "./statistics.rs"
 [[bin]]
 name = "vectors_and_matrices"
 path = "./vectors_and_matrices.rs"
-
-[[bin]]
-name = "wavelet_transforms"
-path = "./wavelet_transforms.rs"

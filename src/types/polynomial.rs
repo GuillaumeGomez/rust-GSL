@@ -9,26 +9,28 @@ The roots of polynomial equations cannot be found analytically beyond the specia
 described in this section uses an iterative method to find the approximate locations of roots of higher order polynomials.
 !*/
 
-use enums;
-use ffi;
+use crate::Value;
+use ffi::FFI;
 
-pub struct PolyComplex {
-    w: *mut ffi::gsl_poly_complex_workspace,
-}
+ffi_wrapper!(
+    PolyComplexWorkspace,
+    *mut sys::gsl_poly_complex_workspace,
+    gsl_poly_complex_workspace_free
+);
 
-impl PolyComplex {
+impl PolyComplexWorkspace {
     /// This function allocates space for a gsl_poly_complex_workspace struct and a workspace suitable for solving a polynomial with n coefficients
     /// using the routine gsl_poly_complex_solve.
     ///
     /// The function returns a pointer to the newly allocated gsl_poly_complex_workspace if no errors were detected, and a null pointer in the case
     /// of error.
-    pub fn new(n: usize) -> Option<PolyComplex> {
-        let tmp = unsafe { ffi::gsl_poly_complex_workspace_alloc(n) };
+    pub fn new(n: usize) -> Option<Self> {
+        let tmp = unsafe { sys::gsl_poly_complex_workspace_alloc(n) };
 
         if tmp.is_null() {
             None
         } else {
-            Some(PolyComplex { w: tmp })
+            Some(Self::wrap(tmp))
         }
     }
 
@@ -41,34 +43,14 @@ impl PolyComplex {
     /// code of Failed. Note that due to finite precision, roots of higher multiplicity are returned as a cluster of simple roots with reduced
     /// accuracy. The solution of polynomials with higher-order roots requires specialized algorithms that take the multiplicity structure into
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
-    pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_poly_complex_solve(a.as_ptr(), a.len() as usize, self.w, z.as_mut_ptr())
+    pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> Value {
+        Value::from(unsafe {
+            sys::gsl_poly_complex_solve(
+                a.as_ptr(),
+                a.len() as _,
+                self.unwrap_unique(),
+                z.as_mut_ptr(),
+            )
         })
-    }
-}
-
-impl Drop for PolyComplex {
-    fn drop(&mut self) {
-        unsafe { ffi::gsl_poly_complex_workspace_free(self.w) };
-        self.w = ::std::ptr::null_mut();
-    }
-}
-
-impl ffi::FFI<ffi::gsl_poly_complex_workspace> for PolyComplex {
-    fn wrap(w: *mut ffi::gsl_poly_complex_workspace) -> PolyComplex {
-        PolyComplex { w: w }
-    }
-
-    fn soft_wrap(w: *mut ffi::gsl_poly_complex_workspace) -> PolyComplex {
-        Self::wrap(w)
-    }
-
-    fn unwrap_shared(w: &PolyComplex) -> *const ffi::gsl_poly_complex_workspace {
-        w.w as *const _
-    }
-
-    fn unwrap_unique(w: &mut PolyComplex) -> *mut ffi::gsl_poly_complex_workspace {
-        w.w
     }
 }

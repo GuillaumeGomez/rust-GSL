@@ -8,8 +8,8 @@ Since the arguments of the standard coupling coefficient functions are integer o
 are, by convention, integers equal to twice the actual spin value.
 !*/
 
-use enums;
-use std::mem::zeroed;
+use crate::Value;
+use std::mem::MaybeUninit;
 
 /// This routine computes the Wigner 3-j coefficient,
 ///
@@ -18,7 +18,7 @@ use std::mem::zeroed;
 ///
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
 pub fn _3j(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_mc: i32) -> f64 {
-    unsafe { ::ffi::gsl_sf_coupling_3j(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc) }
+    unsafe { ::sys::gsl_sf_coupling_3j(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc) }
 }
 
 /// This routine computes the Wigner 3-j coefficient,
@@ -34,19 +34,21 @@ pub fn _3j_e(
     two_ma: i32,
     two_mb: i32,
     two_mc: i32,
-) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
+) -> (Value, ::types::Result) {
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
-        ::ffi::gsl_sf_coupling_3j_e(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc, &mut result)
+        ::sys::gsl_sf_coupling_3j_e(
+            two_ja,
+            two_jb,
+            two_jc,
+            two_ma,
+            two_mb,
+            two_mc,
+            result.as_mut_ptr(),
+        )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 6-j coefficient,
@@ -56,7 +58,7 @@ pub fn _3j_e(
 ///
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
 pub fn _6j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32) -> f64 {
-    unsafe { ::ffi::gsl_sf_coupling_6j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf) }
+    unsafe { ::sys::gsl_sf_coupling_6j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf) }
 }
 
 /// This routine computes the Wigner 6-j coefficient,
@@ -72,19 +74,21 @@ pub fn _6j_e(
     two_jd: i32,
     two_je: i32,
     two_jf: i32,
-) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
+) -> (Value, ::types::Result) {
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
-        ::ffi::gsl_sf_coupling_6j_e(two_ja, two_jb, two_jc, two_jd, two_je, two_jf, &mut result)
+        ::sys::gsl_sf_coupling_6j_e(
+            two_ja,
+            two_jb,
+            two_jc,
+            two_jd,
+            two_je,
+            two_jf,
+            result.as_mut_ptr(),
+        )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 9-j coefficient,
@@ -105,7 +109,7 @@ pub fn _9j(
     two_ji: i32,
 ) -> f64 {
     unsafe {
-        ::ffi::gsl_sf_coupling_9j(
+        ::sys::gsl_sf_coupling_9j(
             two_ja, two_jb, two_jc, two_jd, two_je, two_jf, two_jg, two_jh, two_ji,
         )
     }
@@ -127,10 +131,10 @@ pub fn _9j_e(
     two_jg: i32,
     two_jh: i32,
     two_ji: i32,
-) -> (enums::Value, ::types::Result) {
-    let mut result = unsafe { zeroed::<::ffi::gsl_sf_result>() };
+) -> (Value, ::types::Result) {
+    let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
-        ::ffi::gsl_sf_coupling_9j_e(
+        ::sys::gsl_sf_coupling_9j_e(
             two_ja,
             two_jb,
             two_jc,
@@ -140,15 +144,9 @@ pub fn _9j_e(
             two_jg,
             two_jh,
             two_ji,
-            &mut result,
+            result.as_mut_ptr(),
         )
     };
 
-    (
-        enums::Value::from(ret),
-        ::types::Result {
-            val: result.val,
-            err: result.err,
-        },
-    )
+    (::Value::from(ret), unsafe { result.assume_init() }.into())
 }

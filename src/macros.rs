@@ -4,25 +4,102 @@
 
 #![macro_use]
 
-macro_rules! rgsl_error(
-    ($msg:expr, $err_value:expr) => (
-        {
-            let file = file!();
+#[doc(hidden)]
+macro_rules! ffi_wrap {
+    ($name:tt) => {
+        unsafe { $crate::ffi::FFI::wrap(sys::$name as *mut _) }
+    };
+}
 
-            unsafe {
-                let c_msg = ::std::ffi::CString::new($msg.as_bytes()).unwrap();
-                let c_file = ::std::ffi::CString::new(file.as_bytes()).unwrap();
+#[doc(hidden)]
+macro_rules! wrap_callback {
+    ($f:expr, $F:ident) => {{
+        unsafe extern "C" fn trampoline<F: Fn(f64) -> f64>(
+            x: f64,
+            params: *mut ::libc::c_void,
+        ) -> f64 {
+            let f: &F = &*(params as *const F);
+            f(x)
+        }
 
-                let v = $err_value.into();
-                ffi::gsl_error(c_msg.as_ptr(), c_file.as_ptr(), line!() as i32, v)
+        let f: Box<$F> = Box::new($f);
+        sys::gsl_function_struct {
+            function: unsafe { ::std::mem::transmute(trampoline::<$F> as usize) },
+            params: Box::into_raw(f) as *mut _,
+        }
+    }};
+}
+
+#[doc(hidden)]
+macro_rules! doc {
+    ($doc:expr, $($t:tt)*) => (
+        #[doc = $doc]
+        $($t)*
+    );
+}
+
+#[doc(hidden)]
+macro_rules! ffi_wrapper {
+    ($name:ident, *mut $ty:ty, $drop:ident $(, $doc:expr)?) => {
+        ffi_wrapper!($name, *mut $ty $(, $doc)?);
+
+        impl Drop for $name {
+            fn drop(&mut self) {
+                unsafe { sys::$drop(self.inner) };
+                self.inner = ::std::ptr::null_mut();
             }
         }
-    );
-);
+    };
+    ($name:ident, *mut $ty:ty $(, $doc:expr)?) => {
+        $(#[doc = $doc])?
+        pub struct $name {
+            inner: *mut $ty,
+        }
 
-#[macro_export]
-macro_rules! ffi_wrap {
-    ($name:tt, $cast:tt) => {
-        unsafe { ffi::FFI::wrap(ffi::$name as *mut ffi::$cast) }
+        impl FFI<$ty> for $name {
+            fn wrap(inner: *mut $ty) -> Self {
+                Self { inner }
+            }
+
+            fn soft_wrap(r: *mut $ty) -> Self {
+                Self::wrap(r)
+            }
+
+            #[inline]
+            fn unwrap_shared(&self) -> *const $ty {
+                self.inner as *const _
+            }
+
+            #[inline]
+            fn unwrap_unique(&mut self) -> *mut $ty {
+                self.inner
+            }
+        }
+    };
+    ($name:ident, *const $ty:ty $(, $doc:expr)?) => {
+        $(#[doc = $doc])?
+        #[derive(Clone, Copy)]
+        pub struct $name {
+            inner: *const $ty,
+        }
+
+        impl FFI<$ty> for $name {
+            fn wrap(inner: *mut $ty) -> Self {
+                Self { inner }
+            }
+
+            fn soft_wrap(inner: *mut $ty) -> Self {
+                Self { inner }
+            }
+
+            #[inline]
+            fn unwrap_shared(&self) -> *const $ty {
+                self.inner
+            }
+
+            fn unwrap_unique(&mut self) -> *mut $ty {
+                unimplemented!()
+            }
+        }
     };
 }

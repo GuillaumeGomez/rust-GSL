@@ -26,8 +26,8 @@ level of the transform.
 /// These functions return a status of ::Value::Success upon successful completion. ::Inval is returned if n is not an integer power of
 /// 2 or if insufficient workspace is provided.
 pub mod one_dimension {
-    use enums;
-    use ffi;
+    use crate::Value;
+    use ffi::FFI;
 
     pub fn transform(
         w: &::Wavelet,
@@ -36,15 +36,15 @@ pub mod one_dimension {
         n: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet_transform(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet_transform(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 stride,
                 n,
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -55,14 +55,14 @@ pub mod one_dimension {
         stride: usize,
         n: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet_transform_forward(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet_transform_forward(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -73,14 +73,14 @@ pub mod one_dimension {
         stride: usize,
         n: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet_transform_inverse(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet_transform_inverse(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 stride,
                 n,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -99,8 +99,8 @@ pub mod one_dimension {
 /// the rows and columns of the data for the subsequent levels of the transform, until the full discrete wavelet transform is complete.
 /// The non-standard form of the discrete wavelet transform is typically used in image analysis.
 pub mod two_dimension {
-    use enums;
-    use ffi;
+    use crate::Value;
+    use ffi::FFI;
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
     /// data stored in row-major form with dimensions size1 and size2 and physical row length tda. The dimensions must be equal
@@ -118,16 +118,16 @@ pub mod two_dimension {
         size2: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_transform(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_transform(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -147,15 +147,15 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_transform_forward(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_transform_forward(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -175,15 +175,15 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_transform_inverse(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_transform_inverse(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -194,13 +194,13 @@ pub mod two_dimension {
         m: &mut ::MatrixF64,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_transform_matrix(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_transform_matrix(
+                w.unwrap_shared(),
+                m.unwrap_unique(),
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -210,12 +210,12 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_transform_matrix_forward(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_transform_matrix_forward(
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -225,12 +225,12 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_transform_matrix_inverse(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_transform_matrix_inverse(
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -244,16 +244,16 @@ pub mod two_dimension {
         size2: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_nstransform(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_nstransform(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -266,15 +266,15 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_nstransform_forward(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_nstransform_forward(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -287,15 +287,15 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_nstransform_inverse(
-                ffi::FFI::unwrap_shared(w),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_nstransform_inverse(
+                w.unwrap_shared(),
                 data.as_mut_ptr(),
                 tda,
                 size1,
                 size2,
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -306,13 +306,13 @@ pub mod two_dimension {
         m: &mut ::MatrixF64,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_nstransform_matrix(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_nstransform_matrix(
+                w.unwrap_shared(),
+                m.unwrap_unique(),
                 dir.into(),
-                ffi::FFI::unwrap_unique(work),
+                work.unwrap_unique(),
             )
         })
     }
@@ -322,12 +322,12 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_nstransform_matrix_forward(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_nstransform_matrix_forward(
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
@@ -337,12 +337,12 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> enums::Value {
-        enums::Value::from(unsafe {
-            ffi::gsl_wavelet2d_nstransform_matrix_inverse(
-                ffi::FFI::unwrap_shared(w),
-                ffi::FFI::unwrap_unique(m),
-                ffi::FFI::unwrap_unique(work),
+    ) -> Value {
+        Value::from(unsafe {
+            sys::gsl_wavelet2d_nstransform_matrix_inverse(
+                w.unwrap_shared(),
+                m.unwrap_unique(),
+                work.unwrap_unique(),
             )
         })
     }
