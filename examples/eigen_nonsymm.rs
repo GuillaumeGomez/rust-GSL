@@ -20,7 +20,7 @@ fn main() {
         EigenNonSymmetricVWorkspace::new(4).expect("EigenNonSymmetricVWorkspace::new failed...");
 
     m.matrix_mut(|m| {
-        w.nonsymmv(m, &mut eval, &mut evec);
+        w.nonsymmv(m.expect("Failed to get matrix"), &mut eval, &mut evec);
     });
 
     eigen::nonsymmv_sort(&mut eval, &mut evec, EigenSort::AbsDesc);
