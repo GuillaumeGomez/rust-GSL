@@ -5,9 +5,9 @@
 //! The error function is described in Abramowitz & Stegun, Chapter 7.
 
 use crate::Value;
-use libc;
 use std::ffi::CStr;
 use std::mem::MaybeUninit;
+use std::os::raw::{c_char, c_int};
 
 /// This routine computes the error function erf(x), where erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
 pub fn erf(x: f64) -> f64 {
@@ -210,10 +210,10 @@ pub fn set_error_handler_off() -> Option<fn(&str, &str, u32, ::Value)> {
 }
 
 extern "C" fn inner_error_handler(
-    reason: *const libc::c_char,
-    file: *const libc::c_char,
-    line: libc::c_int,
-    gsl_errno: libc::c_int,
+    reason: *const c_char,
+    file: *const c_char,
+    line: c_int,
+    gsl_errno: c_int,
 ) {
     unsafe {
         if let Some(ref call) = CALLBACK {

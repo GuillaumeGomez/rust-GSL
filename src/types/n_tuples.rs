@@ -32,7 +32,7 @@ use crate::Value;
 use ffi::FFI;
 use std::ffi::CString;
 use std::mem::MaybeUninit;
-use std::os::raw::c_char;
+use std::os::raw::{c_char, c_void};
 use std::path::Path;
 
 pub struct WriteNTuples {
@@ -145,16 +145,16 @@ macro_rules! impl_project {
                 select_func: S,
             ) -> Value {
                 unsafe extern "C" fn value_trampoline<T: Sized, F: Fn(&T) -> f64>(
-                    x: *mut ::libc::c_void,
-                    params: *mut ::libc::c_void,
+                    x: *mut c_void,
+                    params: *mut c_void,
                 ) -> f64 {
                     let f: &F = &*(params as *const F);
                     let x: &T = &*(x as *const T);
                     f(x)
                 }
                 unsafe extern "C" fn select_trampoline<T: Sized, F: Fn(&T) -> bool>(
-                    x: *mut ::libc::c_void,
-                    params: *mut ::libc::c_void,
+                    x: *mut c_void,
+                    params: *mut c_void,
                 ) -> i32 {
                     let f: &F = &*(params as *const F);
                     let x: &T = &*(x as *const T);

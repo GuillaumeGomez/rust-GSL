@@ -42,7 +42,7 @@ its derivative (hence the name fdf) to be supplied by the user.
 !*/
 
 use ffi::FFI;
-use libc::{c_double, c_void};
+use std::os::raw::{c_double, c_void};
 
 use std::boxed::Box;
 use std::mem::transmute;

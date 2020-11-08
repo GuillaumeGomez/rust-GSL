@@ -32,11 +32,11 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_cdotu_sub(
                 N,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                dotu.as_mut_ptr() as *mut ::libc::c_void,
+                dotu.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -45,11 +45,11 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_cdotc_sub(
                 N,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                dotc.as_mut_ptr() as *mut ::libc::c_void,
+                dotc.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -58,11 +58,11 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_zdotu_sub(
                 N,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                dotu.as_mut_ptr() as *mut ::libc::c_void,
+                dotu.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -71,11 +71,11 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_zdotc_sub(
                 N,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                dotc.as_mut_ptr() as *mut ::libc::c_void,
+                dotc.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -97,19 +97,19 @@ pub mod level1 {
     }
 
     pub fn scnrm2<T>(N: i32, x: &[T], incx: i32) -> f32 {
-        unsafe { ::sys::cblas_scnrm2(N, x.as_ptr() as *const ::libc::c_void, incx) }
+        unsafe { ::sys::cblas_scnrm2(N, x.as_ptr() as *const _, incx) }
     }
 
     pub fn scasum<T>(N: i32, x: &[T], incx: i32) -> f32 {
-        unsafe { ::sys::cblas_scasum(N, x.as_ptr() as *const ::libc::c_void, incx) }
+        unsafe { ::sys::cblas_scasum(N, x.as_ptr() as *const _, incx) }
     }
 
     pub fn dznrm2<T>(N: i32, x: &[T], incx: i32) -> f64 {
-        unsafe { ::sys::cblas_dznrm2(N, x.as_ptr() as *const ::libc::c_void, incx) }
+        unsafe { ::sys::cblas_dznrm2(N, x.as_ptr() as *const _, incx) }
     }
 
     pub fn dzasum<T>(N: i32, x: &[T], incx: i32) -> f64 {
-        unsafe { ::sys::cblas_dzasum(N, x.as_ptr() as *const ::libc::c_void, incx) }
+        unsafe { ::sys::cblas_dzasum(N, x.as_ptr() as *const _, incx) }
     }
 
     pub fn isamax(N: i32, x: &[f32], incx: i32) -> ::cblas::Index {
@@ -121,11 +121,11 @@ pub mod level1 {
     }
 
     pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const ::libc::c_void, incx) })
+        ::cblas::Index(unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) })
     }
 
     pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const ::libc::c_void, incx) })
+        ::cblas::Index(unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) })
     }
 
     pub fn sswap(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32) {
@@ -156,9 +156,9 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_cswap(
                 N,
-                x.as_mut_ptr() as *mut ::libc::c_void,
+                x.as_mut_ptr() as *mut _,
                 incx,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -168,9 +168,9 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_ccopy(
                 N,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -180,10 +180,10 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_caxpy(
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -193,9 +193,9 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_zswap(
                 N,
-                x.as_mut_ptr() as *mut ::libc::c_void,
+                x.as_mut_ptr() as *mut _,
                 incx,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -205,9 +205,9 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_zcopy(
                 N,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -217,10 +217,10 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_zaxpy(
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -314,8 +314,8 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_cscal(
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_mut_ptr() as *mut ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -326,8 +326,8 @@ pub mod level1 {
         unsafe {
             ::sys::cblas_zscal(
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_mut_ptr() as *mut ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -335,12 +335,12 @@ pub mod level1 {
 
     /// Multiple each element of a matrix/vector by a constant.
     pub fn csscal<T>(N: i32, alpha: f32, x: &mut [T], incx: i32) {
-        unsafe { ::sys::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut ::libc::c_void, incx) }
+        unsafe { ::sys::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
     pub fn zdscal<T>(N: i32, alpha: f64, x: &mut [T], incx: i32) {
-        unsafe { ::sys::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut ::libc::c_void, incx) }
+        unsafe { ::sys::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
     }
 }
 
@@ -831,13 +831,13 @@ pub mod level2 {
                 transA.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *const ::libc::c_void,
+                X.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                Y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                Y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -867,13 +867,13 @@ pub mod level2 {
                 N,
                 KL,
                 KU,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *const ::libc::c_void,
+                X.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                Y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                Y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -897,9 +897,9 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut ::libc::c_void,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -925,9 +925,9 @@ pub mod level2 {
                 diag.into(),
                 N,
                 K,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut ::libc::c_void,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -950,8 +950,8 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                Ap.as_ptr() as *const ::libc::c_void,
-                X.as_ptr() as *mut ::libc::c_void,
+                Ap.as_ptr() as *const _,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -975,9 +975,9 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut ::libc::c_void,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1003,9 +1003,9 @@ pub mod level2 {
                 diag.into(),
                 N,
                 K,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_mut_ptr() as *mut ::libc::c_void,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1028,8 +1028,8 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                Ap.as_ptr() as *const ::libc::c_void,
-                X.as_ptr() as *mut ::libc::c_void,
+                Ap.as_ptr() as *const _,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1055,13 +1055,13 @@ pub mod level2 {
                 transA.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *const ::libc::c_void,
+                X.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                Y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                Y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -1091,13 +1091,13 @@ pub mod level2 {
                 N,
                 KL,
                 KU,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *const ::libc::c_void,
+                X.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                Y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                Y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -1121,9 +1121,9 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut ::libc::c_void,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1149,9 +1149,9 @@ pub mod level2 {
                 diag.into(),
                 N,
                 K,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut ::libc::c_void,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1174,8 +1174,8 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                Ap.as_ptr() as *const ::libc::c_void,
-                X.as_ptr() as *mut ::libc::c_void,
+                Ap.as_ptr() as *const _,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1199,9 +1199,9 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut ::libc::c_void,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1227,9 +1227,9 @@ pub mod level2 {
                 diag.into(),
                 N,
                 K,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
-                X.as_mut_ptr() as *mut ::libc::c_void,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1252,8 +1252,8 @@ pub mod level2 {
                 transA.into(),
                 diag.into(),
                 N,
-                Ap.as_ptr() as *const ::libc::c_void,
-                X.as_ptr() as *mut ::libc::c_void,
+                Ap.as_ptr() as *const _,
+                X.as_ptr() as *mut _,
                 incx,
             )
         }
@@ -1713,13 +1713,13 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -1745,13 +1745,13 @@ pub mod level2 {
                 uplo.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -1774,12 +1774,12 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                Ap.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                Ap.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -1802,12 +1802,12 @@ pub mod level2 {
                 order.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -1830,12 +1830,12 @@ pub mod level2 {
                 order.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -1857,9 +1857,9 @@ pub mod level2 {
                 uplo.into(),
                 N,
                 alpha,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -1880,9 +1880,9 @@ pub mod level2 {
                 uplo.into(),
                 N,
                 alpha,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                Ap.as_mut_ptr() as *mut ::libc::c_void,
+                Ap.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -1904,12 +1904,12 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -1931,12 +1931,12 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                Ap.as_mut_ptr() as *mut ::libc::c_void,
+                Ap.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -1959,13 +1959,13 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -1991,13 +1991,13 @@ pub mod level2 {
                 uplo.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -2020,12 +2020,12 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                Ap.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                Ap.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                beta.as_ptr() as *const ::libc::c_void,
-                y.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                y.as_mut_ptr() as *mut _,
                 incy,
             )
         }
@@ -2048,12 +2048,12 @@ pub mod level2 {
                 order.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -2076,12 +2076,12 @@ pub mod level2 {
                 order.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -2103,9 +2103,9 @@ pub mod level2 {
                 uplo.into(),
                 N,
                 alpha,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -2126,9 +2126,9 @@ pub mod level2 {
                 uplo.into(),
                 N,
                 alpha,
-                x.as_ptr() as *const ::libc::c_void,
+                x.as_ptr() as *const _,
                 incx,
-                Ap.as_mut_ptr() as *mut ::libc::c_void,
+                Ap.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -2150,12 +2150,12 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                A.as_mut_ptr() as *mut ::libc::c_void,
+                A.as_mut_ptr() as *mut _,
                 lda,
             )
         }
@@ -2177,12 +2177,12 @@ pub mod level2 {
                 order.into(),
                 uplo.into(),
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                x.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                x.as_ptr() as *const _,
                 incx,
-                y.as_ptr() as *const ::libc::c_void,
+                y.as_ptr() as *const _,
                 incy,
-                Ap.as_mut_ptr() as *mut ::libc::c_void,
+                Ap.as_mut_ptr() as *mut _,
             )
         }
     }
@@ -2648,13 +2648,13 @@ pub mod level3 {
                 M,
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2682,13 +2682,13 @@ pub mod level3 {
                 uplo.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2714,11 +2714,11 @@ pub mod level3 {
                 trans.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2746,13 +2746,13 @@ pub mod level3 {
                 trans.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2781,10 +2781,10 @@ pub mod level3 {
                 diag.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_mut_ptr() as *mut ::libc::c_void,
+                B.as_mut_ptr() as *mut _,
                 ldb,
             )
         }
@@ -2813,10 +2813,10 @@ pub mod level3 {
                 diag.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_mut_ptr() as *mut ::libc::c_void,
+                B.as_mut_ptr() as *mut _,
                 ldb,
             )
         }
@@ -2846,13 +2846,13 @@ pub mod level3 {
                 M,
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2880,13 +2880,13 @@ pub mod level3 {
                 uplo.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2912,11 +2912,11 @@ pub mod level3 {
                 trans.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2944,13 +2944,13 @@ pub mod level3 {
                 trans.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -2979,10 +2979,10 @@ pub mod level3 {
                 diag.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_mut_ptr() as *mut ::libc::c_void,
+                B.as_mut_ptr() as *mut _,
                 ldb,
             )
         }
@@ -3011,10 +3011,10 @@ pub mod level3 {
                 diag.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_mut_ptr() as *mut ::libc::c_void,
+                B.as_mut_ptr() as *mut _,
                 ldb,
             )
         }
@@ -3042,13 +3042,13 @@ pub mod level3 {
                 uplo.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -3075,10 +3075,10 @@ pub mod level3 {
                 N,
                 K,
                 alpha,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
                 beta,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -3106,13 +3106,13 @@ pub mod level3 {
                 trans.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
                 beta,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -3140,13 +3140,13 @@ pub mod level3 {
                 uplo.into(),
                 M,
                 N,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
-                beta.as_ptr() as *const ::libc::c_void,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                beta.as_ptr() as *const _,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -3173,10 +3173,10 @@ pub mod level3 {
                 N,
                 K,
                 alpha,
-                A.as_ptr() as *const ::libc::c_void,
+                A.as_ptr() as *const _,
                 lda,
                 beta,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }
@@ -3204,13 +3204,13 @@ pub mod level3 {
                 trans.into(),
                 N,
                 K,
-                alpha.as_ptr() as *const ::libc::c_void,
-                A.as_ptr() as *const ::libc::c_void,
+                alpha.as_ptr() as *const _,
+                A.as_ptr() as *const _,
                 lda,
-                B.as_ptr() as *const ::libc::c_void,
+                B.as_ptr() as *const _,
                 ldb,
                 beta,
-                C.as_mut_ptr() as *mut ::libc::c_void,
+                C.as_mut_ptr() as *mut _,
                 ldc,
             )
         }

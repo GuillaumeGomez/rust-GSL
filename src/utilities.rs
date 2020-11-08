@@ -1,11 +1,11 @@
 /// Utilities for interfacing with GSL/C
 use std::ffi::CString;
-use std::fs::OpenOptions;
 use std::io;
+use std::ops::Drop;
 use std::os::raw::c_char;
 use std::path::Path;
 
-use libc::{fclose, fopen, FILE};
+use sys::libc::{fclose, fopen, FILE};
 
 #[allow(dead_code)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -23,16 +23,18 @@ pub struct IOStream {
 impl IOStream {
     /// Open a file in write mode.
     pub fn fwrite_handle<P: AsRef<Path>>(file: &P) -> io::Result<IOStream> {
-        {
-            OpenOptions::new().write(true).open(file)?;
-        }
         let path = CString::new(file.as_ref().to_str().unwrap()).unwrap();
-        unsafe {
-            Ok(IOStream {
-                inner: fopen(path.as_ptr(), b"w\0".as_ptr() as *const c_char),
-                mode: Mode::Write,
-            })
+        let ptr = unsafe { fopen(path.as_ptr(), b"w\0".as_ptr() as *const c_char) };
+        if ptr.is_null() {
+            return Err(io::Error::new(
+                io::ErrorKind::Other,
+                "Failed to open file...",
+            ));
         }
+        Ok(IOStream {
+            inner: ptr,
+            mode: Mode::Write,
+        })
     }
 
     pub fn write_mode(&self) -> bool {
@@ -45,7 +47,7 @@ impl IOStream {
     }
 }
 
-impl ::std::ops::Drop for IOStream {
+impl Drop for IOStream {
     fn drop(&mut self) {
         unsafe {
             fclose(self.inner);

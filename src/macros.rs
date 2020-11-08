@@ -16,7 +16,7 @@ macro_rules! wrap_callback {
     ($f:expr, $F:ident) => {{
         unsafe extern "C" fn trampoline<F: Fn(f64) -> f64>(
             x: f64,
-            params: *mut ::libc::c_void,
+            params: *mut ::std::os::raw::c_void,
         ) -> f64 {
             let f: &F = &*(params as *const F);
             f(x)

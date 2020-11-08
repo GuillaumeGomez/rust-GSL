@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use std::os::raw::c_int;
+
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
 pub enum Mode {
     PrecDouble,
@@ -113,8 +115,8 @@ impl Value {
 }
 
 #[doc(hidden)]
-impl Into<libc::c_int> for Value {
-    fn into(self) -> libc::c_int {
+impl Into<c_int> for Value {
+    fn into(self) -> c_int {
         match self {
             Self::Success => sys::GSL_SUCCESS,
             Self::Failure => sys::GSL_FAILURE,
@@ -157,8 +159,8 @@ impl Into<libc::c_int> for Value {
 }
 
 #[doc(hidden)]
-impl From<libc::c_int> for Value {
-    fn from(v: libc::c_int) -> Value {
+impl From<c_int> for Value {
+    fn from(v: c_int) -> Value {
         match v {
             sys::GSL_SUCCESS => Self::Success,
             sys::GSL_FAILURE => Self::Failure,
@@ -396,8 +398,8 @@ pub enum ODEiv {
 }
 
 #[doc(hidden)]
-impl Into<libc::c_int> for ODEiv {
-    fn into(self) -> libc::c_int {
+impl Into<c_int> for ODEiv {
+    fn into(self) -> c_int {
         match self {
             Self::Inc => sys::GSL_ODEIV_HADJ_INC,
             Self::Nil => sys::GSL_ODEIV_HADJ_NIL,
@@ -407,8 +409,8 @@ impl Into<libc::c_int> for ODEiv {
 }
 
 #[doc(hidden)]
-impl From<libc::c_int> for ODEiv {
-    fn from(v: libc::c_int) -> ODEiv {
+impl From<c_int> for ODEiv {
+    fn from(v: c_int) -> ODEiv {
         match v {
             sys::GSL_ODEIV_HADJ_INC => Self::Inc,
             sys::GSL_ODEIV_HADJ_NIL => Self::Nil,
