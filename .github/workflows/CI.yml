@@ -1,0 +1,79 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+name: CI
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:20.10
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - nightly
+    steps:
+      - run: apt-get update -y
+      - run: apt-get install -y libgsl0-dev curl build-essential
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - run: cargo check
+      - run: cargo check --features v2_1
+      - run: cargo check --features v2_2
+      - run: cargo check --features v2_3
+      - run: cargo check --features v2_4
+      - run: cargo check --features v2_5
+      - run: cargo check --features v2_6
+      - run: cargo check --features v2_7
+      - name: check examples
+        working-directory: examples
+        run: cargo check --features GSL/v2_7
+
+  build-osx:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - nightly
+    steps:
+      - run: brew update
+      - run: brew install gsl
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - run: cargo check
+      - run: cargo check --features v2_1
+      - run: cargo check --features v2_2
+      - run: cargo check --features v2_3
+      - run: cargo check --features v2_4
+      - run: cargo check --features v2_5
+      - run: cargo check --features v2_6
+      - run: cargo check --features v2_7
+      - name: check examples
+        working-directory: examples
+        run: cargo check --features GSL/v2_7
+
+  fmt:
+    name: rust fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: rustup component add rustfmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
