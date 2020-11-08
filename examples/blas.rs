@@ -22,10 +22,10 @@ fn main() {
                     CblasTranspose::NoTranspose,
                     CblasTranspose::NoTranspose,
                     1.,
-                    mat_a,
-                    mat_b,
+                    mat_a.expect("Failed to get matrix"),
+                    mat_b.expect("Failed to get matrix"),
                     0.,
-                    mat_c,
+                    mat_c.expect("Failed to get matrix"),
                 );
             });
         });
