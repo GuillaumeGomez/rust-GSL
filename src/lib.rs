@@ -58,7 +58,6 @@
 #![allow(clippy::type_complexity)]
 
 extern crate gsl_sys as sys;
-extern crate libc;
 extern crate paste;
 
 pub use types::*;

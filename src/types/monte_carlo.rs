@@ -74,9 +74,9 @@ The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
 use ffi::FFI;
-use libc::{c_double, c_void, size_t};
 use std::marker::PhantomData;
 use std::mem::transmute;
+use std::os::raw::c_void;
 use std::slice;
 
 ffi_wrapper!(PlainMonteCarlo, *mut sys::gsl_monte_plain_state, gsl_monte_plain_free,
@@ -564,12 +564,12 @@ impl VegasVerbosity {
 }
 
 unsafe extern "C" fn monte_trampoline<F: FnMut(&[f64]) -> f64>(
-    x: *mut c_double,
-    dim: size_t,
+    x: *mut f64,
+    dim: usize,
     param: *mut c_void,
-) -> c_double {
+) -> f64 {
     let f: &mut F = &mut *(param as *mut F);
-    f(slice::from_raw_parts(x, dim as usize))
+    f(slice::from_raw_parts(x, dim))
 }
 
 // The following tests have been made and tested against the following C code:

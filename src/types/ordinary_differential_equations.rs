@@ -61,7 +61,7 @@ Differential/Algebraic Equation Solvers.â€, ACM Trans. Math. Software 31, 363â€
 
 use crate::Value;
 use ffi::FFI;
-use libc::c_void;
+use std::os::raw::{c_int, c_void};
 
 /// Description of a system of ODEs.
 ///
@@ -125,7 +125,7 @@ extern "C" fn function_handler(
     t_y: *const f64,
     t_f: *mut f64,
     params: *mut c_void,
-) -> libc::c_int {
+) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
     let n = sys.dimension as usize;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
@@ -141,7 +141,7 @@ extern "C" fn jacobian_handler(
     t_dfdy: *mut f64,
     t_dfdt: *mut f64,
     params: *mut c_void,
-) -> libc::c_int {
+) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
     let n = sys.dimension as usize;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };

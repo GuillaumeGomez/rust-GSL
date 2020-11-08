@@ -72,7 +72,7 @@ Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the
 
 use crate::Value;
 use ffi::FFI;
-use libc::c_ulong;
+use std::os::raw::c_ulong;
 
 ffi_wrapper!(Rng, *mut sys::gsl_rng, gsl_rng_free);
 

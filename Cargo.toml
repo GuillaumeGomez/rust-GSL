@@ -10,7 +10,6 @@ keywords = ["mathematics", "library", "GSL"]
 license = "GPL-3.0+"
 
 [dependencies]
-libc = "~0.2"
 GSL-sys = { path = "gsl-sys" }
 paste = "1.0"
 

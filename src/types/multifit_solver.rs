@@ -214,7 +214,7 @@ int main(void) {
 */
 
 use ffi::{self, FFI};
-use libc::c_void;
+use std::os::raw::{c_int, c_void};
 use VectorF64;
 
 ffi_wrapper!(MultiFitFSolverType, *mut sys::gsl_multifit_fsolver_type);
@@ -438,7 +438,7 @@ unsafe extern "C" fn f(
     x: *const sys::gsl_vector,
     params: *mut c_void,
     pf: *mut sys::gsl_vector,
-) -> libc::c_int {
+) -> c_int {
     let t = params as *mut MultiFitFunctionFdf;
     if let Some(ref i_f) = (*t).f {
         i_f(
@@ -455,7 +455,7 @@ unsafe extern "C" fn df(
     x: *const sys::gsl_vector,
     params: *mut c_void,
     pdf: *mut sys::gsl_matrix,
-) -> libc::c_int {
+) -> c_int {
     let t = params as *mut MultiFitFunctionFdf;
     if let Some(ref i_df) = (*t).df {
         i_df(
@@ -473,7 +473,7 @@ unsafe extern "C" fn fdf(
     params: *mut c_void,
     pf: *mut sys::gsl_vector,
     pdf: *mut sys::gsl_matrix,
-) -> libc::c_int {
+) -> c_int {
     let t = params as *mut MultiFitFunctionFdf;
     if let Some(ref i_fdf) = (*t).fdf {
         i_fdf(
