@@ -29,15 +29,15 @@ This crate works with Cargo and is on [crates.io]. Just add the following to you
 
 ```toml
 [dependencies]
-GSL = "1.1"
+GSL = "2.0"
 ```
 
 You can see examples in the `examples` folder.
 
 ## Building
 
-Just run `cargo build`. However, if you want to use a specific version, you'll need to use the
-`cargo` features. For example:
+To build `rgsl`, just run `cargo build`. However, if you want to use a specific version, you'll
+need to use the `cargo` features. For example:
 
 ```bash
 cargo build --features v2_1
@@ -47,7 +47,7 @@ If a project depends on this version, don't forget to add in your `Cargo.toml`:
 
 ```toml
 [dependencies.GSL]
-version = "1"
+version = "2"
 features = ["v2_1"]
 ```
 
