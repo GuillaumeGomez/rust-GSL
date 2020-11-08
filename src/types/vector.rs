@@ -332,6 +332,10 @@ impl $rust_name {
             }
         }
     }
+
+    pub fn subvector<'a>(&'a mut self, offset: usize, n: usize) -> [<$rust_name View>]<'a> {
+        [<$rust_name View>]::from_vector(self, offset, n)
+    }
 }
 
 pub struct [<$rust_name View>]<'a> {

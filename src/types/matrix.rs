@@ -370,6 +370,16 @@ impl $rust_name {
         [<$vec_name View>]::wrap(unsafe { sys::[<$name _subcolumn>](self.unwrap_unique(), i, offset, n) }, f)
     }
 
+    pub fn submatrix<'a>(
+        &'a mut self,
+        k1: usize,
+        k2: usize,
+        n1: usize,
+        n2: usize,
+    ) -> [<$rust_name View>]<'a> {
+        [<$rust_name View>]::from_matrix(self, k1, k2, n1, n2)
+    }
+
     pub fn size1(&self) -> usize {
         if self.unwrap_shared().is_null() {
             0
@@ -398,6 +408,11 @@ impl $rust_name {
                 None => None,
             }
         }
+    }
+
+    #[doc(hidden)]
+    pub fn is_ptr_null(&self) -> bool {
+        self.unwrap_shared().is_null()
     }
 }
 
@@ -607,14 +622,24 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 
-    pub fn matrix<F: FnOnce(&$rust_name)>(&self, f: F) {
+    pub fn matrix<F: FnOnce(Option<&$rust_name>)>(&self, f: F) {
         let tmp = &self.mat.matrix;
-        f(&$rust_name::soft_wrap(tmp as *const _ as usize as *mut _))
+        let tmp_mat = $rust_name::soft_wrap(tmp as *const _ as usize as *mut _);
+        if tmp_mat.is_ptr_null() {
+            f(None)
+        } else {
+            f(Some(&tmp_mat))
+        }
     }
 
-    pub fn matrix_mut<F: FnOnce(&mut $rust_name)>(&mut self, f: F) {
+    pub fn matrix_mut<F: FnOnce(Option<&mut $rust_name>)>(&mut self, f: F) {
         let tmp = &mut self.mat.matrix;
-        f(&mut $rust_name::soft_wrap(tmp as *mut _))
+        let mut tmp_mat = $rust_name::soft_wrap(tmp as *mut _);
+        if tmp_mat.is_ptr_null() {
+            f(None)
+        } else {
+            f(Some(&mut tmp_mat))
+        }
     }
 } // end of impl block
 } // end of paste! block
