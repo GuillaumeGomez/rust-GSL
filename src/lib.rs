@@ -48,6 +48,7 @@
 #![crate_name = "rgsl"]
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
+#![cfg_attr(feature = "dox", feature(doc_cfg))]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(clippy::too_many_arguments)]
@@ -101,6 +102,7 @@ pub mod exponential_integrals;
 pub mod fermi_dirac;
 pub mod fft;
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 pub mod filter;
 pub mod fit;
 pub mod gamma_beta;
@@ -117,6 +119,7 @@ pub mod logarithm;
 pub mod minimizer;
 pub mod multifit;
 #[cfg(feature = "v2_1")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
 pub mod multilarge;
 pub mod multilinear;
 pub mod numerical_differentiation;

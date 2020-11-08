@@ -18,6 +18,7 @@ pub use self::fast_fourier_transforms::{
     FftComplexF32WaveTable, FftComplexF32Workspace, FftComplexF64WaveTable, FftComplexF64Workspace,
 };
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 pub use self::filter::{
     FilterGaussianWorkspace, FilterImpulseWorkspace, FilterMedianWorkspace, FilterRMedianWorkspace,
 };
@@ -42,6 +43,7 @@ pub use self::multifit_solver::{
     MultiFitFdfSolver, MultiFitFdfSolverType, MultiFitFunction, MultiFitFunctionFdf,
 };
 #[cfg(feature = "v2_1")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
 pub use self::multilarge_linear::{MultilargeLinearType, MultilargeLinearWorkspace};
 pub use self::multiset::MultiSet;
 pub use self::n_tuples::{ReadNTuples, WriteNTuples};
@@ -75,6 +77,7 @@ pub mod discrete_hankel;
 pub mod eigen_symmetric_workspace;
 pub mod fast_fourier_transforms;
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 pub mod filter;
 pub mod histograms;
 pub mod integration;
@@ -87,6 +90,7 @@ pub mod monte_carlo;
 pub mod multifit_linear;
 pub mod multifit_solver;
 #[cfg(feature = "v2_1")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
 pub mod multilarge_linear;
 pub mod multiset;
 pub mod n_tuples;

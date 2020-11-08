@@ -45,6 +45,7 @@ impl MultifitLinearWorkspace {
 
     /// Returns `(Value, chisq, rank)`.
     #[cfg(feature = "v2_3")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_3")))]
     pub fn linear_tsvd(
         &mut self,
         x: &MatrixF64,
@@ -89,6 +90,7 @@ impl MultifitLinearWorkspace {
     }
 
     #[cfg(feature = "v2_3")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_3")))]
     pub fn linear_rank(&self, tol: f64) -> usize {
         unsafe { sys::gsl_multifit_linear_rank(tol, self.unwrap_shared()) }
     }
@@ -332,6 +334,7 @@ impl MultifitLinearWorkspace {
 
     /// Returns `(Value, chisq, rank)`.
     #[cfg(feature = "v2_3")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_3")))]
     pub fn wlinear_tsvd(
         &mut self,
         x: &MatrixF64,
@@ -416,6 +419,7 @@ impl MultifitLinearWorkspace {
     }
 
     #[cfg(feature = "v2_1")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
     pub fn linear_rcond(&mut self) -> f64 {
         unsafe { sys::gsl_multifit_linear_rcond(self.unwrap_unique()) }
     }

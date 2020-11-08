@@ -162,11 +162,13 @@ pub fn gsl_stats_minmax_index(data: &[f64], stride: usize) -> (usize, usize) {
 }
 
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 pub fn select(data: &mut [f64], stride: usize, k: usize) -> f64 {
     unsafe { sys::gsl_stats_select(data.as_mut_ptr(), stride, data.len() as _, k) }
 }
 
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 pub fn median(data: &mut [f64], stride: usize) -> f64 {
     unsafe { sys::gsl_stats_median(data.as_mut_ptr(), stride, data.len() as _) }
 }

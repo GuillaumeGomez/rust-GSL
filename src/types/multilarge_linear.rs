@@ -87,6 +87,7 @@ impl MultilargeLinearWorkspace {
     }
 
     #[cfg(feature = "v2_2")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_2")))]
     pub fn lcurve(
         &mut self,
         reg_param: &mut VectorF64,
@@ -221,6 +222,7 @@ impl MultilargeLinearWorkspace {
     }
 
     #[cfg(feature = "v2_7")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_7")))]
     pub fn matrix<F: FnOnce(&MatrixF64)>(&self, f: F) {
         f(&MatrixF64::soft_wrap(unsafe {
             sys::gsl_multilarge_linear_matrix_ptr(self.unwrap_shared()) as _
@@ -228,6 +230,7 @@ impl MultilargeLinearWorkspace {
     }
 
     #[cfg(feature = "v2_7")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_7")))]
     pub fn rhs<F: FnOnce(&VectorF64)>(&self, f: F) {
         f(&VectorF64::soft_wrap(unsafe {
             sys::gsl_multilarge_linear_rhs_ptr(self.unwrap_shared()) as _

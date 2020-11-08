@@ -22,6 +22,7 @@ impl RStatQuantileWorkspace {
     }
 
     #[cfg(feature = "v2_2")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_2")))]
     pub fn reset(&mut self) -> Value {
         Value::from(unsafe { sys::gsl_rstat_quantile_reset(self.unwrap_unique()) })
     }
@@ -80,6 +81,7 @@ impl RStatWorkspace {
     }
 
     #[cfg(feature = "v2_2")]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_2")))]
     pub fn rms(&self) -> f64 {
         unsafe { sys::gsl_rstat_rms(self.unwrap_shared()) }
     }

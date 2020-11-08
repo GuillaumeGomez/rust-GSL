@@ -617,6 +617,7 @@ impl From<sys::CBLAS_SIDE> for CblasDiag {
 }
 
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
 pub enum FilterEnd {
     PadZero,
@@ -650,6 +651,7 @@ impl From<sys::gsl_filter_end_t> for FilterEnd {
 }
 
 #[cfg(feature = "v2_5")]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
 pub enum FilterScale {
     MedianAbsoluteDeviation,
