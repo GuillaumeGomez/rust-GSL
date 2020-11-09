@@ -325,7 +325,7 @@ pub fn qk<F: Fn(f64) -> f64>(
 /// This function works to an overall absolute tolerance of abserr. The following strategy is used:
 /// on each interval C_k the algorithm tries to achieve the tolerance
 ///
-/// ```
+/// ```text
 /// TOL_k = u_k abserr
 /// ```
 ///
@@ -335,7 +335,7 @@ pub fn qk<F: Fn(f64) -> f64>(
 /// If the integration of a subinterval leads to difficulties then the accuracy requirement for
 /// subsequent intervals is relaxed,
 ///
-/// ```
+/// ```text
 /// TOL_k = u_k max(abserr, max_{i<k}{E_i})
 /// ```
 ///

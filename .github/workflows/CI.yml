@@ -17,7 +17,7 @@ jobs:
           - nightly
     steps:
       - run: apt-get update -y
-      - run: apt-get install -y libgsl0-dev curl build-essential
+      - run: apt-get install -y libgsl0-dev curl build-essential python3
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
@@ -31,9 +31,14 @@ jobs:
       - run: cargo check --features v2_5
       - run: cargo check --features v2_6
       - run: cargo check --features v2_7
+      - name: run tests
+        run: cargo test --features v2_7
       - name: check examples
         working-directory: examples
         run: cargo check --features GSL/v2_7
+      - name: run examples
+        working-directory: examples
+        run: python3 run-examples.py
 
   build-osx:
     runs-on: macos-latest

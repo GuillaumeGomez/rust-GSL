@@ -6,7 +6,7 @@ use std::default::Default;
 
 /// The error handling form of the special functions always calculate an error estimate along with the value of the result.
 /// Therefore, structures are provided for amalgamating a value and error estimate.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Result {
     /// Contains the value.
     pub val: f64,
@@ -40,7 +40,7 @@ impl From<::sys::gsl_sf_result> for Result {
 
 /// In some cases, an overflow or underflow can be detected and handled by a function.
 /// In this case, it may be possible to return a scaling exponent as well as an error/value pair in order to save the result from exceeding the dynamic range of the built-in types.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct ResultE10 {
     /// Contains the value.
     pub val: f64,

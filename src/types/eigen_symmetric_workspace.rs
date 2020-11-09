@@ -742,7 +742,7 @@ fn eigen_symmetric_workspace() {
     use MatrixF64;
     use VectorF64;
 
-    let e = EigenSymmetricWorkspace::new(2).unwrap();
+    let mut e = EigenSymmetricWorkspace::new(2).unwrap();
     let mut m = MatrixF64::new(2, 2).unwrap();
 
     let data = [5., 5., 1., 6.];
@@ -787,7 +787,7 @@ fn eigen_symmetric_vworkspace() {
     use MatrixF64;
     use VectorF64;
 
-    let e = EigenSymmetricVWorkspace::new(3).unwrap();
+    let mut e = EigenSymmetricVWorkspace::new(3).unwrap();
     let data = [5., 5., 1., 6.];
     let mut m = MatrixF64::new(2, 2).unwrap();
 
