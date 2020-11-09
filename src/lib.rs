@@ -6,44 +6,24 @@
 //!
 //! ## Installation
 //!
-//! This binding requires the [GSL library] library to be installed.
-//!
-//! This crate works with Cargo and is on [crates.io].  Just add the
-//! following to your `Cargo.toml` file:
-//!
-//! ```toml
-//! [dependencies]
-//! GSL = "*"
-//! ```
-//!
-//! Add the following line to your source code:
-//!
-//! ```rust
-//! extern crate rgsl;
-//! ```
+//! This binding requires the [GSL library] library (>= 2) to be installed.
 //!
 //! ## Documentation
 //!
-//! You can access the __rgsl__ documentation locally, just build it:
-//!
-//! ```Shell
-//! > cargo doc --open
-//! ```
-//!
-//! Then open this file with an internet browser:
-//! `file:///{rgsl_location}/target/doc/rgsl/index.html`
-//!
-//! You can also access the latest build of the documentation via the internet
+//! You can access the latest version of the documentation via the internet
 //! [here](https://docs.rs/crate/GSL/).
 //!
+//! ## Examples
+//!
+//! Examples are available in the `examples` folder. Don't hesitate to take a look!
+//!
 //! ## License
+//!
 //! __rust-GSL__ is a wrapper for __GSL__, therefore inherits the
 //! [GPL license](http://www.gnu.org/copyleft/gpl.html).
 //!
 //! [crates.io]: https://crates.io/crates/GSL
 //! [GSL library]: http://www.gnu.org/software/gsl/
-//!
-//! Here is the list of all modules :
 
 #![crate_name = "rgsl"]
 #![crate_type = "rlib"]
