@@ -3,14 +3,16 @@
 //
 
 /*!
-Given K discrete events with different probabilities P[k], produce a random value k consistent with its probability.
+Given K discrete events with different probabilities `P[k]`, produce a random value k consistent with its probability.
 
 The obvious way to do this is to preprocess the probability list by generating a cumulative probability array with K+1 elements:
 
+```text
   C[0] = 0
 C[k+1] = C[k]+P[k].
+```
 
-Note that this construction produces C[K]=1. Now choose a uniform deviate u between 0 and 1, and find the value of k such that C[k] <= u < C[k+1]. Although this in principle requires of order \log K steps per random number generation, they are fast steps, and if you use something like \lfloor uK \rfloor as a starting point, you can often do pretty well.
+Note that this construction produces `C[K]=1`. Now choose a uniform deviate u between 0 and 1, and find the value of k such that `C[k] <= u < C[k+1]`. Although this in principle requires of order \log K steps per random number generation, they are fast steps, and if you use something like \lfloor uK \rfloor as a starting point, you can often do pretty well.
 
 But faster methods have been devised. Again, the idea is to preprocess the probability list, and save the result in some form of lookup table; then the individual calls for a random discrete event can go rapidly. An approach invented by G. Marsaglia (Generating discrete random variables in a computer, Comm ACM 6, 37–38 (1963)) is very clever, and readers interested in examples of good algorithm design are directed to this short and well-written paper. Unfortunately, for large K, Marsaglia’s lookup table can be quite large.
 
@@ -47,8 +49,10 @@ impl RanDiscrete {
         unsafe { sys::gsl_ran_discrete(r.unwrap_unique(), self.unwrap_shared()) }
     }
 
-    /// Returns the probability P[k] of observing the variable k. Since P[k] is not stored as part of the lookup table, it must be recomputed; this computation takes O(K),
-    /// so if K is large and you care about the original array P[k] used to create the lookup table, then you should just keep this original array P[k] around.
+    /// Returns the probability `P[k]` of observing the variable k. Since `P[k]` is not
+    /// stored as part of the lookup table, it must be recomputed; this computation takes O(K),
+    /// so if K is large and you care about the original array `P[k]` used to create the lookup
+    /// table, then you should just keep this original array `P[k]` around.
     pub fn discrete_pdf(&self, k: usize) -> f64 {
         unsafe { sys::gsl_ran_discrete_pdf(k, self.unwrap_shared()) }
     }

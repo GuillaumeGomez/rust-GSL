@@ -66,7 +66,7 @@ data[5] = Im(z[2])
 The array indices for the data have the same ordering as those in the definition of the DFT—i.e. there are no index transformations or
 permutations of the data.
 
-A stride parameter allows the user to perform transforms on the elements z[stride*i] instead of z[i]. A stride greater than 1 can be used
+A stride parameter allows the user to perform transforms on the elements `z[stride*i]` instead of `z[i]`. A stride greater than 1 can be used
 to take an in-place FFT of the column of a matrix. A stride of 1 accesses the array without any additional spacing between elements.
 
 To perform an FFT on a vector argument, such as gsl_vector_complex * v, use the following definitions (or their equivalents) when calling
@@ -228,6 +228,7 @@ pub mod real_radix2 {
     /// The following table shows the correspondence between the output data and the equivalent results obtained by considering the input data as
     /// a complex sequence with zero imaginary part (assuming stride=1),
     ///
+    /// ```text
     /// complex[0].real    =    data[0]
     /// complex[0].imag    =    0
     /// complex[1].real    =    data[1]
@@ -244,6 +245,8 @@ pub mod real_radix2 {
     /// ...............         ................
     /// complex[n-1].real  =    data[1]
     /// complex[n-1].imag  =   -data[n-1]
+    /// ```
+    ///
     /// Note that the output data can be converted into the full complex sequence using the function gsl_fft_halfcomplex_radix2_unpack described
     /// below.
     pub fn transform(data: &mut [f64], stride: usize, n: usize) -> Value {

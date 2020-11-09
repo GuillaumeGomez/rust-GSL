@@ -73,8 +73,8 @@ impl Histogram {
     /// This function sets the ranges of the existing histogram h to cover the range xmin to xmax uniformly. The values of the histogram bins
     /// are reset to zero. The bin ranges are shown in the table below,
     ///
-    /// bin[0] corresponds to xmin <= x < xmin + d
-    /// bin[1] corresponds to xmin + d <= x < xmin + 2 d
+    /// `bin[0]` corresponds to xmin <= x < xmin + d
+    /// `bin[1]` corresponds to xmin + d <= x < xmin + 2 d
     /// ......
     /// bin[n-1] corresponds to xmin + (n-1)d <= x < xmax
     /// where d is the bin spacing, d = (xmax-xmin)/n.
@@ -314,9 +314,12 @@ impl HistogramPdf {
     /// This function uses r, a uniform random number between zero and one, to compute a single random sample from the probability distribution
     /// self. The algorithm used to compute the sample s is given by the following formula,
     ///
+    /// ```text
     /// s = range[i] + delta * (range[i+1] - range[i])
+    /// ```
     ///
-    /// where i is the index which satisfies sum[i] <= r < sum[i+1] and delta is (r - sum[i])/(sum[i+1] - sum[i]).
+    /// where i is the index which satisfies `sum[i] <= r < sum[i+1]` and `delta` is
+    /// `(r - sum[i])/(sum[i+1] - sum[i])`.
     pub fn sample(&self, r: f64) -> f64 {
         unsafe { sys::gsl_histogram_pdf_sample(self.unwrap_shared(), r) }
     }

@@ -285,9 +285,11 @@ pub mod level1 {
 
     /// This function computes a Givens rotation (c,s) which zeroes the vector (a,b),
     ///
+    /// ```text
     /// [  c  s ] [ a ] = [ r ]
     ///
     /// [ -s  c ] [ b ]   [ 0 ]
+    /// ```
     ///
     /// The variables a and b are overwritten by the routine.
     pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], d: &mut [f32]) -> Value {
@@ -303,9 +305,11 @@ pub mod level1 {
 
     /// This function computes a Givens rotation (c,s) which zeroes the vector (a,b),
     ///
+    /// ```text
     /// [  c  s ] [ a ] = [ r ]
     ///
     /// [ -s  c ] [ b ]   [ 0 ]
+    /// ```
     ///
     /// The variables a and b are overwritten by the routine.
     pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], d: &mut [f64]) -> Value {

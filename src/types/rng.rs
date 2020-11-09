@@ -239,10 +239,10 @@ impl Rng {
         }
     }
 
-    /// This function fills the array dest[k] with k objects taken randomly from the n elements of the array src[0..n-1]. The objects are each of size size.
+    /// This function fills the array `dest[k]` with k objects taken randomly from the n elements of the array `src[0..n-1]`. The objects are each of size size.
     /// The output of the random number generator r is used to make the selection. The algorithm ensures all possible samples are equally likely, assuming a perfect source of randomness.
     ///
-    /// The objects are sampled without replacement, thus each object can only appear once in dest[k]. It is required that k be less than or equal to n.
+    /// The objects are sampled without replacement, thus each object can only appear once in `dest[k]`. It is required that k be less than or equal to n.
     /// The objects in dest will be in the same relative order as those in src. You will need to call gsl_ran_shuffle(r, dest, n, size) if you want to randomize the order.
     ///
     /// The following code shows how to select a random sample of three unique numbers from the set 0 to 99,
@@ -287,13 +287,17 @@ impl Rng {
         }
     }
 
-    /// This function computes a random sample n[] from the multinomial distribution formed by N trials from an underlying distribution p[K]. The distribution function for n[] is,
+    /// This function computes a random sample n[] from the multinomial distribution formed by N trials from an underlying distribution `p[K]`. The distribution function for `n[]` is,
     ///
+    /// ```text
     /// P(n_1, n_2, ..., n_K) =
     ///   (N!/(n_1! n_2! ... n_K!)) p_1^n_1 p_2^n_2 ... p_K^n_K
+    /// ```
     ///
-    /// where (n_1, n_2, ..., n_K) are nonnegative integers with sum_{k=1}^K n_k = N, and (p_1, p_2, ..., p_K) is a probability distribution with \sum p_i = 1. If the array p[K] is not normalized then its
-    /// entries will be treated as weights and normalized appropriately. The arrays n[] and p[] must both be of length K.
+    /// where (n_1, n_2, ..., n_K) are nonnegative integers with
+    /// `sum_{k=1}^K n_k = N, and (p_1, p_2, ..., p_K)` is a probability distribution with
+    /// `\sum p_i = 1`. If the array `p[K]` is not normalized then its entries will be treated
+    /// as weights and normalized appropriately. The arrays `n[]` and `p[]` must both be of length K.
     ///
     /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
     pub fn multinomial(&mut self, N: u32, p: &[f64], n: &mut [u32]) {

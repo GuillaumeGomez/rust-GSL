@@ -142,7 +142,7 @@ pub fn exp_err_e(x: f64, dx: f64) -> (Value, ::types::Result) {
 }
 
 /// This function exponentiates a quantity x with an associated absolute error dx using the
-/// [`ResultE10`] type to return a result with extended range.
+/// [`ResultE10`][crate::ResultE10] type to return a result with extended range.
 pub fn exp_err_e10_e(x: f64, dx: f64) -> (Value, ::types::ResultE10) {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_err_e10_e(x, dx, result.as_mut_ptr()) };

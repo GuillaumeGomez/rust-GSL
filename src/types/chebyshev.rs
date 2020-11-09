@@ -15,8 +15,8 @@ For further information see Abramowitz & Stegun, Chapter 22.
 
 ##Definitions
 
-The approximation is made over the range [a,b] using order+1 terms, including the coefficient c[0].
-The series is computed using the following convention,
+The approximation is made over the range [a,b] using order+1 terms, including the coefficient
+`c[0]`. The series is computed using the following convention,
 
 f(x) = (c_0 / 2) + \sum_{n=1} c_n T_n(x)
 
@@ -26,7 +26,7 @@ which is needed when accessing the coefficients directly.
 
 The following paper describes the use of Chebyshev series,
 
-R. Broucke, “Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Algorithm 446)”.
+R. Broucke, `Ten Subroutines for the Manipulation of Chebyshev Series [C1] (Algorithm 446)`.
 Communications of the ACM 16(4), 254–256 (1973)
 !*/
 
