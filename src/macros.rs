@@ -22,10 +22,9 @@ macro_rules! wrap_callback {
             f(x)
         }
 
-        let f: Box<$F> = Box::new($f);
         sys::gsl_function_struct {
-            function: unsafe { ::std::mem::transmute(trampoline::<$F> as usize) },
-            params: Box::into_raw(f) as *mut _,
+            function: Some(trampoline::<$F>),
+            params: &$f as *const _ as *mut _,
         }
     }};
 }
