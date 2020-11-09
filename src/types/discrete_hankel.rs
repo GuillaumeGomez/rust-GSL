@@ -146,9 +146,8 @@ fn discrete_hankel() {
         &format!("{:.4} {:.4}", d.x_sample(1), d.k_sample(1)),
         "1.2033 4.8805"
     );
-    let v = d.apply(&[100., 2., 3.]);
-    assert_eq!(true, v.is_ok());
-    let v = v.unwrap();
+    let (res, v) = d.apply(&[100., 2., 3.]);
+    assert_eq!(true, res == ::Value::Success);
     assert_eq!(
         &format!("{:.4} {:.4} {:.4}", v[0], v[1], v[2]),
         "8.5259 13.9819 11.7320"

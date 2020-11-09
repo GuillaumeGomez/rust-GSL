@@ -644,6 +644,7 @@ unsafe extern "C" fn monte_trampoline<F: FnMut(&[f64]) -> f64>(
 #[test]
 fn plain() {
     use std::f64::consts::PI;
+
     fn g(k: &[f64]) -> f64 {
         let a = 1f64 / (PI * PI * PI);
 
@@ -656,13 +657,12 @@ fn plain() {
     let calls = 500000;
 
     ::RngType::env_setup();
-    let t: ::RngType = ::rng::default();
-    let mut r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = PlainMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &mut r).unwrap();
+        let (_, res, err) = s.integrate(g, &xl, &xu, calls, &mut r);
         assert_eq!(&format!("{:.6}", res), "1.412209");
         assert_eq!(&format!("{:.6}", err), "0.013436");
     }
@@ -683,13 +683,12 @@ fn miser() {
     let calls = 500000;
 
     ::RngType::env_setup();
-    let t: ::RngType = ::rng::default();
-    let mut r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, calls, &mut r).unwrap();
+        let (_, res, err) = s.integrate(g, &xl, &xu, calls, &mut r);
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -705,26 +704,22 @@ fn miser_closure() {
     let calls = 500000;
 
     ::RngType::env_setup();
-    let t: ::RngType = ::rng::default();
-    let mut r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s
-            .integrate(
-                3,
-                |k| {
-                    let a = 1f64 / (PI * PI * PI);
+        let (_, res, err) = s.integrate(
+            |k| {
+                let a = 1f64 / (PI * PI * PI);
 
-                    a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
-                },
-                &xl,
-                &xu,
-                calls,
-                &mut r,
-            )
-            .unwrap();
+                a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+            },
+            &xl,
+            &xu,
+            calls,
+            &mut r,
+        );
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -743,13 +738,12 @@ fn vegas_warm_up() {
     let xu: [f64; 3] = [PI, PI, PI];
 
     ::RngType::env_setup();
-    let t: ::RngType = ::rng::default();
-    let mut r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();
 
-        let (res, err) = s.integrate(3, g, &xl, &xu, 10000, &mut r).unwrap();
+        let (_, res, err) = s.integrate(g, &xl, &xu, 10000, &mut r);
         assert_eq!(&format!("{:.6}", res), "1.385603");
         assert_eq!(&format!("{:.6}", err), "0.002212");
     }
@@ -759,9 +753,9 @@ fn vegas_warm_up() {
 fn vegas() {
     use std::f64::consts::PI;
     fn g(k: &[f64]) -> f64 {
-        let a = 1f64 / (PI * PI * PI);
+        let a = 1. / (PI * PI * PI);
 
-        a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+        a / (1. - k[0].cos() * k[1].cos() * k[2].cos())
     }
 
     let calls = 500000;
@@ -770,17 +764,16 @@ fn vegas() {
     let xu: [f64; 3] = [PI, PI, PI];
 
     ::RngType::env_setup();
-    let t: ::RngType = ::rng::default();
-    let mut r = ::Rng::new(&t).unwrap();
+    let mut r = ::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();
 
-        s.integrate(3, g, &xl, &xu, 10000, &mut r).unwrap();
+        s.integrate(g, &xl, &xu, 10000, &mut r);
         let mut res;
         let mut err;
         loop {
-            let (_res, _err) = s.integrate(3, g, &xl, &xu, calls / 5, &mut r).unwrap();
+            let (_, _res, _err) = s.integrate(g, &xl, &xu, calls / 5, &mut r);
             res = _res;
             err = _err;
             println!(

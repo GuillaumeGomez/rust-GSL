@@ -83,7 +83,7 @@ impl Interp {
     /// use rgsl::{Interp, InterpType};
     ///
     /// let interp_type = InterpType::linear();
-    /// let interp = Interp::new(&interp_type, 2).expect("Failed to initialize `Interp`...");
+    /// let interp = Interp::new(interp_type, 2).expect("Failed to initialize `Interp`...");
     /// ```
     pub fn new(t: InterpType, size: usize) -> Option<Interp> {
         let tmp = unsafe { sys::gsl_interp_alloc(t.unwrap_shared(), size) };
@@ -117,7 +117,7 @@ impl Interp {
     /// use rgsl::{Interp, InterpType};
     ///
     /// let interp_type = InterpType::linear();
-    /// let interp = Interp::new(&interp_type, 2).expect("Failed to initialize `Interp`...");
+    /// let interp = Interp::new(interp_type, 2).expect("Failed to initialize `Interp`...");
     /// println!("interp uses '{}' interpolation.", interp.name());
     /// ```
     ///
