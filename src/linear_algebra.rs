@@ -177,7 +177,7 @@ use types::complex::FFFI;
 ///
 /// U is stored in the diagonal and upper triangular part of the input matrix.
 ///
-/// P is stored in the permutation p. Column j of P is column k of the identity matrix, where k = permutation->data[j]
+/// P is stored in the permutation p. Column j of P is column k of the identity matrix, where `k = permutation->data[j]`
 ///
 /// signum gives the sign of the permutation, (-1)^n, where n is the  number of interchanges in the permutation.
 ///
@@ -196,7 +196,7 @@ pub fn LU_decomp(a: &mut ::MatrixF64, p: &mut ::Permutation, signum: &mut i32) -
 ///
 /// U is stored in the diagonal and upper triangular part of the input matrix.
 ///
-/// P is stored in the permutation p. Column j of P is column k of the identity matrix, where k = permutation->data[j]
+/// P is stored in the permutation p. Column j of P is column k of the identity matrix, where `k = permutation->data[j]`
 ///
 /// signum gives the sign of the permutation, (-1)^n, where n is the number of interchanges in the permutation.
 ///

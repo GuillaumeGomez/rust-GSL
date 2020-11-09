@@ -5,8 +5,8 @@
 use crate::Value;
 use ffi::FFI;
 
-/// This function returns the index i of the array x_array such that x_array[i] <= x < x_array[i+1]. The index is searched for in the
-/// range [index_lo,index_hi].
+/// This function returns the index i of the array x_array such that `x_array[i] <= x < x_array[i+1]`.
+/// The index is searched for in the range `[index_lo,index_hi]`.
 pub fn bsearch(x_array: &[f64], x: f64, index_lo: usize, index_hi: usize) -> usize {
     unsafe { sys::gsl_interp_bsearch(x_array.as_ptr(), x, index_lo, index_hi) }
 }

@@ -239,12 +239,14 @@ impl IntegrationWorkspace {
     /// For example, to integrate over the region (a,b) with break-points at x_1, x_2, x_3
     /// (where a < x_1 < x_2 < x_3 < b) the following pts array should be used
     ///
+    /// ```text
     /// pts[0] = a
     /// pts[1] = x_1
     /// pts[2] = x_2
     /// pts[3] = x_3
     /// pts[4] = b
     /// with npts = 5.
+    /// ```
     ///
     /// If you know the locations of the singular points in the integration region then this routine
     /// will be faster than QAGS.

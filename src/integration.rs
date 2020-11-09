@@ -301,7 +301,7 @@ pub fn qk<F: Fn(f64) -> f64>(
 /// This function attempts to compute a Fourier integral of the function f over the semi-infinite
 /// interval `[a,+\infty)`.
 ///
-/// ```
+/// ```text
 /// I = \int_a^{+\infty} dx f(x) sin(omega x)
 /// I = \int_a^{+\infty} dx f(x) cos(omega x)
 /// ```
@@ -310,7 +310,7 @@ pub fn qk<F: Fn(f64) -> f64>(
 /// take any value, since it is overridden by this function to a value appropriate for the Fourier
 /// integration). The integral is computed using the QAWO algorithm over each of the subintervals,
 ///
-/// ```
+/// ```text
 /// C_1 = [a, a + c]
 /// C_2 = [a + c, a + 2 c]
 /// ... = ...

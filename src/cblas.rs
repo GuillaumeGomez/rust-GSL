@@ -362,7 +362,7 @@ pub mod level2 {
     /// * Y : vector Y
     /// * incy : use every incY'th element of Y
     ///
-    /// For parameter lda, if you are passing a matrix A[m][n], the value of parameter lda should be m.
+    /// For parameter lda, if you are passing a matrix `A[m][n]`, the value of parameter lda should be m.
     pub fn sgemv(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -2210,7 +2210,7 @@ pub mod level3 {
     /// * C : matrix C
     /// * ldc : The size of the first dimension of matrix C
     ///
-    /// For parameters lda, ldb, and ldc, if you are passing a matrix D[m][n], the value of parameter lda, ldb, or ldc should be m.
+    /// For parameters lda, ldb, and ldc, if you are passing a matrix `D[m][n]`, the value of parameter lda, ldb, or ldc should be m.
     pub fn sgemm(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,

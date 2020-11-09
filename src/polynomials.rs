@@ -98,7 +98,7 @@ pub mod divided_difference_representation {
 
     /// This function computes a divided-difference representation of the interpolating polynomial for the points (x, y) stored in the arrays
     /// xa and ya of length size. On output the divided-differences of (xa,ya) are stored in the array dd, also of length size. Using the
-    /// notation above, dd[k] = [x_0,x_1,...,x_k].
+    /// notation above, `dd[k] = [x_0,x_1,...,x_k]`.
     pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as _)
@@ -130,7 +130,7 @@ pub mod divided_difference_representation {
     /// arrays xa and ya of length size. Hermite interpolation constructs polynomials which also match first derivatives dy/dx which are provided
     /// in the array dya also of length size. The first derivatives can be incorported into the usual divided-difference algorithm by forming a
     /// new dataset z = \{x_0,x_0,x_1,x_1,...\}, which is stored in the array za of length 2*size on output. On output the divided-differences
-    /// of the Hermite representation are stored in the array dd, also of length 2*size. Using the notation above, dd[k] = [z_0,z_1,...,z_k].
+    /// of the Hermite representation are stored in the array dd, also of length 2*size. Using the notation above, `dd[k] = [z_0,z_1,...,z_k]`.
     /// The resulting Hermite polynomial can be evaluated by calling gsl_poly_dd_eval and using za for the input argument xa.
     pub fn poly_dd_hermite_init(
         dd: &mut [f64],
