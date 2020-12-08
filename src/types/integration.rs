@@ -168,7 +168,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-        key: enums::GaussKonrodRule,
+        key: enums::GaussKronrodRule,
     ) -> (::Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;

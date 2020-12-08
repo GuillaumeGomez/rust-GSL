@@ -276,7 +276,7 @@ impl From<sys::gsl_fft_direction> for FftDirection {
 /// The low-level integration rules in QUADPACK are identified by small integers (1-6). We'll use
 /// symbolic constants to refer to them.
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
-pub enum GaussKonrodRule {
+pub enum GaussKronrodRule {
     /// 15 point Gauss-Kronrod rule
     Gauss15,
     /// 21 point Gauss-Kronrod rule
@@ -292,7 +292,7 @@ pub enum GaussKonrodRule {
 }
 
 #[doc(hidden)]
-impl Into<::std::os::raw::c_int> for GaussKonrodRule {
+impl Into<::std::os::raw::c_int> for GaussKronrodRule {
     fn into(self) -> ::std::os::raw::c_int {
         let x = match self {
             Self::Gauss15 => sys::GSL_INTEG_GAUSS15,
@@ -307,8 +307,8 @@ impl Into<::std::os::raw::c_int> for GaussKonrodRule {
 }
 
 #[doc(hidden)]
-impl From<::std::os::raw::c_int> for GaussKonrodRule {
-    fn from(v: ::std::os::raw::c_int) -> GaussKonrodRule {
+impl From<::std::os::raw::c_int> for GaussKronrodRule {
+    fn from(v: ::std::os::raw::c_int) -> GaussKronrodRule {
         match v as _ {
             sys::GSL_INTEG_GAUSS15 => Self::Gauss15,
             sys::GSL_INTEG_GAUSS21 => Self::Gauss21,
@@ -316,7 +316,7 @@ impl From<::std::os::raw::c_int> for GaussKonrodRule {
             sys::GSL_INTEG_GAUSS41 => Self::Gauss41,
             sys::GSL_INTEG_GAUSS51 => Self::Gauss51,
             sys::GSL_INTEG_GAUSS61 => Self::Gauss61,
-            _ => panic!("Unknown GaussKonrodRule value"),
+            _ => panic!("Unknown GaussKronrodRule value"),
         }
     }
 }
