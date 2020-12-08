@@ -12,22 +12,27 @@ impl Index {
 }
 
 pub mod level1 {
+    #[doc(alias = "cblas_sdsdot")]
     pub fn sdsdot(N: i32, alpha: f32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
         unsafe { ::sys::cblas_sdsdot(N, alpha, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_dsdot")]
     pub fn dsdot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f64 {
         unsafe { ::sys::cblas_dsdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_sdot")]
     pub fn sdot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
         unsafe { ::sys::cblas_sdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_ddot")]
     pub fn ddot(N: i32, x: &[f64], incx: i32, y: &[f64], incy: i32) -> f64 {
         unsafe { ::sys::cblas_ddot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_cdotu_sub")]
     pub fn cdotu_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotu: &mut [T]) {
         unsafe {
             ::sys::cblas_cdotu_sub(
@@ -41,6 +46,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_cdotc_sub")]
     pub fn cdotc_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotc: &mut [T]) {
         unsafe {
             ::sys::cblas_cdotc_sub(
@@ -54,6 +60,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_zdotu_sub")]
     pub fn zdotu_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotu: &mut [T]) {
         unsafe {
             ::sys::cblas_zdotu_sub(
@@ -67,6 +74,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_zdotc_sub")]
     pub fn zdotc_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotc: &mut [T]) {
         unsafe {
             ::sys::cblas_zdotc_sub(
@@ -80,78 +88,97 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_snrm2")]
     pub fn snrm2(N: i32, x: &[f32], incx: i32) -> f32 {
         unsafe { ::sys::cblas_snrm2(N, x.as_ptr(), incx) }
     }
 
+    #[doc(alias = "cblas_sasum")]
     pub fn sasum(N: i32, x: &[f32], incx: i32) -> f32 {
         unsafe { ::sys::cblas_sasum(N, x.as_ptr(), incx) }
     }
 
+    #[doc(alias = "cblas_dnrm2")]
     pub fn dnrm2(N: i32, x: &[f64], incx: i32) -> f64 {
         unsafe { ::sys::cblas_dnrm2(N, x.as_ptr(), incx) }
     }
 
+    #[doc(alias = "cblas_dasum")]
     pub fn dasum(N: i32, x: &[f64], incx: i32) -> f64 {
         unsafe { ::sys::cblas_dasum(N, x.as_ptr(), incx) }
     }
 
+    #[doc(alias = "cblas_scnrm2")]
     pub fn scnrm2<T>(N: i32, x: &[T], incx: i32) -> f32 {
         unsafe { ::sys::cblas_scnrm2(N, x.as_ptr() as *const _, incx) }
     }
 
+    #[doc(alias = "cblas_scasum")]
     pub fn scasum<T>(N: i32, x: &[T], incx: i32) -> f32 {
         unsafe { ::sys::cblas_scasum(N, x.as_ptr() as *const _, incx) }
     }
 
+    #[doc(alias = "cblas_dznrm2")]
     pub fn dznrm2<T>(N: i32, x: &[T], incx: i32) -> f64 {
         unsafe { ::sys::cblas_dznrm2(N, x.as_ptr() as *const _, incx) }
     }
 
+    #[doc(alias = "cblas_dzasum")]
     pub fn dzasum<T>(N: i32, x: &[T], incx: i32) -> f64 {
         unsafe { ::sys::cblas_dzasum(N, x.as_ptr() as *const _, incx) }
     }
 
+    #[doc(alias = "cblas_isamax")]
     pub fn isamax(N: i32, x: &[f32], incx: i32) -> ::cblas::Index {
         ::cblas::Index(unsafe { ::sys::cblas_isamax(N, x.as_ptr(), incx) })
     }
 
+    #[doc(alias = "cblas_idamax")]
     pub fn idamax(N: i32, x: &[f64], incx: i32) -> ::cblas::Index {
         ::cblas::Index(unsafe { ::sys::cblas_idamax(N, x.as_ptr(), incx) })
     }
 
+    #[doc(alias = "cblas_icamax")]
     pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
         ::cblas::Index(unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) })
     }
 
+    #[doc(alias = "cblas_izamax")]
     pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
         ::cblas::Index(unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) })
     }
 
+    #[doc(alias = "cblas_sswap")]
     pub fn sswap(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32) {
         unsafe { ::sys::cblas_sswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_scopy")]
     pub fn scopy(N: i32, x: &[f32], incx: i32, y: &mut [f32], incy: i32) {
         unsafe { ::sys::cblas_scopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_saxpy")]
     pub fn saxpy(N: i32, alpha: f32, x: &[f32], incx: i32, y: &mut [f32], incy: i32) {
         unsafe { ::sys::cblas_saxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_dswap")]
     pub fn dswap(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32) {
         unsafe { ::sys::cblas_dswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_dcopy")]
     pub fn dcopy(N: i32, x: &[f64], incx: i32, y: &mut [f64], incy: i32) {
         unsafe { ::sys::cblas_dcopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_daxpy")]
     pub fn daxpy(N: i32, alpha: f64, x: &[f64], incx: i32, y: &mut [f64], incy: i32) {
         unsafe { ::sys::cblas_daxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
+    #[doc(alias = "cblas_cswap")]
     pub fn cswap<T>(N: i32, x: &mut [T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
             ::sys::cblas_cswap(
@@ -164,6 +191,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_ccopy")]
     pub fn ccopy<T>(N: i32, x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
             ::sys::cblas_ccopy(
@@ -176,6 +204,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_caxpy")]
     pub fn caxpy<T>(N: i32, alpha: &[T], x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
             ::sys::cblas_caxpy(
@@ -189,6 +218,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_zswap")]
     pub fn zswap<T>(N: i32, x: &mut [T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
             ::sys::cblas_zswap(
@@ -201,6 +231,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_zcopy")]
     pub fn zcopy<T>(N: i32, x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
             ::sys::cblas_zcopy(
@@ -213,6 +244,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_zaxpy")]
     pub fn zaxpy<T>(N: i32, alpha: &[T], x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
             ::sys::cblas_zaxpy(
@@ -226,6 +258,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_srotg")]
     pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], s: &mut [f32]) {
         unsafe {
             ::sys::cblas_srotg(
@@ -237,6 +270,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_srotmg")]
     pub fn srotmg(d1: &mut [f32], d2: &mut [f32], b1: &mut [f32], b2: f32, P: &mut [f32]) {
         unsafe {
             ::sys::cblas_srotmg(
@@ -249,14 +283,17 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_srot")]
     pub fn srot(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, c: f32, s: f32) {
         unsafe { ::sys::cblas_srot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
     }
 
+    #[doc(alias = "cblas_srotm")]
     pub fn srotm(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, p: &[f32]) {
         unsafe { ::sys::cblas_srotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
     }
 
+    #[doc(alias = "cblas_drotg")]
     pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], s: &mut [f64]) {
         unsafe {
             ::sys::cblas_drotg(
@@ -268,6 +305,7 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_drotmg")]
     pub fn drotmg(d1: &mut [f64], d2: &mut [f64], b1: &mut [f64], b2: f64, P: &mut [f64]) {
         unsafe {
             ::sys::cblas_drotmg(
@@ -280,10 +318,12 @@ pub mod level1 {
         }
     }
 
+    #[doc(alias = "cblas_drot")]
     pub fn drot(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, c: f64, s: f64) {
         unsafe { ::sys::cblas_drot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
     }
 
+    #[doc(alias = "cblas_drotm")]
     pub fn drotm(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, p: &[f64]) {
         unsafe { ::sys::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
     }
@@ -300,16 +340,19 @@ pub mod level1 {
     /// * incx : Amount to increment counter after each scaling, ie incX=2 mean to scale elements {1,3,...}
     ///
     /// Note that the allocated length of X must be incX*N-1 as N indicates the number of scaling operations to perform.
+    #[doc(alias = "cblas_sscal")]
     pub fn sscal(N: i32, alpha: f32, x: &mut [f32], incx: i32) {
         unsafe { ::sys::cblas_sscal(N, alpha, x.as_mut_ptr(), incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
+    #[doc(alias = "cblas_dscal")]
     pub fn dscal(N: i32, alpha: f64, x: &mut [f64], incx: i32) {
         unsafe { ::sys::cblas_dscal(N, alpha, x.as_mut_ptr(), incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
+    #[doc(alias = "cblas_cscal")]
     pub fn cscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
         unsafe {
             ::sys::cblas_cscal(
@@ -322,6 +365,7 @@ pub mod level1 {
     }
 
     /// Multiple each element of a matrix/vector by a constant.
+    #[doc(alias = "cblas_zscal")]
     pub fn zscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
         unsafe {
             ::sys::cblas_zscal(
@@ -334,11 +378,13 @@ pub mod level1 {
     }
 
     /// Multiple each element of a matrix/vector by a constant.
+    #[doc(alias = "cblas_csscal")]
     pub fn csscal<T>(N: i32, alpha: f32, x: &mut [T], incx: i32) {
         unsafe { ::sys::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
+    #[doc(alias = "cblas_zdscal")]
     pub fn zdscal<T>(N: i32, alpha: f64, x: &mut [T], incx: i32) {
         unsafe { ::sys::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
     }
@@ -363,6 +409,7 @@ pub mod level2 {
     /// * incy : use every incY'th element of Y
     ///
     /// For parameter lda, if you are passing a matrix `A[m][n]`, the value of parameter lda should be m.
+    #[doc(alias = "cblas_sgemv")]
     pub fn sgemv(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -395,6 +442,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_sgbmv")]
     pub fn sgbmv(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -431,6 +479,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_strmv")]
     pub fn strmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -457,6 +506,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_stbmv")]
     pub fn stbmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -485,6 +535,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_stpmv")]
     pub fn stpmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -509,6 +560,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_strsv")]
     pub fn strsv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -535,6 +587,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_stbsv")]
     pub fn stbsv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -563,6 +616,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_stpsv")]
     pub fn stpsv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -587,6 +641,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dgemv")]
     pub fn dgemv(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -619,6 +674,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dgbmv")]
     pub fn dgbmv(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -655,6 +711,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dtrmv")]
     pub fn dtrmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -681,6 +738,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dtbmv")]
     pub fn dtbmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -709,6 +767,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dtpmv")]
     pub fn dtpmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -733,6 +792,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dtrsv")]
     pub fn dtrsv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -759,6 +819,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dtbsv")]
     pub fn dtbsv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -787,6 +848,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dtpsv")]
     pub fn dtpsv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -811,6 +873,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_cgemv")]
     pub fn cgemv<T>(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -843,6 +906,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_cgbmv")]
     pub fn cgbmv<T>(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -879,6 +943,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ctrmv")]
     pub fn ctrmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -905,6 +970,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ctbmv")]
     pub fn ctbmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -933,6 +999,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ctpmv")]
     pub fn ctpmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -957,6 +1024,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ctrsv")]
     pub fn ctrsv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -983,6 +1051,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ctbsv")]
     pub fn ctbsv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1011,6 +1080,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ctpsv")]
     pub fn ctpsv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1035,6 +1105,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zgemv")]
     pub fn zgemv<T>(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -1067,6 +1138,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zgbmv")]
     pub fn zgbmv<T>(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -1103,6 +1175,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ztrmv")]
     pub fn ztrmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1129,6 +1202,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ztbmv")]
     pub fn ztbmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1157,6 +1231,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ztpmv")]
     pub fn ztpmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1181,6 +1256,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ztrsv")]
     pub fn ztrsv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1207,6 +1283,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ztbsv")]
     pub fn ztbsv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1235,6 +1312,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ztpsv")]
     pub fn ztpsv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1259,6 +1337,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ssymv")]
     pub fn ssymv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1289,6 +1368,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ssbmv")]
     pub fn ssbmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1321,6 +1401,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_sspmv")]
     pub fn sspmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1349,6 +1430,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_sger")]
     pub fn sger(
         order: enums::CblasOrder,
         M: i32,
@@ -1377,6 +1459,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ssyr")]
     pub fn ssyr(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1401,6 +1484,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_sspr")]
     pub fn sspr(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1423,6 +1507,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_ssyr2")]
     pub fn ssyr2(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1451,6 +1536,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_sspr2")]
     pub fn sspr2(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1477,6 +1563,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dsymv")]
     pub fn dsymv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1507,6 +1594,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dsbmv")]
     pub fn dsbmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1539,6 +1627,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dspmv")]
     pub fn dspmv(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1567,6 +1656,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dger")]
     pub fn dger(
         order: enums::CblasOrder,
         M: i32,
@@ -1595,6 +1685,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dsyr")]
     pub fn dsyr(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1619,6 +1710,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dspr")]
     pub fn dspr(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1641,6 +1733,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dsyr2")]
     pub fn dsyr2(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1669,6 +1762,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_dspr2")]
     pub fn dspr2(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1695,6 +1789,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_chemv")]
     pub fn chemv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1725,6 +1820,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_chbmv")]
     pub fn chbmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1757,6 +1853,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_chpmv")]
     pub fn chpmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1785,6 +1882,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_cgeru")]
     pub fn cgeru<T>(
         order: enums::CblasOrder,
         M: i32,
@@ -1813,6 +1911,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_cgerc")]
     pub fn cgerc<T>(
         order: enums::CblasOrder,
         M: i32,
@@ -1841,6 +1940,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_cher")]
     pub fn cher<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1865,6 +1965,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_chpr")]
     pub fn chpr<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1887,6 +1988,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_cher2")]
     pub fn cher2<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1915,6 +2017,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_chpr2")]
     pub fn chpr2<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1941,6 +2044,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zhemv")]
     pub fn zhemv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -1971,6 +2075,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zhbmv")]
     pub fn zhbmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2003,6 +2108,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zhpmv")]
     pub fn zhpmv<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2031,6 +2137,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zgeru")]
     pub fn zgeru<T>(
         order: enums::CblasOrder,
         M: i32,
@@ -2059,6 +2166,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zgerc")]
     pub fn zgerc<T>(
         order: enums::CblasOrder,
         M: i32,
@@ -2087,6 +2195,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zher")]
     pub fn zher<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2111,6 +2220,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zhpr")]
     pub fn zhpr<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2133,6 +2243,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zher2")]
     pub fn zher2<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2161,6 +2272,7 @@ pub mod level2 {
         }
     }
 
+    #[doc(alias = "cblas_zhpr2")]
     pub fn zhpr2<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2211,6 +2323,7 @@ pub mod level3 {
     /// * ldc : The size of the first dimension of matrix C
     ///
     /// For parameters lda, ldb, and ldc, if you are passing a matrix `D[m][n]`, the value of parameter lda, ldb, or ldc should be m.
+    #[doc(alias = "cblas_sgemm")]
     pub fn sgemm(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -2264,6 +2377,7 @@ pub mod level3 {
     /// * beta : scalar factor for C
     /// * C : matrix C
     /// * ldc : The size of the first dimension of matrix C
+    #[doc(alias = "cblas_ssymm")]
     pub fn ssymm(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2298,6 +2412,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_ssyrk")]
     pub fn ssyrk(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2328,6 +2443,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_ssyr2k")]
     pub fn ssyr2k(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2362,6 +2478,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_strmm")]
     pub fn strmm(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2394,6 +2511,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_strsm")]
     pub fn strsm(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2426,6 +2544,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_dgemm")]
     pub fn dgemm(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -2462,6 +2581,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_dsymm")]
     pub fn dsymm(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2496,6 +2616,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_dsyrk")]
     pub fn dsyrk(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2526,6 +2647,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_dsyr2k")]
     pub fn dsyr2k(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2560,6 +2682,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_dtrmm")]
     pub fn dtrmm(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2592,6 +2715,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_dtrsm")]
     pub fn dtrsm(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2624,6 +2748,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_cgemm")]
     pub fn cgemm<T>(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -2660,6 +2785,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_csymm")]
     pub fn csymm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2694,6 +2820,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_csyrk")]
     pub fn csyrk<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2724,6 +2851,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_csyr2k")]
     pub fn csyr2k<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2758,6 +2886,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_ctrmm")]
     pub fn ctrmm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2790,6 +2919,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_ctrsm")]
     pub fn ctrsm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2822,6 +2952,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zgemm")]
     pub fn zgemm<T>(
         order: enums::CblasOrder,
         transA: enums::CblasTranspose,
@@ -2858,6 +2989,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zsymm")]
     pub fn zsymm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2892,6 +3024,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zsyrk")]
     pub fn zsyrk<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2922,6 +3055,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zsyr2k")]
     pub fn zsyr2k<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -2956,6 +3090,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_ztrmm")]
     pub fn ztrmm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -2988,6 +3123,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_ztrsm")]
     pub fn ztrsm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -3020,6 +3156,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_chemm")]
     pub fn chemm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -3054,6 +3191,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_cherk")]
     pub fn cherk<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -3084,6 +3222,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_cher2k")]
     pub fn cher2k<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -3118,6 +3257,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zhemm")]
     pub fn zhemm<T>(
         order: enums::CblasOrder,
         side: enums::CblasSide,
@@ -3152,6 +3292,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zherk")]
     pub fn zherk<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,
@@ -3182,6 +3323,7 @@ pub mod level3 {
         }
     }
 
+    #[doc(alias = "cblas_zher2k")]
     pub fn zher2k<T>(
         order: enums::CblasOrder,
         uplo: enums::CblasUplo,

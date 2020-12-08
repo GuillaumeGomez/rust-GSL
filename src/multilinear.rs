@@ -5,6 +5,7 @@
 use crate::{MatrixF64, Value, VectorF64};
 use ffi::FFI;
 
+#[doc(alias = "gsl_multifit_linear_applyW")]
 pub fn applyW(
     x: &MatrixF64,
     w: &VectorF64,
@@ -23,6 +24,7 @@ pub fn applyW(
     }
 }
 
+#[doc(alias = "gsl_multifit_linear_L_decomp")]
 pub fn L_decomp(l: &mut MatrixF64, tau: &mut VectorF64) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_L_decomp(
@@ -32,6 +34,7 @@ pub fn L_decomp(l: &mut MatrixF64, tau: &mut VectorF64) -> Value {
     }
 }
 
+#[doc(alias = "gsl_multifit_linear_lreg")]
 pub fn lreg(smin: f64, smax: f64, reg_param: &mut VectorF64) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_lreg(
@@ -43,6 +46,7 @@ pub fn lreg(smin: f64, smax: f64, reg_param: &mut VectorF64) -> Value {
 }
 
 /// Returns `(Value, idx)`.
+#[doc(alias = "gsl_multifit_linear_lcorner")]
 pub fn lcorner(rho: &VectorF64, eta: &VectorF64) -> (Value, usize) {
     let mut idx = 0;
     let ret = unsafe {
@@ -52,6 +56,7 @@ pub fn lcorner(rho: &VectorF64, eta: &VectorF64) -> (Value, usize) {
 }
 
 /// Returns `(Value, idx)`.
+#[doc(alias = "gsl_multifit_linear_lcorner2")]
 pub fn lcorner2(reg_param: &VectorF64, eta: &VectorF64) -> (Value, usize) {
     let mut idx = 0;
     let ret = unsafe {
@@ -60,11 +65,13 @@ pub fn lcorner2(reg_param: &VectorF64, eta: &VectorF64) -> (Value, usize) {
     (Value::from(ret), idx)
 }
 
+#[doc(alias = "gsl_multifit_linear_Lk")]
 pub fn Lk(p: usize, k: usize, l: &mut MatrixF64) -> Value {
     unsafe { Value::from(sys::gsl_multifit_linear_Lk(p, k, l.unwrap_unique())) }
 }
 
 /// Returns `(Value, y, y_err)`.
+#[doc(alias = "gsl_multifit_linear_est")]
 pub fn linear_est(x: &VectorF64, c: &VectorF64, cov: &MatrixF64) -> (Value, f64, f64) {
     let mut y = 0.;
     let mut y_err = 0.;
@@ -80,6 +87,7 @@ pub fn linear_est(x: &VectorF64, c: &VectorF64, cov: &MatrixF64) -> (Value, f64,
     (Value::from(ret), y, y_err)
 }
 
+#[doc(alias = "gsl_multifit_linear_residuals")]
 pub fn linear_residuals(x: &MatrixF64, y: &VectorF64, c: &VectorF64, r: &mut VectorF64) -> Value {
     unsafe {
         Value::from(sys::gsl_multifit_linear_residuals(

@@ -14,11 +14,13 @@ use crate::Value;
 use std::mem::MaybeUninit;
 
 /// This routine computes the Clausen integral Cl_2(x).
+#[doc(alias = "gsl_sf_clausen")]
 pub fn clausen(x: f64) -> f64 {
     unsafe { sys::gsl_sf_clausen(x) }
 }
 
 /// This routine computes the Clausen integral Cl_2(x).
+#[doc(alias = "gsl_sf_clausen_e")]
 pub fn clausen_e(x: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_clausen_e(x, result.as_mut_ptr()) };

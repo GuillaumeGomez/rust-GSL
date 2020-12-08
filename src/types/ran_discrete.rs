@@ -34,6 +34,7 @@ impl RanDiscrete {
     /// This function returns a pointer to a structure that contains the lookup table for the discrete random number generator. The array P[] contains the probabilities of the discrete events;
     /// these array elements must all be positive, but they needn’t add up to one (so you can think of them more generally as “weights”)—the preprocessor will normalize appropriately.
     /// This return value is used as an argument for the gsl_ran_discrete function below.
+    #[doc(alias = "gsl_ran_discrete_preproc")]
     pub fn new(P: &[f64]) -> Option<RanDiscrete> {
         let tmp = unsafe { sys::gsl_ran_discrete_preproc(P.len() as _, P.as_ptr()) };
 
@@ -45,6 +46,7 @@ impl RanDiscrete {
     }
 
     /// After the new, above, has been called, you use this function to get the discrete random numbers.
+    #[doc(alias = "gsl_ran_discrete")]
     pub fn discrete(&self, r: &mut Rng) -> usize {
         unsafe { sys::gsl_ran_discrete(r.unwrap_unique(), self.unwrap_shared()) }
     }
@@ -53,6 +55,7 @@ impl RanDiscrete {
     /// stored as part of the lookup table, it must be recomputed; this computation takes O(K),
     /// so if K is large and you care about the original array `P[k]` used to create the lookup
     /// table, then you should just keep this original array `P[k]` around.
+    #[doc(alias = "gsl_ran_discrete_pdf")]
     pub fn discrete_pdf(&self, k: usize) -> f64 {
         unsafe { sys::gsl_ran_discrete_pdf(k, self.unwrap_shared()) }
     }

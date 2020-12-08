@@ -17,6 +17,7 @@ use std::mem::MaybeUninit;
 ///  ma mb mc)
 ///
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+#[doc(alias = "gsl_sf_coupling_3j")]
 pub fn _3j(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_mc: i32) -> f64 {
     unsafe { ::sys::gsl_sf_coupling_3j(two_ja, two_jb, two_jc, two_ma, two_mb, two_mc) }
 }
@@ -27,6 +28,7 @@ pub fn _3j(two_ja: i32, two_jb: i32, two_jc: i32, two_ma: i32, two_mb: i32, two_
 ///  ma mb mc)
 ///
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+#[doc(alias = "gsl_sf_coupling_3j_e")]
 pub fn _3j_e(
     two_ja: i32,
     two_jb: i32,
@@ -57,6 +59,7 @@ pub fn _3j_e(
 /// jd je jf}
 ///
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+#[doc(alias = "gsl_sf_coupling_6j")]
 pub fn _6j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_jf: i32) -> f64 {
     unsafe { ::sys::gsl_sf_coupling_6j(two_ja, two_jb, two_jc, two_jd, two_je, two_jf) }
 }
@@ -67,6 +70,7 @@ pub fn _6j(two_ja: i32, two_jb: i32, two_jc: i32, two_jd: i32, two_je: i32, two_
 /// jd je jf}
 ///
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+#[doc(alias = "gsl_sf_coupling_6j_e")]
 pub fn _6j_e(
     two_ja: i32,
     two_jb: i32,
@@ -97,6 +101,7 @@ pub fn _6j_e(
 /// jd je jf
 /// jg jh ji}
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+#[doc(alias = "gsl_sf_coupling_9j")]
 pub fn _9j(
     two_ja: i32,
     two_jb: i32,
@@ -121,6 +126,7 @@ pub fn _9j(
 /// jd je jf
 /// jg jh ji}
 /// where the arguments are given in half-integer units, ja = two_ja/2, ma = two_ma/2, etc.
+#[doc(alias = "gsl_sf_coupling_9j_e")]
 pub fn _9j_e(
     two_ja: i32,
     two_jb: i32,

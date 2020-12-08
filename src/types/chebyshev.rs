@@ -36,6 +36,7 @@ use ffi::FFI;
 ffi_wrapper!(ChebSeries, *mut sys::gsl_cheb_series, gsl_cheb_free);
 
 impl ChebSeries {
+    #[doc(alias = "gsl_cheb_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_cheb_alloc(n) };
 
@@ -49,6 +50,7 @@ impl ChebSeries {
     /// This function computes the Chebyshev approximation cs for the function f over the range
     /// (a,b) to the previously specified order. The computation of the Chebyshev approximation is
     /// an O(n^2) process, and requires n function evaluations.
+    #[doc(alias = "gsl_cheb_init")]
     pub fn init<F: Fn(f64) -> f64>(&mut self, f: F, a: f64, b: f64) -> Value {
         let function = wrap_callback!(f, F);
 
@@ -56,17 +58,20 @@ impl ChebSeries {
     }
 
     /// This function returns the order of Chebyshev series cs.
+    #[doc(alias = "gsl_cheb_order")]
     pub fn order(&self) -> usize {
         unsafe { sys::gsl_cheb_order(self.unwrap_shared()) }
     }
 
     /// This function returns the size of the Chebyshev coefficient array c[] for the Chebyshev
     /// series cs.
+    #[doc(alias = "gsl_cheb_size")]
     pub fn size(&self) -> usize {
         unsafe { sys::gsl_cheb_size(self.unwrap_shared()) }
     }
 
     /// This function evaluates the Chebyshev series cs at a given point x.
+    #[doc(alias = "gsl_cheb_eval")]
     pub fn eval(&self, x: f64) -> f64 {
         unsafe { sys::gsl_cheb_eval(self.unwrap_shared(), x) }
     }
@@ -76,6 +81,7 @@ impl ChebSeries {
     /// neglected term in the series.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_cheb_eval_err")]
     pub fn eval_err(&self, x: f64) -> (Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -87,6 +93,7 @@ impl ChebSeries {
 
     /// This function evaluates the Chebyshev series cs at a given point x, to (at most) the given
     /// order order.
+    #[doc(alias = "gsl_cheb_eval_n")]
     pub fn eval_n(&self, order: usize, x: f64) -> f64 {
         unsafe { sys::gsl_cheb_eval_n(self.unwrap_shared(), order, x) }
     }
@@ -96,6 +103,7 @@ impl ChebSeries {
     /// is made from the first neglected term in the series.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_cheb_eval_n_err")]
     pub fn eval_n_err(&self, order: usize, x: f64) -> (Value, f64, f64) {
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -109,6 +117,7 @@ impl ChebSeries {
     /// This function computes the derivative of the series cs, storing the derivative coefficients
     /// in the previously allocated deriv. The two series cs and deriv must have been allocated with
     /// the same order.
+    #[doc(alias = "gsl_cheb_calc_deriv")]
     pub fn calc_deriv(&self, deriv: &mut ChebSeries) -> Value {
         Value::from(unsafe {
             sys::gsl_cheb_calc_deriv(deriv.unwrap_unique(), self.unwrap_shared())
@@ -119,6 +128,7 @@ impl ChebSeries {
     /// the previously allocated integ. The two series cs and integ must have been allocated with
     /// the same order. The lower limit of the integration is taken to be the left hand end of the
     /// range a.
+    #[doc(alias = "gsl_cheb_calc_integ")]
     pub fn calc_integ(&self, integ: &mut ChebSeries) -> Value {
         Value::from(unsafe {
             sys::gsl_cheb_calc_integ(integ.unwrap_unique(), self.unwrap_shared())

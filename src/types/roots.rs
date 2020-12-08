@@ -120,6 +120,7 @@ impl RootFSolver {
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    #[doc(alias = "gsl_root_fsolver_alloc")]
     pub fn new(t: &RootFSolverType) -> Option<RootFSolver> {
         let tmp = unsafe { sys::gsl_root_fsolver_alloc(t.unwrap_shared()) };
 
@@ -132,6 +133,7 @@ impl RootFSolver {
 
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial search interval [x lower, x upper].
+    #[doc(alias = "gsl_root_fsolver_set")]
     pub fn set<F: Fn(f64) -> f64>(&mut self, f: F, x_lower: f64, x_upper: f64) -> ::Value {
         unsafe extern "C" fn inner<F: Fn(f64) -> f64>(
             x: c_double,
@@ -168,11 +170,13 @@ impl RootFSolver {
     ///
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
+    #[doc(alias = "gsl_root_fsolver_iterate")]
     pub fn iterate(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_root_fsolver_iterate(self.unwrap_unique()) })
     }
 
     /// Returns the solver type name.
+    #[doc(alias = "gsl_root_fsolver_name")]
     pub fn name(&self) -> String {
         unsafe {
             let tmp = sys::gsl_root_fsolver_name(self.unwrap_shared());
@@ -182,16 +186,19 @@ impl RootFSolver {
     }
 
     /// This function returns the current estimate of the root for the solver s.
+    #[doc(alias = "gsl_root_fsolver_root")]
     pub fn root(&self) -> f64 {
         unsafe { sys::gsl_root_fsolver_root(self.unwrap_shared()) }
     }
 
     /// These functions return the current bracketing interval for the solver s.
+    #[doc(alias = "gsl_root_fsolver_x_lower")]
     pub fn x_lower(&self) -> f64 {
         unsafe { sys::gsl_root_fsolver_x_lower(self.unwrap_shared()) }
     }
 
     /// These functions return the current bracketing interval for the solver s.
+    #[doc(alias = "gsl_root_fsolver_x_upper")]
     pub fn x_upper(&self) -> f64 {
         unsafe { sys::gsl_root_fsolver_x_upper(self.unwrap_shared()) }
     }
@@ -242,6 +249,7 @@ impl RootFdfSolver {
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    #[doc(alias = "gsl_root_fdfsolver_alloc")]
     pub fn new(t: &RootFdfSolverType) -> Option<RootFdfSolver> {
         let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(t.unwrap_shared()) };
 
@@ -254,6 +262,7 @@ impl RootFdfSolver {
 
     /// This function initializes, or reinitializes, an existing solver s to use the function and
     /// derivative fdf and the initial guess root.
+    #[doc(alias = "gsl_root_fdfsolver_set")]
     pub fn set<F: Fn(f64) -> f64, DF: Fn(f64) -> f64, FDF: Fn(f64, &mut f64, &mut f64)>(
         &mut self,
         f: F,
@@ -337,11 +346,13 @@ impl RootFdfSolver {
     ///
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
+    #[doc(alias = "gsl_root_fdfsolver_iterate")]
     pub fn iterate(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_root_fdfsolver_iterate(self.unwrap_unique()) })
     }
 
     /// Returns the solver type name.
+    #[doc(alias = "gsl_root_fdfsolver_name")]
     pub fn name(&self) -> Option<&str> {
         unsafe {
             let ptr = sys::gsl_root_fdfsolver_name(self.unwrap_shared());
@@ -361,6 +372,7 @@ impl RootFdfSolver {
     }
 
     /// This function returns the current estimate of the root for the solver s.
+    #[doc(alias = "gsl_root_fdfsolver_root")]
     pub fn root(&self) -> f64 {
         unsafe { sys::gsl_root_fdfsolver_root(self.unwrap_shared()) }
     }

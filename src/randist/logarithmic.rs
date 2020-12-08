@@ -3,6 +3,7 @@
 //
 
 /// This function computes the probability p(k) of obtaining k from a logarithmic distribution with probability parameter p, using the formula given above.
+#[doc(alias = "gsl_ran_logarithmic_pdf")]
 pub fn logarithmic_pdf(k: u32, p: f64) -> f64 {
     unsafe { sys::gsl_ran_logarithmic_pdf(k, p) }
 }

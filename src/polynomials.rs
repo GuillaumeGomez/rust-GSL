@@ -31,11 +31,13 @@ pub mod evaluation {
     use types::ComplexF64;
 
     /// This function evaluates a polynomial with real coefficients for the real variable x.
+    #[doc(alias = "gsl_poly_eval")]
     pub fn poly_eval(c: &[f64], x: f64) -> f64 {
         unsafe { sys::gsl_poly_eval(c.as_ptr(), c.len() as i32, x) }
     }
 
     /// This function evaluates a polynomial with real coefficients for the complex variable z.
+    #[doc(alias = "gsl_poly_complex_eval")]
     pub fn poly_complex_eval(c: &[f64], z: &ComplexF64) -> ComplexF64 {
         unsafe {
             transmute(sys::gsl_poly_complex_eval(
@@ -47,6 +49,7 @@ pub mod evaluation {
     }
 
     /// This function evaluates a polynomial with complex coefficients for the complex variable z.
+    #[doc(alias = "gsl_complex_poly_complex_eval")]
     pub fn complex_poly_complex_eval(c: &[ComplexF64], z: &ComplexF64) -> ComplexF64 {
         let mut tmp = Vec::new();
 
@@ -64,6 +67,7 @@ pub mod evaluation {
 
     /// This function evaluates a polynomial and its derivatives storing the results in the array res of size lenres. The output array contains
     /// the values of d^k P/d x^k for the specified value of x starting with k = 0.
+    #[doc(alias = "gsl_poly_eval_derivs")]
     pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_poly_eval_derivs(
@@ -99,6 +103,7 @@ pub mod divided_difference_representation {
     /// This function computes a divided-difference representation of the interpolating polynomial for the points (x, y) stored in the arrays
     /// xa and ya of length size. On output the divided-differences of (xa,ya) are stored in the array dd, also of length size. Using the
     /// notation above, `dd[k] = [x_0,x_1,...,x_k]`.
+    #[doc(alias = "gsl_poly_dd_init")]
     pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as _)
@@ -106,6 +111,7 @@ pub mod divided_difference_representation {
     }
 
     /// This function evaluates the polynomial stored in divided-difference form in the arrays dd and xa of length size at the point x.
+    #[doc(alias = "gsl_poly_dd_eval")]
     pub fn poly_dd_eval(dd: &[f64], xa: &[f64], x: f64) -> f64 {
         unsafe { sys::gsl_poly_dd_eval(dd.as_ptr(), xa.as_ptr(), dd.len() as _, x) }
     }
@@ -113,6 +119,7 @@ pub mod divided_difference_representation {
     /// This function converts the divided-difference representation of a polynomial to a Taylor expansion. The divided-difference representation
     /// is supplied in the arrays dd and xa of length size. On output the Taylor coefficients of the polynomial expanded about the point xp are
     /// stored in the array c also of length size. A workspace of length size must be provided in the array w.
+    #[doc(alias = "gsl_poly_dd_taylor")]
     pub fn poly_dd_taylor(c: &mut [f64], xp: f64, dd: &[f64], xa: &[f64], w: &mut [f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_poly_dd_taylor(
@@ -132,6 +139,7 @@ pub mod divided_difference_representation {
     /// new dataset z = \{x_0,x_0,x_1,x_1,...\}, which is stored in the array za of length 2*size on output. On output the divided-differences
     /// of the Hermite representation are stored in the array dd, also of length 2*size. Using the notation above, `dd[k] = [z_0,z_1,...,z_k]`.
     /// The resulting Hermite polynomial can be evaluated by calling gsl_poly_dd_eval and using za for the input argument xa.
+    #[doc(alias = "gsl_poly_dd_hermite_init")]
     pub fn poly_dd_hermite_init(
         dd: &mut [f64],
         za: &mut [f64],
@@ -174,6 +182,7 @@ pub mod quadratic_equations {
     /// integer coefficients the discriminant can always be computed exactly.
     ///
     /// Returns `(Value, x0, x1)`.
+    #[doc(alias = "gsl_poly_solve_quadratic")]
     pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> (::Value, f64, f64) {
         let mut x0 = 0.;
         let mut x1 = 0.;
@@ -188,6 +197,7 @@ pub mod quadratic_equations {
     /// The number of complex roots is returned (either one or two) and the locations of the roots are stored in z0 and z1. The roots are returned
     /// in ascending order, sorted first by their real components and then by their imaginary components. If only one real root is found (i.e. if
     /// a=0) then it is stored in z0.
+    #[doc(alias = "gsl_poly_complex_solve_quadratic")]
     pub fn poly_complex_solve_quadratic(
         a: f64,
         b: f64,
@@ -218,6 +228,7 @@ pub mod cubic_equations {
     /// real axis into the complex plane, leading to a discrete change in the number of real roots.
     ///
     /// Returns `(Value, x0, x1, x2)`.
+    #[doc(alias = "gsl_poly_solve_cubic")]
     pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> (::Value, f64, f64, f64) {
         let mut x0 = 0.;
         let mut x1 = 0.;
@@ -233,6 +244,7 @@ pub mod cubic_equations {
     /// The number of complex roots is returned (always three) and the locations of the roots are
     /// stored in z0, z1 and z2. The roots are returned in ascending order, sorted first by their
     /// real components and then by their imaginary components.
+    #[doc(alias = "gsl_poly_complex_solve_cubic")]
     pub fn poly_complex_solve_cubic(
         a: f64,
         b: f64,

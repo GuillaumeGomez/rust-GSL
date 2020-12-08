@@ -29,6 +29,7 @@ pub mod one_dimension {
     use crate::Value;
     use ffi::FFI;
 
+    #[doc(alias = "gsl_wavelet_transform")]
     pub fn transform(
         w: &::Wavelet,
         data: &mut [f64],
@@ -49,6 +50,7 @@ pub mod one_dimension {
         })
     }
 
+    #[doc(alias = "gsl_wavelet_transform_forward")]
     pub fn transform_forward(
         w: &::Wavelet,
         data: &mut [f64],
@@ -67,6 +69,7 @@ pub mod one_dimension {
         })
     }
 
+    #[doc(alias = "gsl_wavelet_transform_inverse")]
     pub fn transform_inverse(
         w: &::Wavelet,
         data: &mut [f64],
@@ -110,6 +113,7 @@ pub mod two_dimension {
     ///
     /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
+    #[doc(alias = "gsl_wavelet2d_transform")]
     pub fn transform(
         w: &::Wavelet,
         data: &mut [f64],
@@ -140,6 +144,7 @@ pub mod two_dimension {
     ///
     /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
+    #[doc(alias = "gsl_wavelet2d_transform_forward")]
     pub fn transform_forward(
         w: &::Wavelet,
         data: &mut [f64],
@@ -168,6 +173,7 @@ pub mod two_dimension {
     ///
     /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
+    #[doc(alias = "gsl_wavelet2d_transform_inverse")]
     pub fn transform_inverse(
         w: &::Wavelet,
         data: &mut [f64],
@@ -189,6 +195,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
+    #[doc(alias = "gsl_wavelet2d_transform_matrix")]
     pub fn transform_matrix(
         w: &::Wavelet,
         m: &mut ::MatrixF64,
@@ -206,6 +213,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
+    #[doc(alias = "gsl_wavelet2d_transform_matrix_forward")]
     pub fn transform_matrix_forward(
         w: &::Wavelet,
         m: &mut ::MatrixF64,
@@ -221,6 +229,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
+    #[doc(alias = "gsl_wavelet2d_transform_matrix_inverse")]
     pub fn transform_matrix_inverse(
         w: &::Wavelet,
         m: &mut ::MatrixF64,
@@ -236,6 +245,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
+    #[doc(alias = "gsl_wavelet2d_nstransform")]
     pub fn nstransform(
         w: &::Wavelet,
         data: &mut [f64],
@@ -259,6 +269,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
+    #[doc(alias = "gsl_wavelet2d_nstransform_forward")]
     pub fn nstransform_forward(
         w: &::Wavelet,
         data: &mut [f64],
@@ -280,6 +291,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
+    #[doc(alias = "gsl_wavelet2d_nstransform_inverse")]
     pub fn nstransform_inverse(
         w: &::Wavelet,
         data: &mut [f64],
@@ -301,6 +313,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
+    #[doc(alias = "gsl_wavelet2d_nstransform_matrix")]
     pub fn nstransform_matrix(
         w: &::Wavelet,
         m: &mut ::MatrixF64,
@@ -318,6 +331,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
+    #[doc(alias = "gsl_wavelet2d_nstransform_matrix_forward")]
     pub fn nstransform_matrix_forward(
         w: &::Wavelet,
         m: &mut ::MatrixF64,
@@ -333,6 +347,7 @@ pub mod two_dimension {
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
+    #[doc(alias = "gsl_wavelet2d_nstransform_matrix_inverse")]
     pub fn nstransform_matrix_inverse(
         w: &::Wavelet,
         m: &mut ::MatrixF64,

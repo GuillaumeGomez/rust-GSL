@@ -92,6 +92,7 @@ use ffi::FFI;
 /// evaluations.
 ///
 /// Returns `(result, abs_err, n_eval)`.
+#[doc(alias = "gsl_integration_qng")]
 pub fn qng<F: Fn(f64) -> f64>(
     f: F,
     a: f64,
@@ -125,6 +126,7 @@ pub fn qng<F: Fn(f64) -> f64>(
 /// Fullerton, Bell Labs, Nov. 1981.
 ///
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk15")]
 pub fn qk15<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
@@ -147,6 +149,7 @@ pub fn qk15<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 }
 
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk21")]
 pub fn qk21<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
@@ -169,6 +172,7 @@ pub fn qk21<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 }
 
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk31")]
 pub fn qk31<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
@@ -191,6 +195,7 @@ pub fn qk31<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 }
 
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk41")]
 pub fn qk41<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
@@ -213,6 +218,7 @@ pub fn qk41<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 }
 
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk51")]
 pub fn qk51<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
@@ -235,6 +241,7 @@ pub fn qk51<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 }
 
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk61")]
 pub fn qk61<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
@@ -257,6 +264,7 @@ pub fn qk61<F: Fn(f64) -> f64>(f: F, a: f64, b: f64) -> (f64, f64, f64, f64) {
 }
 
 /// Returns `(result, abs_err, resabs, resasc)`.
+#[doc(alias = "gsl_integration_qk")]
 pub fn qk<F: Fn(f64) -> f64>(
     xgk: &[f64],
     wg: &[f64],
@@ -347,6 +355,7 @@ pub fn qk<F: Fn(f64) -> f64>(
 /// as workspace for the QAWO algorithm.
 ///
 /// Returns `(result, abs_err)`.
+#[doc(alias = "gsl_integration_qawf")]
 pub fn qawf<F: Fn(f64) -> f64>(
     f: F,
     a: f64,

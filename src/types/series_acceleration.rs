@@ -61,6 +61,7 @@ ffi_wrapper!(
 
 impl LevinUWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms. The size of the workspace is O(2n^2 + 3n).
+    #[doc(alias = "gsl_sum_levin_u_alloc")]
     pub fn new(n: usize) -> Option<LevinUWorkspace> {
         let tmp = unsafe { sys::gsl_sum_levin_u_alloc(n) };
 
@@ -78,6 +79,7 @@ impl LevinUWorkspace {
     /// to choose an optimal number of terms for the extrapolation. All the terms of the series passed in through array should be non-zero.
     ///
     /// Returns `(Value, sum_accel, abserr)`.
+    #[doc(alias = "gsl_sum_levin_u_accel")]
     pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
         let mut sum_accel = 0.;
         let mut abserr = 0.;
@@ -113,6 +115,7 @@ size of the error has already been estimated reliably and is not expected to cha
 
 impl LevinUTruncWorkspace {
     /// This function allocates a workspace for a Levin u-transform of n terms, without error estimation. The size of the workspace is O(3n).
+    #[doc(alias = "gsl_sum_levin_utrunc_alloc")]
     pub fn new(n: usize) -> Option<LevinUTruncWorkspace> {
         let tmp = unsafe { sys::gsl_sum_levin_utrunc_alloc(n) };
 
@@ -131,6 +134,7 @@ impl LevinUTruncWorkspace {
     /// calculating the truncation error, smoothing out any fluctuations.
     ///
     /// Returns `(Value, sum_accel, abserr_trunc)`.
+    #[doc(alias = "gsl_sum_levin_utrunc_accel")]
     pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
         let mut sum_accel = 0.;
         let mut abserr_trunc = 0.;

@@ -23,6 +23,7 @@ use crate::Value;
 /// ```
 ///
 /// assuming that the true minimum x_m^* is contained within the interval.
+#[doc(alias = "gsl_min_test_interval")]
 pub fn test_interval(x_lower: f64, x_upper: f64, epsabs: f64, epsrel: f64) -> Value {
     Value::from(unsafe { sys::gsl_min_test_interval(x_lower, x_upper, epsabs, epsrel) })
 }

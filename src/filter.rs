@@ -10,6 +10,7 @@ use ffi::FFI;
 /// Gaussian, `1` corresponding to a first derivative Gaussian, and so on. If `normalize` is set to
 /// `true`, then the kernel will be normalized to sum to one on output. If `normalize` is set to
 /// `false`, no normalization is performed.
+#[doc(alias = "gsl_filter_gaussian_kernel")]
 pub fn gaussian_kernel(alpha: f64, order: usize, normalize: bool, kernel: &mut VectorF64) -> Value {
     Value::from(unsafe {
         sys::gsl_filter_gaussian_kernel(alpha, order, normalize as _, kernel.unwrap_unique())

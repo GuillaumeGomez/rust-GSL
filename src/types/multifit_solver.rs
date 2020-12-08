@@ -242,6 +242,7 @@ impl MultiFitFSolver {
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    #[doc(alias = "gsl_multifit_fsolver_alloc")]
     pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
         let tmp = unsafe { sys::gsl_multifit_fsolver_alloc(t.unwrap_shared(), n, p) };
 
@@ -252,6 +253,7 @@ impl MultiFitFSolver {
         }
     }
 
+    #[doc(alias = "gsl_multifit_fsolver_set")]
     pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> ::Value {
         // unsafe {
         //     let func = (*self.0).function;
@@ -264,10 +266,12 @@ impl MultiFitFSolver {
         })
     }
 
+    #[doc(alias = "gsl_multifit_fsolver_iterate")]
     pub fn iterate(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_multifit_fsolver_iterate(self.unwrap_unique()) })
     }
 
+    #[doc(alias = "gsl_multifit_fsolver_name")]
     pub fn name(&self) -> String {
         unsafe {
             let tmp = sys::gsl_multifit_fsolver_name(self.unwrap_shared());
@@ -276,6 +280,7 @@ impl MultiFitFSolver {
         }
     }
 
+    #[doc(alias = "gsl_multifit_fsolver_position")]
     pub fn position(&self) -> VectorF64 {
         unsafe { ffi::FFI::wrap(sys::gsl_multifit_fsolver_position(self.unwrap_shared())) }
     }
@@ -291,6 +296,7 @@ impl MultiFitFdfSolver {
     /// This function returns a pointer to a newly allocated instance of a solver of type T for n
     /// observations and p parameters. The number of observations n must be greater than or equal
     /// to parameters p.
+    #[doc(alias = "gsl_multifit_fdfsolver_alloc")]
     pub fn new(_type: &MultiFitFdfSolverType, n: usize, p: usize) -> Option<MultiFitFdfSolver> {
         let s = unsafe { sys::gsl_multifit_fdfsolver_alloc(_type.unwrap_shared(), n, p) };
         if s.is_null() {
@@ -302,6 +308,7 @@ impl MultiFitFdfSolver {
 
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial guess x.
+    #[doc(alias = "gsl_multifit_fdfsolver_set")]
     pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &::VectorF64) -> ::Value {
         ::Value::from(unsafe {
             sys::gsl_multifit_fdfsolver_set(self.unwrap_unique(), f.to_raw(), x.unwrap_shared())
@@ -328,6 +335,7 @@ impl MultiFitFdfSolver {
         unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).sqrt_wts) }
     }
 
+    #[doc(alias = "gsl_multifit_fdfsolver_name")]
     pub fn name(&self) -> String {
         unsafe {
             let tmp = sys::gsl_multifit_fdfsolver_name(self.unwrap_shared());
@@ -339,11 +347,13 @@ impl MultiFitFdfSolver {
     /// This function performs a single iteration of the solver s. If the iteration encounters an
     /// unexpected problem then an error code will be returned. The solver maintains a current
     /// estimate of the best-fit parameters at all times.
+    #[doc(alias = "gsl_multifit_fdfsolver_iterate")]
     pub fn iterate(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_multifit_fdfsolver_iterate(self.unwrap_unique()) })
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
+    #[doc(alias = "gsl_multifit_fdfsolver_position")]
     pub fn position(&self) -> ::VectorF64 {
         unsafe { ffi::FFI::wrap(sys::gsl_multifit_fdfsolver_position(self.unwrap_shared())) }
     }
@@ -352,6 +362,7 @@ impl MultiFitFdfSolver {
     /// iteration, the system is tested for convergence using gsl_multifit_test_delta with the
     /// error tolerances epsabs and epsrel.
     #[allow(unused_assignments)]
+    #[doc(alias = "gsl_multifit_test_delta")]
     pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> ::Value {
         let mut status = ::Value::Failure;
         let ptr = self.unwrap_shared();

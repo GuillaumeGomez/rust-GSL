@@ -11,11 +11,13 @@ use crate::Value;
 use std::mem::MaybeUninit;
 
 /// This computes the principal branch of the Lambert W function, W_0(x).
+#[doc(alias = "gsl_sf_lambert_W0")]
 pub fn lambert_W0(x: f64) -> f64 {
     unsafe { sys::gsl_sf_lambert_W0(x) }
 }
 
 /// This computes the principal branch of the Lambert W function, W_0(x).
+#[doc(alias = "gsl_sf_lambert_W0_e")]
 pub fn lambert_W0_e(x: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_lambert_W0_e(x, result.as_mut_ptr()) };
@@ -24,11 +26,13 @@ pub fn lambert_W0_e(x: f64) -> (Value, ::types::Result) {
 }
 
 /// This computes the secondary real-valued branch of the Lambert W function, W_{-1}(x).
+#[doc(alias = "gsl_sf_lambert_Wm1")]
 pub fn lambert_Wm1(x: f64) -> f64 {
     unsafe { sys::gsl_sf_lambert_Wm1(x) }
 }
 
 /// This computes the secondary real-valued branch of the Lambert W function, W_{-1}(x).
+#[doc(alias = "gsl_sf_lambert_Wm1_e")]
 pub fn lambert_Wm1_e(x: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_lambert_Wm1_e(x, result.as_mut_ptr()) };

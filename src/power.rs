@@ -19,6 +19,7 @@ use std::mem::MaybeUninit;
 /// /* compute 3.0**12 */
 /// println!("{}", pow_int(3., 12));
 /// ```
+#[doc(alias = "gsl_sf_pow_int")]
 pub fn pow_int(x: f64, n: i32) -> f64 {
     unsafe { sys::gsl_sf_pow_int(x, n) }
 }
@@ -34,6 +35,7 @@ pub fn pow_int(x: f64, n: i32) -> f64 {
 /// /* compute 3.0**12 */
 /// println!("{:?}", pow_int_e(3., 12));
 /// ```
+#[doc(alias = "gsl_sf_pow_int_e")]
 pub fn pow_int_e(x: f64, n: i32) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_pow_int_e(x, n, result.as_mut_ptr()) };

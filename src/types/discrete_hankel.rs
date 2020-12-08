@@ -60,6 +60,7 @@ ffi_wrapper!(DiscreteHankel, *mut sys::gsl_dht, gsl_dht_free);
 
 impl DiscreteHankel {
     /// This function allocates a Discrete Hankel transform object of size `size`.
+    #[doc(alias = "gsl_dht_alloc")]
     pub fn new(size: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_dht_alloc(size) };
 
@@ -72,6 +73,7 @@ impl DiscreteHankel {
 
     /// This function allocates a Discrete Hankel transform object of size `size` and initializes it
     /// for the given values of `nu` and `xmax`.
+    #[doc(alias = "gsl_dht_new")]
     pub fn new_with_init(size: usize, nu: f64, xmax: f64) -> Option<Self> {
         let tmp = unsafe { sys::gsl_dht_new(size, nu, xmax) };
 
@@ -83,6 +85,7 @@ impl DiscreteHankel {
     }
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
+    #[doc(alias = "gsl_dht_init")]
     pub fn init(&mut self, nu: f64, xmax: f64) -> Value {
         Value::from(unsafe { sys::gsl_dht_init(self.unwrap_unique(), nu, xmax) })
     }
@@ -92,6 +95,7 @@ impl DiscreteHankel {
     ///
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2,
     /// up to numerical errors.
+    #[doc(alias = "gsl_dht_apply")]
     pub fn apply(&mut self, f_in: &[f64]) -> (Value, Vec<f64>) {
         unsafe {
             assert!(
@@ -111,11 +115,13 @@ impl DiscreteHankel {
     /// This function returns the value of the n-th sample point in the unit interval,
     /// (j_{\nu,n+1}/j_{\nu,M}) X. These are the points where the function f(t) is assumed to be
     /// sampled.
+    #[doc(alias = "gsl_dht_x_sample")]
     pub fn x_sample(&self, n: i32) -> f64 {
         unsafe { sys::gsl_dht_x_sample(self.unwrap_shared(), n) }
     }
 
     /// This function returns the value of the n-th sample point in “k-space”, j_{\nu,n+1}/X.
+    #[doc(alias = "gsl_dht_k_sample")]
     pub fn k_sample(&self, n: i32) -> f64 {
         unsafe { sys::gsl_dht_k_sample(self.unwrap_shared(), n) }
     }

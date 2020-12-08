@@ -108,6 +108,7 @@ ffi_wrapper!(
 impl EigenSymmetricWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real symmetric
     /// matrices. The size of the workspace is O(2n).
+    #[doc(alias = "gsl_eigen_symm_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_symm_alloc(n) };
 
@@ -122,6 +123,7 @@ impl EigenSymmetricWorkspace {
     /// lower triangular part of `A` are destroyed during the computation, but the strict upper
     /// triangular part is not referenced. The eigenvalues are stored in the vector `eval` and are
     /// unordered.
+    #[doc(alias = "gsl_eigen_symm")]
     pub fn symm(&mut self, A: &mut MatrixF64, eval: &mut VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_eigen_symm(
@@ -142,6 +144,7 @@ ffi_wrapper!(
 impl EigenSymmetricVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real symmetric matrices. The size of the workspace is O(4n).
+    #[doc(alias = "gsl_eigen_symmv_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_symmv_alloc(n) };
 
@@ -159,6 +162,7 @@ impl EigenSymmetricVWorkspace {
     /// matrix `evec`. For example, the eigenvector in the first column corresponds to the first
     /// eigenvalue. The eigenvectors are guaranteed to be mutually orthogonal and normalised to unit
     /// magnitude.
+    #[doc(alias = "gsl_eigen_symmv")]
     pub fn symmv(
         &mut self,
         A: &mut MatrixF64,
@@ -185,6 +189,7 @@ ffi_wrapper!(
 impl EigenHermitianWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
     /// matrices. The size of the workspace is O(3n).
+    #[doc(alias = "gsl_eigen_herm_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_herm_alloc(n) };
 
@@ -200,6 +205,7 @@ impl EigenHermitianWorkspace {
     /// triangular part of `A` are destroyed during the computation, but the strict upper triangular
     /// part is not referenced. The imaginary parts of the diagonal are assumed to be zero and are
     /// not referenced. The eigenvalues are stored in the vector `eval` and are unordered.
+    #[doc(alias = "gsl_eigen_herm")]
     pub fn herm(&mut self, A: &mut MatrixComplexF64, eval: &mut VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_eigen_herm(
@@ -220,6 +226,7 @@ ffi_wrapper!(
 impl EigenHermitianVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// complex hermitian matrices. The size of the workspace is O(5n).
+    #[doc(alias = "gsl_eigen_hermv_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_hermv_alloc(n) };
 
@@ -239,6 +246,7 @@ impl EigenHermitianVWorkspace {
     /// `evec`. For example, the eigenvector in the first column corresponds to the first
     /// eigenvalue. The eigenvectors are guaranteed to be mutually orthogonal and normalised to unit
     /// magnitude.
+    #[doc(alias = "gsl_eigen_hermv")]
     pub fn hermv(
         &mut self,
         A: &mut MatrixComplexF64,
@@ -265,6 +273,7 @@ ffi_wrapper!(
 impl EigenNonSymmetricWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex hermitian
     /// matrices. The size of the workspace is O(3n).
+    #[doc(alias = "gsl_eigen_nonsymm_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_nonsymm_alloc(n) };
 
@@ -301,6 +310,7 @@ impl EigenNonSymmetricWorkspace {
     ///
     /// with Z = D Q. Note that Z will not be orthogonal. For this reason, balancing is not
     /// performed by default.
+    #[doc(alias = "gsl_eigen_nonsymm_params")]
     pub fn params(&mut self, compute_t: i32, balance: i32) {
         unsafe { sys::gsl_eigen_nonsymm_params(compute_t, balance, self.unwrap_unique()) }
     }
@@ -312,6 +322,7 @@ impl EigenNonSymmetricWorkspace {
     /// cases, this function may fail to find all eigenvalues. If this happens, an error code is
     /// returned and the number of converged eigenvalues is stored in w->n_evals. The converged
     /// eigenvalues are stored in the beginning of `eval`.
+    #[doc(alias = "gsl_eigen_nonsymm")]
     pub fn nonsymm(&mut self, A: &mut MatrixF64, eval: &mut VectorComplexF64) -> Value {
         Value::from(unsafe {
             sys::gsl_eigen_nonsymm(
@@ -324,6 +335,7 @@ impl EigenNonSymmetricWorkspace {
 
     /// This function is identical to gsl_eigen_nonsymm except that it also computes the Schur
     /// vectors and stores them into `Z`.
+    #[doc(alias = "gsl_eigen_nonsymm_Z")]
     pub fn nonsymm_Z(
         &mut self,
         A: &mut MatrixF64,
@@ -354,6 +366,7 @@ ffi_wrapper!(
 impl EigenNonSymmetricVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real nonsymmetric matrices. The size of the workspace is O(5n).
+    #[doc(alias = "gsl_eigen_nonsymmv_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_nonsymmv_alloc(n) };
 
@@ -368,6 +381,7 @@ impl EigenNonSymmetricVWorkspace {
     /// subsequent calls to gsl_eigen_nonsymmv. If `balance` is set to 1, a balancing transformation
     /// is applied to the matrix. See gsl_eigen_nonsymm_params for more information. Balancing is
     /// turned off by default since it does not preserve the orthogonality of the Schur vectors.
+    #[doc(alias = "gsl_eigen_nonsymmv_params")]
     pub fn params(&mut self, balance: i32) {
         unsafe { sys::gsl_eigen_nonsymmv_params(balance, self.unwrap_unique()) }
     }
@@ -379,6 +393,7 @@ impl EigenNonSymmetricVWorkspace {
     /// gsl_eigen_nonsymmv_Z. The computed eigenvectors are normalized to have unit magnitude. On
     /// output, the upper portion of `A` contains the Schur form T. If gsl_eigen_nonsymm fails, no
     /// eigenvectors are computed, and an error code is returned.
+    #[doc(alias = "gsl_eigen_nonsymmv")]
     pub fn nonsymmv(
         &mut self,
         A: &mut MatrixF64,
@@ -397,6 +412,7 @@ impl EigenNonSymmetricVWorkspace {
 
     /// This function is identical to gsl_eigen_nonsymmv except that it also saves the Schur vectors
     /// into `Z`.
+    #[doc(alias = "gsl_eigen_nonsymmv_Z")]
     pub fn nonsymmv_Z(
         &mut self,
         A: &mut MatrixF64,
@@ -425,6 +441,7 @@ ffi_wrapper!(
 impl EigenGenSymmWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// symmetric-definite eigensystems. The size of the workspace is O(2n).
+    #[doc(alias = "gsl_eigen_gensymm_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_gensymm_alloc(n) };
 
@@ -438,6 +455,7 @@ impl EigenGenSymmWorkspace {
     /// This function computes the eigenvalues of the real generalized symmetric-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
+    #[doc(alias = "gsl_eigen_gensymm")]
     pub fn gensymm(&mut self, mut A: MatrixF64, B: &mut MatrixF64, eval: &mut VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_eigen_gensymm(
@@ -459,6 +477,7 @@ ffi_wrapper!(
 impl EigenGenSymmVWorkspace {
     /// This function allocates a workspace for computing eigenvalues and eigenvectors of n-by-n
     /// real generalized symmetric-definite eigensystems. The size of the workspace is O(4n).
+    #[doc(alias = "gsl_eigen_gensymmv_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_gensymmv_alloc(n) };
 
@@ -473,6 +492,7 @@ impl EigenGenSymmVWorkspace {
     /// symmetric-definite matrix pair (A, B), and stores them in `eval` and `evec` respectively.
     /// The computed eigenvectors are normalized to have unit magnitude. On output, `B` contains its
     /// Cholesky decomposition and `A` is destroyed.
+    #[doc(alias = "gsl_eigen_gensymmv")]
     pub fn gensymmv(
         &mut self,
         mut A: MatrixF64,
@@ -501,6 +521,7 @@ ffi_wrapper!(
 impl EigenGenHermWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
     /// hermitian-definite eigensystems. The size of the workspace is O(3n).
+    #[doc(alias = "gsl_eigen_genherm_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_genherm_alloc(n) };
 
@@ -514,6 +535,7 @@ impl EigenGenHermWorkspace {
     /// This function computes the eigenvalues of the complex generalized hermitian-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
+    #[doc(alias = "gsl_eigen_genherm")]
     pub fn genherm(
         &mut self,
         mut A: MatrixComplexF64,
@@ -540,6 +562,7 @@ ffi_wrapper!(
 impl EigenGenHermVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n complex generalized
     /// hermitian-definite eigensystems. The size of the workspace is O(3n).
+    #[doc(alias = "gsl_eigen_genhermv_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_genhermv_alloc(n) };
 
@@ -553,6 +576,7 @@ impl EigenGenHermVWorkspace {
     /// This function computes the eigenvalues of the complex generalized hermitian-definite matrix
     /// pair (A, B), and stores them in `eval`, using the method outlined above. On output, `B`
     /// contains its Cholesky decomposition and `A` is destroyed.
+    #[doc(alias = "gsl_eigen_genhermv")]
     pub fn genhermv(
         &mut self,
         mut A: MatrixComplexF64,
@@ -581,6 +605,7 @@ ffi_wrapper!(
 impl EigenGenWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// nonsymmetric eigensystems. The size of the workspace is O(n).
+    #[doc(alias = "gsl_eigen_gen_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_gen_alloc(n) };
 
@@ -606,6 +631,7 @@ impl EigenGenWorkspace {
     ///
     /// The balance parameter is currently ignored, since generalized balancing is not yet
     /// implemented.
+    #[doc(alias = "gsl_eigen_gen_params")]
     pub fn params(&mut self, compute_s: i32, compute_t: i32, balance: i32) {
         unsafe { sys::gsl_eigen_gen_params(compute_s, compute_t, balance, self.unwrap_unique()) }
     }
@@ -620,6 +646,7 @@ impl EigenGenWorkspace {
     /// The ordering of eigenvalues in (alpha, beta) follows the ordering of the diagonal blocks in
     /// the Schur forms S and T. In rare cases, this function may fail to find all eigenvalues. If
     /// this occurs, an error code is returned.
+    #[doc(alias = "gsl_eigen_gen")]
     pub fn gen(
         &mut self,
         A: &mut MatrixF64,
@@ -640,6 +667,7 @@ impl EigenGenWorkspace {
 
     /// This function is identical to gsl_eigen_gen except that it also computes the left and right
     /// Schur vectors and stores them into `Q` and `Z` respectively.
+    #[doc(alias = "gsl_eigen_gen_QZ")]
     pub fn gen_QZ(
         &mut self,
         A: &mut MatrixF64,
@@ -672,6 +700,7 @@ ffi_wrapper!(
 impl EigenGenVWorkspace {
     /// This function allocates a workspace for computing eigenvalues of n-by-n real generalized
     /// nonsymmetric eigensystems. The size of the workspace is O(n).
+    #[doc(alias = "gsl_eigen_genv_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_eigen_genv_alloc(n) };
 
@@ -690,6 +719,7 @@ impl EigenGenVWorkspace {
     /// but can be saved by using gsl_eigen_genv_QZ. The computed eigenvectors are normalized to
     /// have unit magnitude. On output, (A, B) contains the generalized Schur form (S, T). If
     /// gsl_eigen_gen fails, no eigenvectors are computed, and an error code is returned.
+    #[doc(alias = "gsl_eigen_genv")]
     pub fn genv(
         &mut self,
         A: &mut MatrixF64,
@@ -712,6 +742,7 @@ impl EigenGenVWorkspace {
 
     /// This function is identical to gsl_eigen_genv except that it also computes the left and right
     /// Schur vectors and stores them into `Q` and `Z` respectively.
+    #[doc(alias = "gsl_eigen_genv_QZ")]
     pub fn genv_QZ(
         &mut self,
         A: &mut MatrixF64,

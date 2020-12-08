@@ -102,6 +102,7 @@ error by a factor of 10 requires a 100-fold increase in the number of sample poi
 
 impl PlainMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
+    #[doc(alias = "gsl_monte_plain_alloc")]
     pub fn new(dim: usize) -> Option<PlainMonteCarlo> {
         let tmp = unsafe { sys::gsl_monte_plain_alloc(dim) };
 
@@ -114,6 +115,7 @@ impl PlainMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
+    #[doc(alias = "gsl_monte_plain_init")]
     pub fn init(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_monte_plain_init(self.unwrap_unique()) })
     }
@@ -128,6 +130,7 @@ impl PlainMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(Value).
+    #[doc(alias = "gsl_monte_plain_integrate")]
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
         f: F,
@@ -200,6 +203,7 @@ an estimate of its error.");
 impl MiserMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions. The workspace is used to maintain
     /// the state of the integration.
+    #[doc(alias = "gsl_monte_miser_alloc")]
     pub fn new(dim: usize) -> Option<MiserMonteCarlo> {
         let tmp = unsafe { sys::gsl_monte_miser_alloc(dim) };
 
@@ -211,6 +215,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
+    #[doc(alias = "gsl_monte_miser_init")]
     pub fn init(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_monte_miser_init(self.unwrap_unique()) })
     }
@@ -225,6 +230,7 @@ impl MiserMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(Value).
+    #[doc(alias = "gsl_monte_miser_integrate")]
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
         f: F,
@@ -259,6 +265,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
+    #[doc(alias = "gsl_monte_miser_params_get")]
     pub fn get_params(&self) -> MiserParams {
         let mut m = sys::gsl_monte_miser_params {
             estimate_frac: 0f64,
@@ -275,6 +282,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function sets the integrator parameters based on values provided in the params structure.
+    #[doc(alias = "gsl_monte_miser_params_set")]
     pub fn set_params(&mut self, params: &MiserParams) {
         unsafe {
             sys::gsl_monte_miser_params_set(self.unwrap_unique(), &params.0 as *const _);
@@ -349,6 +357,7 @@ current estimate has zero error, previous estimates had zero error
 impl VegasMonteCarlo {
     /// This function allocates and initializes a workspace for Monte Carlo integration in dim dimensions.
     /// The workspace is used to maintain the state of the integration.
+    #[doc(alias = "gsl_monte_vegas_alloc")]
     pub fn new(dim: usize) -> Option<VegasMonteCarlo> {
         let tmp = unsafe { sys::gsl_monte_vegas_alloc(dim) };
 
@@ -361,6 +370,7 @@ impl VegasMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace
     /// to be reused for different integrations.
+    #[doc(alias = "gsl_monte_vegas_init")]
     pub fn init(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_monte_vegas_init(self.unwrap_unique()) })
     }
@@ -379,6 +389,7 @@ impl VegasMonteCarlo {
     /// function.
     ///
     /// It returns either Ok((result, abserr)) or Err(Value).
+    #[doc(alias = "gsl_monte_vegas_integrate")]
     pub fn integrate<F: FnMut(&[f64]) -> f64>(
         &mut self,
         f: F,
@@ -416,6 +427,7 @@ impl VegasMonteCarlo {
     /// The returned value should be close to 1. A value which differs significantly from 1 indicates that
     /// the values from different iterations are inconsistent. In this case the weighted error will be
     /// under-estimated, and further iterations of the algorithm are needed to obtain reliable results.
+    #[doc(alias = "gsl_monte_vegas_chisq")]
     pub fn chisq(&mut self) -> f64 {
         unsafe { sys::gsl_monte_vegas_chisq(self.unwrap_unique()) }
     }
@@ -424,6 +436,7 @@ impl VegasMonteCarlo {
     /// from the most recent iteration of the algorithm.
     ///
     /// Returns `(result, sigma)`.
+    #[doc(alias = "gsl_monte_vegas_runval")]
     pub fn runval(&mut self) -> (f64, f64) {
         let mut result = 0.;
         let mut sigma = 0.;
@@ -431,6 +444,7 @@ impl VegasMonteCarlo {
         (result, sigma)
     }
 
+    #[doc(alias = "gsl_monte_vegas_params_get")]
     pub fn get_params(&self) -> VegasParams {
         let mut params = VegasParams::default();
         unsafe {
@@ -439,6 +453,7 @@ impl VegasMonteCarlo {
         params
     }
 
+    #[doc(alias = "gsl_monte_vegas_params_set")]
     pub fn set_params(&mut self, params: &VegasParams) {
         unsafe {
             sys::gsl_monte_vegas_params_set(self.unwrap_unique(), &params.inner as *const _);

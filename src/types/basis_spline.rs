@@ -64,6 +64,7 @@ impl BSpLineWorkspace {
     /// functions.
     ///
     /// Cubic B-splines are specified by k = 4. The size of the workspace is O(5k + nbreak).
+    #[doc(alias = "gsl_bspline_alloc")]
     pub fn new(k: usize, nbreak: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_bspline_alloc(k, nbreak) };
 
@@ -76,6 +77,7 @@ impl BSpLineWorkspace {
 
     /// This function computes the knots associated with the given breakpoints and stores them
     /// internally in w->knots.
+    #[doc(alias = "gsl_bspline_knots")]
     pub fn knots(&mut self, breakpts: &VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_bspline_knots(breakpts.unwrap_shared(), self.unwrap_unique())
@@ -85,6 +87,7 @@ impl BSpLineWorkspace {
     /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding
     /// knot vector using the previously specified nbreak parameter.
     /// The knots are stored in w->knots.
+    #[doc(alias = "gsl_bspline_knots_uniform")]
     pub fn knots_uniform(&mut self, a: f64, b: f64) -> Value {
         Value::from(unsafe { sys::gsl_bspline_knots_uniform(a, b, self.unwrap_unique()) })
     }
@@ -97,6 +100,7 @@ impl BSpLineWorkspace {
     ///
     /// Computing all the basis functions at once is more efficient than computing them
     /// individually, due to the nature of the defining recurrence relation.
+    #[doc(alias = "gsl_bspline_eval")]
     pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> Value {
         Value::from(unsafe { sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique()) })
     }
@@ -110,6 +114,7 @@ impl BSpLineWorkspace {
     /// combinations occur, for example, when evaluating an interpolated function).
     ///
     /// Returns `(Value, istart, iend)`.
+    #[doc(alias = "gsl_bspline_eval_nonzero")]
     pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> (Value, usize, usize) {
         let mut istart = 0;
         let mut iend = 0;
@@ -126,6 +131,7 @@ impl BSpLineWorkspace {
     }
 
     /// This function returns the number of B-spline coefficients given by n = nbreak + k - 2.
+    #[doc(alias = "gsl_bspline_ncoeffs")]
     pub fn ncoeffs(&mut self) -> usize {
         unsafe { sys::gsl_bspline_ncoeffs(self.unwrap_unique()) }
     }
@@ -142,6 +148,7 @@ impl BSpLineWorkspace {
     /// Returns the location of the i-th Greville abscissa for the given B-spline basis.
     /// For the ill-defined case when k=1, the implementation chooses to return breakpoint interval
     /// midpoints.
+    #[doc(alias = "gsl_bspline_greville_abscissa")]
     pub fn greville_abscissa(&mut self, i: usize) -> f64 {
         unsafe { sys::gsl_bspline_greville_abscissa(i, self.unwrap_unique()) }
     }
