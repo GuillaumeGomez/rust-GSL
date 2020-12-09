@@ -30,14 +30,6 @@ macro_rules! wrap_callback {
 }
 
 #[doc(hidden)]
-macro_rules! doc {
-    ($doc:expr, $($t:tt)*) => (
-        #[doc = $doc]
-        $($t)*
-    );
-}
-
-#[doc(hidden)]
 macro_rules! ffi_wrapper {
     ($name:ident, *mut $ty:ty, $drop:ident $(, $doc:expr)?) => {
         ffi_wrapper!($name, *mut $ty $(, $doc)?);
