@@ -24,6 +24,7 @@ ffi_wrapper!(
 );
 
 impl MultilargeLinearWorkspace {
+    #[doc(alias = "gsl_multilarge_linear_alloc")]
     pub fn new(t: MultilargeLinearType, p: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_multilarge_linear_alloc(t.unwrap_shared(), p) };
         if s.is_null() {
@@ -33,6 +34,7 @@ impl MultilargeLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_name")]
     pub fn name(&self) -> Option<String> {
         let n = unsafe { sys::gsl_multilarge_linear_name(self.unwrap_shared()) };
         if n.is_null() {
@@ -49,10 +51,12 @@ impl MultilargeLinearWorkspace {
         ::std::str::from_utf8(slice).ok().map(|x| x.to_owned())
     }
 
+    #[doc(alias = "gsl_multilarge_linear_reset")]
     pub fn reset(&mut self) -> Value {
         unsafe { Value::from(sys::gsl_multilarge_linear_reset(self.unwrap_unique())) }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_accumulate")]
     pub fn accumulate(&mut self, x: &mut MatrixF64, y: &mut VectorF64) -> Value {
         unsafe {
             Value::from(sys::gsl_multilarge_linear_accumulate(
@@ -64,6 +68,7 @@ impl MultilargeLinearWorkspace {
     }
 
     /// Returns `(Value, rnorm, snorm)`.
+    #[doc(alias = "gsl_multilarge_linear_solve")]
     pub fn solve(&mut self, lambda: f64, c: &mut VectorF64) -> (Value, f64, f64) {
         let mut rnorm = 0.;
         let mut snorm = 0.;
@@ -80,6 +85,7 @@ impl MultilargeLinearWorkspace {
     }
 
     /// Returns `(Value, rcond)`.
+    #[doc(alias = "gsl_multilarge_linear_rcond")]
     pub fn rcond(&mut self) -> (Value, f64) {
         let mut rcond = 0.;
         let ret = unsafe { sys::gsl_multilarge_linear_rcond(&mut rcond, self.unwrap_unique()) };
@@ -88,6 +94,7 @@ impl MultilargeLinearWorkspace {
 
     #[cfg(feature = "v2_2")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_2")))]
+    #[doc(alias = "gsl_multilarge_linear_lcurve")]
     pub fn lcurve(
         &mut self,
         reg_param: &mut VectorF64,
@@ -104,6 +111,7 @@ impl MultilargeLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_wstdform1")]
     pub fn wstdform1(
         &mut self,
         L: &VectorF64,
@@ -126,6 +134,7 @@ impl MultilargeLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_stdform1")]
     pub fn stdform1(
         &mut self,
         L: &VectorF64,
@@ -146,6 +155,7 @@ impl MultilargeLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_wstdform2")]
     pub fn wstdform2(
         &mut self,
         LQR: &MatrixF64,
@@ -170,6 +180,7 @@ impl MultilargeLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_stdform2")]
     pub fn stdform2(
         &mut self,
         LQR: &MatrixF64,
@@ -192,6 +203,7 @@ impl MultilargeLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multilarge_linear_genform1")]
     pub fn genform1(&mut self, L: &VectorF64, cs: &VectorF64, c: &mut VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_multilarge_linear_genform1(
@@ -203,6 +215,7 @@ impl MultilargeLinearWorkspace {
         })
     }
 
+    #[doc(alias = "gsl_multilarge_linear_genform2")]
     pub fn genform2(
         &mut self,
         LQR: &MatrixF64,
@@ -223,6 +236,7 @@ impl MultilargeLinearWorkspace {
 
     #[cfg(feature = "v2_7")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_7")))]
+    #[doc(alias = "gsl_multilarge_linear_matrix_ptr")]
     pub fn matrix<F: FnOnce(&MatrixF64)>(&self, f: F) {
         f(&MatrixF64::soft_wrap(unsafe {
             sys::gsl_multilarge_linear_matrix_ptr(self.unwrap_shared()) as _
@@ -231,6 +245,7 @@ impl MultilargeLinearWorkspace {
 
     #[cfg(feature = "v2_7")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_7")))]
+    #[doc(alias = "gsl_multilarge_linear_rhs_ptr")]
     pub fn rhs<F: FnOnce(&VectorF64)>(&self, f: F) {
         f(&VectorF64::soft_wrap(unsafe {
             sys::gsl_multilarge_linear_rhs_ptr(self.unwrap_shared()) as _

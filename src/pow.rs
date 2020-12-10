@@ -28,42 +28,52 @@ pub trait Pow {
 }
 
 impl Pow for f64 {
+    #[doc(alias = "gsl_pow_int")]
     fn pow_int(&self, n: i32) -> f64 {
         unsafe { ::sys::gsl_pow_int(*self, n) }
     }
 
+    #[doc(alias = "gsl_pow_uint")]
     fn pow_uint(&self, n: u32) -> f64 {
         unsafe { ::sys::gsl_pow_uint(*self, n) }
     }
 
+    #[doc(alias = "gsl_pow_2")]
     fn pow2(&self) -> f64 {
         unsafe { ::sys::gsl_pow_2(*self) }
     }
 
+    #[doc(alias = "gsl_pow_3")]
     fn pow3(&self) -> f64 {
         unsafe { ::sys::gsl_pow_3(*self) }
     }
 
+    #[doc(alias = "gsl_pow_4")]
     fn pow4(&self) -> f64 {
         unsafe { ::sys::gsl_pow_4(*self) }
     }
 
+    #[doc(alias = "gsl_pow_5")]
     fn pow5(&self) -> f64 {
         unsafe { ::sys::gsl_pow_5(*self) }
     }
 
+    #[doc(alias = "gsl_pow_6")]
     fn pow6(&self) -> f64 {
         unsafe { ::sys::gsl_pow_6(*self) }
     }
 
+    #[doc(alias = "gsl_pow_7")]
     fn pow7(&self) -> f64 {
         unsafe { ::sys::gsl_pow_7(*self) }
     }
 
+    #[doc(alias = "gsl_pow_8")]
     fn pow8(&self) -> f64 {
         unsafe { ::sys::gsl_pow_8(*self) }
     }
 
+    #[doc(alias = "gsl_pow_9")]
     fn pow9(&self) -> f64 {
         unsafe { ::sys::gsl_pow_9(*self) }
     }

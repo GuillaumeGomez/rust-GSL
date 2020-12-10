@@ -21,6 +21,7 @@ macro_rules! gsl_vec_complex {
         }
 
         impl Drop for $rust_name {
+            #[doc(alias = $name _free)]
             fn drop(&mut self) {
                 if self.can_free {
                     unsafe { sys::[<$name _free>](self.vec) };
@@ -65,19 +66,19 @@ macro_rules! gsl_vec_complex {
         }
 
         impl $rust_name {
-            doc! {
-                concat!("Create a new ", stringify!($rust_name), "with all elements set to zero"),
-                pub fn new(size: usize) -> Option<Self> {
-                    let tmp = unsafe { sys::[<$name _calloc>](size) };
+            #[doc = "Create a new " $rust_name "with all elements set to zero"]
+            #[doc(alias = $name _calloc)]
+            pub fn new(size: usize) -> Option<Self> {
+                let tmp = unsafe { sys::[<$name _calloc>](size) };
 
-                    if tmp.is_null() {
-                        None
-                    } else {
-                        Some(Self::wrap(tmp))
-                    }
+                if tmp.is_null() {
+                    None
+                } else {
+                    Some(Self::wrap(tmp))
                 }
             }
 
+            #[doc(alias = $name _alloc)]
             pub fn from_slice(slice: &[$complex]) -> Option<Self> {
                 let tmp = unsafe { sys::[<$name _alloc>](slice.len() as _) };
 
@@ -122,12 +123,14 @@ macro_rules! gsl_vec_complex {
 
             /// This function returns the i-th element of a vector v. If i lies outside the allowed range of
             /// 0 to n-1 then the error handler is invoked and 0 is returned.
+            #[doc(alias = $name _get)]
             pub fn get(&self, i: usize) -> $complex {
                 unsafe { ::std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), i)) }
             }
 
             /// This function sets the value of the i-th element of a vector v to x. If i lies outside the
             /// allowed range of 0 to n-1 then the error handler is invoked.
+            #[doc(alias = $name _set)]
             pub fn set(&mut self, i: usize, x: &$complex) -> &Self {
                 unsafe {
                     sys::[<$name _set>](self.unwrap_unique(), i, ::std::mem::transmute(*x))
@@ -136,6 +139,7 @@ macro_rules! gsl_vec_complex {
             }
 
             /// This function sets all the elements of the vector v to the value x.
+            #[doc(alias = $name _set_all)]
             pub fn set_all(&mut self, x: &$complex) -> &Self {
                 unsafe {
                     sys::[<$name _set_all>](self.unwrap_unique(), ::std::mem::transmute(*x))
@@ -144,6 +148,7 @@ macro_rules! gsl_vec_complex {
             }
 
             /// This function sets all the elements of the vector v to zero.
+            #[doc(alias = $name _set_zero)]
             pub fn set_zero(&mut self) -> &$rust_name {
                 unsafe { sys::[<$name _set_zero>](self.unwrap_unique()) };
                 self
@@ -151,6 +156,7 @@ macro_rules! gsl_vec_complex {
 
             /// This function makes a basis vector by setting all the elements of the vector v to zero
             /// except for the i-th element which is set to one.
+            #[doc(alias = $name _set_basis)]
             pub fn set_basis(&mut self, i: usize) -> &Self {
                 unsafe { sys::[<$name _set_basis>](self.unwrap_unique(), i) };
                 self
@@ -158,6 +164,7 @@ macro_rules! gsl_vec_complex {
 
             /// This function copies the elements of the other vector into the self vector. The two vectors
             /// must have the same length.
+            #[doc(alias = $name _memcpy)]
             pub fn copy_from(&mut self, other: &$rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _memcpy>](self.unwrap_unique(), other.unwrap_shared())
@@ -166,6 +173,7 @@ macro_rules! gsl_vec_complex {
 
             /// This function copies the elements of the self vector into the other vector. The two vectors
             /// must have the same length.
+            #[doc(alias = $name _memcpy)]
             pub fn copy_to(&self, other: &mut $rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared())
@@ -174,6 +182,7 @@ macro_rules! gsl_vec_complex {
 
             /// This function exchanges the elements of the vectors by copying. The two vectors must have
             /// the same length.
+            #[doc(alias = $name _swap)]
             pub fn swap(&mut self, other: &mut $rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique())
@@ -181,6 +190,7 @@ macro_rules! gsl_vec_complex {
             }
 
             /// This function exchanges the i-th and j-th elements of the vector v in-place.
+            #[doc(alias = $name _swap_elements)]
             pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _swap_elements>](self.unwrap_unique(), i, j)
@@ -188,6 +198,7 @@ macro_rules! gsl_vec_complex {
             }
 
             /// This function reverses the order of the elements of the vector v.
+            #[doc(alias = $name _reverse)]
             pub fn reverse(&mut self) -> Value {
                 Value::from(unsafe { sys::[<$name _reverse>](self.unwrap_unique()) })
             }
@@ -195,6 +206,7 @@ macro_rules! gsl_vec_complex {
             /// This function adds the elements of the other vector to the elements of the `self` vector.
             /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors
             /// must have the same length.
+            #[doc(alias = $name _add)]
             pub fn add(&mut self, other: &$rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared())
@@ -204,6 +216,7 @@ macro_rules! gsl_vec_complex {
             /// This function subtracts the elements of the self vector from the elements of the other
             /// vector. The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two
             /// vectors must have the same length.
+            #[doc(alias = $name _sub)]
             pub fn sub(&mut self, other: &$rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared())
@@ -213,6 +226,7 @@ macro_rules! gsl_vec_complex {
             /// This function multiplies the elements of the self vector a by the elements of the other
             /// vector. The result a_i <- a_i * b_i is stored in self and other remains unchanged. The two
             /// vectors must have the same length.
+            #[doc(alias = $name _mul)]
             pub fn mul(&mut self, other: &$rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared())
@@ -222,6 +236,7 @@ macro_rules! gsl_vec_complex {
             /// This function divides the elements of the self vector by the elements of the other vector.
             /// The result a_i <- a_i / b_i is stored in self and other remains unchanged. The two vectors
             /// must have the same length.
+            #[doc(alias = $name _div)]
             pub fn div(&mut self, other: &$rust_name) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared())
@@ -230,6 +245,7 @@ macro_rules! gsl_vec_complex {
 
             /// This function multiplies the elements of the self vector by the constant factor x. The
             /// result a_i <- a_i is stored in self.
+            #[doc(alias = $name _scale)]
             pub fn scale(&mut self, x: &$complex) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _scale>](self.unwrap_unique(), ::std::mem::transmute(*x))
@@ -238,6 +254,7 @@ macro_rules! gsl_vec_complex {
 
             /// This function adds the constant value x to the elements of the self vector. The result
             /// a_i <- a_i + x is stored in self.
+            #[doc(alias = $name _add_constant)]
             pub fn add_constant(&mut self, x: &$complex) -> Value {
                 Value::from(unsafe {
                     sys::[<$name _add_constant>](
@@ -248,25 +265,30 @@ macro_rules! gsl_vec_complex {
             }
 
             /// This function returns true if all the elements of the self vector are equal to 0.
+            #[doc(alias = $name _isnull)]
             pub fn is_null(&self) -> bool {
                 unsafe { sys::[<$name _isnull>](self.unwrap_shared()) == 1 }
             }
 
             /// This function returns true if all the elements of the self vector are stricly positive.
+            #[doc(alias = $name _ispos)]
             pub fn is_pos(&self) -> bool {
                 unsafe { sys::[<$name _ispos>](self.unwrap_shared()) == 1 }
             }
 
             /// This function returns true if all the elements of the self vector are stricly negative.
+            #[doc(alias = $name _isneg)]
             pub fn is_neg(&self) -> bool {
                 unsafe { sys::[<$name _isneg>](self.unwrap_shared()) == 1 }
             }
 
             /// This function returns true if all the elements of the self vector are stricly non-negative.
+            #[doc(alias = $name _isnonneg)]
             pub fn is_non_neg(&self) -> bool {
                 unsafe { sys::[<$name _isnonneg>](self.unwrap_shared()) == 1 }
             }
 
+            #[doc(alias = $name _equal)]
             pub fn equal(&self, other: &$rust_name) -> bool {
                 unsafe {
                     sys::[<$name _equal>](self.unwrap_shared(), other.unwrap_shared()) == 1
@@ -332,6 +354,7 @@ macro_rules! gsl_vec_complex {
             ///
             /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be
             /// used for vectors which are declared const.
+            #[doc(alias = $name _subvector)]
             pub fn from_vector(v: &'a mut $rust_name, offset: usize, n: usize) -> Self {
                 unsafe {
                     Self {
@@ -370,6 +393,7 @@ macro_rules! gsl_vec_complex {
             /// ```
             /// The function gsl_vector_const_subvector_with_stride is equivalent to
             /// gsl_vector_subvector_with_stride but can be used for vectors which are declared const.
+            #[doc(alias = $name _subvector_with_stride)]
             pub fn from_vector_with_stride(
                 v: &'a mut $rust_name,
                 offset: usize,
@@ -387,9 +411,9 @@ macro_rules! gsl_vec_complex {
             /// These functions return a vector view of an array. The start of the new vector is given by
             /// base and has n elements. Mathematically, the i-th element of the new vector v’ is given by,
             ///
-        /// ```text
+            /// ```text
             /// v'(i) = base[i]
-        /// ```
+            /// ```
             ///
             /// where the index i runs from 0 to n-1.
             ///
@@ -400,6 +424,7 @@ macro_rules! gsl_vec_complex {
             ///
             /// The function gsl_vector_const_view_array is equivalent to gsl_vector_view_array but can be
             /// used for arrays which are declared const.
+            #[doc(alias = $name _view_array)]
             pub fn from_array(base: &'a mut [f64]) -> Self {
                 unsafe {
                     Self {
@@ -424,6 +449,7 @@ macro_rules! gsl_vec_complex {
             ///
             /// The function gsl_vector_const_view_array_with_stride is equivalent to
             /// gsl_vector_view_array_with_stride but can be used for arrays which are declared const.
+            #[doc(alias = $name _view_array_with_stride)]
             pub fn from_array_with_stride(base: &'a mut [$rust_ty], stride: usize) -> Self {
                 unsafe {
                     Self {

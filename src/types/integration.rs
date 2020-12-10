@@ -45,6 +45,7 @@ ffi_wrapper!(
 );
 
 impl IntegrationFixedWorkspace {
+    #[doc(alias = "gsl_integration_fixed_alloc")]
     pub fn new(
         type_: IntegrationFixedType,
         n: usize,
@@ -64,10 +65,12 @@ impl IntegrationFixedWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_integration_fixed_n")]
     pub fn n(&self) -> usize {
         unsafe { sys::gsl_integration_fixed_n(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_integration_fixed_nodes")]
     pub fn nodes(&self) -> Option<&[f64]> {
         let tmp = unsafe { sys::gsl_integration_fixed_nodes(self.unwrap_shared()) };
         if tmp.is_null() {
@@ -76,6 +79,7 @@ impl IntegrationFixedWorkspace {
         unsafe { Some(::std::slice::from_raw_parts(tmp, self.n())) }
     }
 
+    #[doc(alias = "gsl_integration_fixed_weights")]
     pub fn weights(&self) -> Option<&[f64]> {
         let tmp = unsafe { sys::gsl_integration_fixed_weights(self.unwrap_shared()) };
         if tmp.is_null() {
@@ -84,6 +88,7 @@ impl IntegrationFixedWorkspace {
         unsafe { Some(::std::slice::from_raw_parts(tmp, self.n())) }
     }
 
+    #[doc(alias = "gsl_integration_fixed")]
     pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> (::Value, f64) {
         let mut result = 0.;
         let function = wrap_callback!(f, F);
@@ -106,6 +111,7 @@ impl IntegrationWorkspace {
     /// This function allocates a workspace sufficient to hold n double precision intervals, their
     /// integration results and error estimates. One workspace may be used multiple times as all
     /// necessary reinitialization is performed automatically by the integration routines.
+    #[doc(alias = "gsl_integration_workspace_alloc")]
     pub fn new(n: usize) -> Option<IntegrationWorkspace> {
         let tmp = unsafe { sys::gsl_integration_workspace_alloc(n) };
 
@@ -160,6 +166,7 @@ impl IntegrationWorkspace {
     /// allocated size of the workspace.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qag")]
     pub fn qag<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -202,6 +209,7 @@ impl IntegrationWorkspace {
     /// workspace.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qags")]
     pub fn qags<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -252,6 +260,7 @@ impl IntegrationWorkspace {
     /// will be faster than QAGS.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qagp")]
     pub fn qagp<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -296,6 +305,7 @@ impl IntegrationWorkspace {
     /// singularity at the origin. In this case a lower-order rule is more efficient.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qagi")]
     pub fn qagi<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -335,6 +345,7 @@ impl IntegrationWorkspace {
     /// and then integrated using the QAGS algorithm.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qagiu")]
     pub fn qagiu<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -376,6 +387,7 @@ impl IntegrationWorkspace {
     /// and then integrated using the QAGS algorithm.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qagil")]
     pub fn qagil<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -418,6 +430,7 @@ impl IntegrationWorkspace {
     /// singularity the algorithm uses an ordinary 15-point Gauss-Kronrod integration rule.
     ///
     /// Returns `(result, abs_err)`.
+    #[doc(alias = "gsl_integration_qawc")]
     pub fn qawc<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -482,6 +495,7 @@ impl IntegrationQawsTable {
     ///
     /// The function returns a pointer to the newly allocated table gsl_integration_qaws_table if no
     /// errors were detected, and 0 in the case of error.
+    #[doc(alias = "gsl_integration_qaws_table_alloc")]
     pub fn new(alpha: f64, beta: f64, mu: i32, nu: i32) -> Option<IntegrationQawsTable> {
         let tmp = unsafe { sys::gsl_integration_qaws_table_alloc(alpha, beta, mu, nu) };
 
@@ -493,6 +507,7 @@ impl IntegrationQawsTable {
     }
 
     /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
+    #[doc(alias = "gsl_integration_qaws_table_set")]
     pub fn set(&mut self, alpha: f64, beta: f64, mu: i32, nu: i32) -> ::Value {
         ::Value::from(unsafe {
             sys::gsl_integration_qaws_table_set(self.unwrap_unique(), alpha, beta, mu, nu)
@@ -514,6 +529,7 @@ impl IntegrationQawsTable {
     /// Gauss-Kronrod integration rule is used.
     ///
     /// Returns `(result, abs_err)`
+    #[doc(alias = "gsl_integration_qaws")]
     pub fn qaws<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -579,6 +595,7 @@ impl IntegrationQawoTable {
     /// are sufficient for subintervals down to the length L/2^n. The integration routine
     /// gsl_integration_qawo returns the error ::Table if the number of levels is insufficient for
     /// the requested accuracy.
+    #[doc(alias = "gsl_integration_qawo_table_alloc")]
     pub fn new(
         omega: f64,
         l: f64,
@@ -595,6 +612,7 @@ impl IntegrationQawoTable {
     }
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
+    #[doc(alias = "gsl_integration_qawo_table_set")]
     pub fn set(&mut self, omega: f64, l: f64, sine: ::IntegrationQawo) -> ::Value {
         ::Value::from(unsafe {
             sys::gsl_integration_qawo_table_set(self.unwrap_unique(), omega, l, sine.into())
@@ -602,6 +620,7 @@ impl IntegrationQawoTable {
     }
 
     /// This function allows the length parameter l of the self workspace to be changed.
+    #[doc(alias = "gsl_integration_qawo_table_set_length")]
     pub fn set_length(&mut self, l: f64) -> ::Value {
         ::Value::from(unsafe {
             sys::gsl_integration_qawo_table_set_length(self.unwrap_unique(), l)
@@ -625,6 +644,7 @@ impl IntegrationQawoTable {
     /// a "small" widths where d\omega < 4 are computed using a 15-point Gauss-Kronrod integration.
     ///
     /// Returns `(result, abserr)`.
+    #[doc(alias = "gsl_integration_qawo")]
     pub fn qawo<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -672,6 +692,7 @@ impl CquadWorkspace {
     /// n is not the maximum number of intervals that will be evaluated. If the workspace is full,
     /// intervals with smaller error estimates will be discarded. A minimum of 3 intervals
     /// is required and for most functions, a workspace of size 100 is sufficient.
+    #[doc(alias = "gsl_integration_cquad_workspace_alloc")]
     pub fn new(n: usize) -> Option<CquadWorkspace> {
         let tmp = unsafe { sys::gsl_integration_cquad_workspace_alloc(n) };
 
@@ -701,6 +722,7 @@ impl CquadWorkspace {
     /// nevals can be set to NULL (not in rgsl).
     ///
     /// Returns `(result, abs_err, n_evals)`.
+    #[doc(alias = "gsl_integration_cquad")]
     pub fn cquad<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -743,6 +765,7 @@ impl GLFixedTable {
     /// fixed order integration scheme. If possible, high precision precomputed coefficients are
     /// used. If precomputed weights are not available, lower precision coefficients are computed
     /// on the fly.
+    #[doc(alias = "gsl_integration_glfixed_table_alloc")]
     pub fn new(n: usize) -> Option<GLFixedTable> {
         let tmp = unsafe { sys::gsl_integration_glfixed_table_alloc(n) };
 
@@ -758,6 +781,7 @@ impl GLFixedTable {
     /// function f may be integrated on [a,b] by summing wi * f(xi) over i.
     ///
     /// Returns `(Value, xi, wi)`.
+    #[doc(alias = "gsl_integration_glfixed_point")]
     pub fn point(&self, a: f64, b: f64, i: usize) -> (::Value, f64, f64) {
         let mut xi = 0.;
         let mut wi = 0.;
@@ -769,11 +793,13 @@ impl GLFixedTable {
 
     /// This function applies the Gauss-Legendre integration rule contained in table self and
     /// returns the result.
+    #[doc(alias = "gsl_integration_glfixed")]
     pub fn glfixed<F: Fn(f64) -> f64>(&self, f: F, a: f64, b: f64) -> f64 {
         let function = wrap_callback!(f, F);
         unsafe { sys::gsl_integration_glfixed(&function, a, b, self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_integration_glfixed_point")]
     pub fn glfixed_point(&self, a: f64, b: f64, xi: &mut [f64], wi: &mut [f64]) -> Value {
         assert!(xi.len() == wi.len());
 

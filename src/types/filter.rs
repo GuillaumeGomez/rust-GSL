@@ -12,6 +12,7 @@ ffi_wrapper!(
 );
 
 impl FilterGaussianWorkspace {
+    #[doc(alias = "gsl_filter_gaussian_alloc")]
     pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_gaussian_alloc(K) };
         if s.is_null() {
@@ -26,6 +27,7 @@ impl FilterGaussianWorkspace {
     /// corresponding to a Gaussian, `1` corresponding to a first derivative Gaussian, and so on.
     /// The parameter `endtype` specifies how the signal end points are handled. It is allowed for
     /// `x` = `y` for an in-place filter.
+    #[doc(alias = "gsl_filter_gaussian")]
     pub fn gaussian(
         &mut self,
         endtype: FilterEnd,
@@ -54,6 +56,7 @@ ffi_wrapper!(
 );
 
 impl FilterMedianWorkspace {
+    #[doc(alias = "gsl_filter_median_alloc")]
     pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_median_alloc(K) };
         if s.is_null() {
@@ -63,6 +66,7 @@ impl FilterMedianWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_filter_median")]
     pub fn median(&mut self, endtype: FilterEnd, x: &VectorF64, y: &mut VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_filter_median(
@@ -82,6 +86,7 @@ ffi_wrapper!(
 );
 
 impl FilterRMedianWorkspace {
+    #[doc(alias = "gsl_filter_rmedian_alloc")]
     pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_rmedian_alloc(K) };
         if s.is_null() {
@@ -91,6 +96,7 @@ impl FilterRMedianWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_filter_rmedian")]
     pub fn rmedian(&mut self, endtype: FilterEnd, x: &VectorF64, y: &mut VectorF64) -> Value {
         Value::from(unsafe {
             sys::gsl_filter_rmedian(
@@ -110,6 +116,7 @@ ffi_wrapper!(
 );
 
 impl FilterImpulseWorkspace {
+    #[doc(alias = "gsl_filter_impulse_alloc")]
     pub fn new(K: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_filter_impulse_alloc(K) };
         if s.is_null() {
@@ -120,6 +127,7 @@ impl FilterImpulseWorkspace {
     }
 
     /// Returns `(Value, noutlier)`.
+    #[doc(alias = "gsl_filter_impulse")]
     pub fn impulse(
         &mut self,
         endtype: FilterEnd,

@@ -24,6 +24,7 @@ use crate::Value;
 /// it does not depend on the fit.
 ///
 /// Returns `(Value, c0, c1, cov00, cov01, cov11, sumsq)`.
+#[doc(alias = "gsl_fit_linear")]
 pub fn linear(
     x: &[f64],
     xstride: usize,
@@ -68,6 +69,7 @@ pub fn linear(
 /// The weighted sum of squares of the residuals from the best-fit line, \chi^2, is returned in chisq.
 ///
 /// Returns `(Value, c0, c1, cov00, cov01, cov11, chisq)`.
+#[doc(alias = "gsl_fit_wlinear")]
 pub fn wlinear(
     x: &[f64],
     xstride: usize,
@@ -108,6 +110,7 @@ pub fn wlinear(
 /// model Y = c_0 + c_1 X at the point x.
 ///
 /// Returns `(Value, y, y_err)`.
+#[doc(alias = "gsl_fit_linear_est")]
 pub fn linear_est(
     x: f64,
     c0: f64,
@@ -130,6 +133,7 @@ pub fn linear_est(
 /// The sum of squares of the residuals from the best-fit line is returned in sumsq.
 ///
 /// Returns `(Value, c1, cov11, sumsq)`.
+#[doc(alias = "gsl_fit_mul")]
 pub fn mul(
     x: &[f64],
     xstride: usize,
@@ -156,6 +160,7 @@ pub fn mul(
 }
 
 /// Returns `(Value, c1, cov11, sumsq)`.
+#[doc(alias = "gsl_fit_wmul")]
 pub fn wmul(
     x: &[f64],
     xstride: usize,
@@ -190,6 +195,7 @@ pub fn wmul(
 /// point x.
 ///
 /// Returns `(Value, y, y_err)`.
+#[doc(alias = "gsl_fit_mul_est")]
 pub fn mul_est(x: f64, c1: f64, cov11: f64) -> (Value, f64, f64) {
     let mut y = 0.;
     let mut y_err = 0.;

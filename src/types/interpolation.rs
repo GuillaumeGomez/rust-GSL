@@ -68,6 +68,7 @@ impl InterpAccel {
     /// This function performs a lookup action on the data array x_array of size size, using the
     /// given accelerator a. This is how lookups are performed during evaluation of an
     /// interpolation. The function returns an index i such that `x_array[i] <= x < x_array[i+1]`.
+    #[doc(alias = "gsl_interp_accel_find")]
     pub fn find(&mut self, x_array: &[f64], x: f64) -> usize {
         unsafe { sys::gsl_interp_accel_find(&mut self.0, x_array.as_ptr(), x_array.len() as _, x) }
     }
@@ -85,6 +86,7 @@ impl Interp {
     /// let interp_type = InterpType::linear();
     /// let interp = Interp::new(interp_type, 2).expect("Failed to initialize `Interp`...");
     /// ```
+    #[doc(alias = "gsl_interp_alloc")]
     pub fn new(t: InterpType, size: usize) -> Option<Interp> {
         let tmp = unsafe { sys::gsl_interp_alloc(t.unwrap_shared(), size) };
 
@@ -100,6 +102,7 @@ impl Interp {
     /// arrays xa and ya and only stores the static state computed from the data. The xa data array
     /// is always assumed to be strictly ordered, with increasing x values; the behavior for other
     /// arrangements is not defined.
+    #[doc(alias = "gsl_interp_init")]
     pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_interp_init(
@@ -126,6 +129,7 @@ impl Interp {
     /// ```Shell
     /// interp uses 'cspline' interpolation.
     /// ```
+    #[doc(alias = "gsl_interp_name")]
     pub fn name(&self) -> String {
         let tmp = unsafe { sys::gsl_interp_name(self.unwrap_shared()) };
 
@@ -141,6 +145,7 @@ impl Interp {
     /// This function returns the minimum number of points required by the interpolation object
     /// interp or interpolation type T. For example, Akima spline interpolation requires a minimum
     /// of 5 points.
+    #[doc(alias = "gsl_interp_min_size")]
     pub fn min_size(&self) -> u32 {
         unsafe { sys::gsl_interp_min_size(self.unwrap_shared()) }
     }
@@ -152,6 +157,7 @@ impl InterpType {
     /// This function returns the minimum number of points required by the interpolation object
     /// interp or interpolation type T. For example, Akima spline interpolation requires a minimum
     /// of 5 points.
+    #[doc(alias = "gsl_interp_type_min_size")]
     pub fn min_size(&self) -> u32 {
         unsafe { sys::gsl_interp_type_min_size(self.unwrap_shared()) }
     }
@@ -206,6 +212,7 @@ ffi_wrapper!(
 );
 
 impl Spline {
+    #[doc(alias = "gsl_spline_alloc")]
     pub fn new(t: InterpType, size: usize) -> Option<Spline> {
         let tmp = unsafe { sys::gsl_spline_alloc(t.unwrap_shared(), size) };
 
@@ -216,6 +223,7 @@ impl Spline {
         }
     }
 
+    #[doc(alias = "gsl_spline_init")]
     pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_spline_init(
@@ -227,6 +235,7 @@ impl Spline {
         })
     }
 
+    #[doc(alias = "gsl_spline_name")]
     pub fn name(&self) -> String {
         let tmp = unsafe { sys::gsl_spline_name(self.unwrap_shared()) };
 
@@ -239,26 +248,31 @@ impl Spline {
         }
     }
 
+    #[doc(alias = "gsl_spline_min_size")]
     pub fn min_size(&self) -> u32 {
         unsafe { sys::gsl_spline_min_size(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_spline_eval")]
     pub fn eval(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval(self.unwrap_shared(), x, &mut acc.0) }
     }
 
     /// Returns `(Value, y)`.
+    #[doc(alias = "gsl_spline_eval_e")]
     pub fn eval_e(&self, x: f64, acc: &mut InterpAccel) -> (Value, f64) {
         let mut y = 0.;
         let ret = unsafe { sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, &mut y) };
         (Value::from(ret), y)
     }
 
+    #[doc(alias = "gsl_spline_eval_deriv")]
     pub fn eval_deriv(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_deriv(self.unwrap_shared(), x, &mut acc.0) }
     }
 
     /// Returns `(Value, d)`.
+    #[doc(alias = "gsl_spline_eval_deriv_e")]
     pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel) -> (Value, f64) {
         let mut d = 0.;
         let ret =
@@ -266,11 +280,13 @@ impl Spline {
         (Value::from(ret), d)
     }
 
+    #[doc(alias = "gsl_spline_eval_deriv2")]
     pub fn eval_deriv2(&self, x: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_deriv2(self.unwrap_shared(), x, &mut acc.0) }
     }
 
     /// Returns `(Value, d2)`.
+    #[doc(alias = "gsl_spline_eval_deriv2_e")]
     pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel) -> (Value, f64) {
         let mut d2 = 0.;
         let ret =
@@ -278,11 +294,13 @@ impl Spline {
         (Value::from(ret), d2)
     }
 
+    #[doc(alias = "gsl_spline_eval_integ")]
     pub fn eval_integ(&self, a: f64, b: f64, acc: &mut InterpAccel) -> f64 {
         unsafe { sys::gsl_spline_eval_integ(self.unwrap_shared(), a, b, &mut acc.0) }
     }
 
     /// Returns `(Value, d2)`.
+    #[doc(alias = "gsl_spline_eval_integ_e")]
     pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel) -> (Value, f64) {
         let mut result = 0.;
         let ret = unsafe {

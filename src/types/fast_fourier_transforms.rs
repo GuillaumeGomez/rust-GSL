@@ -29,6 +29,7 @@ impl $rust_name {
     /// The wavetable structure can be used repeatedly for any transform of the same length. The
     /// table is not modified by calls to any of the other FFT functions. The same wavetable can be
     /// used for both forward and backward (or inverse) transforms of a given length.
+    #[doc(alias = $name _wavetable $($extra)? _alloc)]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::[<$name _wavetable $($extra)? _alloc>](n) };
 
@@ -61,6 +62,7 @@ ffi_wrapper!(
 
 impl $complex_rust_name {
     /// This function allocates a workspace for a complex transform of length n.
+    #[doc(alias = $complex_name _alloc)]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::[<$complex_name _alloc>](n) };
 
@@ -71,6 +73,7 @@ impl $complex_rust_name {
         }
     }
 
+    #[doc(alias = $name $($extra)? _forward)]
     pub fn forward(
         &mut self,
         data: &mut [$ty],
@@ -89,6 +92,7 @@ impl $complex_rust_name {
         })
     }
 
+    #[doc(alias = $name $($extra)? _transform)]
     pub fn transform(
         &mut self,
         data: &mut [$ty],
@@ -109,6 +113,7 @@ impl $complex_rust_name {
         })
     }
 
+    #[doc(alias = $name $($extra)? _backward)]
     pub fn backward(
         &mut self,
         data: &mut [$ty],
@@ -127,6 +132,7 @@ impl $complex_rust_name {
         })
     }
 
+    #[doc(alias = $name $($extra)? _inverse)]
     pub fn inverse(
         &mut self,
         data: &mut [$ty],

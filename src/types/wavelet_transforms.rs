@@ -65,6 +65,7 @@ offset parameters."
 impl Wavelet {
     /// This function allocates and initializes a wavelet object of type T. The parameter k selects the specific member of the wavelet
     /// family. A null pointer is returned if insufficient memory is available or if a unsupported member is selected.
+    #[doc(alias = "gsl_wavelet_alloc")]
     pub fn new(t: WaveletType, k: usize) -> Option<Wavelet> {
         let tmp = unsafe { sys::gsl_wavelet_alloc(t.unwrap_shared(), k) };
 
@@ -76,6 +77,7 @@ impl Wavelet {
     }
 
     /// This function returns a pointer to the name of the wavelet family for w.
+    #[doc(alias = "gsl_wavelet_name")]
     pub fn name(&self) -> Option<String> {
         let tmp = unsafe { sys::gsl_wavelet_name(self.unwrap_shared()) };
 
@@ -141,6 +143,7 @@ impl WaveletWorkspace {
     /// workspace of size n must be provided. For two-dimensional transforms of n-by-n matrices it is sufficient to allocate a workspace
     /// of size n, since the transform operates on individual rows and columns. A null pointer is returned if insufficient memory is
     /// available.
+    #[doc(alias = "gsl_wavelet_workspace_alloc")]
     pub fn new(n: usize) -> Option<WaveletWorkspace> {
         let tmp = unsafe { sys::gsl_wavelet_workspace_alloc(n) };
 

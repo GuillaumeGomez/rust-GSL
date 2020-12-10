@@ -87,6 +87,7 @@ impl Rng {
     ///
     /// The generator is automatically initialized with the default seed, gsl_rng_default_seed. This is zero by default but can be changed either directly or by using the environment variable
     /// GSL_RNG_SEED (see [`Random number environment variables`](https://www.gnu.org/software/gsl/manual/html_node/Random-number-environment-variables.html#Random-number-environment-variables)).
+    #[doc(alias = "gsl_rng_alloc")]
     pub fn new(T: RngType) -> Option<Rng> {
         let tmp = unsafe { sys::gsl_rng_alloc(T.unwrap_shared()) };
 
@@ -104,12 +105,14 @@ impl Rng {
     /// When using multiple seeds with the same generator, choose seed values greater than zero to avoid collisions with the default setting.
     ///
     /// Note that the most generators only accept 32-bit seeds, with higher values being reduced modulo 2^32. For generators with smaller ranges the maximum seed value will typically be lower.
+    #[doc(alias = "gsl_rng_set")]
     pub fn set(&mut self, s: usize) {
         unsafe { sys::gsl_rng_set(self.unwrap_unique(), s as _) }
     }
 
     /// This function returns a random integer from the generator r. The minimum and maximum values depend on the algorithm used, but all integers in the range [min,max] are equally likely.
     /// The values of min and max can be determined using the auxiliary functions gsl_rng_max (r) and gsl_rng_min (r).
+    #[doc(alias = "gsl_rng_get")]
     pub fn get(&mut self) -> usize {
         unsafe { sys::gsl_rng_get(self.unwrap_shared()) as _ }
     }
@@ -117,6 +120,7 @@ impl Rng {
     /// This function returns a double precision floating point number uniformly distributed in the range [0,1). The range includes 0.0 but excludes 1.0.
     /// The value is typically obtained by dividing the result of gsl_rng_get(r) by gsl_rng_max(r) + 1.0 in double precision.
     /// Some generators compute this ratio internally so that they can provide floating point numbers with more than 32 bits of randomness (the maximum number of bits that can be portably represented in a single unsigned long int).
+    #[doc(alias = "gsl_rng_uniform")]
     pub fn uniform(&mut self) -> f64 {
         unsafe { sys::gsl_rng_uniform(self.unwrap_unique()) }
     }
@@ -124,6 +128,7 @@ impl Rng {
     /// This function returns a positive double precision floating point number uniformly distributed in the range (0,1), excluding both 0.0 and 1.0.
     /// The number is obtained by sampling the generator with the algorithm of gsl_rng_uniform until a non-zero value is obtained.
     /// You can use this function if you need to avoid a singularity at 0.0.
+    #[doc(alias = "gsl_rng_uniform_pos")]
     pub fn uniform_pos(&mut self) -> f64 {
         unsafe { sys::gsl_rng_uniform_pos(self.unwrap_unique()) }
     }
@@ -136,6 +141,7 @@ impl Rng {
     ///
     /// In particular, this function is not intended for generating the full range of unsigned integer values [0,2^32-1].
     /// Instead choose a generator with the maximal integer range and zero minimum value, such as gsl_rng_ranlxd1, gsl_rng_mt19937 or gsl_rng_taus, and sample it directly using gsl_rng_get. The range of each generator can be found using the auxiliary functions described in the next section.
+    #[doc(alias = "gsl_rng_uniform_int")]
     pub fn uniform_int(&mut self, n: usize) -> usize {
         unsafe { sys::gsl_rng_uniform_int(self.unwrap_unique(), n as c_ulong) as _ }
     }
@@ -147,6 +153,7 @@ impl Rng {
     /// ```
     ///
     /// would print something like "r is a 'taus' generator".
+    #[doc(alias = "gsl_rng_name")]
     pub fn get_name(&self) -> String {
         unsafe {
             let tmp = sys::gsl_rng_name(self.unwrap_shared());
@@ -156,12 +163,14 @@ impl Rng {
     }
 
     /// This function returns the largest value that the get function can return.
+    #[doc(alias = "gsl_rng_max")]
     pub fn max(&self) -> usize {
         unsafe { sys::gsl_rng_max(self.unwrap_shared()) as _ }
     }
 
     /// This function returns the smallest value that gsl_rng_get can return. Usually this value is zero.
     /// There are some generators with algorithms that cannot return zero, and for these generators the minimum value is 1.
+    #[doc(alias = "gsl_rng_min")]
     pub fn min(&self) -> usize {
         unsafe { sys::gsl_rng_min(self.unwrap_shared()) as _ }
     }
@@ -175,6 +184,7 @@ impl Rng {
     /// size_t n = gsl_rng_size (r);
     /// fwrite (state, n, 1, stream);
     /// ```
+    #[doc(alias = "gsl_rng_state")]
     pub fn state<T>(&self) -> &T {
         unsafe { &(*(sys::gsl_rng_state(self.unwrap_shared()) as *const T)) }
     }
@@ -188,11 +198,13 @@ impl Rng {
     /// size_t n = gsl_rng_size (r);
     /// fwrite (state, n, 1, stream);
     /// ```
+    #[doc(alias = "gsl_rng_state")]
     pub fn state_mut<T>(&mut self) -> &mut T {
         unsafe { &mut (*(sys::gsl_rng_state(self.unwrap_shared()) as *mut T)) }
     }
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
+    #[doc(alias = "gsl_rng_memcpy")]
     pub fn copy(&self, other: &mut Rng) -> Value {
         Value::from(unsafe { sys::gsl_rng_memcpy(other.unwrap_unique(), self.unwrap_shared()) })
     }
@@ -204,6 +216,7 @@ impl Rng {
     /// size_t n = gsl_rng_size (r);
     /// fwrite (state, n, 1, stream);
     /// ```
+    #[doc(alias = "gsl_rng_size")]
     pub fn size(&self) -> usize {
         unsafe { sys::gsl_rng_size(self.unwrap_shared()) }
     }
@@ -228,6 +241,7 @@ impl Rng {
     ///
     /// gsl_ran_shuffle (r, a, 52, sizeof (int));
     /// ```
+    #[doc(alias = "gsl_ran_shuffle")]
     pub fn shuffle<T>(&mut self, base: &mut [T]) {
         unsafe {
             sys::gsl_ran_shuffle(
@@ -257,6 +271,7 @@ impl Rng {
     ///
     /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
     /// ```
+    #[doc(alias = "gsl_ran_choose")]
     pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> Value {
         assert!(src.len() <= dest.len());
         Value::from(unsafe {
@@ -273,6 +288,7 @@ impl Rng {
 
     /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more
     /// than once in the output sequence dest. There is no requirement that k be less than n in this case.
+    #[doc(alias = "gsl_ran_sample")]
     pub fn sample<T>(&mut self, src: &[T], dest: &mut [T]) {
         assert!(src.len() <= dest.len());
         unsafe {
@@ -300,6 +316,7 @@ impl Rng {
     /// as weights and normalized appropriately. The arrays `n[]` and `p[]` must both be of length K.
     ///
     /// Random variates are generated using the conditional binomial method (see C.S. Davis, The computer generation of multinomial random variates, Comp. Stat. Data Anal. 16 (1993) 205–217 for details).
+    #[doc(alias = "gsl_ran_multinomial")]
     pub fn multinomial(&mut self, N: u32, p: &[f64], n: &mut [u32]) {
         assert!(p.len() <= n.len());
         unsafe {
@@ -324,6 +341,7 @@ impl Rng {
     /// Z = {\prod_{i=1}^K \Gamma(\alpha_i)} / {\Gamma( \sum_{i=1}^K \alpha_i)}
     ///
     /// The random variates are generated by sampling K values from gamma distributions with parameters a=alpha_i, b=1, and renormalizing. See A.M. Law, W.D. Kelton, Simulation Modeling and Analysis (1991).
+    #[doc(alias = "gsl_ran_dirichlet")]
     pub fn dirichlet(&mut self, alpha: &[f64], theta: &mut [f64]) {
         assert!(alpha.len() <= theta.len());
         unsafe {
@@ -340,6 +358,7 @@ impl Rng {
     ///
     /// p(0) = 1 - p
     /// p(1) = p
+    #[doc(alias = "gsl_ran_bernoulli")]
     pub fn bernoulli(&mut self, p: f64) -> u32 {
         unsafe { sys::gsl_ran_bernoulli(self.unwrap_unique(), p) }
     }
@@ -349,6 +368,7 @@ impl Rng {
     /// p(x) dx = {Gamma(a+b) over Gamma(a) Gamma(b)} x^{a-1} (1-x)^{b-1} dx
     ///
     /// for 0 <= x <= 1.
+    #[doc(alias = "gsl_ran_beta")]
     pub fn beta(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_beta(self.unwrap_unique(), a, b) }
     }
@@ -358,6 +378,7 @@ impl Rng {
     /// p(k) = {n! \over k! (n-k)! } p^k (1-p)^{n-k}
     ///
     /// for 0 <= k <= n.
+    #[doc(alias = "gsl_ran_binomial")]
     pub fn binomial(&mut self, p: f64, n: u32) -> u32 {
         unsafe { sys::gsl_ran_binomial(self.unwrap_unique(), p, n) }
     }
@@ -368,6 +389,7 @@ impl Rng {
     /// p(x,y) dx dy = {1 \over 2 \pi \sigma_x \sigma_y \sqrt{1-\rho^2}} \exp (-(x^2/\sigma_x^2 + y^2/\sigma_y^2 - 2 \rho x y/(\sigma_x\sigma_y))/2(1-\rho^2)) dx dy
     ///
     /// for x,y in the range -\infty to +\infty. The correlation coefficient rho should lie between 1 and -1.
+    #[doc(alias = "gsl_ran_bivariate_gaussian")]
     pub fn bivariante_gaussian(&mut self, sigma_x: f64, sigma_y: f64, rho: f64) -> (f64, f64) {
         let mut x = 0.;
         let mut y = 0.;
@@ -390,6 +412,7 @@ impl Rng {
     /// p(x) dx = {1 \over a\pi (1 + (x/a)^2) } dx
     ///
     /// for x in the range -\infty to +\infty. The Cauchy distribution is also known as the Lorentz distribution.
+    #[doc(alias = "gsl_ran_cauchy")]
     pub fn cauchy(&mut self, a: f64) -> f64 {
         unsafe { sys::gsl_ran_cauchy(self.unwrap_unique(), a) }
     }
@@ -399,6 +422,7 @@ impl Rng {
     /// p(x) dx = {1 \over 2 Gamma(\nu/2) } (x/2)^{\nu/2 - 1} \exp(-x/2) dx
     ///
     /// for x >= 0.
+    #[doc(alias = "gsl_ran_chisq")]
     pub fn chisq(&mut self, nu: f64) -> f64 {
         unsafe { sys::gsl_ran_chisq(self.unwrap_unique(), nu) }
     }
@@ -408,6 +432,7 @@ impl Rng {
     /// p(x) dx = {1 \over \mu} \exp(-x/\mu) dx
     ///
     /// for x >= 0.
+    #[doc(alias = "gsl_ran_exponential")]
     pub fn exponential(&mut self, mu: f64) -> f64 {
         unsafe { sys::gsl_ran_exponential(self.unwrap_unique(), mu) }
     }
@@ -417,6 +442,7 @@ impl Rng {
     /// p(x) dx = {1 \over 2 a Gamma(1+1/b)} \exp(-|x/a|^b) dx
     ///
     /// for x >= 0. For b = 1 this reduces to the Laplace distribution. For b = 2 it has the same form as a Gaussian distribution, but with a = \sqrt{2} \sigma.
+    #[doc(alias = "gsl_ran_exppow")]
     pub fn exppow(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_exppow(self.unwrap_unique(), a, b) }
     }
@@ -435,6 +461,7 @@ impl Rng {
     /// ```
     ///
     /// for x >= 0.
+    #[doc(alias = "gsl_ran_fdist")]
     pub fn fdist(&mut self, nu1: f64, nu2: f64) -> f64 {
         unsafe { sys::gsl_ran_fdist(self.unwrap_unique(), nu1, nu2) }
     }
@@ -444,6 +471,7 @@ impl Rng {
     /// p(x) dx = {1 \over (b-a)} dx
     ///
     /// if a <= x < b and 0 otherwise.
+    #[doc(alias = "gsl_ran_flat")]
     pub fn flat(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_flat(self.unwrap_unique(), a, b) }
     }
@@ -457,11 +485,13 @@ impl Rng {
     /// The gamma distribution with an integer parameter a is known as the Erlang distribution.
     ///
     /// The variates are computed using the Marsaglia-Tsang fast gamma method. This function for this method was previously called gsl_ran_gamma_mt and can still be accessed using this name.
+    #[doc(alias = "gsl_ran_gamma")]
     pub fn gamma(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_gamma(self.unwrap_unique(), a, b) }
     }
 
     /// This function returns a gamma variate using the algorithms from Knuth (vol 2).
+    #[doc(alias = "gsl_ran_gamma_knuth")]
     pub fn gamma_knuth(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_gamma_knuth(self.unwrap_unique(), a, b) }
     }
@@ -472,28 +502,33 @@ impl Rng {
     /// p(x) dx = {1 \over \sqrt{2 \pi \sigma^2}} \exp (-x^2 / 2\sigma^2) dx
     /// for x in the range -\infty to +\infty. Use the transformation z = \mu + x on the numbers returned by gsl_ran_gaussian to obtain a Gaussian distribution with mean \mu.
     /// This function uses the Box-Muller algorithm which requires two calls to the random number generator r.
+    #[doc(alias = "gsl_ran_gaussian")]
     pub fn gaussian(&mut self, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_gaussian(self.unwrap_unique(), sigma) }
     }
 
+    #[doc(alias = "gsl_ran_gaussian_ziggurat")]
     pub fn gaussian_ziggurat(&mut self, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_gaussian_ziggurat(self.unwrap_unique(), sigma) }
     }
 
     /// This function computes a Gaussian random variate using the alternative Marsaglia-Tsang ziggurat and Kinderman-Monahan-Leva ratio methods.
     /// The Ziggurat algorithm is the fastest available algorithm in most cases.
+    #[doc(alias = "gsl_ran_gaussian_ratio_method")]
     pub fn gaussian_ratio_method(&mut self, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_gaussian_ratio_method(self.unwrap_unique(), sigma) }
     }
 
     /// This function computes results for the unit Gaussian distribution.
     /// They are equivalent to the functions above with a standard deviation of one, sigma = 1.
+    #[doc(alias = "gsl_ran_ugaussian")]
     pub fn ugaussian(&mut self) -> f64 {
         unsafe { sys::gsl_ran_ugaussian(self.unwrap_unique()) }
     }
 
     /// This function computes results for the unit Gaussian distribution.
     /// They are equivalent to the functions above with a standard deviation of one, sigma = 1.
+    #[doc(alias = "gsl_ran_ugaussian_ratio_method")]
     pub fn ugaussian_ratio_method(&mut self) -> f64 {
         unsafe { sys::gsl_ran_ugaussian_ratio_method(self.unwrap_unique()) }
     }
@@ -508,11 +543,13 @@ impl Rng {
     /// for x > a where N(a;\sigma) is the normalization constant,
     ///
     /// N(a;\sigma) = (1/2) erfc(a / sqrt(2 sigma^2)).
+    #[doc(alias = "gsl_ran_gaussian_tail")]
     pub fn gaussian_tail(&mut self, a: f64, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_gaussian_tail(self.unwrap_unique(), a, sigma) }
     }
 
     /// This function computes results for the tail of a unit Gaussian distribution. They are equivalent to the functions above with a standard deviation of one, sigma = 1.
+    #[doc(alias = "gsl_ran_ugaussian_tail")]
     pub fn ugaussian_tail(&mut self, a: f64) -> f64 {
         unsafe { sys::gsl_ran_ugaussian_tail(self.unwrap_unique(), a) }
     }
@@ -523,6 +560,7 @@ impl Rng {
     /// p(k) =  p (1-p)^(k-1)
     ///
     /// for k >= 1. Note that the distribution begins with k=1 with this definition. There is another convention in which the exponent k-1 is replaced by k.
+    #[doc(alias = "gsl_ran_geometric")]
     pub fn geometric(&mut self, p: f64) -> u32 {
         unsafe { sys::gsl_ran_geometric(self.unwrap_unique(), p) }
     }
@@ -532,6 +570,7 @@ impl Rng {
     /// p(x) dx = a b \exp(-(b \exp(-ax) + ax)) dx
     ///
     /// for -\infty < x < \infty.
+    #[doc(alias = "gsl_ran_gumbel1")]
     pub fn gumbel1(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_gumbel1(self.unwrap_unique(), a, b) }
     }
@@ -541,6 +580,7 @@ impl Rng {
     /// p(x) dx = a b x^{-a-1} \exp(-b x^{-a}) dx
     ///
     /// for 0 < x < \infty.
+    #[doc(alias = "gsl_ran_gumbel2")]
     pub fn gumbel2(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_gumbel2(self.unwrap_unique(), a, b) }
     }
@@ -553,6 +593,7 @@ impl Rng {
     ///
     /// If a population contains n_1 elements of “type 1” and n_2 elements of “type 2” then the hypergeometric distribution gives the probability of obtaining
     /// k elements of “type 1” in t samples from the population without replacement.
+    #[doc(alias = "gsl_ran_hypergeometric")]
     pub fn hypergeometric(&mut self, n1: u32, n2: u32, t: u32) -> u32 {
         unsafe { sys::gsl_ran_hypergeometric(self.unwrap_unique(), n1, n2, t) }
     }
@@ -564,6 +605,7 @@ impl Rng {
     /// For numerical purposes it is more convenient to use the following equivalent form of the integral,
     ///
     /// p(x) = (1/\pi) \int_0^\infty dt \exp(-t \log(t) - x t) \sin(\pi t).
+    #[doc(alias = "gsl_ran_landau")]
     pub fn landau(&mut self) -> f64 {
         unsafe { sys::gsl_ran_landau(self.unwrap_unique()) }
     }
@@ -573,6 +615,7 @@ impl Rng {
     /// p(x) dx = {1 \over 2 a}  \exp(-|x/a|) dx
     ///
     /// for -\infty < x < \infty.
+    #[doc(alias = "gsl_ran_laplace")]
     pub fn laplace(&mut self, a: f64) -> f64 {
         unsafe { sys::gsl_ran_laplace(self.unwrap_unique(), a) }
     }
@@ -584,6 +627,7 @@ impl Rng {
     /// There is no explicit solution for the form of p(x) and the library does not define a corresponding pdf function. For \alpha = 1 the distribution reduces to the Cauchy distribution. For \alpha = 2 it is a Gaussian distribution with \sigma = \sqrt{2} c. For \alpha < 1 the tails of the distribution become extremely wide.
     ///
     /// The algorithm only works for 0 < alpha <= 2.
+    #[doc(alias = "gsl_ran_levy")]
     pub fn levy(&mut self, c: f64, alpha: f64) -> f64 {
         unsafe { sys::gsl_ran_levy(self.unwrap_unique(), c, alpha) }
     }
@@ -600,6 +644,7 @@ impl Rng {
     /// The algorithm only works for 0 < alpha <= 2.
     ///
     /// The Levy alpha-stable distributions have the property that if N alpha-stable variates are drawn from the distribution p(c, \alpha, \beta) then the sum Y = X_1 + X_2 + \dots + X_N will also be distributed as an alpha-stable variate, p(N^(1/\alpha) c, \alpha, \beta).
+    #[doc(alias = "gsl_ran_levy_skew")]
     pub fn levy_skew(&mut self, c: f64, alpha: f64, beta: f64) -> f64 {
         unsafe { sys::gsl_ran_levy_skew(self.unwrap_unique(), c, alpha, beta) }
     }
@@ -609,6 +654,7 @@ impl Rng {
     /// p(k) = {-1 \over \log(1-p)} {(p^k \over k)}
     ///
     /// for k >= 1.
+    #[doc(alias = "gsl_ran_logarithmic")]
     pub fn logarithmic(&mut self, p: f64) -> u32 {
         unsafe { sys::gsl_ran_logarithmic(self.unwrap_unique(), p) }
     }
@@ -618,6 +664,7 @@ impl Rng {
     /// p(x) dx = { \exp(-x/a) \over a (1 + \exp(-x/a))^2 } dx
     ///
     /// for -\infty < x < +\infty.
+    #[doc(alias = "gsl_ran_logistic")]
     pub fn logistic(&mut self, a: f64) -> f64 {
         unsafe { sys::gsl_ran_logistic(self.unwrap_unique(), a) }
     }
@@ -627,6 +674,7 @@ impl Rng {
     /// p(x) dx = {1 \over x \sqrt{2 \pi \sigma^2} } \exp(-(\ln(x) - \zeta)^2/2 \sigma^2) dx
     ///
     /// for x > 0.
+    #[doc(alias = "gsl_ran_lognormal")]
     pub fn lognormal(&mut self, zeta: f64, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_lognormal(self.unwrap_unique(), zeta, sigma) }
     }
@@ -637,6 +685,7 @@ impl Rng {
     /// p(k) = {\Gamma(n + k) \over \Gamma(k+1) \Gamma(n) } p^n (1-p)^k
     ///
     /// Note that n is not required to be an integer.
+    #[doc(alias = "gsl_ran_negative_binomial")]
     pub fn negative_binomial(&mut self, p: f64, n: f64) -> u32 {
         unsafe { sys::gsl_ran_negative_binomial(self.unwrap_unique(), p, n) }
     }
@@ -646,6 +695,7 @@ impl Rng {
     /// p(x) dx = (a/b) / (x/b)^{a+1} dx
     ///
     /// for x >= b.
+    #[doc(alias = "gsl_ran_pareto")]
     pub fn pareto(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_pareto(self.unwrap_unique(), a, b) }
     }
@@ -655,6 +705,7 @@ impl Rng {
     /// p(k) = {(n + k - 1)! \over k! (n - 1)! } p^n (1-p)^k
     ///
     /// for k >= 0
+    #[doc(alias = "gsl_ran_pascal")]
     pub fn pascal(&mut self, p: f64, n: u32) -> u32 {
         unsafe { sys::gsl_ran_pascal(self.unwrap_unique(), p, n) }
     }
@@ -664,6 +715,7 @@ impl Rng {
     /// p(k) = {\mu^k \over k!} \exp(-\mu)
     ///
     /// for k >= 0.
+    #[doc(alias = "gsl_ran_poisson")]
     pub fn poisson(&mut self, mu: f64) -> u32 {
         unsafe { sys::gsl_ran_poisson(self.unwrap_unique(), mu) }
     }
@@ -673,6 +725,7 @@ impl Rng {
     /// p(x) dx = {x \over \sigma^2} \exp(- x^2/(2 \sigma^2)) dx
     ///
     /// for x > 0.
+    #[doc(alias = "gsl_ran_rayleigh")]
     pub fn rayleigh(&mut self, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_rayleigh(self.unwrap_unique(), sigma) }
     }
@@ -682,6 +735,7 @@ impl Rng {
     /// p(x) dx = {x \over \sigma^2} \exp ((a^2 - x^2) /(2 \sigma^2)) dx
     ///
     /// for x > a.
+    #[doc(alias = "gsl_ran_rayleigh_tail")]
     pub fn rayleigh_tail(&mut self, a: f64, sigma: f64) -> f64 {
         unsafe { sys::gsl_ran_rayleigh_tail(self.unwrap_unique(), a, sigma) }
     }
@@ -696,6 +750,7 @@ impl Rng {
     /// a unit circle, and then x=(u^2-v^2)/(u^2+v^2) and y=2uv/(u^2+v^2).
     ///
     /// Returns `(x, y)`.
+    #[doc(alias = "gsl_ran_dir_2d")]
     pub fn dir_2d(&mut self) -> (f64, f64) {
         let mut x = 0.;
         let mut y = 0.;
@@ -713,6 +768,7 @@ impl Rng {
     /// a unit circle, and then x=(u^2-v^2)/(u^2+v^2) and y=2uv/(u^2+v^2).
     ///
     /// Returns `(x, y)`.
+    #[doc(alias = "gsl_ran_dir_2d_trig_method")]
     pub fn dir_2d_trig_method(&mut self) -> (f64, f64) {
         let mut x = 0.;
         let mut y = 0.;
@@ -725,6 +781,7 @@ impl Rng {
     /// distribution projected along any axis is actually uniform (this is only true for 3 dimensions).
     ///
     /// Returns `(x, y, z)`.
+    #[doc(alias = "gsl_ran_dir_3d")]
     pub fn dir_3d(&mut self) -> (f64, f64, f64) {
         let mut x = 0.;
         let mut y = 0.;
@@ -736,6 +793,7 @@ impl Rng {
     /// This function returns a random direction vector v = (x_1,x_2,...,x_n) in n dimensions. The vector is normalized such that |v|^2 = x_1^2 + x_2^2 + ... + x_n^2 = 1.
     /// The method uses the fact that a multivariate Gaussian distribution is spherically symmetric. Each component is generated to have a Gaussian distribution, and then
     /// the components are normalized. The method is described by Knuth, v2, 3rd ed, p135–136, and attributed to G. W. Brown, Modern Mathematics for the Engineer (1956).
+    #[doc(alias = "gsl_ran_dir_nd")]
     pub fn dir_nd(&mut self, x: &mut [f64]) {
         unsafe { sys::gsl_ran_dir_nd(self.unwrap_unique(), x.len() as _, x.as_mut_ptr()) }
     }
@@ -747,6 +805,7 @@ impl Rng {
     ///    (1 + x^2/\nu)^{-(\nu + 1)/2} dx
     ///
     /// for -\infty < x < +\infty.
+    #[doc(alias = "gsl_ran_tdist")]
     pub fn tdist(&mut self, nu: f64) -> f64 {
         unsafe { sys::gsl_ran_tdist(self.unwrap_unique(), nu) }
     }
@@ -756,6 +815,7 @@ impl Rng {
     /// p(x) dx = {b \over a^b} x^{b-1}  \exp(-(x/a)^b) dx
     ///
     /// for x >= 0.
+    #[doc(alias = "gsl_ran_weibull")]
     pub fn weibull(&mut self, a: f64, b: f64) -> f64 {
         unsafe { sys::gsl_ran_weibull(self.unwrap_unique(), a, b) }
     }
@@ -763,6 +823,7 @@ impl Rng {
 
 impl Clone for Rng {
     /// This function returns a pointer to a newly created generator which is an exact copy of the generator r.
+    #[doc(alias = "gsl_rng_clone")]
     fn clone(&self) -> Rng {
         unsafe { FFI::wrap(sys::gsl_rng_clone(self.unwrap_shared())) }
     }
@@ -829,6 +890,7 @@ impl RngType {
     ///     println!("{}", tmp.name);
     /// }
     /// ```
+    #[doc(alias = "gsl_rng_types_setup")]
     pub fn types_setup() -> Vec<RngType> {
         let ptr = unsafe { sys::gsl_rng_types_setup() };
         let mut ret = Vec::new();
@@ -862,6 +924,7 @@ impl RngType {
     ///
     /// If you don’t specify a generator for GSL_RNG_TYPE then gsl_rng_mt19937 is used as the default. The initial value of gsl_rng_default_seed is zero.
     /// See rng example in examples folder for more details.
+    #[doc(alias = "gsl_rng_env_setup")]
     pub fn env_setup() -> Option<RngType> {
         let tmp = unsafe { sys::gsl_rng_env_setup() };
 

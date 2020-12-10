@@ -24,6 +24,7 @@ impl PolyComplexWorkspace {
     ///
     /// The function returns a pointer to the newly allocated gsl_poly_complex_workspace if no errors were detected, and a null pointer in the case
     /// of error.
+    #[doc(alias = "gsl_poly_complex_workspace_alloc")]
     pub fn new(n: usize) -> Option<Self> {
         let tmp = unsafe { sys::gsl_poly_complex_workspace_alloc(n) };
 
@@ -43,6 +44,7 @@ impl PolyComplexWorkspace {
     /// code of Failed. Note that due to finite precision, roots of higher multiplicity are returned as a cluster of simple roots with reduced
     /// accuracy. The solution of polynomials with higher-order roots requires specialized algorithms that take the multiplicity structure into
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
+    #[doc(alias = "gsl_poly_complex_solve")]
     pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> Value {
         Value::from(unsafe {
             sys::gsl_poly_complex_solve(

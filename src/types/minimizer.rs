@@ -118,6 +118,7 @@ impl Minimizer {
     ///
     /// If there is insufficient memory to create the minimizer then the function returns a null
     /// pointer and the error handler is invoked with an error code of ::NoMem.
+    #[doc(alias = "gsl_min_fminimizer_alloc")]
     pub fn new(t: MinimizerType) -> Option<Minimizer> {
         let ptr = unsafe { sys::gsl_min_fminimizer_alloc(t.unwrap_shared()) };
 
@@ -133,6 +134,7 @@ impl Minimizer {
     ///
     /// If the interval given does not contain a minimum, then the function returns an error code of
     /// ::Value::Invalid.
+    #[doc(alias = "gsl_min_fminimizer_set")]
     pub fn set<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -154,6 +156,7 @@ impl Minimizer {
 
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower
     /// and f_upper instead of computing f(x_minimum), f(x_lower) and f(x_upper).
+    #[doc(alias = "gsl_min_fminimizer_set_with_values")]
     pub fn set_with_values<F: Fn(f64) -> f64>(
         &mut self,
         f: F,
@@ -179,6 +182,7 @@ impl Minimizer {
         })
     }
 
+    #[doc(alias = "gsl_min_fminimizer_name")]
     pub fn name(&self) -> Option<String> {
         let n = unsafe { sys::gsl_min_fminimizer_name(self.unwrap_shared()) };
         if n.is_null() {
@@ -195,30 +199,37 @@ impl Minimizer {
         ::std::str::from_utf8(slice).ok().map(|x| x.to_owned())
     }
 
+    #[doc(alias = "gsl_min_fminimizer_x_minimum")]
     pub fn x_minimum(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_x_minimum(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_min_fminimizer_x_lower")]
     pub fn x_lower(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_x_lower(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_min_fminimizer_x_upper")]
     pub fn x_upper(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_x_upper(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_min_fminimizer_f_minimum")]
     pub fn f_minimum(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_f_minimum(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_min_fminimizer_f_lower")]
     pub fn f_lower(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_f_lower(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_min_fminimizer_f_upper")]
     pub fn f_upper(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_f_upper(self.unwrap_shared()) }
     }
 
+    #[doc(alias = "gsl_min_fminimizer_minimum")]
     pub fn minimum(&self) -> f64 {
         unsafe { sys::gsl_min_fminimizer_minimum(self.unwrap_shared()) }
     }
@@ -235,6 +246,7 @@ impl Minimizer {
     /// The minimizer maintains a current best estimate of the position of the minimum at all times,
     /// and the current interval bounding the minimum. This information can be accessed with the
     /// following auxiliary functions,
+    #[doc(alias = "gsl_min_fminimizer_iterate")]
     pub fn iterate(&mut self) -> ::Value {
         ::Value::from(unsafe { sys::gsl_min_fminimizer_iterate(self.unwrap_unique()) })
     }

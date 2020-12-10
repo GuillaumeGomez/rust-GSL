@@ -25,38 +25,47 @@ pub trait Elementary {
 }
 
 impl Elementary for f64 {
+    #[doc(alias = "gsl_log1p")]
     fn log1p(&self) -> f64 {
         unsafe { sys::gsl_log1p(*self) }
     }
 
+    #[doc(alias = "gsl_expm1")]
     fn expm1(&self) -> f64 {
         unsafe { sys::gsl_expm1(*self) }
     }
 
+    #[doc(alias = "gsl_hypot")]
     fn hypot(&self, y: f64) -> f64 {
         unsafe { sys::gsl_hypot(*self, y) }
     }
 
+    #[doc(alias = "gsl_hypot3")]
     fn hypot3(&self, y: f64, z: f64) -> f64 {
         unsafe { sys::gsl_hypot3(*self, y, z) }
     }
 
+    #[doc(alias = "gsl_acosh")]
     fn acosh(&self) -> f64 {
         unsafe { sys::gsl_acosh(*self) }
     }
 
+    #[doc(alias = "gsl_asinh")]
     fn asinh(&self) -> f64 {
         unsafe { sys::gsl_asinh(*self) }
     }
 
+    #[doc(alias = "gsl_atanh")]
     fn atanh(&self) -> f64 {
         unsafe { sys::gsl_atanh(*self) }
     }
 
+    #[doc(alias = "gsl_ldexp")]
     fn ldexp(&self, e: i32) -> f64 {
         unsafe { sys::gsl_ldexp(*self, e) }
     }
 
+    #[doc(alias = "gsl_frexp")]
     fn frexp(&self, e: &mut i32) -> f64 {
         unsafe { sys::gsl_frexp(*self, e) }
     }

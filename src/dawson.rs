@@ -11,11 +11,13 @@ use crate::Value;
 use std::mem::MaybeUninit;
 
 /// This routine computes the value of Dawson’s integral for x.
+#[doc(alias = "gsl_sf_dawson")]
 pub fn dawson(x: f64) -> f64 {
     unsafe { ::sys::gsl_sf_dawson(x) }
 }
 
 /// This routine computes the value of Dawson’s integral for x.
+#[doc(alias = "gsl_sf_dawson_e")]
 pub fn dawson_e(x: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { ::sys::gsl_sf_dawson_e(x, result.as_mut_ptr()) };

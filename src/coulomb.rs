@@ -6,11 +6,13 @@ use crate::Value;
 use std::mem::MaybeUninit;
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
+#[doc(alias = "gsl_sf_hydrogenicR_1")]
 pub fn hydrogenicR_1(Z: f64, r: f64) -> f64 {
     unsafe { sys::gsl_sf_hydrogenicR_1(Z, r) }
 }
 
 /// This routine computes the lowest-order normalized hydrogenic bound state radial wavefunction R_1 := 2Z \sqrt{Z} \exp(-Z r).
+#[doc(alias = "gsl_sf_hydrogenicR_1_e")]
 pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_hydrogenicR_1_e(Z, r, result.as_mut_ptr()) };
@@ -25,6 +27,7 @@ pub fn hydrogenicR_1_e(Z: f64, r: f64) -> (Value, ::types::Result) {
 ///
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
+#[doc(alias = "gsl_sf_hydrogenicR")]
 pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
     unsafe { sys::gsl_sf_hydrogenicR(n, l, Z, r) }
 }
@@ -36,6 +39,7 @@ pub fn hydrogenicR(n: i32, l: i32, Z: f64, r: f64) -> f64 {
 ///
 /// where L^a_b(x) is the generalized Laguerre polynomial (see [`Laguerre Functions`](http://www.gnu.org/software/gsl/manual/html_node/Laguerre-Functions.html#Laguerre-Functions)).
 /// The normalization is chosen such that the wavefunction \psi is given by \psi(n,l,r) = R_n Y_{lm}.
+#[doc(alias = "gsl_sf_hydrogenicR_e")]
 pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_hydrogenicR_e(n, l, Z, r, result.as_mut_ptr()) };
@@ -47,6 +51,7 @@ pub fn hydrogenicR_e(n: i32, l: i32, Z: f64, r: f64) -> (Value, ::types::Result)
 /// If an overflow occurs, GSL_EOVRFLW is returned and scaling exponents are stored in the modifiable parameters exp_F, exp_G.
 ///
 /// Returns `(Value, F, Fp, G, Gp)`.
+#[doc(alias = "gsl_sf_coulomb_wave_FG_e")]
 pub fn wave_FG_e(
     eta: f64,
     x: f64,
@@ -93,6 +98,7 @@ pub fn wave_FG_e(
 /// storing the results in fc_array. In the case of overflow the exponent is stored in F_exponent.
 ///
 /// Returns `(Value, F_exponent)`.
+#[doc(alias = "gsl_sf_coulomb_wave_F_array")]
 pub fn wave_F_array(L_min: f64, eta: f64, x: f64, fc_array: &mut [f64]) -> (Value, f64) {
     let mut F_exponent = 0.;
     let ret = unsafe {
@@ -113,6 +119,7 @@ pub fn wave_F_array(L_min: f64, eta: f64, x: f64, fc_array: &mut [f64]) -> (Valu
 /// in F_exponent and G_exponent.
 ///
 /// Returns `(Value, F_exponent, G_exponent)`.
+#[doc(alias = "gsl_sf_coulomb_wave_FG_array")]
 pub fn wave_FG_array(
     L_min: f64,
     eta: f64,
@@ -143,6 +150,7 @@ pub fn wave_FG_array(
 /// F_exponent and G_exponent.
 ///
 /// Returns `(Value, F_exponent, G_exponent)`.
+#[doc(alias = "gsl_sf_coulomb_wave_FGp_array")]
 pub fn wave_FGp_array(
     L_min: f64,
     eta: f64,
@@ -177,6 +185,7 @@ pub fn wave_FGp_array(
 /// limit \eta \to 0.
 ///
 /// Returns `(Value, F_exponent)`.
+#[doc(alias = "gsl_sf_coulomb_wave_sphF_array")]
 pub fn wave_sphF_array(L_min: f64, eta: f64, x: f64, fc_array: &mut [f64]) -> (Value, f64) {
     let mut F_exponent = 0.;
     let ret = unsafe {
@@ -193,6 +202,7 @@ pub fn wave_sphF_array(L_min: f64, eta: f64, x: f64, fc_array: &mut [f64]) -> (V
 }
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L > -1.
+#[doc(alias = "gsl_sf_coulomb_CL_e")]
 pub fn CL_e(L: f64, eta: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_coulomb_CL_e(L, eta, result.as_mut_ptr()) };
@@ -201,6 +211,7 @@ pub fn CL_e(L: f64, eta: f64) -> (Value, ::types::Result) {
 }
 
 /// This function computes the Coulomb wave function normalization constant C_L(\eta) for L = Lmin \dots Lmin + kmax, Lmin > -1.
+#[doc(alias = "gsl_sf_coulomb_CL_array")]
 pub fn CL_array(Lmin: f64, eta: f64, cl: &mut [f64]) -> Value {
     Value::from(unsafe {
         sys::gsl_sf_coulomb_CL_array(Lmin, cl.len() as i32, eta, cl.as_mut_ptr())

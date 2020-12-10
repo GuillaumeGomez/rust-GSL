@@ -44,6 +44,7 @@ impl WriteNTuples {
     /// returns a pointer to the newly created ntuple struct. Any existing file with the same name
     /// is truncated to zero length and overwritten. A pointer to memory for the current ntuple
     /// row ntuple_data must be supplied-this is used to copy ntuples in and out of the file.
+    #[doc(alias = "gsl_ntuple_create")]
     pub fn create<P: AsRef<Path>>(filename: P) -> Option<WriteNTuples> {
         let filename = filename.as_ref();
         let filename = filename.to_str().expect("Failed to convert path to str");
@@ -61,6 +62,7 @@ impl WriteNTuples {
 
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the
     /// corresponding file.
+    #[doc(alias = "gsl_ntuple_write")]
     pub fn write<T: Sized>(&mut self, data: &T) -> Value {
         Value::from(unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
@@ -70,6 +72,7 @@ impl WriteNTuples {
     }
 
     /// This function is a synonym for NTuples::write.
+    #[doc(alias = "gsl_ntuple_bookdata")]
     pub fn bookdata<T: Sized>(&mut self, data: &T) -> Value {
         Value::from(unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
@@ -80,6 +83,7 @@ impl WriteNTuples {
 }
 
 impl Drop for WriteNTuples {
+    #[doc(alias = "gsl_ntuple_close")]
     fn drop(&mut self) {
         unsafe { sys::gsl_ntuple_close(self.n) };
     }
@@ -94,6 +98,7 @@ impl ReadNTuples {
     /// corresponding ntuple struct. The ntuples in the file must have size size. A pointer to
     /// memory for the current ntuple row ntuple_data must be supplied—this is used to copy ntuples
     /// in and out of the file.
+    #[doc(alias = "gsl_ntuple_open")]
     pub fn open<P: AsRef<Path>>(filename: P) -> Option<ReadNTuples> {
         let filename = filename.as_ref();
         let filename = filename.to_str().expect("Failed to convert path to str");
@@ -111,6 +116,7 @@ impl ReadNTuples {
 
     /// This function reads the current row of the ntuple file for ntuple and stores the values in
     /// ntuple->data.
+    #[doc(alias = "gsl_ntuple_read")]
     pub fn read<T: Sized>(&mut self) -> (Value, T) {
         let mut data = MaybeUninit::<T>::uninit();
 
@@ -124,6 +130,7 @@ impl ReadNTuples {
 }
 
 impl Drop for ReadNTuples {
+    #[doc(alias = "gsl_ntuple_close")]
     fn drop(&mut self) {
         unsafe { sys::gsl_ntuple_close(self.n) };
     }
@@ -138,6 +145,7 @@ macro_rules! impl_project {
             /// `value_func` and added to the histogram. Those ntuple rows where `select_func` returns
             /// `false` are ignored. New entries are added to the histogram, so subsequent calls can be used
             /// to accumulate further data in the same histogram.
+            #[doc(alias = "gsl_ntuple_project")]
             pub fn project<T: Sized, V: Fn(&T) -> f64, S: Fn(&T) -> bool>(
                 &self,
                 h: &mut ::Histogram,

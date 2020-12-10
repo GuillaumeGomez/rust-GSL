@@ -12,6 +12,7 @@ ffi_wrapper!(
 );
 
 impl MultifitLinearWorkspace {
+    #[doc(alias = "gsl_multifit_linear_alloc")]
     pub fn new(n: usize, p: usize) -> Option<Self> {
         let s = unsafe { sys::gsl_multifit_linear_alloc(n, p) };
         if s.is_null() {
@@ -22,6 +23,7 @@ impl MultifitLinearWorkspace {
     }
 
     /// Returns `(Value, chisq)`.
+    #[doc(alias = "gsl_multifit_linear")]
     pub fn linear(
         &mut self,
         x: &MatrixF64,
@@ -46,6 +48,7 @@ impl MultifitLinearWorkspace {
     /// Returns `(Value, chisq, rank)`.
     #[cfg(feature = "v2_3")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_3")))]
+    #[doc(alias = "gsl_multifit_linear_tsvd")]
     pub fn linear_tsvd(
         &mut self,
         x: &MatrixF64,
@@ -71,6 +74,7 @@ impl MultifitLinearWorkspace {
         (Value::from(ret), chisq, rank)
     }
 
+    #[doc(alias = "gsl_multifit_linear_svd")]
     pub fn linear_svd(&mut self, x: &MatrixF64) -> Value {
         unsafe {
             Value::from(sys::gsl_multifit_linear_svd(
@@ -80,6 +84,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_bsvd")]
     pub fn linear_linear_bsvd(&mut self, x: &MatrixF64) -> Value {
         unsafe {
             Value::from(sys::gsl_multifit_linear_bsvd(
@@ -91,11 +96,13 @@ impl MultifitLinearWorkspace {
 
     #[cfg(feature = "v2_3")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_3")))]
+    #[doc(alias = "gsl_multifit_linear_rank")]
     pub fn linear_rank(&self, tol: f64) -> usize {
         unsafe { sys::gsl_multifit_linear_rank(tol, self.unwrap_shared()) }
     }
 
     /// Returns `(Value, rnorm, snorm)`.
+    #[doc(alias = "gsl_multifit_linear_solve")]
     pub fn linear_solve(
         &mut self,
         lambda: f64,
@@ -119,6 +126,7 @@ impl MultifitLinearWorkspace {
         (Value::from(ret), rnorm, snorm)
     }
 
+    #[doc(alias = "gsl_multifit_linear_stdform1")]
     pub fn linear_stdform1(
         &mut self,
         l: &VectorF64,
@@ -139,6 +147,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_wstdform1")]
     pub fn linear_wstdform1(
         &mut self,
         l: &VectorF64,
@@ -161,6 +170,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_stdform2")]
     pub fn linear_stdform2(
         &mut self,
         lqr: &MatrixF64,
@@ -185,6 +195,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_wstdform2")]
     pub fn linear_wstdform2(
         &mut self,
         lqr: &MatrixF64,
@@ -211,6 +222,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_genform1")]
     pub fn linear_genform1(&mut self, l: &VectorF64, cs: &VectorF64, c: &mut VectorF64) -> Value {
         unsafe {
             Value::from(sys::gsl_multifit_linear_genform1(
@@ -222,6 +234,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_genform2")]
     pub fn linear_genform2(
         &mut self,
         lqr: &MatrixF64,
@@ -246,6 +259,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_wgenform2")]
     pub fn linear_wgenform2(
         &mut self,
         lqr: &MatrixF64,
@@ -272,6 +286,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_lcurve")]
     pub fn linear_lcurve(
         &mut self,
         y: &VectorF64,
@@ -290,6 +305,7 @@ impl MultifitLinearWorkspace {
         }
     }
 
+    #[doc(alias = "gsl_multifit_linear_Lsobolev")]
     pub fn linear_Lsobolev(
         &mut self,
         p: usize,
@@ -309,6 +325,7 @@ impl MultifitLinearWorkspace {
     }
 
     /// Returns `(Value, chisq)`.
+    #[doc(alias = "gsl_multifit_wlinear")]
     pub fn wlinear(
         &mut self,
         x: &MatrixF64,
@@ -335,6 +352,7 @@ impl MultifitLinearWorkspace {
     /// Returns `(Value, chisq, rank)`.
     #[cfg(feature = "v2_3")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_3")))]
+    #[doc(alias = "gsl_multifit_wlinear_tsvd")]
     pub fn wlinear_tsvd(
         &mut self,
         x: &MatrixF64,
@@ -363,6 +381,7 @@ impl MultifitLinearWorkspace {
     }
 
     /// Returns `(Value, rank, chisq)`.
+    #[doc(alias = "gsl_multifit_wlinear_svd")]
     pub fn wlinear_svd(
         &mut self,
         x: &MatrixF64,
@@ -391,6 +410,7 @@ impl MultifitLinearWorkspace {
     }
 
     /// Returns `(Value, rank, chisq)`.
+    #[doc(alias = "gsl_multifit_wlinear_usvd")]
     pub fn wlinear_usvd(
         &mut self,
         x: &MatrixF64,
@@ -420,11 +440,13 @@ impl MultifitLinearWorkspace {
 
     #[cfg(feature = "v2_1")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
+    #[doc(alias = "gsl_multifit_linear_rcond")]
     pub fn linear_rcond(&mut self) -> f64 {
         unsafe { sys::gsl_multifit_linear_rcond(self.unwrap_unique()) }
     }
 
     /// Returns `(Value, delta0)`.
+    #[doc(alias = "gsl_multifit_linear_gcv_init")]
     pub fn linear_gcv_init(
         &mut self,
         y: &VectorF64,
@@ -444,6 +466,7 @@ impl MultifitLinearWorkspace {
         (Value::from(ret), delta0)
     }
 
+    #[doc(alias = "gsl_multifit_linear_gcv_curve")]
     pub fn linear_gcv_curve(
         &mut self,
         reg_param: &VectorF64,
@@ -463,6 +486,7 @@ impl MultifitLinearWorkspace {
     }
 
     /// Returns `(Value, lambda)`.
+    #[doc(alias = "gsl_multifit_linear_gcv_min")]
     pub fn linear_gcv_min(
         &mut self,
         reg_param: &VectorF64,
@@ -484,6 +508,7 @@ impl MultifitLinearWorkspace {
         (Value::from(ret), lambda)
     }
 
+    #[doc(alias = "gsl_multifit_linear_gcv_calc")]
     pub fn linear_gcv_calc(&mut self, lambda: f64, UTy: &VectorF64, delta0: f64) -> f64 {
         unsafe {
             sys::gsl_multifit_linear_gcv_calc(
@@ -496,6 +521,7 @@ impl MultifitLinearWorkspace {
     }
 
     /// Returns `(Value, lambda, g_lambda)`.
+    #[doc(alias = "gsl_multifit_linear_gcv")]
     pub fn linear_gcv(
         &mut self,
         y: &VectorF64,

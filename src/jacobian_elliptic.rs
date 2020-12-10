@@ -12,6 +12,7 @@ use crate::Value;
 /// Landen transformations.
 ///
 /// Returns `(Value, sn, cn, dn)`.
+#[doc(alias = "gsl_sf_elljac_e")]
 pub fn elljac_e(u: f64, m: f64) -> (Value, f64, f64, f64) {
     let mut sn = 0.;
     let mut cn = 0.;
