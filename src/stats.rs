@@ -148,7 +148,7 @@ pub fn min(data: &[f64], stride: usize) -> f64 {
 
 /// Returns `(min, max)`.
 #[doc(alias = "gsl_stats_minmax")]
-pub fn gsl_stats_minmax(data: &[f64], stride: usize) -> (f64, f64) {
+pub fn stats_minmax(data: &[f64], stride: usize) -> (f64, f64) {
     let mut min = 0.;
     let mut max = 0.;
 
@@ -168,7 +168,7 @@ pub fn min_index(data: &[f64], stride: usize) -> usize {
 
 /// Returns `(min, max)`.
 #[doc(alias = "gsl_stats_minmax_index")]
-pub fn gsl_stats_minmax_index(data: &[f64], stride: usize) -> (usize, usize) {
+pub fn stats_minmax_index(data: &[f64], stride: usize) -> (usize, usize) {
     let mut min = 0;
     let mut max = 0;
 
