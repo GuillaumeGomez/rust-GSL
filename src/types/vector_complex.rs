@@ -103,6 +103,10 @@ macro_rules! gsl_vec_complex {
                 }
             }
 
+            pub fn is_empty(&self) -> bool {
+                self.len() == 0
+            }
+
             pub fn as_slice(&self) -> Option<&[$rust_ty]> {
                 let ptr = unsafe { (*self.unwrap_shared()).data };
                 if ptr.is_null() {

@@ -15,6 +15,7 @@ enum Mode {
 }
 
 /// A wrapper to handle I/O operations between GSL and rust
+#[allow(clippy::upper_case_acronyms)]
 pub struct IOStream {
     inner: *mut FILE,
     mode: Mode,

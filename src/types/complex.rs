@@ -9,12 +9,14 @@ use std::fmt;
 use std::fmt::{Debug, Formatter};
 
 #[doc(hidden)]
+#[allow(clippy::upper_case_acronyms)]
 pub trait CFFI<T> {
     fn wrap(s: T) -> Self;
     fn unwrap(self) -> T;
 }
 
 #[doc(hidden)]
+#[allow(clippy::upper_case_acronyms)]
 pub trait FFFI<T> {
     fn wrap(self) -> T;
     fn unwrap(t: T) -> Self;

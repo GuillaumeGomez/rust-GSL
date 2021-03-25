@@ -59,6 +59,8 @@ A. C. Hindmarsh, P. N. Brown, K. E. Grant, S. L. Lee, R. Serban, D. E. Shumaker 
 Differential/Algebraic Equation Solvers.”, ACM Trans. Math. Software 31, 363–396, 2005.
 !*/
 
+#![allow(clippy::upper_case_acronyms)]
+
 use crate::Value;
 use ffi::FFI;
 use std::os::raw::{c_int, c_void};
