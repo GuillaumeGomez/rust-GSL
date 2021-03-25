@@ -11,7 +11,7 @@ pub enum Mode {
     PrecApprox,
 }
 
-#[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::gsl_mode_t> for Mode {
     fn into(self) -> sys::gsl_mode_t {
         match self {
@@ -103,6 +103,7 @@ pub enum Value {
     /// cannot reach the specified tolerance in gradient
     ToleranceG,
     /// cannot reach the specified tolerance in gradient
+    #[allow(clippy::upper_case_acronyms)]
     EOF,
     /// Unknown value.
     Unknown(i32),
@@ -115,6 +116,7 @@ impl Value {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<c_int> for Value {
     fn into(self) -> c_int {
         match self {
@@ -215,6 +217,7 @@ pub enum EigenSort {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::gsl_eigen_sort_t> for EigenSort {
     fn into(self) -> sys::gsl_eigen_sort_t {
         match self {
@@ -253,6 +256,7 @@ pub enum FftDirection {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::gsl_fft_direction> for FftDirection {
     fn into(self) -> sys::gsl_fft_direction {
         match self {
@@ -292,6 +296,7 @@ pub enum GaussKronrodRule {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<::std::os::raw::c_int> for GaussKronrodRule {
     fn into(self) -> ::std::os::raw::c_int {
         let x = match self {
@@ -329,6 +334,7 @@ pub enum IntegrationQawo {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::gsl_integration_qawo_enum> for IntegrationQawo {
     fn into(self) -> sys::gsl_integration_qawo_enum {
         match self {
@@ -364,6 +370,7 @@ pub enum VegasMode {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<::std::os::raw::c_int> for VegasMode {
     fn into(self) -> ::std::os::raw::c_int {
         match self {
@@ -398,6 +405,7 @@ pub enum ODEiv {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<c_int> for ODEiv {
     fn into(self) -> c_int {
         match self {
@@ -427,6 +435,7 @@ pub enum WaveletDirection {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::gsl_wavelet_direction> for WaveletDirection {
     fn into(self) -> sys::gsl_wavelet_direction {
         match self {
@@ -456,6 +465,7 @@ pub enum SfLegendreNorm {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::gsl_sf_legendre_t> for SfLegendreNorm {
     fn into(self) -> sys::gsl_sf_legendre_t {
         match self {
@@ -488,6 +498,7 @@ pub enum CblasTranspose {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::CBLAS_TRANSPOSE> for CblasTranspose {
     fn into(self) -> sys::CBLAS_TRANSPOSE {
         match self {
@@ -517,6 +528,7 @@ pub enum CblasUplo {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::CBLAS_UPLO> for CblasUplo {
     fn into(self) -> sys::CBLAS_UPLO {
         match self {
@@ -544,6 +556,7 @@ pub enum CblasOrder {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::CBLAS_ORDER> for CblasOrder {
     fn into(self) -> sys::CBLAS_ORDER {
         match self {
@@ -571,6 +584,7 @@ pub enum CblasSide {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::CBLAS_SIDE> for CblasSide {
     fn into(self) -> sys::CBLAS_SIDE {
         match self {
@@ -598,6 +612,7 @@ pub enum CblasDiag {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 impl Into<sys::CBLAS_SIDE> for CblasDiag {
     fn into(self) -> sys::CBLAS_SIDE {
         match self {
@@ -628,6 +643,7 @@ pub enum FilterEnd {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 #[cfg(feature = "v2_5")]
 impl Into<sys::gsl_filter_end_t> for FilterEnd {
     fn into(self) -> sys::gsl_filter_end_t {
@@ -663,6 +679,7 @@ pub enum FilterScale {
 }
 
 #[doc(hidden)]
+#[allow(clippy::from_over_into)]
 #[cfg(feature = "v2_5")]
 impl Into<sys::gsl_filter_scale_t> for FilterScale {
     fn into(self) -> sys::gsl_filter_scale_t {
