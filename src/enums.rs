@@ -394,6 +394,7 @@ impl From<::std::os::raw::c_int> for VegasMode {
 }
 
 /// Possible return values for an hadjust() evolution method for ordinary differential equations
+#[allow(clippy::upper_case_acronyms)]
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
 pub enum ODEiv {
     /// step was increased

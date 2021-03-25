@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+#![allow(clippy::upper_case_acronyms)]
+
 use crate::enums;
 use crate::Value;
 use ffi::FFI;
