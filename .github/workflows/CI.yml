@@ -23,6 +23,8 @@ jobs:
         with:
           toolchain: ${{ matrix.rust }}
           override: true
+          components: clippy
+      - run: cargo clippy -- -D warnings
       - run: cargo check
       - run: cargo check --features v2_1
       - run: cargo check --features v2_2
