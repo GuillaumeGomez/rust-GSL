@@ -102,8 +102,11 @@ impl Interp {
     /// arrays xa and ya and only stores the static state computed from the data. The xa data array
     /// is always assumed to be strictly ordered, with increasing x values; the behavior for other
     /// arrangements is not defined.
+    ///
+    /// Asserts that `ya.len() >= xa.len()`.
     #[doc(alias = "gsl_interp_init")]
     pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
+        assert!(ya.len() >= xa.len());
         Value::from(unsafe {
             sys::gsl_interp_init(
                 self.unwrap_unique(),
