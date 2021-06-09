@@ -564,8 +564,8 @@ pub enum VegasVerbosity {
 }
 
 impl VegasVerbosity {
-    fn to_int(&self) -> i32 {
-        match *self {
+    fn to_int(self) -> i32 {
+        match self {
             VegasVerbosity::Off => -1,
             VegasVerbosity::Summary => 0,
             VegasVerbosity::Grid => 1,
@@ -573,8 +573,8 @@ impl VegasVerbosity {
         }
     }
 
-    fn is_off(&self) -> bool {
-        matches!(*self, VegasVerbosity::Off)
+    fn is_off(self) -> bool {
+        matches!(self, VegasVerbosity::Off)
     }
 }
 
