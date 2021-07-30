@@ -13,11 +13,22 @@ This binding requires the [GSL library] library (version >= 2) to be installed:
 sudo apt-get install libgsl0-dev
 ```
 
-### OSX
+### macOS
 
 ```bash
 brew install gsl
 ```
+
+#### Apple silicon
+Homebrew installs libraries under `/opt/homebrew/include` on Apple silicon to [maintain backward compatibility with Rosetta 2](https://docs.brew.sh/FAQ#why-is-the-default-installation-prefix-opthomebrew-on-apple-silicon). 
+
+After `gsl` has been installed in the usual way, use the [environment variable](https://doc.rust-lang.org/cargo/reference/environment-variables.html)
+
+```
+RUSTFLAGS='-L /opt/homebrew/include'
+```
+
+before `cargo run`, `cargo build`, etc., to tell the compiler where `gsl` is located.
 
 ### Windows
 
