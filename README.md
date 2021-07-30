@@ -2,6 +2,8 @@
 
 A __Rust__ binding for the [GSL library][GSL library] (the GNU Scientific Library).
 
+The minimum support Rust version is __1.54__.
+
 ## Installation
 
 This binding requires the [GSL library] library (version >= 2) to be installed:
@@ -20,11 +22,14 @@ brew install gsl
 ```
 
 #### Apple silicon
-Homebrew installs libraries under `/opt/homebrew/include` on Apple silicon to [maintain backward compatibility with Rosetta 2](https://docs.brew.sh/FAQ#why-is-the-default-installation-prefix-opthomebrew-on-apple-silicon). 
 
-After `gsl` has been installed in the usual way, use the [environment variable](https://doc.rust-lang.org/cargo/reference/environment-variables.html)
+Homebrew installs libraries under `/opt/homebrew/include` on Apple silicon
+to [maintain backward compatibility with Rosetta 2](https://docs.brew.sh/FAQ#why-is-the-default-installation-prefix-opthomebrew-on-apple-silicon). 
 
-```
+After `gsl` has been installed in the usual way, use
+the [environment variable](https://doc.rust-lang.org/cargo/reference/environment-variables.html):
+
+```bash
 RUSTFLAGS='-L /opt/homebrew/include'
 ```
 
@@ -66,7 +71,7 @@ features = ["v2_1"]
 
 You can access the __rgsl__ documentation locally, just build it:
 
-```Shell
+```shell
 > cargo doc --open
 ```
 

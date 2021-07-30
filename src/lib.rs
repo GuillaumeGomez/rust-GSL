@@ -2,29 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-//! A __Rust__ binding for the [GSL library][] (the GNU Scientific Library).
-//!
-//! ## Installation
-//!
-//! This binding requires the [GSL library] library (>= 2) to be installed.
-//!
-//! ## Documentation
-//!
-//! You can access the latest version of the documentation via the internet
-//! [here](https://docs.rs/crate/GSL/).
-//!
-//! ## Examples
-//!
-//! Examples are available in the `examples` folder. Don't hesitate to take a look!
-//!
-//! ## License
-//!
-//! __rust-GSL__ is a wrapper for __GSL__, therefore inherits the
-//! [GPL license](http://www.gnu.org/copyleft/gpl.html).
-//!
-//! [crates.io]: https://crates.io/crates/GSL
-//! [GSL library]: http://www.gnu.org/software/gsl/
-
 #![crate_name = "rgsl"]
 #![crate_type = "rlib"]
 #![crate_type = "dylib"]
@@ -36,6 +13,7 @@
 #![allow(clippy::many_single_char_names)]
 #![allow(clippy::should_implement_trait)]
 #![allow(clippy::type_complexity)]
+#![doc = include_str!("../README.md")]
 
 extern crate gsl_sys as sys;
 extern crate paste;
