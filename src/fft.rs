@@ -3,7 +3,7 @@
 //
 
 /*!
-#Fast Fourier Transforms (FFTs)
+# Fast Fourier Transforms (FFTs)
 
 This chapter describes functions for performing Fast Fourier Transforms (FFTs). The library includes radix-2 routines (for lengths which are
 a power of two) and mixed-radix routines (which work for any length). For efficiency there are separate versions of the routines for real data
@@ -11,7 +11,7 @@ and for complex data. The mixed-radix routines are a reimplementation of the FFT
 is available on Netlib (FFTPACK also includes some routines for sine and cosine transforms but these are currently not available in GSL). For
 details and derivations of the underlying algorithms consult the document GSL FFT Algorithms (see FFT References and Further Reading)
 
-##Mathematical Definitions
+## Mathematical Definitions
 
 Fast Fourier Transforms are efficient algorithms for calculating the discrete Fourier transform (DFT),
 
@@ -45,7 +45,7 @@ z^{backwards}_j = \sum_{k=0}^{n-1} x_k \exp(2\pi i j k / n).
 When the overall scale of the result is unimportant it is often convenient to use the backwards FFT instead of the inverse to save unnecessary
 divisions.
 
-##Overview of complex data FFTs
+## Overview of complex data FFTs
 
 The inputs and outputs for the complex FFT routines are packed arrays of floating point numbers. In a packed array the real and imaginary parts
 of each complex number are placed in alternate neighboring elements. For example, the following definition of a packed array of length 6,
@@ -99,13 +99,13 @@ n-1      z(t = n-1)      x(f = -1/(n Delta))
 When n is even the location n/2 contains the most positive and negative frequencies (+1/(2 \Delta), -1/(2 \Delta)) which are equivalent. If
 n is odd then general structure of the table above still applies, but n/2 does not appear.
 
-#Radix-2 FFT routines for complex data
+# Radix-2 FFT routines for complex data
 
 The radix-2 algorithms described in this section are simple and compact, although not necessarily the most efficient. They use the Cooley-Tukey
 algorithm to compute in-place complex FFTs for lengths which are a power of 2—no additional storage is required. The corresponding self-sorting
 mixed-radix routines offer better performance at the expense of requiring additional working space.
 
-##Mixed-radix FFT routines for complex data
+## Mixed-radix FFT routines for complex data
 
 This section describes mixed-radix FFT algorithms for complex data. The mixed-radix functions work for FFTs of any length. They are a
 reimplementation of Paul Swarztrauber’s Fortran FFTPACK library. The theory is explained in the review article Self-sorting Mixed-radix FFTs
@@ -127,7 +127,7 @@ n \sum f_i, where the f_i are the factors of n. For programs under user control 
 when the length is poorly factorized. If you frequently encounter data lengths which cannot be factorized using the existing small-prime modules
 consult GSL FFT Algorithms for details on adding support for other factors.
 
-##Overview of real data FFTs
+## Overview of real data FFTs
 
 The functions for real data are similar to those for complex data. However, there is an important difference between forward and inverse transforms.
 The Fourier transform of a real sequence is not real. It is a complex sequence with a special symmetry:

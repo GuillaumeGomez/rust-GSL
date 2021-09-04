@@ -3,7 +3,7 @@
 //
 
 /*!
-#Random Number Distributions
+# Random Number Distributions
 
 This chapter describes functions for generating random variates and computing their probability distributions.
 Samples from the distributions described in this chapter can be obtained using any of the random number generators in the library as an underlying source of randomness.
@@ -17,7 +17,7 @@ The cumulative distribution functions and their inverses are computed separately
 
 Note that the discrete random variate functions always return a value of type unsigned int, and on most platforms this has a maximum value of 2^32-1 ~=~ 4.29e9. They should only be called with a safe range of parameters (where there is a negligible probability of a variate exceeding this limit) to prevent incorrect results due to overflow.
 
-##Introduction
+## Introduction
 
 Continuous random number distributions are defined by a probability density function, p(x), such that the probability of x occurring in the infinitesimal range x to x+dx is p dx.
 

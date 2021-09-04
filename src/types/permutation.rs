@@ -12,7 +12,7 @@ use std::fmt::{Debug, Formatter};
 
 ffi_wrapper!(Permutation, *mut sys::gsl_permutation, gsl_permutation_free);
 
-/// ##Permutations in cyclic form
+/// ## Permutations in cyclic form
 ///
 /// A permutation can be represented in both linear and cyclic notations. The functions described in this section convert between the two forms.
 /// The linear notation is an index mapping, and has already been described above. The cyclic notation expresses a permutation as a series of

@@ -3,7 +3,7 @@
 //
 
 /*!
-##Introduction
+## Introduction
 
 Each algorithm computes an approximation to a definite integral of the form,
 
@@ -48,26 +48,26 @@ an estimate of the error in the approximation.
  * [Integrands with weight functions](http://www.gnu.org/software/gsl/manual/html_node/Integrands-with-weight-functions.html#Integrands-with-weight-functions)
  * [Integrands with singular weight functions](http://www.gnu.org/software/gsl/manual/html_node/Integrands-with-singular-weight-functions.html#Integrands-with-singular-weight-functions)
 
-##QNG non-adaptive Gauss-Kronrod integration
+## QNG non-adaptive Gauss-Kronrod integration
 
 The QNG algorithm is a non-adaptive procedure which uses fixed Gauss-Kronrod-Patterson abscissae to sample the integrand at a maximum of 87
 points. It is provided for fast integration of smooth functions.
 
-##QAG adaptive integration
+## QAG adaptive integration
 
 The QAG algorithm is a simple adaptive integration procedure. The integration region is divided into subintervals, and on each iteration the
 subinterval with the largest estimated error is bisected. This reduces the overall error rapidly, as the subintervals become concentrated
 around local difficulties in the integrand. These subintervals are managed by a gsl_integration_workspace struct, which handles the memory
 for the subinterval ranges, results and error estimates.
 
-##QAGS adaptive integration with singularities
+## QAGS adaptive integration with singularities
 
 The presence of an integrable singularity in the integration region causes an adaptive routine to concentrate new subintervals around the
 singularity. As the subintervals decrease in size the successive approximations to the integral converge in a limiting fashion. This
 approach to the limit can be accelerated using an extrapolation procedure. The QAGS algorithm combines adaptive bisection with the Wynn
 epsilon-algorithm to speed up the integration of many types of integrable singularities.
 
-##References and Further Reading
+## References and Further Reading
 
 The following book is the definitive reference for QUADPACK, and was written by the original authors. It provides descriptions of the
 algorithms, program listings, test programs and examples. It also includes useful advice on numerical integration and many references

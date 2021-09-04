@@ -3,7 +3,7 @@
 //
 
 /*!
-#Sorting
+# Sorting
 
 This chapter describes functions for sorting data, both directly and indirectly (using an index). All the functions use the heapsort algorithm.
 Heapsort is an O(N \log N) algorithm which operates in-place and does not require any additional storage. It also provides consistent performance,
@@ -11,7 +11,7 @@ the running time for its worst-case (ordered data) being not significantly longe
 does not preserve the relative ordering of equal elements—it is an unstable sort. However the resulting order of equal elements will be consistent
 across different platforms when using these functions.
 
-##References and Further Reading
+## References and Further Reading
 
 The subject of sorting is covered extensively in Knuth’s Sorting and Searching,
 

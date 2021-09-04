@@ -3,7 +3,7 @@
 //
 
 /*!
-#Matrices
+# Matrices
 
 Matrices are defined by a gsl_matrix structure which describes a generalized slice of a block. Like a vector it represents a set of
 elements in an area of memory, but uses two indices instead of one.
@@ -42,7 +42,7 @@ pointer block stores the location of the memory block in which the elements of t
 block then the owner field is set to one and the block will be deallocated when the matrix is freed. If the matrix is only a slice of a
 block owned by another object then the owner field is zero and any underlying block will not be freed.
 
-##References and Further Reading
+## References and Further Reading
 
 The block, vector and matrix objects in GSL follow the valarray model of C++. A description of this model can be found in the following
 reference,

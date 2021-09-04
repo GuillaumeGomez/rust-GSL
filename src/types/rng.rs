@@ -3,14 +3,14 @@
 //
 
 /*!
-#Random Number Generation
+# Random Number Generation
 
 The library provides a large collection of random number generators which can be accessed through a uniform interface.
 Environment variables allow you to select different generators and seeds at runtime, so that you can easily switch between generators without needing to recompile your program.
 Each instance of a generator keeps track of its own state, allowing the generators to be used in multi-threaded programs.
 Additional functions are available for transforming uniform random numbers into samples from continuous or discrete probability distributions such as the Gaussian, log-normal or Poisson distributions.
 
-##General comments on random numbers
+## General comments on random numbers
 
 In 1988, Park and Miller wrote a paper entitled “Random number generators: good ones are hard to find.” [Commun. ACM, 31, 1192–1201]. Fortunately, some excellent random number generators are available, though poor ones are still in common use. You may be happy with the system-supplied random number generator on your computer, but you should be aware that as computers get faster, requirements on random number generators increase. Nowadays, a simulation that calls a random number generator millions of times can often finish before you can make it down the hall to the coffee machine and back.
 
@@ -18,14 +18,14 @@ A very nice review of random number generators was written by Pierre L’Ecuyer,
 
 A good random number generator will satisfy both theoretical and statistical properties. Theoretical properties are often hard to obtain (they require real math!), but one prefers a random number generator with a long period, low serial correlation, and a tendency not to “fall mainly on the planes.” Statistical tests are performed with numerical simulations. Generally, a random number generator is used to estimate some quantity for which the theory of probability provides an exact answer. Comparison to this exact answer provides a measure of “randomness”.
 
-##The Random Number Generator Interface
+## The Random Number Generator Interface
 
 It is important to remember that a random number generator is not a “real” function like sine or cosine. Unlike real functions, successive calls to a random number generator yield different return values. Of course that is just what you want for a random number generator, but to achieve this effect, the generator must keep track of some kind of “state” variable.
 Sometimes this state is just an integer (sometimes just the value of the previously generated random number), but often it is more complicated than that and may involve a whole array of numbers, possibly with some indices thrown in. To use the random number generators, you do not need to know the details of what comprises the state, and besides that varies from algorithm to algorithm.
 
 The random number generator library uses two special structs, RngType which holds static information about each type of generator and Rng which describes an instance of a generator created from a given RngType.
 
-##Performance
+## Performance
 
 The following table shows the relative performance of a selection the available random number generators. The fastest simulation quality generators are taus, gfsr4 and mt19937. The generators which offer the best mathematically-proven quality are those based on the RANLUX algorithm.
 
@@ -42,11 +42,11 @@ The following table shows the relative performance of a selection the available 
  *  247 k ints/sec,    198 k doubles/sec, ranlux389
  *  141 k ints/sec,    140 k doubles/sec, ranlxd2
 
-##Random number environment variables
+## Random number environment variables
 
 The library allows you to choose a default generator and seed from the environment variables GSL_RNG_TYPE and GSL_RNG_SEED and the function gsl_rng_env_setup. This makes it easy try out different generators and seeds without having to recompile your program.
 
-##References and Further Reading
+## References and Further Reading
 
 The subject of random number generation and testing is reviewed extensively in Knuth’s Seminumerical Algorithms.
 
@@ -65,7 +65,7 @@ A comprehensive set of random number generator tests is available from NIST,
 NIST Special Publication 800-22, “A Statistical Test Suite for the Validation of Random Number Generators and Pseudo Random Number Generators for Cryptographic Applications”.
 http://csrc.nist.gov/rng/
 
-##Acknowledgements
+## Acknowledgements
 
 Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the source code to their generators (MT19937, MM&TN; TT800, MM&YK) available under the GNU General Public License. Thanks to Martin Lüscher for providing notes and source code for the RANLXS and RANLXD generators.
 !*/
@@ -1249,7 +1249,7 @@ pub mod unix {
     }
 }
 
-/// ##Other random number generators
+/// ## Other random number generators
 ///
 /// The generators in this section are provided for compatibility with existing libraries. If you are converting an existing program to use GSL then
 /// you can select these generators to check your new implementation against the original one, using the same random number generator. After verifying

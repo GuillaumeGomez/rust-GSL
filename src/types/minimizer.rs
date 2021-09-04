@@ -3,7 +3,7 @@
 //
 
 /*!
-#One dimensional Minimization
+# One dimensional Minimization
 
 This chapter describes routines for finding minima of arbitrary one-dimensional functions. The
 library provides low level components for a variety of iterative minimizers and convergence tests.
@@ -13,7 +13,7 @@ switch between minimizers at runtime without needing to recompile your program. 
 minimizer keeps track of its own state, allowing the minimizers to be used in multi-threaded
 programs.
 
-##Overview
+## Overview
 
 The minimization algorithms begin with a bounded region known to contain a minimum. The region is
 described by a lower bound a and an upper bound b, with an estimate of the location of the minimum
@@ -43,7 +43,7 @@ each of the steps. There are three main phases of the iteration. The steps are,
 The state for the minimizers is held in a gsl_min_fminimizer struct. The updating procedure uses
 only function evaluations (not derivatives).
 
-##Caveats
+## Caveats
 
 Note that minimization functions can only search for one minimum at a time. When there are several
 minima in the search area, the first minimum to be found will be returned; however it is difficult
@@ -63,20 +63,20 @@ such as x^4, the magnification of the error is correspondingly worse. The best t
 is to converge to the limit of numerical accuracy in the function values, rather than the location
 of the minimum itself.
 
-##Providing the function to minimize
+## Providing the function to minimize
 
 You must provide a continuous function of one variable for the minimizers to operate on. In order to
 allow for general parameters the functions are defined by a gsl_function data type (see
 [Providing the function to solve](http://www.gnu.org/software/gsl/manual/html_node/Providing-the-function-to-solve.html#Providing-the-function-to-solve)).
 
-##Iteration
+## Iteration
 
 The following functions drive the iteration of each algorithm. Each function performs one iteration
 to update the state of any minimizer of the corresponding type. The same functions work for all
 minimizers so that different methods can be substituted at runtime without modifications to the
 code.
 
-##Stopping Parameters
+## Stopping Parameters
 
 A minimization procedure should stop when one of the following conditions is true:
 
@@ -87,7 +87,7 @@ A minimization procedure should stop when one of the following conditions is tru
 The handling of these conditions is under user control. The function below allows the user to test
 the precision of the current result.
 
-##Minimization Algorithms
+## Minimization Algorithms
 
 The minimization algorithms described in this section require an initial interval which is
 guaranteed to contain a minimum—if a and b are the endpoints of the interval and x is an estimate of

@@ -3,7 +3,7 @@
 //
 
 /*!
-#General Polynomial Equations
+# General Polynomial Equations
 
 The roots of polynomial equations cannot be found analytically beyond the special cases of the quadratic, cubic and quartic equation. The algorithm
 described in this section uses an iterative method to find the approximate locations of roots of higher order polynomials.

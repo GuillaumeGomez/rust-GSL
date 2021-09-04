@@ -3,18 +3,18 @@
 //
 
 /*!
-#Real Symmetric Matrices
+# Real Symmetric Matrices
 
 For real symmetric matrices, the library uses the symmetric bidiagonalization and QR reduction
 method. This is described in Golub & van Loan, section 8.3. The computed eigenvalues are accurate to
 an absolute accuracy of \epsilon ||A||_2, where \epsilon is the machine precision.
 
-#Complex Hermitian Matrices
+# Complex Hermitian Matrices
 
 For hermitian matrices, the library uses the complex form of the symmetric bidiagonalization and QR
 reduction method.
 
-#Real Nonsymmetric Matrices
+# Real Nonsymmetric Matrices
 
 The solution of the real nonsymmetric eigensystem problem for a matrix A involves computing the
 Schur decomposition
@@ -26,7 +26,7 @@ with diagonal 1-by-1 blocks which are real eigenvalues of A, and diagonal 2-by-2
 eigenvalues are complex conjugate eigenvalues of A. The algorithm used is the double-shift Francis
 method.
 
-#Real Generalized Symmetric-Definite Eigensystems
+# Real Generalized Symmetric-Definite Eigensystems
 
 The real generalized symmetric-definite eigenvalue problem is to find eigenvalues \lambda and
 eigenvectors x such that
@@ -47,7 +47,7 @@ The standard symmetric eigensolver can be applied to the matrix C. The resulting
 backtransformed to find the vectors of the original problem. The eigenvalues and eigenvectors of the
 generalized symmetric-definite eigenproblem are always real.
 
-#Complex Generalized Hermitian-Definite Eigensystems
+# Complex Generalized Hermitian-Definite Eigensystems
 
 The complex generalized hermitian-definite eigenvalue problem is to find eigenvalues \lambda and
 eigenvectors x such that
@@ -60,7 +60,7 @@ standard hermitian eigensolver can be applied to the matrix C. The resulting eig
 backtransformed to find the vectors of the original problem. The eigenvalues of the generalized
 hermitian-definite eigenproblem are always real.
 
-#Real Generalized Nonsymmetric Eigensystems
+# Real Generalized Nonsymmetric Eigensystems
 
 Given two square matrices (A, B), the generalized nonsymmetric eigenvalue problem is to find
 eigenvalues \lambda and eigenvectors x such that

@@ -3,14 +3,14 @@
 //
 
 /*!
-#Combinations
+# Combinations
 
 This chapter describes functions for creating and manipulating combinations. A combination c is
 represented by an array of k integers in the  range 0 to n-1, where each value c_i occurs at most
 once. The combination c corresponds to indices of k elements chosen from an n element  vector.
 Combinations are useful for iterating over all k-element subsets of a set.
 
-##References and Further Reading
+## References and Further Reading
 
 Further information on combinations can be found in,
 

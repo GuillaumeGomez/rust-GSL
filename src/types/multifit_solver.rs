@@ -3,7 +3,7 @@
 //
 
 /*!
-#Nonlinear Least-Squares Fitting
+# Nonlinear Least-Squares Fitting
 
 This chapter describes functions for multidimensional nonlinear least-squares fitting. The library
 provides low level components for a variety of iterative solvers and convergence tests. These can
@@ -12,7 +12,7 @@ of the iteration. Each class of methods uses the same framework, so that you can
 solvers at runtime without needing to recompile your program. Each instance of a solver keeps track
 of its own state, allowing the solvers to be used in multi-threaded programs.
 
-##Overview
+## Overview
 
 The problem of multidimensional nonlinear least-squares fitting requires the minimization of the
 squared residuals of n functions, f_i, in p parameters, x_i,
@@ -38,7 +38,7 @@ variable of any data to be fitted is denoted by t.
 With the definition above the Jacobian is J_{ij} =(1 / \sigma_i) d Y_i / d x_j, where Y_i =
 Y(x,t_i).
 
-##High Level Driver
+## High Level Driver
 
 These routines provide a high level wrapper that combine the iteration and convergence testing for
 easy use.

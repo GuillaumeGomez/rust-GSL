@@ -3,13 +3,13 @@
 //
 
 /*!
-#Linear Algebra
+# Linear Algebra
 
 This chapter describes functions for solving linear systems. The library provides linear algebra operations which operate directly on the
 gsl_vector and gsl_matrix objects. These routines use the standard algorithms from Golub & Van Loan’s Matrix Computations with Level-1 and
 Level-2 BLAS calls for efficiency.
 
-##LU Decomposition
+## LU Decomposition
 
 A general square matrix A has an LU decomposition into upper and lower triangular matrices,
 
@@ -18,7 +18,7 @@ where P is a permutation matrix, L is unit lower triangular matrix and U is uppe
 can be used to convert the linear system A x = b into a pair of triangular systems (L y = P b, U x = y), which can be solved by forward and
 back-substitution. Note that the LU decomposition is valid for singular matrices.
 
-##QR Decomposition
+## QR Decomposition
 
 A general rectangular M-by-N matrix A has a QR decomposition into the product of an orthogonal M-by-M square matrix Q (where Q^T Q = I) and
 an M-by-N right-triangular matrix R,
@@ -28,7 +28,7 @@ This decomposition can be used to convert the linear system A x = b into the tri
 Another use of the QR decomposition is to compute an orthonormal basis for a set of vectors. The first N columns of Q form an orthonormal
 basis for the range of A, ran(A), when A has full column rank.
 
-##QR Decomposition with Column Pivoting
+## QR Decomposition with Column Pivoting
 
 The QR decomposition can be extended to the rank deficient case by introducing a column permutation P,
 
@@ -37,7 +37,7 @@ The first r columns of Q form an orthonormal basis for the range of A for a matr
 to convert the linear system A x = b into the triangular system R y = Q^T b, x = P y, which can be solved by back-substitution and permutation.
 We denote the QR decomposition with column pivoting by QRP^T since A = Q R P^T.
 
-##Singular Value Decomposition
+## Singular Value Decomposition
 
 A general rectangular M-by-N matrix A has a singular value decomposition (SVD) into the product of an M-by-N orthogonal matrix U, an N-by-N
 diagonal matrix of singular values S and the transpose of an N-by-N orthogonal square matrix V,
@@ -59,7 +59,7 @@ Note that the routines here compute the “thin” version of the SVD with U as 
 the most commonly-used form in practice. Mathematically, the “full” SVD is defined with U as an M-by-M orthogonal matrix and S as an M-by-N
 diagonal matrix (with additional rows of zeros).
 
-##Cholesky Decomposition
+## Cholesky Decomposition
 
 A symmetric, positive definite square matrix A has a Cholesky decomposition into a product of a lower triangular matrix L and its transpose L^T,
 
@@ -69,7 +69,7 @@ This is sometimes referred to as taking the square-root of a matrix. The Cholesk
 of the matrix are positive. This decomposition can be used to convert the linear system A x = b into a pair of triangular systems (L y = b,
 L^T x = y), which can be solved by forward and back-substitution.
 
-##Tridiagonal Decomposition of Real Symmetric Matrices
+## Tridiagonal Decomposition of Real Symmetric Matrices
 
 A symmetric matrix A can be factorized by similarity transformations into the form,
 
@@ -77,7 +77,7 @@ A = Q T Q^T
 
 where Q is an orthogonal matrix and T is a symmetric tridiagonal matrix.
 
-##Tridiagonal Decomposition of Hermitian Matrices
+## Tridiagonal Decomposition of Hermitian Matrices
 
 A hermitian matrix A can be factorized by similarity transformations into the form,
 
@@ -85,7 +85,7 @@ A = U T U^T
 
 where U is a unitary matrix and T is a real symmetric tridiagonal matrix.
 
-##Hessenberg Decomposition of Real Matrices
+## Hessenberg Decomposition of Real Matrices
 
 A general real matrix A can be decomposed by orthogonal similarity transformations into the form
 
@@ -94,7 +94,7 @@ A = U H U^T
 where U is orthogonal and H is an upper Hessenberg matrix, meaning that it has zeros below the first subdiagonal. The Hessenberg reduction
 is the first step in the Schur decomposition for the nonsymmetric eigenvalue problem, but has applications in other areas as well.
 
-##Hessenberg-Triangular Decomposition of Real Matrices
+## Hessenberg-Triangular Decomposition of Real Matrices
 
 A general real matrix pair (A, B) can be decomposed by orthogonal similarity transformations into the form
 
@@ -104,7 +104,7 @@ B = U R V^T
 where U and V are orthogonal, H is an upper Hessenberg matrix, and R is upper triangular. The Hessenberg-Triangular reduction is the first
 step in the generalized Schur decomposition for the generalized eigenvalue problem.
 
-##Bidiagonalization
+## Bidiagonalization
 
 A general matrix A can be factorized by similarity transformations into the form,
 
@@ -112,7 +112,7 @@ A = U B V^T
 where U and V are orthogonal matrices and B is a N-by-N bidiagonal matrix with non-zero entries only on the diagonal and superdiagonal. The
 size of U is M-by-N and the size of V is N-by-N.
 
-##Householder Transformations
+## Householder Transformations
 
 A Householder transformation is a rank-1 modification of the identity matrix which can be used to zero out selected elements of a vector.
 A Householder matrix P takes the form,
@@ -122,13 +122,13 @@ P = I - \tau v v^T
 where v is a vector (called the Householder vector) and \tau = 2/(v^T v). The functions described in this section use the rank-1 structure
 of the Householder matrix to create and apply Householder transformations efficiently.
 
-##Tridiagonal Systems
+## Tridiagonal Systems
 
 The functions described in this section efficiently solve symmetric, non-symmetric and cyclic tridiagonal systems with minimal storage. Note
 that the current implementations of these functions use a variant of Cholesky decomposition, so the tridiagonal matrix must be positive definite.
 For non-positive definite matrices, the functions return the error code ::Sing.
 
-##Balancing
+## Balancing
 
 The process of balancing a matrix applies similarity transformations to make the rows and columns have comparable norms. This is useful, for
 example, to reduce roundoff errors in the solution of eigenvalue problems. Balancing a matrix A consists of replacing A with a similar matrix

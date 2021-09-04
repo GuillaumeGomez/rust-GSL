@@ -3,14 +3,14 @@
 //
 
 /*!
-#Quasi-Random Sequences
+# Quasi-Random Sequences
 
 This chapter describes functions for generating quasi-random sequences in arbitrary dimensions. A quasi-random sequence progressively
 covers a d-dimensional space with a set of points that are uniformly distributed. Quasi-random sequences are also known as low-discrepancy
 sequences. The quasi-random sequence generators use an interface that is similar to the interface for random number generators, except
 that seeding is not required—each generator produces a single sequence.
 
-##References
+## References
 
 The implementations of the quasi-random sequence routines are based on the algorithms described in the following paper,
 

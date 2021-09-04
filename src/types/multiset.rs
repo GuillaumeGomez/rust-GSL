@@ -3,7 +3,7 @@
 //
 
 /*!
-#Multisets
+# Multisets
 
 This chapter describes functions for creating and manipulating multisets. A multiset c is represented by an array of k integers in the
 range 0 to n-1, where each value c_i may occur more than once. The multiset c corresponds to indices of k elements chosen from an n element

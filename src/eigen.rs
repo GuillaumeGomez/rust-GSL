@@ -3,7 +3,7 @@
 //
 
 /*!
-##References and Further Reading
+## References and Further Reading
 
 Further information on the algorithms described in this section can be found in the following book,
 

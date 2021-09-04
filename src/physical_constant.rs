@@ -8,7 +8,7 @@ This chapter describes macros for the values of physical constants, such as the 
 values are available in different unit systems, including the standard MKSA system (meters, kilograms, seconds, amperes) and the CGSM
 system (centimeters, grams, seconds, gauss), which is commonly used in Astronomy.
 
-##References and Further Reading
+## References and Further Reading
 
 The authoritative sources for physical constants are the 2006 CODATA recommended values, published in the article below. Further
 information on the values of physical constants is also available from the NIST website.

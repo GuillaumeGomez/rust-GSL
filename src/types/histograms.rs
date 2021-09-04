@@ -3,7 +3,7 @@
 //
 
 /*!
-#Histograms
+# Histograms
 
 This chapter describes functions for creating histograms. Histograms provide a convenient way of summarizing the distribution of a set of data.
 A histogram consists of a set of bins which count the number of events falling into a given range of a continuous variable x. In GSL the bins
@@ -13,7 +13,7 @@ sets of ranges (uniformly spaced bins are the default). Both one and two-dimensi
 Once a histogram has been created it can also be converted into a probability distribution function. The library provides efficient routines
 for selecting random samples from probability distributions. This can be useful for generating simulations based on real data.
 
-##Resampling from histograms
+## Resampling from histograms
 
 A histogram made by counting events can be regarded as a measurement of a probability distribution. Allowing for statistical error, the height
 of each bin represents the probability of an event where the value of x falls in the range of that bin. The probability distribution function

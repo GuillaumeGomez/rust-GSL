@@ -3,7 +3,7 @@
 //
 
 /*!
-#Vectors
+# Vectors
 
 Vectors are defined by a gsl_vector structure which describes a slice of a block. Different vectors can be created which point to the
 same block. A vector slice is a set of equally-spaced elements of an area of memory.
