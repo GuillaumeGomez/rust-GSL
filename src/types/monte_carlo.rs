@@ -3,7 +3,7 @@
 //
 
 /*!
-#Monte Carlo Integration
+# Monte Carlo Integration
 
 This chapter describes routines for multidimensional Monte Carlo integration. These include the traditional Monte Carlo method and adaptive
 algorithms such as VEGAS and MISER which use importance sampling and stratified sampling techniques. Each algorithm computes an estimate of
@@ -15,7 +15,7 @@ over a hypercubic region ((x_l,x_u), (y_l,y_u), ...) using a fixed number of fun
 of the error on the result. This error estimate should be taken as a guide rather than as a strict error bound—random sampling of the region
 may not uncover all the important features of the function, resulting in an underestimate of the error.
 
-##Interface
+## Interface
 
 All of the Monte Carlo integration routines use the same general form of interface. There is an allocator to allocate memory for control
 variables and workspace, a routine to initialize those control variables, the integrator itself, and a function to free the space when done.
@@ -27,7 +27,7 @@ can be achieved by calling the integrator several times and averaging the indivi
 Random sample points used within the Monte Carlo routines are always chosen strictly within the integration region, so that endpoint singularities
 are automatically avoided.
 
-##VEGAS
+## VEGAS
 
 The VEGAS algorithm of Lepage is based on importance sampling. It samples points from the probability distribution described by the function
 |f|, so that the points are concentrated in the regions that make the largest contribution to the integral.

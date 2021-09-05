@@ -32,7 +32,7 @@ f(x) = \sum_i c_i B_(i,k)(x)
 given enough (x_j, f(x_j)) data pairs. The coefficients c_i can be readily obtained from a
 least-squares fit.
 
-###References and Further Reading
+### References and Further Reading
 
 Further information on the algorithms described in this section can be found in the following book,
 

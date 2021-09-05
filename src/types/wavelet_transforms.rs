@@ -3,12 +3,12 @@
 //
 
 /*!
-#Wavelet Transforms
+# Wavelet Transforms
 
 This chapter describes functions for performing Discrete Wavelet Transforms (DWTs). The library includes wavelets for real data in both
 one and two dimensions.
 
-##Definitions
+## Definitions
 
 The continuous wavelet transform and its inverse are defined by the relations,
 
@@ -24,7 +24,7 @@ frequency and time axes are sampled dyadically on scales of 2^j through a level 
 
 The discrete wavelet transform is an O(N) algorithm, and is also referred to as the fast wavelet transform.
 
-##References and Further Reading
+## References and Further Reading
 
 The mathematical background to wavelet transforms is covered in the original lectures by Daubechies,
 

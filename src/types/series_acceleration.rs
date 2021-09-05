@@ -3,13 +3,13 @@
 //
 
 /*!
-#Series Acceleration
+# Series Acceleration
 
 The functions described in this chapter accelerate the convergence of a series using the Levin u-transform. This method takes a small
 number of terms from the start of a series and uses a systematic approximation to compute an extrapolated value and an estimate of its
 error. The u-transform works for both convergent and divergent series, including asymptotic series.
 
-##Acceleration functions
+## Acceleration functions
 
 The following functions compute the full Levin u-transform of a series with its error estimate. The error estimate is computed by
 propagating rounding errors from each term through to the final extrapolation.
@@ -22,7 +22,7 @@ reliable method which estimates the error from the convergence of the extrapolat
 described here a full table of intermediate values and derivatives through to O(N) must be computed and stored, but this does give a
 reliable error estimate.
 
-##Acceleration functions without error estimation
+## Acceleration functions without error estimation
 
 The functions described in this section compute the Levin u-transform of series and attempt to estimate the error from the “truncation
 error” in the extrapolation, the difference between the final two approximations. Using this method avoids the need to compute an
@@ -33,7 +33,7 @@ properties at high-speed. For example, when numerically integrating a function d
 varies only slightly. A reliable error estimate should be computed first using the full algorithm described above in order to verify the
 consistency of the results.
 
-##References and Further Reading
+## References and Further Reading
 
 The algorithms used by these functions are described in the following papers,
 

@@ -3,7 +3,7 @@
 //
 
 /*!
-#Interpolation
+# Interpolation
 
 This chapter describes functions for performing interpolation. The library provides a variety of interpolation methods, including Cubic splines
 and Akima splines. The interpolation types are interchangeable, allowing different methods to be used without recompiling. Interpolations can
@@ -12,24 +12,24 @@ interpolating functions.
 
 These interpolation methods produce curves that pass through each datapoint. To interpolate noisy data with a smoothing curve see Basis Splines.
 
-##Introduction
+## Introduction
 
 Given a set of data points (x_1, y_1) \dots (x_n, y_n) the routines described in this section compute a continuous interpolating function
 y(x) such that y(x_i) = y_i. The interpolation is piecewise smooth, and its behavior at the end-points is determined by the type of
 interpolation used.
 
-##Index Look-up and Acceleration
+## Index Look-up and Acceleration
 
 The state of searches can be stored in a gsl_interp_accel object, which is a kind of iterator for interpolation lookups. It caches the previous
 value of an index lookup. When the subsequent interpolation point falls in the same interval its index value can be returned immediately.
 
-##Higher-level Interface
+## Higher-level Interface
 
 The functions described in the previous sections required the user to supply pointers to the x and y arrays on each call. The following
 functions are equivalent to the corresponding gsl_interp functions but maintain a copy of this data in the gsl_spline object. This removes
 the need to pass both xa and ya as arguments on each evaluation.
 
-##References and Further Reading
+## References and Further Reading
 
 Descriptions of the interpolation algorithms and further references can be found in the following books:
 

@@ -45,7 +45,7 @@ This crate works with Cargo and is on [crates.io]. Just add the following to you
 
 ```toml
 [dependencies]
-GSL = "2.0"
+GSL = "4.0"
 ```
 
 You can see examples in the `examples` folder.

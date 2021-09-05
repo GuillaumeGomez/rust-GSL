@@ -3,7 +3,7 @@
 //
 
 /*!
-#Chebyshev Approximations
+# Chebyshev Approximations
 
 This chapter describes routines for computing Chebyshev approximations to univariate functions. A
 Chebyshev approximation is a truncation of the series f(x) = \sum c_n T_n(x), where the Chebyshev
@@ -13,7 +13,7 @@ T_0(x) = 1, T_1(x) = x, T_2(x) = 2 x^2 - 1.
 
 For further information see Abramowitz & Stegun, Chapter 22.
 
-##Definitions
+## Definitions
 
 The approximation is made over the range [a,b] using order+1 terms, including the coefficient
 `c[0]`. The series is computed using the following convention,
@@ -22,7 +22,7 @@ f(x) = (c_0 / 2) + \sum_{n=1} c_n T_n(x)
 
 which is needed when accessing the coefficients directly.
 
-##References and Further Reading
+## References and Further Reading
 
 The following paper describes the use of Chebyshev series,
 

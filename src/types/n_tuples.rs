@@ -3,7 +3,7 @@
 //
 
 /*!
-#N-tuples
+# N-tuples
 
 This chapter describes functions for creating and manipulating ntuples, sets of values associated with events. The ntuples are stored in
 files. Their values can be extracted in any combination and booked in a histogram using a selection function.
@@ -15,7 +15,7 @@ A histogram can be created from ntuple data by providing a selection function an
 whether an event should be included in the subset to be analyzed or not. The value function computes the entry to be added to the histogram
 for each event.
 
-##Histogramming ntuple values
+## Histogramming ntuple values
 
 Once an ntuple has been created its contents can be histogrammed in various ways using the function gsl_ntuple_project. Two user-defined
 functions must be provided, a function to select events and a function to compute scalar values. The selection function and the value
@@ -23,7 +23,7 @@ function both accept the ntuple row as a first argument and other parameters as 
 
 The selection function determines which ntuple rows are selected for histogramming.
 
-##References and Further Reading
+## References and Further Reading
 
 Further information on the use of ntuples can be found in the documentation for the CERN packages PAW and HBOOK (available online).
 !*/

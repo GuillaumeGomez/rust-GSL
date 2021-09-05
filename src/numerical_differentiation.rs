@@ -3,12 +3,12 @@
 //
 
 /*!
-#Numerical Differentiation
+# Numerical Differentiation
 
 The functions described in this chapter compute numerical derivatives by finite differencing. An adaptive algorithm is used to find the
 best choice of finite difference and to estimate the error in the derivative.
 
-##References and Further Reading
+## References and Further Reading
 
 The algorithms used by these functions are described in the following sources:
 

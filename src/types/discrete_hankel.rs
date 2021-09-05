@@ -3,11 +3,11 @@
 //
 
 /*!
-#Discrete Hankel Transforms
+# Discrete Hankel Transforms
 
 This chapter describes functions for performing Discrete Hankel Transforms (DHTs).
 
-##Definitions
+## Definitions
 
 The discrete Hankel transform acts on a vector of sampled data, where the samples are assumed to
 have been taken at points related to the zeroes of a Bessel function of fixed order; compare this to
@@ -45,7 +45,7 @@ inversion formula and the sampling formula given above. Therefore, this transfor
 orthogonal expansion in eigenfunctions of the Dirichlet problem for the Bessel differential
 equation.
 
-##References and Further Reading
+## References and Further Reading
 
 The algorithms used by these functions are described in the following papers,
 

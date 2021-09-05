@@ -4,14 +4,14 @@
 
 /*! Numerical ODE solvers.
 
-#Ordinary Differential Equations
+# Ordinary Differential Equations
 
 This chapter describes functions for solving ordinary differential equation (ODE) initial value problems. The library provides a variety of
 low-level methods, such as Runge-Kutta and Bulirsch-Stoer routines, and higher-level components for adaptive step-size control. The
 components can be combined by the user to achieve the desired solution, with full access to any intermediate steps. A driver object can be
 used as a high level wrapper for easy use of low level functions.
 
-##Defining the ODE System
+## Defining the ODE System
 
 The routines solve the general n-dimensional first-order system,
 
@@ -19,26 +19,26 @@ dy_i(t)/dt = f_i(t, y_1(t), ..., y_n(t))
 for i = 1, \dots, n. The stepping functions rely on the vector of derivatives f_i and the Jacobian matrix, J_{ij} = df_i(t,y(t)) / dy_j. A
 system of equations is defined using the gsl_odeiv2_system datatype.
 
-##Stepping Functions
+## Stepping Functions
 
 The lowest level components are the stepping functions which advance a solution from time t to t+h for a fixed step-size h and estimate
 the resulting local error.
 
-##Adaptive Step-size Control
+## Adaptive Step-size Control
 
 The control function examines the proposed change to the solution produced by a stepping function and attempts to determine the optimal
 step-size for a user-specified level of error.
 
-##Evolution
+## Evolution
 
 The evolution function combines the results of a stepping function and control function to reliably advance the solution forward one
 step using an acceptable step-size.
 
-##Driver
+## Driver
 
 The driver object is a high level wrapper that combines the evolution, control and stepper objects for easy use.
 
-##References and Further Reading
+## References and Further Reading
 
 Ascher, U.M., Petzold, L.R., Computer Methods for Ordinary Differential and Differential-Algebraic Equations, SIAM, Philadelphia, 1998.
 Hairer, E., Norsett, S. P., Wanner, G., Solving Ordinary Differential Equations I: Nonstiff Problems, Springer, Berlin, 1993.

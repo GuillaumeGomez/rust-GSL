@@ -3,31 +3,31 @@
 //
 
 /*!
-#Statistics
+# Statistics
 
 This chapter describes the statistical functions in the library. The basic statistical functions include routines to compute the mean,
 variance and standard deviation. More advanced functions allow you to calculate absolute deviations, skewness, and kurtosis as well as the
 median and arbitrary percentiles. The algorithms use recurrence relations to compute average quantities in a stable way, without large
 intermediate values that might overflow.
 
-##Weighted Samples
+## Weighted Samples
 
 The functions described in this section allow the computation of statistics for weighted samples. The functions accept an array of
 samples, x_i, with associated weights, w_i. Each sample x_i is considered as having been drawn from a Gaussian distribution with variance
 \sigma_i^2. The sample weight w_i is defined as the reciprocal of this variance, w_i = 1/\sigma_i^2. Setting a weight to zero corresponds
 to removing a sample from a dataset.
 
-##Maximum and Minimum values
+## Maximum and Minimum values
 
 The following functions find the maximum and minimum values of a dataset (or their indices). If the data contains NaNs then a NaN will be
 returned, since the maximum or minimum value is undefined. For functions which return an index, the location of the first NaN in the array is returned.
 
-##Median and Percentiles
+## Median and Percentiles
 
 The median and percentile functions described in this section operate on sorted data. For convenience we use quantiles, measured on a
 scale of 0 to 1, instead of percentiles (which use a scale of 0 to 100).
 
-##References and Further Reading
+## References and Further Reading
 
 The standard reference for almost any topic in statistics is the multi-volume Advanced Theory of Statistics by Kendall and Stuart.
 

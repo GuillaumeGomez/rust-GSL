@@ -3,7 +3,7 @@
 //
 
 /*!
-##Transform Functions
+## Transform Functions
 
 This sections describes the actual functions performing the discrete wavelet transform. Note that the transforms use periodic boundary
 conditions. If the signal is not periodic in the sample length then spurious coefficients will appear at the beginning and end of each

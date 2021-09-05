@@ -3,13 +3,13 @@
 //
 
 /*!
-#Polynomials
+# Polynomials
 
 This chapter describes functions for evaluating and solving polynomials. There are routines for finding real and complex roots of quadratic
 and cubic equations using analytic methods. An iterative polynomial solver is also available for finding the roots of general polynomials
 with real coefficients (of any order).
 
-##References and Further Reading
+## References and Further Reading
 
 The balanced-QR method and its error analysis are described in the following papers,
 
