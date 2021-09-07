@@ -13,13 +13,14 @@ macro_rules! ffi_wrap {
 
 #[doc(hidden)]
 macro_rules! wrap_callback {
-    ($f:expr, $F:ident) => {{
-        unsafe extern "C" fn trampoline<F: Fn(f64) -> f64>(
+    ($f:expr, $F:ident $(+ $lt:lifetime)?) => {{
+        unsafe extern "C" fn trampoline<$($lt,)? F: Fn(f64) -> f64 $( + $lt)?>(
             x: f64,
             params: *mut ::std::os::raw::c_void,
         ) -> f64 {
             let f: &F = &*(params as *const F);
-            f(x)
+            let x = f(x);
+            x
         }
 
         sys::gsl_function_struct {
@@ -31,8 +32,8 @@ macro_rules! wrap_callback {
 
 #[doc(hidden)]
 macro_rules! ffi_wrapper {
-    ($name:ident, *mut $ty:ty, $drop:ident $(, $doc:expr)?) => {
-        ffi_wrapper!($name, *mut $ty $(, $doc)?);
+    ($name:ident, *mut $ty:ty, $drop:ident $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
+        ffi_wrapper!($name, *mut $ty $(;$extra_id: $extra_ty => $extra_expr;)* $(, $doc)?);
 
         impl Drop for $name {
             fn drop(&mut self) {
@@ -41,15 +42,16 @@ macro_rules! ffi_wrapper {
             }
         }
     };
-    ($name:ident, *mut $ty:ty $(, $doc:expr)?) => {
+    ($name:ident, *mut $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
         $(#[doc = $doc])?
         pub struct $name {
             inner: *mut $ty,
+            $($extra_id: $extra_ty,)*
         }
 
         impl FFI<$ty> for $name {
             fn wrap(inner: *mut $ty) -> Self {
-                Self { inner }
+                Self { inner $(, $extra_id: $extra_expr)* }
             }
 
             fn soft_wrap(r: *mut $ty) -> Self {
@@ -67,20 +69,21 @@ macro_rules! ffi_wrapper {
             }
         }
     };
-    ($name:ident, *const $ty:ty $(, $doc:expr)?) => {
+    ($name:ident, *const $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
         $(#[doc = $doc])?
         #[derive(Clone, Copy)]
         pub struct $name {
             inner: *const $ty,
+            $($extra_id: $extra_ty,)*
         }
 
         impl FFI<$ty> for $name {
             fn wrap(inner: *mut $ty) -> Self {
-                Self { inner }
+                Self { inner $(, $extra_id: $extra_expr)* }
             }
 
             fn soft_wrap(inner: *mut $ty) -> Self {
-                Self { inner }
+                Self { inner $(, $extra_id: $extra_expr)* }
             }
 
             #[inline]
@@ -93,4 +96,5 @@ macro_rules! ffi_wrapper {
             }
         }
     };
+    () => {}
 }
