@@ -136,14 +136,14 @@ impl Minimizer {
     /// If the interval given does not contain a minimum, then the function returns an error code of
     /// ::Value::Invalid.
     #[doc(alias = "gsl_min_fminimizer_set")]
-    pub fn set<'a, F: Fn(f64) -> f64 + 'a>(
-        &'a mut self,
+    pub fn set<F: Fn(f64) -> f64>(
+        &mut self,
         f: F,
         x_minimum: f64,
         x_lower: f64,
         x_upper: f64,
     ) -> ::Value {
-        self.inner_call = wrap_callback!(f, F + 'a);
+        self.inner_call = wrap_callback!(f, F);
 
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set(
@@ -159,8 +159,8 @@ impl Minimizer {
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower
     /// and f_upper instead of computing f(x_minimum), f(x_lower) and f(x_upper).
     #[doc(alias = "gsl_min_fminimizer_set_with_values")]
-    pub fn set_with_values<'a, F: Fn(f64) -> f64 + 'a>(
-        &'a mut self,
+    pub fn set_with_values<F: Fn(f64) -> f64>(
+        &mut self,
         f: F,
         x_minimum: f64,
         f_minimum: f64,
@@ -169,7 +169,7 @@ impl Minimizer {
         x_upper: f64,
         f_upper: f64,
     ) -> ::Value {
-        self.inner_call = wrap_callback!(f, F + 'a);
+        self.inner_call = wrap_callback!(f, F);
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set_with_values(
                 self.unwrap_unique(),
