@@ -103,6 +103,7 @@ ffi_wrapper!(
     Minimizer,
     *mut sys::gsl_min_fminimizer,
     gsl_min_fminimizer_free
+    ;inner_call: sys::gsl_function_struct => sys::gsl_function_struct { function: None, params: std::ptr::null_mut() };
 );
 
 impl Minimizer {
@@ -135,18 +136,19 @@ impl Minimizer {
     /// If the interval given does not contain a minimum, then the function returns an error code of
     /// ::Value::Invalid.
     #[doc(alias = "gsl_min_fminimizer_set")]
-    pub fn set<F: Fn(f64) -> f64>(
-        &mut self,
+    pub fn set<'a, F: Fn(f64) -> f64 + 'a>(
+        &'a mut self,
         f: F,
         x_minimum: f64,
         x_lower: f64,
         x_upper: f64,
     ) -> ::Value {
-        let mut function = wrap_callback!(f, F);
+        self.inner_call = wrap_callback!(f, F + 'a);
+
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set(
                 self.unwrap_unique(),
-                &mut function,
+                &mut self.inner_call,
                 x_minimum,
                 x_lower,
                 x_upper,
@@ -157,8 +159,8 @@ impl Minimizer {
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower
     /// and f_upper instead of computing f(x_minimum), f(x_lower) and f(x_upper).
     #[doc(alias = "gsl_min_fminimizer_set_with_values")]
-    pub fn set_with_values<F: Fn(f64) -> f64>(
-        &mut self,
+    pub fn set_with_values<'a, F: Fn(f64) -> f64 + 'a>(
+        &'a mut self,
         f: F,
         x_minimum: f64,
         f_minimum: f64,
@@ -167,11 +169,11 @@ impl Minimizer {
         x_upper: f64,
         f_upper: f64,
     ) -> ::Value {
-        let mut function = wrap_callback!(f, F);
+        self.inner_call = wrap_callback!(f, F + 'a);
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set_with_values(
                 self.unwrap_unique(),
-                &mut function,
+                &mut self.inner_call,
                 x_minimum,
                 f_minimum,
                 x_lower,
@@ -265,5 +267,50 @@ impl MinimizerType {
 
     pub fn quad_golden() -> Self {
         ffi_wrap!(gsl_min_fminimizer_quad_golden)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use minimizer::test_interval;
+
+    fn quadratic_test_fn(x: f64) -> f64 {
+        x.powf(2.0) - 5.0
+    }
+
+    #[test]
+    fn test_min() {
+        let mut min = Minimizer::new(MinimizerType::brent()).unwrap();
+        min.set(&quadratic_test_fn, 1.0, -5.0, 5.0);
+
+        let max_iter = 5_usize;
+        let eps_abs = 0.0001;
+        let eps_rel = 0.0000001;
+
+        let mut status = ::Value::Continue;
+        let mut iter = 0_usize;
+
+        while matches!(status, ::Value::Continue) && iter < max_iter {
+            // iterate for next value
+            status = min.iterate(); // fails here w/ segfault
+
+            // test for convergence
+            let r = min.minimum();
+            let x_lo = min.x_lower();
+            let x_hi = min.x_upper();
+
+            status = test_interval(x_lo, x_hi, eps_abs, eps_rel);
+
+            // check if iteration succeeded
+            if matches!(status, ::Value::Success) {
+                println!("Converged");
+            }
+
+            // print current iteration
+            println!("{} [{}, {}] {} {}", iter, x_lo, x_hi, r, x_hi - x_lo);
+
+            iter += 1;
+        }
     }
 }
