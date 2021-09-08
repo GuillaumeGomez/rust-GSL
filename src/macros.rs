@@ -32,24 +32,24 @@ macro_rules! wrap_callback {
 
 #[doc(hidden)]
 macro_rules! ffi_wrapper {
-    ($name:ident, *mut $ty:ty, $drop:ident $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
-        ffi_wrapper!($name, *mut $ty $(;$extra_id: $extra_ty => $extra_expr;)* $(, $doc)?);
+    ($name:ident $(<$($lt:lifetime),*>)?, *mut $ty:ty, $drop:ident $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
+        ffi_wrapper!($name $(<$($lt),*>)?, *mut $ty $(;$extra_id: $extra_ty => $extra_expr;)* $(, $doc)?);
 
-        impl Drop for $name {
+        impl$(<$($lt),*>)? Drop for $name$(<$($lt),*>)? {
             fn drop(&mut self) {
                 unsafe { sys::$drop(self.inner) };
                 self.inner = ::std::ptr::null_mut();
             }
         }
     };
-    ($name:ident, *mut $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
+    ($name:ident $(<$($lt:lifetime),*>)?, *mut $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
         $(#[doc = $doc])?
-        pub struct $name {
+        pub struct $name$(<$($lt),*>)? {
             inner: *mut $ty,
             $($extra_id: $extra_ty,)*
         }
 
-        impl FFI<$ty> for $name {
+        impl$(<$($lt),*>)? FFI<$ty> for $name$(<$($lt),*>)? {
             fn wrap(inner: *mut $ty) -> Self {
                 Self { inner $(, $extra_id: $extra_expr)* }
             }
@@ -69,15 +69,15 @@ macro_rules! ffi_wrapper {
             }
         }
     };
-    ($name:ident, *const $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
+    ($name:ident $(<$($lt:lifetime),*>)?, *const $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
         $(#[doc = $doc])?
         #[derive(Clone, Copy)]
-        pub struct $name {
+        pub struct $name$(<$($lt),*>)? {
             inner: *const $ty,
             $($extra_id: $extra_ty,)*
         }
 
-        impl FFI<$ty> for $name {
+        impl$(<$($lt),*>)? FFI<$ty> for $name$(<$($lt),*>)? {
             fn wrap(inner: *mut $ty) -> Self {
                 Self { inner $(, $extra_id: $extra_expr)* }
             }
