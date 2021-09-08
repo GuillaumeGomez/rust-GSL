@@ -100,13 +100,14 @@ use ffi::FFI;
 use sys;
 
 ffi_wrapper!(
-    Minimizer,
+    Minimizer<'a>,
     *mut sys::gsl_min_fminimizer,
     gsl_min_fminimizer_free
     ;inner_call: sys::gsl_function_struct => sys::gsl_function_struct { function: None, params: std::ptr::null_mut() };
+    ;inner_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;
 );
 
-impl Minimizer {
+impl<'a> Minimizer<'a> {
     /// This function returns a pointer to a newly allocated instance of a minimizer of type T. For
     /// example, the following code creates an instance of a golden section minimizer,
     ///
@@ -120,7 +121,7 @@ impl Minimizer {
     /// If there is insufficient memory to create the minimizer then the function returns a null
     /// pointer and the error handler is invoked with an error code of ::NoMem.
     #[doc(alias = "gsl_min_fminimizer_alloc")]
-    pub fn new(t: MinimizerType) -> Option<Minimizer> {
+    pub fn new(t: MinimizerType) -> Option<Minimizer<'a>> {
         let ptr = unsafe { sys::gsl_min_fminimizer_alloc(t.unwrap_shared()) };
 
         if ptr.is_null() {
@@ -136,14 +137,15 @@ impl Minimizer {
     /// If the interval given does not contain a minimum, then the function returns an error code of
     /// ::Value::Invalid.
     #[doc(alias = "gsl_min_fminimizer_set")]
-    pub fn set<F: Fn(f64) -> f64>(
+    pub fn set<F: Fn(f64) -> f64 + 'a>(
         &mut self,
         f: F,
         x_minimum: f64,
         x_lower: f64,
         x_upper: f64,
     ) -> ::Value {
-        self.inner_call = wrap_callback!(f, F);
+        self.inner_call = wrap_callback!(f, F + 'a);
+        self.inner_closure = Some(Box::new(f));
 
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set(
@@ -159,7 +161,7 @@ impl Minimizer {
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower
     /// and f_upper instead of computing f(x_minimum), f(x_lower) and f(x_upper).
     #[doc(alias = "gsl_min_fminimizer_set_with_values")]
-    pub fn set_with_values<F: Fn(f64) -> f64>(
+    pub fn set_with_values<F: Fn(f64) -> f64 + 'a>(
         &mut self,
         f: F,
         x_minimum: f64,
@@ -169,7 +171,9 @@ impl Minimizer {
         x_upper: f64,
         f_upper: f64,
     ) -> ::Value {
-        self.inner_call = wrap_callback!(f, F);
+        self.inner_call = wrap_callback!(f, F + 'a);
+        self.inner_closure = Some(Box::new(f));
+
         ::Value::from(unsafe {
             sys::gsl_min_fminimizer_set_with_values(
                 self.unwrap_unique(),
@@ -270,8 +274,41 @@ impl MinimizerType {
     }
 }
 
-#[cfg(test)]
+#[cfg(any(test, doctest))]
 mod test {
+    /// This doc block will be used to ensure that the closure can't be set everywhere!
+    ///
+    /// ```compile_fail
+    /// use rgsl::*;
+    /// use rgsl::minimizer::test_interval;
+    ///
+    /// fn set(min: &mut Minimizer) {
+    ///     let y = "lalal".to_owned();
+    ///     min.set(|x| {
+    ///         println!("==> {:?}", y);
+    ///         x * x - 5.
+    ///     }, 1.0, -5.0, 5.0);
+    /// }
+    ///
+    /// let mut min = Minimizer::new(MinimizerType::brent()).unwrap();
+    /// set(&mut min);
+    /// let status = min.iterate();
+    /// ```
+    ///
+    /// Same but a working version:
+    ///
+    /// ```
+    /// use rgsl::*;
+    /// use rgsl::minimizer::test_interval;
+    ///
+    /// fn set(min: &mut Minimizer) {
+    ///     min.set(|x| x * x - 5., 1.0, -5.0, 5.0);
+    /// }
+    ///
+    /// let mut min = Minimizer::new(MinimizerType::brent()).unwrap();
+    /// set(&mut min);
+    /// let status = min.iterate();
+    /// ```
     use super::*;
     use minimizer::test_interval;
 
