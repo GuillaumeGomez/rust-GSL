@@ -106,16 +106,17 @@ ffi_wrapper!(
     *mut sys::gsl_root_fsolver,
     gsl_root_fsolver_free
     ;inner_call: sys::gsl_function_struct => sys::gsl_function_struct { function: None, params: std::ptr::null_mut() };
-    ;inner_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;
+    ;inner_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;,
+    "This is a workspace for finding roots using methods which do not require derivatives."
 );
 
-impl <'a>RootFSolver<'a> {
+impl<'a> RootFSolver<'a> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_root_fsolver_alloc")]
-    pub fn new(t: &RootFSolverType) -> Option<RootFSolver<'a>> {
+    pub fn new(t: RootFSolverType) -> Option<RootFSolver<'a>> {
         let tmp = unsafe { sys::gsl_root_fsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
@@ -129,7 +130,7 @@ impl <'a>RootFSolver<'a> {
     /// the initial search interval [x lower, x upper].
     #[doc(alias = "gsl_root_fsolver_set")]
     pub fn set<F: Fn(f64) -> f64 + 'a>(
-        &'a mut self,
+        &mut self,
         f: F,
         x_lower: f64,
         x_upper: f64
@@ -227,7 +228,8 @@ ffi_wrapper!(
     RootFdfSolver,
     *mut sys::gsl_root_fdfsolver,
     gsl_root_fdfsolver_free
-    ;inner_call: sys::gsl_function_fdf_struct => sys::gsl_function_fdf_struct{f: None, df: None, fdf: None, params: std::ptr::null_mut()};
+    ;inner_call: sys::gsl_function_fdf_struct => sys::gsl_function_fdf_struct{f: None, df: None, fdf: None, params: std::ptr::null_mut()};,
+    "This is a workspace for finding roots using methods which do require derivatives."
 );
 
 impl RootFdfSolver {
@@ -237,7 +239,7 @@ impl RootFdfSolver {
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_root_fdfsolver_alloc")]
-    pub fn new(t: &RootFdfSolverType) -> Option<RootFdfSolver> {
+    pub fn new(t: RootFdfSolverType) -> Option<RootFdfSolver> {
         let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
@@ -363,8 +365,8 @@ mod test {
 
     #[test]
     fn test_root() {
-        let mut root = RootFSolver::new(&RootFSolverType::brent()).unwrap();
-        root.set(quadratic_test_fn, 0.0, 5.0);
+        let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
+        root.set(&quadratic_test_fn, 0.0, 5.0);
 
         let max_iter = 10usize;
         let epsabs= 0.0001;
@@ -377,7 +379,13 @@ mod test {
 
         println!("iter, \t [x_lo, x_hi], \t min, \t error");
         while matches!(status, ::Value::Continue) && iter < max_iter {
-            root.iterate(); //should check for failure
+            status = root.iterate();
+
+            // check if iteration succeeded
+            if !matches!(status, ::Value::Success) {
+                println!("Failed to iterate successfully");
+                break;
+            }
 
             // test for convergence
             let r = root.root();
@@ -404,7 +412,7 @@ mod test {
         let guess_value = 1.0;
 
         // setup solver
-        let mut root = RootFdfSolver::new(&RootFdfSolverType::steffenson()).unwrap();
+        let mut root = RootFdfSolver::new(RootFdfSolverType::steffenson()).unwrap();
         root.set(quadratic_test_fn, quadratic_test_fn_df, quadratic_test_fn_fdf, guess_value);
 
         // set up iterations
