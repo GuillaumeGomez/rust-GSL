@@ -4,6 +4,7 @@
 
 /*!
 # One dimensional Root-Finding
+
 This chapter describes routines for finding roots of arbitrary one-dimensional functions.
 The library provides low level components for a variety of iterative solvers and convergence
 tests. These can be combined by the user to achieve the desired solution, with full access to
@@ -11,24 +12,29 @@ the intermediate steps of the iteration. Each class of methods uses the same fra
 that you can switch between solvers at runtime without needing to recompile your program.
 Each instance of a solver keeps track of its own state, allowing the solvers to be used in
 multi-threaded programs.
+
 ## Overview
+
 One-dimensional root finding algorithms can be divided into two classes, root bracketing and
 root polishing. Algorithms which proceed by bracketing a root are guaranteed to converge.
 Bracketing algorithms begin with a bounded region known to contain a root. The size of
 this bounded region is reduced, iteratively, until it encloses the root to a desired tolerance.
 This provides a rigorous error estimate for the location of the root.
+
 The technique of root polishing attempts to improve an initial guess to the root. These
 algorithms converge only if started “close enough” to a root, and sacrifice a rigorous error
 bound for speed. By approximating the behavior of a function in the vicinity of a root they
 attempt to find a higher order improvement of an initial guess. When the behavior of the
 function is compatible with the algorithm and a good initial guess is available a polishing
 algorithm can provide rapid convergence.
+
 In GSL both types of algorithm are available in similar frameworks. The user provides
 a high-level driver for the algorithms, and the library provides the individual functions
 necessary for each of the steps. There are three main phases of the iteration. The steps are,
 • initialize solver state, s, for algorithm T
 • update s using the iteration T
 • test s for convergence, and repeat iteration if necessary
+
 The state for bracketing solvers is held in a gsl_root_fsolver struct. The updating
 procedure uses only function evaluations (not derivatives). The state for root polishing
 solvers is held in a gsl_root_fdfsolver struct. The updates require both the function and
@@ -38,7 +44,6 @@ its derivative (hence the name fdf) to be supplied by the user.
 use ffi::FFI;
 use sys;
 use sys::libc::{c_double, c_void};
-
 
 ffi_wrapper!(
     RootFSolverType,
@@ -129,22 +134,12 @@ impl<'a> RootFSolver<'a> {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial search interval [x lower, x upper].
     #[doc(alias = "gsl_root_fsolver_set")]
-    pub fn set<F: Fn(f64) -> f64 + 'a>(
-        &mut self,
-        f: F,
-        x_lower: f64,
-        x_upper: f64
-    ) -> ::Value {
+    pub fn set<F: Fn(f64) -> f64 + 'a>(&mut self, f: F, x_lower: f64, x_upper: f64) -> ::Value {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
         ::Value::from(unsafe {
-            sys::gsl_root_fsolver_set(
-                self.unwrap_unique(),
-                &mut self.inner_call,
-                x_lower,
-                x_upper
-            )
+            sys::gsl_root_fsolver_set(self.unwrap_unique(), &mut self.inner_call, x_lower, x_upper)
         })
     }
 
@@ -252,14 +247,18 @@ impl RootFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function and
     /// derivative fdf and the initial guess root.
     #[doc(alias = "gsl_root_fdfsolver_set")]
-    pub fn set<'a, F: Fn(f64) -> f64+'a, DF: Fn(f64) -> f64+'a, FDF: Fn(f64, &mut f64, &mut f64)>(
+    pub fn set<
+        'a,
+        F: Fn(f64) -> f64 + 'a,
+        DF: Fn(f64) -> f64 + 'a,
+        FDF: Fn(f64, &mut f64, &mut f64),
+    >(
         &mut self,
         f: F,
         df: DF,
         fdf: FDF,
         root: f64,
     ) -> ::Value {
-
         // convert rust functions to C
         unsafe extern "C" fn inner_f<'a, F: Fn(f64) -> f64 + 'a>(
             x: f64,
@@ -283,7 +282,7 @@ impl RootFdfSolver {
             y: *mut c_double,
             dy: *mut c_double,
         ) {
-            let fdf: &FDF =  &*(params as *const FDF);
+            let fdf: &FDF = &*(params as *const FDF);
             fdf(x, &mut *y, &mut *dy);
         }
 
@@ -295,10 +294,7 @@ impl RootFdfSolver {
         };
 
         ::Value::from(unsafe {
-            sys::gsl_root_fdfsolver_set(
-                self.unwrap_unique(),
-                &mut self.inner_call,
-                root)
+            sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut self.inner_call, root)
         })
     }
 
@@ -344,10 +340,10 @@ impl RootFdfSolver {
     }
 }
 
-#[cfg(any(test, doctest))]
+#[cfg(test)]
 mod test {
     use super::*;
-    use roots::{test_interval, test_delta};
+    use roots::{test_delta, test_interval};
 
     // support functions
     fn quadratic_test_fn(x: f64) -> f64 {
@@ -358,7 +354,7 @@ mod test {
         2.0 * x
     }
 
-    fn quadratic_test_fn_fdf(x: f64, y: &mut f64, dy: &mut f64){
+    fn quadratic_test_fn_fdf(x: f64, y: &mut f64, dy: &mut f64) {
         *y = x.powf(2.0) - 5.0;
         *dy = 2.0 * x;
     }
@@ -369,7 +365,7 @@ mod test {
         root.set(&quadratic_test_fn, 0.0, 5.0);
 
         let max_iter = 10usize;
-        let epsabs= 0.0001;
+        let epsabs = 0.0001;
         let epsrel = 0.0000001;
 
         let mut status = ::Value::Continue;
@@ -399,7 +395,14 @@ mod test {
                 println!("Converged");
             }
 
-            println!("{} \t [{:.5}, {:.5}] \t {:.5} \t {:.5}", iter, x_lo, x_hi, r, x_hi - x_lo);
+            println!(
+                "{} \t [{:.5}, {:.5}] \t {:.5} \t {:.5}",
+                iter,
+                x_lo,
+                x_hi,
+                r,
+                x_hi - x_lo
+            );
             iter += 1;
         }
         assert!(matches!(status, ::Value::Success))
@@ -413,11 +416,16 @@ mod test {
 
         // setup solver
         let mut root = RootFdfSolver::new(RootFdfSolverType::steffenson()).unwrap();
-        root.set(quadratic_test_fn, quadratic_test_fn_df, quadratic_test_fn_fdf, guess_value);
+        root.set(
+            quadratic_test_fn,
+            quadratic_test_fn_df,
+            quadratic_test_fn_fdf,
+            guess_value,
+        );
 
         // set up iterations
         let max_iter = 20usize;
-        let epsabs= 0.0001;
+        let epsabs = 0.0001;
         let epsrel = 0.0000001;
 
         let mut status = ::Value::Continue;
@@ -442,7 +450,13 @@ mod test {
             }
 
             // print results
-            println!("{} \t {:.5} \t {:.5} \t {:.5}", iter, x, x - x_0, x - r_expected);
+            println!(
+                "{} \t {:.5} \t {:.5} \t {:.5}",
+                iter,
+                x,
+                x - x_0,
+                x - r_expected
+            );
             iter += 1;
         }
         assert!(matches!(status, ::Value::Success))
