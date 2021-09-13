@@ -132,8 +132,19 @@ pub const GSL_SPMATRIX_FLG_FIXED: u32 = 2;
 pub const GSL_VERSION: &'static [u8; 4usize] = b"2.7\0";
 pub const GSL_MAJOR_VERSION: u32 = 2;
 pub const GSL_MINOR_VERSION: u32 = 7;
-pub type __off_t = ::std::os::raw::c_long;
-pub type __off64_t = ::std::os::raw::c_long;
+pub type __int64_t = ::std::os::raw::c_longlong;
+pub type __darwin_size_t = ::std::os::raw::c_ulong;
+pub type __darwin_off_t = __int64_t;
+pub type fpos_t = __darwin_off_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __sbuf;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __sFILEX;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __sFILE;
 pub type FILE = libc::FILE;
 pub const GSL_SUCCESS: ::std::os::raw::c_int = 0;
 pub const GSL_FAILURE: ::std::os::raw::c_int = -1;
@@ -17263,7 +17274,7 @@ pub const GSL_IEEE_TYPE_INF: ::std::os::raw::c_uint = 2;
 pub const GSL_IEEE_TYPE_NORMAL: ::std::os::raw::c_uint = 3;
 pub const GSL_IEEE_TYPE_DENORMAL: ::std::os::raw::c_uint = 4;
 pub const GSL_IEEE_TYPE_ZERO: ::std::os::raw::c_uint = 5;
-pub type _bindgen_ty_3 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_2 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_ieee_float_rep;
@@ -17291,12 +17302,12 @@ extern "C" {
 pub const GSL_IEEE_SINGLE_PRECISION: ::std::os::raw::c_uint = 1;
 pub const GSL_IEEE_DOUBLE_PRECISION: ::std::os::raw::c_uint = 2;
 pub const GSL_IEEE_EXTENDED_PRECISION: ::std::os::raw::c_uint = 3;
-pub type _bindgen_ty_4 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_3 = ::std::os::raw::c_uint;
 pub const GSL_IEEE_ROUND_TO_NEAREST: ::std::os::raw::c_uint = 1;
 pub const GSL_IEEE_ROUND_DOWN: ::std::os::raw::c_uint = 2;
 pub const GSL_IEEE_ROUND_UP: ::std::os::raw::c_uint = 3;
 pub const GSL_IEEE_ROUND_TO_ZERO: ::std::os::raw::c_uint = 4;
-pub type _bindgen_ty_5 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_4 = ::std::os::raw::c_uint;
 pub const GSL_IEEE_MASK_INVALID: ::std::os::raw::c_uint = 1;
 pub const GSL_IEEE_MASK_DENORMALIZED: ::std::os::raw::c_uint = 2;
 pub const GSL_IEEE_MASK_DIVISION_BY_ZERO: ::std::os::raw::c_uint = 4;
@@ -17304,7 +17315,7 @@ pub const GSL_IEEE_MASK_OVERFLOW: ::std::os::raw::c_uint = 8;
 pub const GSL_IEEE_MASK_UNDERFLOW: ::std::os::raw::c_uint = 16;
 pub const GSL_IEEE_MASK_ALL: ::std::os::raw::c_uint = 31;
 pub const GSL_IEEE_TRAP_INEXACT: ::std::os::raw::c_uint = 32;
-pub type _bindgen_ty_6 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_5 = ::std::os::raw::c_uint;
 extern "C" {
     pub fn gsl_ieee_env_setup();
 }
@@ -17490,7 +17501,7 @@ pub const GSL_INTEG_GAUSS31: ::std::os::raw::c_uint = 3;
 pub const GSL_INTEG_GAUSS41: ::std::os::raw::c_uint = 4;
 pub const GSL_INTEG_GAUSS51: ::std::os::raw::c_uint = 5;
 pub const GSL_INTEG_GAUSS61: ::std::os::raw::c_uint = 6;
-pub type _bindgen_ty_7 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_6 = ::std::os::raw::c_uint;
 extern "C" {
     pub fn gsl_integration_qk(
         n: ::std::os::raw::c_int,
@@ -19909,7 +19920,7 @@ pub const GSL_MESSAGE_MASK_E: ::std::os::raw::c_uint = 16;
 pub const GSL_MESSAGE_MASK_F: ::std::os::raw::c_uint = 32;
 pub const GSL_MESSAGE_MASK_G: ::std::os::raw::c_uint = 64;
 pub const GSL_MESSAGE_MASK_H: ::std::os::raw::c_uint = 128;
-pub type _bindgen_ty_8 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_7 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_min_fminimizer_type;
@@ -20370,7 +20381,7 @@ extern "C" {
 pub const GSL_VEGAS_MODE_IMPORTANCE: ::std::os::raw::c_int = 1;
 pub const GSL_VEGAS_MODE_IMPORTANCE_ONLY: ::std::os::raw::c_int = 0;
 pub const GSL_VEGAS_MODE_STRATIFIED: ::std::os::raw::c_int = -1;
-pub type _bindgen_ty_9 = ::std::os::raw::c_int;
+pub type _bindgen_ty_8 = ::std::os::raw::c_int;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_monte_vegas_state;
@@ -22046,7 +22057,17 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_function_struct;
+pub struct gsl_multiroot_function_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut gsl_vector,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub n: usize,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_multiroot_function = gsl_multiroot_function_struct;
 extern "C" {
     pub fn gsl_multiroot_fdjacobian(
@@ -27923,7 +27944,7 @@ pub const GSL_SPMATRIX_CSR: ::std::os::raw::c_uint = 2;
 pub const GSL_SPMATRIX_TRIPLET: ::std::os::raw::c_uint = 0;
 pub const GSL_SPMATRIX_CCS: ::std::os::raw::c_uint = 1;
 pub const GSL_SPMATRIX_CRS: ::std::os::raw::c_uint = 2;
-pub type _bindgen_ty_10 = ::std::os::raw::c_uint;
+pub type _bindgen_ty_9 = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct gsl_spmatrix_pool_node;

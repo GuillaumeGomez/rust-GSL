@@ -150,6 +150,8 @@ fn create_header_file(folder: &Path) {
 
 fn should_strip_struct(line: &str) -> bool {
     !line.contains("pub struct gsl_function_struct ")
+    && !line.contains("pub struct gsl_multiroot_function_struct")
+    && !line.contains("pub struct gsl_multiroot_fdf_function_struct")
     && !line.contains("pub struct gsl_vector")
     && !line.contains("pub struct gsl_ntuple")
     && !line.contains("pub struct gsl_function_fdf_struct ")
