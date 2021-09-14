@@ -270,20 +270,20 @@ impl $rust_name {
     /// This function multiplies the elements of the self matrix by the constant factor x. The
     /// result self(i,j) <- x self(i,j) is stored in self.
     #[doc(alias = $name _scale)]
-    pub fn scale(&mut self, x: f64) -> Value {
+    pub fn scale(&mut self, x: $rust_ty) -> Value {
         Value::from(unsafe { sys::[<$name _scale>](self.unwrap_unique(), x) })
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result
     /// self(i,j) <- self(i,j) + x is stored in self.
     #[doc(alias = $name _add_constant)]
-    pub fn add_constant(&mut self, x: f64) -> Value {
+    pub fn add_constant(&mut self, x: $rust_ty) -> Value {
         Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
     }
 
-    #[doc(alias = $name _add_constant)]
-    pub fn add_diagonal(&mut self, x: f64) -> Value {
-        Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
+    #[doc(alias = $name _add_diagonal)]
+    pub fn add_diagonal(&mut self, x: $rust_ty) -> Value {
+        Value::from(unsafe { sys::[<$name _add_diagonal>](self.unwrap_unique(), x) })
     }
 
     /// This function returns the maximum value in the self matrix.
