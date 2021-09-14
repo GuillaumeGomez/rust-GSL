@@ -267,8 +267,7 @@ impl $rust_name {
     /// This function adds the constant value x to the elements of the self vector. The result
     /// `a_i <- a_i + x` is stored in `self`.
     #[doc(alias = $name _add_constant)]
-    pub fn add_constant(&mut self, x: f64) -> Value {
-        // Funny bug: here it expects a f64 and not a f32 for gsl_vector_float...
+    pub fn add_constant(&mut self, x: $rust_ty) -> Value {
         Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
     }
 
