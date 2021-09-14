@@ -86,3 +86,18 @@ jobs:
           args: --all -- --check
       - name: Checker
         run: python3 checker.py
+
+  sys-check:
+    name: sys check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Run checker
+        working-directory: gsl-sys/bin
+        run: cargo run
+      - run: git diff --exit-code
