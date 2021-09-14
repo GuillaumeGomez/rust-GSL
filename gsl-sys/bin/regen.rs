@@ -5,13 +5,13 @@ use std::env;
 use std::ffi::OsStr;
 use std::fs::{read_dir, write, OpenOptions};
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use regex::Regex;
 
 const HEADER_FILE: &str = "wrapper.h";
-const GSL_REPOSITORY: &str = "git://git.savannah.gnu.org/gsl.git";
+const GSL_REPOSITORY: &str = "ftp://ftp.gnu.org/gnu/gsl/gsl-2.7.tar.gz";
 const STRUCTS_TO_IGNORE: &[&str] = &["pub struct _IO_", "pub struct _G_"];
 const TYPES_TO_IGNORE: &[&str] = &["pub type _IO_lock_t "];
 const STATICS_TO_IGNORE: &[&str] = &[
@@ -136,6 +136,7 @@ fn create_header_file(folder: &Path) {
     let mut extra = vec!["gsl".to_owned()];
 
     get_all_headers(&folder.join("gsl"), &mut extra, &mut headers);
+    headers.sort_by(|a, b| a.split(".h").next().unwrap().cmp(b.split(".h").next().unwrap()));
     write(
         HEADER_FILE,
         format!(
@@ -337,7 +338,7 @@ fn clean_structs(content: &mut Vec<String>) {
     }
 }
 
-fn run_bindgen(folder: &Path, commit_hash: String) {
+fn run_bindgen(folder: &Path, commit_hash: &str) {
     println!("=> Running bindgen...");
     let bindings = bindgen::Builder::default()
         .header(HEADER_FILE)
@@ -395,26 +396,29 @@ fn run_bindgen(folder: &Path, commit_hash: String) {
     println!("<= Done");
 }
 
-fn ready_gsl_lib(folder: &Path) {
-    if Command::new("git")
-        .arg("clone")
+fn ready_gsl_lib(folder: &Path) -> PathBuf {
+    let gsl_path = folder.join("gsl-2.7");
+    let gsl_path_str = gsl_path.to_str().expect("Failed to convert path to str").to_owned();
+    if Command::new("wget")
         .arg(GSL_REPOSITORY)
-        .arg("--depth")
-        .arg("1")
-        .arg(
-            folder
-                .join("gsl")
-                .to_str()
-                .expect("failed to convert path to str"),
-        )
+        .current_dir(folder.to_str().expect("Failed to convert path to str"))
         .status()
         .is_err()
     {
-        panic!("Failed to clone gsl repository...");
+        panic!("Failed to clone gsl sources...");
+    }
+    if Command::new("tar")
+        .arg("xzf")
+        .arg("gsl-2.7.tar.gz")
+        .current_dir(folder.to_str().expect("Failed to convert path to str"))
+        .status()
+        .is_err()
+    {
+        panic!("Failed to untar gsl sources...");
     }
     if Command::new("bash")
         .arg("-c")
-        .arg(&format!("cd {}/gsl && ./autogen.sh", folder.display()))
+        .arg(&format!("cd {} && ./autogen.sh", gsl_path_str))
         .status()
         .is_err()
     {
@@ -422,7 +426,7 @@ fn ready_gsl_lib(folder: &Path) {
     }
     if Command::new("bash")
         .arg("-c")
-        .arg(&format!("cd {}/gsl && ./configure", folder.display()))
+        .arg(&format!("cd {} && ./configure", gsl_path_str))
         .status()
         .is_err()
     {
@@ -430,38 +434,25 @@ fn ready_gsl_lib(folder: &Path) {
     }
     if Command::new("bash")
         .arg("-c")
-        .arg(&format!("cd {}/gsl && make", folder.display()))
+        .arg(&format!("cd {} && make", gsl_path_str))
         .status()
         .is_err()
     {
         panic!("Failed to run make");
     }
-}
-
-fn get_current_commit_hash(folder: &Path) -> String {
-    let commit_hash = Command::new("bash")
-        .arg("-c")
-        .arg(&format!(
-            "cd {} && git rev-parse --short HEAD",
-            folder.display()
-        ))
-        .output()
-        .expect("Failed to retrieve current gsl commit hash");
-    if !commit_hash.status.success() {
-        panic!("Commit hash retrieval failed....");
-    }
-    String::from_utf8(commit_hash.stdout)
-        .expect("Invalid commit hash received...")
-        .trim()
-        .to_owned()
+    gsl_path
 }
 
 fn run_everything(folder: &Path, ready_gsl: bool) {
-    if ready_gsl {
-        ready_gsl_lib(folder);
-    }
+    let tmp;
+    let folder = if ready_gsl {
+        tmp = ready_gsl_lib(folder);
+        &tmp
+    } else {
+        folder
+    };
     create_header_file(folder);
-    run_bindgen(folder, get_current_commit_hash(folder));
+    run_bindgen(folder, "2.7");
 }
 
 fn main() {
