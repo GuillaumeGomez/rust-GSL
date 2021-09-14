@@ -16,3 +16,5 @@ Cargo.lock
 /rust-GSL.iml
 
 **/wrapper.h
+*.tar.gz
+gsl-*/

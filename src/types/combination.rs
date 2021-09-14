@@ -97,6 +97,7 @@ impl Combination {
         unsafe { sys::gsl_combination_k(self.unwrap_shared()) }
     }
 
+    // checker:ignore
     #[doc(alias = "gsl_combination_data")]
     pub fn as_slice(&self) -> &[usize] {
         unsafe {
@@ -105,6 +106,7 @@ impl Combination {
         }
     }
 
+    // checker:ignore
     #[doc(alias = "gsl_combination_data")]
     pub fn as_mut_slice(&mut self) -> &mut [usize] {
         unsafe {
@@ -115,6 +117,7 @@ impl Combination {
 
     /// This function checks that the combination self is valid. The k elements should lie in the
     /// range 0 to n-1, with each value occurring once at most and in increasing order.
+    // checker:ignore
     #[doc(alias = "gsl_combination_valid")]
     pub fn is_valid(&self) -> Value {
         // Little hack because `gsl_combination_valid` doesn't in fact need a mutable object...

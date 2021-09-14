@@ -18,12 +18,13 @@ However, if you want to change the output a bit, it's **strongly** recommended t
 instead clone and setup the GSL repository on your computer directly:
 
 ```bash
-git clone git://git.savannah.gnu.org/gsl.git
-cd gsl
+wget ftp://ftp.gnu.org/gnu/gsl/gsl-2.7.tar.gz
+tar xzf gsl-2.7.tar.gz
+cd gsl-2.7
 ./autogen.sh
 ./configure
 make
-# The headers should now all be in the gsl subfolder!
+# The headers should now all be in the gsl-2.7 subfolder!
 ```
 
 Then run the FFI generation like this:

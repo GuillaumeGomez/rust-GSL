@@ -144,7 +144,7 @@ impl Histogram {
     ///
     /// Returns `(Value, lower, upper)`.
     #[doc(alias = "gsl_histogram_get_range")]
-    pub fn get_range(&self, i: usize) -> (Value, f64, f64) {
+    pub fn range(&self, i: usize) -> (Value, f64, f64) {
         let mut lower = 0.;
         let mut upper = 0.;
         let ret = unsafe {
@@ -460,7 +460,7 @@ impl Histogram2D {
     ///
     /// Returns `(Value, xlower, xupper)`.
     #[doc(alias = "gsl_histogram2d_get_xrange")]
-    pub fn get_xrange(&self, i: usize) -> (Value, f64, f64) {
+    pub fn xrange(&self, i: usize) -> (Value, f64, f64) {
         let mut xlower = 0.;
         let mut xupper = 0.;
         let ret = unsafe {
@@ -479,7 +479,7 @@ impl Histogram2D {
     ///
     /// Returns `(Value, ylower, yupper)`.
     #[doc(alias = "gsl_histogram2d_get_yrange")]
-    pub fn get_yrange(&self, j: usize) -> (Value, f64, f64) {
+    pub fn yrange(&self, j: usize) -> (Value, f64, f64) {
         let mut ylower = 0.;
         let mut yupper = 0.;
         let ret = unsafe {

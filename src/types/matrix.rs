@@ -66,13 +66,6 @@ pub struct $rust_name {
     can_free: bool,
 }
 
-// macro_rules! lol {
-//     ($doc:expr, $($t:tt)*) => (
-//         #[doc(alias = $doc)]
-//         $($t)*
-//     );
-// }
-
 impl $rust_name {
     #[doc = "Creates a new " $rust_name " with all elements set to zero"]
     #[doc(alias = $name _calloc)]
@@ -203,7 +196,7 @@ impl $rust_name {
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place.
     /// The matrix must be square for this operation to be possible.
-    #[doc(alias = $name _swap_row_col)]
+    #[doc(alias = $name _swap_rowcol)]
     pub fn swap_row_col(&mut self, i: usize, j: usize) -> Value {
         Value::from(unsafe { sys::[<$name _swap_rowcol>](self.unwrap_unique(), i, j) })
     }

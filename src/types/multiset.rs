@@ -98,6 +98,7 @@ impl MultiSet {
     }
 
     /// This function returns a pointer to the array of elements in the multiset `self`.
+    // checker:ignore
     #[doc(alias = "gsl_multiset_data")]
     pub fn data_mut(&mut self) -> &mut [usize] {
         unsafe {

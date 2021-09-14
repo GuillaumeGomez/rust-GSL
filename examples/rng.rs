@@ -29,7 +29,7 @@ fn main() {
     let mut r = rgsl::Rng::new(RngType::default()).unwrap();
 
     println!("=== DEFAULT ===");
-    println!("generator type: {}", r.get_name());
+    println!("generator type: {}", r.name());
     println!("seed = {}", rgsl::Rng::default_seed());
     println!("first value = {}", r.get());
 
