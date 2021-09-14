@@ -84,3 +84,5 @@ jobs:
         with:
           command: fmt
           args: --all -- --check
+      - name: Checker
+        run: python3 checker.py
