@@ -71,7 +71,9 @@ impl Permutation {
         unsafe { sys::gsl_permutation_init(self.unwrap_unique()) }
     }
 
-    /// This function copies the elements of the permutation src into the permutation dest. The two permutations must have the same size.
+    /// This function copies the elements of the permutation src into the permutation dest. The two
+    /// permutations must have the same size.
+    // checker:ignore
     #[doc(alias = "gsl_permutation_memcpy")]
     pub fn copy(&self, dest: &mut Permutation) -> Value {
         Value::from(unsafe {
@@ -98,6 +100,7 @@ impl Permutation {
         unsafe { sys::gsl_permutation_size(self.unwrap_shared()) }
     }
 
+    // checker:ignore
     #[doc(alias = "gsl_permutation_data")]
     pub fn as_slice(&self) -> &[usize] {
         unsafe {
@@ -106,6 +109,7 @@ impl Permutation {
         }
     }
 
+    // checker:ignore
     #[doc(alias = "gsl_permutation_data")]
     pub fn as_mut_slice(&mut self) -> &mut [usize] {
         unsafe {
@@ -114,7 +118,9 @@ impl Permutation {
         }
     }
 
-    /// This function checks that the permutation p is valid. The n elements should contain each of the numbers 0 to n-1 once and only once.
+    /// This function checks that the permutation p is valid. The n elements should contain each of
+    /// the numbers 0 to n-1 once and only once.
+    // checker:ignore
     #[doc(alias = "gsl_permutation_valid")]
     pub fn is_valid(&self) -> bool {
         Value::from(unsafe { sys::gsl_permutation_valid(self.unwrap_shared()) }) == ::Value::Success
@@ -150,7 +156,7 @@ impl Permutation {
     }
 
     /// This function applies the permutation to the array data of size n with stride stride.
-    #[doc(alias = "gsl_permutation_data")]
+    #[doc(alias = "gsl_permute")]
     pub fn permute(&mut self, data: &mut [f64], stride: usize) -> Value {
         Value::from(unsafe {
             let data_ptr = sys::gsl_permutation_data(self.unwrap_shared());
@@ -159,7 +165,7 @@ impl Permutation {
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
-    #[doc(alias = "gsl_permutation_data")]
+    #[doc(alias = "gsl_permute_inverse")]
     pub fn permute_inverse(&mut self, data: &mut [f64], stride: usize) -> Value {
         Value::from(unsafe {
             let data_ptr = sys::gsl_permutation_data(self.unwrap_shared());

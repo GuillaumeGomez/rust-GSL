@@ -114,6 +114,7 @@ impl BSpLineWorkspace {
     /// combinations occur, for example, when evaluating an interpolated function).
     ///
     /// Returns `(Value, istart, iend)`.
+    // checker:ignore
     #[doc(alias = "gsl_bspline_eval_nonzero")]
     pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> (Value, usize, usize) {
         let mut istart = 0;

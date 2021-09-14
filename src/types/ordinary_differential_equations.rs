@@ -232,6 +232,7 @@ impl ODEiv2Step {
     /// If the driver object is not appropriately set via gsl_odeiv2_step_set_driver for those steppers that need it, the stepping function
     /// returns ::Fault. If the user-supplied functions defined in the system sys returns Value::BadFunc, the function returns
     /// immediately with the same return code. In this case the user must call gsl_odeiv2_step_reset before calling this function again.
+    // checker:ignore
     #[doc(alias = "gsl_odeiv2_step_apply")]
     pub fn apply(
         &mut self,

@@ -89,6 +89,7 @@ impl QRng {
     }
 
     /// This function returns a pointer to the state of generator `self`.
+    // checker:ignore
     #[doc(alias = "gsl_qrng_state")]
     pub fn state_mut(&mut self) -> Option<&mut [i8]> {
         let tmp = unsafe { sys::gsl_qrng_state(self.unwrap_shared()) };
@@ -103,6 +104,7 @@ impl QRng {
     /// This function copies the quasi-random sequence generator src into the pre-existing generator
     /// `dest`, making dest into an exact copy of `self`. The two generators must be of the same
     /// type.
+    // checker:ignore
     #[doc(alias = "gsl_qrng_memcpy")]
     pub fn copy(&self, dest: &mut QRng) -> Value {
         Value::from(unsafe { sys::gsl_qrng_memcpy(dest.unwrap_unique(), self.unwrap_shared()) })

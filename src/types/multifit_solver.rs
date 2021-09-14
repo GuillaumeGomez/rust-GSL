@@ -361,6 +361,7 @@ impl MultiFitFdfSolver {
     /// These functions iterate the solver s for a maximum of maxiter iterations. After each
     /// iteration, the system is tested for convergence using gsl_multifit_test_delta with the
     /// error tolerances epsabs and epsrel.
+    // checker:ignore
     #[allow(unused_assignments)]
     #[doc(alias = "gsl_multifit_test_delta")]
     pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> ::Value {
@@ -416,6 +417,7 @@ pub struct MultiFitFunctionFdf {
 }
 
 impl MultiFitFunctionFdf {
+    #[doc(alias = "gsl_multifit_function_fdf")]
     pub fn new(n: usize, p: usize, nevalf: usize, nevaldf: usize) -> MultiFitFunctionFdf {
         MultiFitFunctionFdf {
             f: None,

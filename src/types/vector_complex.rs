@@ -358,6 +358,7 @@ macro_rules! gsl_vec_complex {
             ///
             /// The function gsl_vector_const_subvector is equivalent to gsl_vector_subvector but can be
             /// used for vectors which are declared const.
+            // checker:ignore
             #[doc(alias = $name _subvector)]
             pub fn from_vector(v: &'a mut $rust_name, offset: usize, n: usize) -> Self {
                 unsafe {
@@ -397,6 +398,7 @@ macro_rules! gsl_vec_complex {
             /// ```
             /// The function gsl_vector_const_subvector_with_stride is equivalent to
             /// gsl_vector_subvector_with_stride but can be used for vectors which are declared const.
+            // checker:ignore
             #[doc(alias = $name _subvector_with_stride)]
             pub fn from_vector_with_stride(
                 v: &'a mut $rust_name,
@@ -428,6 +430,7 @@ macro_rules! gsl_vec_complex {
             ///
             /// The function gsl_vector_const_view_array is equivalent to gsl_vector_view_array but can be
             /// used for arrays which are declared const.
+            // checker:ignore
             #[doc(alias = $name _view_array)]
             pub fn from_array(base: &'a mut [f64]) -> Self {
                 unsafe {
@@ -453,6 +456,7 @@ macro_rules! gsl_vec_complex {
             ///
             /// The function gsl_vector_const_view_array_with_stride is equivalent to
             /// gsl_vector_view_array_with_stride but can be used for arrays which are declared const.
+            // checker:ignore
             #[doc(alias = $name _view_array_with_stride)]
             pub fn from_array_with_stride(base: &'a mut [$rust_ty], stride: usize) -> Self {
                 unsafe {

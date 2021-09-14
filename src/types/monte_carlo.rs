@@ -265,6 +265,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
+    // checker:ignore
     #[doc(alias = "gsl_monte_miser_params_get")]
     pub fn get_params(&self) -> MiserParams {
         let mut m = sys::gsl_monte_miser_params {
@@ -282,6 +283,7 @@ impl MiserMonteCarlo {
     }
 
     /// This function sets the integrator parameters based on values provided in the params structure.
+    // checker:ignore
     #[doc(alias = "gsl_monte_miser_params_set")]
     pub fn set_params(&mut self, params: &MiserParams) {
         unsafe {
@@ -444,6 +446,7 @@ impl VegasMonteCarlo {
         (result, sigma)
     }
 
+    // checker:ignore
     #[doc(alias = "gsl_monte_vegas_params_get")]
     pub fn get_params(&self) -> VegasParams {
         let mut params = VegasParams::default();
@@ -453,6 +456,7 @@ impl VegasMonteCarlo {
         params
     }
 
+    // checker:ignore
     #[doc(alias = "gsl_monte_vegas_params_set")]
     pub fn set_params(&mut self, params: &VegasParams) {
         unsafe {

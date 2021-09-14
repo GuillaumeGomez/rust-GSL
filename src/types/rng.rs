@@ -154,7 +154,7 @@ impl Rng {
     ///
     /// would print something like "r is a 'taus' generator".
     #[doc(alias = "gsl_rng_name")]
-    pub fn get_name(&self) -> String {
+    pub fn name(&self) -> String {
         unsafe {
             let tmp = sys::gsl_rng_name(self.unwrap_shared());
 
@@ -198,6 +198,7 @@ impl Rng {
     /// size_t n = gsl_rng_size (r);
     /// fwrite (state, n, 1, stream);
     /// ```
+    // checker:ignore
     #[doc(alias = "gsl_rng_state")]
     pub fn state_mut<T>(&mut self) -> &mut T {
         unsafe { &mut (*(sys::gsl_rng_state(self.unwrap_shared()) as *mut T)) }
@@ -390,7 +391,7 @@ impl Rng {
     ///
     /// for x,y in the range -\infty to +\infty. The correlation coefficient rho should lie between 1 and -1.
     #[doc(alias = "gsl_ran_bivariate_gaussian")]
-    pub fn bivariante_gaussian(&mut self, sigma_x: f64, sigma_y: f64, rho: f64) -> (f64, f64) {
+    pub fn bivariate_gaussian(&mut self, sigma_x: f64, sigma_y: f64, rho: f64) -> (f64, f64) {
         let mut x = 0.;
         let mut y = 0.;
 
