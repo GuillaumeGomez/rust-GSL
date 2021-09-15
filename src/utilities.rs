@@ -1,4 +1,7 @@
-/// Utilities for interfacing with GSL/C
+//
+// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+//
+
 use std::ffi::CString;
 use std::io;
 use std::ops::Drop;
