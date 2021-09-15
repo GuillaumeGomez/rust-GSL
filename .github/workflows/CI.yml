@@ -97,7 +97,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - name: Run checker
+      - name: Run checker if changes in gsl-sys
         working-directory: gsl-sys/bin
-        run: cargo run
+        run: ((git diff --name-only `git log --merges --pretty=format:"%H" -n 1` | grep gsl-sys) && cargo run) || echo "No changes in gsl-sys, no need to check it!"
       - run: git diff --exit-code
