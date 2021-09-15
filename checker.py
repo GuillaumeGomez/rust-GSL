@@ -158,9 +158,18 @@ def check_macros(file_path, content, errors):
                         data["sys_names"].append(sys_name)
 
 
+def check_file_header(file_path, content, errors):
+    if content.split('\n')[:3] != [
+        "//",
+        "// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)",
+        "//"
+    ]:
+        add_error(file_path, 1, errors, "Invalid header (take a look at `lib.rs`)")
+
+
 def main():
     errors = []
-    read_dirs("src", errors, [check_macros])
+    read_dirs("src", errors, [check_file_header, check_macros])
     if len(errors) > 0:
         for err in errors:
             print("=> {}".format(err))
