@@ -42,10 +42,8 @@ its derivative (hence the name fdf) to be supplied by the user.
 !*/
 
 use ffi::FFI;
-use std::os::raw::{c_double, c_void};
-
-use std::boxed::Box;
-use std::mem::transmute;
+use sys;
+use sys::libc::{c_double, c_void};
 
 ffi_wrapper!(
     RootFSolverType,
@@ -55,7 +53,6 @@ guaranteed to contain a root—if a and b are the endpoints of the interval then
 differ in sign from f (b). This ensures that the function crosses zero at least once in the
 interval. If a valid initial interval is used then these algorithm cannot fail, provided the
 function is well-behaved.
-
 Note that a bracketing algorithm cannot find roots of even degree, since these do not
 cross the x-axis."
 );
@@ -110,18 +107,21 @@ impl RootFSolverType {
 }
 
 ffi_wrapper!(
-    RootFSolver,
+    RootFSolver<'a>,
     *mut sys::gsl_root_fsolver,
     gsl_root_fsolver_free
+    ;inner_call: sys::gsl_function_struct => sys::gsl_function_struct { function: None, params: std::ptr::null_mut() };
+    ;inner_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;,
+    "This is a workspace for finding roots using methods which do not require derivatives."
 );
 
-impl RootFSolver {
+impl<'a> RootFSolver<'a> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_root_fsolver_alloc")]
-    pub fn new(t: &RootFSolverType) -> Option<RootFSolver> {
+    pub fn new(t: RootFSolverType) -> Option<RootFSolver<'a>> {
         let tmp = unsafe { sys::gsl_root_fsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
@@ -134,29 +134,12 @@ impl RootFSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial search interval [x lower, x upper].
     #[doc(alias = "gsl_root_fsolver_set")]
-    pub fn set<F: Fn(f64) -> f64>(&mut self, f: F, x_lower: f64, x_upper: f64) -> ::Value {
-        unsafe extern "C" fn inner<F: Fn(f64) -> f64>(
-            x: c_double,
-            params: *mut c_void,
-        ) -> c_double {
-            let params: &F = &*(params as *const F);
-            params(x)
-        }
-        ::Value::from(unsafe {
-            let f: Box<F> = Box::new(f);
-            let params = Box::into_raw(f);
+    pub fn set<F: Fn(f64) -> f64 + 'a>(&mut self, f: F, x_lower: f64, x_upper: f64) -> ::Value {
+        self.inner_call = wrap_callback!(f, F + 'a);
+        self.inner_closure = Some(Box::new(f));
 
-            let mut func = sys::gsl_function {
-                function: Some(transmute::<
-                    _,
-                    unsafe extern "C" fn(c_double, *mut c_void) -> c_double,
-                >(inner::<F> as *const ())),
-                params: params as *mut _,
-            };
-            let r = sys::gsl_root_fsolver_set(self.unwrap_unique(), &mut func, x_lower, x_upper);
-            // We free the closure now that we're done using it.
-            Box::from_raw(params);
-            r
+        ::Value::from(unsafe {
+            sys::gsl_root_fsolver_set(self.unwrap_unique(), &mut self.inner_call, x_lower, x_upper)
         })
     }
 
@@ -211,7 +194,6 @@ ffi_wrapper!(
 location of the root. There is no absolute guarantee of convergence—the function must be
 suitable for this technique and the initial guess must be sufficiently close to the root
 for it to work. When these conditions are satisfied then convergence is quadratic.
-
 These algorithms make use of both the function and its derivative."
 );
 
@@ -238,19 +220,24 @@ impl RootFdfSolverType {
 }
 
 ffi_wrapper!(
-    RootFdfSolver,
+    RootFdfSolver<'a>,
     *mut sys::gsl_root_fdfsolver,
     gsl_root_fdfsolver_free
+    ;inner_call: sys::gsl_function_fdf_struct => sys::gsl_function_fdf_struct{f: None, df: None, fdf: None, params: std::ptr::null_mut()};
+    ;inner_f_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;
+    ;inner_df_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;
+    ;inner_fdf_closure: Option<Box<dyn Fn(f64, &mut f64, &mut f64) + 'a>> => None;,
+    "This is a workspace for finding roots using methods which do require derivatives."
 );
 
-impl RootFdfSolver {
+impl<'a> RootFdfSolver<'a> {
     /// This function returns a pointer to a newly allocated instance of a derivative-based
     /// solver of type T.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_root_fdfsolver_alloc")]
-    pub fn new(t: &RootFdfSolverType) -> Option<RootFdfSolver> {
+    pub fn new(t: RootFdfSolverType) -> Option<RootFdfSolver<'a>> {
         let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
@@ -263,76 +250,56 @@ impl RootFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function and
     /// derivative fdf and the initial guess root.
     #[doc(alias = "gsl_root_fdfsolver_set")]
-    pub fn set<F: Fn(f64) -> f64, DF: Fn(f64) -> f64, FDF: Fn(f64, &mut f64, &mut f64)>(
+    pub fn set<
+        F: Fn(f64) -> f64 + 'a,
+        DF: Fn(f64) -> f64 + 'a,
+        FDF: Fn(f64, &mut f64, &mut f64) + 'a,
+    >(
         &mut self,
         f: F,
         df: DF,
         fdf: FDF,
         root: f64,
     ) -> ::Value {
-        unsafe extern "C" fn inner_f<F: Fn(f64) -> f64>(
+        // convert rust functions to C
+        unsafe extern "C" fn inner_f<'a, F: Fn(f64) -> f64 + 'a>(
             x: c_double,
             params: *mut c_void,
-        ) -> c_double {
-            let params: &(*const F, *const (), *const ()) =
-                &*(params as *const (*const F, *const (), *const ()));
-            let f = &*params.0;
+        ) -> f64 {
+            let f: &F = &*(params as *const F);
             f(x)
         }
-        unsafe extern "C" fn inner_df<DF: Fn(f64) -> f64>(
+
+        unsafe extern "C" fn inner_df<'a, DF: Fn(f64) -> f64 + 'a>(
             x: c_double,
             params: *mut c_void,
-        ) -> c_double {
-            let params: &(*const (), *const DF, *const ()) =
-                &*(params as *const (*const (), *const DF, *const ()));
-            let df = &*params.1;
+        ) -> f64 {
+            let df: &DF = &*(params as *const DF);
             df(x)
         }
-        unsafe extern "C" fn inner_fdf<FDF: Fn(f64, &mut f64, &mut f64)>(
+
+        unsafe extern "C" fn inner_fdf<'a, FDF: Fn(f64, &mut f64, &mut f64) + 'a>(
             x: c_double,
             params: *mut c_void,
             y: *mut c_double,
             dy: *mut c_double,
         ) {
-            let params: &(*const (), *const (), *const FDF) =
-                &*(params as *const (*const (), *const (), *const FDF));
-            let fdf = &*params.2;
+            let fdf: &FDF = &*(params as *const FDF);
             fdf(x, &mut *y, &mut *dy);
         }
 
+        self.inner_call = sys::gsl_function_fdf {
+            f: Some(inner_f::<F>),
+            df: Some(inner_df::<DF>),
+            fdf: Some(inner_fdf::<FDF>),
+            params: &(&f, &df, &fdf) as *const _ as *mut _,
+        };
+        self.inner_f_closure = Some(Box::new(f));
+        self.inner_df_closure = Some(Box::new(df));
+        self.inner_fdf_closure = Some(Box::new(fdf));
+
         ::Value::from(unsafe {
-            let f: Box<F> = Box::new(f);
-            let f = Box::into_raw(f);
-            let df: Box<DF> = Box::new(df);
-            let df = Box::into_raw(df);
-            let fdf: Box<FDF> = Box::new(fdf);
-            let fdf = Box::into_raw(fdf);
-
-            let params = Box::new((f, df, fdf));
-            let params = Box::into_raw(params);
-
-            let mut func = sys::gsl_function_fdf {
-                f: Some(transmute::<
-                    _,
-                    unsafe extern "C" fn(c_double, *mut c_void) -> c_double,
-                >(inner_f::<F> as *const ())),
-                df: Some(transmute::<
-                    _,
-                    unsafe extern "C" fn(c_double, *mut c_void) -> c_double,
-                >(inner_df::<DF> as *const ())),
-                fdf: Some(transmute::<
-                    _,
-                    unsafe extern "C" fn(c_double, *mut c_void, *mut c_double, *mut c_double),
-                >(inner_fdf::<FDF> as *const ())),
-                params: params as *mut _,
-            };
-            let r = sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut func, root);
-            // We free the closure now that we're done using it.
-            let tmp = Box::from_raw(params);
-            Box::from_raw(tmp.0);
-            Box::from_raw(tmp.1);
-            Box::from_raw(tmp.2);
-            r
+            sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut self.inner_call, root)
         })
     }
 
@@ -375,5 +342,158 @@ impl RootFdfSolver {
     #[doc(alias = "gsl_root_fdfsolver_root")]
     pub fn root(&self) -> f64 {
         unsafe { sys::gsl_root_fdfsolver_root(self.unwrap_shared()) }
+    }
+}
+
+#[cfg(any(test, doctest))]
+mod test {
+    /// This doc block will be used to ensure that the closure can't be set everywhere!
+    ///
+    /// ```compile_fail
+    /// use rgsl::*;
+    ///
+    /// fn set(root: &mut RootFSolver) {
+    ///     let y = "lalal".to_owned();
+    ///     root.set(
+    ///         {|x| x * x - 5.;
+    ///         println!("==> {:?}", y);
+    ///         }, 0.0, 5.0);
+    /// }
+    ///
+    /// let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
+    /// set(&mut root);
+    /// ```
+    ///
+    /// Same but a working version:
+    ///
+    /// ```
+    /// use rgsl::*;
+    ///
+    /// fn set(root: &mut RootFSolver) {
+    ///     root.set(|x| x * x - 5., 0.0, 5.0);
+    /// }
+    ///
+    /// let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
+    /// set(&mut root);
+    /// let status = root.iterate();
+    /// ```
+    use super::*;
+    use roots::{test_delta, test_interval};
+
+    // support functions
+    fn quadratic_test_fn(x: f64) -> f64 {
+        x.powf(2.0) - 5.0
+    }
+
+    fn quadratic_test_fn_df(x: f64) -> f64 {
+        2.0 * x
+    }
+
+    fn quadratic_test_fn_fdf(x: f64, y: &mut f64, dy: &mut f64) {
+        *y = x.powf(2.0) - 5.0;
+        *dy = 2.0 * x;
+    }
+
+    #[test]
+    fn test_root() {
+        let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
+        root.set(&quadratic_test_fn, 0.0, 5.0);
+
+        let max_iter = 10usize;
+        let epsabs = 0.0001;
+        let epsrel = 0.0000001;
+
+        let mut status = ::Value::Continue;
+        let mut iter = 0usize;
+
+        println!("Testing: {}", root.name());
+
+        println!("iter, \t [x_lo, x_hi], \t min, \t error");
+        while matches!(status, ::Value::Continue) && iter < max_iter {
+            status = root.iterate();
+
+            // check if iteration succeeded
+            if !matches!(status, ::Value::Success) {
+                println!("Failed to iterate successfully");
+                break;
+            }
+
+            // test for convergence
+            let r = root.root();
+            let x_lo = root.x_lower();
+            let x_hi = root.x_upper();
+
+            status = test_interval(x_lo, x_hi, epsabs, epsrel);
+
+            // check if iteration succeeded
+            if status == ::Value::Success {
+                println!("Converged");
+            }
+
+            println!(
+                "{} \t [{:.5}, {:.5}] \t {:.5} \t {:.5}",
+                iter,
+                x_lo,
+                x_hi,
+                r,
+                x_hi - x_lo
+            );
+            iter += 1;
+        }
+        assert!(matches!(status, ::Value::Success))
+    }
+
+    #[test]
+    fn test_root_fdf() {
+        //guess value
+        let r_expected = 5.0_f64.sqrt();
+        let guess_value = 1.0;
+
+        // setup solver
+        let mut root = RootFdfSolver::new(RootFdfSolverType::steffenson()).unwrap();
+        root.set(
+            quadratic_test_fn,
+            quadratic_test_fn_df,
+            quadratic_test_fn_fdf,
+            guess_value,
+        );
+
+        // set up iterations
+        let max_iter = 20usize;
+        let epsabs = 0.0001;
+        let epsrel = 0.0000001;
+
+        let mut status = ::Value::Continue;
+        let mut iter = 0usize;
+
+        println!("Testing: {}", root.name().unwrap());
+
+        println!("iter, \t root, \t rel error \t abs error");
+
+        let mut x = guess_value;
+        while matches!(status, ::Value::Continue) && iter < max_iter {
+            root.iterate(); //should check for failure
+
+            // test for convergence
+            let x_0 = x;
+            x = root.root();
+            status = test_delta(x, x_0, epsabs, epsrel);
+
+            // check if iteration succeeded
+            if matches!(status, ::Value::Success) {
+                println!("Converged");
+            }
+
+            // print results
+            println!(
+                "{} \t {:.5} \t {:.5} \t {:.5}",
+                iter,
+                x,
+                x - x_0,
+                x - r_expected
+            );
+            iter += 1;
+        }
+        assert!(matches!(status, ::Value::Success))
     }
 }
