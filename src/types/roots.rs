@@ -220,21 +220,24 @@ impl RootFdfSolverType {
 }
 
 ffi_wrapper!(
-    RootFdfSolver,
+    RootFdfSolver<'a>,
     *mut sys::gsl_root_fdfsolver,
     gsl_root_fdfsolver_free
-    ;inner_call: sys::gsl_function_fdf_struct => sys::gsl_function_fdf_struct{f: None, df: None, fdf: None, params: std::ptr::null_mut()};,
+    ;inner_call: sys::gsl_function_fdf_struct => sys::gsl_function_fdf_struct{f: None, df: None, fdf: None, params: std::ptr::null_mut()};
+    ;inner_f_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;
+    ;inner_df_closure: Option<Box<dyn Fn(f64) -> f64 + 'a>> => None;
+    ;inner_fdf_closure: Option<Box<dyn Fn(f64, &mut f64, &mut f64) + 'a>> => None;,
     "This is a workspace for finding roots using methods which do require derivatives."
 );
 
-impl RootFdfSolver {
+impl<'a> RootFdfSolver<'a> {
     /// This function returns a pointer to a newly allocated instance of a derivative-based
     /// solver of type T.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
     /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_root_fdfsolver_alloc")]
-    pub fn new(t: RootFdfSolverType) -> Option<RootFdfSolver> {
+    pub fn new(t: RootFdfSolverType) -> Option<RootFdfSolver<'a>> {
         let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(t.unwrap_shared()) };
 
         if tmp.is_null() {
@@ -248,10 +251,9 @@ impl RootFdfSolver {
     /// derivative fdf and the initial guess root.
     #[doc(alias = "gsl_root_fdfsolver_set")]
     pub fn set<
-        'a,
         F: Fn(f64) -> f64 + 'a,
         DF: Fn(f64) -> f64 + 'a,
-        FDF: Fn(f64, &mut f64, &mut f64),
+        FDF: Fn(f64, &mut f64, &mut f64) + 'a,
     >(
         &mut self,
         f: F,
@@ -261,23 +263,23 @@ impl RootFdfSolver {
     ) -> ::Value {
         // convert rust functions to C
         unsafe extern "C" fn inner_f<'a, F: Fn(f64) -> f64 + 'a>(
-            x: f64,
-            params: *mut ::std::os::raw::c_void,
+            x: c_double,
+            params: *mut c_void,
         ) -> f64 {
             let f: &F = &*(params as *const F);
             f(x)
         }
 
         unsafe extern "C" fn inner_df<'a, DF: Fn(f64) -> f64 + 'a>(
-            x: f64,
-            params: *mut ::std::os::raw::c_void,
+            x: c_double,
+            params: *mut c_void,
         ) -> f64 {
             let df: &DF = &*(params as *const DF);
             df(x)
         }
 
-        unsafe extern "C" fn inner_fdf<FDF: Fn(f64, &mut f64, &mut f64)>(
-            x: f64,
+        unsafe extern "C" fn inner_fdf<'a, FDF: Fn(f64, &mut f64, &mut f64) + 'a>(
+            x: c_double,
             params: *mut c_void,
             y: *mut c_double,
             dy: *mut c_double,
@@ -290,8 +292,11 @@ impl RootFdfSolver {
             f: Some(inner_f::<F>),
             df: Some(inner_df::<DF>),
             fdf: Some(inner_fdf::<FDF>),
-            params: &(f, df, fdf) as *const _ as *mut _,
+            params: &(&f, &df, &fdf) as *const _ as *mut _,
         };
+        self.inner_f_closure = Some(Box::new(f));
+        self.inner_df_closure = Some(Box::new(df));
+        self.inner_fdf_closure = Some(Box::new(fdf));
 
         ::Value::from(unsafe {
             sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut self.inner_call, root)
@@ -340,8 +345,38 @@ impl RootFdfSolver {
     }
 }
 
-#[cfg(test)]
+#[cfg(any(test, doctest))]
 mod test {
+    /// This doc block will be used to ensure that the closure can't be set everywhere!
+    ///
+    /// ```compile_fail
+    /// use rgsl::*;
+    ///
+    /// fn set(root: &mut RootFSolver) {
+    ///     let y = "lalal".to_owned();
+    ///     root.set(
+    ///         {|x| x * x - 5.;
+    ///         println!("==> {:?}", y);
+    ///         }, 0.0, 5.0);
+    /// }
+    ///
+    /// let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
+    /// set(&mut root);
+    /// ```
+    ///
+    /// Same but a working version:
+    ///
+    /// ```
+    /// use rgsl::*;
+    ///
+    /// fn set(root: &mut RootFSolver) {
+    ///     root.set(|x| x * x - 5., 0.0, 5.0);
+    /// }
+    ///
+    /// let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
+    /// set(&mut root);
+    /// let status = root.iterate();
+    /// ```
     use super::*;
     use roots::{test_delta, test_interval};
 
