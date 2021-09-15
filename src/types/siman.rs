@@ -1,3 +1,7 @@
+//
+// A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
+//
+
 /*!
 # 25 Simulated Annealing
 
