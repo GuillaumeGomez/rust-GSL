@@ -10,21 +10,21 @@ pub trait Pow {
     /// A version of this function which also computes the numerical error in the result is available as gsl_sf_pow_int_e.
     fn pow_uint(&self, n: u32) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow2(&self) -> Self;
+    fn pow_2(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow3(&self) -> Self;
+    fn pow_3(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow4(&self) -> Self;
+    fn pow_4(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow5(&self) -> Self;
+    fn pow_5(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow6(&self) -> Self;
+    fn pow_6(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow7(&self) -> Self;
+    fn pow_7(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow8(&self) -> Self;
+    fn pow_8(&self) -> Self;
     /// This function can be used to compute small integer powers x^2, x^3, etc. efficiently.
-    fn pow9(&self) -> Self;
+    fn pow_9(&self) -> Self;
 }
 
 impl Pow for f64 {
@@ -39,42 +39,42 @@ impl Pow for f64 {
     }
 
     #[doc(alias = "gsl_pow_2")]
-    fn pow2(&self) -> f64 {
+    fn pow_2(&self) -> f64 {
         unsafe { ::sys::gsl_pow_2(*self) }
     }
 
     #[doc(alias = "gsl_pow_3")]
-    fn pow3(&self) -> f64 {
+    fn pow_3(&self) -> f64 {
         unsafe { ::sys::gsl_pow_3(*self) }
     }
 
     #[doc(alias = "gsl_pow_4")]
-    fn pow4(&self) -> f64 {
+    fn pow_4(&self) -> f64 {
         unsafe { ::sys::gsl_pow_4(*self) }
     }
 
     #[doc(alias = "gsl_pow_5")]
-    fn pow5(&self) -> f64 {
+    fn pow_5(&self) -> f64 {
         unsafe { ::sys::gsl_pow_5(*self) }
     }
 
     #[doc(alias = "gsl_pow_6")]
-    fn pow6(&self) -> f64 {
+    fn pow_6(&self) -> f64 {
         unsafe { ::sys::gsl_pow_6(*self) }
     }
 
     #[doc(alias = "gsl_pow_7")]
-    fn pow7(&self) -> f64 {
+    fn pow_7(&self) -> f64 {
         unsafe { ::sys::gsl_pow_7(*self) }
     }
 
     #[doc(alias = "gsl_pow_8")]
-    fn pow8(&self) -> f64 {
+    fn pow_8(&self) -> f64 {
         unsafe { ::sys::gsl_pow_8(*self) }
     }
 
     #[doc(alias = "gsl_pow_9")]
-    fn pow9(&self) -> f64 {
+    fn pow_9(&self) -> f64 {
         unsafe { ::sys::gsl_pow_9(*self) }
     }
 }
