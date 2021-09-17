@@ -54,13 +54,13 @@ pub fn hyperg_1F1_e(a: f64, b: f64, x: f64) -> (Value, ::types::Result) {
 
 /// This routine computes the confluent hypergeometric function U(m,n,x) for integer parameters m, n.
 #[doc(alias = "gsl_sf_hyperg_U_int")]
-pub fn hyperg_1F1_U_int(m: i32, n: i32, x: f64) -> f64 {
+pub fn hyperg_U_int(m: i32, n: i32, x: f64) -> f64 {
     unsafe { sys::gsl_sf_hyperg_U_int(m, n, x) }
 }
 
 /// This routine computes the confluent hypergeometric function U(m,n,x) for integer parameters m, n.
 #[doc(alias = "gsl_sf_hyperg_U_int_e")]
-pub fn hyperg_1F1_U_int_e(m: i32, n: i32, x: f64) -> (Value, ::types::Result) {
+pub fn hyperg_U_int_e(m: i32, n: i32, x: f64) -> (Value, ::types::Result) {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { ::sys::gsl_sf_hyperg_U_int_e(m, n, x, result.as_mut_ptr()) };
 
@@ -70,7 +70,7 @@ pub fn hyperg_1F1_U_int_e(m: i32, n: i32, x: f64) -> (Value, ::types::Result) {
 /// This routine computes the confluent hypergeometric function U(m,n,x) for integer parameters m, n using the
 /// [`ResultE10]`(types/result/struct.ResultE10.html) type to return a result with extended range.
 #[doc(alias = "gsl_sf_hyperg_U_int_e10_e")]
-pub fn hyperg_1F1_U_int_e10_e(m: i32, n: i32, x: f64) -> (Value, ::types::ResultE10) {
+pub fn hyperg_U_int_e10_e(m: i32, n: i32, x: f64) -> (Value, ::types::ResultE10) {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
     let ret = unsafe { ::sys::gsl_sf_hyperg_U_int_e10_e(m, n, x, result.as_mut_ptr()) };
 
