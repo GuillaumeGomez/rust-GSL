@@ -398,10 +398,12 @@ ffi_wrapper!(
 );
 
 impl MultiFitFdfSolverType {
+    #[doc(alias = "gsl_multifit_fdfsolver_lmder")]
     pub fn lmder() -> MultiFitFdfSolverType {
         ffi_wrap!(gsl_multifit_fdfsolver_lmder)
     }
 
+    #[doc(alias = "gsl_multifit_fdfsolver_lmsder")]
     pub fn lmsder() -> MultiFitFdfSolverType {
         ffi_wrap!(gsl_multifit_fdfsolver_lmsder)
     }

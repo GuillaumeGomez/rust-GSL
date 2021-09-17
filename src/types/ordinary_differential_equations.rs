@@ -266,51 +266,60 @@ ffi_wrapper!(ODEiv2StepType, *const sys::gsl_odeiv2_step_type);
 
 impl ODEiv2StepType {
     /// Explicit embedded Runge-Kutta (2, 3) method.
+    #[doc(alias = "gsl_odeiv2_step_rk2")]
     pub fn rk2() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rk2)
     }
 
     /// Explicit 4th order (classical) Runge-Kutta. Error estimation is carried out by the step doubling method. For more efficient
     /// estimate of the error, use the embedded methods described below.
+    #[doc(alias = "gsl_odeiv2_step_rk4")]
     pub fn rk4() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rk4)
     }
 
     /// Explicit embedded Runge-Kutta-Fehlberg (4, 5) method. This method is a good general-purpose integrator.
-    pub fn rk45() -> ODEiv2StepType {
+    #[doc(alias = "gsl_odeiv2_step_rkf45")]
+    pub fn rkf45() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rkf45)
     }
 
     /// Explicit embedded Runge-Kutta Cash-Karp (4, 5) method.
+    #[doc(alias = "gsl_odeiv2_step_rkck")]
     pub fn rkck() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rkck)
     }
 
     /// Explicit embedded Runge-Kutta Prince-Dormand (8, 9) method.
+    #[doc(alias = "gsl_odeiv2_step_rk8pd")]
     pub fn rk8pd() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rk8pd)
     }
 
     /// Implicit Gaussian first order Runge-Kutta. Also known as implicit Euler or backward Euler method. Error estimation is carried out by
     /// the step doubling method. This algorithm requires the Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
+    #[doc(alias = "gsl_odeiv2_step_rk1imp")]
     pub fn rk1imp() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rk1imp)
     }
 
     /// Implicit Gaussian second order Runge-Kutta. Also known as implicit mid-point rule. Error estimation is carried out by the step doubling
     /// method. This stepper requires the Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
+    #[doc(alias = "gsl_odeiv2_step_rk2imp")]
     pub fn rk2imp() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rk2imp)
     }
 
     /// Implicit Gaussian 4th order Runge-Kutta. Error estimation is carried out by the step doubling method. This algorithm requires the
     /// Jacobian and access to the driver object via gsl_odeiv2_step_set_driver.
+    #[doc(alias = "gsl_odeiv2_step_rk4imp")]
     pub fn rk4imp() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_rk4imp)
     }
 
     /// Implicit Bulirsch-Stoer method of Bader and Deuflhard. The method is generally suitable for stiff problems. This stepper requires
     /// the Jacobian.
+    #[doc(alias = "gsl_odeiv2_step_bsimp")]
     pub fn bsimp() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_bsimp)
     }
@@ -318,6 +327,7 @@ impl ODEiv2StepType {
     /// A variable-coefficient linear multistep Adams method in Nordsieck form. This stepper uses explicit Adams-Bashforth (predictor) and
     /// implicit Adams-Moulton (corrector) methods in P(EC)^m functional iteration mode. Method order varies dynamically between 1 and 12.
     /// This stepper requires the access to the driver object via gsl_odeiv2_step_set_driver.
+    #[doc(alias = "gsl_odeiv2_step_msadams")]
     pub fn msadams() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_msadams)
     }
@@ -326,6 +336,7 @@ impl ODEiv2StepType {
     /// BDF formula as predictor and implicit BDF formula as corrector. A modified Newton iteration method is used to solve the system of
     /// non-linear equations. Method order varies dynamically between 1 and 5. The method is generally suitable for stiff problems. This
     /// stepper requires the Jacobian and the access to the driver object via gsl_odeiv2_step_set_driver.
+    #[doc(alias = "gsl_odeiv2_step_msbdf")]
     pub fn msbdf() -> ODEiv2StepType {
         ffi_wrap!(gsl_odeiv2_step_msbdf)
     }

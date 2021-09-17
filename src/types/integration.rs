@@ -11,30 +11,39 @@ use ffi::FFI;
 ffi_wrapper!(IntegrationFixedType, *const sys::gsl_integration_fixed_type);
 
 impl IntegrationFixedType {
+    #[doc(alias = "gsl_integration_fixed_legendre")]
     pub fn legendre() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_legendre)
     }
+    #[doc(alias = "gsl_integration_fixed_chebyshev")]
     pub fn chebyshev() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_chebyshev)
     }
+    #[doc(alias = "gsl_integration_fixed_chebyshev2")]
     pub fn chebyshev2() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_chebyshev2)
     }
+    #[doc(alias = "gsl_integration_fixed_gegenbauer")]
     pub fn gegenbauer() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_gegenbauer)
     }
+    #[doc(alias = "gsl_integration_fixed_jacobi")]
     pub fn jacobi() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_jacobi)
     }
+    #[doc(alias = "gsl_integration_fixed_laguerre")]
     pub fn laguerre() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_laguerre)
     }
+    #[doc(alias = "gsl_integration_fixed_hermite")]
     pub fn hermite() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_hermite)
     }
+    #[doc(alias = "gsl_integration_fixed_exponential")]
     pub fn exponential() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_exponential)
     }
+    #[doc(alias = "gsl_integration_fixed_rational")]
     pub fn rational() -> IntegrationFixedType {
         ffi_wrap!(gsl_integration_fixed_rational)
     }

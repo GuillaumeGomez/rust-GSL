@@ -846,6 +846,7 @@ impl RngType {
         }
     }
 
+    #[doc(alias = "gsl_rng_default")]
     pub fn default() -> Self {
         ffi_wrap!(gsl_rng_default)
     }
@@ -960,6 +961,7 @@ pub mod algorithms {
     /// The generator gsl_rng_mt19937 uses the second revision of the seeding procedure published by the two authors above in 2002. The original seeding
     /// procedures could cause spurious artifacts for some seed values. They are still available through the alternative generators gsl_rng_mt19937_1999 and
     /// gsl_rng_mt19937_1998.
+    #[doc(alias = "gsl_rng_mt19937")]
     pub fn mt19937() -> RngType {
         ffi_wrap!(gsl_rng_mt19937)
     }
@@ -971,6 +973,7 @@ pub mod algorithms {
     /// randomness. The higher luxury levels provide increased decorrelation between samples as an additional safety margin.
     ///
     /// Note that the range of allowed seeds for this generator is [0,2^31-1]. Higher seed values are wrapped modulo 2^31.
+    #[doc(alias = "gsl_rng_ranlxs0")]
     pub fn ranlxs0() -> RngType {
         ffi_wrap!(gsl_rng_ranlxs0)
     }
@@ -982,6 +985,7 @@ pub mod algorithms {
     /// randomness. The higher luxury levels provide increased decorrelation between samples as an additional safety margin.
     ///
     /// Note that the range of allowed seeds for this generator is [0,2^31-1]. Higher seed values are wrapped modulo 2^31.
+    #[doc(alias = "gsl_rng_ranlxs1")]
     pub fn ranlxs1() -> RngType {
         ffi_wrap!(gsl_rng_ranlxs1)
     }
@@ -993,18 +997,21 @@ pub mod algorithms {
     /// randomness. The higher luxury levels provide increased decorrelation between samples as an additional safety margin.
     ///
     /// Note that the range of allowed seeds for this generator is [0,2^31-1]. Higher seed values are wrapped modulo 2^31.
+    #[doc(alias = "gsl_rng_ranlxs2")]
     pub fn ranlxs2() -> RngType {
         ffi_wrap!(gsl_rng_ranlxs2)
     }
 
     /// This generator produces double precision output (48 bits) from the RANLXS generator. The library provides two luxury levels ranlxd1 and ranlxd2,
     /// in increasing order of strength.
+    #[doc(alias = "gsl_rng_ranlxd1")]
     pub fn ranlxd1() -> RngType {
         ffi_wrap!(gsl_rng_ranlxd1)
     }
 
     /// This generator produces double precision output (48 bits) from the RANLXS generator. The library provides two luxury levels ranlxd1 and ranlxd2,
     /// in increasing order of strength.
+    #[doc(alias = "gsl_rng_ranlxd2")]
     pub fn ranlxd2() -> RngType {
         ffi_wrap!(gsl_rng_ranlxd2)
     }
@@ -1021,6 +1028,7 @@ pub mod algorithms {
     ///
     /// M. Lüscher, “A portable high-quality random number generator for lattice field theory calculations”, Computer Physics Communications, 79 (1994) 100–110.
     /// F. James, “RANLUX: A Fortran implementation of the high-quality pseudo-random number generator of Lüscher”, Computer Physics Communications, 79 (1994) 111–114
+    #[doc(alias = "gsl_rng_ranlux")]
     pub fn ranlux() -> RngType {
         ffi_wrap!(gsl_rng_ranlux)
     }
@@ -1037,6 +1045,7 @@ pub mod algorithms {
     ///
     /// M. Lüscher, “A portable high-quality random number generator for lattice field theory calculations”, Computer Physics Communications, 79 (1994) 100–110.
     /// F. James, “RANLUX: A Fortran implementation of the high-quality pseudo-random number generator of Lüscher”, Computer Physics Communications, 79 (1994) 111–114
+    #[doc(alias = "gsl_rng_ranlux389")]
     pub fn ranlux389() -> RngType {
         ffi_wrap!(gsl_rng_ranlux389)
     }
@@ -1055,6 +1064,7 @@ pub mod algorithms {
     //// The period of this generator is lcm(m_1^3-1, m_2^3-1), which is approximately 2^185 (about 10^56). It uses 6 words of state per generator. For more information see,
     ///
     /// P. L’Ecuyer, “Combined Multiple Recursive Random Number Generators”, Operations Research, 44, 5 (1996), 816–822.
+    #[doc(alias = "gsl_rng_cmrg")]
     pub fn cmrg() -> RngType {
         ffi_wrap!(gsl_rng_cmrg)
     }
@@ -1068,6 +1078,7 @@ pub mod algorithms {
     /// The period of this generator is about 10^46. It uses 5 words of state per generator. More information can be found in the following paper,
     ///
     /// P. L’Ecuyer, F. Blouin, and R. Coutre, “A search for good multiple recursive random number generators”, ACM Transactions on Modeling and Computer Simulation 3, 87–98 (1993).
+    #[doc(alias = "gsl_rng_mrg")]
     pub fn mrg() -> RngType {
         ffi_wrap!(gsl_rng_mrg)
     }
@@ -1094,6 +1105,7 @@ pub mod algorithms {
     /// P. L’Ecuyer, “Tables of Maximally Equidistributed Combined LFSR Generators”, Mathematics of Computation, 68, 225 (1999), 261–269
     ///
     /// The generator gsl_rng_taus2 should now be used in preference to gsl_rng_taus.
+    #[doc(alias = "gsl_rng_taus")]
     pub fn taus() -> RngType {
         ffi_wrap!(gsl_rng_taus)
     }
@@ -1120,6 +1132,7 @@ pub mod algorithms {
     /// P. L’Ecuyer, “Tables of Maximally Equidistributed Combined LFSR Generators”, Mathematics of Computation, 68, 225 (1999), 261–269
     ///
     /// The generator gsl_rng_taus2 should now be used in preference to gsl_rng_taus.
+    #[doc(alias = "gsl_rng_taus2")]
     pub fn taus2() -> RngType {
         ffi_wrap!(gsl_rng_taus2)
     }
@@ -1147,6 +1160,7 @@ pub mod algorithms {
     /// For more information see,
     ///
     /// Robert M. Ziff, “Four-tap shift-register-sequence random-number generators”, Computers in Physics, 12(4), Jul/Aug 1998, pp 385–392.
+    #[doc(alias = "gsl_rng_gfsr4")]
     pub fn gfsr4() -> RngType {
         ffi_wrap!(gsl_rng_gfsr4)
     }
@@ -1166,6 +1180,7 @@ pub mod unix {
     ///
     /// with a = 1103515245, c = 12345 and m = 2^31. The seed specifies the initial value, x_1. The period of this generator is 2^31, and it
     /// uses 1 word of storage per generator.
+    #[doc(alias = "gsl_rng_rand")]
     pub fn rand() -> RngType {
         ffi_wrap!(gsl_rng_rand)
     }
@@ -1188,6 +1203,7 @@ pub mod unix {
     /// where the numeric suffix indicates the buffer length. The original BSD random function used a 128-byte default buffer and so
     /// gsl_rng_random_bsd has been made equivalent to gsl_rng_random128_bsd. Corresponding versions of the libc5 and glibc2 generators are
     /// also available, with the names gsl_rng_random8_libc5, gsl_rng_random8_glibc2, etc.
+    #[doc(alias = "gsl_rng_random_bsd")]
     pub fn random_bsd() -> RngType {
         ffi_wrap!(gsl_rng_random_bsd)
     }
@@ -1210,6 +1226,7 @@ pub mod unix {
     /// where the numeric suffix indicates the buffer length. The original BSD random function used a 128-byte default buffer and so
     /// gsl_rng_random_bsd has been made equivalent to gsl_rng_random128_bsd. Corresponding versions of the libc5 and glibc2 generators are
     /// also available, with the names gsl_rng_random8_libc5, gsl_rng_random8_glibc2, etc.
+    #[doc(alias = "gsl_rng_random_libc5")]
     pub fn random_libc5() -> RngType {
         ffi_wrap!(gsl_rng_random_libc5)
     }
@@ -1232,7 +1249,8 @@ pub mod unix {
     /// where the numeric suffix indicates the buffer length. The original BSD random function used a 128-byte default buffer and so
     /// gsl_rng_random_bsd has been made equivalent to gsl_rng_random128_bsd. Corresponding versions of the libc5 and glibc2 generators are
     /// also available, with the names gsl_rng_random8_libc5, gsl_rng_random8_glibc2, etc.
-    pub fn random_glic2() -> RngType {
+    #[doc(alias = "gsl_rng_random_glibc2")]
+    pub fn random_glibc2() -> RngType {
         ffi_wrap!(gsl_rng_random_glibc2)
     }
 
@@ -1245,6 +1263,7 @@ pub mod unix {
     /// of mrand48. The function gsl_rng_uniform uses the full 48 bits of internal state to return the double precision number x_n/m, which
     /// is equivalent to the function drand48. Note that some versions of the GNU C Library contained a bug in mrand48 function which caused
     /// it to produce different results (only the lower 16-bits of the return value were set).
+    #[doc(alias = "gsl_rng_rand48")]
     pub fn rand48() -> RngType {
         ffi_wrap!(gsl_rng_rand48)
     }
@@ -1277,12 +1296,14 @@ pub mod other {
     /// The function gsl_rng_get returns the upper 32 bits from each term of the sequence. The function gsl_rng_uniform uses the full 48 bits to return the double precision number x_n/m.
     ///
     /// The period of this generator is 2^46.
+    #[doc(alias = "gsl_rng_ranf")]
     pub fn ranf() -> RngType {
         ffi_wrap!(gsl_rng_ranf)
     }
 
     /// This is the RANMAR lagged-fibonacci generator of Marsaglia, Zaman and Tsang. It is a 24-bit generator, originally designed for single-precision IEEE floating point numbers.
     /// It was included in the CERNLIB high-energy physics library.
+    #[doc(alias = "gsl_rng_ranmar")]
     pub fn ranmar() -> RngType {
         ffi_wrap!(gsl_rng_ranmar)
     }
@@ -1295,6 +1316,7 @@ pub mod other {
     /// For more information see,
     ///
     /// S. Kirkpatrick and E. Stoll, “A very fast shift-register sequence random number generator”, Journal of Computational Physics, 40, 517–526 (1981)
+    #[doc(alias = "gsl_rng_r250")]
     pub fn r250() -> RngType {
         ffi_wrap!(gsl_rng_r250)
     }
@@ -1305,6 +1327,7 @@ pub mod other {
     /// For more information see,
     ///
     /// Makoto Matsumoto and Yoshiharu Kurita, “Twisted GFSR Generators II”, ACM Transactions on Modelling and Computer Simulation, Vol. 4, No. 3, 1994, pages 254–266.
+    #[doc(alias = "gsl_rng_tt800")]
     pub fn tt800() -> RngType {
         ffi_wrap!(gsl_rng_tt800)
     }
@@ -1314,6 +1337,7 @@ pub mod other {
     /// x_{n+1} = (a x_n + c) mod m
     ///
     /// with a = 69069, c = 1 and m = 2^32. The seed specifies the initial value, x_1. The period of this generator is 2^32 and it uses 1 word of storage per generator.
+    #[doc(alias = "gsl_rng_vax")]
     pub fn vax() -> RngType {
         ffi_wrap!(gsl_rng_vax)
     }
@@ -1323,6 +1347,7 @@ pub mod other {
     /// x_{n+1} = (a x_n) mod m
     ///
     /// with a = 1664525 and m = 2^32. The seed specifies the initial value, x_1.
+    #[doc(alias = "gsl_rng_transputer")]
     pub fn transputer() -> RngType {
         ffi_wrap!(gsl_rng_transputer)
     }
@@ -1332,6 +1357,7 @@ pub mod other {
     /// x_{n+1} = (a x_n) mod m
     ///
     /// with a = 65539 and m = 2^31. The seed specifies the initial value, x_1. The period of this generator was only 2^29. It has become a textbook example of a poor generator.
+    #[doc(alias = "gsl_rng_randu")]
     pub fn randu() -> RngType {
         ffi_wrap!(gsl_rng_randu)
     }
@@ -1347,23 +1373,27 @@ pub mod other {
     /// For more information see,
     ///
     /// Park and Miller, "Random Number Generators: Good ones are hard to find", Communications of the ACM, October 1988, Volume 31, No 10, pages 1192–1201.
+    #[doc(alias = "gsl_rng_minstd")]
     pub fn minstd() -> RngType {
         ffi_wrap!(gsl_rng_minstd)
     }
 
     /// This is a reimplementation of the 16-bit SLATEC random number generator RUNIF. A generalization of the generator to 32 bits is provided by gsl_rng_uni32.
     /// The original source code is available from NETLIB.
+    #[doc(alias = "gsl_rng_uni")]
     pub fn uni() -> RngType {
         ffi_wrap!(gsl_rng_uni)
     }
 
     /// This is a reimplementation of the 16-bit SLATEC random number generator RUNIF. A generalization of the generator to 32 bits is provided by gsl_rng_uni32.
     /// The original source code is available from NETLIB.
+    #[doc(alias = "gsl_rng_uni32")]
     pub fn uni32() -> RngType {
         ffi_wrap!(gsl_rng_uni32)
     }
 
     /// This is the SLATEC random number generator RAND. It is ancient. The original source code is available from NETLIB.
+    #[doc(alias = "gsl_rng_slatec")]
     pub fn slatec() -> RngType {
         ffi_wrap!(gsl_rng_slatec)
     }
@@ -1376,6 +1406,7 @@ pub mod other {
     /// The original source code is available from NETLIB. For more information see,
     ///
     /// W. Petersen, “Lagged Fibonacci Random Number Generators for the NEC SX-3”, International Journal of High Speed Computing (1994).
+    #[doc(alias = "gsl_rng_zuf")]
     pub fn zuf() -> RngType {
         ffi_wrap!(gsl_rng_zuf)
     }
@@ -1385,6 +1416,7 @@ pub mod other {
     /// x_n = (a_1 x_{n-1} + a_2 x_{n-2}) mod m
     ///
     /// with a_1 = 271828183, a_2 = 314159269, and m = 2^31 - 1.
+    #[doc(alias = "gsl_rng_knuthran2")]
     pub fn knuthran2() -> RngType {
         ffi_wrap!(gsl_rng_knuthran2)
     }
@@ -1392,6 +1424,7 @@ pub mod other {
     /// This is a second-order multiple recursive generator described by Knuth in Seminumerical Algorithms, 3rd Ed., Section 3.6. Knuth provides
     /// its C code. The updated routine gsl_rng_knuthran2002 is from the revised 9th printing and corrects some weaknesses in the earlier version,
     /// which is implemented as gsl_rng_knuthran.
+    #[doc(alias = "gsl_rng_knuthran2002")]
     pub fn knuthran2002() -> RngType {
         ffi_wrap!(gsl_rng_knuthran2002)
     }
@@ -1399,6 +1432,7 @@ pub mod other {
     /// This is a second-order multiple recursive generator described by Knuth in Seminumerical Algorithms, 3rd Ed., Section 3.6. Knuth provides
     /// its C code. The updated routine gsl_rng_knuthran2002 is from the revised 9th printing and corrects some weaknesses in the earlier version,
     /// which is implemented as gsl_rng_knuthran.
+    #[doc(alias = "gsl_rng_knuthran")]
     pub fn knuthran() -> RngType {
         ffi_wrap!(gsl_rng_knuthran)
     }
@@ -1410,6 +1444,7 @@ pub mod other {
     /// where the seed specifies the initial value, x_1. The parameters a and m are as follows, Borosh-Niederreiter: a = 1812433253,
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
+    #[doc(alias = "gsl_rng_borosh13")]
     pub fn borosh13() -> RngType {
         ffi_wrap!(gsl_rng_borosh13)
     }
@@ -1421,6 +1456,7 @@ pub mod other {
     /// where the seed specifies the initial value, x_1. The parameters a and m are as follows, Borosh-Niederreiter: a = 1812433253,
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
+    #[doc(alias = "gsl_rng_fishman18")]
     pub fn fishman18() -> RngType {
         ffi_wrap!(gsl_rng_fishman18)
     }
@@ -1432,6 +1468,7 @@ pub mod other {
     /// where the seed specifies the initial value, x_1. The parameters a and m are as follows, Borosh-Niederreiter: a = 1812433253,
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
+    #[doc(alias = "gsl_rng_fishman20")]
     pub fn fishman20() -> RngType {
         ffi_wrap!(gsl_rng_fishman20)
     }
@@ -1443,6 +1480,7 @@ pub mod other {
     /// where the seed specifies the initial value, x_1. The parameters a and m are as follows, Borosh-Niederreiter: a = 1812433253,
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
+    #[doc(alias = "gsl_rng_lecuyer21")]
     pub fn lecuyer21() -> RngType {
         ffi_wrap!(gsl_rng_lecuyer21)
     }
@@ -1454,6 +1492,7 @@ pub mod other {
     /// where the seed specifies the initial value, x_1. The parameters a and m are as follows, Borosh-Niederreiter: a = 1812433253,
     /// m = 2^32, Fishman18: a = 62089911, m = 2^31 - 1, Fishman20: a = 48271, m = 2^31 - 1, L’Ecuyer: a = 40692, m = 2^31 - 249,
     /// Waterman: a = 1566083941, m = 2^32.
+    #[doc(alias = "gsl_rng_waterman14")]
     pub fn waterman14() -> RngType {
         ffi_wrap!(gsl_rng_waterman14)
     }
@@ -1463,6 +1502,7 @@ pub mod other {
     /// z_{n+1} = (x_n - y_n) mod m
     ///
     /// with m = 2^31 - 1. x_n and y_n are given by the fishman20 and lecuyer21 algorithms. The seed specifies the initial value, x_1.
+    #[doc(alias = "gsl_rng_fishman2x")]
     pub fn fishman2x() -> RngType {
         ffi_wrap!(gsl_rng_fishman2x)
     }
@@ -1472,6 +1512,7 @@ pub mod other {
     /// x_{n+1} = (x_n (x_n + 1)) mod m
     ///
     /// with m = 2^32. The seed specifies the initial value, x_1.
+    #[doc(alias = "gsl_rng_coveyou")]
     pub fn coveyou() -> RngType {
         ffi_wrap!(gsl_rng_coveyou)
     }

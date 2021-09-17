@@ -166,6 +166,7 @@ impl InterpType {
     }
 
     /// Linear interpolation. This interpolation method does not require any additional memory.
+    #[doc(alias = "gsl_interp_linear")]
     pub fn linear() -> InterpType {
         ffi_wrap!(gsl_interp_linear)
     }
@@ -174,6 +175,7 @@ impl InterpType {
     /// of points because polynomial interpolation introduces large oscillations, even for
     /// well-behaved datasets. The number of terms in the interpolating polynomial is equal to the
     /// number of points.
+    #[doc(alias = "gsl_interp_polynomial")]
     pub fn polynomial() -> InterpType {
         ffi_wrap!(gsl_interp_polynomial)
     }
@@ -181,6 +183,7 @@ impl InterpType {
     /// Cubic spline with natural boundary conditions. The resulting curve is piecewise cubic on
     /// each interval, with matching first and second derivatives at the supplied data-points. The
     /// second derivative is chosen to be zero at the first point and last point.
+    #[doc(alias = "gsl_interp_cspline")]
     pub fn cspline() -> InterpType {
         ffi_wrap!(gsl_interp_cspline)
     }
@@ -190,18 +193,21 @@ impl InterpType {
     /// derivatives at the first and last points are also matched. Note that the last point in the
     /// data must have the same y-value as the first point, otherwise the resulting periodic
     /// interpolation will have a discontinuity at the boundary.
+    #[doc(alias = "gsl_interp_cspline_periodic")]
     pub fn cspline_periodic() -> InterpType {
         ffi_wrap!(gsl_interp_cspline_periodic)
     }
 
     /// Non-rounded Akima spline with natural boundary conditions. This method uses the non-rounded
     /// corner algorithm of Wodicka.
+    #[doc(alias = "gsl_interp_akima")]
     pub fn akima() -> InterpType {
         ffi_wrap!(gsl_interp_akima)
     }
 
     /// Non-rounded Akima spline with periodic boundary conditions. This method uses the non-rounded
     /// corner algorithm of Wodicka.
+    #[doc(alias = "gsl_interp_akima_periodic")]
     pub fn akima_periodic() -> InterpType {
         ffi_wrap!(gsl_interp_akima_periodic)
     }

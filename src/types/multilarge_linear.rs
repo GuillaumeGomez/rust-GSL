@@ -8,10 +8,12 @@ use ffi::FFI;
 ffi_wrapper!(MultilargeLinearType, *const sys::gsl_multilarge_linear_type);
 
 impl MultilargeLinearType {
+    #[doc(alias = "gsl_multilarge_linear_normal")]
     pub fn normal() -> MultilargeLinearType {
         ffi_wrap!(gsl_multilarge_linear_normal)
     }
 
+    #[doc(alias = "gsl_multilarge_linear_tsqr")]
     pub fn tsqr() -> MultilargeLinearType {
         ffi_wrap!(gsl_multilarge_linear_tsqr)
     }

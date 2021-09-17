@@ -75,11 +75,13 @@ impl MultiRootFSolverType {
     /// its finite difference approximation. The finite difference approximation is computed
     /// using `gsl_multiroots_fdjac()` with a relative step size of `GSL_SQRT_DBL_EPSILON`.
     /// Note that this step size will not be suitable for all problems.
+    #[doc(alias = "gsl_multiroot_fsolver_hybrids")]
     pub fn hybrids() -> MultiRootFSolverType {
         ffi_wrap!(gsl_multiroot_fsolver_hybrids)
     }
 
     ///This is a finite difference version of the Hybrid algorithm without internal scaling.
+    #[doc(alias = "gsl_multiroot_fsolver_hybrid")]
     pub fn hybrid() -> MultiRootFSolverType {
         ffi_wrap!(gsl_multiroot_fsolver_hybrid)
     }
@@ -103,6 +105,7 @@ impl MultiRootFSolverType {
     /// algorithm is quadratic, but the finite differences require n^2 function evaluations on
     /// each iteration. The algorithm may become unstable if the finite differences are not a
     /// good approximation to the true derivatives.
+    #[doc(alias = "gsl_multiroot_fsolver_dnewton")]
     pub fn dnewton() -> MultiRootFSolverType {
         ffi_wrap!(gsl_multiroot_fsolver_dnewton)
     }
@@ -125,6 +128,7 @@ impl MultiRootFSolverType {
     ///
     /// This algorithm is included only for demonstration purposes, and is not recommended for
     /// serious use.
+    #[doc(alias = "gsl_multiroot_fsolver_broyden")]
     pub fn broyden() -> MultiRootFSolverType {
         ffi_wrap!(gsl_multiroot_fsolver_broyden)
     }
