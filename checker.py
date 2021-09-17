@@ -137,6 +137,9 @@ def check_macros(file_path, content, errors):
                 if data["pending_func_name"] is not None:
                     check_macro_names(file_path, errors, data)
                 init_check_macro_data(data)
+        elif " ffi_wrap!(" in line:
+            sys_name = stripped_line.split("ffi_wrap!(")[1].split(")")[0].strip()
+            data["sys_names"].append(sys_name)
         else:
             if stripped_line.startswith("#[doc(alias"):
                 alias_name = stripped_line.split("(alias")[1].split("=")[1].split(")]")[0].strip()
