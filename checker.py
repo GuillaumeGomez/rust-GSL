@@ -58,6 +58,10 @@ def init_check_macro_data(data, totals, ignored):
     data["indent"] = 0
     data["func_line"] = 0
     added = 0
+    if data.get("is_test", False):
+        totals["test_count"] += 1
+        ignored = True
+    data["is_test"] = False
     if not ignored and data.get("is_in_macro", False):
         totals["in_macro_count"] += 1
         added += 1
@@ -70,7 +74,7 @@ def init_check_macro_data(data, totals, ignored):
         totals["in_func_count"] += 1
         added += 1
     data["is_in_func"] = False
-    if data.get("ignore_next", False):
+    if not ignored and data.get("ignore_next", False):
         totals["ignored"] += 1
     if not ignored and added == 0:
         totals["rust_func_count"] += 1
@@ -132,6 +136,7 @@ def check_counts(errors, data):
     else:
         print("Checked {} `ffi_wrap` items".format(data["ffi_wrap_count"]))
     print("Rust functions: {}".format(data["rust_func_count"]))
+    print("Rust test functions: {}".format(data["test_count"]))
     print("Ignored items: {}".format(data["ignored"]))
 
 
@@ -141,7 +146,7 @@ def check_counts(errors, data):
 def check_macros(file_path, content, errors, totals):
     is_in_macro = False
     is_in_comment = False
-    is_in_trait = False
+    is_in_decl = False
     data = {}
     init_check_macro_data(data, totals, True)
     for line_nb, line in enumerate(content.split('\n')):
@@ -166,23 +171,24 @@ def check_macros(file_path, content, errors, totals):
                 if not macro_name in MACROS_TO_IGNORE:
                     is_in_macro = True
                 continue
-        if not is_in_trait:
-            if stripped_line.startswith("pub trait ") or stripped_line.startswith("trait "):
-                is_in_trait = True
+        if not is_in_decl:
+            if (stripped_line.startswith("pub trait ") or stripped_line.startswith("trait ")
+                    or stripped_line.startswith("pub struct ") or stripped_line.startswith("struct ")):
+                is_in_decl = True
                 continue
-        if line == "}":
-            is_in_macro = False
-            is_in_trait = False
-        elif is_in_trait:
-            continue
-        elif stripped_line == "}":
+        if stripped_line == "}":
+            if line == "}":
+                is_in_macro = False
+                is_in_decl = False
             current_indent = len(line) - len(line.lstrip())
             if current_indent == data["indent"]:
                 ignored = True
-                if data["pending_func_name"] is not None:
+                if data["pending_func_name"] is not None and not is_in_decl:
                     check_macro_names(file_path, errors, data)
                     ignored = False
                 init_check_macro_data(data, totals, ignored)
+        if is_in_decl:
+            continue
         elif " ffi_wrap!(" in line:
             sys_name = stripped_line.split("ffi_wrap!(")[1].split(")")[0].strip()
             data["sys_names"].append(sys_name)
@@ -191,6 +197,8 @@ def check_macros(file_path, content, errors, totals):
             if stripped_line.startswith("#[doc(alias"):
                 alias_name = stripped_line.split("(alias")[1].split("=")[1].split(")]")[0].strip()
                 data["pending_doc_aliases"].append(alias_name.replace("\"", ""))
+            if stripped_line == "#[test]":
+                data["is_test"] = True
             elif data["pending_func_name"] is None and (stripped_line.startswith("pub fn ") or stripped_line.startswith("fn ")):
                 data["pending_func_name"] = line.split("(")[0].split("<")[0].split("fn ")[1].strip()
                 data["indent"] = len(line) - len(line.lstrip())
@@ -225,6 +233,7 @@ def main():
         "ffi_wrap_count": 0,
         "in_func_count": 0,
         "rust_func_count": 0,
+        "test_count": 0,
         "ignored": 0,
     }
     read_dirs("src", errors, totals, [check_file_header, check_macros])
