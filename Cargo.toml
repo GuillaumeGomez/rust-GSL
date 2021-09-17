@@ -1,6 +1,6 @@
 [package]
 name = "GSL"
-version = "5.0.0"
+version = "6.0.0"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
 description = "A rust binding for the GSL (the GNU scientific library)"
 repository = "https://github.com/GuillaumeGomez/rust-GSL"
@@ -10,7 +10,7 @@ keywords = ["mathematics", "library", "GSL"]
 license = "GPL-3.0+"
 
 [dependencies]
-GSL-sys = { path = "gsl-sys", version = "2.0" }
+GSL-sys = { path = "gsl-sys", version = "2.0.3" }
 paste = "1.0"
 
 [features]
