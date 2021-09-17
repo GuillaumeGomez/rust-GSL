@@ -67,6 +67,7 @@ impl RootFSolverType {
     /// small.
     ///
     /// At any time the current estimate of the root is taken as the midpoint of the interval.
+    #[doc(alias = "gsl_root_fsolver_bisection")]
     pub fn bisection() -> RootFSolverType {
         ffi_wrap!(gsl_root_fsolver_bisection)
     }
@@ -83,6 +84,7 @@ impl RootFSolverType {
     ///
     /// The best estimate of the root is taken from the linear interpolation of the interval on
     /// the current iteration.
+    #[doc(alias = "gsl_root_fsolver_brent")]
     pub fn brent() -> RootFSolverType {
         ffi_wrap!(gsl_root_fsolver_brent)
     }
@@ -101,6 +103,7 @@ impl RootFSolverType {
     /// bisection step.
     ///
     /// The best estimate of the root is taken from the most recent interpolation or bisection.
+    #[doc(alias = "gsl_root_fsolver_falsepos")]
     pub fn falsepos() -> RootFSolverType {
         ffi_wrap!(gsl_root_fsolver_falsepos)
     }
@@ -202,18 +205,21 @@ impl RootFdfSolverType {
     /// with an initial guess for the location of the root. On each iteration, a line tangent to
     /// the function f is drawn at that position. The point where this line crosses the x-axis
     /// becomes the new guess.
+    #[doc(alias = "gsl_root_fdfsolver_newton")]
     pub fn newton() -> RootFdfSolverType {
         ffi_wrap!(gsl_root_fdfsolver_newton)
     }
 
     /// The secant method is a simplified version of Newton’s method which does not require
     /// the computation of the derivative on every step.
+    #[doc(alias = "gsl_root_fdfsolver_secant")]
     pub fn secant() -> RootFdfSolverType {
         ffi_wrap!(gsl_root_fdfsolver_secant)
     }
 
     /// The Steffenson Method 1 provides the fastest convergence of all the routines. It com-
     /// bines the basic Newton algorithm with an Aitken “delta-squared” acceleration.
+    #[doc(alias = "gsl_root_fdfsolver_steffenson")]
     pub fn steffenson() -> RootFdfSolverType {
         ffi_wrap!(gsl_root_fdfsolver_steffenson)
     }

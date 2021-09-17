@@ -261,14 +261,17 @@ impl<'a> Minimizer<'a> {
 ffi_wrapper!(MinimizerType, *const sys::gsl_min_fminimizer_type);
 
 impl MinimizerType {
+    #[doc(alias = "gsl_min_fminimizer_goldensection")]
     pub fn goldensection() -> Self {
         ffi_wrap!(gsl_min_fminimizer_goldensection)
     }
 
+    #[doc(alias = "gsl_min_fminimizer_brent")]
     pub fn brent() -> Self {
         ffi_wrap!(gsl_min_fminimizer_brent)
     }
 
+    #[doc(alias = "gsl_min_fminimizer_quad_golden")]
     pub fn quad_golden() -> Self {
         ffi_wrap!(gsl_min_fminimizer_quad_golden)
     }
