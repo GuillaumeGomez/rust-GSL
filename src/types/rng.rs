@@ -898,18 +898,18 @@ impl RngType {
         let mut ret = Vec::new();
 
         if !ptr.is_null() {
-            unsafe {
+            
                 let mut it = 0;
                 loop {
-                    let tmp = ptr.offset(it);
+                    let tmp = unsafe { ptr.offset(it) };
 
-                    if (*tmp).is_null() {
+                    if unsafe { (*tmp).is_null() } {
                         break;
                     }
-                    ret.push(RngType::wrap(*tmp as *mut sys::gsl_rng_type));
+                    unsafe { ret.push(RngType::wrap(*tmp as *mut sys::gsl_rng_type)) };
                     it += 1;
                 }
-            }
+            
         }
         ret
     }

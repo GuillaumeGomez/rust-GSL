@@ -327,21 +327,21 @@ impl<'a> RootFdfSolver<'a> {
     /// Returns the solver type name.
     #[doc(alias = "gsl_root_fdfsolver_name")]
     pub fn name(&self) -> Option<&str> {
-        unsafe {
-            let ptr = sys::gsl_root_fdfsolver_name(self.unwrap_shared());
+        
+            let ptr = unsafe { sys::gsl_root_fdfsolver_name(self.unwrap_shared()) };
 
             if ptr.is_null() {
                 return None;
             }
 
             let mut len = 0;
-            while *ptr.add(len) != 0 {
+            while unsafe { *ptr.add(len) != 0 } {
                 len += 1;
             }
 
-            let slice = ::std::slice::from_raw_parts(ptr as *const _, len);
+            let slice = unsafe { ::std::slice::from_raw_parts(ptr as *const _, len) };
             ::std::str::from_utf8(slice).ok()
-        }
+        
     }
 
     /// This function returns the current estimate of the root for the solver s.
