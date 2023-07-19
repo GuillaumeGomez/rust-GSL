@@ -31,13 +31,13 @@ use crate::Value;
 ///
 /// Returns `(result, abs_err)`.
 #[doc(alias = "gsl_deriv_central")]
-pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f64) {
+pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f64), Value> {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
 
     let ret = unsafe { sys::gsl_deriv_central(&function, x, h, &mut result, &mut abs_err) };
-    (::Value::from(ret), result, abs_err)
+    result_handler!(ret, (result, abs_err))
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an
@@ -54,13 +54,13 @@ pub fn deriv_central<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f6
 ///
 /// Returns `(result, abs_err)`.
 #[doc(alias = "gsl_deriv_forward")]
-pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f64) {
+pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f64), Value> {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
 
     let ret = unsafe { sys::gsl_deriv_forward(&function, x, h, &mut result, &mut abs_err) };
-    (::Value::from(ret), result, abs_err)
+    result_handler!(ret, (result, abs_err))
 }
 
 /// This function computes the numerical derivative of the function f at the point x using an
@@ -73,11 +73,11 @@ pub fn deriv_forward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f6
 ///
 /// Returns `(result, abs_err)`.
 #[doc(alias = "gsl_deriv_backward")]
-pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> (Value, f64, f64) {
+pub fn deriv_backward<F: Fn(f64) -> f64>(f: F, x: f64, h: f64) -> Result<(f64, f64), Value> {
     let mut result = 0.;
     let mut abs_err = 0.;
     let function = wrap_callback!(f, F);
 
     let ret = unsafe { sys::gsl_deriv_backward(&function, x, h, &mut result, &mut abs_err) };
-    (::Value::from(ret), result, abs_err)
+    result_handler!(ret, (result, abs_err))
 }

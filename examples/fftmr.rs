@@ -40,7 +40,7 @@ fn main() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);
     }
 
-    workspace.forward(data, 1, N, &wavetable);
+    workspace.forward(data, 1, N, &wavetable).unwrap();
 
     for i in 0..N {
         println!("{}: {} {}", i, real!(data, i), imag!(data, i));

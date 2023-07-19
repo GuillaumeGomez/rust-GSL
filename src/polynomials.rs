@@ -68,8 +68,8 @@ pub mod evaluation {
     /// This function evaluates a polynomial and its derivatives storing the results in the array res of size lenres. The output array contains
     /// the values of d^k P/d x^k for the specified value of x starting with k = 0.
     #[doc(alias = "gsl_poly_eval_derivs")]
-    pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> Value {
-        Value::from(unsafe {
+    pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_poly_eval_derivs(
                 c.as_ptr(),
                 c.len() as _,
@@ -77,7 +77,8 @@ pub mod evaluation {
                 res.as_mut_ptr(),
                 res.len() as _,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
@@ -104,10 +105,11 @@ pub mod divided_difference_representation {
     /// xa and ya of length size. On output the divided-differences of (xa,ya) are stored in the array dd, also of length size. Using the
     /// notation above, `dd[k] = [x_0,x_1,...,x_k]`.
     #[doc(alias = "gsl_poly_dd_init")]
-    pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> Value {
-        Value::from(unsafe {
+    pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as _)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function evaluates the polynomial stored in divided-difference form in the arrays dd and xa of length size at the point x.
@@ -120,8 +122,14 @@ pub mod divided_difference_representation {
     /// is supplied in the arrays dd and xa of length size. On output the Taylor coefficients of the polynomial expanded about the point xp are
     /// stored in the array c also of length size. A workspace of length size must be provided in the array w.
     #[doc(alias = "gsl_poly_dd_taylor")]
-    pub fn poly_dd_taylor(c: &mut [f64], xp: f64, dd: &[f64], xa: &[f64], w: &mut [f64]) -> Value {
-        Value::from(unsafe {
+    pub fn poly_dd_taylor(
+        c: &mut [f64],
+        xp: f64,
+        dd: &[f64],
+        xa: &[f64],
+        w: &mut [f64],
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_poly_dd_taylor(
                 c.as_mut_ptr(),
                 xp,
@@ -130,7 +138,8 @@ pub mod divided_difference_representation {
                 dd.len() as _,
                 w.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function computes a divided-difference representation of the interpolating Hermite polynomial for the points (x, y) stored in the
@@ -146,8 +155,8 @@ pub mod divided_difference_representation {
         xa: &[f64],
         ya: &[f64],
         dya: &[f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_poly_dd_hermite_init(
                 dd.as_mut_ptr(),
                 za.as_mut_ptr(),
@@ -156,11 +165,13 @@ pub mod divided_difference_representation {
                 dya.as_ptr(),
                 dd.len() as _,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
 pub mod quadratic_equations {
+    use crate::Value;
     use std::mem::transmute;
     use types::ComplexF64;
 
@@ -181,13 +192,13 @@ pub mod quadratic_equations {
     /// may cause a discrete change in the number of roots. However, for polynomials with small
     /// integer coefficients the discriminant can always be computed exactly.
     ///
-    /// Returns `(Value, x0, x1)`.
+    /// Returns `(x0, x1)`.
     #[doc(alias = "gsl_poly_solve_quadratic")]
-    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> (::Value, f64, f64) {
+    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> Result<(f64, f64), Value> {
         let mut x0 = 0.;
         let mut x1 = 0.;
         let ret = unsafe { sys::gsl_poly_solve_quadratic(a, b, c, &mut x0, &mut x1) };
-        (::Value::from(ret), x0, x1)
+        result_handler!(ret, (x0, x1))
     }
 
     /// This function finds the complex roots of the quadratic equation,
@@ -204,14 +215,15 @@ pub mod quadratic_equations {
         c: f64,
         z0: &mut ComplexF64,
         z1: &mut ComplexF64,
-    ) -> ::Value {
-        ::Value::from(unsafe {
-            sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1))
-        })
+    ) -> Result<(), Value> {
+        let ret =
+            unsafe { sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) };
+        result_handler!(ret, ())
     }
 }
 
 pub mod cubic_equations {
+    use crate::Value;
     use std::mem::transmute;
     use types::ComplexF64;
 
@@ -227,14 +239,14 @@ pub mod cubic_equations {
     /// case, finite precision may cause equal or closely-spaced real roots to move off the
     /// real axis into the complex plane, leading to a discrete change in the number of real roots.
     ///
-    /// Returns `(Value, x0, x1, x2)`.
+    /// Returns `(x0, x1, x2)`.
     #[doc(alias = "gsl_poly_solve_cubic")]
-    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> (::Value, f64, f64, f64) {
+    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> Result<(f64, f64, f64), Value> {
         let mut x0 = 0.;
         let mut x1 = 0.;
         let mut x2 = 0.;
         let ret = unsafe { sys::gsl_poly_solve_cubic(a, b, c, &mut x0, &mut x1, &mut x2) };
-        (::Value::from(ret), x0, x1, x2)
+        result_handler!(ret, (x0, x1, x2))
     }
 
     /// This function finds the complex roots of the cubic equation,
@@ -252,9 +264,10 @@ pub mod cubic_equations {
         z0: &mut ComplexF64,
         z1: &mut ComplexF64,
         z2: &mut ComplexF64,
-    ) -> ::Value {
-        ::Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
-        })
+        };
+        result_handler!(ret, ())
     }
 }

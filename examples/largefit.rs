@@ -95,7 +95,8 @@ fn solve_system(print_data: bool, t: MultilargeLinearType, c: &mut VectorF64) {
                 w.accumulate(
                     matrix.expect("Failed to get matrix"),
                     vector.expect("Failed to get vector"),
-                );
+                )
+                .unwrap();
             });
         });
 
@@ -108,13 +109,13 @@ fn solve_system(print_data: bool, t: MultilargeLinearType, c: &mut VectorF64) {
     }
 
     // compute L-curve
-    w.lcurve(&mut reg_param, &mut rho, &mut eta);
+    w.lcurve(&mut reg_param, &mut rho, &mut eta).unwrap();
 
     // solve large LS system and store solution in c
-    let (_, rnorm, snorm) = w.solve(LAMBDA, c);
+    let (rnorm, snorm) = w.solve(LAMBDA, c).unwrap();
 
     // compute reciprocal condition number
-    let (_, rcond) = w.rcond();
+    let rcond = w.rcond().unwrap();
 
     eprintln!("=== Method {} ===\n", w.name().expect("Failed to get name"));
     eprintln!("condition number = {}", 1. / rcond);
@@ -156,8 +157,8 @@ fn main() {
         let f_exact = func(t);
         build_row(t, &mut v);
 
-        let (_, f_tsqr) = blas::level1::ddot(&v, &c_tsqr);
-        let (_, f_normal) = blas::level1::ddot(&v, &c_normal);
+        let f_tsqr = blas::level1::ddot(&v, &c_tsqr).unwrap();
+        let f_normal = blas::level1::ddot(&v, &c_normal).unwrap();
 
         println!("{} {:.6} {:.6} {:.6}", t, f_exact, f_tsqr, f_normal);
 

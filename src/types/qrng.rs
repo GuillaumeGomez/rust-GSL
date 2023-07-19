@@ -50,8 +50,9 @@ impl QRng {
     /// space available for x must match the dimension of the generator. The point x will lie in the
     /// range 0 < x_i < 1 for each x_i.
     #[doc(alias = "gsl_qrng_get")]
-    pub fn get(&self, x: &mut [f64]) -> Value {
-        Value::from(unsafe { sys::gsl_qrng_get(self.unwrap_shared(), x.as_mut_ptr()) })
+    pub fn get(&self, x: &mut [f64]) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_qrng_get(self.unwrap_shared(), x.as_mut_ptr()) };
+        result_handler!(ret, ())
     }
 
     /// This function returns a pointer to the name of the generator.
@@ -106,8 +107,9 @@ impl QRng {
     /// type.
     // checker:ignore
     #[doc(alias = "gsl_qrng_memcpy")]
-    pub fn copy(&self, dest: &mut QRng) -> Value {
-        Value::from(unsafe { sys::gsl_qrng_memcpy(dest.unwrap_unique(), self.unwrap_shared()) })
+    pub fn copy(&self, dest: &mut QRng) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_qrng_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 }
 

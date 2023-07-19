@@ -39,14 +39,20 @@ fn main() {
     }
 
     // compute kernels without normalization
-    filter::gaussian_kernel(ALPHA[0], 0, false, &mut k1);
-    filter::gaussian_kernel(ALPHA[1], 0, false, &mut k2);
-    filter::gaussian_kernel(ALPHA[2], 0, false, &mut k3);
+    filter::gaussian_kernel(ALPHA[0], 0, false, &mut k1).unwrap();
+    filter::gaussian_kernel(ALPHA[1], 0, false, &mut k2).unwrap();
+    filter::gaussian_kernel(ALPHA[2], 0, false, &mut k3).unwrap();
 
     // apply filters
-    gauss_p.gaussian(FilterEnd::PadValue, ALPHA[0], 0, &x, &mut y1);
-    gauss_p.gaussian(FilterEnd::PadValue, ALPHA[1], 0, &x, &mut y2);
-    gauss_p.gaussian(FilterEnd::PadValue, ALPHA[2], 0, &x, &mut y3);
+    gauss_p
+        .gaussian(FilterEnd::PadValue, ALPHA[0], 0, &x, &mut y1)
+        .unwrap();
+    gauss_p
+        .gaussian(FilterEnd::PadValue, ALPHA[1], 0, &x, &mut y2)
+        .unwrap();
+    gauss_p
+        .gaussian(FilterEnd::PadValue, ALPHA[2], 0, &x, &mut y3)
+        .unwrap();
 
     // print kernels
     for i in 0..K {

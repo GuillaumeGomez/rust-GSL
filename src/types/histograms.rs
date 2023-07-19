@@ -66,10 +66,11 @@ impl Histogram {
     /// Note that the size of the range array should be defined to be one element bigger than the number of bins. The additional element is
     /// required for the upper value of the final bin.
     #[doc(alias = "gsl_histogram_set_ranges")]
-    pub fn set_ranges(&mut self, range: &[f64]) -> Value {
-        Value::from(unsafe {
+    pub fn set_ranges(&mut self, range: &[f64]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_histogram_set_ranges(self.unwrap_unique(), range.as_ptr(), range.len() as _)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function sets the ranges of the existing histogram h to cover the range xmin to xmax uniformly. The values of the histogram bins
@@ -81,19 +82,18 @@ impl Histogram {
     /// bin[n-1] corresponds to xmin + (n-1)d <= x < xmax
     /// where d is the bin spacing, d = (xmax-xmin)/n.
     #[doc(alias = "gsl_histogram_set_ranges_uniform")]
-    pub fn set_ranges_uniform(&mut self, xmin: f64, xmax: f64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram_set_ranges_uniform(self.unwrap_unique(), xmin, xmax)
-        })
+    pub fn set_ranges_uniform(&mut self, xmin: f64, xmax: f64) -> Result<(), Value> {
+        let ret =
+            unsafe { sys::gsl_histogram_set_ranges_uniform(self.unwrap_unique(), xmin, xmax) };
+        result_handler!(ret, ())
     }
 
     /// This function copies the self histogram into the pre-existing histogram dest, making dest into an exact copy of self. The two histograms
     /// must be of the same size.
     #[doc(alias = "gsl_histogram_memcpy")]
-    pub fn copy(&self, dest: &mut Histogram) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram_memcpy(dest.unwrap_unique(), self.unwrap_shared())
-        })
+    pub fn copy(&self, dest: &mut Histogram) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function returns a pointer to a newly created histogram which is an exact copy of the self histogram.
@@ -116,15 +116,17 @@ impl Histogram {
     /// called, however, since it is often necessary to compute histograms for a small range of a larger dataset, ignoring the values outside
     /// the range of interest.
     #[doc(alias = "gsl_histogram_increment")]
-    pub fn increment(&mut self, x: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_increment(self.unwrap_unique(), x) })
+    pub fn increment(&mut self, x: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_increment(self.unwrap_unique(), x) };
+        result_handler!(ret, ())
     }
 
     /// This function is similar to gsl_histogram_increment but increases the value of the appropriate bin in the histogram h by the floating-point
     /// number weight.
     #[doc(alias = "gsl_histogram_accumulate")]
-    pub fn accumulate(&mut self, x: f64, weight: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_accumulate(self.unwrap_unique(), x, weight) })
+    pub fn accumulate(&mut self, x: f64, weight: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_accumulate(self.unwrap_unique(), x, weight) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the contents of the i-th bin of the histogram h. If i lies outside the valid range of indices for the histogram then
@@ -142,15 +144,15 @@ impl Histogram {
     /// indicate success. If i lies outside the valid range of indices for the histogram then
     /// the error handler is called and the function returns an error code of Value::Dom.
     ///
-    /// Returns `(Value, lower, upper)`.
+    /// Returns `(lower, upper)`.
     #[doc(alias = "gsl_histogram_get_range")]
-    pub fn range(&self, i: usize) -> (Value, f64, f64) {
+    pub fn range(&self, i: usize) -> Result<(f64, f64), Value> {
         let mut lower = 0.;
         let mut upper = 0.;
         let ret = unsafe {
             sys::gsl_histogram_get_range(self.unwrap_shared(), i, &mut lower, &mut upper)
         };
-        (Value::from(ret), lower, upper)
+        result_handler!(ret, (lower, upper))
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins of the self histogram. They provide a way
@@ -187,12 +189,12 @@ impl Histogram {
     /// and returns ::Value::Success. If x lies outside the valid range of the histogram then the
     /// function returns Value::Dom and the error handler is invoked.
     ///
-    /// Returns `(Value, i)`.
+    /// Returns `i`.
     #[doc(alias = "gsl_histogram_find")]
-    pub fn find(&self, x: f64) -> (Value, usize) {
+    pub fn find(&self, x: f64) -> Result<usize, Value> {
         let mut i = 0;
         let ret = unsafe { sys::gsl_histogram_find(self.unwrap_shared(), x, &mut i) };
-        (Value::from(ret), i)
+        result_handler!(ret, i)
     }
 
     /// This function returns the maximum value contained in the histogram bins.
@@ -250,48 +252,54 @@ impl Histogram {
     /// This function adds the contents of the bins in histogram other to the corresponding bins of self histogram, i.e. h'_1(i) = h_1(i) + h_2(i).
     /// The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram_add")]
-    pub fn add(&mut self, other: &Histogram) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_add(self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn add(&mut self, other: &Histogram) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_add(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function subtracts the contents of the bins in histogram other from the corresponding bins of self histogram, i.e. h'_1(i) = h_1(i) - h_2(i).
     /// The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram_sub")]
-    pub fn sub(&mut self, other: &Histogram) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_sub(self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn sub(&mut self, other: &Histogram) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_sub(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the contents of the bins of self histogram by the contents of the corresponding bins in other histogram, i.e. h'_1(i) =
     /// h_1(i) * h_2(i). The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram_mul")]
-    pub fn mul(&mut self, other: &Histogram) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_mul(self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn mul(&mut self, other: &Histogram) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_mul(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function divides the contents of the bins of self histogram by the contents of the corresponding bins in other histogram, i.e. h'_1(i) = h_1(i)
     /// / h_2(i). The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram_div")]
-    pub fn div(&mut self, other: &Histogram) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_div(self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn div(&mut self, other: &Histogram) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_div(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the contents of the bins of self histogram by the constant scale, i.e. h'_1(i) = h_1(i) * scale.
     #[doc(alias = "gsl_histogram_scale")]
-    pub fn scale(&mut self, scale: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_scale(self.unwrap_unique(), scale) })
+    pub fn scale(&mut self, scale: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_scale(self.unwrap_unique(), scale) };
+        result_handler!(ret, ())
     }
 
     /// This function shifts the contents of the bins of self histogram by the constant offset, i.e. h'_1(i) = h_1(i) + offset.
     #[doc(alias = "gsl_histogram_shift")]
-    pub fn shift(&mut self, offset: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_shift(self.unwrap_unique(), offset) })
+    pub fn shift(&mut self, offset: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_shift(self.unwrap_unique(), offset) };
+        result_handler!(ret, ())
     }
 
     #[allow(unused_must_use)]
     pub fn print<W: Write>(
         &self,
         stream: &mut W, /*, range_format: &str, bin_format: &str*/
-    ) -> io::Result<Value> {
+    ) -> io::Result<()> {
         unsafe {
             let n = (*self.unwrap_shared()).n as isize;
 
@@ -305,7 +313,7 @@ impl Histogram {
                 )?;
             }
 
-            Ok(::Value::Success)
+            Ok(())
         }
     }
 }
@@ -337,8 +345,9 @@ impl HistogramPdf {
     /// This function initializes the probability distribution self with the contents of the histogram h. If any of the bins of h are negative then
     /// the error handler is invoked with an error code of Value::Dom because a probability distribution cannot contain negative values.
     #[doc(alias = "gsl_histogram_pdf_init")]
-    pub fn init(&mut self, h: &Histogram) -> Value {
-        Value::from(unsafe { sys::gsl_histogram_pdf_init(self.unwrap_unique(), h.unwrap_shared()) })
+    pub fn init(&mut self, h: &Histogram) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram_pdf_init(self.unwrap_unique(), h.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function uses r, a uniform random number between zero and one, to compute a single random sample from the probability distribution
@@ -383,8 +392,8 @@ impl Histogram2D {
     /// This function sets the ranges of the existing histogram h using the arrays xrange and yrange of size xsize and ysize respectively.
     /// The values of the histogram bins are reset to zero.
     #[doc(alias = "gsl_histogram2d_set_ranges")]
-    pub fn set_ranges(&mut self, xrange: &[f64], yrange: &[f64]) -> Value {
-        Value::from(unsafe {
+    pub fn set_ranges(&mut self, xrange: &[f64], yrange: &[f64]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_histogram2d_set_ranges(
                 self.unwrap_unique(),
                 xrange.as_ptr(),
@@ -392,25 +401,33 @@ impl Histogram2D {
                 yrange.as_ptr(),
                 yrange.len() as _,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function sets the ranges of the existing histogram h to cover the ranges xmin to xmax and ymin to ymax uniformly. The values
     /// of the histogram bins are reset to zero.
     #[doc(alias = "gsl_histogram2d_set_ranges_uniform")]
-    pub fn set_ranges_uniform(&mut self, xmin: f64, xmax: f64, ymin: f64, ymax: f64) -> Value {
-        Value::from(unsafe {
+    pub fn set_ranges_uniform(
+        &mut self,
+        xmin: f64,
+        xmax: f64,
+        ymin: f64,
+        ymax: f64,
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_histogram2d_set_ranges_uniform(self.unwrap_unique(), xmin, xmax, ymin, ymax)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function copies the histogram src into the pre-existing histogram dest, making dest into an exact copy of src. The two histograms
     /// must be of the same size.
     #[doc(alias = "gsl_histogram2d_memcpy")]
-    pub fn copy(&self, dest: &mut Histogram2D) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_memcpy(dest.unwrap_unique(), self.unwrap_shared())
-        })
+    pub fn copy(&self, dest: &mut Histogram2D) -> Result<(), Value> {
+        let ret =
+            unsafe { sys::gsl_histogram2d_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// his function returns a pointer to a newly created histogram which is an exact copy of the histogram self.
@@ -432,15 +449,17 @@ impl Histogram2D {
     /// called, since it is often necessary to compute histograms for a small range of a larger dataset, ignoring any coordinates outside the
     /// range of interest.
     #[doc(alias = "gsl_histogram2d_increment")]
-    pub fn increment(&mut self, x: f64, y: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram2d_increment(self.unwrap_unique(), x, y) })
+    pub fn increment(&mut self, x: f64, y: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_increment(self.unwrap_unique(), x, y) };
+        result_handler!(ret, ())
     }
 
     /// This function is similar to gsl_histogram2d_increment but increases the value of the appropriate bin in the histogram h by the floating-point
     /// number weight.
     #[doc(alias = "gsl_histogram2d_accumulate")]
-    pub fn accumulate(&mut self, x: f64, y: f64, weight: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram2d_accumulate(self.unwrap_unique(), x, y, weight) })
+    pub fn accumulate(&mut self, x: f64, y: f64, weight: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_accumulate(self.unwrap_unique(), x, y, weight) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the contents of the (i,j)-th bin of the histogram h. If (i,j) lies outside the valid range of indices for the
@@ -458,15 +477,15 @@ impl Histogram2D {
     /// return 0 to indicate success. If i or j lies outside the valid range of indices for the
     /// histogram then the error handler is called with an error code of Value::Dom.
     ///
-    /// Returns `(Value, xlower, xupper)`.
+    /// Returns `(xlower, xupper)`.
     #[doc(alias = "gsl_histogram2d_get_xrange")]
-    pub fn xrange(&self, i: usize) -> (Value, f64, f64) {
+    pub fn xrange(&self, i: usize) -> Result<(f64, f64), Value> {
         let mut xlower = 0.;
         let mut xupper = 0.;
         let ret = unsafe {
             sys::gsl_histogram2d_get_xrange(self.unwrap_shared(), i, &mut xlower, &mut xupper)
         };
-        (Value::from(ret), xlower, xupper)
+        result_handler!(ret, (xlower, xupper))
     }
 
     /// This function finds the upper and lower range limits of the i-th and j-th bins in the x and
@@ -477,15 +496,15 @@ impl Histogram2D {
     /// return 0 to indicate success. If i or j lies outside the valid range of indices for the
     /// histogram then the error handler is called with an error code of Value::Dom.
     ///
-    /// Returns `(Value, ylower, yupper)`.
+    /// Returns `(ylower, yupper)`.
     #[doc(alias = "gsl_histogram2d_get_yrange")]
-    pub fn yrange(&self, j: usize) -> (Value, f64, f64) {
+    pub fn yrange(&self, j: usize) -> Result<(f64, f64), Value> {
         let mut ylower = 0.;
         let mut yupper = 0.;
         let ret = unsafe {
             sys::gsl_histogram2d_get_yrange(self.unwrap_shared(), j, &mut ylower, &mut yupper)
         };
-        (Value::from(ret), ylower, yupper)
+        result_handler!(ret, (ylower, yupper))
     }
 
     /// This function returns the maximum upper and minimum lower range limits and the number of bins for the x and y directions of the histogram h.
@@ -543,13 +562,13 @@ impl Histogram2D {
     /// (x,y) lies outside the valid range of the histogram then the function returns Value::Dom and
     /// the error handler is invoked.
     ///
-    /// Returns `(Value, i, j)`.
+    /// Returns `(i, j)`.
     #[doc(alias = "gsl_histogram2d_find")]
-    pub fn find(&self, x: f64, y: f64) -> (Value, usize, usize) {
+    pub fn find(&self, x: f64, y: f64) -> Result<(usize, usize), Value> {
         let mut i = 0;
         let mut j = 0;
         let ret = unsafe { sys::gsl_histogram2d_find(self.unwrap_shared(), x, y, &mut i, &mut j) };
-        (Value::from(ret), i, j)
+        result_handler!(ret, (i, j))
     }
 
     /// This function returns the maximum value contained in the histogram bins.
@@ -642,49 +661,47 @@ impl Histogram2D {
     /// This function adds the contents of the bins in histogram h2 to the corresponding bins of histogram h1, i.e. h'_1(i,j) = h_1(i,j)
     /// + h_2(i,j). The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram2d_add")]
-    pub fn add(&mut self, other: &Histogram2D) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_add(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn add(&mut self, other: &Histogram2D) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_add(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function subtracts the contents of the bins in histogram h2 from the corresponding bins of histogram h1, i.e. h'_1(i,j) = h_1(i,j)
     /// - h_2(i,j). The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram2d_sub")]
-    pub fn sub(&mut self, other: &Histogram2D) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_sub(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn sub(&mut self, other: &Histogram2D) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_sub(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the contents of the bins of histogram h1 by the contents of the corresponding bins in histogram h2, i.e. h'_1(i,j)
     /// = h_1(i,j) * h_2(i,j). The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram2d_mul")]
-    pub fn mul(&mut self, other: &Histogram2D) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_mul(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn mul(&mut self, other: &Histogram2D) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_mul(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function divides the contents of the bins of histogram h1 by the contents of the corresponding bins in histogram h2, i.e. h'_1(i,j) =
     /// h_1(i,j) / h_2(i,j). The two histograms must have identical bin ranges.
     #[doc(alias = "gsl_histogram2d_div")]
-    pub fn div(&mut self, other: &Histogram2D) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_div(self.unwrap_unique(), other.unwrap_shared())
-        })
+    pub fn div(&mut self, other: &Histogram2D) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_div(self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the contents of the bins of histogram h by the constant scale, i.e. h'_1(i,j) = h_1(i,j) scale.
     #[doc(alias = "gsl_histogram2d_scale")]
-    pub fn scale(&mut self, scale: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram2d_scale(self.unwrap_unique(), scale) })
+    pub fn scale(&mut self, scale: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_scale(self.unwrap_unique(), scale) };
+        result_handler!(ret, ())
     }
 
     /// This function shifts the contents of the bins of histogram h by the constant offset, i.e. h'_1(i,j) = h_1(i,j) + offset.
     #[doc(alias = "gsl_histogram2d_shift")]
-    pub fn shift(&mut self, offset: f64) -> Value {
-        Value::from(unsafe { sys::gsl_histogram2d_shift(self.unwrap_unique(), offset) })
+    pub fn shift(&mut self, offset: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_shift(self.unwrap_unique(), offset) };
+        result_handler!(ret, ())
     }
 }
 
@@ -724,23 +741,22 @@ impl Histogram2DPdf {
     /// negative then the error handler is invoked with an error code of GSL_EDOM because a probability distribution cannot contain negative
     /// values.
     #[doc(alias = "gsl_histogram2d_pdf_init")]
-    pub fn init(&mut self, h: &Histogram2D) -> Value {
-        Value::from(unsafe {
-            sys::gsl_histogram2d_pdf_init(self.unwrap_unique(), h.unwrap_shared())
-        })
+    pub fn init(&mut self, h: &Histogram2D) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_histogram2d_pdf_init(self.unwrap_unique(), h.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function uses two uniform random numbers between zero and one, r1 and r2, to compute a
     /// single random sample from the two-dimensional probability distribution p.
     ///
-    /// Returns `(Value, x, y)`.
+    /// Returns `(x, y)`.
     #[doc(alias = "gsl_histogram2d_pdf_sample")]
-    pub fn sample(&self, r1: f64, r2: f64) -> (Value, f64, f64) {
+    pub fn sample(&self, r1: f64, r2: f64) -> Result<(f64, f64), Value> {
         let mut x = 0.;
         let mut y = 0.;
         let ret = unsafe {
             sys::gsl_histogram2d_pdf_sample(self.unwrap_shared(), r1, r2, &mut x, &mut y)
         };
-        (Value::from(ret), x, y)
+        result_handler!(ret, (x, y))
     }
 }

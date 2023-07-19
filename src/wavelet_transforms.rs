@@ -37,8 +37,8 @@ pub mod one_dimension {
         n: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet_transform(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -47,7 +47,8 @@ pub mod one_dimension {
                 dir.into(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_wavelet_transform_forward")]
@@ -57,8 +58,8 @@ pub mod one_dimension {
         stride: usize,
         n: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet_transform_forward(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -66,7 +67,8 @@ pub mod one_dimension {
                 n,
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_wavelet_transform_inverse")]
@@ -76,8 +78,8 @@ pub mod one_dimension {
         stride: usize,
         n: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet_transform_inverse(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -85,7 +87,8 @@ pub mod one_dimension {
                 n,
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
@@ -122,8 +125,8 @@ pub mod two_dimension {
         size2: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_transform(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -133,7 +136,8 @@ pub mod two_dimension {
                 dir.into(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
@@ -152,8 +156,8 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_transform_forward(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -162,7 +166,8 @@ pub mod two_dimension {
                 size2,
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
@@ -181,8 +186,8 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_transform_inverse(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -191,7 +196,8 @@ pub mod two_dimension {
                 size2,
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
@@ -201,15 +207,16 @@ pub mod two_dimension {
         m: &mut ::MatrixF64,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_transform_matrix(
                 w.unwrap_shared(),
                 m.unwrap_unique(),
                 dir.into(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
@@ -218,14 +225,15 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_transform_matrix_forward(
                 w.unwrap_shared(),
                 m.unwrap_unique(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
@@ -234,14 +242,15 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_transform_matrix_inverse(
                 w.unwrap_shared(),
                 m.unwrap_unique(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
@@ -254,8 +263,8 @@ pub mod two_dimension {
         size2: usize,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_nstransform(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -265,7 +274,8 @@ pub mod two_dimension {
                 dir.into(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
@@ -277,8 +287,8 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_forward(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -287,7 +297,8 @@ pub mod two_dimension {
                 size2,
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
@@ -299,8 +310,8 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_inverse(
                 w.unwrap_shared(),
                 data.as_mut_ptr(),
@@ -309,7 +320,8 @@ pub mod two_dimension {
                 size2,
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
@@ -319,15 +331,16 @@ pub mod two_dimension {
         m: &mut ::MatrixF64,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_matrix(
                 w.unwrap_shared(),
                 m.unwrap_unique(),
                 dir.into(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
@@ -336,14 +349,15 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_matrix_forward(
                 w.unwrap_shared(),
                 m.unwrap_unique(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
@@ -352,13 +366,14 @@ pub mod two_dimension {
         w: &::Wavelet,
         m: &mut ::MatrixF64,
         work: &mut ::WaveletWorkspace,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_matrix_inverse(
                 w.unwrap_shared(),
                 m.unwrap_unique(),
                 work.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }

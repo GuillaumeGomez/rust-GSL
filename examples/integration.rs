@@ -13,7 +13,9 @@ fn main() {
     let alpha: f64 = 1.0;
     let expected: f64 = -4.0;
 
-    let (_, result, error) = w.qags(|x| (alpha * x).ln() / x.sqrt(), 0., 1., 0., 1e-7, 1000);
+    let (result, error) = w
+        .qags(|x| (alpha * x).ln() / x.sqrt(), 0., 1., 0., 1e-7, 1000)
+        .unwrap();
 
     println!("== Adaptive integration ==");
     println!("result          = {}", result);
@@ -37,7 +39,7 @@ fn main() {
 
     println!("");
 
-    let (_, result) = w.fixed(|x| x.powf(m as _) + 1.);
+    let result = w.fixed(|x| x.powf(m as _) + 1.).unwrap();
 
     let expected = if m % 2 == 0 {
         consts::PI.sqrt() + rgsl::gamma_beta::gamma::gamma(0.5 * (1. + m as f64))

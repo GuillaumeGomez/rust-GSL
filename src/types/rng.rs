@@ -206,8 +206,9 @@ impl Rng {
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
     #[doc(alias = "gsl_rng_memcpy")]
-    pub fn copy(&self, other: &mut Rng) -> Value {
-        Value::from(unsafe { sys::gsl_rng_memcpy(other.unwrap_unique(), self.unwrap_shared()) })
+    pub fn copy(&self, other: &mut Rng) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_rng_memcpy(other.unwrap_unique(), self.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the size of the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,
@@ -273,9 +274,9 @@ impl Rng {
     /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
     /// ```
     #[doc(alias = "gsl_ran_choose")]
-    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> Value {
+    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> Result<(), Value> {
         assert!(src.len() <= dest.len());
-        Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_ran_choose(
                 self.unwrap_unique(),
                 dest.as_mut_ptr() as *mut _,
@@ -284,7 +285,8 @@ impl Rng {
                 src.len() as _,
                 ::std::mem::size_of::<T>() as _,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more

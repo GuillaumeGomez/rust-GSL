@@ -31,9 +31,15 @@ fn main() {
     }
 
     // apply filters
-    gauss_p.gaussian(FilterEnd::PadValue, ALPHA, 0, &x, &mut y);
-    gauss_p.gaussian(FilterEnd::PadValue, ALPHA, 1, &x, &mut dy);
-    gauss_p.gaussian(FilterEnd::PadValue, ALPHA, 2, &x, &mut d2y);
+    gauss_p
+        .gaussian(FilterEnd::PadValue, ALPHA, 0, &x, &mut y)
+        .unwrap();
+    gauss_p
+        .gaussian(FilterEnd::PadValue, ALPHA, 1, &x, &mut dy)
+        .unwrap();
+    gauss_p
+        .gaussian(FilterEnd::PadValue, ALPHA, 2, &x, &mut d2y)
+        .unwrap();
 
     // print results
     for i in 0..N {

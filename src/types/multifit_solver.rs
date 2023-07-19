@@ -213,6 +213,7 @@ int main(void) {
 ```
 */
 
+use crate::Value;
 use ffi::{self, FFI};
 use std::os::raw::{c_int, c_void};
 use VectorF64;
@@ -254,21 +255,23 @@ impl MultiFitFSolver {
     }
 
     #[doc(alias = "gsl_multifit_fsolver_set")]
-    pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> ::Value {
+    pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> Result<(), Value> {
         // unsafe {
         //     let func = (*self.0).function;
         //     if !func.is_null() {
         //         Box::from_raw((*func).params);
         //     }
         // }
-        ::Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_multifit_fsolver_set(self.unwrap_unique(), &mut f.0, x.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_fsolver_iterate")]
-    pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_multifit_fsolver_iterate(self.unwrap_unique()) })
+    pub fn iterate(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multifit_fsolver_iterate(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_fsolver_name")]
@@ -309,29 +312,30 @@ impl MultiFitFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial guess x.
     #[doc(alias = "gsl_multifit_fdfsolver_set")]
-    pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &::VectorF64) -> ::Value {
-        ::Value::from(unsafe {
+    pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &VectorF64) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_multifit_fdfsolver_set(self.unwrap_unique(), f.to_raw(), x.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
-    pub fn x(&self) -> ::VectorF64 {
+    pub fn x(&self) -> VectorF64 {
         unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).x) }
     }
 
-    pub fn f(&self) -> ::VectorF64 {
+    pub fn f(&self) -> VectorF64 {
         unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).f) }
     }
 
-    pub fn dx(&self) -> ::VectorF64 {
+    pub fn dx(&self) -> VectorF64 {
         unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).dx) }
     }
 
-    pub fn g(&self) -> ::VectorF64 {
+    pub fn g(&self) -> VectorF64 {
         unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).g) }
     }
 
-    pub fn sqrt_wts(&self) -> ::VectorF64 {
+    pub fn sqrt_wts(&self) -> VectorF64 {
         unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).sqrt_wts) }
     }
 
@@ -348,13 +352,14 @@ impl MultiFitFdfSolver {
     /// unexpected problem then an error code will be returned. The solver maintains a current
     /// estimate of the best-fit parameters at all times.
     #[doc(alias = "gsl_multifit_fdfsolver_iterate")]
-    pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_multifit_fdfsolver_iterate(self.unwrap_unique()) })
+    pub fn iterate(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multifit_fdfsolver_iterate(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
     #[doc(alias = "gsl_multifit_fdfsolver_position")]
-    pub fn position(&self) -> ::VectorF64 {
+    pub fn position(&self) -> VectorF64 {
         unsafe { ffi::FFI::wrap(sys::gsl_multifit_fdfsolver_position(self.unwrap_shared())) }
     }
 
@@ -364,31 +369,31 @@ impl MultiFitFdfSolver {
     // checker:ignore
     #[allow(unused_assignments)]
     #[doc(alias = "gsl_multifit_test_delta")]
-    pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> ::Value {
-        let mut status = ::Value::Failure;
+    pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> Result<(), Value> {
+        let mut status = Value::Failure;
         let ptr = self.unwrap_shared();
 
         if !ptr.is_null() {
             let mut iter = 0usize;
             loop {
-                status = self.iterate();
-
-                if status != ::Value::Success {
-                    break;
-                }
+                self.iterate()?;
 
                 /* test for convergence */
-                status = ::Value::from(unsafe {
+                status = Value::from(unsafe {
                     sys::gsl_multifit_test_delta((*ptr).dx, (*ptr).x, epsabs, epsrel)
                 });
                 iter += 1;
-                if status != ::Value::Continue || iter >= max_iter {
+                if status != Value::Continue || iter >= max_iter {
                     break;
                 }
             }
         }
 
-        status
+        if status != Value::Success {
+            Err(status)
+        } else {
+            Ok(())
+        }
     }
 }
 
@@ -410,9 +415,9 @@ impl MultiFitFdfSolverType {
 }
 
 pub struct MultiFitFunctionFdf {
-    pub f: Option<Box<dyn Fn(::VectorF64, ::VectorF64) -> ::Value>>,
-    pub df: Option<Box<dyn Fn(::VectorF64, ::MatrixF64) -> ::Value>>,
-    pub fdf: Option<Box<dyn Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> ::Value>>,
+    pub f: Option<Box<dyn Fn(::VectorF64, ::VectorF64) -> Value>>,
+    pub df: Option<Box<dyn Fn(::VectorF64, ::MatrixF64) -> Value>>,
+    pub fdf: Option<Box<dyn Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> Value>>,
     pub n: usize,
     pub p: usize,
     intern: sys::gsl_multifit_function_fdf,
@@ -462,7 +467,7 @@ unsafe extern "C" fn f(
         )
         .into()
     } else {
-        ::Value::Success.into()
+        Value::Success.into()
     }
 }
 
@@ -479,7 +484,7 @@ unsafe extern "C" fn df(
         )
         .into()
     } else {
-        ::Value::Success.into()
+        Value::Success.into()
     }
 }
 
@@ -498,6 +503,6 @@ unsafe extern "C" fn fdf(
         )
         .into()
     } else {
-        ::Value::Success.into()
+        Value::Success.into()
     }
 }

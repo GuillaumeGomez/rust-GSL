@@ -49,7 +49,8 @@ fn main() {
         &mut xmedian,
         &mut xsigma,
         &mut ioutlier,
-    );
+    )
+    .unwrap();
 
     for i in 0..N {
         let xi = x.get(i);

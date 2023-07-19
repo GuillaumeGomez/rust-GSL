@@ -63,22 +63,24 @@ impl WriteNTuples {
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the
     /// corresponding file.
     #[doc(alias = "gsl_ntuple_write")]
-    pub fn write<T: Sized>(&mut self, data: &T) -> Value {
-        Value::from(unsafe {
+    pub fn write<T: Sized>(&mut self, data: &T) -> Result<(), Value> {
+        let ret = unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_write(self.n)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function is a synonym for NTuples::write.
     #[doc(alias = "gsl_ntuple_bookdata")]
-    pub fn bookdata<T: Sized>(&mut self, data: &T) -> Value {
-        Value::from(unsafe {
+    pub fn bookdata<T: Sized>(&mut self, data: &T) -> Result<(), Value> {
+        let ret = unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_bookdata(self.n)
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
@@ -117,7 +119,7 @@ impl ReadNTuples {
     /// This function reads the current row of the ntuple file for ntuple and stores the values in
     /// ntuple->data.
     #[doc(alias = "gsl_ntuple_read")]
-    pub fn read<T: Sized>(&mut self) -> (Value, T) {
+    pub fn read<T: Sized>(&mut self) -> Result<T, Value> {
         let mut data = MaybeUninit::<T>::uninit();
 
         let ret = unsafe {
@@ -125,7 +127,7 @@ impl ReadNTuples {
             (*self.n).size = ::std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_read(self.n)
         };
-        (::Value::from(ret), unsafe { data.assume_init() })
+        result_handler!(ret, unsafe { data.assume_init() })
     }
 }
 
@@ -151,7 +153,7 @@ macro_rules! impl_project {
                 h: &mut ::Histogram,
                 value_func: V,
                 select_func: S,
-            ) -> Value {
+            ) -> Result<(), Value> {
                 unsafe extern "C" fn value_trampoline<T: Sized, F: Fn(&T) -> f64>(
                     x: *mut c_void,
                     params: *mut c_void,
@@ -183,14 +185,15 @@ macro_rules! impl_project {
                     function: unsafe { ::std::mem::transmute(select_trampoline::<T, S> as usize) },
                     params: Box::into_raw(f) as *mut _,
                 };
-                Value::from(unsafe {
+                let ret = unsafe {
                     sys::gsl_ntuple_project(
                         h.unwrap_unique(),
                         self.n,
                         &mut value_function,
                         &mut select_function,
                     )
-                })
+                };
+                result_handler!(ret, ())
             }
         }
     };

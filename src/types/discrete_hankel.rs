@@ -86,8 +86,9 @@ impl DiscreteHankel {
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
     #[doc(alias = "gsl_dht_init")]
-    pub fn init(&mut self, nu: f64, xmax: f64) -> Value {
-        Value::from(unsafe { sys::gsl_dht_init(self.unwrap_unique(), nu, xmax) })
+    pub fn init(&mut self, nu: f64, xmax: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_dht_init(self.unwrap_unique(), nu, xmax) };
+        result_handler!(ret, ())
     }
 
     /// This function applies the transform t to the array f_in whose size is equal to the size of
@@ -96,7 +97,7 @@ impl DiscreteHankel {
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2,
     /// up to numerical errors.
     #[doc(alias = "gsl_dht_apply")]
-    pub fn apply(&mut self, f_in: &[f64]) -> (Value, Vec<f64>) {
+    pub fn apply(&mut self, f_in: &[f64]) -> Result<Vec<f64>, Value> {
         unsafe {
             assert!(
                 (*self.unwrap_shared()).size == f_in.len() as _,
@@ -108,7 +109,7 @@ impl DiscreteHankel {
                 f_in.as_ptr() as usize as *mut _,
                 f_out.as_mut_ptr(),
             );
-            (Value::from(ret), f_out)
+            result_handler!(ret, f_out)
         }
     }
 
@@ -147,13 +148,12 @@ impl DiscreteHankel {
 #[test]
 fn discrete_hankel() {
     let mut d = DiscreteHankel::new(3).unwrap();
-    assert_eq!(d.init(3., 2.), ::Value::Success);
+    assert!(d.init(3., 2.).is_ok());
     assert_eq!(
         &format!("{:.4} {:.4}", d.x_sample(1), d.k_sample(1)),
         "1.2033 4.8805"
     );
-    let (res, v) = d.apply(&[100., 2., 3.]);
-    assert_eq!(true, res == ::Value::Success);
+    let v = d.apply(&[100., 2., 3.]).unwrap();
     assert_eq!(
         &format!("{:.4} {:.4} {:.4}", v[0], v[1], v[2]),
         "8.5259 13.9819 11.7320"

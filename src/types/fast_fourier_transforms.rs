@@ -80,8 +80,8 @@ impl $complex_rust_name {
         stride: usize,
         n: usize,
         wavetable: &$rust_name,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name $($extra)? _forward>](
                 data.as_mut_ptr(),
                 stride,
@@ -89,7 +89,8 @@ impl $complex_rust_name {
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = $name $($extra)? _transform)]
@@ -100,8 +101,8 @@ impl $complex_rust_name {
         n: usize,
         wavetable: &$rust_name,
         sign: ::FftDirection,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name $($extra)? _transform>](
                 data.as_mut_ptr(),
                 stride,
@@ -110,7 +111,8 @@ impl $complex_rust_name {
                 self.unwrap_unique(),
                 sign.into(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = $name $($extra)? _backward)]
@@ -120,8 +122,8 @@ impl $complex_rust_name {
         stride: usize,
         n: usize,
         wavetable: &$rust_name,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name $($extra)? _backward>](
                 data.as_mut_ptr(),
                 stride,
@@ -129,7 +131,8 @@ impl $complex_rust_name {
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = $name $($extra)? _inverse)]
@@ -139,8 +142,8 @@ impl $complex_rust_name {
         stride: usize,
         n: usize,
         wavetable: &$rust_name,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name $($extra)? _inverse>](
                 data.as_mut_ptr(),
                 stride,
@@ -148,7 +151,8 @@ impl $complex_rust_name {
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 

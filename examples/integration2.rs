@@ -15,7 +15,7 @@ fn main() {
     let w = IntegrationFixedWorkspace::new(t, N, 0., 1., 0., 0.)
         .expect("IntegrationFixedWorkspace::new failed");
 
-    let (_, result) = w.fixed(|x| x.powi(M as _) + 1.);
+    let result = w.fixed(|x| x.powi(M as _) + 1.).unwrap();
 
     let expected = PI.sqrt() + gamma_beta::gamma::gamma(0.5 * (1. + M as f64));
     println!("m             = {}", M);

@@ -35,7 +35,7 @@ fn main() {
     println!("");
     println!("");
 
-    fft::radix2::forward(data, 1, N);
+    fft::radix2::forward(data, 1, N).unwrap();
 
     for i in 0..N {
         println!(

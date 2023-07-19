@@ -65,8 +65,9 @@ impl MultiSet {
     /// This function copies the elements of the multiset `self` into the multiset dest. The two
     /// multisets must have the same size.
     #[doc(alias = "gsl_multiset_memcpy")]
-    pub fn copy(&self, dest: &mut MultiSet) -> Value {
-        Value::from(unsafe { sys::gsl_multiset_memcpy(dest.unwrap_unique(), self.unwrap_shared()) })
+    pub fn copy(&self, dest: &mut MultiSet) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multiset_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the value of the i-th element of the multiset c. If i lies outside the
@@ -109,29 +110,34 @@ impl MultiSet {
 
     /// This function checks that the multiset self is valid. The k elements should lie in the range
     /// 0 to n-1, with each value occurring in non-decreasing order.
+    ///
+    /// Returns `OK(())` if valid.
     #[doc(alias = "gsl_multiset_valid")]
-    pub fn valid(&self) -> Value {
+    pub fn valid(&self) -> Result<(), Value> {
         // Little trick here: the function is expecting a mutable pointer whereas it doesn't need
         // to be...
-        Value::from(unsafe { sys::gsl_multiset_valid(self.inner) })
+        let ret = unsafe { sys::gsl_multiset_valid(self.inner) };
+        result_handler!(ret, ())
     }
 
     /// This function advances the multiset self to the next multiset element in lexicographic order
-    /// and returns [`Value::Success`]. If no further multisets elements are available it returns
-    /// [`Value::Failure`] and leaves self unmodified. Starting with the first multiset and
-    /// repeatedly applying this function will iterate through all possible multisets of a given
-    /// order.
+    /// and returns `Ok(())`. If no further multisets elements are available it returns
+    /// [`Err(Value::Failure)`](Value::Failure) and leaves self unmodified. Starting with the first
+    /// multiset and repeatedly applying this function will iterate through all possible multisets
+    /// of a given order.
     #[doc(alias = "gsl_multiset_next")]
-    pub fn next(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_multiset_next(self.unwrap_unique()) })
+    pub fn next(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multiset_next(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function steps backwards from the multiset self to the previous multiset element in
     /// lexicographic order, returning [`Value::Success`]. If no previous multiset is available it
     /// returns [`Value::Failure`] and leaves self unmodified.
     #[doc(alias = "gsl_multiset_prev")]
-    pub fn prev(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_multiset_prev(self.unwrap_unique()) })
+    pub fn prev(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multiset_prev(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     pub fn print<W: io::Write>(&self, writer: &mut W) -> io::Result<()> {

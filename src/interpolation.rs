@@ -40,7 +40,7 @@ pub fn eval_e(
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> (Value, f64) {
+) -> Result<f64, Value> {
     let mut y = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_e(
@@ -52,7 +52,7 @@ pub fn eval_e(
             &mut y,
         )
     };
-    (::Value::from(ret), y)
+    result_handler!(ret, y)
 }
 
 /// This function returns the derivative d of an interpolated function for a given point x, using
@@ -87,7 +87,7 @@ pub fn eval_deriv_e(
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> (Value, f64) {
+) -> Result<f64, Value> {
     let mut d = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_deriv_e(
@@ -99,7 +99,7 @@ pub fn eval_deriv_e(
             &mut d,
         )
     };
-    (Value::from(ret), d)
+    result_handler!(ret, d)
 }
 
 /// This function returns the second derivative d2 of an interpolated function for a given point x,
@@ -134,7 +134,7 @@ pub fn eval_deriv2_e(
     ya: &[f64],
     x: f64,
     acc: &mut ::InterpAccel,
-) -> (Value, f64) {
+) -> Result<f64, Value> {
     let mut d2 = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_deriv2_e(
@@ -146,7 +146,7 @@ pub fn eval_deriv2_e(
             &mut d2,
         )
     };
-    (Value::from(ret), d2)
+    result_handler!(ret, d2)
 }
 
 /// This function returns the numerical integral result of an interpolated function over the range
@@ -184,7 +184,7 @@ pub fn eval_integ_e(
     a: f64,
     b: f64,
     acc: &mut ::InterpAccel,
-) -> (Value, f64) {
+) -> Result<f64, Value> {
     let mut result = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_integ_e(
@@ -197,5 +197,5 @@ pub fn eval_integ_e(
             &mut result,
         )
     };
-    (Value::from(ret), result)
+    result_handler!(ret, result)
 }

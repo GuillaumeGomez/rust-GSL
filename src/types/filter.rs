@@ -35,8 +35,8 @@ impl FilterGaussianWorkspace {
         order: usize,
         x: &VectorF64,
         y: &mut VectorF64,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_filter_gaussian(
                 endtype.into(),
                 alpha,
@@ -45,7 +45,8 @@ impl FilterGaussianWorkspace {
                 y.unwrap_unique(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
@@ -67,15 +68,21 @@ impl FilterMedianWorkspace {
     }
 
     #[doc(alias = "gsl_filter_median")]
-    pub fn median(&mut self, endtype: FilterEnd, x: &VectorF64, y: &mut VectorF64) -> Value {
-        Value::from(unsafe {
+    pub fn median(
+        &mut self,
+        endtype: FilterEnd,
+        x: &VectorF64,
+        y: &mut VectorF64,
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_filter_median(
                 endtype.into(),
                 x.unwrap_shared(),
                 y.unwrap_unique(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
@@ -97,15 +104,21 @@ impl FilterRMedianWorkspace {
     }
 
     #[doc(alias = "gsl_filter_rmedian")]
-    pub fn rmedian(&mut self, endtype: FilterEnd, x: &VectorF64, y: &mut VectorF64) -> Value {
-        Value::from(unsafe {
+    pub fn rmedian(
+        &mut self,
+        endtype: FilterEnd,
+        x: &VectorF64,
+        y: &mut VectorF64,
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_filter_rmedian(
                 endtype.into(),
                 x.unwrap_shared(),
                 y.unwrap_unique(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }
 
@@ -126,7 +139,7 @@ impl FilterImpulseWorkspace {
         }
     }
 
-    /// Returns `(Value, noutlier)`.
+    /// Returns `noutlier`.
     #[doc(alias = "gsl_filter_impulse")]
     pub fn impulse(
         &mut self,
@@ -138,7 +151,7 @@ impl FilterImpulseWorkspace {
         xmedian: &mut VectorF64,
         xsigma: &mut VectorF64,
         ioutlier: &mut VectorI32,
-    ) -> (Value, usize) {
+    ) -> Result<usize, Value> {
         let mut noutlier = 0;
         let ret = unsafe {
             sys::gsl_filter_impulse(
@@ -154,6 +167,6 @@ impl FilterImpulseWorkspace {
                 self.unwrap_unique(),
             )
         };
-        (Value::from(ret), noutlier)
+        result_handler!(ret, noutlier)
     }
 }
