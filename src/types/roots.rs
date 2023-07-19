@@ -413,7 +413,7 @@ mod test {
     #[test]
     fn test_root() {
         let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
-        root.set(&quadratic_test_fn, 0.0, 5.0).unwrap();
+        root.set(quadratic_test_fn, 0.0, 5.0).unwrap();
 
         let max_iter = 10usize;
         let epsabs = 0.0001;

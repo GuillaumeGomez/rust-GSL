@@ -24,7 +24,7 @@ fn main() {
         println!("data: {} {} {}", x[i], y[i], 1. / w[i].sqrt());
     }
 
-    println!("");
+    println!();
 
     for i in -30..130 {
         let xf = x[0] + (i as f64 / 100.) * (x[N - 1] - x[0]);

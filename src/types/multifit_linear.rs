@@ -75,14 +75,14 @@ impl MultifitLinearWorkspace {
     }
 
     #[doc(alias = "gsl_multifit_linear_svd")]
-    pub fn linear_svd(&mut self, x: &MatrixF64) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_multifit_linear_svd(x.unwrap_shared(), self.unwrap_unique()) };
+    pub fn linear_svd(&mut self, x: &mut MatrixF64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multifit_linear_svd(x.unwrap_unique(), self.unwrap_unique()) };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_bsvd")]
-    pub fn linear_bsvd(&mut self, x: &MatrixF64) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_multifit_linear_bsvd(x.unwrap_shared(), self.unwrap_unique()) };
+    pub fn linear_bsvd(&mut self, x: &mut MatrixF64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multifit_linear_bsvd(x.unwrap_unique(), self.unwrap_unique()) };
         result_handler!(ret, ())
     }
 

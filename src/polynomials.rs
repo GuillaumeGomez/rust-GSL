@@ -209,6 +209,7 @@ pub mod quadratic_equations {
     /// in ascending order, sorted first by their real components and then by their imaginary components. If only one real root is found (i.e. if
     /// a=0) then it is stored in z0.
     #[doc(alias = "gsl_poly_complex_solve_quadratic")]
+    #[allow(unknown_lints, clippy::useless_transmute)]
     pub fn poly_complex_solve_quadratic(
         a: f64,
         b: f64,
@@ -257,6 +258,7 @@ pub mod cubic_equations {
     /// stored in z0, z1 and z2. The roots are returned in ascending order, sorted first by their
     /// real components and then by their imaginary components.
     #[doc(alias = "gsl_poly_complex_solve_cubic")]
+    #[allow(unknown_lints, clippy::useless_transmute)]
     pub fn poly_complex_solve_cubic(
         a: f64,
         b: f64,

@@ -104,12 +104,19 @@ fn solve_system(print_data: bool, t: MultilargeLinearType, c: &mut VectorF64) {
     }
 
     if print_data {
-        println!("");
-        println!("");
+        println!();
+        println!();
     }
 
     // compute L-curve
-    w.lcurve(&mut reg_param, &mut rho, &mut eta).unwrap();
+    if let Err(e) = w.lcurve(&mut reg_param, &mut rho, &mut eta) {
+        eprintln!(
+            "=== Method {} FAILED ===",
+            w.name().expect("Failed to get name")
+        );
+        eprintln!("error: {:?}", e);
+        return;
+    }
 
     // solve large LS system and store solution in c
     let (rnorm, snorm) = w.solve(LAMBDA, c).unwrap();
@@ -143,8 +150,8 @@ fn main() {
     // solve system with TSQR method
     solve_system(true, MultilargeLinearType::tsqr(), &mut c_tsqr);
 
-    println!("");
-    println!("");
+    println!();
+    println!();
 
     // solve system with Normal equations method
     solve_system(false, MultilargeLinearType::normal(), &mut c_normal);

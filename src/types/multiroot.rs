@@ -307,7 +307,7 @@ mod tests {
         let array_size: usize = 2;
         let guess_value = VectorF64::from_slice(&[-10.0, -5.0]).unwrap();
         multi_root
-            .set(&rosenbrock_f, array_size, &guess_value)
+            .set(rosenbrock_f, array_size, &guess_value)
             .unwrap();
 
         // iteration counters

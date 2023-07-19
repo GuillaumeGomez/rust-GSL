@@ -36,10 +36,10 @@ fn main() {
     }
 
     median_p
-        .median(FilterEnd::PadValue, &mut x, &mut y_median)
+        .median(FilterEnd::PadValue, &x, &mut y_median)
         .unwrap();
     rmedian_p
-        .rmedian(FilterEnd::PadValue, &mut x, &mut y_rmedian)
+        .rmedian(FilterEnd::PadValue, &x, &mut y_rmedian)
         .unwrap();
 
     // print results

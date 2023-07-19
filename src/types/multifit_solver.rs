@@ -255,6 +255,7 @@ impl MultiFitFSolver {
     }
 
     #[doc(alias = "gsl_multifit_fsolver_set")]
+    #[allow(unknown_lints, clippy::needless_pass_by_ref_mut)]
     pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> Result<(), Value> {
         // unsafe {
         //     let func = (*self.0).function;

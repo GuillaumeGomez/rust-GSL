@@ -964,7 +964,7 @@ pub mod level2 {
                 N,
                 A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -993,7 +993,7 @@ pub mod level2 {
                 K,
                 A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1018,7 +1018,7 @@ pub mod level2 {
                 diag.into(),
                 N,
                 Ap.as_ptr() as *const _,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1045,7 +1045,7 @@ pub mod level2 {
                 N,
                 A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1099,7 +1099,7 @@ pub mod level2 {
                 diag.into(),
                 N,
                 Ap.as_ptr() as *const _,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1196,7 +1196,7 @@ pub mod level2 {
                 N,
                 A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1225,7 +1225,7 @@ pub mod level2 {
                 K,
                 A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1250,7 +1250,7 @@ pub mod level2 {
                 diag.into(),
                 N,
                 Ap.as_ptr() as *const _,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1277,7 +1277,7 @@ pub mod level2 {
                 N,
                 A.as_ptr() as *const _,
                 lda,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }
@@ -1331,7 +1331,7 @@ pub mod level2 {
                 diag.into(),
                 N,
                 Ap.as_ptr() as *const _,
-                X.as_ptr() as *mut _,
+                X.as_mut_ptr() as *mut _,
                 incx,
             )
         }

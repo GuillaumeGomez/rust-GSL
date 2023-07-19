@@ -34,7 +34,7 @@ fn main() {
     for i in 0..N {
         println!("{}: {} {}", i, real!(data, i), imag!(data, i));
     }
-    println!("");
+    println!();
 
     for i in 0..wavetable.nf() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);

@@ -55,7 +55,7 @@ fn main() {
     // Get reciprocal condition number of X
     let rcond = w.linear_rcond();
     eprintln!("matrix condition number = {}", 1. / rcond);
-    eprintln!("");
+    eprintln!();
 
     // unregularized (standard) least squares fit, lambda = 0
     let (rnorm, snorm) = w.linear_solve(0., &x, &y, &mut c).unwrap();

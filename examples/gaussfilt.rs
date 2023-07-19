@@ -63,8 +63,8 @@ fn main() {
         println!("{:.6} {:.6} {:.6}", k1i, k2i, k3i);
     }
 
-    println!("");
-    println!("");
+    println!();
+    println!();
 
     // print filter results
     for i in 0..N {

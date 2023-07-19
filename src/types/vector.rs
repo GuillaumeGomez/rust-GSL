@@ -377,7 +377,7 @@ impl $rust_name {
     }
 
     #[doc(alias = $name _subvector)]
-    pub fn subvector<'a>(&'a mut self, offset: usize, n: usize) -> [<$rust_name View>]<'a> {
+    pub fn subvector(&mut self, offset: usize, n: usize) -> [<$rust_name View>]<'_> {
         [<$rust_name View>]::from_vector(self, offset, n)
     }
 }

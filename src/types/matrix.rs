@@ -428,13 +428,13 @@ impl $rust_name {
     }
 
     #[doc(alias = $name _submatrix)]
-    pub fn submatrix<'a>(
-        &'a mut self,
+    pub fn submatrix(
+        &mut self,
         k1: usize,
         k2: usize,
         n1: usize,
         n2: usize,
-    ) -> [<$rust_name View>]<'a> {
+    ) -> [<$rust_name View>]<'_> {
         [<$rust_name View>]::from_matrix(self, k1, k2, n1, n2)
     }
 

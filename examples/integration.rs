@@ -37,7 +37,7 @@ fn main() {
     )
     .expect("IntegrationFixedWorkspace::new failed");
 
-    println!("");
+    println!();
 
     let result = w.fixed(|x| x.powf(m as _) + 1.).unwrap();
 

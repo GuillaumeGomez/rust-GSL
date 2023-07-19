@@ -326,7 +326,7 @@ mod test {
     #[test]
     fn test_min() {
         let mut min = Minimizer::new(MinimizerType::brent()).unwrap();
-        min.set(&quadratic_test_fn, 1.0, -5.0, 5.0).unwrap();
+        min.set(quadratic_test_fn, 1.0, -5.0, 5.0).unwrap();
 
         let max_iter = 5_usize;
         let eps_abs = 0.0001;

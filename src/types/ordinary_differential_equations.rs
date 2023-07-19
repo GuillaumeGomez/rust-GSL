@@ -130,7 +130,7 @@ extern "C" fn function_handler(
     params: *mut c_void,
 ) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
-    let n = sys.dimension as usize;
+    let n = sys.dimension;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
     let t_f = unsafe { ::std::slice::from_raw_parts_mut(t_f, n) };
 
@@ -146,7 +146,7 @@ extern "C" fn jacobian_handler(
     params: *mut c_void,
 ) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
-    let n = sys.dimension as usize;
+    let n = sys.dimension;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
     let t_dfdy = unsafe { ::std::slice::from_raw_parts_mut(t_dfdy, n * n) };
     let t_dfdt = unsafe { ::std::slice::from_raw_parts_mut(t_dfdt, n) };

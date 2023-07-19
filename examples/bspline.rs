@@ -74,8 +74,8 @@ fn main() {
 
     eprintln!("chisq/dof = {}, rsq = {}", chisq / dof as f64, rsq);
 
-    println!("");
-    println!("");
+    println!();
+    println!();
 
     // output the smoothed curve
     let mut xi = 0.;

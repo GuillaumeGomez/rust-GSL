@@ -13,7 +13,7 @@ fn main() {
     println!("x = 2.0");
     println!("f'(x) = {:.10} +/- {:.10}", result, abserr);
     println!("exact = {:.10}", 1.5 * 2f64.sqrt());
-    println!("");
+    println!();
 
     let (result, abserr) =
         numerical_differentiation::deriv_forward(|x| x.powf(1.5), 0., 1e-8).unwrap();
