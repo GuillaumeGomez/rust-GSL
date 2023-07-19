@@ -9,7 +9,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:20.10
+      image: ubuntu:23.10
     strategy:
       matrix:
         rust:
