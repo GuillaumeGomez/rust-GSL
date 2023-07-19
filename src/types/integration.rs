@@ -793,7 +793,7 @@ impl GLFixedTable {
     ///
     /// Returns `(Value, xi, wi)`.
     #[doc(alias = "gsl_integration_glfixed_point")]
-    pub fn point(&self, a: f64, b: f64, i: usize) -> (::Value, f64, f64) {
+    pub fn glfixed_point(&self, a: f64, b: f64, i: usize) -> (::Value, f64, f64) {
         let mut xi = 0.;
         let mut wi = 0.;
         let ret = unsafe {
