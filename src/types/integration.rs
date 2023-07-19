@@ -793,7 +793,7 @@ impl GLFixedTable {
     ///
     /// Returns `(Value, xi, wi)`.
     #[doc(alias = "gsl_integration_glfixed_point")]
-    pub fn point(&self, a: f64, b: f64, i: usize) -> (::Value, f64, f64) {
+    pub fn glfixed_point(&self, a: f64, b: f64, i: usize) -> (::Value, f64, f64) {
         let mut xi = 0.;
         let mut wi = 0.;
         let ret = unsafe {
@@ -808,21 +808,5 @@ impl GLFixedTable {
     pub fn glfixed<F: Fn(f64) -> f64>(&self, f: F, a: f64, b: f64) -> f64 {
         let function = wrap_callback!(f, F);
         unsafe { sys::gsl_integration_glfixed(&function, a, b, self.unwrap_shared()) }
-    }
-
-    #[doc(alias = "gsl_integration_glfixed_point")]
-    pub fn glfixed_point(&self, a: f64, b: f64, xi: &mut [f64], wi: &mut [f64]) -> Value {
-        assert!(xi.len() == wi.len());
-
-        Value::from(unsafe {
-            sys::gsl_integration_glfixed_point(
-                a,
-                b,
-                xi.len() as _,
-                xi.as_mut_ptr(),
-                wi.as_mut_ptr(),
-                self.unwrap_shared(),
-            )
-        })
     }
 }
