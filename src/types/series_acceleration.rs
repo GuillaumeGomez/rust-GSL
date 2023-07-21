@@ -80,7 +80,7 @@ impl LevinUWorkspace {
     ///
     /// Returns `(Value, sum_accel, abserr)`.
     #[doc(alias = "gsl_sum_levin_u_accel")]
-    pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
+    pub fn accel(&mut self, array: &[f64]) -> Result<(f64, f64), Value> {
         let mut sum_accel = 0.;
         let mut abserr = 0.;
         let ret = unsafe {
@@ -92,7 +92,7 @@ impl LevinUWorkspace {
                 &mut abserr,
             )
         };
-        (Value::from(ret), sum_accel, abserr)
+        result_handler!(ret, (sum_accel, abserr))
     }
 
     pub fn sum_plain(&self) -> f64 {
@@ -135,7 +135,7 @@ impl LevinUTruncWorkspace {
     ///
     /// Returns `(Value, sum_accel, abserr_trunc)`.
     #[doc(alias = "gsl_sum_levin_utrunc_accel")]
-    pub fn accel(&mut self, array: &[f64]) -> (Value, f64, f64) {
+    pub fn accel(&mut self, array: &[f64]) -> Result<(f64, f64), Value> {
         let mut sum_accel = 0.;
         let mut abserr_trunc = 0.;
         let ret = unsafe {
@@ -147,7 +147,7 @@ impl LevinUTruncWorkspace {
                 &mut abserr_trunc,
             )
         };
-        (Value::from(ret), sum_accel, abserr_trunc)
+        result_handler!(ret, (sum_accel, abserr_trunc))
     }
 
     pub fn sum_plain(&self) -> f64 {

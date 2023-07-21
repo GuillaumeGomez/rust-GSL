@@ -16,7 +16,7 @@ The radial Mathieu functions Mc^{(j)}_{r}(z,q), Ms^{(j)}_{r}(z,q) are the soluti
 For more information on the Mathieu functions, see Abramowitz and Stegun, Chapter 20.
 !*/
 
-use crate::Value;
+use crate::{types, Value};
 use ffi::FFI;
 use std::mem::MaybeUninit;
 
@@ -40,20 +40,20 @@ impl MathieuWorkspace {
 
     /// This routine computes the characteristic values a_n(q), b_n(q) of the Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     #[doc(alias = "gsl_sf_mathieu_a_e")]
-    pub fn mathieu_a(n: i32, q: f64) -> (Value, ::types::Result) {
+    pub fn mathieu_a(n: i32, q: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_mathieu_a_e(n, q, result.as_mut_ptr()) };
 
-        (::Value::from(ret), unsafe { result.assume_init() }.into())
+        result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the characteristic values a_n(q), b_n(q) of the Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     #[doc(alias = "gsl_sf_mathieu_b_e")]
-    pub fn mathieu_b(n: i32, q: f64) -> (Value, ::types::Result) {
+    pub fn mathieu_b(n: i32, q: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_mathieu_b_e(n, q, result.as_mut_ptr()) };
 
-        (::Value::from(ret), unsafe { result.assume_init() }.into())
+        result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes a series of Mathieu characteristic values a_n(q), b_n(q) for n from order_min to order_max inclusive, storing the results in the array result_array.
@@ -64,8 +64,8 @@ impl MathieuWorkspace {
         order_max: i32,
         q: f64,
         result_array: &mut [f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_sf_mathieu_a_array(
                 order_min,
                 order_max,
@@ -73,7 +73,8 @@ impl MathieuWorkspace {
                 self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This routine computes a series of Mathieu characteristic values a_n(q), b_n(q) for n from order_min to order_max inclusive, storing the results in the array result_array.
@@ -84,8 +85,8 @@ impl MathieuWorkspace {
         order_max: i32,
         q: f64,
         result_array: &mut [f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_sf_mathieu_b_array(
                 order_min,
                 order_max,
@@ -93,25 +94,26 @@ impl MathieuWorkspace {
                 self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This routine computes the angular Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     #[doc(alias = "gsl_sf_mathieu_ce_e")]
-    pub fn mathieu_ce(n: i32, q: f64, x: f64) -> (Value, ::types::Result) {
+    pub fn mathieu_ce(n: i32, q: f64, x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_mathieu_ce_e(n, q, x, result.as_mut_ptr()) };
 
-        (::Value::from(ret), unsafe { result.assume_init() }.into())
+        result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the angular Mathieu functions ce_n(q,x) and se_n(q,x), respectively.
     #[doc(alias = "gsl_sf_mathieu_se_e")]
-    pub fn mathieu_se(n: i32, q: f64, x: f64) -> (Value, ::types::Result) {
+    pub fn mathieu_se(n: i32, q: f64, x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_mathieu_se_e(n, q, x, result.as_mut_ptr()) };
 
-        (::Value::from(ret), unsafe { result.assume_init() }.into())
+        result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes a series of the angular Mathieu functions ce_n(q,x) and se_n(q,x) of order n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -123,8 +125,8 @@ impl MathieuWorkspace {
         q: f64,
         x: f64,
         result_array: &mut [f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_sf_mathieu_ce_array(
                 nmin,
                 nmax,
@@ -133,7 +135,8 @@ impl MathieuWorkspace {
                 self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This routine computes a series of the angular Mathieu functions ce_n(q,x) and se_n(q,x) of order n from nmin to nmax inclusive, storing the results in the array result_array.
@@ -145,8 +148,8 @@ impl MathieuWorkspace {
         q: f64,
         x: f64,
         result_array: &mut [f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_sf_mathieu_se_array(
                 nmin,
                 nmax,
@@ -155,29 +158,30 @@ impl MathieuWorkspace {
                 self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This routine computes the radial j-th kind Mathieu functions Mc_n^{(j)}(q,x) and Ms_n^{(j)}(q,x) of order n.
     ///
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
     #[doc(alias = "gsl_sf_mathieu_Mc_e")]
-    pub fn mathieu_Mc(j: i32, n: i32, q: f64, x: f64) -> (Value, ::types::Result) {
+    pub fn mathieu_Mc(j: i32, n: i32, q: f64, x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_mathieu_Mc_e(j, n, q, x, result.as_mut_ptr()) };
 
-        (::Value::from(ret), unsafe { result.assume_init() }.into())
+        result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the radial j-th kind Mathieu functions Mc_n^{(j)}(q,x) and Ms_n^{(j)}(q,x) of order n.
     ///
     /// The allowed values of j are 1 and 2. The functions for j = 3,4 can be computed as M_n^{(3)} = M_n^{(1)} + iM_n^{(2)} and M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}, where M_n^{(j)} = Mc_n^{(j)} or Ms_n^{(j)}.
     #[doc(alias = "gsl_sf_mathieu_Ms_e")]
-    pub fn mathieu_Ms(j: i32, n: i32, q: f64, x: f64) -> (Value, ::types::Result) {
+    pub fn mathieu_Ms(j: i32, n: i32, q: f64, x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_mathieu_Ms_e(j, n, q, x, result.as_mut_ptr()) };
 
-        (::Value::from(ret), unsafe { result.assume_init() }.into())
+        result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes a series of the radial Mathieu functions of kind j, with order from nmin to nmax inclusive, storing the results in the array result_array.
@@ -190,8 +194,8 @@ impl MathieuWorkspace {
         q: f64,
         x: f64,
         result_array: &mut [f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_sf_mathieu_Mc_array(
                 j,
                 nmin,
@@ -201,7 +205,8 @@ impl MathieuWorkspace {
                 self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This routine computes a series of the radial Mathieu functions of kind j, with order from nmin to nmax inclusive, storing the results in the array result_array.
@@ -214,8 +219,8 @@ impl MathieuWorkspace {
         q: f64,
         x: f64,
         result_array: &mut [f64],
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_sf_mathieu_Ms_array(
                 j,
                 nmin,
@@ -225,6 +230,7 @@ impl MathieuWorkspace {
                 self.unwrap_unique(),
                 result_array.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }

@@ -23,7 +23,7 @@ pub trait FFFI<T> {
 }
 
 #[repr(C)]
-#[derive(Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct ComplexF64 {
     pub dat: [f64; 2],
 }
@@ -453,14 +453,6 @@ impl Debug for ComplexF64 {
     }
 }
 
-impl Clone for ComplexF64 {
-    fn clone(&self) -> ComplexF64 {
-        ComplexF64 {
-            dat: [self.dat[0], self.dat[1]],
-        }
-    }
-}
-
 impl Default for ComplexF64 {
     fn default() -> ComplexF64 {
         ComplexF64 { dat: [0f64, 0f64] }
@@ -516,7 +508,7 @@ impl FFFI<ComplexF64> for sys::gsl_complex {
 }
 
 #[repr(C)]
-#[derive(Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct ComplexF32 {
     pub dat: [f32; 2],
 }
@@ -940,14 +932,6 @@ impl ComplexF32 {
 impl Debug for ComplexF32 {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         write!(f, "[{}, {}]", self.dat[0], self.dat[1])
-    }
-}
-
-impl Clone for ComplexF32 {
-    fn clone(&self) -> ComplexF32 {
-        ComplexF32 {
-            dat: [self.dat[0], self.dat[1]],
-        }
     }
 }
 

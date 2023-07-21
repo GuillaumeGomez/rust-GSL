@@ -192,83 +192,93 @@ impl $rust_name {
     /// This function copies the elements of the other vector into the self vector. The two vectors
     /// must have the same length.
     #[doc(alias = $name _memcpy)]
-    pub fn copy_from(&mut self, other: &$rust_name) -> Value {
-        Value::from(
-            unsafe { sys::[<$name _memcpy>](
+    pub fn copy_from(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _memcpy>](
                 self.unwrap_unique(),
-                other.unwrap_shared()) })
+                other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors
     /// must have the same length.
     #[doc(alias = $name _memcpy)]
-    pub fn copy_to(&self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) })
+    pub fn copy_to(&self, other: &mut $rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have
     /// the same length.
     #[doc(alias = $name _swap)]
-    pub fn swap(&mut self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe { sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique()) })
+    pub fn swap(&mut self, other: &mut $rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
     #[doc(alias = $name _swap_elements)]
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> Value {
-        Value::from(unsafe { sys::[<$name _swap_elements>](self.unwrap_unique(), i, j) })
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _swap_elements>](self.unwrap_unique(), i, j) };
+        result_handler!(ret, ())
     }
 
     /// This function reverses the order of the elements of the vector v.
     #[doc(alias = $name _reverse)]
-    pub fn reverse(&mut self) -> Value {
-        Value::from(unsafe { sys::[<$name _reverse>](self.unwrap_unique()) })
+    pub fn reverse(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _reverse>](self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors
     /// must have the same length.
     #[doc(alias = $name _add)]
-    pub fn add(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn add(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other
     /// vector. The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two
     /// vectors must have the same length.
     #[doc(alias = $name _sub)]
-    pub fn sub(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn sub(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other
     /// vector. The result `a_i <- a_i * b_i` is stored in self and other remains unchanged. The two
     /// vectors must have the same length.
     #[doc(alias = $name _mul)]
-    pub fn mul(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn mul(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result `a_i <- a_i / b_i` is stored in self and other remains unchanged. The two vectors
     /// must have the same length.
     #[doc(alias = $name _div)]
-    pub fn div(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe { sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared()) })
+    pub fn div(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared()) };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The
     /// result `a_i <- a_i` is stored in `self`.
     #[doc(alias = $name _scale)]
-    pub fn scale(&mut self, x: $rust_ty) -> Value {
-        Value::from(unsafe { sys::[<$name _scale>](self.unwrap_unique(), x) })
+    pub fn scale(&mut self, x: $rust_ty) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _scale>](self.unwrap_unique(), x) };
+        result_handler!(ret, ())
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result
     /// `a_i <- a_i + x` is stored in `self`.
     #[doc(alias = $name _add_constant)]
-    pub fn add_constant(&mut self, x: $rust_ty) -> Value {
-        Value::from(unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) })
+    pub fn add_constant(&mut self, x: $rust_ty) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the maximum value in the self vector.
@@ -354,18 +364,20 @@ impl $rust_name {
         if self.unwrap_shared().is_null() {
             None
         } else {
-            match $rust_name::new(self.len()) {
-                Some(mut v) => {
-                    v.copy_from(self);
+            if let Some(mut v) = $rust_name::new(self.len()) {
+                if v.copy_from(self).is_err() {
+                    None
+                } else {
                     Some(v)
                 }
-                None => None,
+            } else {
+                None
             }
         }
     }
 
     #[doc(alias = $name _subvector)]
-    pub fn subvector<'a>(&'a mut self, offset: usize, n: usize) -> [<$rust_name View>]<'a> {
+    pub fn subvector(&mut self, offset: usize, n: usize) -> [<$rust_name View>]<'_> {
         [<$rust_name View>]::from_vector(self, offset, n)
     }
 }

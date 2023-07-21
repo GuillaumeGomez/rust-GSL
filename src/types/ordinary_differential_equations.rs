@@ -63,6 +63,7 @@ Differential/Algebraic Equation Solvers.â€, ACM Trans. Math. Software 31, 363â€
 
 use crate::Value;
 use ffi::FFI;
+use std::ffi::CStr;
 use std::os::raw::{c_int, c_void};
 
 /// Description of a system of ODEs.
@@ -129,7 +130,7 @@ extern "C" fn function_handler(
     params: *mut c_void,
 ) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
-    let n = sys.dimension as usize;
+    let n = sys.dimension;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
     let t_f = unsafe { ::std::slice::from_raw_parts_mut(t_f, n) };
 
@@ -145,7 +146,7 @@ extern "C" fn jacobian_handler(
     params: *mut c_void,
 ) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
-    let n = sys.dimension as usize;
+    let n = sys.dimension;
     let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
     let t_dfdy = unsafe { ::std::slice::from_raw_parts_mut(t_dfdy, n * n) };
     let t_dfdt = unsafe { ::std::slice::from_raw_parts_mut(t_dfdt, n) };
@@ -177,8 +178,9 @@ impl ODEiv2Step {
     /// This function resets the stepping function s. It should be used whenever the next use of s will not be a continuation of a previous
     /// step.
     #[doc(alias = "gsl_odeiv2_step_reset")]
-    pub fn reset(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_step_reset(self.unwrap_unique()) })
+    pub fn reset(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_step_reset(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function returns a pointer to the name of the stepping function. For example,
@@ -194,11 +196,7 @@ impl ODEiv2Step {
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                Some(
-                    String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string(),
-                )
-            }
+            unsafe { Some(String::from_utf8_lossy(CStr::from_ptr(tmp).to_bytes()).to_string()) }
         }
     }
 
@@ -213,8 +211,9 @@ impl ODEiv2Step {
     /// the driver object. This is a requirement for some steppers, to get the desired error level for internal iteration of stepper.
     /// Allocation of a driver object calls this function automatically.
     #[doc(alias = "gsl_odeiv2_step_set_driver")]
-    pub fn set_driver(&mut self, d: &ODEiv2Driver) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_step_set_driver(self.unwrap_unique(), d.d) })
+    pub fn set_driver(&mut self, d: &ODEiv2Driver) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_step_set_driver(self.unwrap_unique(), d.d) };
+        result_handler!(ret, ())
     }
 
     /// This function applies the stepping function s to the system of equations defined by sys, using the step-size h to advance the system
@@ -243,7 +242,7 @@ impl ODEiv2Step {
         dydt_in: &[f64],
         dydt_out: &mut [f64],
         sys: &mut ODEiv2System,
-    ) -> Value {
+    ) -> Result<(), Value> {
         let sys_raw = sys.to_raw();
 
         let ret = unsafe {
@@ -258,7 +257,7 @@ impl ODEiv2Step {
                 &sys_raw as *const sys::gsl_odeiv2_system,
             )
         };
-        Value::from(ret)
+        result_handler!(ret, ())
     }
 }
 
@@ -460,10 +459,11 @@ impl ODEiv2Control {
     /// This function initializes the control function c with the parameters eps_abs (absolute error), eps_rel (relative error), a_y
     /// (scaling factor for y) and a_dydt (scaling factor for derivatives).
     #[doc(alias = "gsl_odeiv2_control_init")]
-    pub fn init(&mut self, eps_abs: f64, eps_rel: f64, a_y: f64, a_dydt: f64) -> Value {
-        Value::from(unsafe {
+    pub fn init(&mut self, eps_abs: f64, eps_rel: f64, a_y: f64, a_dydt: f64) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_odeiv2_control_init(self.unwrap_unique(), eps_abs, eps_rel, a_y, a_dydt)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function adjusts the step-size h using the control function c, and the current values of y, yerr and dydt. The stepping function
@@ -505,11 +505,7 @@ impl ODEiv2Control {
         if tmp.is_null() {
             None
         } else {
-            unsafe {
-                Some(
-                    String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string(),
-                )
-            }
+            unsafe { Some(String::from_utf8_lossy(CStr::from_ptr(tmp).to_bytes()).to_string()) }
         }
     }
 
@@ -519,18 +515,19 @@ impl ODEiv2Control {
     ///
     /// Returns `(Value, errlev)`.
     #[doc(alias = "gsl_odeiv2_control_errlevel")]
-    pub fn errlevel(&mut self, y: f64, dydt: f64, h: f64, ind: usize) -> (Value, f64) {
+    pub fn errlevel(&mut self, y: f64, dydt: f64, h: f64, ind: usize) -> Result<f64, Value> {
         let mut errlev = 0.;
         let ret = unsafe {
             sys::gsl_odeiv2_control_errlevel(self.unwrap_unique(), y, dydt, h, ind, &mut errlev)
         };
-        (Value::from(ret), errlev)
+        result_handler!(ret, errlev)
     }
 
     /// This function sets a pointer of the driver object d for control object c.
     #[doc(alias = "gsl_odeiv2_control_set_driver")]
-    pub fn set_driver(&mut self, d: &ODEiv2Driver) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_control_set_driver(self.unwrap_unique(), d.d) })
+    pub fn set_driver(&mut self, d: &ODEiv2Driver) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_control_set_driver(self.unwrap_unique(), d.d) };
+        result_handler!(ret, ())
     }
 }
 
@@ -602,7 +599,7 @@ impl ODEiv2Evolve {
         t1: f64,
         h: &mut f64,
         y: &mut [f64],
-    ) -> Value {
+    ) -> Result<(), Value> {
         let sys_raw = sys.to_raw();
         let psys = &sys_raw as *const _;
 
@@ -618,7 +615,7 @@ impl ODEiv2Evolve {
                 y.as_mut_ptr(),
             )
         };
-        Value::from(ret)
+        result_handler!(ret, ())
     }
 
     /// This function advances the ODE-system (e, sys, con) from time t and position y using the stepping function step by a specified step
@@ -633,7 +630,7 @@ impl ODEiv2Evolve {
         t: &mut f64,
         h: f64,
         y: &mut [f64],
-    ) -> Value {
+    ) -> Result<(), Value> {
         let sys_raw = sys.to_raw();
         let psys = &sys_raw as *const _;
 
@@ -648,14 +645,15 @@ impl ODEiv2Evolve {
                 y.as_mut_ptr(),
             )
         };
-        Value::from(ret)
+        result_handler!(ret, ())
     }
 
     /// This function resets the evolution function e. It should be used whenever the next use of e will not be a continuation of a previous
     /// step.
     #[doc(alias = "gsl_odeiv2_evolve_reset")]
-    pub fn reset(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_evolve_reset(self.unwrap_unique()) })
+    pub fn reset(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_evolve_reset(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function sets a pointer of the driver object d for evolve object e.
@@ -664,8 +662,9 @@ impl ODEiv2Evolve {
     /// in sequence. For example, if a step-change in an external driving force occurs at times t_a, t_b and t_c then evolution should be carried
     /// out over the ranges (t_0,t_a), (t_a,t_b), (t_b,t_c), and (t_c,t_1) separately and not directly over the range (t_0,t_1).
     #[doc(alias = "gsl_odeiv2_evolve_set_driver")]
-    pub fn set_driver(&mut self, d: &ODEiv2Driver) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_evolve_set_driver(self.unwrap_unique(), d.d) })
+    pub fn set_driver(&mut self, d: &ODEiv2Driver) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_evolve_set_driver(self.unwrap_unique(), d.d) };
+        result_handler!(ret, ())
     }
 }
 
@@ -816,20 +815,23 @@ impl<'a> ODEiv2Driver<'a> {
 
     /// The function sets a minimum for allowed step size hmin for driver self. Default value is 0.
     #[doc(alias = "gsl_odeiv2_driver_set_hmin")]
-    pub fn set_hmin(&mut self, hmin: f64) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_driver_set_hmin(self.d, hmin) })
+    pub fn set_hmin(&mut self, hmin: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_driver_set_hmin(self.d, hmin) };
+        result_handler!(ret, ())
     }
 
     /// The function sets a maximum for allowed step size hmax for driver self. Default value is ::DBL_MAX.
     #[doc(alias = "gsl_odeiv2_driver_set_hmax")]
-    pub fn set_hmax(&mut self, hmax: f64) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_driver_set_hmax(self.d, hmax) })
+    pub fn set_hmax(&mut self, hmax: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_driver_set_hmax(self.d, hmax) };
+        result_handler!(ret, ())
     }
 
     /// The function sets a maximum for allowed number of steps nmax for driver self. Default value of 0 sets no limit for steps.
     #[doc(alias = "gsl_odeiv2_driver_set_nmax")]
-    pub fn set_nmax(&mut self, nmax: usize) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_driver_set_nmax(self.d, nmax as _) })
+    pub fn set_nmax(&mut self, nmax: usize) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_driver_set_nmax(self.d, nmax as _) };
+        result_handler!(ret, ())
     }
 
     /// This function evolves the driver system d from t to t1. Initially vector y should contain the values of dependent variables at
@@ -841,30 +843,40 @@ impl<'a> ODEiv2Driver<'a> {
     /// returns immediately with the same return code. In this case the user must call gsl_odeiv2_driver_reset before calling this
     /// function again.
     #[doc(alias = "gsl_odeiv2_driver_apply")]
-    pub fn apply(&mut self, t: &mut f64, t1: f64, y: &mut [f64]) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_driver_apply(self.d, t, t1, y.as_mut_ptr()) })
+    pub fn apply(&mut self, t: &mut f64, t1: f64, y: &mut [f64]) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_driver_apply(self.d, t, t1, y.as_mut_ptr()) };
+        result_handler!(ret, ())
     }
 
     /// This function evolves the driver system d from t with n steps of size h. If the function is unable to complete the calculation, an
     /// error code from gsl_odeiv2_evolve_apply_fixed_step is returned, and t and y contain the values from last successful step.
     #[doc(alias = "gsl_odeiv2_driver_apply_fixed_step")]
-    pub fn apply_fixed_step(&mut self, t: &mut f64, h: f64, n: usize, y: &mut [f64]) -> Value {
-        Value::from(unsafe {
+    pub fn apply_fixed_step(
+        &mut self,
+        t: &mut f64,
+        h: f64,
+        n: usize,
+        y: &mut [f64],
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_odeiv2_driver_apply_fixed_step(self.d, t, h, n as _, y.as_mut_ptr())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function resets the evolution and stepper objects.
     #[doc(alias = "gsl_odeiv2_driver_reset")]
-    pub fn reset(&mut self) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_driver_reset(self.d) })
+    pub fn reset(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_driver_reset(self.d) };
+        result_handler!(ret, ())
     }
 
     /// The routine resets the evolution and stepper objects and sets new initial step size to hstart. This function can be used e.g. to
     /// change the direction of integration.
     #[doc(alias = "gsl_odeiv2_driver_reset_hstart")]
-    pub fn reset_hstart(&mut self, hstart: f64) -> Value {
-        Value::from(unsafe { sys::gsl_odeiv2_driver_reset_hstart(self.d, hstart) })
+    pub fn reset_hstart(&mut self, hstart: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_odeiv2_driver_reset_hstart(self.d, hstart) };
+        result_handler!(ret, ())
     }
 }
 

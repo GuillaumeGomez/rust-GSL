@@ -22,7 +22,7 @@ fn main() {
     let n = 10000i32;
     let mut cs = ChebSeries::new(40).unwrap();
 
-    cs.init(f, 0., 1.);
+    cs.init(f, 0., 1.).unwrap();
     for i in 0..n {
         let x = i as f64 / n as f64;
         let r10 = cs.eval_n(10, x);

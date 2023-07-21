@@ -31,10 +31,11 @@ fn main() {
     let mut w = EigenSymmetricVWorkspace::new(4).expect("EigenSymmetricVWorkspace::new failed...");
 
     m.matrix_mut(|m| {
-        w.symmv(m.expect("Failed to get matrix"), &mut eval, &mut evec);
+        w.symmv(m.expect("Failed to get matrix"), &mut eval, &mut evec)
+            .unwrap();
     });
 
-    eigen::symmv_sort(&mut eval, &mut evec, EigenSort::AbsAsc);
+    eigen::symmv_sort(&mut eval, &mut evec, EigenSort::AbsAsc).unwrap();
 
     for i in 0..4 {
         let eval_i = eval.get(i);

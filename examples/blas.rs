@@ -26,7 +26,8 @@ fn main() {
                     mat_b.expect("Failed to get matrix"),
                     0.,
                     mat_c.expect("Failed to get matrix"),
-                );
+                )
+                .unwrap();
             });
         });
     });

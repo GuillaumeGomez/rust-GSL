@@ -41,6 +41,7 @@ solvers is held in a gsl_root_fdfsolver struct. The updates require both the fun
 its derivative (hence the name fdf) to be supplied by the user.
 !*/
 
+use crate::Value;
 use ffi::FFI;
 use sys;
 use sys::libc::{c_double, c_void};
@@ -137,13 +138,19 @@ impl<'a> RootFSolver<'a> {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial search interval [x lower, x upper].
     #[doc(alias = "gsl_root_fsolver_set")]
-    pub fn set<F: Fn(f64) -> f64 + 'a>(&mut self, f: F, x_lower: f64, x_upper: f64) -> ::Value {
+    pub fn set<F: Fn(f64) -> f64 + 'a>(
+        &mut self,
+        f: F,
+        x_lower: f64,
+        x_upper: f64,
+    ) -> Result<(), Value> {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
-        ::Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_root_fsolver_set(self.unwrap_unique(), &mut self.inner_call, x_lower, x_upper)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// The following function drives the iteration of each algorithm. Each function performs one
@@ -157,8 +164,9 @@ impl<'a> RootFSolver<'a> {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     #[doc(alias = "gsl_root_fsolver_iterate")]
-    pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_root_fsolver_iterate(self.unwrap_unique()) })
+    pub fn iterate(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_root_fsolver_iterate(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// Returns the solver type name.
@@ -266,7 +274,7 @@ impl<'a> RootFdfSolver<'a> {
         df: DF,
         fdf: FDF,
         root: f64,
-    ) -> ::Value {
+    ) -> Result<(), Value> {
         // convert rust functions to C
         unsafe extern "C" fn inner_f<'a, F: Fn(f64) -> f64 + 'a>(
             x: c_double,
@@ -304,9 +312,10 @@ impl<'a> RootFdfSolver<'a> {
         self.inner_df_closure = Some(Box::new(df));
         self.inner_fdf_closure = Some(Box::new(fdf));
 
-        ::Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut self.inner_call, root)
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// The following function drives the iteration of each algorithm. Each function performs one
@@ -320,8 +329,9 @@ impl<'a> RootFdfSolver<'a> {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     #[doc(alias = "gsl_root_fdfsolver_iterate")]
-    pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_root_fdfsolver_iterate(self.unwrap_unique()) })
+    pub fn iterate(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_root_fdfsolver_iterate(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// Returns the solver type name.
@@ -403,26 +413,20 @@ mod test {
     #[test]
     fn test_root() {
         let mut root = RootFSolver::new(RootFSolverType::brent()).unwrap();
-        root.set(&quadratic_test_fn, 0.0, 5.0);
+        root.set(quadratic_test_fn, 0.0, 5.0).unwrap();
 
         let max_iter = 10usize;
         let epsabs = 0.0001;
         let epsrel = 0.0000001;
 
-        let mut status = ::Value::Continue;
+        let mut status = Value::Continue;
         let mut iter = 0usize;
 
         println!("Testing: {}", root.name());
 
         println!("iter, \t [x_lo, x_hi], \t min, \t error");
-        while matches!(status, ::Value::Continue) && iter < max_iter {
-            status = root.iterate();
-
-            // check if iteration succeeded
-            if !matches!(status, ::Value::Success) {
-                println!("Failed to iterate successfully");
-                break;
-            }
+        while matches!(status, Value::Continue) && iter < max_iter {
+            root.iterate().unwrap();
 
             // test for convergence
             let r = root.root();
@@ -432,7 +436,7 @@ mod test {
             status = test_interval(x_lo, x_hi, epsabs, epsrel);
 
             // check if iteration succeeded
-            if status == ::Value::Success {
+            if status == Value::Success {
                 println!("Converged");
             }
 
@@ -446,7 +450,7 @@ mod test {
             );
             iter += 1;
         }
-        assert!(matches!(status, ::Value::Success))
+        assert!(matches!(status, Value::Success))
     }
 
     #[test]
@@ -462,14 +466,15 @@ mod test {
             quadratic_test_fn_df,
             quadratic_test_fn_fdf,
             guess_value,
-        );
+        )
+        .unwrap();
 
         // set up iterations
         let max_iter = 20usize;
         let epsabs = 0.0001;
         let epsrel = 0.0000001;
 
-        let mut status = ::Value::Continue;
+        let mut status = Value::Continue;
         let mut iter = 0usize;
 
         println!("Testing: {}", root.name().unwrap());
@@ -477,16 +482,16 @@ mod test {
         println!("iter, \t root, \t rel error \t abs error");
 
         let mut x = guess_value;
-        while matches!(status, ::Value::Continue) && iter < max_iter {
-            root.iterate(); //should check for failure
+        while matches!(status, Value::Continue) && iter < max_iter {
+            root.iterate().unwrap();
 
             // test for convergence
             let x_0 = x;
             x = root.root();
+            // check if iteration succeeded
             status = test_delta(x, x_0, epsabs, epsrel);
 
-            // check if iteration succeeded
-            if matches!(status, ::Value::Success) {
+            if matches!(status, Value::Success) {
                 println!("Converged");
             }
 
@@ -500,6 +505,6 @@ mod test {
             );
             iter += 1;
         }
-        assert!(matches!(status, ::Value::Success))
+        assert!(matches!(status, Value::Success))
     }
 }

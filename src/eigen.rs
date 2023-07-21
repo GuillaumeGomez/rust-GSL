@@ -26,10 +26,15 @@ use types::{MatrixComplexF64, MatrixF64, VectorComplexF64, VectorF64};
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding real eigenvectors stored in the columns
 /// of the matrix evec into ascending or descending order according to the value of the parameter sort_type
 #[doc(alias = "gsl_eigen_symmv_sort")]
-pub fn symmv_sort(eval: &mut VectorF64, evec: &mut MatrixF64, sort_type: ::EigenSort) -> Value {
-    Value::from(unsafe {
+pub fn symmv_sort(
+    eval: &mut VectorF64,
+    evec: &mut MatrixF64,
+    sort_type: ::EigenSort,
+) -> Result<(), Value> {
+    let ret = unsafe {
         sys::gsl_eigen_symmv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
-    })
+    };
+    result_handler!(ret, ())
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding complex eigenvectors stored in the columns
@@ -39,10 +44,11 @@ pub fn hermv_sort(
     eval: &mut VectorF64,
     evec: &mut MatrixComplexF64,
     sort_type: ::EigenSort,
-) -> Value {
-    Value::from(unsafe {
+) -> Result<(), Value> {
+    let ret = unsafe {
         sys::gsl_eigen_hermv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
-    })
+    };
+    result_handler!(ret, ())
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding complex eigenvectors stored in the columns
@@ -53,19 +59,25 @@ pub fn nonsymmv_sort(
     eval: &mut VectorComplexF64,
     evec: &mut MatrixComplexF64,
     sort_type: ::EigenSort,
-) -> Value {
-    Value::from(unsafe {
+) -> Result<(), Value> {
+    let ret = unsafe {
         sys::gsl_eigen_nonsymmv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
-    })
+    };
+    result_handler!(ret, ())
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding real eigenvectors stored in the columns
 /// of the matrix evec into ascending or descending order according to the value of the parameter sort_type.
 #[doc(alias = "gsl_eigen_gensymmv_sort")]
-pub fn gensymmv_sort(eval: &mut VectorF64, evec: &mut MatrixF64, sort_type: ::EigenSort) -> Value {
-    Value::from(unsafe {
+pub fn gensymmv_sort(
+    eval: &mut VectorF64,
+    evec: &mut MatrixF64,
+    sort_type: ::EigenSort,
+) -> Result<(), Value> {
+    let ret = unsafe {
         sys::gsl_eigen_gensymmv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
-    })
+    };
+    result_handler!(ret, ())
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vector eval and the corresponding complex eigenvectors stored in the
@@ -75,10 +87,11 @@ pub fn genhermv_sort(
     eval: &mut VectorF64,
     evec: &mut MatrixComplexF64,
     sort_type: ::EigenSort,
-) -> Value {
-    Value::from(unsafe {
+) -> Result<(), Value> {
+    let ret = unsafe {
         sys::gsl_eigen_genhermv_sort(eval.unwrap_unique(), evec.unwrap_unique(), sort_type.into())
-    })
+    };
+    result_handler!(ret, ())
 }
 
 /// This function simultaneously sorts the eigenvalues stored in the vectors (alpha, beta) and the corresponding complex eigenvectors stored
@@ -90,13 +103,14 @@ pub fn genv_sort(
     beta: &mut VectorF64,
     evec: &mut MatrixComplexF64,
     sort_type: ::EigenSort,
-) -> Value {
-    Value::from(unsafe {
+) -> Result<(), Value> {
+    let ret = unsafe {
         sys::gsl_eigen_genv_sort(
             alpha.unwrap_unique(),
             beta.unwrap_unique(),
             evec.unwrap_unique(),
             sort_type.into(),
         )
-    })
+    };
+    result_handler!(ret, ())
 }

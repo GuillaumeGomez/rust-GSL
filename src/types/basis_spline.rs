@@ -78,18 +78,18 @@ impl BSpLineWorkspace {
     /// This function computes the knots associated with the given breakpoints and stores them
     /// internally in w->knots.
     #[doc(alias = "gsl_bspline_knots")]
-    pub fn knots(&mut self, breakpts: &VectorF64) -> Value {
-        Value::from(unsafe {
-            sys::gsl_bspline_knots(breakpts.unwrap_shared(), self.unwrap_unique())
-        })
+    pub fn knots(&mut self, breakpts: &VectorF64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_bspline_knots(breakpts.unwrap_shared(), self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding
     /// knot vector using the previously specified nbreak parameter.
     /// The knots are stored in w->knots.
     #[doc(alias = "gsl_bspline_knots_uniform")]
-    pub fn knots_uniform(&mut self, a: f64, b: f64) -> Value {
-        Value::from(unsafe { sys::gsl_bspline_knots_uniform(a, b, self.unwrap_unique()) })
+    pub fn knots_uniform(&mut self, a: f64, b: f64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_bspline_knots_uniform(a, b, self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function evaluates all B-spline basis functions at the position x and stores them in
@@ -101,8 +101,9 @@ impl BSpLineWorkspace {
     /// Computing all the basis functions at once is more efficient than computing them
     /// individually, due to the nature of the defining recurrence relation.
     #[doc(alias = "gsl_bspline_eval")]
-    pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> Value {
-        Value::from(unsafe { sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique()) })
+    pub fn eval(&mut self, x: f64, B: &mut VectorF64) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_bspline_eval(x, B.unwrap_unique(), self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function evaluates all potentially nonzero B-spline basis functions at the position x
@@ -116,7 +117,7 @@ impl BSpLineWorkspace {
     /// Returns `(Value, istart, iend)`.
     // checker:ignore
     #[doc(alias = "gsl_bspline_eval_nonzero")]
-    pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> (Value, usize, usize) {
+    pub fn eval_non_zero(&mut self, x: f64, Bk: &mut VectorF64) -> Result<(usize, usize), Value> {
         let mut istart = 0;
         let mut iend = 0;
         let ret = unsafe {
@@ -128,7 +129,7 @@ impl BSpLineWorkspace {
                 self.unwrap_unique(),
             )
         };
-        (Value::from(ret), istart, iend)
+        result_handler!(ret, (istart, iend))
     }
 
     /// This function returns the number of B-spline coefficients given by n = nbreak + k - 2.

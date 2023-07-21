@@ -44,14 +44,14 @@ fn main() {
     }
 
     // use uniform breakpoints on [0, 15]
-    bw.knots_uniform(0., 15.);
+    bw.knots_uniform(0., 15.).unwrap();
 
     // construct the fit matrix X
     for i in 0..N {
         let xi = x.get(i);
 
         // compute B_j(xi) for all j
-        bw.eval(xi, &mut b);
+        bw.eval(xi, &mut b).unwrap();
 
         // fill in row i of X
         for j in 0..NCOEFFS {
@@ -61,7 +61,7 @@ fn main() {
     }
 
     // do the fit
-    let (_, chisq) = mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov);
+    let chisq = mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov).unwrap();
 
     let dof = N - NCOEFFS;
     let tss = stats::wtss(
@@ -74,14 +74,14 @@ fn main() {
 
     eprintln!("chisq/dof = {}, rsq = {}", chisq / dof as f64, rsq);
 
-    println!("");
-    println!("");
+    println!();
+    println!();
 
     // output the smoothed curve
     let mut xi = 0.;
     while xi < 15. {
-        bw.eval(xi, &mut b);
-        let (_, yi, _) = multilinear::linear_est(&b, &c, &cov);
+        bw.eval(xi, &mut b).unwrap();
+        let (yi, _) = multilinear::linear_est(&b, &c, &cov).unwrap();
         println!("{} {}", xi, yi);
         xi += 0.1;
     }

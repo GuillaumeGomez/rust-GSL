@@ -95,7 +95,8 @@ fn solve_system(print_data: bool, t: MultilargeLinearType, c: &mut VectorF64) {
                 w.accumulate(
                     matrix.expect("Failed to get matrix"),
                     vector.expect("Failed to get vector"),
-                );
+                )
+                .unwrap();
             });
         });
 
@@ -103,18 +104,25 @@ fn solve_system(print_data: bool, t: MultilargeLinearType, c: &mut VectorF64) {
     }
 
     if print_data {
-        println!("");
-        println!("");
+        println!();
+        println!();
     }
 
     // compute L-curve
-    w.lcurve(&mut reg_param, &mut rho, &mut eta);
+    if let Err(e) = w.lcurve(&mut reg_param, &mut rho, &mut eta) {
+        eprintln!(
+            "=== Method {} FAILED ===",
+            w.name().expect("Failed to get name")
+        );
+        eprintln!("error: {:?}", e);
+        return;
+    }
 
     // solve large LS system and store solution in c
-    let (_, rnorm, snorm) = w.solve(LAMBDA, c);
+    let (rnorm, snorm) = w.solve(LAMBDA, c).unwrap();
 
     // compute reciprocal condition number
-    let (_, rcond) = w.rcond();
+    let rcond = w.rcond().unwrap();
 
     eprintln!("=== Method {} ===\n", w.name().expect("Failed to get name"));
     eprintln!("condition number = {}", 1. / rcond);
@@ -142,8 +150,8 @@ fn main() {
     // solve system with TSQR method
     solve_system(true, MultilargeLinearType::tsqr(), &mut c_tsqr);
 
-    println!("");
-    println!("");
+    println!();
+    println!();
 
     // solve system with Normal equations method
     solve_system(false, MultilargeLinearType::normal(), &mut c_normal);
@@ -156,8 +164,8 @@ fn main() {
         let f_exact = func(t);
         build_row(t, &mut v);
 
-        let (_, f_tsqr) = blas::level1::ddot(&v, &c_tsqr);
-        let (_, f_normal) = blas::level1::ddot(&v, &c_normal);
+        let f_tsqr = blas::level1::ddot(&v, &c_tsqr).unwrap();
+        let f_normal = blas::level1::ddot(&v, &c_normal).unwrap();
 
         println!("{} {:.6} {:.6} {:.6}", t, f_exact, f_tsqr, f_normal);
 

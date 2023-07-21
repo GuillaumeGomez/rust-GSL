@@ -105,16 +105,17 @@ impl Interp {
     ///
     /// Asserts that `ya.len() >= xa.len()`.
     #[doc(alias = "gsl_interp_init")]
-    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
+    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Result<(), Value> {
         assert!(ya.len() >= xa.len());
-        Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_interp_init(
                 self.unwrap_unique(),
                 xa.as_ptr(),
                 ya.as_ptr(),
                 xa.len() as _,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function returns the name of the interpolation type used by interp. For example,
@@ -233,15 +234,16 @@ impl Spline {
     }
 
     #[doc(alias = "gsl_spline_init")]
-    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Value {
-        Value::from(unsafe {
+    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_spline_init(
                 self.unwrap_unique(),
                 xa.as_ptr(),
                 ya.as_ptr(),
                 xa.len() as _,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_spline_name")]
@@ -267,12 +269,12 @@ impl Spline {
         unsafe { sys::gsl_spline_eval(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    /// Returns `(Value, y)`.
+    /// Returns `y`.
     #[doc(alias = "gsl_spline_eval_e")]
-    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel) -> (Value, f64) {
+    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
         let mut y = 0.;
         let ret = unsafe { sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, &mut y) };
-        (Value::from(ret), y)
+        result_handler!(ret, y)
     }
 
     #[doc(alias = "gsl_spline_eval_deriv")]
@@ -280,13 +282,13 @@ impl Spline {
         unsafe { sys::gsl_spline_eval_deriv(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    /// Returns `(Value, d)`.
+    /// Returns `d`.
     #[doc(alias = "gsl_spline_eval_deriv_e")]
-    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel) -> (Value, f64) {
+    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
         let mut d = 0.;
         let ret =
             unsafe { sys::gsl_spline_eval_deriv_e(self.unwrap_shared(), x, &mut acc.0, &mut d) };
-        (Value::from(ret), d)
+        result_handler!(ret, d)
     }
 
     #[doc(alias = "gsl_spline_eval_deriv2")]
@@ -294,13 +296,13 @@ impl Spline {
         unsafe { sys::gsl_spline_eval_deriv2(self.unwrap_shared(), x, &mut acc.0) }
     }
 
-    /// Returns `(Value, d2)`.
+    /// Returns `d2`.
     #[doc(alias = "gsl_spline_eval_deriv2_e")]
-    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel) -> (Value, f64) {
+    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
         let mut d2 = 0.;
         let ret =
             unsafe { sys::gsl_spline_eval_deriv2_e(self.unwrap_shared(), x, &mut acc.0, &mut d2) };
-        (Value::from(ret), d2)
+        result_handler!(ret, d2)
     }
 
     #[doc(alias = "gsl_spline_eval_integ")]
@@ -308,13 +310,13 @@ impl Spline {
         unsafe { sys::gsl_spline_eval_integ(self.unwrap_shared(), a, b, &mut acc.0) }
     }
 
-    /// Returns `(Value, d2)`.
+    /// Returns `d2`.
     #[doc(alias = "gsl_spline_eval_integ_e")]
-    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel) -> (Value, f64) {
+    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
         let mut result = 0.;
         let ret = unsafe {
             sys::gsl_spline_eval_integ_e(self.unwrap_shared(), a, b, &mut acc.0, &mut result)
         };
-        (Value::from(ret), result)
+        result_handler!(ret, result)
     }
 }

@@ -73,6 +73,7 @@ current estimate has zero error, previous estimates had zero error
 The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
+use crate::Value;
 use ffi::FFI;
 use std::marker::PhantomData;
 use std::mem::transmute;
@@ -116,8 +117,9 @@ impl PlainMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
     #[doc(alias = "gsl_monte_plain_init")]
-    pub fn init(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_monte_plain_init(self.unwrap_unique()) })
+    pub fn init(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_monte_plain_init(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This routines uses the plain Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined
@@ -138,7 +140,7 @@ impl PlainMonteCarlo {
         xu: &[f64],
         t_calls: usize,
         r: &mut ::Rng,
-    ) -> (::Value, f64, f64) {
+    ) -> Result<(f64, f64), Value> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -161,8 +163,7 @@ impl PlainMonteCarlo {
                 &mut abserr,
             )
         };
-
-        (::Value::from(ret), result, abserr)
+        result_handler!(ret, (result, abserr))
     }
 }
 
@@ -216,8 +217,9 @@ impl MiserMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
     #[doc(alias = "gsl_monte_miser_init")]
-    pub fn init(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_monte_miser_init(self.unwrap_unique()) })
+    pub fn init(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_monte_miser_init(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This routines uses the MISER Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined by
@@ -238,7 +240,7 @@ impl MiserMonteCarlo {
         xu: &[f64],
         t_calls: usize,
         r: &mut ::Rng,
-    ) -> (::Value, f64, f64) {
+    ) -> Result<(f64, f64), Value> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -261,7 +263,7 @@ impl MiserMonteCarlo {
                 &mut abserr,
             )
         };
-        (::Value::from(ret), result, abserr)
+        result_handler!(ret, (result, abserr))
     }
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
@@ -373,8 +375,9 @@ impl VegasMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace
     /// to be reused for different integrations.
     #[doc(alias = "gsl_monte_vegas_init")]
-    pub fn init(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_monte_vegas_init(self.unwrap_unique()) })
+    pub fn init(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_monte_vegas_init(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This routines uses the VEGAS Monte Carlo algorithm to integrate the function f over the dim-dimensional
@@ -399,7 +402,7 @@ impl VegasMonteCarlo {
         xu: &[f64],
         t_calls: usize,
         r: &mut ::Rng,
-    ) -> (::Value, f64, f64) {
+    ) -> Result<(f64, f64), Value> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -422,7 +425,7 @@ impl VegasMonteCarlo {
                 &mut abserr,
             )
         };
-        (::Value::from(ret), result, abserr)
+        result_handler!(ret, (result, abserr))
     }
 
     /// This function returns the chi-squared per degree of freedom for the weighted estimate of the integral.
@@ -675,13 +678,13 @@ fn plain() {
 
     let calls = 500000;
 
-    ::RngType::env_setup();
+    crate::RngType::env_setup();
     let mut r = ::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = PlainMonteCarlo::new(3).unwrap();
 
-        let (_, res, err) = s.integrate(g, &xl, &xu, calls, &mut r);
+        let (res, err) = s.integrate(g, &xl, &xu, calls, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.412209");
         assert_eq!(&format!("{:.6}", err), "0.013436");
     }
@@ -707,7 +710,7 @@ fn miser() {
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
 
-        let (_, res, err) = s.integrate(g, &xl, &xu, calls, &mut r);
+        let (res, err) = s.integrate(g, &xl, &xu, calls, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -728,17 +731,19 @@ fn miser_closure() {
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
 
-        let (_, res, err) = s.integrate(
-            |k| {
-                let a = 1f64 / (PI * PI * PI);
+        let (res, err) = s
+            .integrate(
+                |k| {
+                    let a = 1f64 / (PI * PI * PI);
 
-                a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
-            },
-            &xl,
-            &xu,
-            calls,
-            &mut r,
-        );
+                    a / (1.0 - k[0].cos() * k[1].cos() * k[2].cos())
+                },
+                &xl,
+                &xu,
+                calls,
+                &mut r,
+            )
+            .unwrap();
         assert_eq!(&format!("{:.6}", res), "1.389530");
         assert_eq!(&format!("{:.6}", err), "0.005011");
     }
@@ -762,7 +767,7 @@ fn vegas_warm_up() {
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();
 
-        let (_, res, err) = s.integrate(g, &xl, &xu, 10000, &mut r);
+        let (res, err) = s.integrate(g, &xl, &xu, 10000, &mut r).unwrap();
         assert_eq!(&format!("{:.6}", res), "1.385603");
         assert_eq!(&format!("{:.6}", err), "0.002212");
     }
@@ -788,11 +793,11 @@ fn vegas() {
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();
 
-        s.integrate(g, &xl, &xu, 10000, &mut r);
+        s.integrate(g, &xl, &xu, 10000, &mut r).unwrap();
         let mut res;
         let mut err;
         loop {
-            let (_, _res, _err) = s.integrate(g, &xl, &xu, calls / 5, &mut r);
+            let (_res, _err) = s.integrate(g, &xl, &xu, calls / 5, &mut r).unwrap();
             res = _res;
             err = _err;
             println!(

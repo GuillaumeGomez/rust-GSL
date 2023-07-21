@@ -35,8 +35,12 @@ fn main() {
         x.set(i, xi + ei);
     }
 
-    median_p.median(FilterEnd::PadValue, &mut x, &mut y_median);
-    rmedian_p.rmedian(FilterEnd::PadValue, &mut x, &mut y_rmedian);
+    median_p
+        .median(FilterEnd::PadValue, &x, &mut y_median)
+        .unwrap();
+    rmedian_p
+        .rmedian(FilterEnd::PadValue, &x, &mut y_rmedian)
+        .unwrap();
 
     // print results
     for i in 0..N {

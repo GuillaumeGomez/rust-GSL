@@ -8,7 +8,7 @@ Since the arguments of the standard coupling coefficient functions are integer o
 are, by convention, integers equal to twice the actual spin value.
 !*/
 
-use crate::Value;
+use crate::{types, Value};
 use std::mem::MaybeUninit;
 
 /// This routine computes the Wigner 3-j coefficient,
@@ -36,7 +36,7 @@ pub fn _3j_e(
     two_ma: i32,
     two_mb: i32,
     two_mc: i32,
-) -> (Value, ::types::Result) {
+) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         ::sys::gsl_sf_coupling_3j_e(
@@ -50,7 +50,7 @@ pub fn _3j_e(
         )
     };
 
-    (::Value::from(ret), unsafe { result.assume_init() }.into())
+    result_handler!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 6-j coefficient,
@@ -78,7 +78,7 @@ pub fn _6j_e(
     two_jd: i32,
     two_je: i32,
     two_jf: i32,
-) -> (Value, ::types::Result) {
+) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         ::sys::gsl_sf_coupling_6j_e(
@@ -92,7 +92,7 @@ pub fn _6j_e(
         )
     };
 
-    (::Value::from(ret), unsafe { result.assume_init() }.into())
+    result_handler!(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the Wigner 9-j coefficient,
@@ -137,7 +137,7 @@ pub fn _9j_e(
     two_jg: i32,
     two_jh: i32,
     two_ji: i32,
-) -> (Value, ::types::Result) {
+) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe {
         ::sys::gsl_sf_coupling_9j_e(
@@ -154,5 +154,5 @@ pub fn _9j_e(
         )
     };
 
-    (::Value::from(ret), unsafe { result.assume_init() }.into())
+    result_handler!(ret, unsafe { result.assume_init() }.into())
 }

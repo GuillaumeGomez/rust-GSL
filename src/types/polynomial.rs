@@ -45,14 +45,15 @@ impl PolyComplexWorkspace {
     /// accuracy. The solution of polynomials with higher-order roots requires specialized algorithms that take the multiplicity structure into
     /// account (see e.g. Z. Zeng, Algorithm 835, ACM Transactions on Mathematical Software, Volume 30, Issue 2 (2004), pp 218–236).
     #[doc(alias = "gsl_poly_complex_solve")]
-    pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> Value {
-        Value::from(unsafe {
+    pub fn solve(&mut self, a: &[f64], z: &mut [f64]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_poly_complex_solve(
                 a.as_ptr(),
                 a.len() as _,
                 self.unwrap_unique(),
                 z.as_mut_ptr(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 }

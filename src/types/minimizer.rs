@@ -96,6 +96,7 @@ somewhere in the interval. If a valid initial interval is used then these algori
 provided the function is well-behaved.
 !*/
 
+use crate::Value;
 use ffi::FFI;
 use sys;
 
@@ -135,7 +136,7 @@ impl<'a> Minimizer<'a> {
     /// search interval [x_lower, x_upper], with a guess for the location of the minimum x_minimum.
     ///
     /// If the interval given does not contain a minimum, then the function returns an error code of
-    /// ::Value::Invalid.
+    /// `Value::Invalid`.
     #[doc(alias = "gsl_min_fminimizer_set")]
     pub fn set<F: Fn(f64) -> f64 + 'a>(
         &mut self,
@@ -143,11 +144,11 @@ impl<'a> Minimizer<'a> {
         x_minimum: f64,
         x_lower: f64,
         x_upper: f64,
-    ) -> ::Value {
+    ) -> Result<(), Value> {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
-        ::Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_min_fminimizer_set(
                 self.unwrap_unique(),
                 &mut self.inner_call,
@@ -155,7 +156,8 @@ impl<'a> Minimizer<'a> {
                 x_lower,
                 x_upper,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower
@@ -170,11 +172,11 @@ impl<'a> Minimizer<'a> {
         f_lower: f64,
         x_upper: f64,
         f_upper: f64,
-    ) -> ::Value {
+    ) -> Result<(), Value> {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
-        ::Value::from(unsafe {
+        let ret = unsafe {
             sys::gsl_min_fminimizer_set_with_values(
                 self.unwrap_unique(),
                 &mut self.inner_call,
@@ -185,7 +187,8 @@ impl<'a> Minimizer<'a> {
                 x_upper,
                 f_upper,
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_min_fminimizer_name")]
@@ -243,18 +246,19 @@ impl<'a> Minimizer<'a> {
     /// This function performs a single iteration of the minimizer s. If the iteration encounters an
     /// unexpected problem then an error code will be returned,
     ///
-    /// ::Value::BadFunc
+    /// `Value::BadFunc`
     /// the iteration encountered a singular point where the function evaluated to Inf or NaN.
     ///
-    /// ::Value::Failure
+    /// `Value::Failure`
     /// the algorithm could not improve the current best approximation or bounding interval.
     ///
     /// The minimizer maintains a current best estimate of the position of the minimum at all times,
     /// and the current interval bounding the minimum. This information can be accessed with the
     /// following auxiliary functions,
     #[doc(alias = "gsl_min_fminimizer_iterate")]
-    pub fn iterate(&mut self) -> ::Value {
-        ::Value::from(unsafe { sys::gsl_min_fminimizer_iterate(self.unwrap_unique()) })
+    pub fn iterate(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_min_fminimizer_iterate(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 }
 
@@ -322,18 +326,18 @@ mod test {
     #[test]
     fn test_min() {
         let mut min = Minimizer::new(MinimizerType::brent()).unwrap();
-        min.set(&quadratic_test_fn, 1.0, -5.0, 5.0);
+        min.set(quadratic_test_fn, 1.0, -5.0, 5.0).unwrap();
 
         let max_iter = 5_usize;
         let eps_abs = 0.0001;
         let eps_rel = 0.0000001;
 
-        let mut status = ::Value::Continue;
+        let mut status = Value::Continue;
         let mut iter = 0_usize;
 
-        while matches!(status, ::Value::Continue) && iter < max_iter {
+        while matches!(status, Value::Continue) && iter < max_iter {
             // iterate for next value
-            status = min.iterate(); // fails here w/ segfault
+            min.iterate().unwrap(); // fails here w/ segfault
 
             // test for convergence
             let r = min.minimum();
@@ -343,7 +347,7 @@ mod test {
             status = test_interval(x_lo, x_hi, eps_abs, eps_rel);
 
             // check if iteration succeeded
-            if matches!(status, ::Value::Success) {
+            if matches!(status, Value::Success) {
                 println!("Converged");
             }
 

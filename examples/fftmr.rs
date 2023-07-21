@@ -34,13 +34,13 @@ fn main() {
     for i in 0..N {
         println!("{}: {} {}", i, real!(data, i), imag!(data, i));
     }
-    println!("");
+    println!();
 
     for i in 0..wavetable.nf() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);
     }
 
-    workspace.forward(data, 1, N, &wavetable);
+    workspace.forward(data, 1, N, &wavetable).unwrap();
 
     for i in 0..N {
         println!("{}: {} {}", i, real!(data, i), imag!(data, i));

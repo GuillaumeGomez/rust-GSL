@@ -99,7 +99,7 @@ pub fn qng<F: Fn(f64) -> f64>(
     b: f64,
     eps_abs: f64,
     eps_rel: f64,
-) -> (::Value, f64, f64, usize) {
+) -> Result<(f64, f64, usize), Value> {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
@@ -117,7 +117,7 @@ pub fn qng<F: Fn(f64) -> f64>(
             &mut n_eval,
         )
     };
-    (::Value::from(ret), result, abs_err, n_eval)
+    result_handler!(ret, (result, abs_err, n_eval))
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80
@@ -361,10 +361,10 @@ pub fn qawf<F: Fn(f64) -> f64>(
     a: f64,
     epsabs: f64,
     limit: usize,
-    workspace: &mut ::IntegrationWorkspace,
-    cycle_workspace: &mut ::IntegrationWorkspace,
-    wf: &mut ::IntegrationQawoTable,
-) -> (Value, f64, f64) {
+    workspace: &mut crate::IntegrationWorkspace,
+    cycle_workspace: &mut crate::IntegrationWorkspace,
+    wf: &mut crate::IntegrationQawoTable,
+) -> Result<(f64, f64), Value> {
     let mut result = 0.;
     let mut abs_err = 0.;
 
@@ -382,5 +382,5 @@ pub fn qawf<F: Fn(f64) -> f64>(
             &mut abs_err,
         )
     };
-    (::Value::from(ret), result, abs_err)
+    result_handler!(ret, (result, abs_err))
 }

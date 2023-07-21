@@ -98,3 +98,14 @@ macro_rules! ffi_wrapper {
     };
     () => {}
 }
+
+#[doc(hidden)]
+macro_rules! result_handler {
+    ($ret:ident, $value:expr) => {{
+        if $ret == crate::sys::GSL_SUCCESS {
+            Ok($value)
+        } else {
+            Err(crate::Value::from($ret))
+        }
+    }};
+}

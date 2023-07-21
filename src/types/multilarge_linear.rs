@@ -54,24 +54,26 @@ impl MultilargeLinearWorkspace {
     }
 
     #[doc(alias = "gsl_multilarge_linear_reset")]
-    pub fn reset(&mut self) -> Value {
-        unsafe { Value::from(sys::gsl_multilarge_linear_reset(self.unwrap_unique())) }
+    pub fn reset(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_multilarge_linear_reset(self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_accumulate")]
-    pub fn accumulate(&mut self, x: &mut MatrixF64, y: &mut VectorF64) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_accumulate(
+    pub fn accumulate(&mut self, x: &mut MatrixF64, y: &mut VectorF64) -> Result<(), Value> {
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_accumulate(
                 x.unwrap_unique(),
                 y.unwrap_unique(),
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        result_handler!(ret, ())
     }
 
-    /// Returns `(Value, rnorm, snorm)`.
+    /// Returns `(rnorm, snorm)`.
     #[doc(alias = "gsl_multilarge_linear_solve")]
-    pub fn solve(&mut self, lambda: f64, c: &mut VectorF64) -> (Value, f64, f64) {
+    pub fn solve(&mut self, lambda: f64, c: &mut VectorF64) -> Result<(f64, f64), Value> {
         let mut rnorm = 0.;
         let mut snorm = 0.;
         let ret = unsafe {
@@ -83,15 +85,15 @@ impl MultilargeLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        (Value::from(ret), rnorm, snorm)
+        result_handler!(ret, (rnorm, snorm))
     }
 
-    /// Returns `(Value, rcond)`.
+    /// Returns `rcond`.
     #[doc(alias = "gsl_multilarge_linear_rcond")]
-    pub fn rcond(&mut self) -> (Value, f64) {
+    pub fn rcond(&mut self) -> Result<f64, Value> {
         let mut rcond = 0.;
         let ret = unsafe { sys::gsl_multilarge_linear_rcond(&mut rcond, self.unwrap_unique()) };
-        (Value::from(ret), rcond)
+        result_handler!(ret, rcond)
     }
 
     #[cfg(feature = "v2_2")]
@@ -102,15 +104,16 @@ impl MultilargeLinearWorkspace {
         reg_param: &mut VectorF64,
         rho: &mut VectorF64,
         eta: &mut VectorF64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_lcurve(
+    ) -> Result<(), Value> {
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_lcurve(
                 reg_param.unwrap_unique(),
                 rho.unwrap_unique(),
                 eta.unwrap_unique(),
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_wstdform1")]
@@ -122,9 +125,9 @@ impl MultilargeLinearWorkspace {
         y: &VectorF64,
         Xs: &mut MatrixF64,
         ys: &mut VectorF64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_wstdform1(
+    ) -> Result<(), Value> {
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_wstdform1(
                 L.unwrap_shared(),
                 X.unwrap_shared(),
                 w.unwrap_shared(),
@@ -132,8 +135,9 @@ impl MultilargeLinearWorkspace {
                 Xs.unwrap_unique(),
                 ys.unwrap_unique(),
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_stdform1")]
@@ -144,17 +148,18 @@ impl MultilargeLinearWorkspace {
         y: &VectorF64,
         Xs: &mut MatrixF64,
         ys: &mut VectorF64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_stdform1(
+    ) -> Result<(), Value> {
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_stdform1(
                 L.unwrap_shared(),
                 X.unwrap_shared(),
                 y.unwrap_shared(),
                 Xs.unwrap_unique(),
                 ys.unwrap_unique(),
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_wstdform2")]
@@ -167,9 +172,9 @@ impl MultilargeLinearWorkspace {
         y: &VectorF64,
         Xs: &mut MatrixF64,
         ys: &mut VectorF64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_wstdform2(
+    ) -> Result<(), Value> {
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_wstdform2(
                 LQR.unwrap_shared(),
                 Ltau.unwrap_shared(),
                 X.unwrap_shared(),
@@ -178,8 +183,9 @@ impl MultilargeLinearWorkspace {
                 Xs.unwrap_unique(),
                 ys.unwrap_unique(),
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_stdform2")]
@@ -191,9 +197,9 @@ impl MultilargeLinearWorkspace {
         y: &VectorF64,
         Xs: &mut MatrixF64,
         ys: &mut VectorF64,
-    ) -> Value {
-        unsafe {
-            Value::from(sys::gsl_multilarge_linear_stdform2(
+    ) -> Result<(), Value> {
+        let ret = unsafe {
+            sys::gsl_multilarge_linear_stdform2(
                 LQR.unwrap_shared(),
                 Ltau.unwrap_shared(),
                 X.unwrap_shared(),
@@ -201,20 +207,27 @@ impl MultilargeLinearWorkspace {
                 Xs.unwrap_unique(),
                 ys.unwrap_unique(),
                 self.unwrap_unique(),
-            ))
-        }
+            )
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_genform1")]
-    pub fn genform1(&mut self, L: &VectorF64, cs: &VectorF64, c: &mut VectorF64) -> Value {
-        Value::from(unsafe {
+    pub fn genform1(
+        &mut self,
+        L: &VectorF64,
+        cs: &VectorF64,
+        c: &mut VectorF64,
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_multilarge_linear_genform1(
                 L.unwrap_shared(),
                 cs.unwrap_shared(),
                 c.unwrap_unique(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_multilarge_linear_genform2")]
@@ -224,8 +237,8 @@ impl MultilargeLinearWorkspace {
         Ltau: &VectorF64,
         cs: &VectorF64,
         c: &mut VectorF64,
-    ) -> Value {
-        Value::from(unsafe {
+    ) -> Result<(), Value> {
+        let ret = unsafe {
             sys::gsl_multilarge_linear_genform2(
                 LQR.unwrap_shared(),
                 Ltau.unwrap_shared(),
@@ -233,7 +246,8 @@ impl MultilargeLinearWorkspace {
                 c.unwrap_unique(),
                 self.unwrap_unique(),
             )
-        })
+        };
+        result_handler!(ret, ())
     }
 
     #[cfg(feature = "v2_7")]

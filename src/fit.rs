@@ -23,7 +23,7 @@ use crate::Value;
 /// [`Correlation`](http://www.gnu.org/software/gsl/manual/html_node/Correlation.html#Correlation)),
 /// it does not depend on the fit.
 ///
-/// Returns `(Value, c0, c1, cov00, cov01, cov11, sumsq)`.
+/// Returns `(c0, c1, cov00, cov01, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_linear")]
 pub fn linear(
     x: &[f64],
@@ -31,7 +31,7 @@ pub fn linear(
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (Value, f64, f64, f64, f64, f64, f64) {
+) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -53,7 +53,7 @@ pub fn linear(
             &mut sumsq,
         )
     };
-    (Value::from(ret), c0, c1, cov00, cov01, cov11, sumsq)
+    result_handler!(ret, (c0, c1, cov00, cov01, cov11, sumsq))
 }
 
 /// This function computes the best-fit linear regression coefficients (c0,c1) of the model
@@ -68,7 +68,7 @@ pub fn linear(
 /// the parameters (cov00, cov01, cov11).
 /// The weighted sum of squares of the residuals from the best-fit line, \chi^2, is returned in chisq.
 ///
-/// Returns `(Value, c0, c1, cov00, cov01, cov11, chisq)`.
+/// Returns `(c0, c1, cov00, cov01, cov11, chisq)`.
 #[doc(alias = "gsl_fit_wlinear")]
 pub fn wlinear(
     x: &[f64],
@@ -78,7 +78,7 @@ pub fn wlinear(
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (Value, f64, f64, f64, f64, f64, f64) {
+) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -102,14 +102,14 @@ pub fn wlinear(
             &mut chisq,
         )
     };
-    (Value::from(ret), c0, c1, cov00, cov01, cov11, chisq)
+    result_handler!(ret, (c0, c1, cov00, cov01, cov11, chisq))
 }
 
 /// This function uses the best-fit linear regression coefficients c0, c1 and their covariance
 /// cov00, cov01, cov11 to compute the fitted function y and its standard deviation y_err for the
 /// model Y = c_0 + c_1 X at the point x.
 ///
-/// Returns `(Value, y, y_err)`.
+/// Returns `(y, y_err)`.
 #[doc(alias = "gsl_fit_linear_est")]
 pub fn linear_est(
     x: f64,
@@ -118,12 +118,12 @@ pub fn linear_est(
     cov00: f64,
     cov01: f64,
     cov11: f64,
-) -> (Value, f64, f64) {
+) -> Result<(f64, f64), Value> {
     let mut y = 0.;
     let mut y_err = 0.;
     let ret =
         unsafe { ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
-    (Value::from(ret), y, y_err)
+    result_handler!(ret, (y, y_err))
 }
 
 /// This function computes the best-fit linear regression coefficient c1 of the model Y = c_1 X for
@@ -132,7 +132,7 @@ pub fn linear_est(
 /// scatter of the points around the best-fit line and returned via the parameter cov11.
 /// The sum of squares of the residuals from the best-fit line is returned in sumsq.
 ///
-/// Returns `(Value, c1, cov11, sumsq)`.
+/// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_mul")]
 pub fn mul(
     x: &[f64],
@@ -140,12 +140,12 @@ pub fn mul(
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (Value, f64, f64, f64) {
+) -> Result<(f64, f64, f64), Value> {
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
-        ::sys::gsl_fit_mul(
+        crate::sys::gsl_fit_mul(
             x.as_ptr(),
             xstride,
             y.as_ptr(),
@@ -156,10 +156,10 @@ pub fn mul(
             &mut sumsq,
         )
     };
-    (Value::from(ret), c1, cov11, sumsq)
+    result_handler!(ret, (c1, cov11, sumsq))
 }
 
-/// Returns `(Value, c1, cov11, sumsq)`.
+/// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_wmul")]
 pub fn wmul(
     x: &[f64],
@@ -169,12 +169,12 @@ pub fn wmul(
     y: &[f64],
     ystride: usize,
     n: usize,
-) -> (Value, f64, f64, f64) {
+) -> Result<(f64, f64, f64), Value> {
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
-        ::sys::gsl_fit_wmul(
+        crate::sys::gsl_fit_wmul(
             x.as_ptr(),
             xstride,
             w.as_ptr(),
@@ -187,18 +187,18 @@ pub fn wmul(
             &mut sumsq,
         )
     };
-    (Value::from(ret), c1, cov11, sumsq)
+    result_handler!(ret, (c1, cov11, sumsq))
 }
 
 /// This function uses the best-fit linear regression coefficient c1 and its covariance cov11 to
 /// compute the fitted function y and its standard deviation y_err for the model Y = c_1 X at the
 /// point x.
 ///
-/// Returns `(Value, y, y_err)`.
+/// Returns `(y, y_err)`.
 #[doc(alias = "gsl_fit_mul_est")]
-pub fn mul_est(x: f64, c1: f64, cov11: f64) -> (Value, f64, f64) {
+pub fn mul_est(x: f64, c1: f64, cov11: f64) -> Result<(f64, f64), Value> {
     let mut y = 0.;
     let mut y_err = 0.;
-    let ret = unsafe { ::sys::gsl_fit_mul_est(x, c1, cov11, &mut y, &mut y_err) };
-    (Value::from(ret), y, y_err)
+    let ret = unsafe { crate::sys::gsl_fit_mul_est(x, c1, cov11, &mut y, &mut y_err) };
+    result_handler!(ret, (y, y_err))
 }

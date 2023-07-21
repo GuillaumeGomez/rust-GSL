@@ -89,175 +89,190 @@ impl $rust_name {
     /// This function copies the elements of the other matrix into the self matrix. The two matrices
     /// must have the same size.
     #[doc(alias = $name _memcpy)]
-    pub fn copy_from(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn copy_from(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _memcpy>](self.unwrap_unique(), other.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function copies the elements of the self matrix into the other matrix. The two matrices
     /// must have the same size.
     #[doc(alias = $name _memcpy)]
-    pub fn copy_to(&self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn copy_to(&self, other: &mut $rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function exchanges the elements of the matrices self and other by copying. The two
     /// matrices must have the same size.
     #[doc(alias = $name _swap)]
-    pub fn swap(&mut self, other: &mut $rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn swap(&mut self, other: &mut $rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _swap>](self.unwrap_unique(), other.unwrap_unique())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function copies the elements of the y-th row of the matrix into the returned vector.
     #[doc(alias = $name _get_row)]
-    pub fn get_row(&self, y: usize) -> Option<(Value, [<Vector $complex>])> {
+    pub fn get_row(&self, y: usize) -> Result<[<Vector $complex>], Value> {
         let tmp = unsafe { sys::[<$complex_c _alloc>](self.size2()) };
 
         if tmp.is_null() {
-            None
+            Err(Value::NoMemory)
         } else {
             let ret = unsafe { sys::[<$name _get_row>](tmp, self.unwrap_shared(), y) };
 
-            Some((Value::from(ret), FFI::wrap(tmp)))
+            result_handler!(ret, FFI::wrap(tmp))
         }
     }
 
     /// This function copies the elements of the x-th column of the matrix into the returned vector.
     #[doc(alias = $name _get_col)]
-    pub fn get_col(&self, x: usize) -> Option<(Value, [<Vector $complex>])> {
+    pub fn get_col(&self, x: usize) -> Result<[<Vector $complex>], Value> {
         let tmp = unsafe { sys::[<$complex_c _alloc>](self.size1()) };
 
         if tmp.is_null() {
-            None
+            Err(Value::NoMemory)
         } else {
             let ret = unsafe { sys::[<$name _get_col>](tmp, self.unwrap_shared(), x) };
 
-            Some((Value::from(ret), FFI::wrap(tmp)))
+            result_handler!(ret, FFI::wrap(tmp))
         }
     }
 
     /// This function copies the elements of the vector v into the y-th row of the matrix.
     /// The length of the vector must be the same as the length of the row.
     #[doc(alias = $name _set_row)]
-    pub fn set_row(&mut self, y: usize, v: &[<Vector $complex>]) -> Value {
-        Value::from(unsafe {
+    pub fn set_row(&mut self, y: usize, v: &[<Vector $complex>]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _set_row>](self.unwrap_unique(), y, v.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function copies the elements of the vector v into the x-th column of the matrix.
     /// The length of the vector must be the same as the length of the column.
     #[doc(alias = $name _set_col)]
-    pub fn set_col(&mut self, x: usize, v: &[<Vector $complex>]) -> Value {
-        Value::from(unsafe {
+    pub fn set_col(&mut self, x: usize, v: &[<Vector $complex>]) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _set_col>](self.unwrap_unique(), x, v.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function exchanges the y1-th and y2-th rows of the matrix in-place.
     #[doc(alias = $name _swap_rows)]
-    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> Value {
-        Value::from(unsafe { sys::[<$name _swap_rows>](self.unwrap_unique(), y1, y2) })
+    pub fn swap_rows(&mut self, y1: usize, y2: usize) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _swap_rows>](self.unwrap_unique(), y1, y2) };
+        result_handler!(ret, ())
     }
 
     /// This function exchanges the x1-th and x2-th columns of the matrix in-place.
     #[doc(alias = $name _swap_columns)]
-    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> Value {
-        Value::from(unsafe { sys::[<$name _swap_columns>](self.unwrap_unique(), x1, x2) })
+    pub fn swap_columns(&mut self, x1: usize, x2: usize) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _swap_columns>](self.unwrap_unique(), x1, x2) };
+        result_handler!(ret, ())
     }
 
     /// This function exchanges the i-th row and j-th column of the matrix in-place. The matrix must
     /// be square for this operation to be possible.
     #[doc(alias = $name _swap_rowcol)]
-    pub fn swap_row_col(&mut self, i: usize, j: usize) -> Value {
-        Value::from(unsafe { sys::[<$name _swap_rowcol>](self.unwrap_unique(), i, j) })
+    pub fn swap_row_col(&mut self, i: usize, j: usize) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _swap_rowcol>](self.unwrap_unique(), i, j) };
+        result_handler!(ret, ())
     }
 
     /// This function returns the transpose of the matrix by copying the elements into it.
     /// This function works for all matrices provided that the dimensions of the matrix dest match
     /// the transposed dimensions of the matrix.
     #[doc(alias = $name _transpose_memcpy)]
-    pub fn transpose_memcpy(&self) -> Option<(Value, $rust_name)> {
+    pub fn transpose_memcpy(&self) -> Result<$rust_name, Value> {
         let dest = unsafe { sys::[<$name _alloc>](self.size2(), self.size1()) };
 
         if dest.is_null() {
-            None
+            Err(Value::NoMemory)
         } else {
             let ret =
                 unsafe { sys::[<$name _transpose_memcpy>](dest, self.unwrap_shared()) };
 
-            Some((Value::from(ret), Self::wrap(dest)))
+            result_handler!(ret, Self::wrap(dest))
         }
     }
 
     /// This function replaces the matrix m by its transpose by copying the elements of the matrix
     /// in-place. The matrix must be square for this operation to be possible.
     #[doc(alias = $name _transpose)]
-    pub fn transpose(&mut self) -> Value {
-        Value::from(unsafe { sys::[<$name _transpose>](self.unwrap_unique()) })
+    pub fn transpose(&mut self) -> Result<(), Value> {
+        let ret = unsafe { sys::[<$name _transpose>](self.unwrap_unique()) };
+        result_handler!(ret, ())
     }
 
     /// This function adds the elements of the other matrix to the elements of the `self` matrix.
     /// The result self(i,j) <- self(i,j) + other(i,j) is stored in `self` and other remains
     /// unchanged. The two matrices must have the same dimensions.
     #[doc(alias = $name _add)]
-    pub fn add(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn add(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function subtracts the elements of the other matrix from the elements of the `self`
     /// matrix. The result self(i,j) <- self(i,j) - other(i,j) is stored in `self` and other remains
     /// unchanged. The two matrices must have the same dimensions.
     #[doc(alias = $name _sub)]
-    pub fn sub(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn sub(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the elements of the self matrix by the elements of the other
     /// matrix. The result self(i,j) <- self(i,j) * other(i,j) is stored in self and other remains
     /// unchanged. The two matrices must have the same dimensions.
     #[doc(alias = $name _mul_elements)]
-    pub fn mul_elements(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn mul_elements(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _mul_elements>](self.unwrap_unique(), other.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function divides the elements of the self matrix by the elements of the other matrix.
     /// The result self(i,j) <- self(i,j) / other(i,j) is stored in self and other remains
     /// unchanged. The two matrices must have the same dimensions.
     #[doc(alias = $name _div_elements)]
-    pub fn div_elements(&mut self, other: &$rust_name) -> Value {
-        Value::from(unsafe {
+    pub fn div_elements(&mut self, other: &$rust_name) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _div_elements>](self.unwrap_unique(), other.unwrap_shared())
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function multiplies the elements of the self matrix by the constant factor x. The
     /// result self(i,j) <- x self(i,j) is stored in self.
     #[doc(alias = $name _scale)]
-    pub fn scale(&mut self, x: &$complex) -> Value {
-        Value::from(unsafe {
+    pub fn scale(&mut self, x: &$complex) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _scale>](self.unwrap_unique(), ::std::mem::transmute(*x))
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function adds the constant value x to the elements of the self matrix. The result
     /// self(i,j) <- self(i,j) + x is stored in self.
     #[doc(alias = $name _add_constant)]
-    pub fn add_constant(&mut self, x: &$complex) -> Value {
-        Value::from(unsafe {
+    pub fn add_constant(&mut self, x: &$complex) -> Result<(), Value> {
+        let ret = unsafe {
             sys::[<$name _add_constant>](self.unwrap_unique(), ::std::mem::transmute(*x))
-        })
+        };
+        result_handler!(ret, ())
     }
 
     /// This function returns true if all the elements of the self matrix are stricly zero.
@@ -345,12 +360,14 @@ impl $rust_name {
         if self.unwrap_shared().is_null() {
             None
         } else {
-            match Self::new(self.size1(), self.size2()) {
-                Some(mut m) => {
-                    m.copy_from(self);
+            if let Some(mut m) = Self::new(self.size1(), self.size2()) {
+                if m.copy_from(self).is_err() {
+                    None
+                } else {
                     Some(m)
                 }
-                None => None,
+            } else {
+                None
             }
         }
     }
