@@ -481,7 +481,7 @@ impl Drop for $rust_name {
     fn drop(&mut self) {
         if self.can_free {
             unsafe { sys::[<$name _free>](self.mat) };
-            self.mat = ::std::ptr::null_mut();
+            self.mat = std::ptr::null_mut();
         }
     }
 }

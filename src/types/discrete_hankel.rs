@@ -103,7 +103,7 @@ impl DiscreteHankel {
                 (*self.unwrap_shared()).size == f_in.len() as _,
                 "f_in and f_out must have the same length as this struct"
             );
-            let mut f_out: Vec<f64> = ::std::iter::repeat(0.).take(f_in.len()).collect();
+            let mut f_out: Vec<f64> = std::iter::repeat(0.).take(f_in.len()).collect();
             let ret = sys::gsl_dht_apply(
                 self.unwrap_unique(),
                 f_in.as_ptr() as usize as *mut _,

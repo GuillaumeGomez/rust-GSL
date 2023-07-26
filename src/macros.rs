@@ -16,7 +16,7 @@ macro_rules! wrap_callback {
     ($f:expr, $F:ident $(+ $lt:lifetime)?) => {{
         unsafe extern "C" fn trampoline<$($lt,)? F: Fn(f64) -> f64 $( + $lt)?>(
             x: f64,
-            params: *mut ::std::os::raw::c_void,
+            params: *mut std::os::raw::c_void,
         ) -> f64 {
             let f: &F = &*(params as *const F);
             let x = f(x);
@@ -38,7 +38,7 @@ macro_rules! ffi_wrapper {
         impl$(<$($lt),*>)? Drop for $name$(<$($lt),*>)? {
             fn drop(&mut self) {
                 unsafe { sys::$drop(self.inner) };
-                self.inner = ::std::ptr::null_mut();
+                self.inner = std::ptr::null_mut();
             }
         }
     };

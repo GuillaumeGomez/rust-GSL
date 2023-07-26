@@ -111,48 +111,52 @@ pub fn hazard_e(x: f64) -> Result<types::Result, Value> {
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
 
-pub fn str_error(error: ::Value) -> &'static str {
+pub fn str_error(error: crate::Value) -> &'static str {
     match error {
-        ::Value::Success => "Success",
-        ::Value::Failure => "Failure",
-        ::Value::Continue => "The iteration has not converged yet",
-        ::Value::Domain => "Input domain error",
-        ::Value::Range => "Output range error",
-        ::Value::Fault => "Invalid pointer",
-        ::Value::Invalid => "Invalid argument supplied by user",
-        ::Value::Failed => "generic failure",
-        ::Value::Factorization => "Factorization failed",
-        ::Value::Sanity => "Sanity check failed - shouldn't happen",
-        ::Value::NoMemory => "Malloc failed",
-        ::Value::BadFunction => "Problem with user-supplied function",
-        ::Value::RunAway => "Iterative process is out of control",
-        ::Value::MaxIteration => "Exceeded max number of iterations",
-        ::Value::ZeroDiv => "Tried to divide by zero",
-        ::Value::BadTolerance => "Specified tolerance is invalid or theoretically unattainable",
-        ::Value::Tolerance => "Failed to reach the specified tolerance",
-        ::Value::UnderFlow => "Underflow",
-        ::Value::OverFlow => "Overflow",
-        ::Value::Loss => "Loss of accuracy",
-        ::Value::Round => "Roundoff error",
-        ::Value::BadLength => "Matrix/vector sizes are not conformant",
-        ::Value::NotSquare => "Matrix not square",
-        ::Value::Singularity => "Singularity or extremely bad function behavior detected",
-        ::Value::Diverge => "Integral or series is divergent",
-        ::Value::Unsupported => "The required feature is not supported by this hardware platform",
-        ::Value::Unimplemented => "The requested feature is not (yet) implemented",
-        ::Value::Cache => "Cache limit exceeded",
-        ::Value::Table => "Table limit exceeded",
-        ::Value::NoProgress => "Iteration is not making progress towards solution",
-        ::Value::NoProgressJacobian => "Jacobian evaluations are not improving the solution",
-        ::Value::ToleranceF => "Cannot reach the specified tolerance in F",
-        ::Value::ToleranceX => "Cannot reach the specified tolerance in X",
-        ::Value::ToleranceG => "Cannot reach the specified tolerance in gradient",
-        ::Value::EOF => "End of file",
-        ::Value::Unknown(_) => "Unknown error",
+        crate::Value::Success => "Success",
+        crate::Value::Failure => "Failure",
+        crate::Value::Continue => "The iteration has not converged yet",
+        crate::Value::Domain => "Input domain error",
+        crate::Value::Range => "Output range error",
+        crate::Value::Fault => "Invalid pointer",
+        crate::Value::Invalid => "Invalid argument supplied by user",
+        crate::Value::Failed => "generic failure",
+        crate::Value::Factorization => "Factorization failed",
+        crate::Value::Sanity => "Sanity check failed - shouldn't happen",
+        crate::Value::NoMemory => "Malloc failed",
+        crate::Value::BadFunction => "Problem with user-supplied function",
+        crate::Value::RunAway => "Iterative process is out of control",
+        crate::Value::MaxIteration => "Exceeded max number of iterations",
+        crate::Value::ZeroDiv => "Tried to divide by zero",
+        crate::Value::BadTolerance => {
+            "Specified tolerance is invalid or theoretically unattainable"
+        }
+        crate::Value::Tolerance => "Failed to reach the specified tolerance",
+        crate::Value::UnderFlow => "Underflow",
+        crate::Value::OverFlow => "Overflow",
+        crate::Value::Loss => "Loss of accuracy",
+        crate::Value::Round => "Roundoff error",
+        crate::Value::BadLength => "Matrix/vector sizes are not conformant",
+        crate::Value::NotSquare => "Matrix not square",
+        crate::Value::Singularity => "Singularity or extremely bad function behavior detected",
+        crate::Value::Diverge => "Integral or series is divergent",
+        crate::Value::Unsupported => {
+            "The required feature is not supported by this hardware platform"
+        }
+        crate::Value::Unimplemented => "The requested feature is not (yet) implemented",
+        crate::Value::Cache => "Cache limit exceeded",
+        crate::Value::Table => "Table limit exceeded",
+        crate::Value::NoProgress => "Iteration is not making progress towards solution",
+        crate::Value::NoProgressJacobian => "Jacobian evaluations are not improving the solution",
+        crate::Value::ToleranceF => "Cannot reach the specified tolerance in F",
+        crate::Value::ToleranceX => "Cannot reach the specified tolerance in X",
+        crate::Value::ToleranceG => "Cannot reach the specified tolerance in gradient",
+        crate::Value::EOF => "End of file",
+        crate::Value::Unknown(_) => "Unknown error",
     }
 }
 
-static mut CALLBACK: Option<fn(&str, &str, u32, ::Value)> = None;
+static mut CALLBACK: Option<fn(&str, &str, u32, crate::Value)> = None;
 
 /// `f` is the type of GSL error handler functions. An error handler will be passed four arguments
 /// which specify the reason for the error (a string), the name of the source file in which it
@@ -194,8 +198,8 @@ static mut CALLBACK: Option<fn(&str, &str, u32, ::Value)> = None;
 /// ```
 #[doc(alias = "gsl_set_error_handler")]
 pub fn set_error_handler(
-    f: Option<fn(&str, &str, u32, ::Value)>,
-) -> Option<fn(&str, &str, u32, ::Value)> {
+    f: Option<fn(&str, &str, u32, crate::Value)>,
+) -> Option<fn(&str, &str, u32, crate::Value)> {
     unsafe {
         let out = CALLBACK.take();
         match f {
@@ -216,7 +220,7 @@ pub fn set_error_handler(
 /// routines must be checked. This is the recommended behavior for production programs. The previous
 /// handler is returned (so that you can restore it later).
 #[doc(alias = "gsl_set_error_handler_off")]
-pub fn set_error_handler_off() -> Option<fn(&str, &str, u32, ::Value)> {
+pub fn set_error_handler_off() -> Option<fn(&str, &str, u32, crate::Value)> {
     unsafe {
         sys::gsl_set_error_handler_off();
         CALLBACK.take()
@@ -237,7 +241,7 @@ extern "C" fn inner_error_handler(
                 s.to_str().unwrap_or("Unknown"),
                 f.to_str().unwrap_or("Unknown"),
                 line as _,
-                ::Value::from(gsl_errno),
+                crate::Value::from(gsl_errno),
             );
         }
     }

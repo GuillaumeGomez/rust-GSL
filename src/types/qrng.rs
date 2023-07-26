@@ -85,7 +85,7 @@ impl QRng {
         if tmp.is_null() {
             None
         } else {
-            Some(unsafe { ::std::slice::from_raw_parts(tmp as _, self.size()) })
+            Some(unsafe { std::slice::from_raw_parts(tmp as _, self.size()) })
         }
     }
 
@@ -98,7 +98,7 @@ impl QRng {
         if tmp.is_null() {
             None
         } else {
-            Some(unsafe { ::std::slice::from_raw_parts_mut(tmp as _, self.size()) })
+            Some(unsafe { std::slice::from_raw_parts_mut(tmp as _, self.size()) })
         }
     }
 

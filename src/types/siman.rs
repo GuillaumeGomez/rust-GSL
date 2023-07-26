@@ -51,7 +51,7 @@ pub struct SimAnnealing<T: Clone> {
 }
 
 type gsl_siman_Efunc_t<T> = fn(&T) -> f64;
-type gsl_siman_step_t<T> = fn(&mut ::Rng, &mut T, f64);
+type gsl_siman_step_t<T> = fn(&mut crate::Rng, &mut T, f64);
 type gsl_siman_metric_t<T> = fn(&T, &T) -> f64;
 type gsl_siman_print_t<T> = fn(&T);
 
@@ -234,7 +234,7 @@ where
     /// If the argument `print_pos` is not None, a debugging log will be printed to
     /// stdout with the following columns: ```#-iter #-evals temperature position energy best_energy```
     /// and the output of the function print position itself.
-    pub fn solve(&self, rng: &mut ::Rng) -> T {
+    pub fn solve(&self, rng: &mut crate::Rng) -> T {
         let mut x = self.x0_p.clone();
         let mut new_x = self.x0_p.clone();
         let mut best_x = self.x0_p.clone();
@@ -407,7 +407,7 @@ where
     }
     */
     /// Like the function solve, but performs multiple runs and returns the best result.
-    pub fn solve_many(&self, rng: &mut ::Rng) -> T {
+    pub fn solve_many(&self, rng: &mut crate::Rng) -> T {
         let mut x = self.x0_p.clone();
         let mut new_x = Vec::with_capacity(self.params.n_tries);
 

@@ -186,7 +186,7 @@ impl Histogram {
     /// the self histogram. The bin is located using a binary search. The search includes an
     /// optimization for histograms with uniform range, and will return the correct bin immediately
     /// in this case. If x is found in the range of the histogram then the function sets the index i
-    /// and returns ::Value::Success. If x lies outside the valid range of the histogram then the
+    /// and returns crate::Value::Success. If x lies outside the valid range of the histogram then the
     /// function returns Value::Dom and the error handler is invoked.
     ///
     /// Returns `i`.
@@ -558,7 +558,7 @@ impl Histogram2D {
     /// This function finds and sets the indices i and j to the bin which covers the coordinates
     /// (x,y). The bin is located using a binary search. The search includes an optimization for
     /// histograms with uniform ranges, and will return the correct bin immediately in this case. If
-    /// (x,y) is found then the function sets the indices (i,j) and returns ::Value::Success. If
+    /// (x,y) is found then the function sets the indices (i,j) and returns crate::Value::Success. If
     /// (x,y) lies outside the valid range of the histogram then the function returns Value::Dom and
     /// the error handler is invoked.
     ///

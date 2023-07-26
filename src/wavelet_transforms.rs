@@ -23,7 +23,7 @@ level of the transform.
 /// where the first element is the smoothing coefficient s_{-1,0}, followed by the detail coefficients d_{j,k} for each level j. The
 /// backward transform inverts these coefficients to obtain the original data.
 ///
-/// These functions return a status of ::Value::Success upon successful completion. ::Inval is returned if n is not an integer power of
+/// These functions return a status of crate::Value::Success upon successful completion. ::Inval is returned if n is not an integer power of
 /// 2 or if insufficient workspace is provided.
 pub mod one_dimension {
     use crate::Value;
@@ -114,7 +114,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     ///
-    /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
+    /// The functions return a status of crate::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     #[doc(alias = "gsl_wavelet2d_transform")]
     pub fn transform(
@@ -146,7 +146,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     ///
-    /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
+    /// The functions return a status of crate::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     #[doc(alias = "gsl_wavelet2d_transform_forward")]
     pub fn transform_forward(
@@ -176,7 +176,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     ///
-    /// The functions return a status of ::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
+    /// The functions return a status of crate::Value::Success upon successful completion. ::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     #[doc(alias = "gsl_wavelet2d_transform_inverse")]
     pub fn transform_inverse(
@@ -204,7 +204,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_transform_matrix")]
     pub fn transform_matrix(
         w: &::Wavelet,
-        m: &mut ::MatrixF64,
+        m: &mut crate::MatrixF64,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
     ) -> Result<(), Value> {
@@ -223,7 +223,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_transform_matrix_forward")]
     pub fn transform_matrix_forward(
         w: &::Wavelet,
-        m: &mut ::MatrixF64,
+        m: &mut crate::MatrixF64,
         work: &mut ::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {
@@ -240,7 +240,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_transform_matrix_inverse")]
     pub fn transform_matrix_inverse(
         w: &::Wavelet,
-        m: &mut ::MatrixF64,
+        m: &mut crate::MatrixF64,
         work: &mut ::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {
@@ -328,7 +328,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_nstransform_matrix")]
     pub fn nstransform_matrix(
         w: &::Wavelet,
-        m: &mut ::MatrixF64,
+        m: &mut crate::MatrixF64,
         dir: ::WaveletDirection,
         work: &mut ::WaveletWorkspace,
     ) -> Result<(), Value> {
@@ -347,7 +347,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_nstransform_matrix_forward")]
     pub fn nstransform_matrix_forward(
         w: &::Wavelet,
-        m: &mut ::MatrixF64,
+        m: &mut crate::MatrixF64,
         work: &mut ::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {
@@ -364,7 +364,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_nstransform_matrix_inverse")]
     pub fn nstransform_matrix_inverse(
         w: &::Wavelet,
-        m: &mut ::MatrixF64,
+        m: &mut crate::MatrixF64,
         work: &mut ::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {

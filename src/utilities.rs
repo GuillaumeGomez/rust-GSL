@@ -55,7 +55,7 @@ impl Drop for IOStream {
     fn drop(&mut self) {
         unsafe {
             fclose(self.inner);
-            self.inner = ::std::ptr::null_mut();
+            self.inner = std::ptr::null_mut();
         }
     }
 }

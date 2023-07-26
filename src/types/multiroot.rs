@@ -315,7 +315,7 @@ mod tests {
         let mut iter = 0;
 
         // convergence checks
-        let mut status = ::Value::Continue;
+        let mut status = crate::Value::Continue;
         let epsabs = 1e-6;
 
         print_state(&mut multi_root, 0);
@@ -332,12 +332,12 @@ mod tests {
             status = test_residual(&f_value, epsabs);
 
             // check if iteration succeeded
-            if matches!(status, ::Value::Success) {
+            if matches!(status, crate::Value::Success) {
                 println!("Converged");
             }
 
             iter += 1;
         }
-        assert!(matches!(status, ::Value::Success))
+        assert!(matches!(status, crate::Value::Success))
     }
 }
