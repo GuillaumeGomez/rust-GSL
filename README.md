@@ -45,7 +45,7 @@ This crate works with Cargo and is on [crates.io]. Just add the following to you
 
 ```toml
 [dependencies]
-GSL = "4.0"
+GSL = "7.0"
 ```
 
 You can see examples in the `examples` folder.
@@ -74,8 +74,6 @@ You can access the __rgsl__ documentation locally, just build it:
 ```shell
 > cargo doc --open
 ```
-
-Then open this file with an internet browser: `file:///{rgsl_location}/target/doc/rgsl/index.html`
 
 You can also access the latest build of the documentation via the internet [here](https://docs.rs/crate/GSL/).
 
