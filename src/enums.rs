@@ -298,7 +298,7 @@ pub enum GaussKronrodRule {
 #[doc(hidden)]
 #[allow(clippy::from_over_into)]
 impl Into<::std::os::raw::c_int> for GaussKronrodRule {
-    fn into(self) -> ::std::os::raw::c_int {
+    fn into(self) -> std::os::raw::c_int {
         let x = match self {
             Self::Gauss15 => sys::GSL_INTEG_GAUSS15,
             Self::Gauss21 => sys::GSL_INTEG_GAUSS21,
@@ -313,7 +313,7 @@ impl Into<::std::os::raw::c_int> for GaussKronrodRule {
 
 #[doc(hidden)]
 impl From<::std::os::raw::c_int> for GaussKronrodRule {
-    fn from(v: ::std::os::raw::c_int) -> GaussKronrodRule {
+    fn from(v: std::os::raw::c_int) -> GaussKronrodRule {
         match v as _ {
             sys::GSL_INTEG_GAUSS15 => Self::Gauss15,
             sys::GSL_INTEG_GAUSS21 => Self::Gauss21,
@@ -372,7 +372,7 @@ pub enum VegasMode {
 #[doc(hidden)]
 #[allow(clippy::from_over_into)]
 impl Into<::std::os::raw::c_int> for VegasMode {
-    fn into(self) -> ::std::os::raw::c_int {
+    fn into(self) -> std::os::raw::c_int {
         match self {
             Self::Importance => sys::GSL_VEGAS_MODE_IMPORTANCE,
             Self::ImportanceOnly => sys::GSL_VEGAS_MODE_IMPORTANCE_ONLY,
@@ -383,7 +383,7 @@ impl Into<::std::os::raw::c_int> for VegasMode {
 
 #[doc(hidden)]
 impl From<::std::os::raw::c_int> for VegasMode {
-    fn from(v: ::std::os::raw::c_int) -> VegasMode {
+    fn from(v: std::os::raw::c_int) -> VegasMode {
         match v {
             sys::GSL_VEGAS_MODE_IMPORTANCE => Self::Importance,
             sys::GSL_VEGAS_MODE_IMPORTANCE_ONLY => Self::ImportanceOnly,

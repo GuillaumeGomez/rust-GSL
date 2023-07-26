@@ -139,7 +139,7 @@ impl PlainMonteCarlo {
         xl: &[f64],
         xu: &[f64],
         t_calls: usize,
-        r: &mut ::Rng,
+        r: &mut crate::Rng,
     ) -> Result<(f64, f64), Value> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
@@ -239,7 +239,7 @@ impl MiserMonteCarlo {
         xl: &[f64],
         xu: &[f64],
         t_calls: usize,
-        r: &mut ::Rng,
+        r: &mut crate::Rng,
     ) -> Result<(f64, f64), Value> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
@@ -401,7 +401,7 @@ impl VegasMonteCarlo {
         xl: &[f64],
         xu: &[f64],
         t_calls: usize,
-        r: &mut ::Rng,
+        r: &mut crate::Rng,
     ) -> Result<(f64, f64), Value> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
@@ -526,7 +526,7 @@ impl<'a> VegasParams<'a> {
             }
             stream.as_raw()
         } else {
-            ::std::ptr::null_mut()
+            std::ptr::null_mut()
         };
         Ok(VegasParams {
             inner: sys::gsl_monte_vegas_params {
@@ -542,7 +542,7 @@ impl<'a> VegasParams<'a> {
     }
 }
 
-impl<'a> ::std::default::Default for VegasParams<'a> {
+impl<'a> std::default::Default for VegasParams<'a> {
     fn default() -> VegasParams<'a> {
         VegasParams {
             inner: sys::gsl_monte_vegas_params {
@@ -551,7 +551,7 @@ impl<'a> ::std::default::Default for VegasParams<'a> {
                 stage: 0,
                 mode: ::VegasMode::ImportanceOnly.into(),
                 verbose: -1,
-                ostream: ::std::ptr::null_mut(),
+                ostream: std::ptr::null_mut(),
             },
             lt: PhantomData,
         }
@@ -679,7 +679,7 @@ fn plain() {
     let calls = 500000;
 
     crate::RngType::env_setup();
-    let mut r = ::Rng::new(::RngType::default()).unwrap();
+    let mut r = crate::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = PlainMonteCarlo::new(3).unwrap();
@@ -704,8 +704,8 @@ fn miser() {
 
     let calls = 500000;
 
-    ::RngType::env_setup();
-    let mut r = ::Rng::new(::RngType::default()).unwrap();
+    crate::RngType::env_setup();
+    let mut r = crate::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
@@ -725,8 +725,8 @@ fn miser_closure() {
 
     let calls = 500000;
 
-    ::RngType::env_setup();
-    let mut r = ::Rng::new(::RngType::default()).unwrap();
+    crate::RngType::env_setup();
+    let mut r = crate::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
@@ -761,8 +761,8 @@ fn vegas_warm_up() {
     let xl: [f64; 3] = [0f64; 3];
     let xu: [f64; 3] = [PI, PI, PI];
 
-    ::RngType::env_setup();
-    let mut r = ::Rng::new(::RngType::default()).unwrap();
+    crate::RngType::env_setup();
+    let mut r = crate::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();
@@ -787,8 +787,8 @@ fn vegas() {
     let xl: [f64; 3] = [0f64; 3];
     let xu: [f64; 3] = [PI, PI, PI];
 
-    ::RngType::env_setup();
-    let mut r = ::Rng::new(::RngType::default()).unwrap();
+    crate::RngType::env_setup();
+    let mut r = crate::Rng::new(::RngType::default()).unwrap();
 
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();

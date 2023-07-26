@@ -373,7 +373,7 @@ pub fn Jnu_e(nu: f64, x: f64) -> Result<types::Result, Value> {
 /// This function computes the regular cylindrical Bessel function of fractional order \nu, J_\nu(x), evaluated at a series of x values. The array v of length size contains the x values.
 /// They are assumed to be strictly ordered and positive. The array is over-written with the values of J_\nu(x_i).
 #[doc(alias = "gsl_sf_bessel_sequence_Jnu_e")]
-pub fn sequence_Jnu(nu: f64, mode: ::Mode, v: &mut [f64]) -> Result<(), Value> {
+pub fn sequence_Jnu(nu: f64, mode: crate::Mode, v: &mut [f64]) -> Result<(), Value> {
     let ret =
         unsafe { sys::gsl_sf_bessel_sequence_Jnu_e(nu, mode.into(), v.len() as _, v.as_mut_ptr()) };
     result_handler!(ret, ())

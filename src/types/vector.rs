@@ -52,7 +52,7 @@ impl Drop for $rust_name {
     fn drop(&mut self) {
         if self.can_free {
             unsafe { sys::[<$name _free>](self.vec) };
-            self.vec = ::std::ptr::null_mut();
+            self.vec = std::ptr::null_mut();
         }
     }
 }
@@ -139,7 +139,7 @@ impl $rust_name {
         if ptr.is_null() {
             None
         } else {
-            Some(unsafe { ::std::slice::from_raw_parts(ptr, self.len()) })
+            Some(unsafe { std::slice::from_raw_parts(ptr, self.len()) })
         }
     }
 
@@ -148,7 +148,7 @@ impl $rust_name {
         if ptr.is_null() {
             None
         } else {
-            Some(unsafe { ::std::slice::from_raw_parts_mut(ptr, self.len()) })
+            Some(unsafe { std::slice::from_raw_parts_mut(ptr, self.len()) })
         }
     }
 

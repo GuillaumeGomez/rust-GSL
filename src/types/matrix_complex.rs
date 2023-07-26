@@ -49,7 +49,7 @@ impl $rust_name {
     /// invoked and 0 is returned.
     #[doc(alias = $name _get)]
     pub fn get(&self, y: usize, x: usize) -> $complex {
-        unsafe { ::std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), y, x)) }
+        unsafe { std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), y, x)) }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
@@ -58,7 +58,7 @@ impl $rust_name {
     #[doc(alias = $name _set)]
     pub fn set(&mut self, y: usize, x: usize, value: &$complex) -> &Self {
         unsafe {
-            sys::[<$name _set>](self.unwrap_unique(), y, x, ::std::mem::transmute(*value))
+            sys::[<$name _set>](self.unwrap_unique(), y, x, std::mem::transmute(*value))
         };
         self
     }
@@ -66,7 +66,7 @@ impl $rust_name {
     /// This function sets all the elements of the matrix to the value x.
     #[doc(alias = $name _set_all)]
     pub fn set_all(&mut self, x: &$complex) -> &Self {
-        unsafe { sys::[<$name _set_all>](self.unwrap_unique(), ::std::mem::transmute(*x)) };
+        unsafe { sys::[<$name _set_all>](self.unwrap_unique(), std::mem::transmute(*x)) };
         self
     }
 
@@ -260,7 +260,7 @@ impl $rust_name {
     #[doc(alias = $name _scale)]
     pub fn scale(&mut self, x: &$complex) -> Result<(), Value> {
         let ret = unsafe {
-            sys::[<$name _scale>](self.unwrap_unique(), ::std::mem::transmute(*x))
+            sys::[<$name _scale>](self.unwrap_unique(), std::mem::transmute(*x))
         };
         result_handler!(ret, ())
     }
@@ -270,7 +270,7 @@ impl $rust_name {
     #[doc(alias = $name _add_constant)]
     pub fn add_constant(&mut self, x: &$complex) -> Result<(), Value> {
         let ret = unsafe {
-            sys::[<$name _add_constant>](self.unwrap_unique(), ::std::mem::transmute(*x))
+            sys::[<$name _add_constant>](self.unwrap_unique(), std::mem::transmute(*x))
         };
         result_handler!(ret, ())
     }

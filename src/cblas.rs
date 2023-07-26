@@ -129,23 +129,23 @@ pub mod level1 {
     }
 
     #[doc(alias = "cblas_isamax")]
-    pub fn isamax(N: i32, x: &[f32], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::sys::cblas_isamax(N, x.as_ptr(), incx) })
+    pub fn isamax(N: i32, x: &[f32], incx: i32) -> crate::cblas::Index {
+        crate::cblas::Index(unsafe { ::sys::cblas_isamax(N, x.as_ptr(), incx) })
     }
 
     #[doc(alias = "cblas_idamax")]
-    pub fn idamax(N: i32, x: &[f64], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::sys::cblas_idamax(N, x.as_ptr(), incx) })
+    pub fn idamax(N: i32, x: &[f64], incx: i32) -> crate::cblas::Index {
+        crate::cblas::Index(unsafe { ::sys::cblas_idamax(N, x.as_ptr(), incx) })
     }
 
     #[doc(alias = "cblas_icamax")]
-    pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) })
+    pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> crate::cblas::Index {
+        crate::cblas::Index(unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) })
     }
 
     #[doc(alias = "cblas_izamax")]
-    pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> ::cblas::Index {
-        ::cblas::Index(unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) })
+    pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> crate::cblas::Index {
+        crate::cblas::Index(unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) })
     }
 
     #[doc(alias = "cblas_sswap")]

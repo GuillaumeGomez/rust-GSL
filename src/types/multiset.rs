@@ -94,7 +94,7 @@ impl MultiSet {
     pub fn data(&self) -> &[usize] {
         unsafe {
             let ptr = sys::gsl_multiset_data(self.unwrap_shared());
-            ::std::slice::from_raw_parts(ptr, self.k())
+            std::slice::from_raw_parts(ptr, self.k())
         }
     }
 
@@ -104,7 +104,7 @@ impl MultiSet {
     pub fn data_mut(&mut self) -> &mut [usize] {
         unsafe {
             let ptr = sys::gsl_multiset_data(self.unwrap_shared());
-            ::std::slice::from_raw_parts_mut(ptr, self.k())
+            std::slice::from_raw_parts_mut(ptr, self.k())
         }
     }
 

@@ -219,7 +219,7 @@ use std::os::raw::{c_int, c_void};
 
 ffi_wrapper!(MultiFitFSolverType, *mut sys::gsl_multifit_fsolver_type);
 
-// pub struct MultiFitFunction<F: Fn(x: &::VectorF64, f: &mut ::VectorF64)> {
+// pub struct MultiFitFunction<F: Fn(x: &::VectorF64, f: &mut crate::VectorF64)> {
 //     pub f: Box<F>,
 //     /// Number of functions.
 //     pub n: usize,
@@ -415,9 +415,9 @@ impl MultiFitFdfSolverType {
 }
 
 pub struct MultiFitFunctionFdf {
-    pub f: Option<Box<dyn Fn(::VectorF64, ::VectorF64) -> Value>>,
-    pub df: Option<Box<dyn Fn(::VectorF64, ::MatrixF64) -> Value>>,
-    pub fdf: Option<Box<dyn Fn(::VectorF64, ::VectorF64, ::MatrixF64) -> Value>>,
+    pub f: Option<Box<dyn Fn(::VectorF64, crate::VectorF64) -> Value>>,
+    pub df: Option<Box<dyn Fn(::VectorF64, crate::MatrixF64) -> Value>>,
+    pub fdf: Option<Box<dyn Fn(::VectorF64, crate::VectorF64, crate::MatrixF64) -> Value>>,
     pub n: usize,
     pub p: usize,
     intern: sys::gsl_multifit_function_fdf,
@@ -438,7 +438,7 @@ impl MultiFitFunctionFdf {
                 fdf: Some(fdf),
                 n,
                 p,
-                params: ::std::ptr::null_mut(),
+                params: std::ptr::null_mut(),
                 nevalf,
                 nevaldf,
             },

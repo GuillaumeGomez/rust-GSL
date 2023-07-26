@@ -131,8 +131,8 @@ extern "C" fn function_handler(
 ) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
     let n = sys.dimension;
-    let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
-    let t_f = unsafe { ::std::slice::from_raw_parts_mut(t_f, n) };
+    let t_y = unsafe { std::slice::from_raw_parts(t_y, n) };
+    let t_f = unsafe { std::slice::from_raw_parts_mut(t_f, n) };
 
     (sys.function)(t, t_y, t_f).into()
 }
@@ -147,9 +147,9 @@ extern "C" fn jacobian_handler(
 ) -> c_int {
     let sys = unsafe { &mut *(params as *mut ODEiv2System) };
     let n = sys.dimension;
-    let t_y = unsafe { ::std::slice::from_raw_parts(t_y, n) };
-    let t_dfdy = unsafe { ::std::slice::from_raw_parts_mut(t_dfdy, n * n) };
-    let t_dfdt = unsafe { ::std::slice::from_raw_parts_mut(t_dfdt, n) };
+    let t_y = unsafe { std::slice::from_raw_parts(t_y, n) };
+    let t_dfdy = unsafe { std::slice::from_raw_parts_mut(t_dfdy, n * n) };
+    let t_dfdt = unsafe { std::slice::from_raw_parts_mut(t_dfdt, n) };
 
     match sys.jacobian {
         Some(ref mut j) => j(t, t_y, t_dfdy, t_dfdt),
@@ -224,7 +224,7 @@ impl ODEiv2Step {
     /// if it is not null.
     ///
     /// The stepping function returns Value::Failure if it is unable to compute the requested step. Also, if the user-supplied functions defined
-    /// in the system sys return a status other than ::Value::Success the step will be aborted. In that case, the elements of y will be restored
+    /// in the system sys return a status other than crate::Value::Success the step will be aborted. In that case, the elements of y will be restored
     /// to their pre-step values and the error code from the user-supplied function will be returned. Failure may be due to a singularity in
     /// the system or too large step-size h. In that case the step should be attempted again with a smaller step-size, e.g. h/2.
     ///
@@ -583,8 +583,8 @@ impl ODEiv2Evolve {
     /// return code. In this case the user must call gsl_odeiv2_step_reset and gsl_odeiv2_evolve_reset before calling this function again.
     ///
     /// Otherwise, if the user-supplied functions defined in the system sys or the stepping function step return a status other than
-    /// ::Value::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
-    /// ::Failuer is returned if the user functions returned ::Value::Success. Otherwise the value returned by user function is returned.
+    /// crate::Value::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
+    /// ::Failuer is returned if the user functions returned crate::Value::Success. Otherwise the value returned by user function is returned.
     /// If no acceptable step can be made, t and y will be restored to their pre-step values and h contains the final attempted step-size.
     ///
     /// If the step is successful the function returns a suggested step-size for the next step in h. The maximum time t1 is guaranteed not
@@ -675,7 +675,7 @@ pub struct ODEiv2Driver<'a> {
     raw_system: Box<sys::gsl_odeiv2_system>,
     /// `PhantomData` to bind lifetime of this struct to the lifetime
     /// of the provided ODEiv2System.
-    phantom: ::std::marker::PhantomData<&'a ODEiv2System<'a>>,
+    phantom: std::marker::PhantomData<&'a ODEiv2System<'a>>,
 }
 
 impl<'a> ODEiv2Driver<'a> {
@@ -702,7 +702,7 @@ impl<'a> ODEiv2Driver<'a> {
             Some(ODEiv2Driver {
                 d: tmp,
                 raw_system: sys_raw,
-                phantom: ::std::marker::PhantomData,
+                phantom: std::marker::PhantomData,
             })
         }
     }
@@ -730,7 +730,7 @@ impl<'a> ODEiv2Driver<'a> {
             Some(ODEiv2Driver {
                 d: tmp,
                 raw_system: sys_raw,
-                phantom: ::std::marker::PhantomData,
+                phantom: std::marker::PhantomData,
             })
         }
     }
@@ -768,7 +768,7 @@ impl<'a> ODEiv2Driver<'a> {
             Some(ODEiv2Driver {
                 d: tmp,
                 raw_system: sys_raw,
-                phantom: ::std::marker::PhantomData,
+                phantom: std::marker::PhantomData,
             })
         }
     }
@@ -808,7 +808,7 @@ impl<'a> ODEiv2Driver<'a> {
             Some(ODEiv2Driver {
                 d: tmp,
                 raw_system: sys_raw,
-                phantom: ::std::marker::PhantomData,
+                phantom: std::marker::PhantomData,
             })
         }
     }
@@ -884,7 +884,7 @@ impl<'a> Drop for ODEiv2Driver<'a> {
     #[doc(alias = "gsl_odeiv2_driver_free")]
     fn drop(&mut self) {
         unsafe { sys::gsl_odeiv2_driver_free(self.d) };
-        self.d = ::std::ptr::null_mut();
+        self.d = std::ptr::null_mut();
     }
 }
 
@@ -893,7 +893,7 @@ impl<'a> Drop for ODEiv2Driver<'a> {
 //     fn wrap(d: *mut sys::gsl_odeiv2_driver) -> ODEiv2Driver<'a> {
 //         ODEiv2Driver {
 //             d: d,
-//             phantom: ::std::marker::PhantomData,
+//             phantom: std::marker::PhantomData,
 //         }
 //     }
 //

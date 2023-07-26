@@ -284,7 +284,7 @@ pub mod level1 {
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_caxpy(
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_unique(),
             )
@@ -301,7 +301,7 @@ pub mod level1 {
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zaxpy(
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_unique(),
             )
@@ -545,10 +545,10 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_cgemv(
                 transA.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 y.unwrap_unique(),
             )
         };
@@ -568,10 +568,10 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_zgemv(
                 transA.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 y.unwrap_unique(),
             )
         };
@@ -827,10 +827,10 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_chemv(
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 y.unwrap_unique(),
             )
         };
@@ -852,10 +852,10 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_zhemv(
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 y.unwrap_unique(),
             )
         };
@@ -910,7 +910,7 @@ pub mod level2 {
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_cgeru(
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -929,7 +929,7 @@ pub mod level2 {
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zgeru(
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -948,7 +948,7 @@ pub mod level2 {
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_cgerc(
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -967,7 +967,7 @@ pub mod level2 {
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zgerc(
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -1097,7 +1097,7 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_cher2(
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -1121,7 +1121,7 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_zher2(
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -1200,10 +1200,10 @@ pub mod level3 {
             sys::gsl_blas_cgemm(
                 transA.into(),
                 transB.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1225,10 +1225,10 @@ pub mod level3 {
             sys::gsl_blas_zgemm(
                 transA.into(),
                 transB.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1303,10 +1303,10 @@ pub mod level3 {
             sys::gsl_blas_csymm(
                 side.into(),
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1329,10 +1329,10 @@ pub mod level3 {
             sys::gsl_blas_zsymm(
                 side.into(),
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1356,10 +1356,10 @@ pub mod level3 {
             sys::gsl_blas_chemm(
                 side.into(),
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1383,10 +1383,10 @@ pub mod level3 {
             sys::gsl_blas_zhemm(
                 side.into(),
                 uplo.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1469,7 +1469,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1497,7 +1497,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1581,7 +1581,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1609,7 +1609,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1683,9 +1683,9 @@ pub mod level3 {
             sys::gsl_blas_csyrk(
                 uplo.into(),
                 trans.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1708,9 +1708,9 @@ pub mod level3 {
             sys::gsl_blas_zsyrk(
                 uplo.into(),
                 trans.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1840,10 +1840,10 @@ pub mod level3 {
             sys::gsl_blas_csyr2k(
                 uplo.into(),
                 trans.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1867,10 +1867,10 @@ pub mod level3 {
             sys::gsl_blas_zsyr2k(
                 uplo.into(),
                 trans.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                ::std::mem::transmute(*beta),
+                std::mem::transmute(*beta),
                 C.unwrap_unique(),
             )
         };
@@ -1895,7 +1895,7 @@ pub mod level3 {
             sys::gsl_blas_cher2k(
                 uplo.into(),
                 trans.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
                 beta,
@@ -1923,7 +1923,7 @@ pub mod level3 {
             sys::gsl_blas_zher2k(
                 uplo.into(),
                 trans.into(),
-                ::std::mem::transmute(*alpha),
+                std::mem::transmute(*alpha),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
                 beta,

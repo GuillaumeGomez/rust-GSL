@@ -49,8 +49,8 @@ impl MultilargeLinearWorkspace {
             }
             len += 1;
         }
-        let slice = unsafe { ::std::slice::from_raw_parts(n as _, len as _) };
-        ::std::str::from_utf8(slice).ok().map(|x| x.to_owned())
+        let slice = unsafe { std::slice::from_raw_parts(n as _, len as _) };
+        std::str::from_utf8(slice).ok().map(|x| x.to_owned())
     }
 
     #[doc(alias = "gsl_multilarge_linear_reset")]

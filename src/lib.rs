@@ -122,7 +122,7 @@ pub static ROOT4_DBL_MIN: f64 = 1.221_338_669_755_462_0e-77;
 pub static ROOT5_DBL_MIN: f64 = 2.947_602_296_969_176_3e-62;
 pub static ROOT6_DBL_MIN: f64 = 5.303_436_890_579_821_8e-52;
 
-pub static DBL_MAX: f64 = ::std::f64::MAX; //1.7976931348623156e+308;
+pub static DBL_MAX: f64 = std::f64::MAX; //1.7976931348623156e+308;
 pub static SQRT_DBL_MAX: f64 = 1.340_780_792_994_259_6e+154;
 pub static ROOT3_DBL_MAX: f64 = 5.643_803_094_122_289_7e+102;
 pub static ROOT4_DBL_MAX: f64 = 1.157_920_892_373_162_0e+77;

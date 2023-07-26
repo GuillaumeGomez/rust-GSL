@@ -250,7 +250,7 @@ impl Rng {
                 self.unwrap_unique(),
                 base.as_mut_ptr() as *mut _,
                 base.len() as _,
-                ::std::mem::size_of::<T>() as _,
+                std::mem::size_of::<T>() as _,
             )
         }
     }
@@ -283,7 +283,7 @@ impl Rng {
                 dest.len() as _,
                 src.as_ptr() as *mut _,
                 src.len() as _,
-                ::std::mem::size_of::<T>() as _,
+                std::mem::size_of::<T>() as _,
             )
         };
         result_handler!(ret, ())
@@ -301,7 +301,7 @@ impl Rng {
                 dest.len() as _,
                 src.as_ptr() as *mut _,
                 src.len() as _,
-                ::std::mem::size_of::<T>() as _,
+                std::mem::size_of::<T>() as _,
             )
         }
     }

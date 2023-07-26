@@ -349,8 +349,8 @@ impl<'a> RootFdfSolver<'a> {
                 len += 1;
             }
 
-            let slice = ::std::slice::from_raw_parts(ptr as *const _, len);
-            ::std::str::from_utf8(slice).ok()
+            let slice = std::slice::from_raw_parts(ptr as *const _, len);
+            std::str::from_utf8(slice).ok()
         }
     }
 

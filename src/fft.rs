@@ -163,7 +163,7 @@ is desirable for better locality of memory accesses).
 /// decimation-in-time algorithm. The length of the transform is restricted to powers of two. For the transform version of the function
 /// the sign argument can be either forward (-1) or backward (+1).
 ///
-/// The functions return a value of ::Value::Success if no errors were detected, or Value::Dom if the length n is not a power of two.
+/// The functions return a value of crate::Value::Success if no errors were detected, or Value::Dom if the length n is not a power of two.
 pub mod radix2 {
     use crate::Value;
 

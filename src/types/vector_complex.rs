@@ -25,7 +25,7 @@ macro_rules! gsl_vec_complex {
             fn drop(&mut self) {
                 if self.can_free {
                     unsafe { sys::[<$name _free>](self.vec) };
-                    self.vec = ::std::ptr::null_mut();
+                    self.vec = std::ptr::null_mut();
                 }
             }
         }
@@ -112,7 +112,7 @@ macro_rules! gsl_vec_complex {
                 if ptr.is_null() {
                     None
                 } else {
-                    Some(unsafe { ::std::slice::from_raw_parts(ptr, self.len()) })
+                    Some(unsafe { std::slice::from_raw_parts(ptr, self.len()) })
                 }
             }
 
@@ -121,7 +121,7 @@ macro_rules! gsl_vec_complex {
                 if ptr.is_null() {
                     None
                 } else {
-                    Some(unsafe { ::std::slice::from_raw_parts_mut(ptr, self.len()) })
+                    Some(unsafe { std::slice::from_raw_parts_mut(ptr, self.len()) })
                 }
             }
 
@@ -129,7 +129,7 @@ macro_rules! gsl_vec_complex {
             /// 0 to n-1 then the error handler is invoked and 0 is returned.
             #[doc(alias = $name _get)]
             pub fn get(&self, i: usize) -> $complex {
-                unsafe { ::std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), i)) }
+                unsafe { std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), i)) }
             }
 
             /// This function sets the value of the i-th element of a vector v to x. If i lies outside the
@@ -137,7 +137,7 @@ macro_rules! gsl_vec_complex {
             #[doc(alias = $name _set)]
             pub fn set(&mut self, i: usize, x: &$complex) -> &Self {
                 unsafe {
-                    sys::[<$name _set>](self.unwrap_unique(), i, ::std::mem::transmute(*x))
+                    sys::[<$name _set>](self.unwrap_unique(), i, std::mem::transmute(*x))
                 };
                 self
             }
@@ -146,7 +146,7 @@ macro_rules! gsl_vec_complex {
             #[doc(alias = $name _set_all)]
             pub fn set_all(&mut self, x: &$complex) -> &Self {
                 unsafe {
-                    sys::[<$name _set_all>](self.unwrap_unique(), ::std::mem::transmute(*x))
+                    sys::[<$name _set_all>](self.unwrap_unique(), std::mem::transmute(*x))
                 };
                 self
             }
@@ -261,7 +261,7 @@ macro_rules! gsl_vec_complex {
             #[doc(alias = $name _scale)]
             pub fn scale(&mut self, x: &$complex) -> Result<(), Value> {
                 let ret = unsafe {
-                    sys::[<$name _scale>](self.unwrap_unique(), ::std::mem::transmute(*x))
+                    sys::[<$name _scale>](self.unwrap_unique(), std::mem::transmute(*x))
                 };
                 result_handler!(ret, ())
             }
@@ -273,7 +273,7 @@ macro_rules! gsl_vec_complex {
                 let ret = unsafe {
                     sys::[<$name _add_constant>](
                         self.unwrap_unique(),
-                        ::std::mem::transmute(*x),
+                        std::mem::transmute(*x),
                     )
                 };
                 result_handler!(ret, ())

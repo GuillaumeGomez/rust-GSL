@@ -50,7 +50,7 @@ impl WriteNTuples {
         let filename = filename.to_str().expect("Failed to convert path to str");
         let c_str = CString::new(filename.as_bytes()).unwrap();
         let tmp = unsafe {
-            sys::gsl_ntuple_create(c_str.as_ptr() as *mut c_char, ::std::ptr::null_mut(), 0)
+            sys::gsl_ntuple_create(c_str.as_ptr() as *mut c_char, std::ptr::null_mut(), 0)
         };
 
         if tmp.is_null() {
@@ -66,7 +66,7 @@ impl WriteNTuples {
     pub fn write<T: Sized>(&mut self, data: &T) -> Result<(), Value> {
         let ret = unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
-            (*self.n).size = ::std::mem::size_of::<T>() as _;
+            (*self.n).size = std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_write(self.n)
         };
         result_handler!(ret, ())
@@ -77,7 +77,7 @@ impl WriteNTuples {
     pub fn bookdata<T: Sized>(&mut self, data: &T) -> Result<(), Value> {
         let ret = unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
-            (*self.n).size = ::std::mem::size_of::<T>() as _;
+            (*self.n).size = std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_bookdata(self.n)
         };
         result_handler!(ret, ())
@@ -105,9 +105,8 @@ impl ReadNTuples {
         let filename = filename.as_ref();
         let filename = filename.to_str().expect("Failed to convert path to str");
         let c_str = CString::new(filename.as_bytes()).unwrap();
-        let tmp = unsafe {
-            sys::gsl_ntuple_open(c_str.as_ptr() as *mut c_char, ::std::ptr::null_mut(), 0)
-        };
+        let tmp =
+            unsafe { sys::gsl_ntuple_open(c_str.as_ptr() as *mut c_char, std::ptr::null_mut(), 0) };
 
         if tmp.is_null() {
             None
@@ -124,7 +123,7 @@ impl ReadNTuples {
 
         let ret = unsafe {
             (*self.n).ntuple_data = data.as_mut_ptr() as *mut _;
-            (*self.n).size = ::std::mem::size_of::<T>() as _;
+            (*self.n).size = std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_read(self.n)
         };
         result_handler!(ret, unsafe { data.assume_init() })
@@ -177,12 +176,12 @@ macro_rules! impl_project {
 
                 let f: Box<V> = Box::new(value_func);
                 let mut value_function = sys::gsl_ntuple_value_fn {
-                    function: unsafe { ::std::mem::transmute(value_trampoline::<T, V> as usize) },
+                    function: unsafe { std::mem::transmute(value_trampoline::<T, V> as usize) },
                     params: Box::into_raw(f) as *mut _,
                 };
                 let f: Box<S> = Box::new(select_func);
                 let mut select_function = sys::gsl_ntuple_select_fn {
-                    function: unsafe { ::std::mem::transmute(select_trampoline::<T, S> as usize) },
+                    function: unsafe { std::mem::transmute(select_trampoline::<T, S> as usize) },
                     params: Box::into_raw(f) as *mut _,
                 };
                 let ret = unsafe {

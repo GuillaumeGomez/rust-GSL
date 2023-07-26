@@ -461,11 +461,11 @@ impl Default for ComplexF64 {
 
 impl CFFI<sys::gsl_complex> for ComplexF64 {
     fn wrap(t: sys::gsl_complex) -> ComplexF64 {
-        unsafe { ::std::mem::transmute(t) }
+        unsafe { std::mem::transmute(t) }
     }
 
     fn unwrap(self) -> sys::gsl_complex {
-        unsafe { ::std::mem::transmute(self) }
+        unsafe { std::mem::transmute(self) }
     }
 }
 
@@ -499,11 +499,11 @@ impl FFFI<ComplexF32> for sys::gsl_complex {
 
 impl FFFI<ComplexF64> for sys::gsl_complex {
     fn wrap(self) -> ComplexF64 {
-        unsafe { ::std::mem::transmute(self) }
+        unsafe { std::mem::transmute(self) }
     }
 
     fn unwrap(t: ComplexF64) -> sys::gsl_complex {
-        unsafe { ::std::mem::transmute(t) }
+        unsafe { std::mem::transmute(t) }
     }
 }
 
@@ -957,11 +957,11 @@ impl CFFI<sys::gsl_complex> for ComplexF32 {
 
 impl CFFI<sys::gsl_complex_float> for ComplexF32 {
     fn wrap(s: sys::gsl_complex_float) -> ComplexF32 {
-        unsafe { ::std::mem::transmute(s) }
+        unsafe { std::mem::transmute(s) }
     }
 
     fn unwrap(self) -> sys::gsl_complex_float {
-        unsafe { ::std::mem::transmute(self) }
+        unsafe { std::mem::transmute(self) }
     }
 }
 
