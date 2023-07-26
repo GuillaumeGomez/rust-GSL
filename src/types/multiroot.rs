@@ -56,7 +56,7 @@ The state for solvers which do not use an analytic Jacobian matrix is held in a
 The algorithms estimate the matrix J or J^{-1} by approximate methods.
 !*/
 
-use crate::{Value, VectorF64};
+use crate::{Value, VectorF64, View};
 use ffi::FFI;
 use sys;
 use sys::libc::{c_int, c_void};
@@ -217,21 +217,21 @@ impl<'a> MultiRootFSolver<'a> {
 
     /// This function returns the current estimate of the root for the solver `s`, given by `s->x`.
     #[doc(alias = "gsl_multiroot_fsolver_root")]
-    pub fn root(&self) -> VectorF64 {
-        VectorF64::soft_wrap(unsafe { sys::gsl_multiroot_fsolver_root(self.unwrap_shared()) })
+    pub fn root(&self) -> View<'_, VectorF64> {
+        unsafe { View::new(sys::gsl_multiroot_fsolver_root(self.unwrap_shared())) }
     }
 
     /// This function returns the last step `dx` taken by the solver `s`, given by `s->dx`.
     #[doc(alias = "gsl_multiroot_fsolver_dx")]
-    pub fn dx(&self) -> VectorF64 {
-        VectorF64::soft_wrap(unsafe { sys::gsl_multiroot_fsolver_dx(self.unwrap_shared()) })
+    pub fn dx(&self) -> View<'_, VectorF64> {
+        unsafe { View::new(sys::gsl_multiroot_fsolver_dx(self.unwrap_shared())) }
     }
 
     /// This function returns the function value `f(x)` at the current estimate of the root for
     /// the solver `s`, given by `s->f`.
     #[doc(alias = "gsl_multiroot_fsolver_f")]
-    pub fn f(&self) -> VectorF64 {
-        VectorF64::soft_wrap(unsafe { sys::gsl_multiroot_fsolver_f(self.unwrap_shared()) })
+    pub fn f(&self) -> View<'_, VectorF64> {
+        unsafe { View::new(sys::gsl_multiroot_fsolver_f(self.unwrap_shared())) }
     }
 }
 

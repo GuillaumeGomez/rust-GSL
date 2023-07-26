@@ -18,13 +18,14 @@
 extern crate gsl_sys as sys;
 extern crate paste;
 
-pub use types::*;
+pub use self::types::*;
 
-pub use elementary::Elementary;
-pub use pow::Pow;
-pub use trigonometric::Trigonometric;
-pub use types::rng;
-pub use utilities::IOStream;
+pub use self::elementary::Elementary;
+pub use self::pow::Pow;
+pub use self::trigonometric::Trigonometric;
+pub use self::types::rng;
+pub use self::utilities::IOStream;
+pub use self::view::View;
 
 // enums part
 pub use self::enums::*;
@@ -32,6 +33,7 @@ pub use self::enums::*;
 mod enums;
 mod macros;
 mod utilities;
+mod view;
 
 #[doc(hidden)]
 pub mod ffi;

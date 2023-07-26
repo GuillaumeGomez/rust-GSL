@@ -213,10 +213,9 @@ int main(void) {
 ```
 */
 
-use crate::Value;
+use crate::{Value, VectorF64, View};
 use ffi::{self, FFI};
 use std::os::raw::{c_int, c_void};
-use VectorF64;
 
 ffi_wrapper!(MultiFitFSolverType, *mut sys::gsl_multifit_fsolver_type);
 
@@ -285,8 +284,8 @@ impl MultiFitFSolver {
     }
 
     #[doc(alias = "gsl_multifit_fsolver_position")]
-    pub fn position(&self) -> VectorF64 {
-        unsafe { ffi::FFI::wrap(sys::gsl_multifit_fsolver_position(self.unwrap_shared())) }
+    pub fn position(&self) -> View<'_, VectorF64> {
+        unsafe { View::new(sys::gsl_multifit_fsolver_position(self.unwrap_shared())) }
     }
 }
 
@@ -320,24 +319,24 @@ impl MultiFitFdfSolver {
         result_handler!(ret, ())
     }
 
-    pub fn x(&self) -> VectorF64 {
-        unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).x) }
+    pub fn x(&self) -> View<'_, VectorF64> {
+        unsafe { View::new((*self.unwrap_shared()).x) }
     }
 
-    pub fn f(&self) -> VectorF64 {
-        unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).f) }
+    pub fn f(&self) -> View<'_, VectorF64> {
+        unsafe { View::new((*self.unwrap_shared()).f) }
     }
 
-    pub fn dx(&self) -> VectorF64 {
-        unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).dx) }
+    pub fn dx(&self) -> View<'_, VectorF64> {
+        unsafe { View::new((*self.unwrap_shared()).dx) }
     }
 
-    pub fn g(&self) -> VectorF64 {
-        unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).g) }
+    pub fn g(&self) -> View<'_, VectorF64> {
+        unsafe { View::new((*self.unwrap_shared()).g) }
     }
 
-    pub fn sqrt_wts(&self) -> VectorF64 {
-        unsafe { ffi::FFI::soft_wrap((*self.unwrap_shared()).sqrt_wts) }
+    pub fn sqrt_wts(&self) -> View<'_, VectorF64> {
+        unsafe { View::new((*self.unwrap_shared()).sqrt_wts) }
     }
 
     #[doc(alias = "gsl_multifit_fdfsolver_name")]
@@ -360,8 +359,8 @@ impl MultiFitFdfSolver {
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
     #[doc(alias = "gsl_multifit_fdfsolver_position")]
-    pub fn position(&self) -> VectorF64 {
-        unsafe { ffi::FFI::wrap(sys::gsl_multifit_fdfsolver_position(self.unwrap_shared())) }
+    pub fn position(&self) -> View<'_, VectorF64> {
+        unsafe { View::new(sys::gsl_multifit_fdfsolver_position(self.unwrap_shared())) }
     }
 
     /// These functions iterate the solver s for a maximum of maxiter iterations. After each
