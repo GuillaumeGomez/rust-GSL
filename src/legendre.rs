@@ -70,10 +70,8 @@ pub mod polynomials {
 
     /// This function computes arrays of Legendre polynomials P_l(x) and derivatives dP_l(x)/dx, for l = 0, \dots, lmax, |x| <= 1
     #[doc(alias = "gsl_sf_legendre_Pl_array")]
-    pub fn legendre_Pl_array(x: f64, result_array: &mut [f64]) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_sf_legendre_Pl_array(result_array.len() as i32, x, result_array.as_mut_ptr())
-        };
+    pub fn legendre_Pl_array(lmax: usize, x: f64, result_array: &mut [f64]) -> Result<(), Value> {
+        let ret = unsafe { sys::gsl_sf_legendre_Pl_array(lmax as _, x, result_array.as_mut_ptr()) };
         result_handler!(ret, ())
     }
 
