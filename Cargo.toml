@@ -25,6 +25,7 @@ dox = ["v2_7", "GSL-sys/dox"]
 
 [package.metadata.docs.rs]
 features = ["dox"]
+rustdoc-args = ["--generate-link-to-definition"]
 
 [lib]
 name = "rgsl"
