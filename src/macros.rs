@@ -41,6 +41,10 @@ macro_rules! ffi_wrapper {
                 self.inner = std::ptr::null_mut();
             }
         }
+
+        unsafe impl$(<$($lt),*>)? Send for $name$(<$($lt),*>)? {}
+
+        unsafe impl$(<$($lt),*>)? Sync for $name$(<$($lt),*>)? {}
     };
     ($name:ident $(<$($lt:lifetime),*>)?, *mut $ty:ty $(;$extra_id:ident: $extra_ty:ty => $extra_expr:expr;)* $(, $doc:expr)?) => {
         $(#[doc = $doc])?
