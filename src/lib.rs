@@ -76,6 +76,7 @@ pub mod legendre;
 pub mod linear_algebra;
 pub mod logarithm;
 pub mod minimizer;
+pub mod multimin;
 pub mod multifit;
 #[cfg(feature = "v2_1")]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]

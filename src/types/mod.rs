@@ -86,6 +86,7 @@ pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
 pub mod minimizer;
+pub mod multimin;
 pub mod monte_carlo;
 pub mod multifit_linear;
 pub mod multifit_solver;
