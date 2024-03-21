@@ -4,7 +4,6 @@
 
 use std::ffi::CString;
 use std::io;
-use std::ops::Drop;
 use std::os::raw::c_char;
 use std::path::Path;
 

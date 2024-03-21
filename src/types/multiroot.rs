@@ -58,7 +58,6 @@ The algorithms estimate the matrix J or J^{-1} by approximate methods.
 
 use crate::{Value, VectorF64, View};
 use ffi::FFI;
-use sys;
 use sys::libc::{c_int, c_void};
 
 ffi_wrapper!(

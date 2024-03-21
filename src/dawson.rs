@@ -7,7 +7,7 @@ The Dawson integral is defined by \exp(-x^2) \int_0^x dt \exp(t^2).
 A table of Dawson’s integral can be found in Abramowitz & Stegun, Table 7.5.
 !*/
 
-use crate::{sys, types, Value};
+use crate::{types, Value};
 use std::mem::MaybeUninit;
 
 /// This routine computes the value of Dawson’s integral for x.
