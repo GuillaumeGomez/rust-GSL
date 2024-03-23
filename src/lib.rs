@@ -76,12 +76,12 @@ pub mod legendre;
 pub mod linear_algebra;
 pub mod logarithm;
 pub mod minimizer;
-pub mod multimin;
 pub mod multifit;
 #[cfg(feature = "v2_1")]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
 pub mod multilarge;
 pub mod multilinear;
+pub mod multimin;
 pub mod multiroot;
 pub mod numerical_differentiation;
 pub mod physical_constant;

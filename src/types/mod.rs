@@ -86,13 +86,13 @@ pub mod mathieu;
 pub mod matrix;
 pub mod matrix_complex;
 pub mod minimizer;
-pub mod multimin;
 pub mod monte_carlo;
 pub mod multifit_linear;
 pub mod multifit_solver;
 #[cfg(feature = "v2_1")]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_1")))]
 pub mod multilarge_linear;
+pub mod multimin;
 pub mod multiroot;
 pub mod multiset;
 pub mod n_tuples;

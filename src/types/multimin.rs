@@ -6,13 +6,13 @@
 
 # Multidimensional Minimization
 
-This chapter describes routines for finding minima of arbitrary multidimensional functions. The 
-library provides low level components for a variety of iterative minimizers and convergence tests. 
-These can be combined by the user to achieve the desired solution, while providing full access 
-to the intermediate steps of the algorithms. Each class of methods uses the same framework, 
-so that you can switch between minimizers at runtime without needing to recompile your program. 
-Each instance of a minimizer keeps track of its own state, allowing the minimizers to be used 
-in multi-threaded programs. The minimization algorithms can be used to maximize a function by 
+This chapter describes routines for finding minima of arbitrary multidimensional functions. The
+library provides low level components for a variety of iterative minimizers and convergence tests.
+These can be combined by the user to achieve the desired solution, while providing full access
+to the intermediate steps of the algorithms. Each class of methods uses the same framework,
+so that you can switch between minimizers at runtime without needing to recompile your program.
+Each instance of a minimizer keeps track of its own state, allowing the minimizers to be used
+in multi-threaded programs. The minimization algorithms can be used to maximize a function by
 inverting its sign.
 
 ## Overview
@@ -23,46 +23,46 @@ The problem of multidimensional minimization requires finding a point x such tha
 f(x_1, ... , x_n)
 ```
 
-takes a value which is lower than at any neighboring point. For smooth functions the gradient g = \nabla f 
-vanishes at the minimum. In general there are no bracketing methods available for the minimization of 
-n-dimensional functions. The algorithms proceed from an initial guess using a search algorithm which 
+takes a value which is lower than at any neighboring point. For smooth functions the gradient g = \nabla f
+vanishes at the minimum. In general there are no bracketing methods available for the minimization of
+n-dimensional functions. The algorithms proceed from an initial guess using a search algorithm which
 attempts to move in a downhill direction.
 
-Algorithms making use of the gradient of the function perform a one-dimensional line minimisation along this 
-direction until the lowest point is found to a suitable tolerance. The search direction is then 
-updated with local information from the function and its derivatives, and the whole process repeated 
+Algorithms making use of the gradient of the function perform a one-dimensional line minimisation along this
+direction until the lowest point is found to a suitable tolerance. The search direction is then
+updated with local information from the function and its derivatives, and the whole process repeated
 until the true n-dimensional minimum is found.
 
-Algorithms which do not require the gradient of the function use different strategies. For example, 
-the Nelder-Mead Simplex algorithm maintains n+1 trial parameter vectors as the vertices of a n-dimensional 
-simplex. On each iteration it tries to improve the worst vertex of the simplex by geometrical transformations. 
+Algorithms which do not require the gradient of the function use different strategies. For example,
+the Nelder-Mead Simplex algorithm maintains n+1 trial parameter vectors as the vertices of a n-dimensional
+simplex. On each iteration it tries to improve the worst vertex of the simplex by geometrical transformations.
 The iterations are continued until the overall size of the simplex has decreased sufficiently.
 
-Both types of algorithms use a standard framework. The user provides a high-level driver for the algorithms, 
-and the library provides the individual functions necessary for each of the steps. There are three 
+Both types of algorithms use a standard framework. The user provides a high-level driver for the algorithms,
+and the library provides the individual functions necessary for each of the steps. There are three
 main phases of the iteration. The steps are,
 
  * initialize minimizer state, s, for algorithm T
  * update s using the iteration T
  * test s for convergence, and repeat iteration if necessary
 
-Each iteration step consists either of an improvement to the line-minimisation in the current 
-direction or an update to the search direction itself. The state for the minimizers is held 
+Each iteration step consists either of an improvement to the line-minimisation in the current
+direction or an update to the search direction itself. The state for the minimizers is held
 in a gsl_multimin_fdfminimizer struct or a gsl_multimin_fminimizer struct.
 
 ## Caveats
 
-Note that the minimization algorithms can only search for one local minimum at a time. When there are several 
-local minima in the search area, the first minimum to be found will be returned; however it is difficult 
-to predict which of the minima this will be. In most cases, no error will be reported if you try to 
+Note that the minimization algorithms can only search for one local minimum at a time. When there are several
+local minima in the search area, the first minimum to be found will be returned; however it is difficult
+to predict which of the minima this will be. In most cases, no error will be reported if you try to
 find a local minimum in an area where there is more than one.
 
-It is also important to note that the minimization algorithms find local minima; there is no way 
+It is also important to note that the minimization algorithms find local minima; there is no way
 to determine whether a minimum is a global minimum of the function in question.
 
 ## Providing a function to minimize
 
-You must provide a parametric function of n variables for the minimizers to operate on. 
+You must provide a parametric function of n variables for the minimizers to operate on.
 
 */
 
@@ -81,11 +81,11 @@ ffi_wrapper!(
 
 impl<'a> Minimizer<'a> {
     /// Creates a minimizer of type `t` for an n-dimensional function.
-    /// If there is insufficient memory to create the minimizer then 
+    /// If there is insufficient memory to create the minimizer then
     /// the function returns a null pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_multimin_fminimizer_alloc")]
-    pub fn new(t: MinimizerType, n : usize) -> Option<Minimizer<'a>> {
-        let ptr = unsafe { sys::gsl_multimin_fminimizer_alloc(t.unwrap_shared(),n) };
+    pub fn new(t: MinimizerType, n: usize) -> Option<Minimizer<'a>> {
+        let ptr = unsafe { sys::gsl_multimin_fminimizer_alloc(t.unwrap_shared(), n) };
 
         if ptr.is_null() {
             None
@@ -94,8 +94,8 @@ impl<'a> Minimizer<'a> {
         }
     }
 
-    /// This function initializes the minimizer `s` to minimize the function `f`, starting from the initial point `x`. 
-    /// The size of the initial trial steps is given in vector `step_size`. The precise meaning of this 
+    /// This function initializes the minimizer `s` to minimize the function `f`, starting from the initial point `x`.
+    /// The size of the initial trial steps is given in vector `step_size`. The precise meaning of this
     /// parameter depends on the method used.
     #[doc(alias = "gsl_multimin_fminimizer_set")]
     pub fn set<F: Fn(&VectorF64) -> f64 + 'a>(
@@ -108,16 +108,16 @@ impl<'a> Minimizer<'a> {
             x: *const sys::gsl_vector,
             params: *mut c_void,
         ) -> f64 {
-            let f : &F = &*(params as *const F);
+            let f: &F = &*(params as *const F);
             let x_new = VectorF64::soft_wrap(x as *const _ as *mut _);
             f(&x_new)
         }
         self.inner_call = sys::gsl_multimin_function_struct {
-            f : Some(inner_f::<F>),
-            n : x.len(),
+            f: Some(inner_f::<F>),
+            n: x.len(),
             params: &f as *const _ as *mut _,
         };
- 
+
         self.inner_closure = Some(Box::new(f));
 
         let ret = unsafe {
@@ -150,7 +150,7 @@ impl<'a> Minimizer<'a> {
     }
 
     #[doc(alias = "gsl_multimin_fminimizer_x")]
-    pub fn x(&self) -> View<'_,VectorF64> {
+    pub fn x(&self) -> View<'_, VectorF64> {
         unsafe { View::new(sys::gsl_multimin_fminimizer_x(self.unwrap_shared())) }
     }
 
@@ -164,9 +164,9 @@ impl<'a> Minimizer<'a> {
         unsafe { sys::gsl_multimin_fminimizer_size(self.unwrap_shared()) }
     }
 
-    /// This function performs a single iteration of the minimizer s. If the iteration encounters 
-    /// an unexpected problem then an error code will be returned. The error code `Value::NoProgress` 
-    /// signifies that the minimizer is unable to improve on its current estimate, either due 
+    /// This function performs a single iteration of the minimizer s. If the iteration encounters
+    /// an unexpected problem then an error code will be returned. The error code `Value::NoProgress`
+    /// signifies that the minimizer is unable to improve on its current estimate, either due
     /// to numerical difficulty or because a genuine local minimum has been reached.
     #[doc(alias = "gsl_multimin_fminimizer_iterate")]
     pub fn iterate(&mut self) -> Result<(), Value> {
@@ -206,7 +206,7 @@ mod test {
     ///     let dummy = "lalal".to_owned();
     ///     m.set(|x| {
     ///     println!("==> {:?}", dummy);
-    ///     x.get(0) + x.get(1)}, 
+    ///     x.get(0) + x.get(1)},
     ///     &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap(),
     ///     &rgsl::VectorF64::from_slice(&[1.0, 1.0]).unwrap()).unwrap();
     ///
@@ -223,7 +223,7 @@ mod test {
     ///
     /// fn set(m: &mut Minimizer) {
     ///     m.set(|x| {
-    ///     x.get(0) + x.get(1)}, 
+    ///     x.get(0) + x.get(1)},
     ///     &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap(),
     ///     &rgsl::VectorF64::from_slice(&[1.0, 1.0]).unwrap()).unwrap();
     ///
@@ -235,7 +235,7 @@ mod test {
     use super::*;
     use multimin::test_size;
 
-    fn print_state(min : &Minimizer, iter: usize) {
+    fn print_state(min: &Minimizer, iter: usize) {
         let f = min.minimum();
         let x = min.x();
         println!(
@@ -249,19 +249,19 @@ mod test {
 
     #[test]
     fn test_multi_min() {
-        let mut min = Minimizer::new(MinimizerType::nm_simplex2(),2).unwrap();
-        let guess_value = VectorF64::from_slice(&[5.0,7.0]).unwrap();
-        let step_size = VectorF64::from_slice(&[1.0,1.0]).unwrap();
-    
+        let mut min = Minimizer::new(MinimizerType::nm_simplex2(), 2).unwrap();
+        let guess_value = VectorF64::from_slice(&[5.0, 7.0]).unwrap();
+        let step_size = VectorF64::from_slice(&[1.0, 1.0]).unwrap();
 
         let paraboloid = |v: &VectorF64| -> f64 {
-            let center = (1.0,2.0);
-            let scale = (10.0,20.0);
+            let center = (1.0, 2.0);
+            let scale = (10.0, 20.0);
             let minimum = 30.0;
 
             let x = v.get(0);
             let y = v.get(1);
-            let result = scale.0 * (x-center.0).powf(2.0) + scale.1*(y-center.1).powf(2.0) + minimum;
+            let result =
+                scale.0 * (x - center.0).powf(2.0) + scale.1 * (y - center.1).powf(2.0) + minimum;
             result
         };
 
@@ -280,7 +280,7 @@ mod test {
             // test for convergence
             let size = min.size();
 
-            status = test_size(size,eps_abs);
+            status = test_size(size, eps_abs);
 
             // check if iteration succeeded
             if matches!(status, Value::Success) {
@@ -288,7 +288,7 @@ mod test {
             }
 
             // print current iteration
-            print_state(&min,iter);
+            print_state(&min, iter);
 
             iter += 1;
         }
