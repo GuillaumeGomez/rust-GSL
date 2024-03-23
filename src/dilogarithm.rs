@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::{sys, types, Value};
+use crate::{types, Value};
 use std::mem::MaybeUninit;
 
 /// These routines compute the dilogarithm for a real argument. In Lewin’s notation this is Li_2(x), the real part of the dilogarithm of a real x.

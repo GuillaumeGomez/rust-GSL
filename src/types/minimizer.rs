@@ -98,7 +98,6 @@ provided the function is well-behaved.
 
 use crate::Value;
 use ffi::FFI;
-use sys;
 
 ffi_wrapper!(
     Minimizer<'a>,

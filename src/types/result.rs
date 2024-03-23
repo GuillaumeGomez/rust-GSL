@@ -2,8 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use std::default::Default;
-
 /// The error handling form of the special functions always calculate an error estimate along with the value of the result.
 /// Therefore, structures are provided for amalgamating a value and error estimate.
 #[derive(Clone, Copy, Debug)]

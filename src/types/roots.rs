@@ -43,7 +43,6 @@ its derivative (hence the name fdf) to be supplied by the user.
 
 use crate::Value;
 use ffi::FFI;
-use sys;
 use sys::libc::{c_double, c_void};
 
 ffi_wrapper!(

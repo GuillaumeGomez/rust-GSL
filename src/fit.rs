@@ -32,6 +32,9 @@ pub fn linear(
     ystride: usize,
     n: usize,
 ) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
+    if (n - 1) * xstride >= x.len() || (n - 1) * ystride >= y.len() {
+        return Err(Value::Invalid);
+    }
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -79,6 +82,10 @@ pub fn wlinear(
     ystride: usize,
     n: usize,
 ) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
+    if (n - 1) * xstride >= x.len() || (n - 1) * wstride >= w.len() || (n - 1) * ystride >= y.len()
+    {
+        return Err(Value::Invalid);
+    }
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -141,6 +148,9 @@ pub fn mul(
     ystride: usize,
     n: usize,
 ) -> Result<(f64, f64, f64), Value> {
+    if (n - 1) * xstride >= x.len() || (n - 1) * ystride >= y.len() {
+        return Err(Value::Invalid);
+    }
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
@@ -170,6 +180,10 @@ pub fn wmul(
     ystride: usize,
     n: usize,
 ) -> Result<(f64, f64, f64), Value> {
+    if (n - 1) * xstride >= x.len() || (n - 1) * wstride >= w.len() || (n - 1) * ystride >= y.len()
+    {
+        return Err(Value::Invalid);
+    }
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
