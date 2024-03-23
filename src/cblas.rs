@@ -2,15 +2,6 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-#[derive(Clone, Copy)]
-pub struct Index(pub(crate) sys::CBLAS_INDEX_t);
-
-impl Index {
-    pub fn new(value: usize) -> Index {
-        Index(value)
-    }
-}
-
 pub mod level1 {
     #[doc(alias = "cblas_sdsdot")]
     pub fn sdsdot(N: i32, alpha: f32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
@@ -129,23 +120,23 @@ pub mod level1 {
     }
 
     #[doc(alias = "cblas_isamax")]
-    pub fn isamax(N: i32, x: &[f32], incx: i32) -> crate::cblas::Index {
-        crate::cblas::Index(unsafe { ::sys::cblas_isamax(N, x.as_ptr(), incx) })
+    pub fn isamax(N: i32, x: &[f32], incx: i32) -> usize {
+        unsafe { ::sys::cblas_isamax(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_idamax")]
-    pub fn idamax(N: i32, x: &[f64], incx: i32) -> crate::cblas::Index {
-        crate::cblas::Index(unsafe { ::sys::cblas_idamax(N, x.as_ptr(), incx) })
+    pub fn idamax(N: i32, x: &[f64], incx: i32) -> usize {
+        unsafe { ::sys::cblas_idamax(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_icamax")]
-    pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> crate::cblas::Index {
-        crate::cblas::Index(unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) })
+    pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> usize {
+        unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_izamax")]
-    pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> crate::cblas::Index {
-        crate::cblas::Index(unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) })
+    pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> usize {
+        unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_sswap")]
