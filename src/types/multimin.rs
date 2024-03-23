@@ -68,7 +68,6 @@ You must provide a parametric function of n variables for the minimizers to oper
 
 use crate::{Value, VectorF64, View};
 use ffi::FFI;
-use sys;
 use sys::libc::c_void;
 
 ffi_wrapper!(

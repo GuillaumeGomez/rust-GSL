@@ -276,7 +276,6 @@ mod tests {
     ///
     use super::*;
     use multiroot::test_residual;
-    use VectorF64;
 
     /// checking a test function
     /// must return a success criteria (or failure)

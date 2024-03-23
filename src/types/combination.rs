@@ -102,7 +102,11 @@ impl Combination {
     pub fn as_slice(&self) -> &[usize] {
         unsafe {
             let data = sys::gsl_combination_data(self.unwrap_shared());
-            std::slice::from_raw_parts(data, self.k())
+            if data.is_null() {
+                &[]
+            } else {
+                std::slice::from_raw_parts(data, self.k())
+            }
         }
     }
 
@@ -111,7 +115,11 @@ impl Combination {
     pub fn as_mut_slice(&mut self) -> &mut [usize] {
         unsafe {
             let data = sys::gsl_combination_data(self.unwrap_shared());
-            std::slice::from_raw_parts_mut(data, self.k())
+            if data.is_null() {
+                &mut []
+            } else {
+                std::slice::from_raw_parts_mut(data, self.k())
+            }
         }
     }
 
