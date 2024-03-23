@@ -6,7 +6,14 @@ import sys
 
 
 MACROS_TO_IGNORE = ["ffi_wrap", "wrap_callback", "ffi_wrapper"]
-FUNC_NAME_TO_IGNORE = ["new", "new_with_init", "from_slice"]
+FUNC_NAME_TO_IGNORE = [
+    "new",
+    "new_with_init",
+    "from_slice",
+    "nm_simplex",
+    "nm_simplex2",
+    "nm_simplex2_rand",
+]
 
 
 def read_file(path):
