@@ -7,7 +7,7 @@
 
 This chapter describes the statistical functions in the library. The basic statistical functions include routines to compute the mean,
 variance and standard deviation. More advanced functions allow you to calculate absolute deviations, skewness, and kurtosis as well as the
-median and arbitrary percentiles. The algorithms use recurrence relations to compute average quantities in a stable way, without large
+median and arbitrary percentiles. The algorithms use crate::recurrence relations to compute average quantities in a stable way, without large
 intermediate values that might overflow.
 
 ## Weighted Samples

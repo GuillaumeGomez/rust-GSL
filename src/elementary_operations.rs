@@ -9,7 +9,7 @@ use std::mem::MaybeUninit;
 #[doc(alias = "gsl_sf_multiply_e")]
 pub fn multiply_e(x: f64, y: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_multiply_e(x, y, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_multiply_e(x, y, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -19,7 +19,7 @@ pub fn multiply_e(x: f64, y: f64) -> Result<types::Result, Value> {
 #[doc(alias = "gsl_sf_multiply_err_e")]
 pub fn multiply_err_e(x: f64, dx: f64, y: f64, dy: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_multiply_err_e(x, dx, y, dy, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_multiply_err_e(x, dx, y, dy, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }

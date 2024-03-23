@@ -42,7 +42,7 @@ pub fn linear(
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
-        ::sys::gsl_fit_linear(
+        sys::gsl_fit_linear(
             x.as_ptr(),
             xstride,
             y.as_ptr(),
@@ -93,7 +93,7 @@ pub fn wlinear(
     let mut cov11 = 0.;
     let mut chisq = 0.;
     let ret = unsafe {
-        ::sys::gsl_fit_wlinear(
+        sys::gsl_fit_wlinear(
             x.as_ptr(),
             xstride,
             w.as_ptr(),
@@ -129,7 +129,7 @@ pub fn linear_est(
     let mut y = 0.;
     let mut y_err = 0.;
     let ret =
-        unsafe { ::sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
+        unsafe { sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
     result_handler!(ret, (y, y_err))
 }
 
@@ -155,7 +155,7 @@ pub fn mul(
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
-        crate::sys::gsl_fit_mul(
+        sys::gsl_fit_mul(
             x.as_ptr(),
             xstride,
             y.as_ptr(),
@@ -188,7 +188,7 @@ pub fn wmul(
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
-        crate::sys::gsl_fit_wmul(
+        sys::gsl_fit_wmul(
             x.as_ptr(),
             xstride,
             w.as_ptr(),
@@ -213,6 +213,6 @@ pub fn wmul(
 pub fn mul_est(x: f64, c1: f64, cov11: f64) -> Result<(f64, f64), Value> {
     let mut y = 0.;
     let mut y_err = 0.;
-    let ret = unsafe { crate::sys::gsl_fit_mul_est(x, c1, cov11, &mut y, &mut y_err) };
+    let ret = unsafe { sys::gsl_fit_mul_est(x, c1, cov11, &mut y, &mut y_err) };
     result_handler!(ret, (y, y_err))
 }

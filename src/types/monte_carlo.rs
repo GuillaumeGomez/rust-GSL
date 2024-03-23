@@ -73,8 +73,8 @@ current estimate has zero error, previous estimates had zero error
 The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::marker::PhantomData;
 use std::mem::transmute;
 use std::os::raw::c_void;
@@ -502,9 +502,9 @@ impl<'a> VegasParams<'a> {
         alpha: f64,
         iterations: usize,
         stage: i32,
-        mode: ::VegasMode,
+        mode: crate::VegasMode,
         verbosity: VegasVerbosity,
-        stream: Option<&'a mut ::IOStream>,
+        stream: Option<&'a mut crate::IOStream>,
     ) -> Result<VegasParams, String> {
         if !verbosity.is_off() && stream.is_none() {
             return Err(
@@ -549,7 +549,7 @@ impl<'a> std::default::Default for VegasParams<'a> {
                 alpha: 1.5,
                 iterations: 5,
                 stage: 0,
-                mode: ::VegasMode::ImportanceOnly.into(),
+                mode: crate::VegasMode::ImportanceOnly.into(),
                 verbose: -1,
                 ostream: std::ptr::null_mut(),
             },
@@ -679,7 +679,7 @@ fn plain() {
     let calls = 500000;
 
     crate::RngType::env_setup();
-    let mut r = crate::Rng::new(::RngType::default()).unwrap();
+    let mut r = crate::Rng::new(crate::RngType::default()).unwrap();
 
     {
         let mut s = PlainMonteCarlo::new(3).unwrap();
@@ -705,7 +705,7 @@ fn miser() {
     let calls = 500000;
 
     crate::RngType::env_setup();
-    let mut r = crate::Rng::new(::RngType::default()).unwrap();
+    let mut r = crate::Rng::new(crate::RngType::default()).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
@@ -726,7 +726,7 @@ fn miser_closure() {
     let calls = 500000;
 
     crate::RngType::env_setup();
-    let mut r = crate::Rng::new(::RngType::default()).unwrap();
+    let mut r = crate::Rng::new(crate::RngType::default()).unwrap();
 
     {
         let mut s = MiserMonteCarlo::new(3).unwrap();
@@ -762,7 +762,7 @@ fn vegas_warm_up() {
     let xu: [f64; 3] = [PI, PI, PI];
 
     crate::RngType::env_setup();
-    let mut r = crate::Rng::new(::RngType::default()).unwrap();
+    let mut r = crate::Rng::new(crate::RngType::default()).unwrap();
 
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();
@@ -788,7 +788,7 @@ fn vegas() {
     let xu: [f64; 3] = [PI, PI, PI];
 
     crate::RngType::env_setup();
-    let mut r = crate::Rng::new(::RngType::default()).unwrap();
+    let mut r = crate::Rng::new(crate::RngType::default()).unwrap();
 
     {
         let mut s = VegasMonteCarlo::new(3).unwrap();

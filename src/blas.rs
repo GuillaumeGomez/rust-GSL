@@ -3,9 +3,9 @@
 //
 
 pub mod level1 {
+    use crate::ffi::FFI;
+    use crate::types::complex::CFFI;
     use crate::{types, Value};
-    use ffi::FFI;
-    use types::complex::CFFI;
 
     /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result
     /// in result.
@@ -324,13 +324,13 @@ pub mod level1 {
     /// This function rescales the vector x by the multiplicative factor alpha.
     #[doc(alias = "gsl_blas_cscal")]
     pub fn cscal(alpha: &types::ComplexF32, x: &mut types::VectorComplexF32) {
-        unsafe { sys::gsl_blas_cscal(::std::mem::transmute(*alpha), x.unwrap_unique()) }
+        unsafe { sys::gsl_blas_cscal(std::mem::transmute(*alpha), x.unwrap_unique()) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     #[doc(alias = "gsl_blas_zscal")]
     pub fn zscal(alpha: &types::ComplexF64, x: &mut types::VectorComplexF64) {
-        unsafe { sys::gsl_blas_zscal(::std::mem::transmute(*alpha), x.unwrap_unique()) }
+        unsafe { sys::gsl_blas_zscal(std::mem::transmute(*alpha), x.unwrap_unique()) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
@@ -483,8 +483,8 @@ pub mod level1 {
 }
 
 pub mod level2 {
+    use crate::ffi::FFI;
     use crate::{enums, types, Value};
-    use ffi::FFI;
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
     #[doc(alias = "gsl_blas_sgemv")]
@@ -1132,8 +1132,8 @@ pub mod level2 {
 }
 
 pub mod level3 {
+    use crate::ffi::FFI;
     use crate::{enums, types, Value};
-    use ffi::FFI;
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
     #[doc(alias = "gsl_blas_sgemm")]

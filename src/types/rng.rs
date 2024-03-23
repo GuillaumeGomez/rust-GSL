@@ -70,8 +70,8 @@ http://csrc.nist.gov/rng/
 Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the source code to their generators (MT19937, MM&TN; TT800, MM&YK) available under the GNU General Public License. Thanks to Martin Lüscher for providing notes and source code for the RANLXS and RANLXD generators.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::os::raw::c_ulong;
 
 ffi_wrapper!(Rng, *mut sys::gsl_rng, gsl_rng_free);
@@ -158,7 +158,7 @@ impl Rng {
         unsafe {
             let tmp = sys::gsl_rng_name(self.unwrap_shared());
 
-            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
     }
 
@@ -842,7 +842,7 @@ impl RngType {
             String::new()
         } else {
             unsafe {
-                String::from_utf8_lossy(::std::ffi::CStr::from_ptr((*ptr).name).to_bytes())
+                String::from_utf8_lossy(std::ffi::CStr::from_ptr((*ptr).name).to_bytes())
                     .to_string()
             }
         }
@@ -947,7 +947,7 @@ impl RngType {
 /// The following generators are recommended for use in simulation. They have extremely long periods, low correlation and pass most statistical tests.
 /// For the most reliable source of uncorrelated numbers, the second-generation RANLUX generators have the strongest proof of randomness.
 pub mod algorithms {
-    use types::RngType;
+    use crate::types::RngType;
 
     /// The MT19937 generator of Makoto Matsumoto and Takuji Nishimura is a variant of the twisted generalized feedback shift-register algorithm, and
     /// is known as the “Mersenne Twister” generator. It has a Mersenne prime period of 2^19937 - 1 (about 10^6000) and is equi-distributed in 623 dimensions.
@@ -1174,7 +1174,7 @@ pub mod algorithms {
 /// randomness and aren’t suitable for work requiring accurate statistics. However, if you won’t be measuring statistical quantities and just
 /// want to introduce some variation into your program then these generators are quite acceptable.
 pub mod unix {
-    use types::RngType;
+    use crate::types::RngType;
 
     /// This is the BSD rand generator. Its sequence is
     ///
@@ -1282,7 +1282,7 @@ pub mod unix {
 /// 2^31 or 2^32). This leads to periodicity in the least significant bits of each number, with only the higher bits having any randomness.
 /// Thus if you want to produce a random bitstream it is best to avoid using the least significant bits.
 pub mod other {
-    use types::RngType;
+    use crate::types::RngType;
 
     /// This is the CRAY random number generator RANF. Its sequence is
     ///

@@ -28,8 +28,8 @@ The selection function determines which ntuple rows are selected for histogrammi
 Further information on the use of ntuples can be found in the documentation for the CERN packages PAW and HBOOK (available online).
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::ffi::CString;
 use std::mem::MaybeUninit;
 use std::os::raw::{c_char, c_void};
@@ -149,7 +149,7 @@ macro_rules! impl_project {
             #[doc(alias = "gsl_ntuple_project")]
             pub fn project<T: Sized, V: Fn(&T) -> f64, S: Fn(&T) -> bool>(
                 &self,
-                h: &mut ::Histogram,
+                h: &mut crate::Histogram,
                 value_func: V,
                 select_func: S,
             ) -> Result<(), Value> {

@@ -178,7 +178,7 @@ pub mod radix2 {
         data: &mut [f64],
         stride: usize,
         n: usize,
-        sign: ::FftDirection,
+        sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_transform(data.as_mut_ptr(), stride, n, sign.into())
@@ -211,7 +211,7 @@ pub mod radix2 {
         data: &mut [f64],
         stride: usize,
         n: usize,
-        sign: ::FftDirection,
+        sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_dif_transform(data.as_mut_ptr(), stride, n, sign.into())

@@ -3,8 +3,8 @@
 //
 
 pub fn subinterval_too_small(a1: f64, a2: f64, b2: f64) -> bool {
-    let e = ::DBL_EPSILON;
-    let u = ::DBL_MIN;
+    let e = crate::DBL_EPSILON;
+    let u = crate::DBL_MIN;
 
     let tmp = (1f64 + 100f64 * e) * (a2.abs() + 1000f64 * u);
 

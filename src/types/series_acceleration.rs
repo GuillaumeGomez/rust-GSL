@@ -49,8 +49,8 @@ A review paper on the Levin Transform is available online,
 Herbert H. H. Homeier, Scalar Levin-Type Sequence Transformations, http://arxiv.org/abs/math/0005209.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 ffi_wrapper!(
     LevinUWorkspace,

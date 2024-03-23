@@ -9,8 +9,8 @@ The roots of polynomial equations cannot be found analytically beyond the specia
 described in this section uses an iterative method to find the approximate locations of roots of higher order polynomials.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 ffi_wrapper!(
     PolyComplexWorkspace,

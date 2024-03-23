@@ -23,7 +23,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_m1_e")]
     pub fn fermi_dirac_m1_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_m1_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_m1_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -40,7 +40,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_0_e")]
     pub fn fermi_dirac_0_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_0_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_0_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -55,7 +55,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_1_e")]
     pub fn fermi_dirac_1_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_1_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_1_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -70,7 +70,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_2_e")]
     pub fn fermi_dirac_2_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_2_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_2_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -85,7 +85,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_int_e")]
     pub fn fermi_dirac_int_e(j: i32, x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_int_e(j, x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_int_e(j, x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -100,7 +100,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_mhalf_e")]
     pub fn fermi_dirac_mhalf_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_mhalf_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_mhalf_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -115,7 +115,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_half_e")]
     pub fn fermi_dirac_half_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_half_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_half_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -130,7 +130,7 @@ pub mod complete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_3half_e")]
     pub fn fermi_dirac_3half_e(x: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_3half_e(x, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_3half_e(x, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -153,7 +153,7 @@ pub mod incomplete_integrals {
     #[doc(alias = "gsl_sf_fermi_dirac_inc_0_e")]
     pub fn fermi_dirac_inc_0_e(x: f64, b: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_fermi_dirac_inc_0_e(x, b, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_fermi_dirac_inc_0_e(x, b, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }

@@ -40,7 +40,10 @@ pub fn log_abs_e(x: f64) -> Result<types::Result, Value> {
 /// This routine computes the complex logarithm of z = z_r + i z_i.
 /// The results are returned as lnr, theta such that \exp(lnr + i \theta) = z_r + i z_i, where \theta lies in the range [-\pi,\pi].
 #[doc(alias = "gsl_sf_complex_log_e")]
-pub fn complex_log_e(zr: f64, zi: f64) -> Result<(::types::Result, ::types::Result), Value> {
+pub fn complex_log_e(
+    zr: f64,
+    zi: f64,
+) -> Result<(crate::types::Result, crate::types::Result), Value> {
     let mut lnr = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let mut theta = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_complex_log_e(zr, zi, lnr.as_mut_ptr(), theta.as_mut_ptr()) };

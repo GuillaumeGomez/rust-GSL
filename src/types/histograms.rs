@@ -24,8 +24,8 @@ In this equation n_i is the number of events in the bin which contains x, w_i is
 The distribution of events within each bin is assumed to be uniform.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::io::{self, Write};
 
 ffi_wrapper!(Histogram, *mut sys::gsl_histogram, gsl_histogram_free);

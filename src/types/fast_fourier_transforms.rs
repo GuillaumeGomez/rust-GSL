@@ -2,9 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::paste::paste;
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
+use paste::paste;
 
 macro_rules! gsl_fft_wavetable {
     ($rust_name:ident, $name:ident, $complex_rust_name:ident, $complex_name:ident, $ty:ident $(, $extra:ident)?) => (
@@ -100,7 +100,7 @@ impl $complex_rust_name {
         stride: usize,
         n: usize,
         wavetable: &$rust_name,
-        sign: ::FftDirection,
+        sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::[<$name $($extra)? _transform>](

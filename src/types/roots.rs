@@ -41,8 +41,8 @@ solvers is held in a gsl_root_fdfsolver struct. The updates require both the fun
 its derivative (hence the name fdf) to be supplied by the user.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use sys::libc::{c_double, c_void};
 
 ffi_wrapper!(
@@ -174,7 +174,7 @@ impl<'a> RootFSolver<'a> {
         unsafe {
             let tmp = sys::gsl_root_fsolver_name(self.unwrap_shared());
 
-            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
     }
 
@@ -365,7 +365,7 @@ mod test {
     /// This doc block will be used to ensure that the closure can't be set everywhere!
     ///
     /// ```compile_fail
-    /// use rgsl::*;
+    /// use crate::rgsl::*;
     ///
     /// fn set(root: &mut RootFSolver) {
     ///     let y = "lalal".to_owned();
@@ -382,7 +382,7 @@ mod test {
     /// Same but a working version:
     ///
     /// ```
-    /// use rgsl::*;
+    /// use crate::rgsl::*;
     ///
     /// fn set(root: &mut RootFSolver) {
     ///     root.set(|x| x * x - 5., 0.0, 5.0);
@@ -393,7 +393,7 @@ mod test {
     /// let status = root.iterate();
     /// ```
     use super::*;
-    use roots::{test_delta, test_interval};
+    use crate::roots::{test_delta, test_interval};
 
     // support functions
     fn quadratic_test_fn(x: f64) -> f64 {

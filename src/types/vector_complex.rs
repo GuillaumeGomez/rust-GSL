@@ -2,9 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::paste::paste;
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
+use paste::paste;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
@@ -13,7 +13,7 @@ macro_rules! gsl_vec_complex {
     ($rust_name:ident, $name:ident, $complex:ident, $rust_ty:ident) => {
         paste! {
 
-        use types::$complex;
+        use crate::types::$complex;
 
         pub struct $rust_name {
             vec: *mut sys::$name,

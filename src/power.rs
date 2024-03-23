@@ -14,7 +14,7 @@ use std::mem::MaybeUninit;
 /// underflow conditions.
 ///
 /// ```rust
-/// use rgsl::power::pow_int;
+/// use crate::rgsl::power::pow_int;
 ///
 /// /* compute 3.0**12 */
 /// println!("{}", pow_int(3., 12));
@@ -30,7 +30,7 @@ pub fn pow_int(x: f64, n: i32) -> f64 {
 /// underflow conditions.
 ///
 /// ```rust
-/// use rgsl::power::pow_int_e;
+/// use crate::rgsl::power::pow_int_e;
 ///
 /// /* compute 3.0**12 */
 /// println!("{:?}", pow_int_e(3., 12));

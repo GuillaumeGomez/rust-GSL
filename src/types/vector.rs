@@ -30,13 +30,13 @@ vector points to a block owned by another object then the owner field is zero an
 vector.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
 
-use crate::paste::paste;
+use paste::paste;
 
 macro_rules! gsl_vec {
     ($rust_name:ident, $name:ident, $rust_ty:ident) => (

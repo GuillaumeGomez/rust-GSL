@@ -28,7 +28,7 @@ impl Result {
 }
 
 impl From<::sys::gsl_sf_result> for Result {
-    fn from(v: ::sys::gsl_sf_result) -> Self {
+    fn from(v: sys::gsl_sf_result) -> Self {
         Self {
             val: v.val,
             err: v.err,
@@ -65,7 +65,7 @@ impl ResultE10 {
 }
 
 impl From<::sys::gsl_sf_result_e10> for ResultE10 {
-    fn from(v: ::sys::gsl_sf_result_e10) -> Self {
+    fn from(v: sys::gsl_sf_result_e10) -> Self {
         Self {
             val: v.val,
             err: v.err,

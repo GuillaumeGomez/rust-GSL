@@ -18,8 +18,8 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 1998, CRC Press LLC, ISBN 084933988X
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::fmt::{self, Debug, Formatter};
 
 ffi_wrapper!(Combination, *mut sys::gsl_combination, gsl_combination_free);

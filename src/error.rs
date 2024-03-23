@@ -12,7 +12,7 @@ use std::os::raw::{c_char, c_int};
 /// This routine computes the error function erf(x), where erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
 #[doc(alias = "gsl_sf_erf")]
 pub fn erf(x: f64) -> f64 {
-    unsafe { ::sys::gsl_sf_erf(x) }
+    unsafe { sys::gsl_sf_erf(x) }
 }
 
 /// This routine computes the error function erf(x), where erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
@@ -27,7 +27,7 @@ pub fn erf_e(x: f64) -> Result<types::Result, Value> {
 /// This routine computes the complementary error function erfc(x) = 1 - erf(x) = (2/\sqrt(\pi)) \int_x^\infty \exp(-t^2).
 #[doc(alias = "gsl_sf_erfc")]
 pub fn erfc(x: f64) -> f64 {
-    unsafe { ::sys::gsl_sf_erfc(x) }
+    unsafe { sys::gsl_sf_erfc(x) }
 }
 
 /// This routine computes the complementary error function erfc(x) = 1 - erf(x) = (2/\sqrt(\pi)) \int_x^\infty \exp(-t^2).
@@ -42,7 +42,7 @@ pub fn erfc_e(x: f64) -> Result<types::Result, Value> {
 /// This routine computes the logarithm of the complementary error function \log(\erfc(x)).
 #[doc(alias = "gsl_sf_log_erfc")]
 pub fn log_erfc(x: f64) -> f64 {
-    unsafe { ::sys::gsl_sf_log_erfc(x) }
+    unsafe { sys::gsl_sf_log_erfc(x) }
 }
 
 /// This routine computes the logarithm of the complementary error function \log(\erfc(x)).
@@ -57,7 +57,7 @@ pub fn log_erfc_e(x: f64) -> Result<types::Result, Value> {
 /// This routine computes the Gaussian probability density function Z(x) = (1/\sqrt{2\pi}) \exp(-x^2/2).
 #[doc(alias = "gsl_sf_erf_Z")]
 pub fn erf_Z(x: f64) -> f64 {
-    unsafe { ::sys::gsl_sf_erf_Z(x) }
+    unsafe { sys::gsl_sf_erf_Z(x) }
 }
 
 /// This routine computes the Gaussian probability density function Z(x) = (1/\sqrt{2\pi}) \exp(-x^2/2).
@@ -78,7 +78,7 @@ pub fn erf_Z_e(x: f64) -> Result<types::Result, Value> {
 /// It decreases rapidly as x approaches -\infty and asymptotes to h(x) \sim x as x approaches +\infty.
 #[doc(alias = "gsl_sf_erf_Q")]
 pub fn erf_Q(x: f64) -> f64 {
-    unsafe { ::sys::gsl_sf_erf_Q(x) }
+    unsafe { sys::gsl_sf_erf_Q(x) }
 }
 
 /// This routine computes the upper tail of the Gaussian probability function Q(x) = (1/\sqrt{2\pi}) \int_x^\infty dt \exp(-t^2/2).
@@ -99,7 +99,7 @@ pub fn erf_Q_e(x: f64) -> Result<types::Result, Value> {
 /// This routine computes the hazard function for the normal distribution.
 #[doc(alias = "gsl_sf_hazard")]
 pub fn hazard(x: f64) -> f64 {
-    unsafe { ::sys::gsl_sf_hazard(x) }
+    unsafe { sys::gsl_sf_hazard(x) }
 }
 
 /// This routine computes the hazard function for the normal distribution.
@@ -173,8 +173,8 @@ static mut CALLBACK: Option<fn(&str, &str, u32, crate::Value)> = None;
 /// restore a new error handler,
 ///
 /// ```
-/// use rgsl::error::set_error_handler;
-/// use rgsl::Value;
+/// use crate::rgsl::error::set_error_handler;
+/// use crate::rgsl::Value;
 ///
 /// fn error_handling(error_str: &str, file: &str, line: u32, error_value: Value) {
 ///     println!("[{:?}] '{}:{}': {}", error_value, file, line, error_str);
@@ -193,7 +193,7 @@ static mut CALLBACK: Option<fn(&str, &str, u32, crate::Value)> = None;
 /// To use the default behavior (abort on error) set the error handler to NULL,
 ///
 /// ```
-/// # use rgsl::error::set_error_handler;
+/// # use crate::rgsl::error::set_error_handler;
 /// let old_handler = set_error_handler(None);
 /// ```
 #[doc(alias = "gsl_set_error_handler")]
@@ -249,7 +249,7 @@ extern "C" fn inner_error_handler(
 
 #[test]
 fn test_error_handler() {
-    use {bessel, Value};
+    use crate::{bessel, Value};
 
     set_error_handler_off();
     match bessel::K0_e(1e3) {

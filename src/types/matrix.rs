@@ -50,13 +50,13 @@ reference,
 B. Stroustrup, The C++ Programming Language (3rd Ed), Section 22.4 Vector Arithmetic. Addison-Wesley 1997, ISBN 0-201-88954-4.
 !*/
 
-use crate::paste::paste;
+use crate::ffi::{self, FFI};
+use crate::types::{VectorF32, VectorF64, VectorI32, VectorU32};
+use crate::types::{VectorF32View, VectorF64View, VectorI32View, VectorU32View};
 use crate::Value;
-use ffi::{self, FFI};
+use paste::paste;
 use std::fmt::{self, Debug, Formatter};
 use std::marker::PhantomData;
-use types::{VectorF32, VectorF64, VectorI32, VectorU32};
-use types::{VectorF32View, VectorF64View, VectorI32View, VectorU32View};
 
 macro_rules! gsl_matrix {
     ($rust_name:ident, $name:ident, $rust_ty:ident, $vec_name:ident, $vec_c_name:ident) => (

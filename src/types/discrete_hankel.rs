@@ -53,8 +53,8 @@ H. Fisk Johnson, Comp. Phys. Comm. 43, 181 (1987).
 D. Lemoine, J. Chem. Phys. 101, 3936 (1994).
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 ffi_wrapper!(DiscreteHankel, *mut sys::gsl_dht, gsl_dht_free);
 

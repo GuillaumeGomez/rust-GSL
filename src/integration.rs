@@ -80,8 +80,8 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 (2010), Issue 3, Article 26.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 /// This function applies the Gauss-Kronrod 10-point, 21-point, 43-point and 87-point integration
 /// rules in succession until an estimate of the integral of f over (a,b) is achieved within the
