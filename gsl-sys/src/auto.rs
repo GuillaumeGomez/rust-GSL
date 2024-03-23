@@ -21916,7 +21916,13 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_function_struct;
+pub struct gsl_multimin_function_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void) -> f64,
+    >,
+    pub n: usize,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_multimin_function = gsl_multimin_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
