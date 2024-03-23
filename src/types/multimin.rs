@@ -81,8 +81,8 @@ ffi_wrapper!(
 
 impl<'a> Minimizer<'a> {
     /// Creates a minimizer of type `t` for an n-dimensional function.
-	/// If there is insufficient memory to create the minimizer then 
-	/// the function returns a null pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    /// If there is insufficient memory to create the minimizer then 
+    /// the function returns a null pointer and the error handler is invoked with an error code of `Value::NoMemory`.
     #[doc(alias = "gsl_multimin_fminimizer_alloc")]
     pub fn new(t: MinimizerType, n : usize) -> Option<Minimizer<'a>> {
         let ptr = unsafe { sys::gsl_multimin_fminimizer_alloc(t.unwrap_shared(),n) };
@@ -94,9 +94,9 @@ impl<'a> Minimizer<'a> {
         }
     }
 
-	/// This function initializes the minimizer `s` to minimize the function `f`, starting from the initial point `x`. 
-	/// The size of the initial trial steps is given in vector `step_size`. The precise meaning of this 
-	/// parameter depends on the method used.
+    /// This function initializes the minimizer `s` to minimize the function `f`, starting from the initial point `x`. 
+    /// The size of the initial trial steps is given in vector `step_size`. The precise meaning of this 
+    /// parameter depends on the method used.
     #[doc(alias = "gsl_multimin_fminimizer_set")]
     pub fn set<F: Fn(&VectorF64) -> f64 + 'a>(
         &mut self,
@@ -110,8 +110,7 @@ impl<'a> Minimizer<'a> {
         ) -> f64 {
             let f : &F = &*(params as *const F);
             let x_new = VectorF64::soft_wrap(x as *const _ as *mut _);
-            let x = f(&x_new);
-            x
+            f(&x_new)
         }
         self.inner_call = sys::gsl_multimin_function_struct {
             f : Some(inner_f::<F>),
@@ -132,7 +131,7 @@ impl<'a> Minimizer<'a> {
         result_handler!(ret, ())
     }
 
-	/// This function returns a pointer to the name of the minimizer.
+    /// This function returns a pointer to the name of the minimizer.
     #[doc(alias = "gsl_multimin_fminimizer_name")]
     pub fn name(&self) -> Option<String> {
         let n = unsafe { sys::gsl_multimin_fminimizer_name(self.unwrap_shared()) };
@@ -165,10 +164,10 @@ impl<'a> Minimizer<'a> {
         unsafe { sys::gsl_multimin_fminimizer_size(self.unwrap_shared()) }
     }
 
-	/// This function performs a single iteration of the minimizer s. If the iteration encounters 
-	/// an unexpected problem then an error code will be returned. The error code `Value::NoProgress` 
-	/// signifies that the minimizer is unable to improve on its current estimate, either due 
-	/// to numerical difficulty or because a genuine local minimum has been reached.
+    /// This function performs a single iteration of the minimizer s. If the iteration encounters 
+    /// an unexpected problem then an error code will be returned. The error code `Value::NoProgress` 
+    /// signifies that the minimizer is unable to improve on its current estimate, either due 
+    /// to numerical difficulty or because a genuine local minimum has been reached.
     #[doc(alias = "gsl_multimin_fminimizer_iterate")]
     pub fn iterate(&mut self) -> Result<(), Value> {
         let ret = unsafe { sys::gsl_multimin_fminimizer_iterate(self.unwrap_unique()) };
@@ -200,37 +199,37 @@ mod test {
     /// This doc block will be used to ensure that the closure can't be set everywhere!
     ///
     /// ```compile_fail
-	/// extern crate rgsl;
-	/// use rgsl::types::multimin::{Minimizer,MinimizerType};
+    /// extern crate rgsl;
+    /// use rgsl::types::multimin::{Minimizer,MinimizerType};
     ///
-	/// fn set(m: &mut Minimizer) {
-	/// 	let dummy = "lalal".to_owned();
-    /// 	m.set(|x| {
-   	/// 	println!("==> {:?}", dummy);
-   	/// 	x.get(0) + x.get(1)}, 
-	/// 	&rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap(),
-	/// 	&rgsl::VectorF64::from_slice(&[1.0, 1.0]).unwrap()).unwrap();
+    /// fn set(m: &mut Minimizer) {
+    ///     let dummy = "lalal".to_owned();
+    ///     m.set(|x| {
+    ///     println!("==> {:?}", dummy);
+    ///     x.get(0) + x.get(1)}, 
+    ///     &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap(),
+    ///     &rgsl::VectorF64::from_slice(&[1.0, 1.0]).unwrap()).unwrap();
     ///
-    /// 	let mut mint = Minimizer::new(MinimizerType::nm_simplex(), 2).unwrap();
-    /// 	set(&mut mint);
-    /// 	let _status = mint.iterate();
+    ///     let mut mint = Minimizer::new(MinimizerType::nm_simplex(), 2).unwrap();
+    ///     set(&mut mint);
+    ///     let _status = mint.iterate();
     /// ```
     ///
     /// Same but a working version:
     ///
     /// ```
-	/// extern crate rgsl;
-	/// use rgsl::types::multimin::{Minimizer,MinimizerType};
+    /// extern crate rgsl;
+    /// use rgsl::types::multimin::{Minimizer,MinimizerType};
     ///
-	/// fn set(m: &mut Minimizer) {
-    /// 	m.set(|x| {
-   	/// 	x.get(0) + x.get(1)}, 
-	/// 	&rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap(),
-	/// 	&rgsl::VectorF64::from_slice(&[1.0, 1.0]).unwrap()).unwrap();
+    /// fn set(m: &mut Minimizer) {
+    ///     m.set(|x| {
+    ///     x.get(0) + x.get(1)}, 
+    ///     &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap(),
+    ///     &rgsl::VectorF64::from_slice(&[1.0, 1.0]).unwrap()).unwrap();
     ///
-    /// 	let mut mint = Minimizer::new(MinimizerType::nm_simplex(), 2).unwrap();
-    /// 	set(&mut mint);
-    /// 	let _status = mint.iterate();
+    ///     let mut mint = Minimizer::new(MinimizerType::nm_simplex(), 2).unwrap();
+    ///     set(&mut mint);
+    ///     let _status = mint.iterate();
     /// }
     /// ```
     use super::*;
@@ -253,18 +252,18 @@ mod test {
         let mut min = Minimizer::new(MinimizerType::nm_simplex2(),2).unwrap();
         let guess_value = VectorF64::from_slice(&[5.0,7.0]).unwrap();
         let step_size = VectorF64::from_slice(&[1.0,1.0]).unwrap();
-	
+    
 
-		let paraboloid = |v: &VectorF64| -> f64 {
-			let center = (1.0,2.0);
-			let scale = (10.0,20.0);
-			let minimum = 30.0;
+        let paraboloid = |v: &VectorF64| -> f64 {
+            let center = (1.0,2.0);
+            let scale = (10.0,20.0);
+            let minimum = 30.0;
 
-			let x = v.get(0);
-			let y = v.get(1);
-			let result = scale.0 * (x-center.0).powf(2.0) + scale.1*(y-center.1).powf(2.0) + minimum;
-			result
-		};
+            let x = v.get(0);
+            let y = v.get(1);
+            let result = scale.0 * (x-center.0).powf(2.0) + scale.1*(y-center.1).powf(2.0) + minimum;
+            result
+        };
 
         min.set(paraboloid, &guess_value, &step_size).unwrap();
 
