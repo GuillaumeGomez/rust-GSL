@@ -96,8 +96,8 @@ somewhere in the interval. If a valid initial interval is used then these algori
 provided the function is well-behaved.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 ffi_wrapper!(
     Minimizer<'a>,
@@ -119,7 +119,7 @@ impl<'a> Minimizer<'a> {
     /// ```
     ///
     /// If there is insufficient memory to create the minimizer then the function returns a null
-    /// pointer and the error handler is invoked with an error code of ::NoMem.
+    /// pointer and the error handler is invoked with an error code of crate::NoMem.
     #[doc(alias = "gsl_min_fminimizer_alloc")]
     pub fn new(t: MinimizerType) -> Option<Minimizer<'a>> {
         let ptr = unsafe { sys::gsl_min_fminimizer_alloc(t.unwrap_shared()) };
@@ -285,8 +285,8 @@ mod test {
     /// This doc block will be used to ensure that the closure can't be set everywhere!
     ///
     /// ```compile_fail
-    /// use rgsl::*;
-    /// use rgsl::minimizer::test_interval;
+    /// use crate::rgsl::*;
+    /// use crate::rgsl::minimizer::test_interval;
     ///
     /// fn set(min: &mut Minimizer) {
     ///     let y = "lalal".to_owned();
@@ -304,8 +304,8 @@ mod test {
     /// Same but a working version:
     ///
     /// ```
-    /// use rgsl::*;
-    /// use rgsl::minimizer::test_interval;
+    /// use crate::rgsl::*;
+    /// use crate::rgsl::minimizer::test_interval;
     ///
     /// fn set(min: &mut Minimizer) {
     ///     min.set(|x| x * x - 5., 1.0, -5.0, 5.0);
@@ -316,7 +316,7 @@ mod test {
     /// let status = min.iterate();
     /// ```
     use super::*;
-    use minimizer::test_interval;
+    use crate::minimizer::test_interval;
 
     fn quadratic_test_fn(x: f64) -> f64 {
         x.powf(2.0) - 5.0

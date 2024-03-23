@@ -66,8 +66,8 @@ You must provide a parametric function of n variables for the minimizers to oper
 
 */
 
+use crate::ffi::FFI;
 use crate::{Value, VectorF64, View};
-use ffi::FFI;
 use sys::libc::c_void;
 
 ffi_wrapper!(
@@ -199,7 +199,7 @@ mod test {
     ///
     /// ```compile_fail
     /// extern crate rgsl;
-    /// use rgsl::types::multimin::{Minimizer,MinimizerType};
+    /// use crate::rgsl::types::multimin::{Minimizer,MinimizerType};
     ///
     /// fn set(m: &mut Minimizer) {
     ///     let dummy = "lalal".to_owned();
@@ -218,7 +218,7 @@ mod test {
     ///
     /// ```
     /// extern crate rgsl;
-    /// use rgsl::types::multimin::{Minimizer,MinimizerType};
+    /// use crate::rgsl::types::multimin::{Minimizer,MinimizerType};
     ///
     /// fn set(m: &mut Minimizer) {
     ///     m.set(|x| {
@@ -232,7 +232,7 @@ mod test {
     /// }
     /// ```
     use super::*;
-    use multimin::test_size;
+    use crate::multimin::test_size;
 
     fn print_state(min: &Minimizer, iter: usize) {
         let f = min.minimum();

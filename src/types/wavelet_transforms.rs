@@ -52,7 +52,7 @@ Goldberger et al. PhysioBank, PhysioToolkit, and PhysioNet: Components of a New 
 Circulation 101(23):e215-e220 2000.
 !*/
 
-use ffi::FFI;
+use crate::ffi::FFI;
 
 ffi_wrapper!(
     Wavelet,
@@ -85,9 +85,7 @@ impl Wavelet {
             None
         } else {
             unsafe {
-                Some(
-                    String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string(),
-                )
+                Some(String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string())
             }
         }
     }

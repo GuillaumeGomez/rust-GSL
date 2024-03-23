@@ -5,8 +5,8 @@
 #![allow(clippy::upper_case_acronyms)]
 
 use crate::enums;
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 ffi_wrapper!(IntegrationFixedType, *const sys::gsl_integration_fixed_type);
 
@@ -87,7 +87,7 @@ impl IntegrationFixedWorkspace {
         if tmp.is_null() {
             return None;
         }
-        unsafe { Some(::std::slice::from_raw_parts(tmp, self.n())) }
+        unsafe { Some(std::slice::from_raw_parts(tmp, self.n())) }
     }
 
     #[doc(alias = "gsl_integration_fixed_weights")]
@@ -96,7 +96,7 @@ impl IntegrationFixedWorkspace {
         if tmp.is_null() {
             return None;
         }
-        unsafe { Some(::std::slice::from_raw_parts(tmp, self.n())) }
+        unsafe { Some(std::slice::from_raw_parts(tmp, self.n())) }
     }
 
     #[doc(alias = "gsl_integration_fixed")]
@@ -597,21 +597,21 @@ impl IntegrationQawoTable {
     /// should be chosen from one of the two following symbolic values:
     ///
     /// ```text
-    /// ::Cosine
-    /// ::IntegrationQawo::Sine
+    /// crate::Cosine
+    /// crate::IntegrationQawo::Sine
     /// ```
     ///
     /// The gsl_integration_qawo_table is a table of the trigonometric coefficients required in the
     /// integration process. The parameter n determines the number of levels of coefficients that
     /// are computed. Each level corresponds to one bisection of the interval L, so that n levels
     /// are sufficient for subintervals down to the length L/2^n. The integration routine
-    /// gsl_integration_qawo returns the error ::Table if the number of levels is insufficient for
+    /// gsl_integration_qawo returns the error crate::Table if the number of levels is insufficient for
     /// the requested accuracy.
     #[doc(alias = "gsl_integration_qawo_table_alloc")]
     pub fn new(
         omega: f64,
         l: f64,
-        sine: ::IntegrationQawo,
+        sine: crate::IntegrationQawo,
         n: usize,
     ) -> Option<IntegrationQawoTable> {
         let tmp = unsafe { sys::gsl_integration_qawo_table_alloc(omega, l, sine.into(), n) };
@@ -625,7 +625,7 @@ impl IntegrationQawoTable {
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
     #[doc(alias = "gsl_integration_qawo_table_set")]
-    pub fn set(&mut self, omega: f64, l: f64, sine: ::IntegrationQawo) -> Result<(), Value> {
+    pub fn set(&mut self, omega: f64, l: f64, sine: crate::IntegrationQawo) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_integration_qawo_table_set(self.unwrap_unique(), omega, l, sine.into())
         };

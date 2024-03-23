@@ -16,8 +16,8 @@ The radial Mathieu functions Mc^{(j)}_{r}(z,q), Ms^{(j)}_{r}(z,q) are the soluti
 For more information on the Mathieu functions, see Abramowitz and Stegun, Chapter 20.
 !*/
 
+use crate::ffi::FFI;
 use crate::{types, Value};
-use ffi::FFI;
 use std::mem::MaybeUninit;
 
 ffi_wrapper!(MathieuWorkspace, *mut sys::gsl_sf_mathieu_workspace, gsl_sf_mathieu_free,

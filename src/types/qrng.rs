@@ -18,8 +18,8 @@ P. Bratley and B.L. Fox and H. Niederreiter, “Algorithm 738: Programs to Gener
 Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–495.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 ffi_wrapper!(QRng, *mut sys::gsl_qrng, gsl_qrng_free);
 
@@ -64,9 +64,7 @@ impl QRng {
             None
         } else {
             unsafe {
-                Some(
-                    String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string(),
-                )
+                Some(String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string())
             }
         }
     }

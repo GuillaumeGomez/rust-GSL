@@ -2,8 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::ffi::FFI;
 use crate::{Value, VectorF64};
-use ffi::FFI;
 
 /// This function constructs a Gaussian kernel parameterized by `alpha` and stores the output in
 /// `kernel`. The parameter `order` specifies the derivative order, with `0` corresponding to a

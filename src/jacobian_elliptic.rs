@@ -17,6 +17,6 @@ pub fn elljac_e(u: f64, m: f64) -> Result<(f64, f64, f64), Value> {
     let mut sn = 0.;
     let mut cn = 0.;
     let mut dn = 0.;
-    let ret = unsafe { crate::sys::gsl_sf_elljac_e(u, m, &mut sn, &mut cn, &mut dn) };
+    let ret = unsafe { sys::gsl_sf_elljac_e(u, m, &mut sn, &mut cn, &mut dn) };
     result_handler!(ret, (sn, cn, dn))
 }

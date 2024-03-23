@@ -2,8 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 /// This function returns the index i of the array x_array such that `x_array[i] <= x < x_array[i+1]`.
 /// The index is searched for in the range `[index_lo,index_hi]`.
@@ -14,9 +14,15 @@ pub fn bsearch(x_array: &[f64], x: f64, index_lo: usize, index_hi: usize) -> usi
 
 /// This function returns the interpolated value of y for a given point x, using the interpolation
 /// object interp, data arrays xa and ya and the accelerator acc. When x is outside the range of xa,
-/// the error code ::Dom is returned with a value of rgsl::NAN for y.
+/// the error code crate::Dom is returned with a value of rgsl::NAN for y.
 #[doc(alias = "gsl_interp_eval")]
-pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::InterpAccel) -> f64 {
+pub fn eval(
+    interp: &crate::Interp,
+    xa: &[f64],
+    ya: &[f64],
+    x: f64,
+    acc: &mut crate::InterpAccel,
+) -> f64 {
     unsafe {
         sys::gsl_interp_eval(
             interp.unwrap_shared(),
@@ -30,16 +36,16 @@ pub fn eval(interp: &::Interp, xa: &[f64], ya: &[f64], x: f64, acc: &mut ::Inter
 
 /// This function returns the interpolated value of y for a given point x, using the interpolation
 /// object interp, data arrays xa and ya and the accelerator acc. When x is outside the range of xa,
-/// the error code ::Dom is returned with a value of rgsl::NAN for y.
+/// the error code crate::Dom is returned with a value of rgsl::NAN for y.
 ///
 /// Returns `y`.
 #[doc(alias = "gsl_interp_eval_e")]
 pub fn eval_e(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> Result<f64, Value> {
     let mut y = 0.;
     let ret = unsafe {
@@ -59,11 +65,11 @@ pub fn eval_e(
 /// the interpolation object interp, data arrays xa and ya and the accelerator acc.
 #[doc(alias = "gsl_interp_eval_deriv")]
 pub fn eval_deriv(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> f64 {
     unsafe {
         sys::gsl_interp_eval_deriv(
@@ -82,11 +88,11 @@ pub fn eval_deriv(
 /// Returns `(Value, d)`.
 #[doc(alias = "gsl_interp_eval_deriv_e")]
 pub fn eval_deriv_e(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> Result<f64, Value> {
     let mut d = 0.;
     let ret = unsafe {
@@ -106,11 +112,11 @@ pub fn eval_deriv_e(
 /// using the interpolation object interp, data arrays xa and ya and the accelerator acc.
 #[doc(alias = "gsl_interp_eval_deriv2")]
 pub fn eval_deriv2(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> f64 {
     unsafe {
         sys::gsl_interp_eval_deriv2(
@@ -129,11 +135,11 @@ pub fn eval_deriv2(
 /// Returns `(Value, d2)`.
 #[doc(alias = "gsl_interp_eval_deriv2_e")]
 pub fn eval_deriv2_e(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     x: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> Result<f64, Value> {
     let mut d2 = 0.;
     let ret = unsafe {
@@ -153,12 +159,12 @@ pub fn eval_deriv2_e(
 /// [a, b], using the interpolation object interp, data arrays xa and ya and the accelerator acc.
 #[doc(alias = "gsl_interp_eval_integ")]
 pub fn eval_integ(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     a: f64,
     b: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> f64 {
     unsafe {
         sys::gsl_interp_eval_integ(
@@ -178,12 +184,12 @@ pub fn eval_integ(
 /// Returns `(Value, result)`.
 #[doc(alias = "gsl_interp_eval_integ_e")]
 pub fn eval_integ_e(
-    interp: &::Interp,
+    interp: &crate::Interp,
     xa: &[f64],
     ya: &[f64],
     a: f64,
     b: f64,
-    acc: &mut ::InterpAccel,
+    acc: &mut crate::InterpAccel,
 ) -> Result<f64, Value> {
     let mut result = 0.;
     let ret = unsafe {

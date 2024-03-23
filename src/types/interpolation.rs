@@ -37,8 +37,8 @@ C.W. Ueberhuber, Numerical Computation (Volume 1), Chapter 9 “Interpolation”
 D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6.8, Dover (1988), ISBN 0-486-65691-8.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 
 /// Evaluation accelerator.
 #[derive(Clone)]
@@ -81,7 +81,7 @@ impl Interp {
     /// size data-points.
     ///
     /// ```
-    /// use rgsl::{Interp, InterpType};
+    /// use crate::rgsl::{Interp, InterpType};
     ///
     /// let interp_type = InterpType::linear();
     /// let interp = Interp::new(interp_type, 2).expect("Failed to initialize `Interp`...");
@@ -121,7 +121,7 @@ impl Interp {
     /// This function returns the name of the interpolation type used by interp. For example,
     ///
     /// ```
-    /// use rgsl::{Interp, InterpType};
+    /// use crate::rgsl::{Interp, InterpType};
     ///
     /// let interp_type = InterpType::linear();
     /// let interp = Interp::new(interp_type, 2).expect("Failed to initialize `Interp`...");
@@ -140,9 +140,7 @@ impl Interp {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe {
-                String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
-            }
+            unsafe { String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string() }
         }
     }
 
@@ -253,9 +251,7 @@ impl Spline {
         if tmp.is_null() {
             String::new()
         } else {
-            unsafe {
-                String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
-            }
+            unsafe { String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string() }
         }
     }
 

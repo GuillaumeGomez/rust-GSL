@@ -2,8 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::ffi::FFI;
 use crate::{FilterEnd, FilterScale, Value, VectorF64, VectorI32};
-use ffi::FFI;
 
 ffi_wrapper!(
     FilterGaussianWorkspace,

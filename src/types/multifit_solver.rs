@@ -213,13 +213,13 @@ int main(void) {
 ```
 */
 
+use crate::ffi::{self, FFI};
 use crate::{Value, VectorF64, View};
-use ffi::{self, FFI};
 use std::os::raw::{c_int, c_void};
 
 ffi_wrapper!(MultiFitFSolverType, *mut sys::gsl_multifit_fsolver_type);
 
-// pub struct MultiFitFunction<F: Fn(x: &::VectorF64, f: &mut crate::VectorF64)> {
+// pub struct MultiFitFunction<F: Fn(x: &crate::VectorF64, f: &mut crate::VectorF64)> {
 //     pub f: Box<F>,
 //     /// Number of functions.
 //     pub n: usize,
@@ -279,7 +279,7 @@ impl MultiFitFSolver {
         unsafe {
             let tmp = sys::gsl_multifit_fsolver_name(self.unwrap_shared());
 
-            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
     }
 
@@ -344,7 +344,7 @@ impl MultiFitFdfSolver {
         unsafe {
             let tmp = sys::gsl_multifit_fdfsolver_name(self.unwrap_shared());
 
-            String::from_utf8_lossy(::std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
+            String::from_utf8_lossy(std::ffi::CStr::from_ptr(tmp).to_bytes()).to_string()
         }
     }
 
@@ -415,9 +415,9 @@ impl MultiFitFdfSolverType {
 }
 
 pub struct MultiFitFunctionFdf {
-    pub f: Option<Box<dyn Fn(::VectorF64, crate::VectorF64) -> Value>>,
-    pub df: Option<Box<dyn Fn(::VectorF64, crate::MatrixF64) -> Value>>,
-    pub fdf: Option<Box<dyn Fn(::VectorF64, crate::VectorF64, crate::MatrixF64) -> Value>>,
+    pub f: Option<Box<dyn Fn(crate::VectorF64, crate::VectorF64) -> Value>>,
+    pub df: Option<Box<dyn Fn(crate::VectorF64, crate::MatrixF64) -> Value>>,
+    pub fdf: Option<Box<dyn Fn(crate::VectorF64, crate::VectorF64, crate::MatrixF64) -> Value>>,
     pub n: usize,
     pub p: usize,
     intern: sys::gsl_multifit_function_fdf,

@@ -47,9 +47,9 @@ A large collection of B-spline routines is available in the PPPACK library avail
 http://www.netlib.org/pppack, which is also part of SLATEC.
 !*/
 
+use crate::ffi::FFI;
+use crate::types::VectorF64;
 use crate::Value;
-use ffi::FFI;
-use types::VectorF64;
 
 ffi_wrapper!(
     BSpLineWorkspace,

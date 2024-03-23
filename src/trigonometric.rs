@@ -2,9 +2,9 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::types;
 use crate::Value;
 use std::mem::MaybeUninit;
-use types;
 
 pub trait Trigonometric {
     /// This routine computes the sine function \sin(x).
@@ -71,52 +71,52 @@ pub trait Trigonometric {
 impl Trigonometric for f64 {
     #[doc(alias = "gsl_sf_sin")]
     fn sin(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_sin(*self) }
+        unsafe { sys::gsl_sf_sin(*self) }
     }
 
     #[doc(alias = "gsl_sf_sin_e")]
     fn sin_e(&self) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_sin_e(*self, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_sin_e(*self, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     #[doc(alias = "gsl_sf_cos")]
     fn cos(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_cos(*self) }
+        unsafe { sys::gsl_sf_cos(*self) }
     }
 
     #[doc(alias = "gsl_sf_cos_e")]
     fn cos_e(&self) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_cos_e(*self, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_cos_e(*self, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     #[doc(alias = "gsl_sf_hypot")]
     fn sf_hypot(&self, y: f64) -> f64 {
-        unsafe { ::sys::gsl_sf_hypot(*self, y) }
+        unsafe { sys::gsl_sf_hypot(*self, y) }
     }
 
     #[doc(alias = "gsl_sf_hypot_e")]
     fn sf_hypot_e(&self, y: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_hypot_e(*self, y, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_hypot_e(*self, y, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     #[doc(alias = "gsl_sf_sinc")]
     fn sinc(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_sinc(*self) }
+        unsafe { sys::gsl_sf_sinc(*self) }
     }
 
     #[doc(alias = "gsl_sf_sinc_e")]
     fn sinc_e(&self) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_sinc_e(*self, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_sinc_e(*self, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -126,7 +126,7 @@ impl Trigonometric for f64 {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let mut result2 = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe {
-            ::sys::gsl_sf_complex_sin_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
+            sys::gsl_sf_complex_sin_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
         };
 
         result_handler!(
@@ -143,7 +143,7 @@ impl Trigonometric for f64 {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let mut result2 = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe {
-            ::sys::gsl_sf_complex_cos_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
+            sys::gsl_sf_complex_cos_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
         };
 
         result_handler!(
@@ -160,7 +160,7 @@ impl Trigonometric for f64 {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let mut result2 = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe {
-            ::sys::gsl_sf_complex_logsin_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
+            sys::gsl_sf_complex_logsin_e(*self, zi, result.as_mut_ptr(), result2.as_mut_ptr())
         };
 
         result_handler!(
@@ -174,26 +174,26 @@ impl Trigonometric for f64 {
 
     #[doc(alias = "gsl_sf_lnsinh")]
     fn lnsinh(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_lnsinh(*self) }
+        unsafe { sys::gsl_sf_lnsinh(*self) }
     }
 
     #[doc(alias = "gsl_sf_lnsinh_e")]
     fn lnsinh_e(&self) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_lnsinh_e(*self, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_lnsinh_e(*self, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
 
     #[doc(alias = "gsl_sf_lncosh")]
     fn lncosh(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_lncosh(*self) }
+        unsafe { sys::gsl_sf_lncosh(*self) }
     }
 
     #[doc(alias = "gsl_sf_lncosh_e")]
     fn lncosh_e(&self) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_lncosh_e(*self, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_lncosh_e(*self, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -203,7 +203,7 @@ impl Trigonometric for f64 {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let mut result2 = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe {
-            ::sys::gsl_sf_polar_to_rect(*self, theta, result.as_mut_ptr(), result2.as_mut_ptr())
+            sys::gsl_sf_polar_to_rect(*self, theta, result.as_mut_ptr(), result2.as_mut_ptr())
         };
 
         result_handler!(
@@ -220,7 +220,7 @@ impl Trigonometric for f64 {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let mut result2 = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe {
-            ::sys::gsl_sf_rect_to_polar(*self, y, result.as_mut_ptr(), result2.as_mut_ptr())
+            sys::gsl_sf_rect_to_polar(*self, y, result.as_mut_ptr(), result2.as_mut_ptr())
         };
 
         result_handler!(
@@ -234,30 +234,30 @@ impl Trigonometric for f64 {
 
     #[doc(alias = "gsl_sf_angle_restrict_symm")]
     fn angle_restrict_symm(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_angle_restrict_symm(*self) }
+        unsafe { sys::gsl_sf_angle_restrict_symm(*self) }
     }
 
     #[doc(alias = "gsl_sf_angle_restrict_symm_e")]
     fn angle_restrict_symm_e(&mut self) -> Result<(), Value> {
-        let ret = unsafe { ::sys::gsl_sf_angle_restrict_symm_e(self) };
+        let ret = unsafe { sys::gsl_sf_angle_restrict_symm_e(self) };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_sf_angle_restrict_pos")]
     fn angle_restrict_pos(&self) -> f64 {
-        unsafe { ::sys::gsl_sf_angle_restrict_pos(*self) }
+        unsafe { sys::gsl_sf_angle_restrict_pos(*self) }
     }
 
     #[doc(alias = "gsl_sf_angle_restrict_pos_e")]
     fn angle_restrict_pos_e(&mut self) -> Result<(), Value> {
-        let ret = unsafe { ::sys::gsl_sf_angle_restrict_pos_e(self) };
+        let ret = unsafe { sys::gsl_sf_angle_restrict_pos_e(self) };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_sf_sin_err_e")]
     fn sin_err_e(&self, dx: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_sin_err_e(*self, dx, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_sin_err_e(*self, dx, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }
@@ -265,7 +265,7 @@ impl Trigonometric for f64 {
     #[doc(alias = "gsl_sf_cos_err_e")]
     fn cos_err_e(&self, dx: f64) -> Result<types::Result, Value> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-        let ret = unsafe { ::sys::gsl_sf_cos_err_e(*self, dx, result.as_mut_ptr()) };
+        let ret = unsafe { sys::gsl_sf_cos_err_e(*self, dx, result.as_mut_ptr()) };
 
         result_handler!(ret, unsafe { result.assume_init() }.into())
     }

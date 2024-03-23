@@ -17,7 +17,7 @@ pub fn hyperg_0F1(c: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_0F1_e")]
 pub fn hyperg_0F1_e(c: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_0F1_e(c, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_0F1_e(c, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -32,7 +32,7 @@ pub fn hyperg_1F1_int(m: i32, n: i32, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_1F1_int_e")]
 pub fn hyperg_1F1_int_e(m: i32, n: i32, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_1F1_int_e(m, n, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_1F1_int_e(m, n, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -47,7 +47,7 @@ pub fn hyperg_1F1(a: f64, b: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_1F1_e")]
 pub fn hyperg_1F1_e(a: f64, b: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_1F1_e(a, b, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_1F1_e(a, b, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -62,7 +62,7 @@ pub fn hyperg_U_int(m: i32, n: i32, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_U_int_e")]
 pub fn hyperg_U_int_e(m: i32, n: i32, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_U_int_e(m, n, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_U_int_e(m, n, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -72,7 +72,7 @@ pub fn hyperg_U_int_e(m: i32, n: i32, x: f64) -> Result<types::Result, Value> {
 #[doc(alias = "gsl_sf_hyperg_U_int_e10_e")]
 pub fn hyperg_U_int_e10_e(m: i32, n: i32, x: f64) -> Result<types::ResultE10, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_U_int_e10_e(m, n, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_U_int_e10_e(m, n, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -87,7 +87,7 @@ pub fn hyperg_U(a: f64, b: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_U_e")]
 pub fn hyperg_U_e(a: f64, b: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_U_e(a, b, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_U_e(a, b, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -97,7 +97,7 @@ pub fn hyperg_U_e(a: f64, b: f64, x: f64) -> Result<types::Result, Value> {
 #[doc(alias = "gsl_sf_hyperg_U_e10_e")]
 pub fn hyperg_U_e10_e(a: f64, b: f64, x: f64) -> Result<types::ResultE10, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_U_e10_e(a, b, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_U_e10_e(a, b, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -120,7 +120,7 @@ pub fn hyperg_2F1(a: f64, b: f64, c: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_2F1_e")]
 pub fn hyperg_2F1_e(a: f64, b: f64, c: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_2F1_e(a, b, c, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_2F1_e(a, b, c, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -135,7 +135,7 @@ pub fn hyperg_2F1_conj(aR: f64, aI: f64, c: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_2F1_conj_e")]
 pub fn hyperg_2F1_conj_e(aR: f64, aI: f64, c: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_2F1_conj_e(aR, aI, c, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_2F1_conj_e(aR, aI, c, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -150,7 +150,7 @@ pub fn hyperg_2F1_renorm(a: f64, b: f64, c: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_2F1_renorm_e")]
 pub fn hyperg_2F1_renorm_e(a: f64, b: f64, c: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_2F1_renorm_e(a, b, c, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_2F1_renorm_e(a, b, c, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -165,7 +165,7 @@ pub fn hyperg_2F1_conj_renorm(aR: f64, aI: f64, c: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_2F1_conj_renorm_e")]
 pub fn hyperg_2F1_conj_renorm_e(aR: f64, aI: f64, c: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_2F1_conj_renorm_e(aR, aI, c, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_2F1_conj_renorm_e(aR, aI, c, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }
@@ -182,7 +182,7 @@ pub fn hyperg_2F0(a: f64, b: f64, x: f64) -> f64 {
 #[doc(alias = "gsl_sf_hyperg_2F0_e")]
 pub fn hyperg_2F0_e(a: f64, b: f64, x: f64) -> Result<types::Result, Value> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
-    let ret = unsafe { ::sys::gsl_sf_hyperg_2F0_e(a, b, x, result.as_mut_ptr()) };
+    let ret = unsafe { sys::gsl_sf_hyperg_2F0_e(a, b, x, result.as_mut_ptr()) };
 
     result_handler!(ret, unsafe { result.assume_init() }.into())
 }

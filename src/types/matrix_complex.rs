@@ -2,16 +2,16 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::paste::paste;
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
+use paste::paste;
 use std::fmt::{self, Debug, Formatter};
 
 macro_rules! gsl_matrix_complex {
     ($rust_name:ident, $name:ident, $complex:ident, $complex_c:ident) => (
 paste! {
 
-use types::{$complex, [<Vector $complex>], [<Vector $complex View>]};
+use crate::types::{$complex, [<Vector $complex>], [<Vector $complex View>]};
 
 ffi_wrapper!(
     $rust_name,

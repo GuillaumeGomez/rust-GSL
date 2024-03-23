@@ -3,8 +3,6 @@
 //
 
 #![crate_name = "rgsl"]
-#![crate_type = "rlib"]
-#![crate_type = "dylib"]
 #![cfg_attr(feature = "dox", feature(doc_cfg))]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
@@ -14,9 +12,6 @@
 #![allow(clippy::should_implement_trait)]
 #![allow(clippy::type_complexity)]
 #![doc = include_str!("../README.md")]
-
-extern crate gsl_sys as sys;
-extern crate paste;
 
 pub use self::types::*;
 

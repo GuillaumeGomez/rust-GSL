@@ -56,8 +56,8 @@ The state for solvers which do not use an analytic Jacobian matrix is held in a
 The algorithms estimate the matrix J or J^{-1} by approximate methods.
 !*/
 
+use crate::ffi::FFI;
 use crate::{Value, VectorF64, View};
-use ffi::FFI;
 use sys::libc::{c_int, c_void};
 
 ffi_wrapper!(
@@ -239,8 +239,8 @@ mod tests {
     /// This doc block will be used to ensure that the closure can't be set everywhere!
     ///
     /// ```compile_fail
-    /// use rgsl::*;
-    /// use rgsl::types::multiroot::{MultiRootFSolver, MultiRootFSolverType};
+    /// use crate::rgsl::*;
+    /// use crate::rgsl::types::multiroot::{MultiRootFSolver, MultiRootFSolverType};
     ///
     /// fn set(root: &mut MultiRootFSolver) {
     ///     let dummy = "lalal".to_owned();
@@ -259,8 +259,8 @@ mod tests {
     /// Same but a working version:
     ///
     /// ```
-    /// use rgsl::types::multiroot::{MultiRootFSolver, MultiRootFSolverType};
-    /// use rgsl::*;
+    /// use crate::rgsl::types::multiroot::{MultiRootFSolver, MultiRootFSolverType};
+    /// use crate::rgsl::*;
     ///
     /// fn set(root: &mut MultiRootFSolver) {
     ///     root.set(|x, y| {
@@ -275,7 +275,7 @@ mod tests {
     /// ```
     ///
     use super::*;
-    use multiroot::test_residual;
+    use crate::multiroot::test_residual;
 
     /// checking a test function
     /// must return a success criteria (or failure)

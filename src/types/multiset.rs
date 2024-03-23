@@ -11,8 +11,8 @@ vector with replacement. In mathematical terms, n is the cardinality of the mult
 Multisets are useful, for example, when iterating over the indices of a k-th order symmetric tensor in n-space.
 !*/
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::io;
 
 ffi_wrapper!(MultiSet, *mut sys::gsl_multiset, gsl_multiset_free);

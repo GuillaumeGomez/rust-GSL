@@ -26,9 +26,9 @@ R. L. Burden and J. D. Faires, Numerical Analysis, 9th edition, ISBN 0-538-73351
 /// `P(x) = c[0] + c[1] x + c[2] x^2 + \dots + c[len-1] x^{len-1}` using Horner’s method for
 /// stability.
 pub mod evaluation {
+    use crate::types::ComplexF64;
     use crate::Value;
     use std::mem::transmute;
-    use types::ComplexF64;
 
     /// This function evaluates a polynomial with real coefficients for the real variable x.
     #[doc(alias = "gsl_poly_eval")]
@@ -171,9 +171,9 @@ pub mod divided_difference_representation {
 }
 
 pub mod quadratic_equations {
+    use crate::types::ComplexF64;
     use crate::Value;
     use std::mem::transmute;
-    use types::ComplexF64;
 
     /// This function finds the real roots of the quadratic equation,
     ///
@@ -224,9 +224,9 @@ pub mod quadratic_equations {
 }
 
 pub mod cubic_equations {
+    use crate::types::ComplexF64;
     use crate::Value;
     use std::mem::transmute;
-    use types::ComplexF64;
 
     /// This function finds the real roots of the cubic equation,
     ///

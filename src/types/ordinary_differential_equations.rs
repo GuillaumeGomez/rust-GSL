@@ -61,8 +61,8 @@ Differential/Algebraic Equation Solvers.â€, ACM Trans. Math. Software 31, 363â€
 
 #![allow(clippy::upper_case_acronyms)]
 
+use crate::ffi::FFI;
 use crate::Value;
-use ffi::FFI;
 use std::ffi::CStr;
 use std::os::raw::{c_int, c_void};
 
@@ -229,7 +229,7 @@ impl ODEiv2Step {
     /// the system or too large step-size h. In that case the step should be attempted again with a smaller step-size, e.g. h/2.
     ///
     /// If the driver object is not appropriately set via gsl_odeiv2_step_set_driver for those steppers that need it, the stepping function
-    /// returns ::Fault. If the user-supplied functions defined in the system sys returns Value::BadFunc, the function returns
+    /// returns crate::Fault. If the user-supplied functions defined in the system sys returns Value::BadFunc, the function returns
     /// immediately with the same return code. In this case the user must call gsl_odeiv2_step_reset before calling this function again.
     // checker:ignore
     #[doc(alias = "gsl_odeiv2_step_apply")]
@@ -479,8 +479,8 @@ impl ODEiv2Control {
         yerr: &[f64],
         dydt: &[f64],
         h: &mut f64,
-    ) -> ::ODEiv {
-        ::ODEiv::from(unsafe {
+    ) -> crate::ODEiv {
+        crate::ODEiv::from(unsafe {
             sys::gsl_odeiv2_control_hadjust(
                 self.unwrap_unique(),
                 s.unwrap_unique(),
@@ -584,7 +584,7 @@ impl ODEiv2Evolve {
     ///
     /// Otherwise, if the user-supplied functions defined in the system sys or the stepping function step return a status other than
     /// crate::Value::Success, the step is retried with a decreased step-size. If the step-size decreases below machine precision, a status of
-    /// ::Failuer is returned if the user functions returned crate::Value::Success. Otherwise the value returned by user function is returned.
+    /// crate::Failuer is returned if the user functions returned crate::Value::Success. Otherwise the value returned by user function is returned.
     /// If no acceptable step can be made, t and y will be restored to their pre-step values and h contains the final attempted step-size.
     ///
     /// If the step is successful the function returns a suggested step-size for the next step in h. The maximum time t1 is guaranteed not
@@ -820,7 +820,7 @@ impl<'a> ODEiv2Driver<'a> {
         result_handler!(ret, ())
     }
 
-    /// The function sets a maximum for allowed step size hmax for driver self. Default value is ::DBL_MAX.
+    /// The function sets a maximum for allowed step size hmax for driver self. Default value is crate::DBL_MAX.
     #[doc(alias = "gsl_odeiv2_driver_set_hmax")]
     pub fn set_hmax(&mut self, hmax: f64) -> Result<(), Value> {
         let ret = unsafe { sys::gsl_odeiv2_driver_set_hmax(self.d, hmax) };
@@ -839,7 +839,7 @@ impl<'a> ODEiv2Driver<'a> {
     /// y contain the values from last successful step.
     ///
     /// If maximum number of steps is reached, a value of Value::MaxIteration is returned. If the step size drops below minimum value, the
-    /// function returns with ::NoProg. If the user-supplied functions defined in the system sys returns Value::BadFunc, the function
+    /// function returns with crate::NoProg. If the user-supplied functions defined in the system sys returns Value::BadFunc, the function
     /// returns immediately with the same return code. In this case the user must call gsl_odeiv2_driver_reset before calling this
     /// function again.
     #[doc(alias = "gsl_odeiv2_driver_apply")]

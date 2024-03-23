@@ -5,28 +5,28 @@
 pub mod level1 {
     #[doc(alias = "cblas_sdsdot")]
     pub fn sdsdot(N: i32, alpha: f32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
-        unsafe { ::sys::cblas_sdsdot(N, alpha, x.as_ptr(), incx, y.as_ptr(), incy) }
+        unsafe { sys::cblas_sdsdot(N, alpha, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_dsdot")]
     pub fn dsdot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f64 {
-        unsafe { ::sys::cblas_dsdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
+        unsafe { sys::cblas_dsdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_sdot")]
     pub fn sdot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
-        unsafe { ::sys::cblas_sdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
+        unsafe { sys::cblas_sdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_ddot")]
     pub fn ddot(N: i32, x: &[f64], incx: i32, y: &[f64], incy: i32) -> f64 {
-        unsafe { ::sys::cblas_ddot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
+        unsafe { sys::cblas_ddot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_cdotu_sub")]
     pub fn cdotu_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotu: &mut [T]) {
         unsafe {
-            ::sys::cblas_cdotu_sub(
+            sys::cblas_cdotu_sub(
                 N,
                 x.as_ptr() as *const _,
                 incx,
@@ -40,7 +40,7 @@ pub mod level1 {
     #[doc(alias = "cblas_cdotc_sub")]
     pub fn cdotc_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotc: &mut [T]) {
         unsafe {
-            ::sys::cblas_cdotc_sub(
+            sys::cblas_cdotc_sub(
                 N,
                 x.as_ptr() as *const _,
                 incx,
@@ -54,7 +54,7 @@ pub mod level1 {
     #[doc(alias = "cblas_zdotu_sub")]
     pub fn zdotu_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotu: &mut [T]) {
         unsafe {
-            ::sys::cblas_zdotu_sub(
+            sys::cblas_zdotu_sub(
                 N,
                 x.as_ptr() as *const _,
                 incx,
@@ -68,7 +68,7 @@ pub mod level1 {
     #[doc(alias = "cblas_zdotc_sub")]
     pub fn zdotc_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotc: &mut [T]) {
         unsafe {
-            ::sys::cblas_zdotc_sub(
+            sys::cblas_zdotc_sub(
                 N,
                 x.as_ptr() as *const _,
                 incx,
@@ -81,98 +81,98 @@ pub mod level1 {
 
     #[doc(alias = "cblas_snrm2")]
     pub fn snrm2(N: i32, x: &[f32], incx: i32) -> f32 {
-        unsafe { ::sys::cblas_snrm2(N, x.as_ptr(), incx) }
+        unsafe { sys::cblas_snrm2(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_sasum")]
     pub fn sasum(N: i32, x: &[f32], incx: i32) -> f32 {
-        unsafe { ::sys::cblas_sasum(N, x.as_ptr(), incx) }
+        unsafe { sys::cblas_sasum(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_dnrm2")]
     pub fn dnrm2(N: i32, x: &[f64], incx: i32) -> f64 {
-        unsafe { ::sys::cblas_dnrm2(N, x.as_ptr(), incx) }
+        unsafe { sys::cblas_dnrm2(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_dasum")]
     pub fn dasum(N: i32, x: &[f64], incx: i32) -> f64 {
-        unsafe { ::sys::cblas_dasum(N, x.as_ptr(), incx) }
+        unsafe { sys::cblas_dasum(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_scnrm2")]
     pub fn scnrm2<T>(N: i32, x: &[T], incx: i32) -> f32 {
-        unsafe { ::sys::cblas_scnrm2(N, x.as_ptr() as *const _, incx) }
+        unsafe { sys::cblas_scnrm2(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_scasum")]
     pub fn scasum<T>(N: i32, x: &[T], incx: i32) -> f32 {
-        unsafe { ::sys::cblas_scasum(N, x.as_ptr() as *const _, incx) }
+        unsafe { sys::cblas_scasum(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_dznrm2")]
     pub fn dznrm2<T>(N: i32, x: &[T], incx: i32) -> f64 {
-        unsafe { ::sys::cblas_dznrm2(N, x.as_ptr() as *const _, incx) }
+        unsafe { sys::cblas_dznrm2(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_dzasum")]
     pub fn dzasum<T>(N: i32, x: &[T], incx: i32) -> f64 {
-        unsafe { ::sys::cblas_dzasum(N, x.as_ptr() as *const _, incx) }
+        unsafe { sys::cblas_dzasum(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_isamax")]
     pub fn isamax(N: i32, x: &[f32], incx: i32) -> usize {
-        unsafe { ::sys::cblas_isamax(N, x.as_ptr(), incx) }
+        unsafe { sys::cblas_isamax(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_idamax")]
     pub fn idamax(N: i32, x: &[f64], incx: i32) -> usize {
-        unsafe { ::sys::cblas_idamax(N, x.as_ptr(), incx) }
+        unsafe { sys::cblas_idamax(N, x.as_ptr(), incx) }
     }
 
     #[doc(alias = "cblas_icamax")]
     pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> usize {
-        unsafe { ::sys::cblas_icamax(N, x.as_ptr() as *const _, incx) }
+        unsafe { sys::cblas_icamax(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_izamax")]
     pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> usize {
-        unsafe { ::sys::cblas_izamax(N, x.as_ptr() as *const _, incx) }
+        unsafe { sys::cblas_izamax(N, x.as_ptr() as *const _, incx) }
     }
 
     #[doc(alias = "cblas_sswap")]
     pub fn sswap(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32) {
-        unsafe { ::sys::cblas_sswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
+        unsafe { sys::cblas_sswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_scopy")]
     pub fn scopy(N: i32, x: &[f32], incx: i32, y: &mut [f32], incy: i32) {
-        unsafe { ::sys::cblas_scopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
+        unsafe { sys::cblas_scopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_saxpy")]
     pub fn saxpy(N: i32, alpha: f32, x: &[f32], incx: i32, y: &mut [f32], incy: i32) {
-        unsafe { ::sys::cblas_saxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
+        unsafe { sys::cblas_saxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_dswap")]
     pub fn dswap(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32) {
-        unsafe { ::sys::cblas_dswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
+        unsafe { sys::cblas_dswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_dcopy")]
     pub fn dcopy(N: i32, x: &[f64], incx: i32, y: &mut [f64], incy: i32) {
-        unsafe { ::sys::cblas_dcopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
+        unsafe { sys::cblas_dcopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_daxpy")]
     pub fn daxpy(N: i32, alpha: f64, x: &[f64], incx: i32, y: &mut [f64], incy: i32) {
-        unsafe { ::sys::cblas_daxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
+        unsafe { sys::cblas_daxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
     }
 
     #[doc(alias = "cblas_cswap")]
     pub fn cswap<T>(N: i32, x: &mut [T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
-            ::sys::cblas_cswap(
+            sys::cblas_cswap(
                 N,
                 x.as_mut_ptr() as *mut _,
                 incx,
@@ -185,7 +185,7 @@ pub mod level1 {
     #[doc(alias = "cblas_ccopy")]
     pub fn ccopy<T>(N: i32, x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
-            ::sys::cblas_ccopy(
+            sys::cblas_ccopy(
                 N,
                 x.as_ptr() as *const _,
                 incx,
@@ -198,7 +198,7 @@ pub mod level1 {
     #[doc(alias = "cblas_caxpy")]
     pub fn caxpy<T>(N: i32, alpha: &[T], x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
-            ::sys::cblas_caxpy(
+            sys::cblas_caxpy(
                 N,
                 alpha.as_ptr() as *const _,
                 x.as_ptr() as *const _,
@@ -212,7 +212,7 @@ pub mod level1 {
     #[doc(alias = "cblas_zswap")]
     pub fn zswap<T>(N: i32, x: &mut [T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
-            ::sys::cblas_zswap(
+            sys::cblas_zswap(
                 N,
                 x.as_mut_ptr() as *mut _,
                 incx,
@@ -225,7 +225,7 @@ pub mod level1 {
     #[doc(alias = "cblas_zcopy")]
     pub fn zcopy<T>(N: i32, x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
-            ::sys::cblas_zcopy(
+            sys::cblas_zcopy(
                 N,
                 x.as_ptr() as *const _,
                 incx,
@@ -238,7 +238,7 @@ pub mod level1 {
     #[doc(alias = "cblas_zaxpy")]
     pub fn zaxpy<T>(N: i32, alpha: &[T], x: &[T], incx: i32, y: &mut [T], incy: i32) {
         unsafe {
-            ::sys::cblas_zaxpy(
+            sys::cblas_zaxpy(
                 N,
                 alpha.as_ptr() as *const _,
                 x.as_ptr() as *const _,
@@ -252,7 +252,7 @@ pub mod level1 {
     #[doc(alias = "cblas_srotg")]
     pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], s: &mut [f32]) {
         unsafe {
-            ::sys::cblas_srotg(
+            sys::cblas_srotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
                 c.as_mut_ptr(),
@@ -264,7 +264,7 @@ pub mod level1 {
     #[doc(alias = "cblas_srotmg")]
     pub fn srotmg(d1: &mut [f32], d2: &mut [f32], b1: &mut [f32], b2: f32, P: &mut [f32]) {
         unsafe {
-            ::sys::cblas_srotmg(
+            sys::cblas_srotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
@@ -276,18 +276,18 @@ pub mod level1 {
 
     #[doc(alias = "cblas_srot")]
     pub fn srot(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, c: f32, s: f32) {
-        unsafe { ::sys::cblas_srot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
+        unsafe { sys::cblas_srot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
     }
 
     #[doc(alias = "cblas_srotm")]
     pub fn srotm(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, p: &[f32]) {
-        unsafe { ::sys::cblas_srotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
+        unsafe { sys::cblas_srotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
     }
 
     #[doc(alias = "cblas_drotg")]
     pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], s: &mut [f64]) {
         unsafe {
-            ::sys::cblas_drotg(
+            sys::cblas_drotg(
                 a.as_mut_ptr(),
                 b.as_mut_ptr(),
                 c.as_mut_ptr(),
@@ -299,7 +299,7 @@ pub mod level1 {
     #[doc(alias = "cblas_drotmg")]
     pub fn drotmg(d1: &mut [f64], d2: &mut [f64], b1: &mut [f64], b2: f64, P: &mut [f64]) {
         unsafe {
-            ::sys::cblas_drotmg(
+            sys::cblas_drotmg(
                 d1.as_mut_ptr(),
                 d2.as_mut_ptr(),
                 b1.as_mut_ptr(),
@@ -311,12 +311,12 @@ pub mod level1 {
 
     #[doc(alias = "cblas_drot")]
     pub fn drot(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, c: f64, s: f64) {
-        unsafe { ::sys::cblas_drot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
+        unsafe { sys::cblas_drot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
     }
 
     #[doc(alias = "cblas_drotm")]
     pub fn drotm(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, p: &[f64]) {
-        unsafe { ::sys::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
+        unsafe { sys::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
@@ -333,20 +333,20 @@ pub mod level1 {
     /// Note that the allocated length of X must be incX*N-1 as N indicates the number of scaling operations to perform.
     #[doc(alias = "cblas_sscal")]
     pub fn sscal(N: i32, alpha: f32, x: &mut [f32], incx: i32) {
-        unsafe { ::sys::cblas_sscal(N, alpha, x.as_mut_ptr(), incx) }
+        unsafe { sys::cblas_sscal(N, alpha, x.as_mut_ptr(), incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
     #[doc(alias = "cblas_dscal")]
     pub fn dscal(N: i32, alpha: f64, x: &mut [f64], incx: i32) {
-        unsafe { ::sys::cblas_dscal(N, alpha, x.as_mut_ptr(), incx) }
+        unsafe { sys::cblas_dscal(N, alpha, x.as_mut_ptr(), incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
     #[doc(alias = "cblas_cscal")]
     pub fn cscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
         unsafe {
-            ::sys::cblas_cscal(
+            sys::cblas_cscal(
                 N,
                 alpha.as_ptr() as *const _,
                 x.as_mut_ptr() as *mut _,
@@ -359,7 +359,7 @@ pub mod level1 {
     #[doc(alias = "cblas_zscal")]
     pub fn zscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
         unsafe {
-            ::sys::cblas_zscal(
+            sys::cblas_zscal(
                 N,
                 alpha.as_ptr() as *const _,
                 x.as_mut_ptr() as *mut _,
@@ -371,13 +371,13 @@ pub mod level1 {
     /// Multiple each element of a matrix/vector by a constant.
     #[doc(alias = "cblas_csscal")]
     pub fn csscal<T>(N: i32, alpha: f32, x: &mut [T], incx: i32) {
-        unsafe { ::sys::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
+        unsafe { sys::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
     }
 
     /// Multiple each element of a matrix/vector by a constant.
     #[doc(alias = "cblas_zdscal")]
     pub fn zdscal<T>(N: i32, alpha: f64, x: &mut [T], incx: i32) {
-        unsafe { ::sys::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
+        unsafe { sys::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
     }
 }
 
@@ -416,7 +416,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_sgemv(
+            sys::cblas_sgemv(
                 order.into(),
                 transA.into(),
                 M,
@@ -451,7 +451,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_sgbmv(
+            sys::cblas_sgbmv(
                 order.into(),
                 transA.into(),
                 M,
@@ -483,7 +483,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_strmv(
+            sys::cblas_strmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -511,7 +511,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_stbmv(
+            sys::cblas_stbmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -538,7 +538,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_stpmv(
+            sys::cblas_stpmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -564,7 +564,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_strsv(
+            sys::cblas_strsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -592,7 +592,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_stbsv(
+            sys::cblas_stbsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -619,7 +619,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_stpsv(
+            sys::cblas_stpsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -648,7 +648,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_dgemv(
+            sys::cblas_dgemv(
                 order.into(),
                 transA.into(),
                 M,
@@ -683,7 +683,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_dgbmv(
+            sys::cblas_dgbmv(
                 order.into(),
                 transA.into(),
                 M,
@@ -715,7 +715,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtrmv(
+            sys::cblas_dtrmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -743,7 +743,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtbmv(
+            sys::cblas_dtbmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -770,7 +770,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtpmv(
+            sys::cblas_dtpmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -796,7 +796,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtrsv(
+            sys::cblas_dtrsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -824,7 +824,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtbsv(
+            sys::cblas_dtbsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -851,7 +851,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtpsv(
+            sys::cblas_dtpsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -880,7 +880,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_cgemv(
+            sys::cblas_cgemv(
                 order.into(),
                 transA.into(),
                 M,
@@ -915,7 +915,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_cgbmv(
+            sys::cblas_cgbmv(
                 order.into(),
                 transA.into(),
                 M,
@@ -947,7 +947,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctrmv(
+            sys::cblas_ctrmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -975,7 +975,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctbmv(
+            sys::cblas_ctbmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1002,7 +1002,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctpmv(
+            sys::cblas_ctpmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1028,7 +1028,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctrsv(
+            sys::cblas_ctrsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1056,7 +1056,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctbsv(
+            sys::cblas_ctbsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1083,7 +1083,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctpsv(
+            sys::cblas_ctpsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1112,7 +1112,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_zgemv(
+            sys::cblas_zgemv(
                 order.into(),
                 transA.into(),
                 M,
@@ -1147,7 +1147,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_zgbmv(
+            sys::cblas_zgbmv(
                 order.into(),
                 transA.into(),
                 M,
@@ -1179,7 +1179,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztrmv(
+            sys::cblas_ztrmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1207,7 +1207,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztbmv(
+            sys::cblas_ztbmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1234,7 +1234,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztpmv(
+            sys::cblas_ztpmv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1260,7 +1260,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztrsv(
+            sys::cblas_ztrsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1288,7 +1288,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztbsv(
+            sys::cblas_ztbsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1315,7 +1315,7 @@ pub mod level2 {
         incx: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztpsv(
+            sys::cblas_ztpsv(
                 order.into(),
                 uplo.into(),
                 transA.into(),
@@ -1343,7 +1343,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssymv(
+            sys::cblas_ssymv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1375,7 +1375,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssbmv(
+            sys::cblas_ssbmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1406,7 +1406,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_sspmv(
+            sys::cblas_sspmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1435,7 +1435,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_sger(
+            sys::cblas_sger(
                 order.into(),
                 M,
                 N,
@@ -1462,7 +1462,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssyr(
+            sys::cblas_ssyr(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1486,7 +1486,7 @@ pub mod level2 {
         Ap: &mut [f32],
     ) {
         unsafe {
-            ::sys::cblas_sspr(
+            sys::cblas_sspr(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1512,7 +1512,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssyr2(
+            sys::cblas_ssyr2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1540,7 +1540,7 @@ pub mod level2 {
         A: &mut [f32],
     ) {
         unsafe {
-            ::sys::cblas_sspr2(
+            sys::cblas_sspr2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1569,7 +1569,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsymv(
+            sys::cblas_dsymv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1601,7 +1601,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsbmv(
+            sys::cblas_dsbmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1632,7 +1632,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_dspmv(
+            sys::cblas_dspmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1661,7 +1661,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_dger(
+            sys::cblas_dger(
                 order.into(),
                 M,
                 N,
@@ -1688,7 +1688,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsyr(
+            sys::cblas_dsyr(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1712,7 +1712,7 @@ pub mod level2 {
         Ap: &mut [f64],
     ) {
         unsafe {
-            ::sys::cblas_dspr(
+            sys::cblas_dspr(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1738,7 +1738,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsyr2(
+            sys::cblas_dsyr2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1766,7 +1766,7 @@ pub mod level2 {
         A: &mut [f64],
     ) {
         unsafe {
-            ::sys::cblas_dspr2(
+            sys::cblas_dspr2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1795,7 +1795,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_chemv(
+            sys::cblas_chemv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1827,7 +1827,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_chbmv(
+            sys::cblas_chbmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1858,7 +1858,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_chpmv(
+            sys::cblas_chpmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1887,7 +1887,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_cgeru(
+            sys::cblas_cgeru(
                 order.into(),
                 M,
                 N,
@@ -1916,7 +1916,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_cgerc(
+            sys::cblas_cgerc(
                 order.into(),
                 M,
                 N,
@@ -1943,7 +1943,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_cher(
+            sys::cblas_cher(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1967,7 +1967,7 @@ pub mod level2 {
         Ap: &mut [T],
     ) {
         unsafe {
-            ::sys::cblas_chpr(
+            sys::cblas_chpr(
                 order.into(),
                 uplo.into(),
                 N,
@@ -1993,7 +1993,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_cher2(
+            sys::cblas_cher2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2021,7 +2021,7 @@ pub mod level2 {
         Ap: &mut [f64],
     ) {
         unsafe {
-            ::sys::cblas_chpr2(
+            sys::cblas_chpr2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2050,7 +2050,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_zhemv(
+            sys::cblas_zhemv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2082,7 +2082,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_zhbmv(
+            sys::cblas_zhbmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2113,7 +2113,7 @@ pub mod level2 {
         incy: i32,
     ) {
         unsafe {
-            ::sys::cblas_zhpmv(
+            sys::cblas_zhpmv(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2142,7 +2142,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_zgeru(
+            sys::cblas_zgeru(
                 order.into(),
                 M,
                 N,
@@ -2171,7 +2171,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_zgerc(
+            sys::cblas_zgerc(
                 order.into(),
                 M,
                 N,
@@ -2198,7 +2198,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_zher(
+            sys::cblas_zher(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2222,7 +2222,7 @@ pub mod level2 {
         Ap: &mut [T],
     ) {
         unsafe {
-            ::sys::cblas_zhpr(
+            sys::cblas_zhpr(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2248,7 +2248,7 @@ pub mod level2 {
         lda: i32,
     ) {
         unsafe {
-            ::sys::cblas_zher2(
+            sys::cblas_zher2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2276,7 +2276,7 @@ pub mod level2 {
         Ap: &mut [f64],
     ) {
         unsafe {
-            ::sys::cblas_zhpr2(
+            sys::cblas_zhpr2(
                 order.into(),
                 uplo.into(),
                 N,
@@ -2294,7 +2294,7 @@ pub mod level2 {
 pub mod level3 {
     use crate::enums;
 
-    /// General ::types::Matrix-MatrixF64 multiplication for single precision float.
+    /// General crate::types::Matrix-MatrixF64 multiplication for single precision float.
     ///
     /// __Parameters:__
     ///
@@ -2332,7 +2332,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_sgemm(
+            sys::cblas_sgemm(
                 order.into(),
                 transA.into(),
                 transB.into(),
@@ -2351,7 +2351,7 @@ pub mod level3 {
         }
     }
 
-    /// Symmetric ::types::Matrix-MatrixF64 multiplication for single precision float.
+    /// Symmetric crate::types::Matrix-MatrixF64 multiplication for single precision float.
     ///
     /// __Parameters:__
     ///
@@ -2385,7 +2385,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssymm(
+            sys::cblas_ssymm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2418,7 +2418,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssyrk(
+            sys::cblas_ssyrk(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -2451,7 +2451,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_ssyr2k(
+            sys::cblas_ssyr2k(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -2485,7 +2485,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_strmm(
+            sys::cblas_strmm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2518,7 +2518,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_strsm(
+            sys::cblas_strsm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2553,7 +2553,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_dgemm(
+            sys::cblas_dgemm(
                 order.into(),
                 transA.into(),
                 transB.into(),
@@ -2589,7 +2589,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsymm(
+            sys::cblas_dsymm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2622,7 +2622,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsyrk(
+            sys::cblas_dsyrk(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -2655,7 +2655,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_dsyr2k(
+            sys::cblas_dsyr2k(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -2689,7 +2689,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtrmm(
+            sys::cblas_dtrmm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2722,7 +2722,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_dtrsm(
+            sys::cblas_dtrsm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2757,7 +2757,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_cgemm(
+            sys::cblas_cgemm(
                 order.into(),
                 transA.into(),
                 transB.into(),
@@ -2793,7 +2793,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_csymm(
+            sys::cblas_csymm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2826,7 +2826,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_csyrk(
+            sys::cblas_csyrk(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -2859,7 +2859,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_csyr2k(
+            sys::cblas_csyr2k(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -2893,7 +2893,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctrmm(
+            sys::cblas_ctrmm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2926,7 +2926,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_ctrsm(
+            sys::cblas_ctrsm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -2961,7 +2961,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zgemm(
+            sys::cblas_zgemm(
                 order.into(),
                 transA.into(),
                 transB.into(),
@@ -2997,7 +2997,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zsymm(
+            sys::cblas_zsymm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -3030,7 +3030,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zsyrk(
+            sys::cblas_zsyrk(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -3063,7 +3063,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zsyr2k(
+            sys::cblas_zsyr2k(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -3097,7 +3097,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztrmm(
+            sys::cblas_ztrmm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -3130,7 +3130,7 @@ pub mod level3 {
         ldb: i32,
     ) {
         unsafe {
-            ::sys::cblas_ztrsm(
+            sys::cblas_ztrsm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -3164,7 +3164,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_chemm(
+            sys::cblas_chemm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -3197,7 +3197,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_cherk(
+            sys::cblas_cherk(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -3230,7 +3230,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_cher2k(
+            sys::cblas_cher2k(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -3265,7 +3265,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zhemm(
+            sys::cblas_zhemm(
                 order.into(),
                 side.into(),
                 uplo.into(),
@@ -3298,7 +3298,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zherk(
+            sys::cblas_zherk(
                 order.into(),
                 uplo.into(),
                 trans.into(),
@@ -3331,7 +3331,7 @@ pub mod level3 {
         ldc: i32,
     ) {
         unsafe {
-            ::sys::cblas_zher2k(
+            sys::cblas_zher2k(
                 order.into(),
                 uplo.into(),
                 trans.into(),

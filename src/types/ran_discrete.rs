@@ -21,8 +21,8 @@ A much better approach is due to Alastair J. Walker (An efficient method for gen
 This method can be used to speed up some of the discrete random number generators below, such as the binomial distribution. To use it for something like the Poisson Distribution, a modification would have to be made, since it only takes a finite set of K outcomes.
 !*/
 
-use ffi::FFI;
-use types::Rng;
+use crate::ffi::FFI;
+use crate::types::Rng;
 
 ffi_wrapper!(
     RanDiscrete,

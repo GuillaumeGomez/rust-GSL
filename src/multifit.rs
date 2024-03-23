@@ -2,8 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+use crate::ffi::FFI;
 use crate::{MatrixF64, Value, VectorF64};
-use ffi::FFI;
 
 /// Compute the covariance matrix cov = inv (J^T J) by QRP^T decomposition of J
 #[doc(alias = "gsl_multifit_covar")]

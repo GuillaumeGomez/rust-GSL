@@ -61,10 +61,10 @@ pub fn wave_FG_e(
     exp_G: &mut f64,
 ) -> Result<
     (
-        ::types::Result,
-        ::types::Result,
-        ::types::Result,
-        ::types::Result,
+        crate::types::Result,
+        crate::types::Result,
+        crate::types::Result,
+        crate::types::Result,
     ),
     Value,
 > {
