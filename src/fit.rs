@@ -8,33 +8,40 @@ Linear Regression
 The functions described in this section can be used to perform least-squares fits to a straight line model, Y(c,x) = c_0 + c_1 x.
 !*/
 
-use crate::Value;
+use crate::{
+    vector::{check_equal_len, Vector},
+    Value,
+};
 
-/// This function computes the best-fit linear regression coefficients (c0,c1) of the model
-/// Y = c_0 + c_1 X for the dataset (x, y), two vectors of length n with strides xstride and
-/// ystride.
+/// This function computes the best-fit linear regression coefficients
+/// (c0, c1) of the model Y = c_0 + c_1 X for the dataset (`x`, `y`),
+/// two vectors of the same length (possibly with strides).
 ///
-/// The errors on y are assumed unknown so the variance-covariance matrix for the parameters
-/// (c0, c1) is estimated from the scatter of the points around the best-fit line and returned via
-/// the parameters (cov00, cov01, cov11).
+/// The errors on `y` are assumed unknown so the variance-covariance
+/// matrix for the parameters (c0, c1) is estimated from the scatter
+/// of the points around the best-fit line and returned via the
+/// parameters (cov00, cov01, cov11).
 ///
-/// The sum of squares of the residuals from the best-fit line is returned in sumsq. Note: the
-/// correlation coefficient of the data can be computed using gsl_stats_correlation (see
+/// The sum of squares of the residuals from the best-fit line is
+/// returned in sumsq. Note: the correlation coefficient of the data
+/// can be computed using gsl_stats_correlation (see
 /// [`Correlation`](http://www.gnu.org/software/gsl/manual/html_node/Correlation.html#Correlation)),
 /// it does not depend on the fit.
 ///
 /// Returns `(c0, c1, cov00, cov01, cov11, sumsq)`.
+///
+/// # Example
+///
+/// ```
+/// use rgsl::fit;
+/// let (c0, c1, _, _, _, _) = fit::linear(&[0., 1.], &[0., 1.])?;
+/// assert_eq!(c0, 0.);
+/// assert_eq!(c1, 1.);
+/// # Ok::<(), rgsl::Value>(())
+/// ```
 #[doc(alias = "gsl_fit_linear")]
-pub fn linear(
-    x: &[f64],
-    xstride: usize,
-    y: &[f64],
-    ystride: usize,
-    n: usize,
-) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
-    if (n - 1) * xstride >= x.len() || (n - 1) * ystride >= y.len() {
-        return Err(Value::Invalid);
-    }
+pub fn linear<T: Vector<f64>>(x: &T, y: &T) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
+    check_equal_len(x, y)?;
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -42,12 +49,12 @@ pub fn linear(
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
-        sys::gsl_fit_linear(
-            x.as_ptr(),
-            xstride,
-            y.as_ptr(),
-            ystride,
-            n,
+        ::sys::gsl_fit_linear(
+            x.as_slice().as_ptr(),
+            x.stride(),
+            y.as_slice().as_ptr(),
+            y.stride(),
+            x.len(),
             &mut c0,
             &mut c1,
             &mut cov00,
@@ -59,11 +66,12 @@ pub fn linear(
     result_handler!(ret, (c0, c1, cov00, cov01, cov11, sumsq))
 }
 
-/// This function computes the best-fit linear regression coefficients (c0,c1) of the model
-/// Y = c_0 + c_1 X for the weighted dataset (x, y), two vectors of length n with strides xstride
-/// and ystride.
+/// This function computes the best-fit linear regression coefficients
+/// (c0, c1) of the model Y = c_0 + c_1 X for the weighted dataset
+/// (`x`, `y`), two vectors of the same length (possibly with strides).
 ///
-/// The vector w, of length n and stride wstride, specifies the weight of each datapoint.
+/// The vector `w`, of the same length as `x` and `y`, specifies the
+/// weight of each datapoint.
 ///
 /// The weight is the reciprocal of the variance for each datapoint in y.
 ///
@@ -73,19 +81,13 @@ pub fn linear(
 ///
 /// Returns `(c0, c1, cov00, cov01, cov11, chisq)`.
 #[doc(alias = "gsl_fit_wlinear")]
-pub fn wlinear(
-    x: &[f64],
-    xstride: usize,
-    w: &[f64],
-    wstride: usize,
-    y: &[f64],
-    ystride: usize,
-    n: usize,
+pub fn wlinear<T: Vector<f64>>(
+    x: &T,
+    w: &T,
+    y: &T,
 ) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
-    if (n - 1) * xstride >= x.len() || (n - 1) * wstride >= w.len() || (n - 1) * ystride >= y.len()
-    {
-        return Err(Value::Invalid);
-    }
+    check_equal_len(x, y)?;
+    check_equal_len(x, w)?;
     let mut c0 = 0.;
     let mut c1 = 0.;
     let mut cov00 = 0.;
@@ -93,14 +95,14 @@ pub fn wlinear(
     let mut cov11 = 0.;
     let mut chisq = 0.;
     let ret = unsafe {
-        sys::gsl_fit_wlinear(
-            x.as_ptr(),
-            xstride,
-            w.as_ptr(),
-            wstride,
-            y.as_ptr(),
-            ystride,
-            n,
+        ::sys::gsl_fit_wlinear(
+            x.as_slice().as_ptr(),
+            x.stride(),
+            w.as_slice().as_ptr(),
+            w.stride(),
+            y.as_slice().as_ptr(),
+            y.stride(),
+            x.len(),
             &mut c0,
             &mut c1,
             &mut cov00,
@@ -141,26 +143,18 @@ pub fn linear_est(
 ///
 /// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_mul")]
-pub fn mul(
-    x: &[f64],
-    xstride: usize,
-    y: &[f64],
-    ystride: usize,
-    n: usize,
-) -> Result<(f64, f64, f64), Value> {
-    if (n - 1) * xstride >= x.len() || (n - 1) * ystride >= y.len() {
-        return Err(Value::Invalid);
-    }
+pub fn mul<T: Vector<f64>>(x: &T, y: &T) -> Result<(f64, f64, f64), Value> {
+    check_equal_len(x, y)?;
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
         sys::gsl_fit_mul(
-            x.as_ptr(),
-            xstride,
-            y.as_ptr(),
-            ystride,
-            n,
+            x.as_slice().as_ptr(),
+            x.stride(),
+            y.as_slice().as_ptr(),
+            y.stride(),
+            x.len(),
             &mut c1,
             &mut cov11,
             &mut sumsq,
@@ -171,31 +165,21 @@ pub fn mul(
 
 /// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_wmul")]
-pub fn wmul(
-    x: &[f64],
-    xstride: usize,
-    w: &[f64],
-    wstride: usize,
-    y: &[f64],
-    ystride: usize,
-    n: usize,
-) -> Result<(f64, f64, f64), Value> {
-    if (n - 1) * xstride >= x.len() || (n - 1) * wstride >= w.len() || (n - 1) * ystride >= y.len()
-    {
-        return Err(Value::Invalid);
-    }
+pub fn wmul<T: Vector<f64>>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f64), Value> {
+    check_equal_len(x, y)?;
+    check_equal_len(x, w)?;
     let mut c1 = 0.;
     let mut cov11 = 0.;
     let mut sumsq = 0.;
     let ret = unsafe {
         sys::gsl_fit_wmul(
-            x.as_ptr(),
-            xstride,
-            w.as_ptr(),
-            wstride,
-            y.as_ptr(),
-            ystride,
-            n,
+            x.as_slice().as_ptr(),
+            x.stride(),
+            w.as_slice().as_ptr(),
+            w.stride(),
+            y.as_slice().as_ptr(),
+            y.stride(),
+            x.len(),
             &mut c1,
             &mut cov11,
             &mut sumsq,

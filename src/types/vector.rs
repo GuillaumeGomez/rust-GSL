@@ -38,6 +38,26 @@ use std::marker::PhantomData;
 
 use paste::paste;
 
+#[cfg(feature = "complex")]
+extern crate num_complex;
+#[cfg(feature = "complex")]
+use self::num_complex::Complex;
+
+/// Trait implemented by types that are considered vectors by this crate.
+/// Elements of the vector are of type `F` (`f32` or `f64`).
+pub trait Vector<F> {
+    /// Return the number of elements in the vector.
+    fn len(&self) -> usize;
+    /// The distance in the slice between two consecutive elements.
+    fn stride(&self) -> usize;
+    /// Return a reference to the underlying slice.  Note that the
+    /// `i`th element of the vector is the `i * stride` element in the
+    /// slice.
+    fn as_slice(&self) -> &[F];
+    /// As [`as_slice`] but mutable.
+    fn as_mut_slice(&mut self) -> &mut [F];
+}
+
 macro_rules! gsl_vec {
     ($rust_name:ident, $name:ident, $rust_ty:ident) => (
 paste! {
@@ -556,6 +576,26 @@ impl<'a> [<$rust_name View>]<'a> {
     }
 } // end of impl block
 
+    impl Vector<$rust_ty> for $rust_name {
+        fn len(&self) -> usize {
+            $rust_name::len(self)
+        }
+        fn stride(&self) -> usize {
+            let ptr = self.unwrap_shared();
+            if ptr.is_null() {
+                1
+            } else {
+                unsafe { (*ptr).stride }
+            }
+        }
+        fn as_slice(&self) -> &[$rust_ty] {
+            $rust_name::as_slice(self).unwrap_or(&[])
+        }
+        fn as_mut_slice(&mut self) -> &mut [$rust_ty] {
+            $rust_name::as_slice_mut(self).unwrap_or(&mut [])
+        }
+    }
+
 } // end of paste! block
 ); // end of gsl_vec macro
 }
@@ -564,3 +604,45 @@ gsl_vec!(VectorF32, gsl_vector_float, f32);
 gsl_vec!(VectorF64, gsl_vector, f64);
 gsl_vec!(VectorI32, gsl_vector_int, i32);
 gsl_vec!(VectorU32, gsl_vector_uint, u32);
+
+// Implement the `Vector` trait on standard vectors.
+
+macro_rules! impl_AsRef {
+    ($ty: ty) => {
+        impl<T> Vector<$ty> for T
+        where
+            T: AsRef<[$ty]> + AsMut<[$ty]>,
+        {
+            fn len(&self) -> usize {
+                self.as_ref().len()
+            }
+            fn stride(&self) -> usize {
+                1
+            }
+            fn as_slice(&self) -> &[$ty] {
+                self.as_ref()
+            }
+            fn as_mut_slice(&mut self) -> &mut [$ty] {
+                self.as_mut()
+            }
+        }
+    };
+}
+
+impl_AsRef!(f32);
+impl_AsRef!(f64);
+#[cfg(feature = "complex")]
+impl_AsRef!(Complex<f32>);
+#[cfg(feature = "complex")]
+impl_AsRef!(Complex<f64>);
+
+#[inline]
+pub(crate) fn check_equal_len<T, F>(x: &T, y: &T) -> Result<(), Value>
+where
+    T: Vector<F>,
+{
+    if x.len() != y.len() {
+        return Err(Value::Invalid);
+    }
+    Ok(())
+}
