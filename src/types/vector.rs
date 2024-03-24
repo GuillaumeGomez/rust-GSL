@@ -43,6 +43,7 @@ extern crate num_complex;
 #[cfg(feature = "complex")]
 use self::num_complex::Complex;
 
+#[allow(clippy::len_without_is_empty)]
 /// Trait implemented by types that are considered vectors by this crate.
 /// Elements of the vector are of type `F` (`f32` or `f64`).
 pub trait Vector<F> {
