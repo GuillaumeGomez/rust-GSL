@@ -5,9 +5,10 @@
 use crate::ffi::FFI;
 use crate::Value;
 use paste::paste;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
-use std::marker::PhantomData;
+use std::{
+    fmt::{self, Debug, Formatter},
+    marker::PhantomData,
+};
 
 macro_rules! gsl_vec_complex {
     ($rust_name:ident, $name:ident, $complex:ident, $rust_ty:ident) => {

@@ -4,8 +4,7 @@
 
 // TODO : port to Rust type : http://doc.rust-lang.org/num/complex/struct.Complex.html
 
-use std::fmt;
-use std::fmt::{Debug, Formatter};
+use std::fmt::{self, Debug, Formatter};
 
 #[doc(hidden)]
 #[allow(clippy::upper_case_acronyms)]
