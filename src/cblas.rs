@@ -27,10 +27,10 @@ fn stride<F, T: Vector<F>>(x: &T) -> i32 {
 }
 
 pub mod level1 {
-    #[cfg(feature = "complex")]
-    use num_complex::Complex;
     use super::{as_mut_ptr, as_ptr, len, stride};
     use crate::vector::{check_equal_len, Vector};
+    #[cfg(feature = "complex")]
+    use num_complex::Complex;
 
     /// Return the sum of `alpha` and the dot product of `x` and `y`.
     #[doc(alias = "cblas_sdsdot")]
