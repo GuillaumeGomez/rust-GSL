@@ -511,23 +511,27 @@ pub mod level1 {
                 &mut h as *mut _,
             )
         }
-        let h = match h[0] {
-            -1.0 => H::Full {
+        let h = if h[0] == -1.0 {
+            H::Full {
                 h11: h[1],
                 h21: h[2],
                 h12: h[3],
                 h22: h[4],
-            },
-            0.0 => H::OffDiag {
+            }
+        } else if h[0] == 0.0 {
+            H::OffDiag {
                 h21: h[2],
                 h12: h[3],
-            },
-            1.0 => H::Diag {
+            }
+        } else if h[0] == 1.0 {
+            H::Diag {
                 h11: h[1],
                 h22: h[4],
-            },
-            -2.0 => H::Id,
-            _ => unreachable!("srotmg: incorrect flag value"),
+            }
+        } else if h[0] == -2.0 {
+            H::Id
+        } else {
+            unreachable!("srotmg: incorrect flag value")
         };
         (h, x1)
     }
@@ -627,23 +631,27 @@ pub mod level1 {
                 &mut h as *mut _,
             )
         }
-        let h = match h[0] {
-            -1.0 => H::Full {
+        let h = if h[0] == -1.0 {
+            H::Full {
                 h11: h[1],
                 h21: h[2],
                 h12: h[3],
                 h22: h[4],
-            },
-            0.0 => H::OffDiag {
+            }
+        } else if h[0] == 0.0 {
+            H::OffDiag {
                 h21: h[2],
                 h12: h[3],
-            },
-            1.0 => H::Diag {
+            }
+        } else if h[0] == 1.0 {
+            H::Diag {
                 h11: h[1],
                 h22: h[4],
-            },
-            -2.0 => H::Id,
-            _ => unreachable!("srotmg: incorrect flag value"),
+            }
+        } else if h[0] == -2.0 {
+            H::Id
+        } else {
+            unreachable!("srotmg: incorrect flag value")
         };
         (h, x1)
     }
