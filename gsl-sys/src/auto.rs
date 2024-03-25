@@ -21926,8 +21926,30 @@ pub struct gsl_multimin_function_struct {
 pub type gsl_multimin_function = gsl_multimin_function_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multimin_function_fdf_struct;
+pub struct gsl_multimin_function_fdf_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void) -> f64,
+    >,
+    pub df: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            g: *mut gsl_vector,
+        ) -> (),
+    >,
+    pub fdf: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut f64,
+            g: *mut gsl_vector,
+        ) -> (),
+    >,
+    pub n: usize,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_multimin_function_fdf = gsl_multimin_function_fdf_struct;
+
 extern "C" {
     pub fn gsl_multimin_diff(
         f: *const gsl_multimin_function,
