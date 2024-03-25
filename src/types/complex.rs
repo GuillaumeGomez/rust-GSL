@@ -20,6 +20,7 @@ pub trait FFFI<T> {
     fn unwrap(t: T) -> Self;
 }
 
+//#[deprecated(note = "Use `Complex64` from the `num_complex` create instead")]
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq)]
 pub struct ComplexF64 {

@@ -612,7 +612,7 @@ macro_rules! impl_AsRef {
     ($ty: ty) => {
         impl<T> Vector<$ty> for T
         where
-            T: AsRef<[$ty]> + AsMut<[$ty]>,
+            T: AsRef<[$ty]> + AsMut<[$ty]> + ?Sized,
         {
             fn len(&self) -> usize {
                 self.as_ref().len()
@@ -640,7 +640,7 @@ impl_AsRef!(Complex<f64>);
 #[inline]
 pub(crate) fn check_equal_len<T, F>(x: &T, y: &T) -> Result<(), Value>
 where
-    T: Vector<F>,
+    T: Vector<F> + ?Sized,
 {
     if x.len() != y.len() {
         return Err(Value::Invalid);

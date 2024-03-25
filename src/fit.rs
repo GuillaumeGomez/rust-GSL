@@ -40,7 +40,10 @@ use crate::{
 /// # Ok::<(), rgsl::Value>(())
 /// ```
 #[doc(alias = "gsl_fit_linear")]
-pub fn linear<T: Vector<f64>>(x: &T, y: &T) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
+pub fn linear<T>(x: &T, y: &T) -> Result<(f64, f64, f64, f64, f64, f64), Value>
+where
+    T: Vector<f64> + ?Sized,
+{
     check_equal_len(x, y)?;
     let mut c0 = 0.;
     let mut c1 = 0.;
@@ -81,7 +84,7 @@ pub fn linear<T: Vector<f64>>(x: &T, y: &T) -> Result<(f64, f64, f64, f64, f64, 
 ///
 /// Returns `(c0, c1, cov00, cov01, cov11, chisq)`.
 #[doc(alias = "gsl_fit_wlinear")]
-pub fn wlinear<T: Vector<f64>>(
+pub fn wlinear<T: Vector<f64> + ?Sized>(
     x: &T,
     w: &T,
     y: &T,
@@ -143,7 +146,7 @@ pub fn linear_est(
 ///
 /// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_mul")]
-pub fn mul<T: Vector<f64>>(x: &T, y: &T) -> Result<(f64, f64, f64), Value> {
+pub fn mul<T: Vector<f64> + ?Sized>(x: &T, y: &T) -> Result<(f64, f64, f64), Value> {
     check_equal_len(x, y)?;
     let mut c1 = 0.;
     let mut cov11 = 0.;
@@ -165,7 +168,7 @@ pub fn mul<T: Vector<f64>>(x: &T, y: &T) -> Result<(f64, f64, f64), Value> {
 
 /// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_wmul")]
-pub fn wmul<T: Vector<f64>>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f64), Value> {
+pub fn wmul<T: Vector<f64> + ?Sized>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f64), Value> {
     check_equal_len(x, y)?;
     check_equal_len(x, w)?;
     let mut c1 = 0.;
