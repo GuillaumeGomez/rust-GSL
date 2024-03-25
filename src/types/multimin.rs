@@ -280,7 +280,7 @@ impl MinimizerFdf {
     /// Creates a minimizer of type `t` for an n-dimensional function.
     /// If there is insufficient memory to create the minimizer then
     /// the function returns a `None`.
-    #[doc(alias = "gsl_multimin_fminimizer_alloc")]
+    #[doc(alias = "gsl_multimin_fdfminimizer_alloc")]
     pub fn new(t: MinimizerFdfType, n: usize) -> Option<MinimizerFdf> {
         let ptr = unsafe { sys::gsl_multimin_fdfminimizer_alloc(t.unwrap_shared(), n) };
 
