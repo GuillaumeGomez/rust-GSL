@@ -21931,10 +21931,19 @@ pub struct gsl_multimin_function_fdf_struct {
         unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void) -> f64,
     >,
     pub df: ::std::option::Option<
-        unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void, g: *mut gsl_vector) -> (),
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            g: *mut gsl_vector,
+        ) -> (),
     >,
     pub fdf: ::std::option::Option<
-        unsafe extern "C" fn(x: *const gsl_vector, params: *mut ::std::os::raw::c_void, f: *mut f64,g: *mut gsl_vector) -> (),
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut f64,
+            g: *mut gsl_vector,
+        ) -> (),
     >,
     pub n: usize,
     pub params: *mut ::std::os::raw::c_void,
