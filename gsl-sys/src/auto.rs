@@ -22147,7 +22147,32 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct gsl_multiroot_function_fdf_struct;
+pub struct gsl_multiroot_function_fdf_struct {
+    pub f: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut gsl_vector,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub df: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            J: *mut gsl_matrix,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub fdf: ::std::option::Option<
+        unsafe extern "C" fn(
+            x: *const gsl_vector,
+            params: *mut ::std::os::raw::c_void,
+            f: *mut gsl_vector,
+            J: *mut gsl_matrix,
+        ) -> ::std::os::raw::c_int,
+    >,
+    pub n: usize,
+    pub params: *mut ::std::os::raw::c_void,
+}
 pub type gsl_multiroot_function_fdf = gsl_multiroot_function_fdf_struct;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
