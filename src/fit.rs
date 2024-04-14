@@ -53,11 +53,11 @@ where
     let mut sumsq = 0.;
     let ret = unsafe {
         ::sys::gsl_fit_linear(
-            x.as_slice().as_ptr(),
-            x.stride(),
-            y.as_slice().as_ptr(),
-            y.stride(),
-            x.len(),
+            T::as_slice(x).as_ptr(),
+            T::stride(x),
+            T::as_slice(y).as_ptr(),
+            T::stride(y),
+            T::len(x),
             &mut c0,
             &mut c1,
             &mut cov00,
@@ -99,13 +99,13 @@ pub fn wlinear<T: Vector<f64> + ?Sized>(
     let mut chisq = 0.;
     let ret = unsafe {
         ::sys::gsl_fit_wlinear(
-            x.as_slice().as_ptr(),
-            x.stride(),
-            w.as_slice().as_ptr(),
-            w.stride(),
-            y.as_slice().as_ptr(),
-            y.stride(),
-            x.len(),
+            T::as_slice(x).as_ptr(),
+            T::stride(x),
+            T::as_slice(w).as_ptr(),
+            T::stride(w),
+            T::as_slice(y).as_ptr(),
+            T::stride(y),
+            T::len(x),
             &mut c0,
             &mut c1,
             &mut cov00,
@@ -153,11 +153,11 @@ pub fn mul<T: Vector<f64> + ?Sized>(x: &T, y: &T) -> Result<(f64, f64, f64), Val
     let mut sumsq = 0.;
     let ret = unsafe {
         sys::gsl_fit_mul(
-            x.as_slice().as_ptr(),
-            x.stride(),
-            y.as_slice().as_ptr(),
-            y.stride(),
-            x.len(),
+            T::as_slice(x).as_ptr(),
+            T::stride(x),
+            T::as_slice(y).as_ptr(),
+            T::stride(y),
+            T::len(x),
             &mut c1,
             &mut cov11,
             &mut sumsq,
@@ -176,13 +176,13 @@ pub fn wmul<T: Vector<f64> + ?Sized>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f
     let mut sumsq = 0.;
     let ret = unsafe {
         sys::gsl_fit_wmul(
-            x.as_slice().as_ptr(),
-            x.stride(),
-            w.as_slice().as_ptr(),
-            w.stride(),
-            y.as_slice().as_ptr(),
-            y.stride(),
-            x.len(),
+            T::as_slice(x).as_ptr(),
+            T::stride(x),
+            T::as_slice(w).as_ptr(),
+            T::stride(w),
+            T::as_slice(y).as_ptr(),
+            T::stride(y),
+            T::len(x),
             &mut c1,
             &mut cov11,
             &mut sumsq,

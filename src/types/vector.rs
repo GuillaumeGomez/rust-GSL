@@ -48,16 +48,60 @@ use self::num_complex::Complex;
 /// Elements of the vector are of type `F` (`f32` or `f64`).
 pub trait Vector<F> {
     /// Return the number of elements in the vector.
-    fn len(&self) -> usize;
-    /// The distance in the slice between two consecutive elements.
-    fn stride(&self) -> usize;
+    ///
+    /// This is an associated function rather than a method to avoid
+    /// conflicting with similarly named methods.
+    fn len(x: &Self) -> usize;
+
+    /// The distance in the slice between two consecutive elements of
+    /// the vector in [`Vector::as_slice`] and [`Vector::as_mut_slice`].
+    fn stride(x: &Self) -> usize;
+
     /// Return a reference to the underlying slice.  Note that the
     /// `i`th element of the vector is the `i * stride` element in the
     /// slice.
-    fn as_slice(&self) -> &[F];
+    ///
+    /// This is an associated function rather than a method to avoid
+    /// conflicting with similarly named methods.
+    fn as_slice(x: &Self) -> &[F];
+
     /// As [`as_slice`] but mutable.
-    fn as_mut_slice(&mut self) -> &mut [F];
+    fn as_mut_slice(x: &mut Self) -> &mut [F];
 }
+
+/// Return the length of `x` as a `i32` value (to use in CBLAS calls).
+#[inline]
+pub(crate) fn len<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
+    T::len(x).try_into().expect("Length must fit in `i32`")
+}
+
+#[inline]
+pub(crate) fn as_ptr<F, T: Vector<F> + ?Sized>(x: &T) -> *const F {
+    T::as_slice(x).as_ptr()
+}
+
+#[inline]
+pub(crate) fn as_mut_ptr<F, T: Vector<F> + ?Sized>(x: &mut T) -> *mut F {
+    T::as_mut_slice(x).as_mut_ptr()
+}
+
+/// Return the stride of `x` as a `i32` value (to use in CBLAS calls).
+#[inline]
+pub(crate) fn stride<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
+    T::stride(x).try_into().expect("Stride must fit in `i32`")
+}
+
+#[inline]
+pub(crate) fn check_equal_len<T, F>(x: &T, y: &T) -> Result<(), Value>
+where
+    T: Vector<F> + ?Sized,
+{
+    if T::len(x) != T::len(y) {
+        return Err(Value::Invalid);
+    }
+    Ok(())
+}
+
 
 macro_rules! gsl_vec {
     ($rust_name:ident, $name:ident, $rust_ty:ident) => (
@@ -578,22 +622,26 @@ impl<'a> [<$rust_name View>]<'a> {
 } // end of impl block
 
     impl Vector<$rust_ty> for $rust_name {
-        fn len(&self) -> usize {
-            $rust_name::len(self)
+        #[inline]
+        fn len(x: &Self) -> usize {
+            $rust_name::len(x)
         }
-        fn stride(&self) -> usize {
-            let ptr = self.unwrap_shared();
+        #[inline]
+        fn stride(x: &Self) -> usize {
+            let ptr = x.unwrap_shared();
             if ptr.is_null() {
                 1
             } else {
                 unsafe { (*ptr).stride }
             }
         }
-        fn as_slice(&self) -> &[$rust_ty] {
-            $rust_name::as_slice(self).unwrap_or(&[])
+        #[inline]
+        fn as_slice(x: &Self) -> &[$rust_ty] {
+            $rust_name::as_slice(x).unwrap_or(&[])
         }
-        fn as_mut_slice(&mut self) -> &mut [$rust_ty] {
-            $rust_name::as_slice_mut(self).unwrap_or(&mut [])
+        #[inline]
+        fn as_mut_slice(x: &mut Self) -> &mut [$rust_ty] {
+            $rust_name::as_slice_mut(x).unwrap_or(&mut [])
         }
     }
 
@@ -614,17 +662,21 @@ macro_rules! impl_AsRef {
         where
             T: AsRef<[$ty]> + AsMut<[$ty]> + ?Sized,
         {
-            fn len(&self) -> usize {
-                self.as_ref().len()
+            #[inline]
+            fn len(x: &Self) -> usize {
+                x.as_ref().len()
             }
-            fn stride(&self) -> usize {
+            #[inline]
+            fn stride(_: &Self) -> usize {
                 1
             }
-            fn as_slice(&self) -> &[$ty] {
-                self.as_ref()
+            #[inline]
+            fn as_slice(x: &Self) -> &[$ty] {
+                x.as_ref()
             }
-            fn as_mut_slice(&mut self) -> &mut [$ty] {
-                self.as_mut()
+            #[inline]
+            fn as_mut_slice(x: &mut Self) -> &mut [$ty] {
+                x.as_mut()
             }
         }
     };
@@ -637,13 +689,3 @@ impl_AsRef!(Complex<f32>);
 #[cfg(feature = "complex")]
 impl_AsRef!(Complex<f64>);
 
-#[inline]
-pub(crate) fn check_equal_len<T, F>(x: &T, y: &T) -> Result<(), Value>
-where
-    T: Vector<F> + ?Sized,
-{
-    if x.len() != y.len() {
-        return Err(Value::Invalid);
-    }
-    Ok(())
-}
