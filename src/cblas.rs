@@ -2,33 +2,11 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::vector::Vector;
-
-/// Return the length of `x` as a `i32` value (to use in CBLAS calls).
-#[inline]
-fn len<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
-    x.len().try_into().expect("Length must fit in `i32`")
-}
-
-#[inline]
-fn as_ptr<F, T: Vector<F> + ?Sized>(x: &T) -> *const F {
-    x.as_slice().as_ptr()
-}
-
-#[inline]
-fn as_mut_ptr<F, T: Vector<F> + ?Sized>(x: &mut T) -> *mut F {
-    x.as_mut_slice().as_mut_ptr()
-}
-
-/// Return the stride of `x` as a `i32` value (to use in CBLAS calls).
-#[inline]
-fn stride<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
-    x.stride().try_into().expect("Stride must fit in `i32`")
-}
-
 pub mod level1 {
-    use super::{as_mut_ptr, as_ptr, len, stride};
-    use crate::vector::{check_equal_len, Vector};
+    use crate::vector::{
+        Vector,
+        as_mut_ptr, as_ptr, len, stride, check_equal_len,
+    };
     #[cfg(feature = "complex")]
     use num_complex::Complex;
 
