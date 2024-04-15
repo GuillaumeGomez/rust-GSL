@@ -32,9 +32,11 @@ vector.
 
 use crate::ffi::FFI;
 use crate::Value;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
-use std::marker::PhantomData;
+use std::{
+    fmt::{self, Debug, Formatter},
+    marker::PhantomData,
+    ops::Range,
+};
 
 use paste::paste;
 
@@ -46,6 +48,9 @@ use self::num_complex::Complex;
 #[allow(clippy::len_without_is_empty)]
 /// Trait implemented by types that are considered vectors by this crate.
 /// Elements of the vector are of type `F` (`f32` or `f64`).
+///
+/// Bring this trait into scope in order to add methods to specify
+/// strides to the types implementing `Vector`.
 pub trait Vector<F> {
     /// Return the number of elements in the vector.
     ///
@@ -58,15 +63,93 @@ pub trait Vector<F> {
     fn stride(x: &Self) -> usize;
 
     /// Return a reference to the underlying slice.  Note that the
-    /// `i`th element of the vector is the `i * stride` element in the
-    /// slice.
+    /// `i`th element of the vector, `0 <= i < len(x)`, is the
+    /// `i * stride` element in the slice.
     ///
     /// This is an associated function rather than a method to avoid
     /// conflicting with similarly named methods.
     fn as_slice(x: &Self) -> &[F];
 
-    /// As [`as_slice`] but mutable.
+    fn slice(&self, r: Range<usize>) -> Option<Slice<'_, F>> {
+        let stride = Self::stride(self);
+        let slice = Self::as_slice(self);
+        // FIXME: use std::slice::SliceIndex methods when stable.
+        if r.end == 0 {
+            return Some(Slice { vec: &slice[0..0], len: 0, stride: 1 })
+        }
+        let end = (r.end - 1) * stride + 1;
+        if r.start > r.end || end > slice.len() {
+            None
+        } else {
+            let start = r.start * stride;
+            Some(Slice {
+                vec: &slice[start .. end],
+                len: r.end - r.start,
+                stride
+            })
+        }
+    }
+}
+
+pub trait VectorMut<F>: Vector<F> {
+    /// Same as [`Vector::as_slice`] but mutable.
     fn as_mut_slice(x: &mut Self) -> &mut [F];
+
+    /// Same as [`Vector::slice`] but mutable.
+    fn slice_mut(&mut self, r: Range<usize>) -> Option<SliceMut<'_, F>> {
+                let stride = Self::stride(self);
+        let slice = Self::as_mut_slice(self);
+        // FIXME: use std::slice::SliceIndex methods when stable.
+        if r.end == 0 {
+            return Some(SliceMut { vec: &mut slice[0..0], len: 0, stride: 1 })
+        }
+        let end = (r.end - 1) * stride + 1;
+        if r.start > r.end || end > slice.len() {
+            None
+        } else {
+            let start = r.start * stride;
+            Some(SliceMut {
+                vec: &mut slice[start .. end],
+                len: r.end - r.start,
+                stride
+            })
+        }
+    }
+}
+
+pub struct Slice<'a, F> {
+    vec: &'a [F],
+    len: usize,
+    stride: usize,
+}
+
+pub struct SliceMut<'a, F> {
+    vec: &'a mut [F],
+    len: usize,
+    stride: usize,
+}
+
+impl<'a, F> Vector<F> for Slice<'a, F> {
+    #[inline]
+    fn len(x: &Self) -> usize { x.len }
+    #[inline]
+    fn stride(x: &Self) -> usize { x.stride }
+    #[inline]
+    fn as_slice(x: &Self) -> &[F] { x.vec }
+}
+
+impl<'a, F> Vector<F> for SliceMut<'a, F> {
+    #[inline]
+    fn len(x: &Self) -> usize { x.len }
+    #[inline]
+    fn stride(x: &Self) -> usize { x.stride }
+    #[inline]
+    fn as_slice(x: &Self) -> &[F] { x.vec }
+}
+
+impl<'a, F> VectorMut<F> for SliceMut<'a, F> {
+    #[inline]
+    fn as_mut_slice(x: &mut Self) -> &mut [F] { x.vec }
 }
 
 /// Return the length of `x` as a `i32` value (to use in CBLAS calls).
@@ -81,7 +164,7 @@ pub(crate) fn as_ptr<F, T: Vector<F> + ?Sized>(x: &T) -> *const F {
 }
 
 #[inline]
-pub(crate) fn as_mut_ptr<F, T: Vector<F> + ?Sized>(x: &mut T) -> *mut F {
+pub(crate) fn as_mut_ptr<F, T: VectorMut<F> + ?Sized>(x: &mut T) -> *mut F {
     T::as_mut_slice(x).as_mut_ptr()
 }
 
@@ -92,11 +175,12 @@ pub(crate) fn stride<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
 }
 
 #[inline]
-pub(crate) fn check_equal_len<T, F>(x: &T, y: &T) -> Result<(), Value>
+pub(crate) fn check_equal_len<T1, T2, F>(x: &T1, y: &T2) -> Result<(), Value>
 where
-    T: Vector<F> + ?Sized,
+    T1: Vector<F> + ?Sized,
+    T2: Vector<F> + ?Sized,
 {
-    if T::len(x) != T::len(y) {
+    if T1::len(x) != T2::len(y) {
         return Err(Value::Invalid);
     }
     Ok(())
@@ -639,6 +723,8 @@ impl<'a> [<$rust_name View>]<'a> {
         fn as_slice(x: &Self) -> &[$rust_ty] {
             $rust_name::as_slice(x).unwrap_or(&[])
         }
+    }
+    impl VectorMut<$rust_ty> for $rust_name {
         #[inline]
         fn as_mut_slice(x: &mut Self) -> &mut [$rust_ty] {
             $rust_name::as_slice_mut(x).unwrap_or(&mut [])
@@ -660,7 +746,7 @@ macro_rules! impl_AsRef {
     ($ty: ty) => {
         impl<T> Vector<$ty> for T
         where
-            T: AsRef<[$ty]> + AsMut<[$ty]> + ?Sized,
+            T: AsRef<[$ty]> + ?Sized,
         {
             #[inline]
             fn len(x: &Self) -> usize {
@@ -674,6 +760,12 @@ macro_rules! impl_AsRef {
             fn as_slice(x: &Self) -> &[$ty] {
                 x.as_ref()
             }
+        }
+
+        impl<T> VectorMut<$ty> for T
+        where
+            T: Vector<$ty> + AsMut<[$ty]> + ?Sized,
+        {
             #[inline]
             fn as_mut_slice(x: &mut Self) -> &mut [$ty] {
                 x.as_mut()
