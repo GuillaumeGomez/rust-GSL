@@ -32,15 +32,21 @@ use crate::vector::VectorMut;
 /// ```
 #[doc(alias = "gsl_stats_wmean")]
 pub fn wmean<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wmean: the size of w and data must be the same");
     }
-    unsafe { sys:: gsl_stats_wmean(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wmean(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
-
 }
 
 /// Returns the estimated variance of the weighted dataset `data`
@@ -49,13 +55,20 @@ where T: Vector<f64> + ?Sized {
 /// ̂σ² = (∑ wᵢ) / ((∑ wᵢ)² - ∑ wᵢ²) · ∑ wᵢ (xᵢ - ̂μ)².
 #[doc(alias = "gsl_stats_wvariance")]
 pub fn wvariance<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wvariance: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wvariance(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wvariance(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
 }
 
@@ -63,14 +76,21 @@ where T: Vector<f64> + ?Sized {
 /// using the given weighted mean `wmean`.
 #[doc(alias = "gsl_stats_wvariance_m")]
 pub fn wvariance_m<T>(w: &T, data: &T, wmean: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wvariance_m: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wvariance_m(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        wmean)
+    unsafe {
+        sys::gsl_stats_wvariance_m(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            wmean,
+        )
     }
 }
 
@@ -78,13 +98,20 @@ where T: Vector<f64> + ?Sized {
 /// variance.
 #[doc(alias = "gsl_stats_wsd")]
 pub fn wsd<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wsd: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wsd(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wsd(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
 }
 
@@ -92,14 +119,21 @@ where T: Vector<f64> + ?Sized {
 /// variance using the given weighted mean `wmean`.
 #[doc(alias = "gsl_stats_wsd_m")]
 pub fn wsd_m<T>(w: &T, data: &T, wmean: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wsd_m: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wsd_m(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        wmean)
+    unsafe {
+        sys::gsl_stats_wsd_m(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            wmean,
+        )
     }
 }
 
@@ -111,14 +145,21 @@ where T: Vector<f64> + ?Sized {
 /// σ² = ∑ wᵢ (xᵢ - μ)² / (∑ wᵢ)..
 #[doc(alias = "gsl_stats_wvariance_with_fixed_mean")]
 pub fn wvariance_with_fixed_mean<T>(w: &T, data: &T, mean: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wvariance_with_fixed_mean: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wvariance_with_fixed_mean(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        mean)
+    unsafe {
+        sys::gsl_stats_wvariance_with_fixed_mean(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            mean,
+        )
     }
 }
 
@@ -126,14 +167,21 @@ where T: Vector<f64> + ?Sized {
 /// of the variance computed by [`wvariance_with_fixed_mean`].
 #[doc(alias = "gsl_stats_wsd_with_fixed_mean")]
 pub fn wsd_with_fixed_mean<T>(w: &T, data: &T, mean: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wsd_with_fixed_mean: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wsd_with_fixed_mean(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        mean)
+    unsafe {
+        sys::gsl_stats_wsd_with_fixed_mean(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            mean,
+        )
     }
 }
 
@@ -142,13 +190,20 @@ where T: Vector<f64> + ?Sized {
 /// wmean is computed internally.
 #[doc(alias = "gsl_stats_wtss")]
 pub fn wtss<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wtss: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wtss(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wtss(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
 }
 
@@ -156,14 +211,21 @@ where T: Vector<f64> + ?Sized {
 /// weighted mean.  TSS = ∑ wᵢ (xᵢ - `wmean`)².
 #[doc(alias = "gsl_stats_wtss_m")]
 pub fn wtss_m<T>(w: &T, data: &T, wmean: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wtss_m: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wtss_m(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        wmean)
+    unsafe {
+        sys::gsl_stats_wtss_m(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            wmean,
+        )
     }
 }
 
@@ -172,13 +234,20 @@ where T: Vector<f64> + ?Sized {
 /// absdev = (∑ wᵢ |xᵢ - ̂μ|) / (∑ wᵢ)
 #[doc(alias = "gsl_stats_wabsdev")]
 pub fn wabsdev<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wabsdev: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wabsdev(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wabsdev(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
 }
 
@@ -186,14 +255,21 @@ where T: Vector<f64> + ?Sized {
 /// the given weighted mean `wmean`.
 #[doc(alias = "gsl_stats_wabsdev_m")]
 pub fn wabsdev_m<T>(w: &T, data: &T, wmean: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wabsdev_m: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wabsdev_m(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        wmean)
+    unsafe {
+        sys::gsl_stats_wabsdev_m(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            wmean,
+        )
     }
 }
 
@@ -201,13 +277,20 @@ where T: Vector<f64> + ?Sized {
 /// skew = (∑ wᵢ ((xᵢ - ̂x) / ̂σ)³) / (∑ wᵢ)
 #[doc(alias = "gsl_stats_wskew")]
 pub fn wskew<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wskew: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wskew(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wskew(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
 }
 
@@ -216,14 +299,22 @@ where T: Vector<f64> + ?Sized {
 /// `wmean` and `wsd`.
 #[doc(alias = "gsl_stats_wskew_m_sd")]
 pub fn wskew_m_sd<T>(w: &T, data: &T, wmean: f64, wsd: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wskew_m_sd: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wskew_m_sd(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        wmean, wsd)
+    unsafe {
+        sys::gsl_stats_wskew_m_sd(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            wmean,
+            wsd,
+        )
     }
 }
 
@@ -231,13 +322,20 @@ where T: Vector<f64> + ?Sized {
 /// kurtosis = (∑ wᵢ ((xᵢ - ̂x) / ̂σ)⁴) / (∑ wᵢ) - 3
 #[doc(alias = "gsl_stats_wkurtosis")]
 pub fn wkurtosis<T>(w: &T, data: &T) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wkurtosis: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wkurtosis(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data))
+    unsafe {
+        sys::gsl_stats_wkurtosis(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
 }
 
@@ -246,89 +344,129 @@ where T: Vector<f64> + ?Sized {
 /// `wmean` and `wsd`.
 #[doc(alias = "gsl_stats_wkurtosis_m_sd")]
 pub fn wkurtosis_m_sd<T>(w: &T, data: &T, wmean: f64, wsd: f64) -> f64
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     if T::len(w) != T::len(data) {
         panic!("rgsl::stats::wkurtosis_m_sd: the size of w and data must be the same");
     }
-    unsafe { sys::gsl_stats_wkurtosis_m_sd(
-        vector::as_ptr(w), T::stride(w),
-        vector::as_ptr(data), T::stride(data), T::len(data),
-        wmean, wsd)
+    unsafe {
+        sys::gsl_stats_wkurtosis_m_sd(
+            vector::as_ptr(w),
+            T::stride(w),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+            wmean,
+            wsd,
+        )
     }
 }
 
-
-
 #[doc(alias = "gsl_stats_pvariance")]
 pub fn pvariance<T>(data1: &T, data2: &T) -> f64
-where T: Vector<f64> + ?Sized {
-    unsafe { sys::gsl_stats_pvariance(
-        vector::as_ptr(data1), T::stride(data1), T::len(data1),
-        vector::as_ptr(data2), T::stride(data2), T::len(data2))
+where
+    T: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_pvariance(
+            vector::as_ptr(data1),
+            T::stride(data1),
+            T::len(data1),
+            vector::as_ptr(data2),
+            T::stride(data2),
+            T::len(data2),
+        )
     }
 }
 
 #[doc(alias = "gsl_stats_ttest")]
 pub fn ttest<T>(data1: &T, data2: &T) -> f64
-where T: Vector<f64> + ?Sized {
-    unsafe { sys::gsl_stats_ttest(
-        vector::as_ptr(data1), T::stride(data1), T::len(data1),
-        vector::as_ptr(data2), T::stride(data2), T::len(data2))
+where
+    T: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_ttest(
+            vector::as_ptr(data1),
+            T::stride(data1),
+            T::len(data1),
+            vector::as_ptr(data2),
+            T::stride(data2),
+            T::len(data2),
+        )
     }
 }
 
 #[doc(alias = "gsl_stats_max")]
 pub fn max<T>(data: &T) -> f64
-where T: Vector<f64> + ?Sized {
-    unsafe { sys::gsl_stats_max(
-        vector::as_ptr(data), T::stride(data), T::len(data)) }
+where
+    T: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_max(vector::as_ptr(data), T::stride(data), T::len(data)) }
 }
 
 #[doc(alias = "gsl_stats_min")]
 pub fn min<T>(data: &T) -> f64
-where T: Vector<f64> + ?Sized {
-    unsafe { sys::gsl_stats_min(
-        vector::as_ptr(data), T::stride(data), T::len(data)) }
+where
+    T: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_min(vector::as_ptr(data), T::stride(data), T::len(data)) }
 }
 
 /// Returns `(min, max)`.
 #[doc(alias = "gsl_stats_minmax")]
 pub fn stats_minmax<T>(data: &T) -> (f64, f64)
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     let mut min = 0.;
     let mut max = 0.;
 
-    unsafe { sys::gsl_stats_minmax(
-        &mut min, &mut max,
-        vector::as_ptr(data), T::stride(data), T::len(data)) }
+    unsafe {
+        sys::gsl_stats_minmax(
+            &mut min,
+            &mut max,
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
+    }
     (min, max)
 }
 
 #[doc(alias = "gsl_stats_max_index")]
 pub fn max_index<T>(data: &T) -> usize
-where T: Vector<f64> + ?Sized {
-    unsafe { sys::gsl_stats_max_index(
-        vector::as_ptr(data), T::stride(data), T::len(data)) }
+where
+    T: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_max_index(vector::as_ptr(data), T::stride(data), T::len(data)) }
 }
 
 #[doc(alias = "gsl_stats_min_index")]
 pub fn min_index<T>(data: &T) -> usize
-where T: Vector<f64> + ?Sized {
-    unsafe { sys::gsl_stats_min_index(
-        vector::as_ptr(data), T::stride(data), T::len(data)) }
+where
+    T: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_min_index(vector::as_ptr(data), T::stride(data), T::len(data)) }
 }
 
 /// Returns `(min, max)`.
 #[doc(alias = "gsl_stats_minmax_index")]
 pub fn stats_minmax_index<T>(data: &T) -> (usize, usize)
-where T: Vector<f64> + ?Sized {
+where
+    T: Vector<f64> + ?Sized,
+{
     let mut min = 0;
     let mut max = 0;
 
     unsafe {
         sys::gsl_stats_minmax_index(
-            &mut min, &mut max,
-            vector::as_ptr(data), T::stride(data), T::len(data))
+            &mut min,
+            &mut max,
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data),
+        )
     }
     (min, max)
 }
@@ -337,16 +475,18 @@ where T: Vector<f64> + ?Sized {
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 #[doc(alias = "gsl_stats_select")]
 pub fn select<T>(data: &mut T, k: usize) -> f64
-where T: VectorMut<f64> + ?Sized {
-    unsafe { sys::gsl_stats_select(
-        vector::as_mut_ptr(data), T::stride(data), T::len(data), k) }
+where
+    T: VectorMut<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_select(vector::as_mut_ptr(data), T::stride(data), T::len(data), k) }
 }
 
 #[cfg(feature = "v2_5")]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 #[doc(alias = "gsl_stats_median")]
 pub fn median<T>(data: &mut T) -> f64
-where T: VectorMut<f64> + ?Sized {
-    unsafe { sys::gsl_stats_median(
-        vector::as_mut_ptr(data), T::stride(data), T::len(data)) }
+where
+    T: VectorMut<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_median(vector::as_mut_ptr(data), T::stride(data), T::len(data)) }
 }
