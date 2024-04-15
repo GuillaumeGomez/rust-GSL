@@ -3,10 +3,7 @@
 //
 
 pub mod level1 {
-    use crate::vector::{
-        Vector, VectorMut,
-        as_mut_ptr, as_ptr, len, stride, check_equal_len,
-    };
+    use crate::vector::{as_mut_ptr, as_ptr, check_equal_len, len, stride, Vector, VectorMut};
     #[cfg(feature = "complex")]
     use num_complex::Complex;
 
@@ -269,7 +266,10 @@ pub mod level1 {
     /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_sswap")]
     pub fn sswap<T1, T2>(x: &mut T1, y: &mut T2)
-    where T1: VectorMut<f32> + ?Sized, T2: VectorMut<f32> + ?Sized {
+    where
+        T1: VectorMut<f32> + ?Sized,
+        T2: VectorMut<f32> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe { sys::cblas_sswap(len(x), as_mut_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
     }
@@ -277,7 +277,10 @@ pub mod level1 {
     /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_scopy")]
     pub fn scopy<T1, T2>(x: &T1, y: &mut T2)
-    where T1: Vector<f32> + ?Sized, T2: VectorMut<f32> + ?Sized {
+    where
+        T1: Vector<f32> + ?Sized,
+        T2: VectorMut<f32> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe { sys::cblas_scopy(len(x), as_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
     }
@@ -285,7 +288,10 @@ pub mod level1 {
     /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_saxpy")]
     pub fn saxpy<T1, T2>(alpha: f32, x: &T1, y: &mut T2)
-    where T1: Vector<f32> + ?Sized, T2: VectorMut<f32> + ?Sized {
+    where
+        T1: Vector<f32> + ?Sized,
+        T2: VectorMut<f32> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_saxpy(
@@ -302,7 +308,10 @@ pub mod level1 {
     /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_dswap")]
     pub fn dswap<T1, T2>(x: &mut T1, y: &mut T2)
-    where T1: VectorMut<f64> + ?Sized, T2: VectorMut<f64> + ?Sized {
+    where
+        T1: VectorMut<f64> + ?Sized,
+        T2: VectorMut<f64> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe { sys::cblas_dswap(len(x), as_mut_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
     }
@@ -310,7 +319,10 @@ pub mod level1 {
     /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_dcopy")]
     pub fn dcopy<T1, T2>(x: &T1, y: &mut T2)
-    where T1: Vector<f64> + ?Sized, T2: VectorMut<f64> + ?Sized {
+    where
+        T1: Vector<f64> + ?Sized,
+        T2: VectorMut<f64> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe { sys::cblas_dcopy(len(x), as_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
     }
@@ -318,7 +330,10 @@ pub mod level1 {
     /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_daxpy")]
     pub fn daxpy<T1, T2>(alpha: f64, x: &T1, y: &mut T2)
-    where T1: Vector<f64> + ?Sized, T2: VectorMut<f64> + ?Sized {
+    where
+        T1: Vector<f64> + ?Sized,
+        T2: VectorMut<f64> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_daxpy(
@@ -336,8 +351,9 @@ pub mod level1 {
     /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_cswap")]
     pub fn cswap<T1, T2>(x: &mut T1, y: &mut T2)
-    where T1: VectorMut<Complex<f32>> + ?Sized,
-          T2: VectorMut<Complex<f32>> + ?Sized
+    where
+        T1: VectorMut<Complex<f32>> + ?Sized,
+        T2: VectorMut<Complex<f32>> + ?Sized,
     {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
@@ -355,8 +371,9 @@ pub mod level1 {
     /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_ccopy")]
     pub fn ccopy<T1, T2>(x: &T1, y: &mut T2)
-    where T1: Vector<Complex<f32>> + ?Sized,
-          T2: VectorMut<Complex<f32>> + ?Sized
+    where
+        T1: Vector<Complex<f32>> + ?Sized,
+        T2: VectorMut<Complex<f32>> + ?Sized,
     {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
@@ -374,8 +391,9 @@ pub mod level1 {
     /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_caxpy")]
     pub fn caxpy<T1, T2>(alpha: &Complex<f32>, x: &T1, y: &mut T2)
-    where T1: Vector<Complex<f32>> + ?Sized,
-          T2: VectorMut<Complex<f32>> + ?Sized
+    where
+        T1: Vector<Complex<f32>> + ?Sized,
+        T2: VectorMut<Complex<f32>> + ?Sized,
     {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
@@ -394,8 +412,9 @@ pub mod level1 {
     /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_zswap")]
     pub fn zswap<T1, T2>(x: &mut T1, y: &mut T2)
-    where T1: VectorMut<Complex<f64>> + ?Sized,
-          T2: VectorMut<Complex<f64>> + ?Sized
+    where
+        T1: VectorMut<Complex<f64>> + ?Sized,
+        T2: VectorMut<Complex<f64>> + ?Sized,
     {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
@@ -413,8 +432,9 @@ pub mod level1 {
     /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_zcopy")]
     pub fn zcopy<T1, T2>(x: &T1, y: &mut T2)
-    where T1: Vector<Complex<f64>> + ?Sized,
-          T2: VectorMut<Complex<f64>> + ?Sized
+    where
+        T1: Vector<Complex<f64>> + ?Sized,
+        T2: VectorMut<Complex<f64>> + ?Sized,
     {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
@@ -432,8 +452,9 @@ pub mod level1 {
     /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_zaxpy")]
     pub fn zaxpy<T1, T2>(alpha: &Complex<f64>, x: &T1, y: &mut T2)
-    where T1: Vector<Complex<f64>> + ?Sized,
-          T2: VectorMut<Complex<f64>> + ?Sized
+    where
+        T1: Vector<Complex<f64>> + ?Sized,
+        T2: VectorMut<Complex<f64>> + ?Sized,
     {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
@@ -559,7 +580,9 @@ pub mod level1 {
     /// for all indices i.
     #[doc(alias = "cblas_srot")]
     pub fn srot<T>(x: &mut T, y: &mut T, c: f32, s: f32)
-    where T: VectorMut<f32> + ?Sized {
+    where
+        T: VectorMut<f32> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_srot(
@@ -582,7 +605,9 @@ pub mod level1 {
     /// for all indices i.
     #[doc(alias = "cblas_srotm")]
     pub fn srotm<T>(x: &mut T, y: &mut T, h: H<f32>)
-    where T: VectorMut<f32> + ?Sized {
+    where
+        T: VectorMut<f32> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         let p = match h {
             H::Full { h11, h21, h12, h22 } => [-1.0, h11, h21, h12, h22],
@@ -681,7 +706,9 @@ pub mod level1 {
     /// for all indices i.
     #[doc(alias = "cblas_drot")]
     pub fn drot<T>(x: &mut T, y: &mut T, c: f64, s: f64)
-    where T: VectorMut<f64> + ?Sized {
+    where
+        T: VectorMut<f64> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_drot(
@@ -704,7 +731,9 @@ pub mod level1 {
     /// for all indices i.
     #[doc(alias = "cblas_drotm")]
     pub fn drotm<T>(x: &mut T, y: &mut T, h: H<f64>)
-    where T: VectorMut<f64> + ?Sized {
+    where
+        T: VectorMut<f64> + ?Sized,
+    {
         check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         let p = match h {
             H::Full { h11, h21, h12, h22 } => [-1.0, h11, h21, h12, h22],
@@ -727,14 +756,18 @@ pub mod level1 {
     /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_sscal")]
     pub fn sscal<T>(alpha: f32, x: &mut T)
-    where T: VectorMut<f32> + ?Sized {
+    where
+        T: VectorMut<f32> + ?Sized,
+    {
         unsafe { sys::cblas_sscal(len(x), alpha, as_mut_ptr(x), stride(x)) }
     }
 
     /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_dscal")]
     pub fn dscal<T>(alpha: f64, x: &mut T)
-    where T: VectorMut<f64> + ?Sized {
+    where
+        T: VectorMut<f64> + ?Sized,
+    {
         unsafe { sys::cblas_dscal(len(x), alpha, as_mut_ptr(x), stride(x)) }
     }
 
@@ -742,7 +775,9 @@ pub mod level1 {
     /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_cscal")]
     pub fn cscal<T>(alpha: &Complex<f32>, x: &mut T)
-    where T: VectorMut<Complex<f32>> + ?Sized {
+    where
+        T: VectorMut<Complex<f32>> + ?Sized,
+    {
         unsafe {
             sys::cblas_cscal(
                 len(x),
@@ -757,7 +792,9 @@ pub mod level1 {
     /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_zscal")]
     pub fn zscal<T>(alpha: &Complex<f64>, x: &mut T)
-    where T: VectorMut<Complex<f64>> + ?Sized {
+    where
+        T: VectorMut<Complex<f64>> + ?Sized,
+    {
         unsafe {
             sys::cblas_zscal(
                 len(x),
@@ -772,7 +809,9 @@ pub mod level1 {
     /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_csscal")]
     pub fn csscal<T>(alpha: f32, x: &mut T)
-    where T: VectorMut<Complex<f32>> + ?Sized {
+    where
+        T: VectorMut<Complex<f32>> + ?Sized,
+    {
         unsafe { sys::cblas_csscal(len(x), alpha, as_mut_ptr(x) as *mut _, stride(x)) }
     }
 
@@ -780,7 +819,9 @@ pub mod level1 {
     /// Multiple each element of a matrix/vector by a constant.
     #[doc(alias = "cblas_zdscal")]
     pub fn zdscal<T>(alpha: f64, x: &mut T)
-    where T: VectorMut<Complex<f64>> + ?Sized {
+    where
+        T: VectorMut<Complex<f64>> + ?Sized,
+    {
         unsafe { sys::cblas_zdscal(len(x), alpha, as_mut_ptr(x) as *mut _, stride(x)) }
     }
 }

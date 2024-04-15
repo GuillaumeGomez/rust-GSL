@@ -75,7 +75,11 @@ pub trait Vector<F> {
         let slice = Self::as_slice(self);
         // FIXME: use std::slice::SliceIndex methods when stable.
         if r.end == 0 {
-            return Some(Slice { vec: &slice[0..0], len: 0, stride: 1 })
+            return Some(Slice {
+                vec: &slice[0..0],
+                len: 0,
+                stride: 1,
+            });
         }
         let end = (r.end - 1) * stride + 1;
         if r.start > r.end || end > slice.len() {
@@ -83,9 +87,9 @@ pub trait Vector<F> {
         } else {
             let start = r.start * stride;
             Some(Slice {
-                vec: &slice[start .. end],
+                vec: &slice[start..end],
                 len: r.end - r.start,
-                stride
+                stride,
             })
         }
     }
@@ -97,11 +101,15 @@ pub trait VectorMut<F>: Vector<F> {
 
     /// Same as [`Vector::slice`] but mutable.
     fn slice_mut(&mut self, r: Range<usize>) -> Option<SliceMut<'_, F>> {
-                let stride = Self::stride(self);
+        let stride = Self::stride(self);
         let slice = Self::as_mut_slice(self);
         // FIXME: use std::slice::SliceIndex methods when stable.
         if r.end == 0 {
-            return Some(SliceMut { vec: &mut slice[0..0], len: 0, stride: 1 })
+            return Some(SliceMut {
+                vec: &mut slice[0..0],
+                len: 0,
+                stride: 1,
+            });
         }
         let end = (r.end - 1) * stride + 1;
         if r.start > r.end || end > slice.len() {
@@ -109,9 +117,9 @@ pub trait VectorMut<F>: Vector<F> {
         } else {
             let start = r.start * stride;
             Some(SliceMut {
-                vec: &mut slice[start .. end],
+                vec: &mut slice[start..end],
                 len: r.end - r.start,
-                stride
+                stride,
             })
         }
     }
@@ -131,25 +139,39 @@ pub struct SliceMut<'a, F> {
 
 impl<'a, F> Vector<F> for Slice<'a, F> {
     #[inline]
-    fn len(x: &Self) -> usize { x.len }
+    fn len(x: &Self) -> usize {
+        x.len
+    }
     #[inline]
-    fn stride(x: &Self) -> usize { x.stride }
+    fn stride(x: &Self) -> usize {
+        x.stride
+    }
     #[inline]
-    fn as_slice(x: &Self) -> &[F] { x.vec }
+    fn as_slice(x: &Self) -> &[F] {
+        x.vec
+    }
 }
 
 impl<'a, F> Vector<F> for SliceMut<'a, F> {
     #[inline]
-    fn len(x: &Self) -> usize { x.len }
+    fn len(x: &Self) -> usize {
+        x.len
+    }
     #[inline]
-    fn stride(x: &Self) -> usize { x.stride }
+    fn stride(x: &Self) -> usize {
+        x.stride
+    }
     #[inline]
-    fn as_slice(x: &Self) -> &[F] { x.vec }
+    fn as_slice(x: &Self) -> &[F] {
+        x.vec
+    }
 }
 
 impl<'a, F> VectorMut<F> for SliceMut<'a, F> {
     #[inline]
-    fn as_mut_slice(x: &mut Self) -> &mut [F] { x.vec }
+    fn as_mut_slice(x: &mut Self) -> &mut [F] {
+        x.vec
+    }
 }
 
 /// Return the length of `x` as a `i32` value (to use in CBLAS calls).
@@ -185,7 +207,6 @@ where
     }
     Ok(())
 }
-
 
 macro_rules! gsl_vec {
     ($rust_name:ident, $name:ident, $rust_ty:ident) => (
@@ -780,4 +801,3 @@ impl_AsRef!(f64);
 impl_AsRef!(Complex<f32>);
 #[cfg(feature = "complex")]
 impl_AsRef!(Complex<f64>);
-
