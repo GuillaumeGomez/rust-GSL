@@ -3,381 +3,826 @@
 //
 
 pub mod level1 {
+    use crate::vector::{as_mut_ptr, as_ptr, check_equal_len, len, stride, Vector, VectorMut};
+    #[cfg(feature = "complex")]
+    use num_complex::Complex;
+
+    /// Return the sum of `alpha` and the dot product of `x` and `y`.
     #[doc(alias = "cblas_sdsdot")]
-    pub fn sdsdot(N: i32, alpha: f32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
-        unsafe { sys::cblas_sdsdot(N, alpha, x.as_ptr(), incx, y.as_ptr(), incy) }
+    pub fn sdsdot<T: Vector<f32> + ?Sized>(alpha: f32, x: &T, y: &T) -> f32 {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        unsafe { sys::cblas_sdsdot(len(x), alpha, as_ptr(x), stride(x), as_ptr(y), stride(y)) }
     }
 
+    /// Return the dot product of `x` and `y`.
     #[doc(alias = "cblas_dsdot")]
-    pub fn dsdot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f64 {
-        unsafe { sys::cblas_dsdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
+    pub fn dsdot<T: Vector<f32> + ?Sized>(x: &T, y: &T) -> f64 {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        unsafe { sys::cblas_dsdot(len(x), as_ptr(x), stride(x), as_ptr(y), stride(y)) }
     }
 
+    /// Return the dot product of `x` and `y`.
     #[doc(alias = "cblas_sdot")]
-    pub fn sdot(N: i32, x: &[f32], incx: i32, y: &[f32], incy: i32) -> f32 {
-        unsafe { sys::cblas_sdot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
+    pub fn sdot<T: Vector<f32> + ?Sized>(x: &T, y: &T) -> f32 {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        unsafe { sys::cblas_sdot(len(x), as_ptr(x), stride(x), as_ptr(y), stride(y)) }
     }
 
+    /// Return the dot product of `x` and `y`.
     #[doc(alias = "cblas_ddot")]
-    pub fn ddot(N: i32, x: &[f64], incx: i32, y: &[f64], incy: i32) -> f64 {
-        unsafe { sys::cblas_ddot(N, x.as_ptr(), incx, y.as_ptr(), incy) }
+    pub fn ddot<T: Vector<f64> + ?Sized>(x: &T, y: &T) -> f64 {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        unsafe { sys::cblas_ddot(len(x), as_ptr(x), stride(x), as_ptr(y), stride(y)) }
     }
 
+    #[cfg(feature = "complex")]
+    /// Return the unconjugated dot product between `x` and `y`, that
+    /// is ∑ xᵢ yᵢ.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use num_complex::Complex;
+    /// use rgsl::cblas::level1::cdotu;
+    /// let x = [Complex::new(1., 1.), Complex::new(2., 1.)];
+    /// assert_eq!(cdotu(&x, &x), Complex::new(3., 6.))
+    /// ```
     #[doc(alias = "cblas_cdotu_sub")]
-    pub fn cdotu_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotu: &mut [T]) {
+    pub fn cdotu<T>(x: &T, y: &T) -> Complex<f32>
+    where
+        T: Vector<Complex<f32>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        let mut dotu: Complex<f32> = Complex::new(0., 0.);
         unsafe {
             sys::cblas_cdotu_sub(
-                N,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_ptr() as *const _,
-                incy,
-                dotu.as_mut_ptr() as *mut _,
+                len(x),
+                as_ptr(x) as *const _,
+                stride(x),
+                as_ptr(y) as *const _,
+                stride(y),
+                &mut dotu as *mut Complex<f32> as *mut _,
             )
         }
+        dotu
     }
 
+    #[cfg(feature = "complex")]
+    /// Return the (conjugated) dot product between `x` and `y`, that
+    /// is ∑ x̅ᵢ yᵢ.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use num_complex::Complex;
+    /// use rgsl::cblas::level1::cdotc;
+    /// let x = [Complex::new(1., 1.), Complex::new(2., 1.)];
+    /// assert_eq!(cdotc(&x, &x), Complex::new(7., 0.))
+    /// ```
     #[doc(alias = "cblas_cdotc_sub")]
-    pub fn cdotc_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotc: &mut [T]) {
+    pub fn cdotc<T>(x: &T, y: &T) -> Complex<f32>
+    where
+        T: Vector<Complex<f32>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        let mut dotc: Complex<f32> = Complex::new(0., 0.);
         unsafe {
             sys::cblas_cdotc_sub(
-                N,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_ptr() as *const _,
-                incy,
-                dotc.as_mut_ptr() as *mut _,
+                len(x),
+                as_ptr(x) as *const _,
+                stride(x),
+                as_ptr(y) as *const _,
+                stride(y),
+                &mut dotc as *mut Complex<f32> as *mut _,
             )
         }
+        dotc
     }
 
+    #[cfg(feature = "complex")]
+    /// Return the unconjugated dot product between `x` and `y`, that
+    /// is ∑ xᵢ yᵢ.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use num_complex::Complex;
+    /// use rgsl::cblas::level1::zdotu;
+    /// let x = [Complex::new(1., 1.), Complex::new(2., 1.)];
+    /// assert_eq!(zdotu(&x, &x), Complex::new(3., 6.))
+    /// ```
     #[doc(alias = "cblas_zdotu_sub")]
-    pub fn zdotu_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotu: &mut [T]) {
+    pub fn zdotu<T>(x: &T, y: &T) -> Complex<f64>
+    where
+        T: Vector<Complex<f64>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        let mut dotu: Complex<f64> = Complex::new(0., 0.);
         unsafe {
             sys::cblas_zdotu_sub(
-                N,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_ptr() as *const _,
-                incy,
-                dotu.as_mut_ptr() as *mut _,
+                len(x),
+                as_ptr(x) as *const _,
+                stride(x),
+                as_ptr(y) as *const _,
+                stride(y),
+                &mut dotu as *mut Complex<f64> as *mut _,
             )
         }
+        dotu
     }
 
+    #[cfg(feature = "complex")]
+    /// Return the (conjugated) dot product between `x` and `y`, that
+    /// is ∑ x̅ᵢ yᵢ.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use num_complex::Complex;
+    /// use rgsl::cblas::level1::zdotc;
+    /// let x = [Complex::new(1., 1.), Complex::new(2., 1.)];
+    /// assert_eq!(zdotc(&x, &x), Complex::new(7., 0.))
+    /// ```
     #[doc(alias = "cblas_zdotc_sub")]
-    pub fn zdotc_sub<T>(N: i32, x: &[T], incx: i32, y: &[T], incy: i32, dotc: &mut [T]) {
+    pub fn zdotc<T>(x: &T, y: &T) -> Complex<f64>
+    where
+        T: Vector<Complex<f64>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("The length of `x` and `y` must be equal");
+        let mut dotc: Complex<f64> = Complex::new(0., 0.);
         unsafe {
             sys::cblas_zdotc_sub(
-                N,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_ptr() as *const _,
-                incy,
-                dotc.as_mut_ptr() as *mut _,
+                len(x),
+                as_ptr(x) as *const _,
+                stride(x),
+                as_ptr(y) as *const _,
+                stride(y),
+                &mut dotc as *mut Complex<f64> as *mut _,
+            )
+        }
+        dotc
+    }
+
+    /// Return the Euclidean norm of `x`.
+    #[doc(alias = "cblas_snrm2")]
+    pub fn snrm2<T: Vector<f32> + ?Sized>(x: &T) -> f32 {
+        unsafe { sys::cblas_snrm2(len(x), as_ptr(x), stride(x)) }
+    }
+
+    /// Return the sum of the absolute values of the elements of `x`
+    /// (i.e., its L¹-norm).
+    #[doc(alias = "cblas_sasum")]
+    pub fn sasum<T: Vector<f32> + ?Sized>(x: &T) -> f32 {
+        unsafe { sys::cblas_sasum(len(x), as_ptr(x), stride(x)) }
+    }
+
+    /// Return the Euclidean norm of `x`.
+    #[doc(alias = "cblas_dnrm2")]
+    pub fn dnrm2<T: Vector<f64> + ?Sized>(x: &T) -> f64 {
+        unsafe { sys::cblas_dnrm2(len(x), as_ptr(x), stride(x)) }
+    }
+
+    /// Return the sum of the absolute values of the elements of `x`
+    /// (i.e., its L¹-norm).
+    #[doc(alias = "cblas_dasum")]
+    pub fn dasum<T: Vector<f64> + ?Sized>(x: &T) -> f64 {
+        unsafe { sys::cblas_dasum(len(x), as_ptr(x), stride(x)) }
+    }
+
+    #[cfg(feature = "complex")]
+    /// Return the Euclidean norm of `x`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use num_complex::Complex;
+    /// use rgsl::cblas::level1::scnrm2;
+    /// let x = [Complex::new(1., 1.), Complex::new(2., 1.)];
+    /// assert_eq!(scnrm2(&x), 7f32.sqrt())
+    /// ```
+    #[doc(alias = "cblas_scnrm2")]
+    pub fn scnrm2<T: Vector<Complex<f32>> + ?Sized>(x: &T) -> f32 {
+        unsafe { sys::cblas_scnrm2(len(x), as_ptr(x) as *const _, stride(x)) }
+    }
+
+    #[cfg(feature = "complex")]
+    /// Return the sum of the modulus of the elements of `x`
+    /// (i.e., its L¹-norm).
+    #[doc(alias = "cblas_scasum")]
+    pub fn scasum<T: Vector<Complex<f32>> + ?Sized>(x: &T) -> f32 {
+        unsafe { sys::cblas_scasum(len(x), as_ptr(x) as *const _, stride(x)) }
+    }
+
+    #[cfg(feature = "complex")]
+    /// Return the Euclidean norm of `x`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use num_complex::Complex;
+    /// use rgsl::cblas::level1::dznrm2;
+    /// let x = [Complex::new(1., 1.), Complex::new(2., 1.)];
+    /// assert_eq!(dznrm2(&x), 7f64.sqrt())
+    /// ```
+    #[doc(alias = "cblas_dznrm2")]
+    pub fn dznrm2<T: Vector<Complex<f64>> + ?Sized>(x: &T) -> f64 {
+        unsafe { sys::cblas_dznrm2(len(x), as_ptr(x) as *const _, stride(x)) }
+    }
+
+    #[cfg(feature = "complex")]
+    /// Return the sum of the modulus of the elements of `x`
+    /// (i.e., its L¹-norm).
+    #[doc(alias = "cblas_dzasum")]
+    pub fn dzasum<T: Vector<Complex<f64>> + ?Sized>(x: &T) -> f64 {
+        unsafe { sys::cblas_dzasum(len(x), as_ptr(x) as *const _, stride(x)) }
+    }
+
+    /// Return the index of the element with maximum absolute value.
+    #[doc(alias = "cblas_isamax")]
+    pub fn isamax<T: Vector<f32> + ?Sized>(x: &T) -> usize {
+        unsafe { sys::cblas_isamax(len(x), as_ptr(x), stride(x)) }
+    }
+
+    /// Return the index of the element with maximum absolute value.
+    #[doc(alias = "cblas_idamax")]
+    pub fn idamax<T: Vector<f64> + ?Sized>(x: &T) -> usize {
+        unsafe { sys::cblas_idamax(len(x), as_ptr(x), stride(x)) }
+    }
+
+    #[cfg(feature = "complex")]
+    /// Return the index of the element with maximum modulus.
+    #[doc(alias = "cblas_icamax")]
+    pub fn icamax<T: Vector<Complex<f32>> + ?Sized>(x: &T) -> usize {
+        unsafe { sys::cblas_icamax(len(x), as_ptr(x) as *const _, stride(x)) }
+    }
+
+    #[cfg(feature = "complex")]
+    /// Return the index of the element with maximum modulus.
+    #[doc(alias = "cblas_izamax")]
+    pub fn izamax<T: Vector<Complex<f64>> + ?Sized>(x: &T) -> usize {
+        unsafe { sys::cblas_izamax(len(x), as_ptr(x) as *const _, stride(x)) }
+    }
+
+    /// Swap vectors `x` and `y`.
+    #[doc(alias = "cblas_sswap")]
+    pub fn sswap<T1, T2>(x: &mut T1, y: &mut T2)
+    where
+        T1: VectorMut<f32> + ?Sized,
+        T2: VectorMut<f32> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe { sys::cblas_sswap(len(x), as_mut_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
+    }
+
+    /// Copy the content of `x` into `y`.
+    #[doc(alias = "cblas_scopy")]
+    pub fn scopy<T1, T2>(x: &T1, y: &mut T2)
+    where
+        T1: Vector<f32> + ?Sized,
+        T2: VectorMut<f32> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe { sys::cblas_scopy(len(x), as_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
+    }
+
+    /// `y` := `alpha` * `x` + `y`.
+    #[doc(alias = "cblas_saxpy")]
+    pub fn saxpy<T1, T2>(alpha: f32, x: &T1, y: &mut T2)
+    where
+        T1: Vector<f32> + ?Sized,
+        T2: VectorMut<f32> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe {
+            sys::cblas_saxpy(
+                len(x),
+                alpha,
+                as_ptr(x),
+                stride(x),
+                as_mut_ptr(y),
+                stride(y),
             )
         }
     }
 
-    #[doc(alias = "cblas_snrm2")]
-    pub fn snrm2(N: i32, x: &[f32], incx: i32) -> f32 {
-        unsafe { sys::cblas_snrm2(N, x.as_ptr(), incx) }
-    }
-
-    #[doc(alias = "cblas_sasum")]
-    pub fn sasum(N: i32, x: &[f32], incx: i32) -> f32 {
-        unsafe { sys::cblas_sasum(N, x.as_ptr(), incx) }
-    }
-
-    #[doc(alias = "cblas_dnrm2")]
-    pub fn dnrm2(N: i32, x: &[f64], incx: i32) -> f64 {
-        unsafe { sys::cblas_dnrm2(N, x.as_ptr(), incx) }
-    }
-
-    #[doc(alias = "cblas_dasum")]
-    pub fn dasum(N: i32, x: &[f64], incx: i32) -> f64 {
-        unsafe { sys::cblas_dasum(N, x.as_ptr(), incx) }
-    }
-
-    #[doc(alias = "cblas_scnrm2")]
-    pub fn scnrm2<T>(N: i32, x: &[T], incx: i32) -> f32 {
-        unsafe { sys::cblas_scnrm2(N, x.as_ptr() as *const _, incx) }
-    }
-
-    #[doc(alias = "cblas_scasum")]
-    pub fn scasum<T>(N: i32, x: &[T], incx: i32) -> f32 {
-        unsafe { sys::cblas_scasum(N, x.as_ptr() as *const _, incx) }
-    }
-
-    #[doc(alias = "cblas_dznrm2")]
-    pub fn dznrm2<T>(N: i32, x: &[T], incx: i32) -> f64 {
-        unsafe { sys::cblas_dznrm2(N, x.as_ptr() as *const _, incx) }
-    }
-
-    #[doc(alias = "cblas_dzasum")]
-    pub fn dzasum<T>(N: i32, x: &[T], incx: i32) -> f64 {
-        unsafe { sys::cblas_dzasum(N, x.as_ptr() as *const _, incx) }
-    }
-
-    #[doc(alias = "cblas_isamax")]
-    pub fn isamax(N: i32, x: &[f32], incx: i32) -> usize {
-        unsafe { sys::cblas_isamax(N, x.as_ptr(), incx) }
-    }
-
-    #[doc(alias = "cblas_idamax")]
-    pub fn idamax(N: i32, x: &[f64], incx: i32) -> usize {
-        unsafe { sys::cblas_idamax(N, x.as_ptr(), incx) }
-    }
-
-    #[doc(alias = "cblas_icamax")]
-    pub fn icamax<T>(N: i32, x: &[T], incx: i32) -> usize {
-        unsafe { sys::cblas_icamax(N, x.as_ptr() as *const _, incx) }
-    }
-
-    #[doc(alias = "cblas_izamax")]
-    pub fn izamax<T>(N: i32, x: &[T], incx: i32) -> usize {
-        unsafe { sys::cblas_izamax(N, x.as_ptr() as *const _, incx) }
-    }
-
-    #[doc(alias = "cblas_sswap")]
-    pub fn sswap(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32) {
-        unsafe { sys::cblas_sswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
-    }
-
-    #[doc(alias = "cblas_scopy")]
-    pub fn scopy(N: i32, x: &[f32], incx: i32, y: &mut [f32], incy: i32) {
-        unsafe { sys::cblas_scopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
-    }
-
-    #[doc(alias = "cblas_saxpy")]
-    pub fn saxpy(N: i32, alpha: f32, x: &[f32], incx: i32, y: &mut [f32], incy: i32) {
-        unsafe { sys::cblas_saxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
-    }
-
+    /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_dswap")]
-    pub fn dswap(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32) {
-        unsafe { sys::cblas_dswap(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy) }
+    pub fn dswap<T1, T2>(x: &mut T1, y: &mut T2)
+    where
+        T1: VectorMut<f64> + ?Sized,
+        T2: VectorMut<f64> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe { sys::cblas_dswap(len(x), as_mut_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
     }
 
+    /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_dcopy")]
-    pub fn dcopy(N: i32, x: &[f64], incx: i32, y: &mut [f64], incy: i32) {
-        unsafe { sys::cblas_dcopy(N, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
+    pub fn dcopy<T1, T2>(x: &T1, y: &mut T2)
+    where
+        T1: Vector<f64> + ?Sized,
+        T2: VectorMut<f64> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe { sys::cblas_dcopy(len(x), as_ptr(x), stride(x), as_mut_ptr(y), stride(y)) }
     }
 
+    /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_daxpy")]
-    pub fn daxpy(N: i32, alpha: f64, x: &[f64], incx: i32, y: &mut [f64], incy: i32) {
-        unsafe { sys::cblas_daxpy(N, alpha, x.as_ptr(), incx, y.as_mut_ptr(), incy) }
+    pub fn daxpy<T1, T2>(alpha: f64, x: &T1, y: &mut T2)
+    where
+        T1: Vector<f64> + ?Sized,
+        T2: VectorMut<f64> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe {
+            sys::cblas_daxpy(
+                len(x),
+                alpha,
+                as_ptr(x),
+                stride(x),
+                as_mut_ptr(y),
+                stride(y),
+            )
+        }
     }
 
+    #[cfg(feature = "complex")]
+    /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_cswap")]
-    pub fn cswap<T>(N: i32, x: &mut [T], incx: i32, y: &mut [T], incy: i32) {
+    pub fn cswap<T1, T2>(x: &mut T1, y: &mut T2)
+    where
+        T1: VectorMut<Complex<f32>> + ?Sized,
+        T2: VectorMut<Complex<f32>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_cswap(
-                N,
-                x.as_mut_ptr() as *mut _,
-                incx,
-                y.as_mut_ptr() as *mut _,
-                incy,
+                len(x),
+                as_mut_ptr(x) as *mut _,
+                stride(x),
+                as_mut_ptr(y) as *mut _,
+                stride(y),
             )
         }
     }
 
+    #[cfg(feature = "complex")]
+    /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_ccopy")]
-    pub fn ccopy<T>(N: i32, x: &[T], incx: i32, y: &mut [T], incy: i32) {
+    pub fn ccopy<T1, T2>(x: &T1, y: &mut T2)
+    where
+        T1: Vector<Complex<f32>> + ?Sized,
+        T2: VectorMut<Complex<f32>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_ccopy(
-                N,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_mut_ptr() as *mut _,
-                incy,
+                len(x),
+                as_ptr(x) as *const _,
+                stride(x),
+                as_mut_ptr(y) as *mut _,
+                stride(y),
             )
         }
     }
 
+    #[cfg(feature = "complex")]
+    /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_caxpy")]
-    pub fn caxpy<T>(N: i32, alpha: &[T], x: &[T], incx: i32, y: &mut [T], incy: i32) {
+    pub fn caxpy<T1, T2>(alpha: &Complex<f32>, x: &T1, y: &mut T2)
+    where
+        T1: Vector<Complex<f32>> + ?Sized,
+        T2: VectorMut<Complex<f32>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_caxpy(
-                N,
-                alpha.as_ptr() as *const _,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_mut_ptr() as *mut _,
-                incy,
+                len(x),
+                alpha as *const Complex<f32> as *const _,
+                as_ptr(x) as *const _,
+                stride(x),
+                as_mut_ptr(y) as *mut _,
+                stride(y),
             )
         }
     }
 
+    #[cfg(feature = "complex")]
+    /// Swap vectors `x` and `y`.
     #[doc(alias = "cblas_zswap")]
-    pub fn zswap<T>(N: i32, x: &mut [T], incx: i32, y: &mut [T], incy: i32) {
+    pub fn zswap<T1, T2>(x: &mut T1, y: &mut T2)
+    where
+        T1: VectorMut<Complex<f64>> + ?Sized,
+        T2: VectorMut<Complex<f64>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_zswap(
-                N,
-                x.as_mut_ptr() as *mut _,
-                incx,
-                y.as_mut_ptr() as *mut _,
-                incy,
+                len(x),
+                as_mut_ptr(x) as *mut _,
+                stride(x),
+                as_mut_ptr(y) as *mut _,
+                stride(y),
             )
         }
     }
 
+    #[cfg(feature = "complex")]
+    /// Copy the content of `x` into `y`.
     #[doc(alias = "cblas_zcopy")]
-    pub fn zcopy<T>(N: i32, x: &[T], incx: i32, y: &mut [T], incy: i32) {
+    pub fn zcopy<T1, T2>(x: &T1, y: &mut T2)
+    where
+        T1: Vector<Complex<f64>> + ?Sized,
+        T2: VectorMut<Complex<f64>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_zcopy(
-                N,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_mut_ptr() as *mut _,
-                incy,
+                len(x),
+                as_ptr(x) as *const _,
+                stride(x),
+                as_mut_ptr(y) as *mut _,
+                stride(y),
             )
         }
     }
 
+    #[cfg(feature = "complex")]
+    /// `y` := `alpha` * `x` + `y`.
     #[doc(alias = "cblas_zaxpy")]
-    pub fn zaxpy<T>(N: i32, alpha: &[T], x: &[T], incx: i32, y: &mut [T], incy: i32) {
+    pub fn zaxpy<T1, T2>(alpha: &Complex<f64>, x: &T1, y: &mut T2)
+    where
+        T1: Vector<Complex<f64>> + ?Sized,
+        T2: VectorMut<Complex<f64>> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
         unsafe {
             sys::cblas_zaxpy(
-                N,
-                alpha.as_ptr() as *const _,
-                x.as_ptr() as *const _,
-                incx,
-                y.as_mut_ptr() as *mut _,
-                incy,
+                len(x),
+                alpha as *const Complex<f64> as *const _,
+                as_ptr(x) as *const _,
+                stride(x),
+                as_mut_ptr(y) as *mut _,
+                stride(y),
             )
         }
     }
 
+    /// Given the Cartesian coordinates (`a`, `b`), returns
+    /// (c, s, r, z) such that
+    ///
+    /// ⎧c  s⎫ ⎧a⎫ = ⎧r⎫
+    /// ⎩s  c⎭ ⎩b⎭   ⎩0⎭
+    ///
+    /// The value of z is defined such that if |`a`| > |`b`|, z is s;
+    /// otherwise if c ≠ 0, z is 1/c; otherwise z is 1.
     #[doc(alias = "cblas_srotg")]
-    pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], s: &mut [f32]) {
+    pub fn srotg(a: f32, b: f32) -> (f32, f32, f32, f32) {
+        let mut c = f32::NAN;
+        let mut s = f32::NAN;
+        let mut r = a;
+        let mut z = b;
         unsafe {
             sys::cblas_srotg(
-                a.as_mut_ptr(),
-                b.as_mut_ptr(),
-                c.as_mut_ptr(),
-                s.as_mut_ptr(),
+                &mut r as *mut _,
+                &mut z as *mut _,
+                &mut c as *mut _,
+                &mut s as *mut _,
             )
         }
+        (c, s, r, z)
     }
 
+    /// Modified matrix transformation (for the mathematical field `F`).
+    #[derive(Clone, Copy)]
+    pub enum H<F> {
+        /// Specify that H is the matrix
+        ///
+        /// ⎧`h11`  `h12`⎫
+        /// ⎩`h21`  `h22`⎭
+        Full {
+            h11: F,
+            h21: F,
+            h12: F,
+            h22: F,
+        },
+        /// Specify that H is the matrix
+        ///
+        /// ⎧1.0  `h12`⎫
+        /// ⎩`h21`  1.0⎭
+        OffDiag {
+            h21: F,
+            h12: F,
+        },
+        /// Specify that H is the matrix
+        ///
+        /// ⎧`h11`   1.0⎫
+        /// ⎩-1.0  `h22`⎭
+        Diag {
+            h11: F,
+            h22: F,
+        },
+        Id,
+    }
+
+    /// Given Cartesian coordinates (`x1`, `x2`), return the
+    /// transformation matrix H that zeros the second component or the
+    /// vector (`x1` √`d1`, `x2` √`d2`):
+    ///
+    /// H ⎧`x1` √`d1`⎫ = ⎧y1⎫
+    ///   ⎩`x2` √`d2`⎭   ⎩0.⎭
+    ///
+    /// The second component of the return value is `y1`.
     #[doc(alias = "cblas_srotmg")]
-    pub fn srotmg(d1: &mut [f32], d2: &mut [f32], b1: &mut [f32], b2: f32, P: &mut [f32]) {
+    pub fn srotmg(mut d1: f32, mut d2: f32, mut x1: f32, x2: f32) -> (H<f32>, f32) {
+        let mut h: [f32; 5] = [0.; 5];
         unsafe {
             sys::cblas_srotmg(
-                d1.as_mut_ptr(),
-                d2.as_mut_ptr(),
-                b1.as_mut_ptr(),
-                b2,
-                P.as_mut_ptr(),
+                &mut d1 as *mut _,
+                &mut d2 as *mut _,
+                &mut x1 as *mut _,
+                x2,
+                &mut h as *mut _,
+            )
+        }
+        let h = if h[0] == -1.0 {
+            H::Full {
+                h11: h[1],
+                h21: h[2],
+                h12: h[3],
+                h22: h[4],
+            }
+        } else if h[0] == 0.0 {
+            H::OffDiag {
+                h21: h[2],
+                h12: h[3],
+            }
+        } else if h[0] == 1.0 {
+            H::Diag {
+                h11: h[1],
+                h22: h[4],
+            }
+        } else if h[0] == -2.0 {
+            H::Id
+        } else {
+            unreachable!("srotmg: incorrect flag value")
+        };
+        (h, x1)
+    }
+
+    /// Apply plane rotation.  More specifically, perform the
+    /// following transformation in place :
+    ///
+    /// ⎧`x`ᵢ⎫ = ⎧`c`  `s`⎫ ⎧`x`ᵢ⎫
+    /// ⎩`y`ᵢ⎭   ⎩-`s` `c`⎭ ⎩`y`ᵢ⎭
+    ///
+    /// for all indices i.
+    #[doc(alias = "cblas_srot")]
+    pub fn srot<T>(x: &mut T, y: &mut T, c: f32, s: f32)
+    where
+        T: VectorMut<f32> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe {
+            sys::cblas_srot(
+                len(x),
+                as_mut_ptr(x),
+                stride(x),
+                as_mut_ptr(y),
+                stride(y),
+                c,
+                s,
             )
         }
     }
 
-    #[doc(alias = "cblas_srot")]
-    pub fn srot(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, c: f32, s: f32) {
-        unsafe { sys::cblas_srot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
-    }
-
+    /// Apply the matrix rotation `h` to `x`, `y`.
+    ///
+    /// ⎧`x`ᵢ⎫ = `h` ⎧`x`ᵢ⎫
+    /// ⎩`y`ᵢ⎭       ⎩`y`ᵢ⎭
+    ///
+    /// for all indices i.
     #[doc(alias = "cblas_srotm")]
-    pub fn srotm(N: i32, x: &mut [f32], incx: i32, y: &mut [f32], incy: i32, p: &[f32]) {
-        unsafe { sys::cblas_srotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
+    pub fn srotm<T>(x: &mut T, y: &mut T, h: H<f32>)
+    where
+        T: VectorMut<f32> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        let p = match h {
+            H::Full { h11, h21, h12, h22 } => [-1.0, h11, h21, h12, h22],
+            H::OffDiag { h21, h12 } => [0.0, 1., h21, h12, 1.],
+            H::Diag { h11, h22 } => [1.0, h11, -1., 1., h22],
+            H::Id => [-2.0, 1., 0., 0., 1.],
+        };
+        unsafe {
+            sys::cblas_srotm(
+                len(x),
+                as_mut_ptr(x),
+                stride(x),
+                as_mut_ptr(y),
+                stride(y),
+                &p as *const _,
+            )
+        }
     }
 
+    /// Given the Cartesian coordinates (`a`, `b`), returns
+    /// (c, s, r, z) such that
+    ///
+    /// ⎧c  s⎫ ⎧a⎫ = ⎧r⎫
+    /// ⎩s  c⎭ ⎩b⎭   ⎩0⎭
+    ///
+    /// The value of z is defined such that if |`a`| > |`b`|, z is s;
+    /// otherwise if c ≠ 0, z is 1/c; otherwise z is 1.
     #[doc(alias = "cblas_drotg")]
-    pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], s: &mut [f64]) {
+    pub fn drotg(a: f64, b: f64) -> (f64, f64, f64, f64) {
+        let mut c = f64::NAN;
+        let mut s = f64::NAN;
+        let mut r = a;
+        let mut z = b;
         unsafe {
             sys::cblas_drotg(
-                a.as_mut_ptr(),
-                b.as_mut_ptr(),
-                c.as_mut_ptr(),
-                s.as_mut_ptr(),
+                &mut r as *mut _,
+                &mut z as *mut _,
+                &mut c as *mut _,
+                &mut s as *mut _,
             )
         }
+        (c, s, r, z)
     }
 
+    /// Given Cartesian coordinates (`x1`, `x2`), return the
+    /// transformation matrix H that zeros the second component or the
+    /// vector (`x1` √`d1`, `x2` √`d2`):
+    ///
+    /// H ⎧`x1` √`d1`⎫ = ⎧y1⎫
+    ///   ⎩`x2` √`d2`⎭   ⎩0.⎭
+    ///
+    /// The second component of the return value is `y1`.
     #[doc(alias = "cblas_drotmg")]
-    pub fn drotmg(d1: &mut [f64], d2: &mut [f64], b1: &mut [f64], b2: f64, P: &mut [f64]) {
+    pub fn drotmg(mut d1: f64, mut d2: f64, mut x1: f64, x2: f64) -> (H<f64>, f64) {
+        let mut h: [f64; 5] = [0.; 5];
         unsafe {
             sys::cblas_drotmg(
-                d1.as_mut_ptr(),
-                d2.as_mut_ptr(),
-                b1.as_mut_ptr(),
-                b2,
-                P.as_mut_ptr(),
+                &mut d1 as *mut _,
+                &mut d2 as *mut _,
+                &mut x1 as *mut _,
+                x2,
+                &mut h as *mut _,
+            )
+        }
+        let h = if h[0] == -1.0 {
+            H::Full {
+                h11: h[1],
+                h21: h[2],
+                h12: h[3],
+                h22: h[4],
+            }
+        } else if h[0] == 0.0 {
+            H::OffDiag {
+                h21: h[2],
+                h12: h[3],
+            }
+        } else if h[0] == 1.0 {
+            H::Diag {
+                h11: h[1],
+                h22: h[4],
+            }
+        } else if h[0] == -2.0 {
+            H::Id
+        } else {
+            unreachable!("srotmg: incorrect flag value")
+        };
+        (h, x1)
+    }
+
+    /// Apply plane rotation.  More specifically, perform the
+    /// following transformation in place :
+    ///
+    /// ⎧`x`ᵢ⎫ = ⎧`c`  `s`⎫ ⎧`x`ᵢ⎫
+    /// ⎩`y`ᵢ⎭   ⎩-`s` `c`⎭ ⎩`y`ᵢ⎭
+    ///
+    /// for all indices i.
+    #[doc(alias = "cblas_drot")]
+    pub fn drot<T>(x: &mut T, y: &mut T, c: f64, s: f64)
+    where
+        T: VectorMut<f64> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        unsafe {
+            sys::cblas_drot(
+                len(x),
+                as_mut_ptr(x),
+                stride(x),
+                as_mut_ptr(y),
+                stride(y),
+                c,
+                s,
             )
         }
     }
 
-    #[doc(alias = "cblas_drot")]
-    pub fn drot(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, c: f64, s: f64) {
-        unsafe { sys::cblas_drot(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, c, s) }
-    }
-
+    /// Apply the matrix rotation `h` to `x`, `y`.
+    ///
+    /// ⎧`x`ᵢ⎫ = `h` ⎧`x`ᵢ⎫
+    /// ⎩`y`ᵢ⎭       ⎩`y`ᵢ⎭
+    ///
+    /// for all indices i.
     #[doc(alias = "cblas_drotm")]
-    pub fn drotm(N: i32, x: &mut [f64], incx: i32, y: &mut [f64], incy: i32, p: &[f64]) {
-        unsafe { sys::cblas_drotm(N, x.as_mut_ptr(), incx, y.as_mut_ptr(), incy, p.as_ptr()) }
+    pub fn drotm<T>(x: &mut T, y: &mut T, h: H<f64>)
+    where
+        T: VectorMut<f64> + ?Sized,
+    {
+        check_equal_len(x, y).expect("Vectors `x` and `y` must have the same length");
+        let p = match h {
+            H::Full { h11, h21, h12, h22 } => [-1.0, h11, h21, h12, h22],
+            H::OffDiag { h21, h12 } => [0.0, 1., h21, h12, 1.],
+            H::Diag { h11, h22 } => [1.0, h11, -1., 1., h22],
+            H::Id => [-2.0, 1., 0., 0., 1.],
+        };
+        unsafe {
+            sys::cblas_drotm(
+                len(x),
+                as_mut_ptr(x),
+                stride(x),
+                as_mut_ptr(y),
+                stride(y),
+                &p as *const _,
+            )
+        }
     }
 
-    /// Multiple each element of a matrix/vector by a constant.
-    ///
-    /// __Postcondition__: Every incX'th element of X has been multiplied by a factor of alpha
-    ///
-    /// __Parameters__:
-    ///
-    /// * N : number of elements in x to scale
-    /// * alpha : factor to scale by
-    /// * X : pointer to the vector/matrix data
-    /// * incx : Amount to increment counter after each scaling, ie incX=2 mean to scale elements {1,3,...}
-    ///
-    /// Note that the allocated length of X must be incX*N-1 as N indicates the number of scaling operations to perform.
+    /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_sscal")]
-    pub fn sscal(N: i32, alpha: f32, x: &mut [f32], incx: i32) {
-        unsafe { sys::cblas_sscal(N, alpha, x.as_mut_ptr(), incx) }
+    pub fn sscal<T>(alpha: f32, x: &mut T)
+    where
+        T: VectorMut<f32> + ?Sized,
+    {
+        unsafe { sys::cblas_sscal(len(x), alpha, as_mut_ptr(x), stride(x)) }
     }
 
-    /// Multiple each element of a matrix/vector by a constant.
+    /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_dscal")]
-    pub fn dscal(N: i32, alpha: f64, x: &mut [f64], incx: i32) {
-        unsafe { sys::cblas_dscal(N, alpha, x.as_mut_ptr(), incx) }
+    pub fn dscal<T>(alpha: f64, x: &mut T)
+    where
+        T: VectorMut<f64> + ?Sized,
+    {
+        unsafe { sys::cblas_dscal(len(x), alpha, as_mut_ptr(x), stride(x)) }
     }
 
-    /// Multiple each element of a matrix/vector by a constant.
+    #[cfg(feature = "complex")]
+    /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_cscal")]
-    pub fn cscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
+    pub fn cscal<T>(alpha: &Complex<f32>, x: &mut T)
+    where
+        T: VectorMut<Complex<f32>> + ?Sized,
+    {
         unsafe {
             sys::cblas_cscal(
-                N,
-                alpha.as_ptr() as *const _,
-                x.as_mut_ptr() as *mut _,
-                incx,
+                len(x),
+                alpha as *const Complex<f32> as *const _,
+                as_mut_ptr(x) as *mut _,
+                stride(x),
             )
         }
     }
 
-    /// Multiple each element of a matrix/vector by a constant.
+    #[cfg(feature = "complex")]
+    /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_zscal")]
-    pub fn zscal<T>(N: i32, alpha: &[T], x: &mut [T], incx: i32) {
+    pub fn zscal<T>(alpha: &Complex<f64>, x: &mut T)
+    where
+        T: VectorMut<Complex<f64>> + ?Sized,
+    {
         unsafe {
             sys::cblas_zscal(
-                N,
-                alpha.as_ptr() as *const _,
-                x.as_mut_ptr() as *mut _,
-                incx,
+                len(x),
+                alpha as *const Complex<f64> as *const _,
+                as_mut_ptr(x) as *mut _,
+                stride(x),
             )
         }
     }
 
-    /// Multiple each element of a matrix/vector by a constant.
+    #[cfg(feature = "complex")]
+    /// Multiply each element of `x` by `alpha`.
     #[doc(alias = "cblas_csscal")]
-    pub fn csscal<T>(N: i32, alpha: f32, x: &mut [T], incx: i32) {
-        unsafe { sys::cblas_csscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
+    pub fn csscal<T>(alpha: f32, x: &mut T)
+    where
+        T: VectorMut<Complex<f32>> + ?Sized,
+    {
+        unsafe { sys::cblas_csscal(len(x), alpha, as_mut_ptr(x) as *mut _, stride(x)) }
     }
 
+    #[cfg(feature = "complex")]
     /// Multiple each element of a matrix/vector by a constant.
     #[doc(alias = "cblas_zdscal")]
-    pub fn zdscal<T>(N: i32, alpha: f64, x: &mut [T], incx: i32) {
-        unsafe { sys::cblas_zdscal(N, alpha, x.as_mut_ptr() as *mut _, incx) }
+    pub fn zdscal<T>(alpha: f64, x: &mut T)
+    where
+        T: VectorMut<Complex<f64>> + ?Sized,
+    {
+        unsafe { sys::cblas_zdscal(len(x), alpha, as_mut_ptr(x) as *mut _, stride(x)) }
     }
 }
 

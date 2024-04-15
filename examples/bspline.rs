@@ -64,12 +64,7 @@ fn main() {
     let chisq = mw.wlinear(&mat_x, &w, &y, &mut c, &mut cov).unwrap();
 
     let dof = N - NCOEFFS;
-    let tss = stats::wtss(
-        w.as_slice().expect("as_slice failed"),
-        1,
-        y.as_slice().expect("as_slice failed"),
-        1,
-    );
+    let tss = stats::wtss(&w, &y);
     let rsq = 1. - chisq / tss;
 
     eprintln!("chisq/dof = {}, rsq = {}", chisq / dof as f64, rsq);
