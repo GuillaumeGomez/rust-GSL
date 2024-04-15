@@ -108,14 +108,14 @@ pub mod vectors {
 
     /// This function sorts the elements of the vector v into ascending numerical order.
     #[doc(alias = "gsl_sort_vector")]
-    #[deprecated(since="8.0", note="Please use `sort` instead")]
+    #[deprecated(since="8.0.0", note="Please use `sort` instead")]
     pub fn sort_vector(v: &mut VectorF64) {
         unsafe { sys::gsl_sort_vector(v.unwrap_unique()) }
     }
 
     /// This function sorts the elements of the vector v1 into ascending numerical order, while making the same rearrangement of the vector v2.
     #[doc(alias = "gsl_sort_vector2")]
-    #[deprecated(since="8.0", note="Please use `sort2` instead")]
+    #[deprecated(since="8.0.0", note="Please use `sort2` instead")]
     pub fn sort_vector2(v1: &mut VectorF64, v2: &mut VectorF64) {
         unsafe { sys::gsl_sort_vector2(v1.unwrap_unique(), v2.unwrap_unique()) }
     }
@@ -196,7 +196,7 @@ pub mod select {
     /// vector `v` into the slice `dest`.  Panic if `dest.len()` is
     /// larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_smallest")]
-    #[deprecated(since="8.0", note="Please use `sort_smallest` instead")]
+    #[deprecated(since="8.0.0", note="Please use `sort_smallest` instead")]
     pub fn sort_vector_smallest(dest: &mut [f64], v: &VectorF64) -> Result<(), Value> {
         if dest.len() > v.len() {
             panic!("rgsl::sort::select::sort_vector_smallest: `dest.len() > v.len()`");
@@ -210,7 +210,7 @@ pub mod select {
     /// vector `v` into the array dest.  Panic if `dest.len()` is
     /// larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_largest")]
-    #[deprecated(since="8.0", note="Please use `sort_largest` instead")]
+    #[deprecated(since="8.0.0", note="Please use `sort_largest` instead")]
     pub fn sort_vector_largest(dest: &mut [f64], v: &VectorF64) -> Result<(), Value> {
         if dest.len() > v.len() {
             panic!("rgsl::sort::select::sort_vector_largest: `dest.len() > v.len()`");
@@ -257,7 +257,7 @@ pub mod select {
     /// elements of the vector `v` in the slice `p`.  Panic if
     /// `p.len()` is larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_smallest_index")]
-    #[deprecated(since="8.0", note="Please use `sort_smallest_index` instead")]
+    #[deprecated(since="8.0.0", note="Please use `sort_smallest_index` instead")]
     pub fn sort_vector_smallest_index(p: &mut [usize], v: &VectorF64) -> Result<(), Value> {
         if p.len() > v.len() {
             panic!("rgsl::sort::select::sort_vector_smallest_index: `p.len() > v.len()`");
@@ -271,7 +271,7 @@ pub mod select {
     /// elements of the vector `v` in the slice `p`.  Panic if
     /// `p.len()` is larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_largest_index")]
-    #[deprecated(since="8.0", note="Please use `sort_largest_index` instead")]
+    #[deprecated(since="8.0.0", note="Please use `sort_largest_index` instead")]
     pub fn sort_vector_largest_index(p: &mut [usize], v: &VectorF64) -> Result<(), Value> {
         if p.len() > v.len() {
             panic!("rgsl::sort::select::sort_vector_largest_index: `p.len() > v.len()`");
