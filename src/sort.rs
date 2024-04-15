@@ -32,39 +32,112 @@ Robert Sedgewick, Algorithms in C, Addison-Wesley, ISBN 0201514257.
 pub mod vectors {
     use crate::ffi::FFI;
     use crate::types::{Permutation, VectorF64};
+    use crate::vector::{self, check_equal_len, Vector, VectorMut};
     use crate::Value;
 
-    /// This function sorts the n elements of the array data with stride stride into ascending numerical order.
+    /// This function sorts the elements of the array `data` into
+    /// ascending numerical order.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rgsl::sort::vectors::sort;
+    /// let mut data = [4., 1., 3., 2.];
+    /// sort(&mut data);
+    /// assert_eq!(data, [1., 2., 3., 4.]);
+    /// ```
+    ///
+    /// The same function can also be used with GSL vectors:
+    ///
+    /// ```
+    /// use rgsl::{vector::VectorF64, sort::vectors::sort};
+    /// let mut data = VectorF64::from_slice(&[4., 1., 3., 2.]).unwrap();
+    /// sort(&mut data);
+    /// assert_eq!(data.as_slice().unwrap(), [1., 2., 3., 4.]);
+    /// ```
     #[doc(alias = "gsl_sort")]
-    pub fn sort(data: &mut [f64], stride: usize, n: usize) {
-        unsafe { sys::gsl_sort(data.as_mut_ptr(), stride, n) }
+    pub fn sort<T>(data: &mut T)
+    where T: VectorMut<f64> + ?Sized {
+        unsafe { sys::gsl_sort(
+            vector::as_mut_ptr(data),
+            T::stride(data),
+            T::len(data))
+        }
     }
 
-    /// This function sorts the n elements of the array data1 with stride stride1 into ascending numerical order, while making the same rearrangement
-    /// of the array data2 with stride stride2, also of size n.
+    /// This function sorts the elements of the array `data1` into
+    /// ascending numerical order, while making the same rearrangement
+    /// of the array `data2`.  Panic if `data1` and `data2` do not
+    /// have the same length.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use rgsl::sort::vectors::sort2;
+    /// let mut data1 = [4., 1., 3., 2.];
+    /// let mut data2 = [10., 20., 30., 40.];
+    /// sort2(&mut data1, &mut data2);
+    /// assert_eq!(data1, [1., 2., 3., 4.]);
+    /// assert_eq!(data2, [20., 40., 30., 10.]);
+    /// ```
+    ///
+    /// The same function can also be used with GSL vectors:
+    ///
+    /// ```
+    /// use rgsl::{vector::VectorF64, sort::vectors::sort2};
+    /// let mut data1 = VectorF64::from_slice(&[4., 1., 3., 2.]).unwrap();
+    /// let mut data2 = VectorF64::from_slice(&[10., 20., 30., 40.]).unwrap();
+    /// sort2(&mut data1, &mut data2);
+    /// assert_eq!(data1.as_slice().unwrap(), [1., 2., 3., 4.]);
+    /// assert_eq!(data2.as_slice().unwrap(), [20., 40., 30., 10.]);
+    /// ```
     #[doc(alias = "gsl_sort2")]
-    pub fn sort2(data1: &mut [f64], stride1: usize, data2: &mut [f64], stride2: usize, n: usize) {
-        unsafe { sys::gsl_sort2(data1.as_mut_ptr(), stride1, data2.as_mut_ptr(), stride2, n) }
+    pub fn sort2<T1, T2>(data1: &mut T1, data2: &mut T2)
+    where T1: VectorMut<f64> + ?Sized,
+          T2: VectorMut<f64> + ?Sized
+    {
+        check_equal_len(data1, data2)
+            .expect("rgsl::sort::sort2: the vectors must have the same length");
+        unsafe { sys::gsl_sort2(
+            vector::as_mut_ptr(data1),
+            T1::stride(data1),
+            vector::as_mut_ptr(data2),
+            T2::stride(data2),
+            T1::len(data1)) }
     }
 
     /// This function sorts the elements of the vector v into ascending numerical order.
     #[doc(alias = "gsl_sort_vector")]
+    #[deprecated(since="8.0", note="Please use `sort` instead")]
     pub fn sort_vector(v: &mut VectorF64) {
         unsafe { sys::gsl_sort_vector(v.unwrap_unique()) }
     }
 
     /// This function sorts the elements of the vector v1 into ascending numerical order, while making the same rearrangement of the vector v2.
     #[doc(alias = "gsl_sort_vector2")]
+    #[deprecated(since="8.0", note="Please use `sort2` instead")]
     pub fn sort_vector2(v1: &mut VectorF64, v2: &mut VectorF64) {
         unsafe { sys::gsl_sort_vector2(v1.unwrap_unique(), v2.unwrap_unique()) }
     }
 
-    /// This function indirectly sorts the n elements of the array data with stride stride into ascending order, storing the resulting
-    /// permutation in p. The array p must be allocated with a sufficient length to store the n elements of the permutation. The elements of p
-    /// give the index of the array element which would have been stored in that position if the array had been sorted in place. The array data is not changed.
+    /// This function indirectly sorts the elements of the array
+    /// `data` into ascending order, storing the resulting permutation
+    /// in `p`.  The slice `p` must have the same length as `data`.
+    /// The elements of `p` give the index of the array element which
+    /// would have been stored in that position if the array had been
+    /// sorted in place.
     #[doc(alias = "gsl_sort_index")]
-    pub fn sort_index(p: &mut [usize], data: &[f64], stride: usize, n: usize) {
-        unsafe { sys::gsl_sort_index(p.as_mut_ptr(), data.as_ptr(), stride, n) }
+    pub fn sort_index<T>(p: &mut [usize], data: &T)
+    where T: Vector<f64> + ?Sized {
+        if p.len() != T::len(data) {
+            panic!("rgsl::sort::vectors::sort_index: `p` and `data` must have the same length");
+        }
+        unsafe { sys::gsl_sort_index(
+            p.as_mut_ptr(),
+            vector::as_ptr(data),
+            T::stride(data),
+            T::len(data))
+        }
     }
 
     /// This function indirectly sorts the elements of the vector v into ascending order, storing the resulting permutation in p. The elements of p give the
@@ -84,105 +157,127 @@ pub mod vectors {
 pub mod select {
     use crate::ffi::FFI;
     use crate::types::VectorF64;
+    use crate::vector::{self, Vector};
     use crate::Value;
 
-    /// This function copies the k smallest elements of the array src, of size n and stride stride, in ascending numerical order into the array dest. The size
-    /// k of the subset must be less than or equal to n. The data src is not modified by this operation.
+    /// This function copies the `dest.len()` smallest elements of the
+    /// array `src`, in ascending numerical order into the array
+    /// `dest`.  Panic if `dest.len()` is larger than the size of `src`.
     #[doc(alias = "gsl_sort_smallest")]
-    pub fn sort_smallest(
-        dest: &mut [f64],
-        k: usize,
-        src: &[f64],
-        stride: usize,
-    ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_sort_smallest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
+    pub fn sort_smallest<T>(dest: &mut [f64], src: &T) -> Result<(), Value>
+    where T: Vector<f64> + ?Sized {
+        if dest.len() > T::len(src) {
+            panic!("rgsl::sort::select::sort_smallest: `dest.len() > src.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_smallest(
+            dest.as_mut_ptr(),  dest.len(),
+            vector::as_ptr(src),  T::stride(src),  T::len(src))
         };
         result_handler!(ret, ())
     }
 
-    /// This function copies the k largest elements of the array src, of size n and stride stride, in descending numerical order into the array dest. k must
-    /// be less than or equal to n. The data src is not modified by this operation.
+    /// This function copies the `dest.len()` largest elements of the
+    /// array `src` in descending numerical order into the array
+    /// `dest`.  Panic if `dest.len()` is larger than the size of `src`.
     #[doc(alias = "gsl_sort_largest")]
-    pub fn sort_largest(
-        dest: &mut [f64],
-        k: usize,
-        src: &[f64],
-        stride: usize,
-    ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_sort_largest(dest.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
+    pub fn sort_largest<T>(dest: &mut [f64], src: &T) -> Result<(), Value>
+    where T: Vector<f64> + ?Sized {
+        if dest.len() > T::len(src) {
+            panic!("rgsl::sort::select::sort_largest: `dest.len() > src.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_largest(
+            dest.as_mut_ptr(), dest.len(),
+            vector::as_ptr(src), T::stride(src), T::len(src))
         };
         result_handler!(ret, ())
     }
 
-    /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
+    /// This function copies the `dest.len()` smallest elements of the
+    /// vector `v` into the slice `dest`.  Panic if `dest.len()` is
+    /// larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_smallest")]
-    pub fn sort_vector_smallest(dest: &mut [f64], k: usize, v: &VectorF64) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_sort_vector_smallest(dest.as_mut_ptr(), k, v.unwrap_shared()) };
+    #[deprecated(since="8.0", note="Please use `sort_smallest` instead")]
+    pub fn sort_vector_smallest(dest: &mut [f64], v: &VectorF64) -> Result<(), Value> {
+        if dest.len() > v.len() {
+            panic!("rgsl::sort::select::sort_vector_smallest: `dest.len() > v.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_vector_smallest(
+            dest.as_mut_ptr(), dest.len(), v.unwrap_shared()) };
         result_handler!(ret, ())
     }
 
-    /// This function copies the k smallest or largest elements of the vector v into the array dest. k must be less than or equal to the length of the vector v.
+    /// This function copies the `dest.len()` largest elements of the
+    /// vector `v` into the array dest.  Panic if `dest.len()` is
+    /// larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_largest")]
-    pub fn sort_vector_largest(dest: &mut [f64], k: usize, v: &VectorF64) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_sort_vector_largest(dest.as_mut_ptr(), k, v.unwrap_shared()) };
+    #[deprecated(since="8.0", note="Please use `sort_largest` instead")]
+    pub fn sort_vector_largest(dest: &mut [f64], v: &VectorF64) -> Result<(), Value> {
+        if dest.len() > v.len() {
+            panic!("rgsl::sort::select::sort_vector_largest: `dest.len() > v.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_vector_largest(
+            dest.as_mut_ptr(), dest.len(), v.unwrap_shared()) };
         result_handler!(ret, ())
     }
 
-    /// This function stores the indices of the k smallest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
-    /// the corresponding data is in ascending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
+    /// This function stores the indices of the `p.len()` smallest
+    /// elements of the vector `src` in the slice `p`.  The indices are
+    /// chosen so that the corresponding data is in ascending
+    /// numerical order.  Panic if `p.len()` is larger than the size
+    /// of `src`.
     #[doc(alias = "gsl_sort_smallest_index")]
-    pub fn sort_smallest_index(
-        p: &mut [usize],
-        k: usize,
-        src: &[f64],
-        stride: usize,
-    ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_sort_smallest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
+    pub fn sort_smallest_index<T>(p: &mut [usize], src: &T) -> Result<(), Value>
+    where T: Vector<f64> + ?Sized {
+        if p.len() > T::len(src) {
+            panic!("rgsl::sort::select::sort_smallest_index: `p.len() > src.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_smallest_index(
+            p.as_mut_ptr(), p.len(),
+            vector::as_ptr(src), T::stride(src), T::len(src))
         };
         result_handler!(ret, ())
     }
 
-    /// This function stores the indices of the k largest elements of the array src, of size n and stride stride, in the array p. The indices are chosen so that
-    /// the corresponding data is in descending numerical order. k must be less than or equal to n. The data src is not modified by this operation.
+    /// This function stores the indices of the `p.len()` largest
+    /// elements of the vector `src` in the slice `p`.  The indices
+    /// are chosen so that the corresponding data is in descending
+    /// numerical order.  Panic if `p.len()` is larger than the size
+    /// of `src`.
     #[doc(alias = "gsl_sort_largest_index")]
-    pub fn sort_largest_index(
-        p: &mut [usize],
-        k: usize,
-        src: &[f64],
-        stride: usize,
-    ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_sort_largest_index(p.as_mut_ptr(), k, src.as_ptr(), stride, src.len() as _)
+    pub fn sort_largest_index<T>(p: &mut [usize], src: &T) -> Result<(), Value>
+    where T: Vector<f64> + ?Sized {
+        let ret = unsafe { sys::gsl_sort_largest_index(
+            p.as_mut_ptr(), p.len(),
+            vector::as_ptr(src), T::stride(src), T::len(src))
         };
         result_handler!(ret, ())
     }
 
-    /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
-    /// the vector v.
+    /// This function stores the indices of the `p.len()` smallest
+    /// elements of the vector `v` in the slice `p`.  Panic if
+    /// `p.len()` is larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_smallest_index")]
-    pub fn sort_vector_smallest_index(
-        p: &mut [usize],
-        k: usize,
-        v: &VectorF64,
-    ) -> Result<(), Value> {
-        let ret =
-            unsafe { sys::gsl_sort_vector_smallest_index(p.as_mut_ptr(), k, v.unwrap_shared()) };
+    #[deprecated(since="8.0", note="Please use `sort_smallest_index` instead")]
+    pub fn sort_vector_smallest_index(p: &mut [usize], v: &VectorF64) -> Result<(), Value> {
+        if p.len() > v.len() {
+            panic!("rgsl::sort::select::sort_vector_smallest_index: `p.len() > v.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_vector_smallest_index(
+            p.as_mut_ptr(), p.len(), v.unwrap_shared()) };
         result_handler!(ret, ())
     }
 
-    /// This function stores the indices of the k smallest or largest elements of the vector v in the array p. k must be less than or equal to the length of
-    /// the vector v.
+    /// This function stores the indices of the `p.len()` largest
+    /// elements of the vector `v` in the slice `p`.  Panic if
+    /// `p.len()` is larger than the size of `src`.
     #[doc(alias = "gsl_sort_vector_largest_index")]
-    pub fn sort_vector_largest_index(
-        p: &mut [usize],
-        k: usize,
-        v: &VectorF64,
-    ) -> Result<(), Value> {
-        let ret =
-            unsafe { sys::gsl_sort_vector_largest_index(p.as_mut_ptr(), k, v.unwrap_shared()) };
+    #[deprecated(since="8.0", note="Please use `sort_largest_index` instead")]
+    pub fn sort_vector_largest_index(p: &mut [usize], v: &VectorF64) -> Result<(), Value> {
+        if p.len() > v.len() {
+            panic!("rgsl::sort::select::sort_vector_largest_index: `p.len() > v.len()`");
+        }
+        let ret = unsafe { sys::gsl_sort_vector_largest_index(
+            p.as_mut_ptr(), p.len(), v.unwrap_shared()) };
         result_handler!(ret, ())
     }
 }
