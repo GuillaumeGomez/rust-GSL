@@ -688,7 +688,7 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 
-    pub fn matrix<F: FnOnce(Option<&$rust_name>)>(&self, f: F) {
+    pub fn matrix<F: FnOnce(Option<&$rust_name>) -> R, R>(&self, f: F) -> R {
         let tmp = &self.mat.matrix;
         let tmp_mat = $rust_name::soft_wrap(tmp as *const _ as usize as *mut _);
         if tmp_mat.is_ptr_null() {
@@ -698,7 +698,7 @@ impl<'a> [<$rust_name View>]<'a> {
         }
     }
 
-    pub fn matrix_mut<F: FnOnce(Option<&mut $rust_name>)>(&mut self, f: F) {
+    pub fn matrix_mut<F: FnOnce(Option<&mut $rust_name>) -> R, R>(&mut self, f: F) -> R {
         let tmp = &mut self.mat.matrix;
         let mut tmp_mat = $rust_name::soft_wrap(tmp as *mut _);
         if tmp_mat.is_ptr_null() {
