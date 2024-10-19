@@ -22,7 +22,7 @@ extern "C" {
         func_f: fn(Vec<f64>, f64, Vec<f64>) -> f64,
         func_dfs: &Vec<fn(Vec<f64>, f64, Vec<f64>) -> f64>,
         params: *const f64,
-        covars: *const f64,
+        parerr: *const f64,
         params_len: usize,
         ts: *const f64,
         ys: *const f64,
@@ -48,15 +48,15 @@ pub unsafe fn gsl_multifit_nlinear_basic(
     }
 
     let mut params: Vec<f64> = params_in.clone();
-    let mut covars: Vec<f64> = Vec::with_capacity(params_in.len());
+    let mut parerr: Vec<f64> = Vec::with_capacity(params_in.len());
 
-    covars.resize(params_in.len(), 0.0);
+    parerr.resize(params_in.len(), 0.0);
 
     unsafe {
         run_gsl_multifit_nlinear(
             func_f,
             params.as_mut_ptr(),
-            covars.as_mut_ptr(),
+            parerr.as_mut_ptr(),
             params.len(),
             ts.as_ptr(),
             ys.as_ptr(),
@@ -67,7 +67,7 @@ pub unsafe fn gsl_multifit_nlinear_basic(
         );
     }
 
-    (params, covars)
+    (params, parerr)
 }
 
 pub unsafe fn gsl_multifit_nlinear_basic_df(
@@ -86,16 +86,16 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
     }
 
     let mut params: Vec<f64> = params_in.clone();
-    let mut covars: Vec<f64> = Vec::with_capacity(params_in.len());
+    let mut parerr: Vec<f64> = Vec::with_capacity(params_in.len());
 
-    covars.resize(params_in.len(), 0.0);
+    parerr.resize(params_in.len(), 0.0);
 
     unsafe {
         run_gsl_multifit_nlinear_df(
             func_f,
             func_dfs,
             params.as_mut_ptr(),
-            covars.as_mut_ptr(),
+            parerr.as_mut_ptr(),
             params.len(),
             ts.as_ptr(),
             ys.as_ptr(),
@@ -106,5 +106,5 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
         );
     }
 
-    (params, covars)
+    (params, parerr)
 }

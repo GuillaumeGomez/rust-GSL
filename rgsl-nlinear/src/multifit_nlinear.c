@@ -75,25 +75,32 @@ void
 solver_progress(const size_t iter, const size_t vector_len,
          const gsl_multifit_nlinear_workspace *w)
 {
-  gsl_vector *f = gsl_multifit_nlinear_residual(w);
-  gsl_vector *x = gsl_multifit_nlinear_position(w);
+  gsl_matrix *j;
+  gsl_matrix *covar_local = gsl_matrix_alloc(vector_len, vector_len);
+
+  gsl_vector *x = w->x;
   double rcond;
+
+  j = gsl_multifit_nlinear_jac(w);
+  gsl_multifit_nlinear_covar (j, 0.0, covar_local);
 
   /* compute reciprocal condition number of J(x) */
   gsl_multifit_nlinear_rcond(&rcond, w);
 
   printf("iter %2zu: ", iter);
   for (size_t i = 0; i < vector_len; i++) {
-      printf("par[%u] = %.4f +/- %.4f, ", i, gsl_vector_get(x, i), gsl_vector_get(f, i));
+      printf("par[%lu] = %.4f +/- %.4f, ", i, gsl_vector_get(x, i), sqrt(gsl_matrix_get(covar_local, i, i)));
   }
   printf("cond(J) = %8.4f\n", 1.0 / rcond);
+
+  gsl_matrix_free(covar_local);
 }
 
 void run_gsl_multifit_nlinear_df(
     opt_function func_f,
     opt_function* func_dfs,
     double* params,
-    double* covars,
+    double* parerr,
     size_t params_len,
     double* ts,
     double* ys,
@@ -125,7 +132,7 @@ void run_gsl_multifit_nlinear_df(
 
     gsl_vector_view x = gsl_vector_view_array (params, params_len);
     double chisq, chisq0;
-    int status, info;
+    int info;
 
     void* call_dfs_ptr = NULL;
     if (func_dfs != NULL) {
@@ -153,7 +160,7 @@ void run_gsl_multifit_nlinear_df(
     f = gsl_multifit_nlinear_residual(w);
     gsl_blas_ddot(f, f, &chisq0);
 
-    /* solve the system with a maximum of 100 iterations */
+    /* solve the system within a maximum of max_iters iterations */
     for (size_t i = 0; i < max_iters; i++) {
 
         double rcond;
@@ -191,7 +198,7 @@ void run_gsl_multifit_nlinear_df(
 
     for (size_t i = 0; i < params_len; i++) {
         params[i] = gsl_vector_get(w->x, i);
-        covars[i] = gsl_matrix_get(covar, i, i);
+        parerr[i] = sqrt(gsl_matrix_get(covar, i, i));
     }
 
     gsl_multifit_nlinear_free (w);
@@ -201,7 +208,7 @@ void run_gsl_multifit_nlinear_df(
 void run_gsl_multifit_nlinear(
     opt_function func_f,
     double* params,
-    double* covars,
+    double* parerr,
     size_t params_len,
     double* ts,
     double* ys,
@@ -214,7 +221,7 @@ void run_gsl_multifit_nlinear(
         func_f,
         NULL,
         params,
-        covars,
+        parerr,
         params_len,
         ts,
         ys,
