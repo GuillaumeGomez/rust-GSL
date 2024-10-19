@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector.h>
@@ -71,7 +72,7 @@ call_dfs (const gsl_vector * x, void *data,
 
 
 void
-callback(const size_t iter, void *params,
+solver_progress(const size_t iter, const size_t vector_len,
          const gsl_multifit_nlinear_workspace *w)
 {
   gsl_vector *f = gsl_multifit_nlinear_residual(w);
@@ -81,13 +82,11 @@ callback(const size_t iter, void *params,
   /* compute reciprocal condition number of J(x) */
   gsl_multifit_nlinear_rcond(&rcond, w);
 
-  fprintf(stderr, "iter %2zu: A = %.4f, lambda = %.4f, b = %.4f, cond(J) = %8.4f\n",
-          iter,
-          gsl_vector_get(x, 0),
-          gsl_vector_get(x, 1),
-          gsl_vector_get(x, 2),
-          1.0 / rcond
-  );
+  printf("iter %2zu: ", iter);
+  for (size_t i = 0; i < vector_len; i++) {
+      printf("par[%u] = %.4f +/- %.4f, ", i, gsl_vector_get(x, i), gsl_vector_get(f, i));
+  }
+  printf("cond(J) = %8.4f\n", 1.0 / rcond);
 }
 
 void run_gsl_multifit_nlinear_df(
@@ -133,9 +132,9 @@ void run_gsl_multifit_nlinear_df(
         call_dfs_ptr = &call_dfs;
     }
 
-    const double xtol = 1e-8;
-    const double gtol = 1e-8;
-    const double ftol = 1e-8;
+    const double xtol = 1e-08;
+    const double gtol = 1e-08;
+    const double ftol = 1e-08;
 
     fdf.f = call_f;
     fdf.df = call_dfs_ptr;
@@ -155,7 +154,33 @@ void run_gsl_multifit_nlinear_df(
     gsl_blas_ddot(f, f, &chisq0);
 
     /* solve the system with a maximum of 100 iterations */
-    status = gsl_multifit_nlinear_driver(max_iters, xtol, gtol, ftol, callback, NULL, &info, w);
+    for (size_t i = 0; i < max_iters; i++) {
+
+        double rcond;
+
+        gsl_multifit_nlinear_iterate(w);
+        gsl_multifit_nlinear_test(xtol, gtol, ftol, &info, w);
+
+        if (info != 0) {
+
+            if (info == 1) {
+                printf("Reason for stopping: Small Step Size\n");
+            } else if (info == 2) {
+                printf("Reason for stopping: Small Gradient\n");
+            }
+
+            break;
+        }
+
+        gsl_multifit_nlinear_rcond(&rcond, w);
+        if (isnan(rcond) && i != 0) {
+
+            printf("Reason for stopping: Invalid rcond\n");
+            break;
+        }
+
+        solver_progress(i, params_len, w);
+    }
 
     /* compute covariance of best fit parameters */
     jacobian = gsl_multifit_nlinear_jac(w);
