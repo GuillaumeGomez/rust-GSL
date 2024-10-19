@@ -1,0 +1,16 @@
+[package]
+name = "rgsl-nlinear"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+cc = "1.0"
+pkg-config = "0.3"
+rgsl-cblib = { version = "0.1.0", path = "rgsl-cblib" }
+
+[dependencies]
+rgsl-cblib = { version = "0.1.0", path = "rgsl-cblib" }
+
+[lib]
+name = "rgsl_nlinear"
+crate-type = ["dylib", "rlib"]

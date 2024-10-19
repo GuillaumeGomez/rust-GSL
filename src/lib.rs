@@ -22,6 +22,8 @@ pub use self::types::rng;
 pub use self::utilities::IOStream;
 pub use self::view::View;
 
+pub use rgsl_nlinear::*;
+
 // enums part
 pub use self::enums::*;
 
