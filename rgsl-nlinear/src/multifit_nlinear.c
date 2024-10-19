@@ -75,25 +75,17 @@ void
 solver_progress(const size_t iter, const size_t vector_len,
          const gsl_multifit_nlinear_workspace *w)
 {
-  gsl_matrix *j;
-  gsl_matrix *covar_local = gsl_matrix_alloc(vector_len, vector_len);
-
   gsl_vector *x = w->x;
   double rcond;
-
-  j = gsl_multifit_nlinear_jac(w);
-  gsl_multifit_nlinear_covar (j, 0.0, covar_local);
 
   /* compute reciprocal condition number of J(x) */
   gsl_multifit_nlinear_rcond(&rcond, w);
 
   printf("iter %2zu: ", iter);
   for (size_t i = 0; i < vector_len; i++) {
-      printf("par[%lu] = %.4f +/- %.4f, ", i, gsl_vector_get(x, i), sqrt(gsl_matrix_get(covar_local, i, i)));
+      printf("par[%lu] = %.4f, ", i, gsl_vector_get(x, i));
   }
   printf("cond(J) = %8.4f\n", 1.0 / rcond);
-
-  gsl_matrix_free(covar_local);
 }
 
 void run_gsl_multifit_nlinear_df(
@@ -117,7 +109,7 @@ void run_gsl_multifit_nlinear_df(
 
     gsl_vector *f;
     gsl_matrix *jacobian;
-    gsl_matrix *covar = gsl_matrix_alloc (params_len, params_len);
+    gsl_matrix *covar = gsl_matrix_alloc(params_len, params_len);
   
     struct data d = {
        func_f,
@@ -130,8 +122,9 @@ void run_gsl_multifit_nlinear_df(
        args_len
     };
 
-    gsl_vector_view x = gsl_vector_view_array (params, params_len);
-    double chisq, chisq0;
+    gsl_vector_view x = gsl_vector_view_array(params, params_len);
+    double dof = vars_len - params_len;
+    double chisq, chisq0, chisq_dof;
     int info;
 
     void* call_dfs_ptr = NULL;
@@ -151,7 +144,7 @@ void run_gsl_multifit_nlinear_df(
     fdf.params = &d;
 
     /* allocate workspace with default parameters */
-    w = gsl_multifit_nlinear_alloc (T, &fdf_params, vars_len, params_len);
+    w = gsl_multifit_nlinear_alloc(T, &fdf_params, vars_len, params_len);
 
     /* initialize solver with starting point and weights */
     gsl_multifit_nlinear_init (&x.vector, &fdf, w);
@@ -197,8 +190,9 @@ void run_gsl_multifit_nlinear_df(
     gsl_blas_ddot(f, f, &chisq);
 
     for (size_t i = 0; i < params_len; i++) {
+        chisq_dof = GSL_MAX_DBL(1, sqrt(chisq / dof));
         params[i] = gsl_vector_get(w->x, i);
-        parerr[i] = sqrt(gsl_matrix_get(covar, i, i));
+        parerr[i] = chisq_dof * sqrt(gsl_matrix_get(covar, i, i));
     }
 
     gsl_multifit_nlinear_free (w);
