@@ -11,7 +11,8 @@ extern "C" {
         vars_len: usize,
         args: *const f64,
         args_len: usize,
-        max_iters: u64
+        max_iters: u64,
+        status: *const i8
     );
 }
 
@@ -29,7 +30,8 @@ extern "C" {
         vars_len: usize,
         args: *const f64,
         args_len: usize,
-        max_iters: u64
+        max_iters: u64,
+        status: *const i8
     );
 }
 
@@ -40,15 +42,16 @@ pub unsafe fn gsl_multifit_nlinear_basic(
     ys: Vec<f64>,
     args: Vec<f64>,
     max_iters: u64
-) -> (Vec<f64>, Vec<f64>) {
+) -> (Vec<f64>, Vec<f64>, i8) {
 
     if ts.len() != ys.len() {
         eprintln!("Time length does not match Ys length!");
-        return (vec![], vec![]);
+        return (vec![], vec![], -1);
     }
 
     let mut params: Vec<f64> = params_in.clone();
     let mut parerr: Vec<f64> = Vec::with_capacity(params_in.len());
+    let mut status: i8 = 0;
 
     parerr.resize(params_in.len(), 0.0);
 
@@ -63,11 +66,12 @@ pub unsafe fn gsl_multifit_nlinear_basic(
             ts.len(),
             args.as_ptr(),
             args.len(),
-            max_iters
+            max_iters,
+            &mut status
         );
     }
 
-    (params, parerr)
+    (params, parerr, status)
 }
 
 pub unsafe fn gsl_multifit_nlinear_basic_df(
@@ -78,15 +82,16 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
     ys: Vec<f64>,
     args: Vec<f64>,
     max_iters: u64
-) -> (Vec<f64>, Vec<f64>) {
+) -> (Vec<f64>, Vec<f64>, i8) {
 
     if ts.len() != ys.len() {
         eprintln!("Time length does not match Ys length!");
-        return (vec![], vec![]);
+        return (vec![], vec![], -1);
     }
 
     let mut params: Vec<f64> = params_in.clone();
     let mut parerr: Vec<f64> = Vec::with_capacity(params_in.len());
+    let mut status: i8 = 0;
 
     parerr.resize(params_in.len(), 0.0);
 
@@ -102,9 +107,10 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
             ts.len(),
             args.as_ptr(),
             args.len(),
-            max_iters
+            max_iters,
+            &mut status
         );
     }
 
-    (params, parerr)
+    (params, parerr, status)
 }

@@ -99,7 +99,8 @@ void run_gsl_multifit_nlinear_df(
     size_t vars_len,
     double* args,
     size_t args_len,
-    size_t max_iters
+    size_t max_iters,
+    int* status
 ) {
 
     const gsl_multifit_nlinear_type *T = gsl_multifit_nlinear_trust;
@@ -125,7 +126,6 @@ void run_gsl_multifit_nlinear_df(
     gsl_vector_view x = gsl_vector_view_array(params, params_len);
     double dof = vars_len - params_len;
     double chisq, chisq0, chisq_dof;
-    int info;
 
     void* call_dfs_ptr = NULL;
     if (func_dfs != NULL) {
@@ -159,13 +159,13 @@ void run_gsl_multifit_nlinear_df(
         double rcond;
 
         gsl_multifit_nlinear_iterate(w);
-        gsl_multifit_nlinear_test(xtol, gtol, ftol, &info, w);
+        gsl_multifit_nlinear_test(xtol, gtol, ftol, status, w);
 
-        if (info != 0) {
+        if (*status != 0) {
 
-            if (info == 1) {
+            if (*status == 1) {
                 printf("Reason for stopping: Small Step Size\n");
-            } else if (info == 2) {
+            } else if (*status == 2) {
                 printf("Reason for stopping: Small Gradient\n");
             }
 
@@ -175,7 +175,9 @@ void run_gsl_multifit_nlinear_df(
         gsl_multifit_nlinear_rcond(&rcond, w);
         if (isnan(rcond) && i != 0) {
 
-            printf("Reason for stopping: Invalid rcond\n");
+            printf("Reason for stopping: Invalid Status\n");
+            *status = -1;
+
             break;
         }
 
@@ -209,7 +211,8 @@ void run_gsl_multifit_nlinear(
     size_t vars_len,
     double* args,
     size_t args_len,
-    size_t max_iters
+    size_t max_iters,
+    int* status
 ) {
     run_gsl_multifit_nlinear_df(
         func_f,
@@ -222,7 +225,8 @@ void run_gsl_multifit_nlinear(
         vars_len,
         args,
         args_len,
-        max_iters
+        max_iters,
+        status
     );
 }
 
