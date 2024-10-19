@@ -43,7 +43,7 @@ pub unsafe fn rust_callback_dfs(
 
     let mut params_vector = Vec::new();
     let mut args_vector = Vec::new();
-    let func_df = func_dfs.get(func_i).unwrap();
+    let func_df = func_dfs[func_i];
 
     for i in 0..params_len {
         unsafe {
