@@ -47,6 +47,9 @@ pub unsafe fn gsl_multifit_nlinear_basic(
     if ts.len() != ys.len() {
         eprintln!("Time length does not match Ys length!");
         return (vec![], vec![], -1);
+    } else if params_in.len() > ts.len() {
+        eprintln!("Parameter length is less than values length!");
+        return (vec![], vec![], -1);
     }
 
     let mut params: Vec<f64> = params_in.clone();
@@ -86,6 +89,9 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
 
     if ts.len() != ys.len() {
         eprintln!("Time length does not match Ys length!");
+        return (vec![], vec![], -1);
+    } else if params_in.len() > ts.len() {
+        eprintln!("Parameter length is less than values length!");
         return (vec![], vec![], -1);
     }
 
