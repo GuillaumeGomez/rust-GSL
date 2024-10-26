@@ -3,7 +3,7 @@ use gsl_sys::gsl_vector_get;
 
 
 #[no_mangle]
-pub unsafe fn rust_callback_f(
+pub extern "C" fn rust_callback_f(
     func_f: fn(Vec<f64>, f64, Vec<f64>) -> f64,
     params: *const gsl_vector,
     params_len: usize,
@@ -31,7 +31,7 @@ pub unsafe fn rust_callback_f(
 }
 
 #[no_mangle]
-pub unsafe fn rust_callback_dfs(
+pub extern "C" fn rust_callback_dfs(
     func_dfs: &Vec<fn(Vec<f64>, f64, Vec<f64>) -> f64>,
     params: *const gsl_vector,
     params_len: usize,
