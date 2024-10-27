@@ -7,6 +7,7 @@ use gsl_sys::gsl_vector_get;
 pub mod multifit_nlinear;
 
 #[no_mangle]
+#[allow(improper_ctypes_definitions)]
 pub extern "C" fn rust_callback_f(
     func_f: fn(Vec<f64>, f64, Vec<f64>) -> f64,
     params: *const gsl_vector,
