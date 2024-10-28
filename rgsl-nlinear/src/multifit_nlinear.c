@@ -181,7 +181,7 @@ void run_gsl_multifit_nlinear_df(
             break;
         }
 
-        solver_progress(i, params_len, w);
+        //solver_progress(i, params_len, w);
     }
 
     /* compute covariance of best fit parameters */
