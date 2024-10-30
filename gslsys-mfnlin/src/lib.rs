@@ -19,6 +19,7 @@ use gsl_sys::GSL_SUCCESS;
 use gsl_sys::gsl_blas_ddot;
 use gsl_sys::gsl_matrix;
 use gsl_sys::gsl_matrix_alloc;
+use gsl_sys::gsl_matrix_set;
 use gsl_sys::gsl_multifit_nlinear_free;
 use gsl_sys::gsl_multifit_nlinear_fdtype;
 use gsl_sys::gsl_multifit_nlinear_iterate;
@@ -124,7 +125,28 @@ fn call_f(x: *const gsl_vector, data: *mut multifit_nlinear_data, f: *mut gsl_ve
     GSL_SUCCESS
 }
 
-fn call_df(x: *const gsl_vector, params: *mut multifit_nlinear_data, df: *mut gsl_matrix) -> i32 {
+fn call_df(x: *const gsl_vector, data: *mut multifit_nlinear_data, jacobian: *mut gsl_matrix) -> i32 {
+
+    let n = unsafe { (*data).ts.len() };
+
+    let ts: &Vec<f64> = unsafe { &(*data).ts };
+    let func_dfs: &Vec<fn(Vec<f64>, f64, Vec<f64>) -> f64> = unsafe { &(*data).func_dfs };
+    let args: &Vec<f64> = unsafe { &(*data).args };
+
+    let mut params: Vec<f64> = Vec::new();
+    let params_len = unsafe { (*data).params_len };
+
+    for i in 0..params_len {
+        let param = unsafe { gsl_vector_get(x, i) };
+        params.push(param);
+    }
+
+    for i in 0..n {
+        for j in 0..params_len {
+            unsafe { gsl_matrix_set(jacobian, i, j, func_dfs[j](params.clone(), ts[i], args.clone())); }
+        }   
+    }
+
     GSL_SUCCESS
 }
 
@@ -188,7 +210,7 @@ fn run_gsl_multifit_nlinear_df(
     let jacobian: *mut gsl_matrix;
     let covar: *mut gsl_matrix;
 
-    let data_struct = multifit_nlinear_data {
+    let mut data_struct = multifit_nlinear_data {
         func_f: func_f,
         func_dfs: func_dfs.to_vec(),
         params_len: params_len,
@@ -196,9 +218,9 @@ fn run_gsl_multifit_nlinear_df(
         ys: ys.to_vec(),
         args: args.to_vec()
     };
-    let data_ptr: *mut multifit_nlinear_data = Box::into_raw(Box::new(data_struct));
+    let data_ptr: *mut multifit_nlinear_data = &mut data_struct as *mut multifit_nlinear_data;
     let x = unsafe { gsl_vector_view_array(params, params_len) };
-    let x_ptr: *const gsl_vector = Box::into_raw(Box::new(x.vector));
+    let x_ptr: *const gsl_vector = &x.vector as *const gsl_vector;
     let dof: f64 = (vars_len - params_len) as f64;
 
     let mut chisq: f64 = 0.0;
@@ -210,9 +232,9 @@ fn run_gsl_multifit_nlinear_df(
     const gtol: f64 = 1e-8;
     const ftol: f64 = 1e-8;
 
-    let fdf = self::gsl_multifit_nlinear_fdf {
+    let mut fdf = self::gsl_multifit_nlinear_fdf {
         f: call_f,
-        df: ptr::null(),
+        df: call_df as *const fn(*const gsl_vector, *mut multifit_nlinear_data, *mut gsl_matrix) -> i32,
         fvv: ptr::null(),
         n: vars_len,
         p: params_len,
@@ -221,7 +243,7 @@ fn run_gsl_multifit_nlinear_df(
         nevaldf: 0,
         nevalfvv: 0
     };
-    let fdf_ptr: *mut self::gsl_multifit_nlinear_fdf = Box::into_raw(Box::new(fdf));
+    let fdf_ptr: *mut self::gsl_multifit_nlinear_fdf = &mut fdf as *mut self::gsl_multifit_nlinear_fdf;
 
     /* allocate workspace with default parameters */
     let w: *mut gsl_multifit_nlinear_workspace = unsafe {
