@@ -14,15 +14,20 @@
 
 use std::ptr;
 
+use gsl_sys::GSL_FAILURE;
 use gsl_sys::GSL_SUCCESS;
 
 use gsl_sys::gsl_blas_ddot;
 use gsl_sys::gsl_matrix;
 use gsl_sys::gsl_matrix_alloc;
+use gsl_sys::gsl_matrix_free;
+use gsl_sys::gsl_matrix_get;
 use gsl_sys::gsl_matrix_set;
+use gsl_sys::gsl_multifit_nlinear_covar;
 use gsl_sys::gsl_multifit_nlinear_free;
 use gsl_sys::gsl_multifit_nlinear_fdtype;
 use gsl_sys::gsl_multifit_nlinear_iterate;
+use gsl_sys::gsl_multifit_nlinear_jac;
 use gsl_sys::gsl_multifit_nlinear_rcond;
 use gsl_sys::gsl_multifit_nlinear_residual;
 use gsl_sys::gsl_multifit_nlinear_scale;
@@ -40,6 +45,16 @@ use gsl_sys::gsl_vector_view_array;
 
 
 pub extern crate libc;
+
+macro_rules! result_handler {
+    ($ret:ident, $value:expr) => {{
+        if $ret == GSL_SUCCESS {
+            Ok($value)
+        } else {
+            Err($ret)
+        }
+    }};
+}
 
 #[repr(C)]
 #[derive(Debug, Clone)]
@@ -154,6 +169,26 @@ fn call_fvv(x: *const gsl_vector, v: *const gsl_vector, params: *mut multifit_nl
     GSL_SUCCESS
 }
 
+pub unsafe fn gsl_multifit_nlinear_basic(
+    func_f: fn(Vec<f64>, f64, Vec<f64>) -> f64,
+    params_in: Vec<f64>,
+    ts: &Vec<f64>,
+    ys: &Vec<f64>,
+    args: &Vec<f64>,
+    max_iters: u64
+) -> Result<(Vec<f64>, Vec<f64>, i32), i32> {
+
+    gsl_multifit_nlinear_basic_df(
+        func_f,
+        &Vec::new(),
+        params_in,
+        ts,
+        ys,
+        args,
+        max_iters
+    )
+}
+
 pub unsafe fn gsl_multifit_nlinear_basic_df(
     func_f: fn(Vec<f64>, f64, Vec<f64>) -> f64,
     func_dfs: &Vec<fn(Vec<f64>, f64, Vec<f64>) -> f64>,
@@ -162,43 +197,47 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
     ys: &Vec<f64>,
     args: &Vec<f64>,
     max_iters: u64
-) -> (Vec<f64>, Vec<f64>) {
+) -> Result<(Vec<f64>, Vec<f64>, i32), i32> {
+
+    let mut params: Vec<f64> = params_in.clone();
+    let mut parerr: Vec<f64> = Vec::with_capacity(params_in.len());
+    let mut status: i32 = 0;
+    let mut err_code: i32 = GSL_FAILURE;
+
+    parerr.resize(params_in.len(), 0.0);
 
     if ts.len() != ys.len() {
         eprintln!("Time length does not match Ys length!");
-        return (vec![], vec![]);
+    } else {
+        run_gsl_multifit_nlinear_df(
+            func_f,
+            func_dfs,
+            params.as_mut_ptr(),
+            parerr.as_mut_ptr(),
+            params.len(),
+            ts,
+            ys,
+            args,
+            max_iters,
+            &mut status
+        );
+        err_code = GSL_SUCCESS;
     }
 
-    let mut params: Vec<f64> = params_in.clone();
-    let mut covars: Vec<f64> = Vec::with_capacity(params_in.len());
-
-    covars.resize(params_in.len(), 0.0);
-
-    run_gsl_multifit_nlinear_df(
-        func_f,
-        func_dfs,
-        params.as_mut_ptr(),
-        covars.as_mut_ptr(),
-        params.len(),
-        ts,
-        ys,
-        args,
-        max_iters
-    );
-
-    (params, covars)
+    result_handler!(err_code, (params, parerr, status))
 }
 
 fn run_gsl_multifit_nlinear_df(
     func_f: fn(Vec<f64>, f64, Vec<f64>) -> f64,
     func_dfs: &Vec<fn(Vec<f64>, f64, Vec<f64>) -> f64>,
     params: *mut f64,
-    covars: *mut f64,
+    parerr: *mut f64,
     params_len: usize,
     ts: &Vec<f64>,
     ys: &Vec<f64>,
     args: &Vec<f64>,
-    max_iters: u64
+    max_iters: u64,
+    status: &mut i32
 ) {
 
     let vars_len = ts.len();
@@ -208,7 +247,7 @@ fn run_gsl_multifit_nlinear_df(
 
     let f: *mut gsl_vector;
     let jacobian: *mut gsl_matrix;
-    let covar: *mut gsl_matrix;
+    let covar: *mut gsl_matrix = unsafe { gsl_matrix_alloc(params_len, params_len) };
 
     let mut data_struct = multifit_nlinear_data {
         func_f: func_f,
@@ -225,16 +264,21 @@ fn run_gsl_multifit_nlinear_df(
 
     let mut chisq: f64 = 0.0;
     let mut chisq0: f64 = 0.0;
-    let mut status: i32 = 0;
     let mut info: i32 = 0;
 
     const xtol: f64 = 1e-8;
     const gtol: f64 = 1e-8;
     const ftol: f64 = 1e-8;
 
+    let call_df_ptr = if func_dfs.len() == params_len {
+        call_df as *const fn(*const gsl_vector, *mut multifit_nlinear_data, *mut gsl_matrix) -> i32
+    } else {
+        ptr::null()
+    };
+
     let mut fdf = self::gsl_multifit_nlinear_fdf {
         f: call_f,
-        df: call_df as *const fn(*const gsl_vector, *mut multifit_nlinear_data, *mut gsl_matrix) -> i32,
+        df: call_df_ptr,
         fvv: ptr::null(),
         n: vars_len,
         p: params_len,
@@ -275,13 +319,13 @@ fn run_gsl_multifit_nlinear_df(
         let mut rcond: f64 = 0.0;
 
         unsafe { gsl_multifit_nlinear_iterate(w); }
-        unsafe { gsl_multifit_nlinear_test(xtol, gtol, ftol, &mut status, w); }
+        unsafe { gsl_multifit_nlinear_test(xtol, gtol, ftol, &mut *status, w); }
 
-        if status != 0 {
+        if *status != 0 {
 
-            if status == 1 {
+            if *status == 1 {
                 println!("Reason for stopping: Small Step Size");
-            } else if status == 2 {
+            } else if *status == 2 {
                 println!("Reason for stopping: Small Gradient");
             }
 
@@ -289,15 +333,29 @@ fn run_gsl_multifit_nlinear_df(
         }
 
         unsafe { gsl_multifit_nlinear_rcond(&mut rcond, w) };
-        println!("{}", rcond);
+
+        if rcond.is_nan() {
+            println!("Reason for stopping: Invalid Status");
+            *status = -1;
+
+            break;
+        }
     }
 
-    let res = unsafe { gsl_multifit_nlinear_residual(w) };
+    /* compute covariance of best fit parameters */
+    let jacobian = unsafe { gsl_multifit_nlinear_jac(w) };
+    unsafe { gsl_multifit_nlinear_covar(jacobian, 0.0, covar); }
+
+    /* compute final cost */
+    unsafe { gsl_blas_ddot(f, f, &mut chisq); }
+    let chisq_dof = (chisq / dof).sqrt();
+
+    let residuals = unsafe { gsl_multifit_nlinear_residual(w) };
     for i in 0..params_len {
-        unsafe { params.wrapping_add(i).write(gsl_vector_get(res, i)); }
+        unsafe { params.wrapping_add(i).write(gsl_vector_get(residuals, i)); }
+        unsafe { parerr.wrapping_add(i).write(chisq_dof * gsl_matrix_get(covar, i, i).sqrt()); }
     }
 
-    unsafe {
-        gsl_multifit_nlinear_free(w);
-    }
+    unsafe { gsl_multifit_nlinear_free(w); }
+    unsafe { gsl_matrix_free(covar); }
 }
