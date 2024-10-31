@@ -114,6 +114,10 @@ path = "./largefit.rs"
 required-features = ["GSL/v2_2"]
 
 [[bin]]
+name = "multifit_nlinear"
+path = "./multifit_nlinear.rs"
+
+[[bin]]
 name = "rng"
 path = "./rng.rs"
 

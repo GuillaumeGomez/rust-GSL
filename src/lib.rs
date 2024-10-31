@@ -22,6 +22,9 @@ pub use self::types::rng;
 pub use self::utilities::IOStream;
 pub use self::view::View;
 
+pub use sys::gsl_multifit_nlinear_basic;
+pub use sys::gsl_multifit_nlinear_basic_df;
+
 // enums part
 pub use self::enums::*;
 
