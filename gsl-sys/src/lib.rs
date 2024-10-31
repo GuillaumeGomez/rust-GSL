@@ -309,9 +309,8 @@ fn run_gsl_multifit_nlinear_df(
             break;
         }
 
-        unsafe { gsl_multifit_nlinear_rcond(&mut rcond, w) };
-
-        if rcond.is_nan() {
+        unsafe { gsl_multifit_nlinear_rcond(&mut rcond, w); }
+        if rcond.is_nan() && i != 0 {
             println!("Reason for stopping: Invalid Status");
             *status = -1;
 
