@@ -183,6 +183,8 @@ pub unsafe fn gsl_multifit_nlinear_basic_df(
 
     if ts.len() != ys.len() {
         eprintln!("Time length does not match Ys length!");
+    } else if params_in.len() > ts.len() {
+        eprintln!("Time length is shorter than parameter length!");
     } else {
         run_gsl_multifit_nlinear_df(
             func_f,
