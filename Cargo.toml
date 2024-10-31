@@ -12,7 +12,6 @@ edition = "2021"
 
 [dependencies]
 sys = { path = "gsl-sys", package = "GSL-sys", version = "3.0.0" }
-sys_mfnlin = { path = "gslsys-mfnlin", package = "gslsys-mfnlin", version = "0.1.0" }
 paste = "1.0"
 
 [features]

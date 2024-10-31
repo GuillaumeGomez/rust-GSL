@@ -7,7 +7,6 @@ use rgsl::types::rng::Rng;
 use rgsl::types::rng::RngType;
 
 
-#[no_mangle]
 fn expb_f(params: Vec<f64>, t: f64, _args: Vec<f64>) -> f64 {
 
     let a = params.get(0).unwrap();
@@ -17,20 +16,17 @@ fn expb_f(params: Vec<f64>, t: f64, _args: Vec<f64>) -> f64 {
     a * f64::exp(-lambda * t) + b
 }
 
-#[no_mangle]
 fn expb_df_a(params: Vec<f64>, t: f64, _args: Vec<f64>) -> f64 {
     let lambda = params.get(1).unwrap();
     f64::exp(-lambda * t)
 }
 
-#[no_mangle]
 fn expb_df_lambda(params: Vec<f64>, t: f64, _args: Vec<f64>) -> f64 {
     let a = params.get(0).unwrap();
     let lambda = params.get(1).unwrap();
     -t * a * f64::exp(-lambda * t)
 }
 
-#[no_mangle]
 fn expb_df_b(_params: Vec<f64>, _t: f64, _args: Vec<f64>) -> f64 {
     1.0
 }
