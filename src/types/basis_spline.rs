@@ -24,8 +24,9 @@ B_(i,k)(x) = [(x - t_i)/(t_(i+k-1) - t_i)] B_(i,k-1)(x)
 for i = 0, …, n-1. The common case of cubic B-splines is given by k = 4. The above recurrence
 relation can be evaluated in a numerically stable way by the de Boor algorithm.
 
-If we define appropriate knots on an interval [a,b] then the B-spline basis functions form a
-complete set on that interval. Therefore we can expand a smoothing function as
+If we define appropriate knots on an interval \[a,b\] then the
+B-spline basis functions form a complete set on that interval.
+Therefore we can expand a smoothing function as
 
 f(x) = \sum_i c_i B_(i,k)(x)
 
@@ -83,8 +84,9 @@ impl BSpLineWorkspace {
         result_handler!(ret, ())
     }
 
-    /// This function assumes uniformly spaced breakpoints on [a,b] and constructs the corresponding
-    /// knot vector using the previously specified nbreak parameter.
+    /// This function assumes uniformly spaced breakpoints on \[a,b\]
+    /// and constructs the corresponding knot vector using the previously
+    /// specified nbreak parameter.
     /// The knots are stored in w->knots.
     #[doc(alias = "gsl_bspline_knots_uniform")]
     pub fn knots_uniform(&mut self, a: f64, b: f64) -> Result<(), Value> {

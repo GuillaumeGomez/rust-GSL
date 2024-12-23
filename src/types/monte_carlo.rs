@@ -474,30 +474,40 @@ pub struct VegasParams<'a> {
 }
 
 impl<'a> VegasParams<'a> {
-    /// alpha: The parameter alpha controls the stiffness of the rebinning algorithm. It is typically
-    /// set between one and two. A value of zero prevents rebinning of the grid. The default
-    /// value is 1.5.
+    /// `alpha`: The parameter `alpha` controls the stiffness of the
+    /// rebinning algorithm. It is typically set between one and two.
+    /// A value of zero prevents rebinning of the grid.  The default
+    /// value is `1.5`.
     ///
-    /// iterations: The number of iterations to perform for each call to the routine. The default value
-    /// is 5 iterations.
+    /// `iterations`: The number of iterations to perform for each
+    /// call to the routine.  The default value is `5` iterations.
     ///
-    /// stage: Setting this determines the stage of the calculation. Normally, stage = 0 which begins
-    /// with a new uniform grid and empty weighted average. Calling vegas with stage =
-    /// 1 retains the grid from the previous run but discards the weighted average, so that
-    /// one can “tune” the grid using a relatively small number of points and then do a large
-    /// run with stage = 1 on the optimized grid. Setting stage = 2 keeps the grid and the
-    /// weighted average from the previous run, but may increase (or decrease) the number
-    /// of histogram bins in the grid depending on the number of calls available. Choosing
-    /// stage = 3 enters at the main loop, so that nothing is changed, and is equivalent to
-    /// performing additional iterations in a previous call.
+    /// `stage`: Setting this determines the stage of the
+    /// calculation. Normally, stage = 0 which begins with a new
+    /// uniform grid and empty weighted average. Calling vegas with
+    /// stage = 1 retains the grid from the previous run but discards
+    /// the weighted average, so that one can “tune” the grid using a
+    /// relatively small number of points and then do a large run with
+    /// stage = 1 on the optimized grid. Setting stage = 2 keeps the
+    /// grid and the weighted average from the previous run, but may
+    /// increase (or decrease) the number of histogram bins in the
+    /// grid depending on the number of calls available. Choosing
+    /// stage = 3 enters at the main loop, so that nothing is changed,
+    /// and is equivalent to performing additional iterations in a
+    /// previous call.
     ///
-    /// mode: The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_
-    /// STRATIFIED, GSL_VEGAS_MODE_IMPORTANCE_ONLY. This determines whether vegas
-    /// will use importance sampling or stratified sampling, or whether it can pick on
-    /// its own. In low dimensions vegas uses strict stratified sampling (more precisely,
-    /// stratified sampling is chosen if there are fewer than 2 bins per box).
+    /// `mode`: The possible choices are
+    /// [`VegasMode::Importance`][crate::VegasMode::Importance],
+    /// [`VegasMode::Stratified`][crate::VegasMode::Stratified], and
+    /// [`VegasMode::ImportanceOnly`][crate::VegasMode::ImportanceOnly].
+    /// This determines whether vegas will use importance sampling or
+    /// stratified sampling, or whether it can pick on its own. In low
+    /// dimensions vegas uses strict stratified sampling (more
+    /// precisely, stratified sampling is chosen if there are fewer
+    /// than 2 bins per box).
     ///
-    /// verbosity + stream: These parameters set the level of information printed by vegas.
+    /// `verbosity` and `stream`: These parameters set the level of
+    /// information printed by vegas.
     pub fn new(
         alpha: f64,
         iterations: usize,
@@ -505,7 +515,7 @@ impl<'a> VegasParams<'a> {
         mode: crate::VegasMode,
         verbosity: VegasVerbosity,
         stream: Option<&'a mut crate::IOStream>,
-    ) -> Result<VegasParams, String> {
+    ) -> Result<VegasParams<'a>, String> {
         if !verbosity.is_off() && stream.is_none() {
             return Err(
                 "rust-GSL: need to provide an input stream for Vegas Monte Carlo \

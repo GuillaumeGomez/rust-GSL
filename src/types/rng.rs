@@ -110,8 +110,11 @@ impl Rng {
         unsafe { sys::gsl_rng_set(self.unwrap_unique(), s as _) }
     }
 
-    /// This function returns a random integer from the generator r. The minimum and maximum values depend on the algorithm used, but all integers in the range [min,max] are equally likely.
-    /// The values of min and max can be determined using the auxiliary functions gsl_rng_max (r) and gsl_rng_min (r).
+    /// This function returns a random integer from the generator r.
+    /// The minimum and maximum values depend on the algorithm used,
+    /// but all integers in the range \[min,max\] are equally likely.
+    /// The values of min and max can be determined using the
+    /// auxiliary functions gsl_rng_max (r) and gsl_rng_min (r).
     #[doc(alias = "gsl_rng_get")]
     pub fn get(&mut self) -> usize {
         unsafe { sys::gsl_rng_get(self.unwrap_shared()) as _ }

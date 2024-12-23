@@ -2,6 +2,8 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
+//! GLS types (reexported into the root `rgsl`).
+
 pub use self::basis_spline::BSpLineWorkspace;
 
 pub use self::chebyshev::ChebSeries;

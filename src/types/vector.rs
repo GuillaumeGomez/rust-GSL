@@ -59,7 +59,7 @@ pub trait Vector<F> {
     fn len(x: &Self) -> usize;
 
     /// The distance in the slice between two consecutive elements of
-    /// the vector in [`Vector::as_slice`] and [`Vector::as_mut_slice`].
+    /// the vector in [`Vector::as_slice`] and [`VectorMut::as_mut_slice`].
     fn stride(x: &Self) -> usize;
 
     /// Return a reference to the underlying slice.  Note that the
