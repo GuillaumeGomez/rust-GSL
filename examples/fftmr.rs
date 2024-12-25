@@ -6,6 +6,7 @@ extern crate rgsl;
 
 use rgsl::{FftComplexF64WaveTable, FftComplexF64Workspace};
 
+// FIXME: Make the interface use complex numbers.
 macro_rules! real {
     ($z:ident, $i:expr) => {
         $z[2 * ($i)]
@@ -17,7 +18,7 @@ macro_rules! imag {
     };
 }
 
-const N: usize = 630;
+const N: usize = 128;
 
 fn main() {
     let data = &mut [0.; 2 * N];
@@ -40,7 +41,7 @@ fn main() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);
     }
 
-    workspace.forward(data, 1, N, &wavetable).unwrap();
+    workspace.forward(data, &wavetable).unwrap();
 
     for i in 0..N {
         println!("{}: {} {}", i, real!(data, i), imag!(data, i));
