@@ -689,7 +689,7 @@ impl<'a> [<$rust_name View>]<'a> {
     /// n elements with a step-size of stride from one element to the next in the original
     /// array. Mathematically, the i-th element of the new vector v’ is given by,
     ///
-    /// v'(i) = base[i*stride]
+    /// v'(i) = base\[i*stride\]
     ///
     /// where the index i runs from 0 to n-1.
     ///

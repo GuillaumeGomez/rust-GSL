@@ -54,16 +54,16 @@ Donald E. Knuth, The Art of Computer Programming: Seminumerical Algorithms (Vol 
 Further information is available in the review paper written by Pierre L’Ecuyer,
 
 P. L’Ecuyer, “Random Number Generation”, Chapter 4 of the Handbook on Simulation, Jerry Banks Ed., Wiley, 1998, 93–137.
-http://www.iro.umontreal.ca/~lecuyer/papers.html
+<http://www.iro.umontreal.ca/~lecuyer/papers.html>
 
 The source code for the DIEHARD random number generator tests is also available online,
 
 DIEHARD source code G. Marsaglia,
-http://stat.fsu.edu/pub/diehard/
+<http://stat.fsu.edu/pub/diehard/>
 A comprehensive set of random number generator tests is available from NIST,
 
 NIST Special Publication 800-22, “A Statistical Test Suite for the Validation of Random Number Generators and Pseudo Random Number Generators for Cryptographic Applications”.
-http://csrc.nist.gov/rng/
+<http://csrc.nist.gov/rng/>
 
 ## Acknowledgements
 

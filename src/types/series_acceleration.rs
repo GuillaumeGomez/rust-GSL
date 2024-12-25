@@ -46,7 +46,7 @@ D. Levin, Development of Non-Linear Transformations for Improving Convergence of
 
 A review paper on the Levin Transform is available online,
 
-Herbert H. H. Homeier, Scalar Levin-Type Sequence Transformations, http://arxiv.org/abs/math/0005209.
+Herbert H. H. Homeier, Scalar Levin-Type Sequence Transformations, <http://arxiv.org/abs/math/0005209>.
 !*/
 
 use crate::ffi::FFI;

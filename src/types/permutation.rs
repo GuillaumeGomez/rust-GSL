@@ -10,6 +10,8 @@ use crate::{MatrixComplexF32, MatrixComplexF64, MatrixF32, VectorF64};
 use std::fmt::{self, Debug, Formatter};
 use std::slice;
 
+// FIXME: Permutations have the same representation as vectors.
+// Do we want to wrap vectors?  (The wrapping is to preserve invariants.)
 ffi_wrapper!(Permutation, *mut sys::gsl_permutation, gsl_permutation_free);
 
 /// ## Permutations in cyclic form

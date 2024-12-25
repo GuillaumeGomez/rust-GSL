@@ -145,7 +145,7 @@ G. H. Golub, C. F. Van Loan, Matrix Computations (3rd Ed, 1996), Johns Hopkins U
 The LAPACK library is described in the following manual,
 
 LAPACK Users’ Guide (Third Edition, 1999), Published by SIAM, ISBN 0-89871-447-8.
-http://www.netlib.org/lapack
+<http://www.netlib.org/lapack>
 
 The LAPACK source code can be found at the website above, along with an online copy of the users guide.
 
@@ -158,7 +158,7 @@ J.C. Nash, “A one-sided transformation method for the singular value decomposi
 1 (1975), p 74–76
 J.C. Nash and S. Shlien “Simple algorithms for the partial singular value decomposition”, Computer Journal, Volume 30 (1987), p 268–275.
 James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR”, Lapack Working Note 15 (LAWN-15), October 1989. Available from netlib,
-http://www.netlib.org/lapack/ in the lawns or lawnspdf directories.
+<http://www.netlib.org/lapack/> in the lawns or lawnspdf directories.
 !*/
 
 use crate::enums;

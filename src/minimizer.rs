@@ -11,7 +11,7 @@ use crate::Value;
 /// |a - b| < epsabs + epsrel min(|a|,|b|)
 /// ```
 ///
-/// when the interval x = [a,b] does not include the origin. If the interval includes the origin then \min(|a|,|b|) is replaced by zero (
+/// when the interval x = \[a,b\] does not include the origin. If the interval includes the origin then \min(|a|,|b|) is replaced by zero (
 /// which is the minimum value of |x| over the interval). This ensures that the relative error is accurately estimated for minima close to
 /// the origin.
 ///

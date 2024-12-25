@@ -45,7 +45,7 @@ Richard W. Johnson, Higher order B-spline collocation at the Greville abscissae.
 Mathematics. vol. 52, 2005, 63–75.
 
 A large collection of B-spline routines is available in the PPPACK library available at
-http://www.netlib.org/pppack, which is also part of SLATEC.
+<http://www.netlib.org/pppack>, which is also part of SLATEC.
 !*/
 
 use crate::ffi::FFI;

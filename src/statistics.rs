@@ -41,7 +41,7 @@ For physicists the Particle Data Group provides useful reviews of Probability an
 Annual Review of Particle Physics.
 
 Review of Particle Properties R.M. Barnett et al., Physical Review D54, 1 (1996)
-The Review of Particle Physics is available online at the website http://pdg.lbl.gov/.
+The Review of Particle Physics is available online at the website <http://pdg.lbl.gov/>.
 !*/
 
 /// This function returns the arithmetic mean of data, a dataset of length n with stride stride. The
@@ -573,7 +573,7 @@ pub fn median_from_sorted_data(data: &[f64], stride: usize, n: usize) -> f64 {
 ///
 /// where i is floor((n - 1)f) and \delta is (n-1)f - i.
 ///
-/// Thus the minimum value of the array (data[0*stride]) is given by f equal to zero, the maximum
+/// Thus the minimum value of the array (data\[0*stride\]) is given by f equal to zero, the maximum
 /// value (data[(n-1)*stride]) is given by f equal to one and the median value is given by f equal
 /// to 0.5. Since the algorithm for computing quantiles involves interpolation this function always
 /// returns a floating-point number, even for integer data types.
