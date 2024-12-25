@@ -51,7 +51,11 @@ use self::num_complex::Complex;
 ///
 /// Bring this trait into scope in order to add methods to specify
 /// strides to the types implementing `Vector`.
-pub trait Vector<F> {
+///
+/// # Safety
+/// One must make sore that `(len - 1) * stride` does not exceed the
+/// length of the underlying slice.
+pub unsafe trait Vector<F> {
     /// Return the number of elements in the vector.
     ///
     /// This is an associated function rather than a method to avoid
@@ -71,6 +75,10 @@ pub trait Vector<F> {
     fn as_slice(x: &Self) -> &[F];
 
     fn slice(&self, r: Range<usize>) -> Option<Slice<'_, F>> {
+        // The fields of `Slice` are not public, hence there is no way
+        // to implement this function outside this module.  This
+        // guarantee that there is no out-of-bounds access as soon as
+        // the above methods are correctly implemented.
         let stride = Self::stride(self);
         let slice = Self::as_slice(self);
         // FIXME: use std::slice::SliceIndex methods when stable.
@@ -95,7 +103,7 @@ pub trait Vector<F> {
     }
 }
 
-pub trait VectorMut<F>: Vector<F> {
+pub unsafe trait VectorMut<F>: Vector<F> {
     /// Same as [`Vector::as_slice`] but mutable.
     fn as_mut_slice(x: &mut Self) -> &mut [F];
 
@@ -137,7 +145,7 @@ pub struct SliceMut<'a, F> {
     stride: usize,
 }
 
-impl<'a, F> Vector<F> for Slice<'a, F> {
+unsafe impl<'a, F> Vector<F> for Slice<'a, F> {
     #[inline]
     fn len(x: &Self) -> usize {
         x.len
@@ -152,7 +160,7 @@ impl<'a, F> Vector<F> for Slice<'a, F> {
     }
 }
 
-impl<'a, F> Vector<F> for SliceMut<'a, F> {
+unsafe impl<'a, F> Vector<F> for SliceMut<'a, F> {
     #[inline]
     fn len(x: &Self) -> usize {
         x.len
@@ -167,7 +175,7 @@ impl<'a, F> Vector<F> for SliceMut<'a, F> {
     }
 }
 
-impl<'a, F> VectorMut<F> for SliceMut<'a, F> {
+unsafe impl<'a, F> VectorMut<F> for SliceMut<'a, F> {
     #[inline]
     fn as_mut_slice(x: &mut Self) -> &mut [F] {
         x.vec
@@ -726,7 +734,7 @@ impl<'a> [<$rust_name View>]<'a> {
     }
 } // end of impl block
 
-    impl Vector<$rust_ty> for $rust_name {
+    unsafe impl Vector<$rust_ty> for $rust_name {
         #[inline]
         fn len(x: &Self) -> usize {
             $rust_name::len(x)
@@ -745,7 +753,7 @@ impl<'a> [<$rust_name View>]<'a> {
             $rust_name::as_slice(x).unwrap_or(&[])
         }
     }
-    impl VectorMut<$rust_ty> for $rust_name {
+    unsafe impl VectorMut<$rust_ty> for $rust_name {
         #[inline]
         fn as_mut_slice(x: &mut Self) -> &mut [$rust_ty] {
             $rust_name::as_slice_mut(x).unwrap_or(&mut [])
@@ -765,7 +773,7 @@ gsl_vec!(VectorU32, gsl_vector_uint, u32);
 
 macro_rules! impl_AsRef {
     ($ty: ty) => {
-        impl<T> Vector<$ty> for T
+        unsafe impl<T> Vector<$ty> for T
         where
             T: AsRef<[$ty]> + ?Sized,
         {
@@ -783,7 +791,7 @@ macro_rules! impl_AsRef {
             }
         }
 
-        impl<T> VectorMut<$ty> for T
+        unsafe impl<T> VectorMut<$ty> for T
         where
             T: Vector<$ty> + AsMut<[$ty]> + ?Sized,
         {
