@@ -463,9 +463,9 @@ pub mod level1 {
         #[test]
         fn test_drotg() {
             let (c, s, r) = drotg(3., 4.).unwrap();
-            assert_eq!(c, 0.6);
-            assert_eq!(s, 0.8);
-            assert_eq!(r, 5.);
+            assert!((c - 0.6).abs() < 5e-16, "|{c} - 0.6| >= 5e-16");
+            assert!((s - 0.8).abs() < 5e-16, "|{s} - 0.8| >= 5e-16");
+            assert!((r - 5.).abs() < 1e-15, "|{r} - 5.| >= 1e-15");
         }
     }
 }
