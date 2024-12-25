@@ -4,8 +4,12 @@
 
 pub mod level1 {
     use crate::ffi::FFI;
+    use crate::{
+        types,
+        types::complex::{FromC, ToC},
+        Value,
+    };
     use crate::{VectorF32, VectorF64};
-    use crate::{types, types::complex::{ToC, FromC}, Value};
     use num_complex::Complex;
 
     /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result
@@ -283,13 +287,8 @@ pub mod level1 {
         x: &types::VectorComplexF32,
         y: &mut types::VectorComplexF32,
     ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_caxpy(
-                alpha.unwrap(),
-                x.unwrap_shared(),
-                y.unwrap_unique(),
-            )
-        };
+        let ret =
+            unsafe { sys::gsl_blas_caxpy(alpha.unwrap(), x.unwrap_shared(), y.unwrap_unique()) };
         result_handler!(ret, ())
     }
 
@@ -300,13 +299,8 @@ pub mod level1 {
         x: &types::VectorComplexF64,
         y: &mut types::VectorComplexF64,
     ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_zaxpy(
-                alpha.unwrap(),
-                x.unwrap_shared(),
-                y.unwrap_unique(),
-            )
-        };
+        let ret =
+            unsafe { sys::gsl_blas_zaxpy(alpha.unwrap(), x.unwrap_shared(), y.unwrap_unique()) };
         result_handler!(ret, ())
     }
 
@@ -358,14 +352,7 @@ pub mod level1 {
     pub fn srotg(mut a: f32, mut b: f32) -> Result<(f32, f32, f32), Value> {
         let mut c = 0.;
         let mut s = 0.;
-        let ret = unsafe {
-            sys::gsl_blas_srotg(
-                &mut a,
-                &mut b,
-                &mut c,
-                &mut s,
-            )
-        };
+        let ret = unsafe { sys::gsl_blas_srotg(&mut a, &mut b, &mut c, &mut s) };
         result_handler!(ret, (c, s, a))
     }
 
@@ -381,14 +368,7 @@ pub mod level1 {
     pub fn drotg(mut a: f64, mut b: f64) -> Result<(f64, f64, f64), Value> {
         let mut c = 0.;
         let mut s = 0.;
-        let ret = unsafe {
-            sys::gsl_blas_drotg(
-                &mut a,
-                &mut b,
-                &mut c,
-                &mut s,
-            )
-        };
+        let ret = unsafe { sys::gsl_blas_drotg(&mut a, &mut b, &mut c, &mut s) };
         result_handler!(ret, (c, s, a))
     }
 
@@ -420,22 +400,9 @@ pub mod level1 {
     /// The modified Givens transformation is defined in the original
     /// [Level-1 BLAS specification](https://help.imsl.com/fortran/fnlmath/current/basic-linear-algebra-sub.htm#mch9_1817247609_srotmg).
     #[doc(alias = "gsl_blas_srotmg")]
-    pub fn srotmg(
-        mut d1: f32,
-        mut d2: f32,
-        mut b1: f32,
-        b2: f32,
-    ) -> Result<[f32; 5], Value> {
+    pub fn srotmg(mut d1: f32, mut d2: f32, mut b1: f32, b2: f32) -> Result<[f32; 5], Value> {
         let mut p = [f32::NAN; 5];
-        let ret = unsafe {
-            sys::gsl_blas_srotmg(
-                &mut d1,
-                &mut d2,
-                &mut b1,
-                b2,
-                p.as_mut_ptr(),
-            )
-        };
+        let ret = unsafe { sys::gsl_blas_srotmg(&mut d1, &mut d2, &mut b1, b2, p.as_mut_ptr()) };
         result_handler!(ret, p)
     }
 
@@ -443,22 +410,9 @@ pub mod level1 {
     /// The modified Givens transformation is defined in the original
     /// [Level-1 BLAS specification](https://help.imsl.com/fortran/fnlmath/current/basic-linear-algebra-sub.htm#mch9_1817247609_srotmg).
     #[doc(alias = "gsl_blas_drotmg")]
-    pub fn drotmg(
-        mut d1: f64,
-        mut d2: f64,
-        mut b1: f64,
-        b2: f64,
-    ) -> Result<[f64; 5], Value> {
+    pub fn drotmg(mut d1: f64, mut d2: f64, mut b1: f64, b2: f64) -> Result<[f64; 5], Value> {
         let mut p = [f64::NAN; 5];
-        let ret = unsafe {
-            sys::gsl_blas_drotmg(
-                &mut d1,
-                &mut d2,
-                &mut b1,
-                b2,
-                p.as_mut_ptr(),
-            )
-        };
+        let ret = unsafe { sys::gsl_blas_drotmg(&mut d1, &mut d2, &mut b1, b2, p.as_mut_ptr()) };
         result_handler!(ret, p)
     }
 
@@ -474,11 +428,7 @@ pub mod level1 {
         if lenx != leny {
             panic!("rgsl::blas::srotm: len(x) = {lenx} != len(y) = {leny}")
         }
-        let ret =
-            unsafe { sys::gsl_blas_srotm(
-                x.unwrap_unique(),
-                y.unwrap_unique(),
-                p.as_ptr()) };
+        let ret = unsafe { sys::gsl_blas_srotm(x.unwrap_unique(), y.unwrap_unique(), p.as_ptr()) };
         result_handler!(ret, ())
     }
 
@@ -494,11 +444,7 @@ pub mod level1 {
         if lenx != leny {
             panic!("rgsl::blas::drotm: len(x) = {lenx} != len(y) = {leny}")
         }
-        let ret =
-            unsafe { sys::gsl_blas_drotm(
-                x.unwrap_unique(),
-                y.unwrap_unique(),
-                p.as_ptr()) };
+        let ret = unsafe { sys::gsl_blas_drotm(x.unwrap_unique(), y.unwrap_unique(), p.as_ptr()) };
         result_handler!(ret, ())
     }
 

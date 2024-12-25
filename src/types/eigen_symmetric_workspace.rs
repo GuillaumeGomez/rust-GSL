@@ -890,10 +890,10 @@ fn eigen_symmetric_vworkspace() {
 // ```
 #[test]
 fn eigen_hermitian_workspace() {
+    use crate::complex::ComplexOps;
+    use num_complex::Complex;
     use MatrixComplexF64;
     use VectorF64;
-    use num_complex::Complex;
-    use crate::complex::ComplexOps;
 
     let mut e = EigenHermitianWorkspace::new(3).unwrap();
     let mut m = MatrixComplexF64::new(2, 2).unwrap();
@@ -945,8 +945,8 @@ fn eigen_hermitian_workspace() {
 // ```
 #[test]
 fn eigen_hermitian_vworkspace() {
-    use num_complex::Complex;
     use crate::complex::ComplexOps;
+    use num_complex::Complex;
 
     let mut e = EigenHermitianVWorkspace::new(3).unwrap();
     let mut m = MatrixComplexF64::new(2, 2).unwrap();

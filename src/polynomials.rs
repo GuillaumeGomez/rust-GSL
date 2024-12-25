@@ -27,7 +27,7 @@ R. L. Burden and J. D. Faires, Numerical Analysis, 9th edition, ISBN 0-538-73351
 /// stability.
 pub mod evaluation {
     use crate::{
-        types::complex::{ToC, FromC},
+        types::complex::{FromC, ToC},
         Value,
     };
     use num_complex::Complex;
@@ -41,13 +41,7 @@ pub mod evaluation {
     /// This function evaluates a polynomial with real coefficients for the complex variable z.
     #[doc(alias = "gsl_poly_complex_eval")]
     pub fn poly_complex_eval(c: &[f64], z: &Complex<f64>) -> Complex<f64> {
-        unsafe {
-            sys::gsl_poly_complex_eval(
-                c.as_ptr(),
-                c.len() as i32,
-                z.unwrap(),
-            ).wrap()
-        }
+        unsafe { sys::gsl_poly_complex_eval(c.as_ptr(), c.len() as i32, z.unwrap()).wrap() }
     }
 
     /// This function evaluates a polynomial with complex coefficients for the complex variable z.
@@ -60,11 +54,7 @@ pub mod evaluation {
             tmp.push(it.unwrap())
         }
         unsafe {
-            sys::gsl_complex_poly_complex_eval(
-                tmp.as_ptr(),
-                tmp.len() as i32,
-                z.unwrap(),
-            ).wrap()
+            sys::gsl_complex_poly_complex_eval(tmp.as_ptr(), tmp.len() as i32, z.unwrap()).wrap()
         }
     }
 
@@ -221,10 +211,7 @@ pub mod quadratic_equations {
         z1: &mut Complex<f64>,
     ) -> Result<(), Value> {
         let ret =
-            unsafe { sys::gsl_poly_complex_solve_quadratic(
-                a, b, c,
-                transmute(z0),
-                transmute(z1)) };
+            unsafe { sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) };
         result_handler!(ret, ())
     }
 }
@@ -274,11 +261,7 @@ pub mod cubic_equations {
         z2: &mut Complex<f64>,
     ) -> Result<(), Value> {
         let ret = unsafe {
-            sys::gsl_poly_complex_solve_cubic(
-                a, b, c,
-                transmute(z0),
-                transmute(z1),
-                transmute(z2))
+            sys::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
         };
         result_handler!(ret, ())
     }

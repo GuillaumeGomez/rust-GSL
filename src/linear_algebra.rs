@@ -164,10 +164,7 @@ James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR�
 use crate::complex::ToC;
 use crate::enums;
 use crate::ffi::FFI;
-use crate::{
-    complex::FromC,
-    Value,
-};
+use crate::{complex::FromC, Value};
 use num_complex::Complex;
 
 /// Factorise a general N x N matrix A into,
@@ -1275,11 +1272,7 @@ pub fn householder_transform(v: &mut crate::VectorF64) -> f64 {
 /// the first. On output the transformation is stored in the vector v and the scalar \tau is returned.
 #[doc(alias = "gsl_linalg_complex_householder_transform")]
 pub fn complex_householder_transform(v: &mut crate::VectorComplexF64) -> Complex<f64> {
-    unsafe {
-        sys::gsl_linalg_complex_householder_transform(
-            v.unwrap_unique(),
-        ).wrap()
-    }
+    unsafe { sys::gsl_linalg_complex_householder_transform(v.unwrap_unique()).wrap() }
 }
 
 /// This function applies the Householder matrix P defined by the scalar tau and the vector v to the left-hand side of the matrix A. On output
@@ -1303,11 +1296,7 @@ pub fn complex_householder_hm(
     a: &mut crate::MatrixComplexF64,
 ) -> Result<(), Value> {
     let ret = unsafe {
-        sys::gsl_linalg_complex_householder_hm(
-            tau.unwrap(),
-            v.unwrap_shared(),
-            a.unwrap_unique(),
-        )
+        sys::gsl_linalg_complex_householder_hm(tau.unwrap(), v.unwrap_shared(), a.unwrap_unique())
     };
     result_handler!(ret, ())
 }
@@ -1333,11 +1322,7 @@ pub fn complex_householder_mh(
     a: &mut crate::MatrixComplexF64,
 ) -> Result<(), Value> {
     let ret = unsafe {
-        sys::gsl_linalg_complex_householder_mh(
-            tau.unwrap(),
-            v.unwrap_shared(),
-            a.unwrap_unique(),
-        )
+        sys::gsl_linalg_complex_householder_mh(tau.unwrap(), v.unwrap_shared(), a.unwrap_unique())
     };
     result_handler!(ret, ())
 }
@@ -1363,11 +1348,7 @@ pub fn complex_householder_hv(
     w: &mut crate::VectorComplexF64,
 ) -> Result<(), Value> {
     let ret = unsafe {
-        sys::gsl_linalg_complex_householder_hv(
-            tau.unwrap(),
-            v.unwrap_shared(),
-            w.unwrap_unique(),
-        )
+        sys::gsl_linalg_complex_householder_hv(tau.unwrap(), v.unwrap_shared(), w.unwrap_unique())
     };
     result_handler!(ret, ())
 }

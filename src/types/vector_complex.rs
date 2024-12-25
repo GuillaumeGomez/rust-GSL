@@ -7,16 +7,16 @@ use crate::{
     complex::{FromC, ToC},
     Value,
 };
+use num_complex::Complex;
 use paste::paste;
 use std::{
     fmt::{self, Debug, Formatter},
     marker::PhantomData,
 };
-use num_complex::Complex;
 
 macro_rules! gsl_vec_complex {
     ($rust_name:ident, $name:ident, $complex:ident, $rust_ty:ident) => {
-    paste! {
+        paste! {
         pub struct $rust_name {
             vec: *mut sys::$name,
             can_free: bool,

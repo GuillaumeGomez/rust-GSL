@@ -4,9 +4,9 @@
 
 use num_complex::Complex;
 
-#[deprecated(since="8.0.0", note="use `Complex<f64>` instead")]
+#[deprecated(since = "8.0.0", note = "use `Complex<f64>` instead")]
 pub type ComplexF64 = Complex<f64>;
-#[deprecated(since="8.0.0", note="use `Complex<f32>` instead")]
+#[deprecated(since = "8.0.0", note = "use `Complex<f32>` instead")]
 pub type ComplexF32 = Complex<f32>;
 
 pub(crate) trait ToC<T> {
@@ -44,13 +44,13 @@ pub trait ComplexOps<T> {
 
     /// This function returns the magnitude of the complex number z, |z|.
     #[doc(alias = "gsl_complex_abs")]
-    #[deprecated(since="8.0.0", note="please use `.norm()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.norm()` instead")]
     fn abs(&self) -> T;
 
     /// This function returns the squared magnitude of the complex
     /// number z = `self`, |z|².
     #[doc(alias = "gsl_complex_abs2")]
-    #[deprecated(since="8.0.0", note="please use `.norm_sqr()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.norm_sqr()` instead")]
     fn abs2(&self) -> T;
 
     /// This function returns the natural logarithm of the magnitude
@@ -65,90 +65,90 @@ pub trait ComplexOps<T> {
 
     /// This function returns the sum of the complex numbers a and b, z=a+b.
     #[doc(alias = "gsl_complex_add")]
-    #[deprecated(since="8.0.0", note="please use `+` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `+` instead")]
     fn add(&self, other: &Complex<T>) -> Complex<T>;
 
     /// This function returns the difference of the complex numbers a
     /// and b, z=a-b.
     #[doc(alias = "gsl_complex_sub")]
-    #[deprecated(since="8.0.0", note="please use `-` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `-` instead")]
     fn sub(&self, other: &Complex<T>) -> Complex<T>;
 
     /// This function returns the product of the complex numbers a and b, z=ab.
     #[doc(alias = "gsl_complex_mul")]
-    #[deprecated(since="8.0.0", note="please use `*` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `*` instead")]
     fn mul(&self, other: &Complex<T>) -> Complex<T>;
 
     /// This function returns the quotient of the complex numbers a
     /// and b, z=a/b.
     #[doc(alias = "gsl_complex_div")]
-    #[deprecated(since="8.0.0", note="please use `/` of `fdiv` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `/` of `fdiv` instead")]
     fn div(&self, other: &Complex<T>) -> Complex<T>;
 
     /// This function returns the sum of the complex number a and the
     /// real number x, z = a + x.
     #[doc(alias = "gsl_complex_add_real")]
-    #[deprecated(since="8.0.0", note="please use `+` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `+` instead")]
     fn add_real(&self, x: T) -> Complex<T>;
 
     /// This function returns the difference of the complex number a
     /// and the real number x, z=a-x.
     #[doc(alias = "gsl_complex_sub_real")]
-    #[deprecated(since="8.0.0", note="please use `-` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `-` instead")]
     fn sub_real(&self, x: T) -> Complex<T>;
 
     /// This function returns the product of the complex number a and
     /// the real number x, z=ax.
     #[doc(alias = "gsl_complex_mul_real")]
-    #[deprecated(since="8.0.0", note="please use `*` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `*` instead")]
     fn mul_real(&self, x: T) -> Complex<T>;
 
     /// This function returns the quotient of the complex number a and
     /// the real number x, z=a/x.
     #[doc(alias = "gsl_complex_div_real")]
-    #[deprecated(since="8.0.0", note="please use `/` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `/` instead")]
     fn div_real(&self, x: T) -> Complex<T>;
 
     /// This function returns the sum of the complex number a and the
     /// imaginary number iy, z=a+iy.
     #[doc(alias = "gsl_complex_add_imag")]
-    #[deprecated(since="8.0.0", note="please use `self + x * Complex::I` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `self + x * Complex::I` instead")]
     fn add_imag(&self, x: T) -> Complex<T>;
 
     /// This function returns the difference of the complex number a
     /// and the imaginary number iy, z=a-iy.
     #[doc(alias = "gsl_complex_sub_imag")]
-    #[deprecated(since="8.0.0", note="please use `self - x * Complex::I` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `self - x * Complex::I` instead")]
     fn sub_imag(&self, x: T) -> Complex<T>;
 
     /// This function returns the product of the complex number a and
     /// the imaginary number iy, z=a*(iy).
     #[doc(alias = "gsl_complex_mul_imag")]
-    #[deprecated(since="8.0.0", note="please use `self * x * Complex::I` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `self * x * Complex::I` instead")]
     fn mul_imag(&self, x: T) -> Complex<T>;
 
     /// This function returns the quotient of the complex number a and
     /// the imaginary number iy, z=a/(iy).
     #[doc(alias = "gsl_complex_div_imag")]
-    #[deprecated(since="8.0.0", note="please use `self / (x * Complex::I)` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `self / (x * Complex::I)` instead")]
     fn div_imag(&self, x: T) -> Complex<T>;
 
     /// This function returns the complex conjugate of the complex
     /// number z, z^* = x - i y.
     #[doc(alias = "gsl_complex_conjugate")]
-    #[deprecated(since="8.0.0", note="please use `.conj()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.conj()` instead")]
     fn conjugate(&self) -> Complex<T>;
 
     /// This function returns the inverse, or reciprocal, of the
     /// complex number z, 1/z = (x - i y)/ (x^2 + y^2).
     #[doc(alias = "gsl_complex_inverse")]
-    #[deprecated(since="8.0.0", note="please use `.inv()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.inv()` instead")]
     fn inverse(&self) -> Complex<T>;
 
     /// This function returns the negative of the complex number z, -z
     /// = (-x) + i(-y).
     #[doc(alias = "gsl_complex_negative")]
-    #[deprecated(since="8.0.0", note="please use the unary `-` instead")]
+    #[deprecated(since = "8.0.0", note = "please use the unary `-` instead")]
     fn negative(&self) -> Complex<T>;
 
     /// This function returns the complex square root of the real
@@ -160,20 +160,20 @@ pub trait ComplexOps<T> {
     /// complex power a z^a.  This is computed as \exp(\log(z)*a)
     /// using complex logarithms and complex exponentials.
     #[doc(alias = "gsl_complex_pow")]
-    #[deprecated(since="8.0.0", note="please use the unary `-` instead")]
+    #[deprecated(since = "8.0.0", note = "please use the unary `-` instead")]
     fn pow(&self, other: &Complex<T>) -> Complex<T>;
 
     /// This function returns the complex number z raised to the real
     /// power x, z^x.
     #[doc(alias = "gsl_complex_pow_real")]
-    #[deprecated(since="8.0.0", note="please use `.powf(x)` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.powf(x)` instead")]
     fn pow_real(&self, x: T) -> Complex<T>;
 
     /// This function returns the complex base-b logarithm of the
     /// complex number z, \log_b(z).  This quantity is computed as the
     /// ratio \log(z)/\log(b).
     #[doc(alias = "gsl_complex_log_b")]
-    #[deprecated(since="8.0.0", note="please use `.log(base)` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.log(base)` instead")]
     fn log_b(&self, base: &Complex<T>) -> Complex<T>;
 
     /// This function returns the complex secant of the complex number
@@ -195,7 +195,7 @@ pub trait ComplexOps<T> {
     /// number z, \arcsin(z).  The branch cuts are on the real axis,
     /// less than -1 and greater than 1.
     #[doc(alias = "gsl_complex_arcsin")]
-    #[deprecated(since="8.0.0", note="please use `.asin()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.asin()` instead")]
     fn arcsin(&self) -> Complex<T>;
 
     /// This function returns the complex arcsine of the real number
@@ -214,7 +214,7 @@ pub trait ComplexOps<T> {
     /// number z, \arccos(z).  The branch cuts are on the real axis,
     /// less than -1 and greater than 1.
     #[doc(alias = "gsl_complex_arccos")]
-    #[deprecated(since="8.0.0", note="please use `.acos()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.acos()` instead")]
     fn arccos(&self) -> Complex<T>;
 
     /// This function returns the complex arccosine of the real number
@@ -232,7 +232,7 @@ pub trait ComplexOps<T> {
     /// number z, \arctan(z).  The branch cuts are on the imaginary
     /// axis, below -i and above i.
     #[doc(alias = "gsl_complex_arctan")]
-    #[deprecated(since="8.0.0", note="please use `.atan()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.atan()` instead")]
     fn arctan(&self) -> Complex<T>;
 
     /// This function returns the complex arcsecant of the complex
@@ -279,7 +279,7 @@ pub trait ComplexOps<T> {
     /// complex number z, \arcsinh(z).  The branch cuts are on the
     /// imaginary axis, below -i and above i.
     #[doc(alias = "gsl_complex_arcsinh")]
-    #[deprecated(since="8.0.0", note="please use `.asinh()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.asinh()` instead")]
     fn arcsinh(&self) -> Complex<T>;
 
     /// This function returns the complex hyperbolic arccosine of the
@@ -288,7 +288,7 @@ pub trait ComplexOps<T> {
     /// square root in formula 4.6.21 of Abramowitz & Stegun giving
     /// \arccosh(z)=\log(z-\sqrt{z^2-1}).
     #[doc(alias = "gsl_complex_arccosh")]
-    #[deprecated(since="8.0.0", note="please use `.acosh()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.acosh()` instead")]
     fn arccosh(&self) -> Complex<T>;
 
     /// This function returns the complex hyperbolic arccosine of the
@@ -301,7 +301,7 @@ pub trait ComplexOps<T> {
     ///
     /// The branch cuts are on the real axis, less than -1 and greater than 1.
     #[doc(alias = "gsl_complex_arctanh")]
-    #[deprecated(since="8.0.0", note="please use `.atanh()` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.atanh()` instead")]
     fn arctanh(&self) -> Complex<T>;
 
     /// This function returns the complex hyperbolic arctangent of the
@@ -324,10 +324,10 @@ pub trait ComplexOps<T> {
     #[doc(alias = "gsl_complex_arccoth")]
     fn arccoth(&self) -> Complex<T>;
 
-    #[deprecated(since="8.0.0", note="please use `.re` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.re` instead")]
     fn real(&self) -> T;
 
-    #[deprecated(since="8.0.0", note="please use `.im` instead")]
+    #[deprecated(since = "8.0.0", note = "please use `.im` instead")]
     fn imaginary(&self) -> T;
 }
 
@@ -533,12 +533,13 @@ impl ComplexOps<f64> for Complex<f64> {
     }
 }
 
-
 // The GLS Complex module does not support `f32` operations.  Thus we
 // convert back and forth to `f64`.
 impl ToC<sys::gsl_complex> for Complex<f32> {
     fn unwrap(self) -> sys::gsl_complex {
-        sys::gsl_complex { dat: [self.re as f64, self.im as f64]}
+        sys::gsl_complex {
+            dat: [self.re as f64, self.im as f64],
+        }
     }
 }
 
@@ -559,7 +560,10 @@ impl ToC<sys::gsl_complex_float> for Complex<f32> {
 impl FromC<Complex<f32>> for sys::gsl_complex {
     fn wrap(self) -> Complex<f32> {
         let [re, im] = self.dat;
-        Complex { re: re as f32, im: im as f32 }
+        Complex {
+            re: re as f32,
+            im: im as f32,
+        }
     }
 }
 
@@ -580,7 +584,7 @@ impl ComplexOps<f32> for Complex<f32> {
         unsafe { sys::gsl_complex_abs2(self.unwrap()) as f32 }
     }
 
-     fn logabs(&self) -> f32 {
+    fn logabs(&self) -> f32 {
         unsafe { sys::gsl_complex_logabs(self.unwrap()) as f32 }
     }
 
@@ -764,7 +768,6 @@ impl ComplexOps<f32> for Complex<f32> {
         self.im
     }
 }
-
 
 #[cfg(test)]
 mod tests {

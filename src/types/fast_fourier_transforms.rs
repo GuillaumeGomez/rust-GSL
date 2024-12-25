@@ -3,10 +3,7 @@
 //
 
 use crate::ffi::FFI;
-use crate::{
-    vector::VectorMut,
-    Value
-};
+use crate::{vector::VectorMut, Value};
 use paste::paste;
 
 macro_rules! gsl_fft_wavetable {

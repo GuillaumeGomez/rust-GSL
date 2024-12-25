@@ -7,8 +7,8 @@ use crate::{
     complex::{FromC, ToC},
     Value,
 };
-use paste::paste;
 use num_complex::Complex;
+use paste::paste;
 use std::fmt::{self, Debug, Formatter};
 
 macro_rules! gsl_matrix_complex {
