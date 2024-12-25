@@ -332,194 +332,242 @@ pub trait ComplexOps<T> {
 }
 
 impl ComplexOps<f64> for Complex<f64> {
+    #[doc(alias = "gsl_complex_rect")]
     fn rect(x: f64, y: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_rect(x, y).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_polar")]
     fn polar(r: f64, theta: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_polar(r, theta).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_abs")]
     fn abs(&self) -> f64 {
         unsafe { sys::gsl_complex_abs(self.unwrap()) }
     }
 
+    #[doc(alias = "gsl_complex_abs2")]
     fn abs2(&self) -> f64 {
         unsafe { sys::gsl_complex_abs2(self.unwrap()) }
     }
 
+    #[doc(alias = "gsl_complex_logabs")]
     fn logabs(&self) -> f64 {
         unsafe { sys::gsl_complex_logabs(self.unwrap()) }
     }
 
+    #[doc(alias = "gsl_complex_add")]
     fn add(&self, other: &Complex<f64>) -> Complex<f64> {
         unsafe { sys::gsl_complex_add(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sub")]
     fn sub(&self, other: &Complex<f64>) -> Complex<f64> {
         unsafe { sys::gsl_complex_sub(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_mul")]
     fn mul(&self, other: &Complex<f64>) -> Complex<f64> {
         unsafe { sys::gsl_complex_mul(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_div")]
     fn div(&self, other: &Complex<f64>) -> Complex<f64> {
         unsafe { sys::gsl_complex_div(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_add_real")]
     fn add_real(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_add_real(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sub_real")]
     fn sub_real(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_sub_real(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_mul_real")]
     fn mul_real(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_mul_real(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_div_real")]
     fn div_real(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_div_real(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_add_imag")]
     fn add_imag(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_add_imag(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sub_imag")]
     fn sub_imag(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_sub_imag(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_mul_imag")]
     fn mul_imag(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_mul_imag(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_div_imag")]
     fn div_imag(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_div_imag(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_conjugate")]
     fn conjugate(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_conjugate(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_inverse")]
     fn inverse(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_inverse(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_negative")]
     fn negative(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_negative(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sqrt_real")]
     fn sqrt_real(x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_sqrt_real(x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_pow")]
     fn pow(&self, other: &Complex<f64>) -> Complex<f64> {
         unsafe { sys::gsl_complex_pow(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_pow_real")]
     fn pow_real(&self, x: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_pow_real(self.unwrap(), x).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_log_b")]
     fn log_b(&self, other: &Complex<f64>) -> Complex<f64> {
         unsafe { sys::gsl_complex_log_b(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sec")]
     fn sec(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_sec(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_csc")]
     fn csc(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_csc(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_cot")]
     fn cot(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_cot(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsin")]
     fn arcsin(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arcsin(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsin_real")]
     fn arcsin_real(z: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_arcsin_real(z).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccos")]
     fn arccos(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccos(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccos_real")]
     fn arccos_real(z: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccos_real(z).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arctan")]
     fn arctan(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arctan(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsec")]
     fn arcsec(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arcsec(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsec_real")]
     fn arcsec_real(z: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_arcsec_real(z).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccsc")]
     fn arccsc(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccsc(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccsc_real")]
     fn arccsc_real(z: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccsc_real(z).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccot")]
     fn arccot(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccot(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sech")]
     fn sech(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_sech(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_csch")]
     fn csch(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_csch(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_coth")]
     fn coth(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_coth(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsinh")]
     fn arcsinh(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arcsinh(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccosh")]
     fn arccosh(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccosh(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccosh_real")]
     fn arccosh_real(z: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccosh_real(z).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arctanh")]
     fn arctanh(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arctanh(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arctanh_real")]
     fn arctanh_real(z: f64) -> Complex<f64> {
         unsafe { sys::gsl_complex_arctanh_real(z).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsech")]
     fn arcsech(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arcsech(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccsch")]
     fn arccsch(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccsch(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccoth")]
     fn arccoth(&self) -> Complex<f64> {
         unsafe { sys::gsl_complex_arccoth(self.unwrap()).wrap() }
     }
@@ -568,194 +616,242 @@ impl FromC<Complex<f32>> for sys::gsl_complex {
 }
 
 impl ComplexOps<f32> for Complex<f32> {
+    #[doc(alias = "gsl_complex_rect")]
     fn rect(x: f32, y: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_rect(x as f64, y as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_polar")]
     fn polar(r: f32, theta: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_polar(r as f64, theta as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_abs")]
     fn abs(&self) -> f32 {
         unsafe { sys::gsl_complex_abs(self.unwrap()) as f32 }
     }
 
+    #[doc(alias = "gsl_complex_abs2")]
     fn abs2(&self) -> f32 {
         unsafe { sys::gsl_complex_abs2(self.unwrap()) as f32 }
     }
 
+    #[doc(alias = "gsl_complex_logabs")]
     fn logabs(&self) -> f32 {
         unsafe { sys::gsl_complex_logabs(self.unwrap()) as f32 }
     }
 
+    #[doc(alias = "gsl_complex_add")]
     fn add(&self, other: &Complex<f32>) -> Complex<f32> {
         unsafe { sys::gsl_complex_add(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sub")]
     fn sub(&self, other: &Complex<f32>) -> Complex<f32> {
         unsafe { sys::gsl_complex_sub(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_mul")]
     fn mul(&self, other: &Complex<f32>) -> Complex<f32> {
         unsafe { sys::gsl_complex_mul(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_div")]
     fn div(&self, other: &Complex<f32>) -> Complex<f32> {
         unsafe { sys::gsl_complex_div(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_add_real")]
     fn add_real(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_add_real(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sub_real")]
     fn sub_real(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_sub_real(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_mul_real")]
     fn mul_real(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_mul_real(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_div_real")]
     fn div_real(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_div_real(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_add_imag")]
     fn add_imag(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_add_imag(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sub_imag")]
     fn sub_imag(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_sub_imag(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_mul_imag")]
     fn mul_imag(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_mul_imag(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_div_imag")]
     fn div_imag(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_div_imag(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_conjugate")]
     fn conjugate(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_conjugate(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_inverse")]
     fn inverse(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_inverse(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_negative")]
     fn negative(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_negative(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sqrt_real")]
     fn sqrt_real(x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_sqrt_real(x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_pow")]
     fn pow(&self, other: &Complex<f32>) -> Complex<f32> {
         unsafe { sys::gsl_complex_pow(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_pow_real")]
     fn pow_real(&self, x: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_pow_real(self.unwrap(), x as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_log_b")]
     fn log_b(&self, other: &Complex<f32>) -> Complex<f32> {
         unsafe { sys::gsl_complex_log_b(self.unwrap(), other.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sec")]
     fn sec(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_sec(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_csc")]
     fn csc(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_csc(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_cot")]
     fn cot(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_cot(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsin")]
     fn arcsin(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arcsin(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsin_real")]
     fn arcsin_real(z: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_arcsin_real(z as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccos")]
     fn arccos(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccos(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccos_real")]
     fn arccos_real(z: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccos_real(z as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arctan")]
     fn arctan(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arctan(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsec")]
     fn arcsec(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arcsec(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsec_real")]
     fn arcsec_real(z: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_arcsec_real(z as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccsc")]
     fn arccsc(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccsc(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccsc_real")]
     fn arccsc_real(z: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccsc_real(z as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccot")]
     fn arccot(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccot(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_sech")]
     fn sech(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_sech(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_csch")]
     fn csch(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_csch(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_coth")]
     fn coth(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_coth(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsinh")]
     fn arcsinh(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arcsinh(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccosh")]
     fn arccosh(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccosh(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccosh_real")]
     fn arccosh_real(z: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccosh_real(z as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arctanh")]
     fn arctanh(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arctanh(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arctanh_real")]
     fn arctanh_real(z: f32) -> Complex<f32> {
         unsafe { sys::gsl_complex_arctanh_real(z as f64).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arcsech")]
     fn arcsech(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arcsech(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccsch")]
     fn arccsch(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccsch(self.unwrap()).wrap() }
     }
 
+    #[doc(alias = "gsl_complex_arccoth")]
     fn arccoth(&self) -> Complex<f32> {
         unsafe { sys::gsl_complex_arccoth(self.unwrap()).wrap() }
     }
