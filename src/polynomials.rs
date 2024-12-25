@@ -26,9 +26,11 @@ R. L. Burden and J. D. Faires, Numerical Analysis, 9th edition, ISBN 0-538-73351
 /// `P(x) = c[0] + c[1] x + c[2] x^2 + \dots + c[len-1] x^{len-1}` using Horner’s method for
 /// stability.
 pub mod evaluation {
-    use crate::types::ComplexF64;
-    use crate::Value;
-    use std::mem::transmute;
+    use crate::{
+        types::complex::{ToC, FromC},
+        Value,
+    };
+    use num_complex::Complex;
 
     /// This function evaluates a polynomial with real coefficients for the real variable x.
     #[doc(alias = "gsl_poly_eval")]
@@ -38,30 +40,31 @@ pub mod evaluation {
 
     /// This function evaluates a polynomial with real coefficients for the complex variable z.
     #[doc(alias = "gsl_poly_complex_eval")]
-    pub fn poly_complex_eval(c: &[f64], z: &ComplexF64) -> ComplexF64 {
+    pub fn poly_complex_eval(c: &[f64], z: &Complex<f64>) -> Complex<f64> {
         unsafe {
-            transmute(sys::gsl_poly_complex_eval(
+            sys::gsl_poly_complex_eval(
                 c.as_ptr(),
                 c.len() as i32,
-                transmute(*z),
-            ))
+                z.unwrap(),
+            ).wrap()
         }
     }
 
     /// This function evaluates a polynomial with complex coefficients for the complex variable z.
     #[doc(alias = "gsl_complex_poly_complex_eval")]
-    pub fn complex_poly_complex_eval(c: &[ComplexF64], z: &ComplexF64) -> ComplexF64 {
+    pub fn complex_poly_complex_eval(c: &[Complex<f64>], z: &Complex<f64>) -> Complex<f64> {
+        // FIXME: Making a copy should be unnecessary.
         let mut tmp = Vec::new();
 
         for it in c.iter() {
-            unsafe { tmp.push(transmute(*it)) };
+            tmp.push(it.unwrap())
         }
         unsafe {
-            transmute(sys::gsl_complex_poly_complex_eval(
+            sys::gsl_complex_poly_complex_eval(
                 tmp.as_ptr(),
                 tmp.len() as i32,
-                transmute(*z),
-            ))
+                z.unwrap(),
+            ).wrap()
         }
     }
 
@@ -171,8 +174,8 @@ pub mod divided_difference_representation {
 }
 
 pub mod quadratic_equations {
-    use crate::types::ComplexF64;
     use crate::Value;
+    use num_complex::Complex;
     use std::mem::transmute;
 
     /// This function finds the real roots of the quadratic equation,
@@ -214,18 +217,21 @@ pub mod quadratic_equations {
         a: f64,
         b: f64,
         c: f64,
-        z0: &mut ComplexF64,
-        z1: &mut ComplexF64,
+        z0: &mut Complex<f64>,
+        z1: &mut Complex<f64>,
     ) -> Result<(), Value> {
         let ret =
-            unsafe { sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) };
+            unsafe { sys::gsl_poly_complex_solve_quadratic(
+                a, b, c,
+                transmute(z0),
+                transmute(z1)) };
         result_handler!(ret, ())
     }
 }
 
 pub mod cubic_equations {
-    use crate::types::ComplexF64;
     use crate::Value;
+    use num_complex::Complex;
     use std::mem::transmute;
 
     /// This function finds the real roots of the cubic equation,
@@ -263,12 +269,16 @@ pub mod cubic_equations {
         a: f64,
         b: f64,
         c: f64,
-        z0: &mut ComplexF64,
-        z1: &mut ComplexF64,
-        z2: &mut ComplexF64,
+        z0: &mut Complex<f64>,
+        z1: &mut Complex<f64>,
+        z2: &mut Complex<f64>,
     ) -> Result<(), Value> {
         let ret = unsafe {
-            sys::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
+            sys::gsl_poly_complex_solve_cubic(
+                a, b, c,
+                transmute(z0),
+                transmute(z1),
+                transmute(z2))
         };
         result_handler!(ret, ())
     }
