@@ -8,6 +8,7 @@ pub use self::basis_spline::BSpLineWorkspace;
 
 pub use self::chebyshev::ChebSeries;
 pub use self::combination::Combination;
+#[allow(deprecated)]
 pub use self::complex::{ComplexF32, ComplexF64, ComplexOps};
 pub use self::discrete_hankel::DiscreteHankel;
 pub use self::eigen_symmetric_workspace::{

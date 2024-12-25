@@ -103,6 +103,15 @@ pub unsafe trait Vector<F> {
     }
 }
 
+/// Trait implemented by types that are considered *mutable* vectors
+/// by this crate.  Elements of the vector are of type `F` (`f32` or `f64`).
+///
+/// Bring this trait into scope in order to add methods to specify
+/// strides to the types implementing `Vector`.
+///
+/// # Safety
+/// One must make sore that `(len - 1) * stride` does not exceed the
+/// length of the underlying slice.
 pub unsafe trait VectorMut<F>: Vector<F> {
     /// Same as [`Vector::as_slice`] but mutable.
     fn as_mut_slice(x: &mut Self) -> &mut [F];
@@ -145,7 +154,7 @@ pub struct SliceMut<'a, F> {
     stride: usize,
 }
 
-unsafe impl<'a, F> Vector<F> for Slice<'a, F> {
+unsafe impl<F> Vector<F> for Slice<'_, F> {
     #[inline]
     fn len(x: &Self) -> usize {
         x.len
@@ -160,7 +169,7 @@ unsafe impl<'a, F> Vector<F> for Slice<'a, F> {
     }
 }
 
-unsafe impl<'a, F> Vector<F> for SliceMut<'a, F> {
+unsafe impl<F> Vector<F> for SliceMut<'_, F> {
     #[inline]
     fn len(x: &Self) -> usize {
         x.len
@@ -175,7 +184,7 @@ unsafe impl<'a, F> Vector<F> for SliceMut<'a, F> {
     }
 }
 
-unsafe impl<'a, F> VectorMut<F> for SliceMut<'a, F> {
+unsafe impl<F> VectorMut<F> for SliceMut<'_, F> {
     #[inline]
     fn as_mut_slice(x: &mut Self) -> &mut [F] {
         x.vec

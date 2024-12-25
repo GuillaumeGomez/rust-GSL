@@ -12,7 +12,7 @@ pub struct View<'a, T> {
     phantom: PhantomData<&'a ()>,
 }
 
-impl<'a, T> View<'a, T> {
+impl<T> View<'_, T> {
     pub(crate) fn new<P>(inner: *mut P) -> Self
     where
         T: FFI<P>,
@@ -24,7 +24,7 @@ impl<'a, T> View<'a, T> {
     }
 }
 
-impl<'a, T> Deref for View<'a, T> {
+impl<T> Deref for View<'_, T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {

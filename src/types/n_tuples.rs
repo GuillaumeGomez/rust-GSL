@@ -176,12 +176,12 @@ macro_rules! impl_project {
 
                 let f: Box<V> = Box::new(value_func);
                 let mut value_function = sys::gsl_ntuple_value_fn {
-                    function: unsafe { std::mem::transmute(value_trampoline::<T, V> as usize) },
+                    function: Some(value_trampoline::<T, V>),
                     params: Box::into_raw(f) as *mut _,
                 };
                 let f: Box<S> = Box::new(select_func);
                 let mut select_function = sys::gsl_ntuple_select_fn {
-                    function: unsafe { std::mem::transmute(select_trampoline::<T, S> as usize) },
+                    function: Some(select_trampoline::<T, S>),
                     params: Box::into_raw(f) as *mut _,
                 };
                 let ret = unsafe {

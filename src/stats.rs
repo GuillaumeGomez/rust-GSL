@@ -1,6 +1,15 @@
 //
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
+//! # Weighted Samples
+//!
+//! The functions described in this section allow the computation of
+//! statistics for weighted samples.  The functions accept a vector of
+//! samples, xᵢ, with associated weights, wᵢ.  Each sample xᵢ is
+//! considered as having been drawn from a Gaussian distribution with
+//! variance σᵢ².  The sample weight wᵢ is defined as the reciprocal
+//! of this variance, wᵢ = 1/σᵢ².  Setting a weight to zero
+//! corresponds to removing a sample from a dataset.
 
 use crate::vector::{self, Vector};
 
@@ -8,16 +17,6 @@ use crate::vector::{self, Vector};
 use crate::vector::VectorMut;
 
 // FIXME: Many functions are missing.
-
-/// # Weighted Samples
-///
-/// The functions described in this section allow the computation of
-/// statistics for weighted samples.  The functions accept a vector of
-/// samples, xᵢ, with associated weights, wᵢ.  Each sample xᵢ is
-/// considered as having been drawn from a Gaussian distribution with
-/// variance σᵢ².  The sample weight wᵢ is defined as the reciprocal
-/// of this variance, wᵢ = 1/σᵢ².  Setting a weight to zero
-/// corresponds to removing a sample from a dataset.
 
 /// Return the weighted mean of the dataset `data` using the set of
 /// weights `w`. The weighted mean is defined as,

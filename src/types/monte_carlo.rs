@@ -76,7 +76,6 @@ The estimates are averaged using the arithmetic mean, but no error is computed.
 use crate::ffi::FFI;
 use crate::Value;
 use std::marker::PhantomData;
-use std::mem::transmute;
 use std::os::raw::c_void;
 use std::slice;
 
@@ -147,7 +146,7 @@ impl PlainMonteCarlo {
         let f: Box<F> = Box::new(f);
         let ret = unsafe {
             let func = sys::gsl_monte_function {
-                f: transmute(monte_trampoline::<F> as usize),
+                f: Some(monte_trampoline::<F>),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
@@ -247,7 +246,7 @@ impl MiserMonteCarlo {
         let f: Box<F> = Box::new(f);
         let ret = unsafe {
             let mut func = sys::gsl_monte_function {
-                f: transmute(monte_trampoline::<F> as usize),
+                f: Some(monte_trampoline::<F>),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };
@@ -409,7 +408,7 @@ impl VegasMonteCarlo {
         let f: Box<F> = Box::new(f);
         let ret = unsafe {
             let mut func = sys::gsl_monte_function {
-                f: transmute(monte_trampoline::<F> as usize),
+                f: Some(monte_trampoline::<F>),
                 dim: xl.len() as _,
                 params: Box::into_raw(f) as *mut _,
             };

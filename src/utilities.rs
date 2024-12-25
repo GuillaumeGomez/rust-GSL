@@ -27,7 +27,7 @@ impl IOStream {
     /// Open a file in write mode.
     pub fn fwrite_handle<P: AsRef<Path>>(file: &P) -> io::Result<IOStream> {
         let path = CString::new(file.as_ref().to_str().unwrap()).unwrap();
-        let ptr = unsafe { fopen(path.as_ptr(), b"w\0".as_ptr() as *const c_char) };
+        let ptr = unsafe { fopen(path.as_ptr(), c"w".as_ptr() as *const c_char) };
         if ptr.is_null() {
             return Err(io::Error::new(
                 io::ErrorKind::Other,
