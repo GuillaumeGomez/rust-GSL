@@ -44,6 +44,8 @@ Review of Particle Properties R.M. Barnett et al., Physical Review D54, 1 (1996)
 The Review of Particle Physics is available online at the website <http://pdg.lbl.gov/>.
 !*/
 
+use crate::vector::{check_equal_len, Vector};
+
 /// This function returns the arithmetic mean of data, a dataset of length n with stride stride. The
 /// arithmetic mean, or sample mean, is denoted by \Hat\mu and defined as,
 ///
@@ -52,8 +54,11 @@ The Review of Particle Physics is available online at the website <http://pdg.lb
 /// where x_i are the elements of the dataset data. For samples drawn from a gaussian distribution
 /// the variance of \Hat\mu is \sigma^2 / N.
 #[doc(alias = "gsl_stats_mean")]
-pub fn mean(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_mean(data.as_ptr(), stride, n) }
+pub fn mean<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_mean(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function returns the estimated, or sample, variance of data, a dataset of length n with
@@ -69,8 +74,11 @@ pub fn mean(data: &[f64], stride: usize, n: usize) -> f64 {
 /// This function computes the mean via a call to gsl_stats_mean. If you have already computed the
 /// mean then you can pass it directly to gsl_stats_variance_m.
 #[doc(alias = "gsl_stats_variance")]
-pub fn variance(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_variance(data.as_ptr(), stride, n) }
+pub fn variance<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_variance(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function returns the sample variance of data relative to the given value of mean. The
@@ -78,22 +86,45 @@ pub fn variance(data: &[f64], stride: usize, n: usize) -> f64 {
 ///
 /// \Hat\sigma^2 = (1/(N-1)) \sum (x_i - mean)^2
 #[doc(alias = "gsl_stats_variance_m")]
-pub fn variance_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_variance_m(data.as_ptr(), stride, n, mean) }
+pub fn variance_m<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_variance_m(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the
 /// square root of the corresponding variance functions above.
 #[doc(alias = "gsl_stats_sd")]
-pub fn sd(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_sd(data.as_ptr(), stride, n) }
+pub fn sd<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_sd(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the
 /// square root of the corresponding variance functions above.
 #[doc(alias = "gsl_stats_sd_m")]
-pub fn sd_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_sd_m(data.as_ptr(), stride, n, mean) }
+pub fn sd_m<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_sd_m(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// This function returns the total sum of squares (TSS) of data about the mean. For gsl_stats_tss_m
@@ -102,8 +133,11 @@ pub fn sd_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
 ///
 /// TSS =  \sum (x_i - mean)^2
 #[doc(alias = "gsl_stats_tss")]
-pub fn tss(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_tss(data.as_ptr(), stride, n) }
+pub fn tss<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_tss(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function returns the total sum of squares (TSS) of data about the mean. For gsl_stats_tss_m
@@ -112,8 +146,18 @@ pub fn tss(data: &[f64], stride: usize, n: usize) -> f64 {
 ///
 /// TSS =  \sum (x_i - mean)^2
 #[doc(alias = "gsl_stats_tss_m")]
-pub fn tss_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_tss_m(data.as_ptr(), stride, n, mean) }
+pub fn tss_m<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_tss_m(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// This function computes an unbiased estimate of the variance of data when the population mean
@@ -123,15 +167,35 @@ pub fn tss_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
 ///
 /// \Hat\sigma^2 = (1/N) \sum (x_i - \mu)^2
 #[doc(alias = "gsl_stats_variance_with_fixed_mean")]
-pub fn variance_with_fixed_mean(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_variance_with_fixed_mean(data.as_ptr(), stride, n, mean) }
+pub fn variance_with_fixed_mean<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_variance_with_fixed_mean(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// This function calculates the standard deviation of data for a fixed population mean mean. The
 /// result is the square root of the corresponding variance function.
 #[doc(alias = "gsl_stats_sd_with_fixed_mean")]
-pub fn sd_with_fixed_mean(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_sd_with_fixed_mean(data.as_ptr(), stride, n, mean) }
+pub fn sd_with_fixed_mean<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_sd_with_fixed_mean(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// This function computes the absolute deviation from the mean of data, a dataset of length n with
@@ -143,8 +207,11 @@ pub fn sd_with_fixed_mean(data: &[f64], stride: usize, n: usize, mean: f64) -> f
 /// more robust measure of the width of a distribution than the variance. This function computes the
 /// mean of data via a call to gsl_stats_mean.
 #[doc(alias = "gsl_stats_absdev")]
-pub fn absdev(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_absdev(data.as_ptr(), stride, n) }
+pub fn absdev<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_absdev(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function computes the absolute deviation of the dataset data relative to the given value of
@@ -156,8 +223,18 @@ pub fn absdev(data: &[f64], stride: usize, n: usize) -> f64 {
 /// recomputing it), or wish to calculate the absolute deviation relative to another value (such as
 /// zero, or the median).
 #[doc(alias = "gsl_stats_absdev_m")]
-pub fn absdev_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_absdev_m(data.as_ptr(), stride, n, mean) }
+pub fn absdev_m<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_absdev_m(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// This function computes the skewness of data, a dataset of length n with stride stride. The
@@ -171,8 +248,11 @@ pub fn absdev_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
 /// The function computes the mean and estimated standard deviation of data via calls to [`mean`]
 /// and [`sd`].
 #[doc(alias = "gsl_stats_skew")]
-pub fn skew(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_skew(data.as_ptr(), stride, n) }
+pub fn skew<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_skew(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function computes the skewness of the dataset data using the given values of the mean mean
@@ -183,8 +263,19 @@ pub fn skew(data: &[f64], stride: usize, n: usize) -> f64 {
 /// These functions are useful if you have already computed the mean and standard deviation of data
 /// and want to avoid recomputing them.
 #[doc(alias = "gsl_stats_skew_m_sd")]
-pub fn skew_m_sd(data: &[f64], stride: usize, n: usize, mean: f64, sd: f64) -> f64 {
-    unsafe { sys::gsl_stats_skew_m_sd(data.as_ptr(), stride, n, mean, sd) }
+pub fn skew_m_sd<V>(data: &V, mean: f64, sd: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_skew_m_sd(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+            sd,
+        )
+    }
 }
 
 /// This function computes the kurtosis of data, a dataset of length n with stride stride. The
@@ -195,8 +286,11 @@ pub fn skew_m_sd(data: &[f64], stride: usize, n: usize, mean: f64, sd: f64) -> f
 /// The kurtosis measures how sharply peaked a distribution is, relative to its width. The kurtosis
 /// is normalized to zero for a Gaussian distribution.
 #[doc(alias = "gsl_stats_kurtosis")]
-pub fn kurtosis(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_kurtosis(data.as_ptr(), stride, n) }
+pub fn kurtosis<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_kurtosis(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function computes the kurtosis of the dataset data using the given values of the mean mean
@@ -207,8 +301,19 @@ pub fn kurtosis(data: &[f64], stride: usize, n: usize) -> f64 {
 /// This function is useful if you have already computed the mean and standard deviation of data and
 /// want to avoid recomputing them.
 #[doc(alias = "gsl_stats_kurtosis_m_sd")]
-pub fn kurtosis_m_sd(data: &[f64], stride: usize, n: usize, mean: f64, sd: f64) -> f64 {
-    unsafe { sys::gsl_stats_kurtosis_m_sd(data.as_ptr(), stride, n, mean, sd) }
+pub fn kurtosis_m_sd<V>(data: &V, mean: f64, sd: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_kurtosis_m_sd(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+            sd,
+        )
+    }
 }
 
 /// This function computes the lag-1 autocorrelation of the dataset data.
@@ -217,15 +322,34 @@ pub fn kurtosis_m_sd(data: &[f64], stride: usize, n: usize, mean: f64, sd: f64) 
 ///        \over
 ///        \sum_{i = 1}^{n} (x_{i} - \Hat\mu) (x_{i} - \Hat\mu)}
 #[doc(alias = "gsl_stats_lag1_autocorrelation")]
-pub fn lag1_autocorrelation(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_lag1_autocorrelation(data.as_ptr(), stride, n) }
+pub fn lag1_autocorrelation<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_lag1_autocorrelation(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function computes the lag-1 autocorrelation of the dataset data using the given value of
 /// the mean mean.
 #[doc(alias = "gsl_stats_lag1_autocorrelation_m")]
-pub fn lag1_autocorrelation_m(data: &[f64], stride: usize, n: usize, mean: f64) -> f64 {
-    unsafe { sys::gsl_stats_lag1_autocorrelation_m(data.as_ptr(), stride, n, mean) }
+pub fn lag1_autocorrelation_m<V>(data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_lag1_autocorrelation_m(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
+    }
 }
 
 /// This function computes the covariance of the datasets data1 and data2 which must both be of the
@@ -233,30 +357,38 @@ pub fn lag1_autocorrelation_m(data: &[f64], stride: usize, n: usize, mean: f64) 
 ///
 /// covar = (1/(n - 1)) \sum_{i = 1}^{n} (x_i - \Hat x) (y_i - \Hat y)
 #[doc(alias = "gsl_stats_covariance")]
-pub fn covariance(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_covariance(data1.as_ptr(), stride1, data2.as_ptr(), stride2, n) }
+pub fn covariance<V>(data1: &V, data2: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(data1, data2).unwrap();
+    unsafe {
+        sys::gsl_stats_covariance(
+            V::as_slice(data1).as_ptr(),
+            V::stride(data1),
+            V::as_slice(data2).as_ptr(),
+            V::stride(data2),
+            V::len(data1),
+        )
+    }
 }
 
 /// This function computes the covariance of the datasets data1 and data2 using the given values of
 /// the means, mean1 and mean2. This is useful if you have already computed the means of data1 and
 /// data2 and want to avoid recomputing them.
 #[doc(alias = "gsl_stats_covariance_m")]
-pub fn covariance_m(
-    data1: &[f64],
-    stride1: usize,
-    data2: &[f64],
-    stride2: usize,
-    n: usize,
-    mean1: f64,
-    mean2: f64,
-) -> f64 {
+pub fn covariance_m<V>(data1: &V, data2: &V, mean1: f64, mean2: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(data1, data2).unwrap();
     unsafe {
         sys::gsl_stats_covariance_m(
-            data1.as_ptr(),
-            stride1,
-            data2.as_ptr(),
-            stride2,
-            n,
+            V::as_slice(data1).as_ptr(),
+            V::stride(data1),
+            V::as_slice(data2).as_ptr(),
+            V::stride(data2),
+            V::len(data1),
             mean1,
             mean2,
         )
@@ -272,8 +404,20 @@ pub fn covariance_m(
 ///      \sqrt{1/(n-1) \sum (x_i - \Hat x)^2} \sqrt{1/(n-1) \sum (y_i - \Hat y)^2}
 ///     }
 #[doc(alias = "gsl_stats_correlation")]
-pub fn correlation(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_correlation(data1.as_ptr(), stride1, data2.as_ptr(), stride2, n) }
+pub fn correlation<V>(data1: &V, data2: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(data1, data2).unwrap();
+    unsafe {
+        sys::gsl_stats_correlation(
+            V::as_slice(data1).as_ptr(),
+            V::stride(data1),
+            V::as_slice(data2).as_ptr(),
+            V::stride(data2),
+            V::len(data1),
+        )
+    }
 }
 
 /// This function computes the Spearman rank correlation coefficient between the datasets data1 and
@@ -282,21 +426,21 @@ pub fn correlation(data1: &[f64], stride1: usize, data2: &[f64], stride2: usize,
 /// correlation between the ranked vectors x_R and y_R, where ranks are defined to be the average of
 /// the positions of an element in the ascending order of the values.
 #[doc(alias = "gsl_stats_spearman")]
-pub fn spearman(
-    data1: &[f64],
-    stride1: usize,
-    data2: &[f64],
-    stride2: usize,
-    n: usize,
-    work: &mut [f64],
-) -> f64 {
+pub fn spearman<V>(data1: &V, data2: &V, work: &mut [f64]) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(data1, data2).unwrap();
+    if work.len() < 2 * V::len(data1) {
+        panic!("gsl::statistics::spearman: `work` is too small");
+    }
     unsafe {
         sys::gsl_stats_spearman(
-            data1.as_ptr(),
-            stride1,
-            data2.as_ptr(),
-            stride2,
-            n,
+            V::as_slice(data1).as_ptr(),
+            V::stride(data1),
+            V::as_slice(data2).as_ptr(),
+            V::stride(data2),
+            V::len(data1),
             work.as_mut_ptr(),
         )
     }
@@ -307,8 +451,20 @@ pub fn spearman(
 ///
 /// \Hat\mu = (\sum w_i x_i) / (\sum w_i)
 #[doc(alias = "gsl_stats_wmean")]
-pub fn wmean(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wmean(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wmean<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wmean(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function returns the estimated variance of the dataset data with stride stride and length
@@ -321,36 +477,78 @@ pub fn wmean(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -
 /// Note that this expression reduces to an unweighted variance with the familiar 1/(N-1) factor
 /// when there are N equal non-zero weights.
 #[doc(alias = "gsl_stats_wvariance")]
-pub fn wvariance(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wvariance(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wvariance<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wvariance(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function returns the estimated variance of the weighted dataset data using the given
 /// weighted mean wmean.
 #[doc(alias = "gsl_stats_wvariance_m")]
-pub fn wvariance_m(
-    w: &[f64],
-    wstride: usize,
-    data: &[f64],
-    stride: usize,
-    n: usize,
-    wmean: f64,
-) -> f64 {
-    unsafe { sys::gsl_stats_wvariance_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
+pub fn wvariance_m<V>(w: &V, data: &V, wmean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_wvariance_m(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            wmean,
+        )
+    }
 }
 
 /// The standard deviation is defined as the square root of the variance. This function returns the
 /// square root of the corresponding variance function [`wvariance`] above.
 #[doc(alias = "gsl_stats_wsd")]
-pub fn wsd(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wsd(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wsd<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wsd(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function returns the square root of the corresponding variance function
 /// [`wvariance_m`] above.
 #[doc(alias = "gsl_stats_wsd_m")]
-pub fn wsd_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
-    unsafe { sys::gsl_stats_wsd_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
+pub fn wsd_m<V>(w: &V, data: &V, wmean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wsd_m(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            wmean,
+        )
+    }
 }
 
 /// This function computes an unbiased estimate of the variance of the weighted dataset data when
@@ -359,21 +557,18 @@ pub fn wsd_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, w
 ///
 /// \Hat\sigma^2 = (\sum w_i (x_i - \mu)^2) / (\sum w_i)
 #[doc(alias = "gsl_stats_wvariance_with_fixed_mean")]
-pub fn wvariance_with_fixed_mean(
-    w: &[f64],
-    wstride: usize,
-    data: &[f64],
-    stride: usize,
-    n: usize,
-    mean: f64,
-) -> f64 {
+pub fn wvariance_with_fixed_mean<V>(w: &V, data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
     unsafe {
         sys::gsl_stats_wvariance_with_fixed_mean(
-            w.as_ptr(),
-            wstride,
-            data.as_ptr(),
-            stride,
-            n,
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
             mean,
         )
     }
@@ -382,16 +577,20 @@ pub fn wvariance_with_fixed_mean(
 /// The standard deviation is defined as the square root of the variance. This function returns the
 /// square root of the corresponding variance function above.
 #[doc(alias = "gsl_stats_wsd_with_fixed_mean")]
-pub fn wsd_with_fixed_mean(
-    w: &[f64],
-    wstride: usize,
-    data: &[f64],
-    stride: usize,
-    n: usize,
-    mean: f64,
-) -> f64 {
+pub fn wsd_with_fixed_mean<V>(w: &V, data: &V, mean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
     unsafe {
-        sys::gsl_stats_wsd_with_fixed_mean(w.as_ptr(), wstride, data.as_ptr(), stride, n, mean)
+        sys::gsl_stats_wsd_with_fixed_mean(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            mean,
+        )
     }
 }
 
@@ -401,8 +600,20 @@ pub fn wsd_with_fixed_mean(
 ///
 /// TSS =  \sum w_i (x_i - wmean)^2
 #[doc(alias = "gsl_stats_wtss")]
-pub fn wtss(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wtss(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wtss<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wtss(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function returns the weighted total sum of squares (TSS) of data about the weighted mean.
@@ -411,8 +622,21 @@ pub fn wtss(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) ->
 ///
 /// TSS =  \sum w_i (x_i - wmean)^2
 #[doc(alias = "gsl_stats_wtss_m")]
-pub fn wtss_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, wmean: f64) -> f64 {
-    unsafe { sys::gsl_stats_wtss_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
+pub fn wtss_m<V>(w: &V, data: &V, wmean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wtss_m(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            wmean,
+        )
+    }
 }
 
 /// This function computes the weighted absolute deviation from the weighted mean of data. The absolute deviation from the mean is defined
@@ -420,68 +644,120 @@ pub fn wtss_m(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize, 
 ///
 /// absdev = (\sum w_i |x_i - \Hat\mu|) / (\sum w_i)
 #[doc(alias = "gsl_stats_wabsdev")]
-pub fn wabsdev(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wabsdev(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wabsdev<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wabsdev(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function computes the absolute deviation of the weighted dataset data about the given weighted mean wmean.
 #[doc(alias = "gsl_stats_wabsdev_m")]
-pub fn wabsdev_m(
-    w: &[f64],
-    wstride: usize,
-    data: &[f64],
-    stride: usize,
-    n: usize,
-    wmean: f64,
-) -> f64 {
-    unsafe { sys::gsl_stats_wabsdev_m(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean) }
+pub fn wabsdev_m<V>(w: &V, data: &V, wmean: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wabsdev_m(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            wmean,
+        )
+    }
 }
 
 /// This function computes the weighted skewness of the dataset data.
 ///
 /// skew = (\sum w_i ((x_i - \Hat x)/\Hat \sigma)^3) / (\sum w_i)
 #[doc(alias = "gsl_stats_wskew")]
-pub fn wskew(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wskew(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wskew<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wskew(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function computes the weighted skewness of the dataset data using the given values of the
 /// weighted mean and weighted standard deviation, wmean and wsd.
 #[doc(alias = "gsl_stats_wskew_m_sd")]
-pub fn wskew_m_sd(
-    w: &[f64],
-    wstride: usize,
-    data: &[f64],
-    stride: usize,
-    n: usize,
-    wmean: f64,
-    wsd: f64,
-) -> f64 {
-    unsafe { sys::gsl_stats_wskew_m_sd(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean, wsd) }
+pub fn wskew_m_sd<V>(w: &V, data: &V, wmean: f64, wsd: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wskew_m_sd(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            wmean,
+            wsd,
+        )
+    }
 }
 
 /// This function computes the weighted kurtosis of the dataset data.
 ///
 /// kurtosis = ((\sum w_i ((x_i - \Hat x)/\Hat \sigma)^4) / (\sum w_i)) - 3
 #[doc(alias = "gsl_stats_wkurtosis")]
-pub fn wkurtosis(w: &[f64], wstride: usize, data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_wkurtosis(w.as_ptr(), wstride, data.as_ptr(), stride, n) }
+pub fn wkurtosis<V>(w: &V, data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
+    unsafe {
+        sys::gsl_stats_wkurtosis(
+            V::as_slice(w).as_ptr(),
+            V::stride(data),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function computes the weighted kurtosis of the dataset data using the given values of the
 /// weighted mean and weighted standard deviation, wmean and wsd.
 #[doc(alias = "gsl_stats_wkurtosis_m_sd")]
-pub fn wkurtosis_m_sd(
-    w: &[f64],
-    wstride: usize,
-    data: &[f64],
-    stride: usize,
-    n: usize,
-    wmean: f64,
-    wsd: f64,
-) -> f64 {
+pub fn wkurtosis_m_sd<V>(w: &V, data: &V, wmean: f64, wsd: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    check_equal_len(w, data).unwrap();
     unsafe {
-        sys::gsl_stats_wkurtosis_m_sd(w.as_ptr(), wstride, data.as_ptr(), stride, n, wmean, wsd)
+        sys::gsl_stats_wkurtosis_m_sd(
+            V::as_slice(w).as_ptr(),
+            V::stride(w),
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            wmean,
+            wsd,
+        )
     }
 }
 
@@ -491,8 +767,11 @@ pub fn wkurtosis_m_sd(
 /// If you want instead to find the element with the largest absolute magnitude you will need to
 /// apply fabs or abs to your data before calling this function.
 #[doc(alias = "gsl_stats_max")]
-pub fn max(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_max(data.as_ptr(), stride, n) }
+pub fn max<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_max(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function returns the minimum value in data, a dataset of length n with stride stride. The
@@ -501,18 +780,32 @@ pub fn max(data: &[f64], stride: usize, n: usize) -> f64 {
 /// If you want instead to find the element with the smallest absolute magnitude you will need to
 /// apply fabs or abs to your data before calling this function.
 #[doc(alias = "gsl_stats_min")]
-pub fn min(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_min(data.as_ptr(), stride, n) }
+pub fn min<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_min(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function finds both the minimum and maximum values min, max in data in a single pass.
 ///
 /// Returns `(min, max)`.
 #[doc(alias = "gsl_stats_minmax")]
-pub fn minmax(data: &[f64], stride: usize, n: usize) -> (f64, f64) {
+pub fn minmax<V>(data: &V) -> (f64, f64)
+where
+    V: Vector<f64> + ?Sized,
+{
     let mut min = 0.;
     let mut max = 0.;
-    unsafe { sys::gsl_stats_minmax(&mut min, &mut max, data.as_ptr(), stride, n) };
+    unsafe {
+        sys::gsl_stats_minmax(
+            &mut min,
+            &mut max,
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    };
     (min, max)
 }
 
@@ -520,16 +813,22 @@ pub fn minmax(data: &[f64], stride: usize, n: usize) -> (f64, f64) {
 /// stride. The maximum value is defined as the value of the element x_i which satisfies x_i >= x_j
 /// for all j. When there are several equal maximum elements then the first one is chosen.
 #[doc(alias = "gsl_stats_max_index")]
-pub fn max_index(data: &[f64], stride: usize, n: usize) -> usize {
-    unsafe { sys::gsl_stats_max_index(data.as_ptr(), stride, n) }
+pub fn max_index<V>(data: &V) -> usize
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_max_index(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function returns the index of the minimum value in data, a dataset of length n with stride
 /// stride. The minimum value is defined as the value of the element x_i which satisfies x_i >= x_j
 /// for all j. When there are several equal minimum elements then the first one is chosen.
 #[doc(alias = "gsl_stats_min_index")]
-pub fn min_index(data: &[f64], stride: usize, n: usize) -> usize {
-    unsafe { sys::gsl_stats_min_index(data.as_ptr(), stride, n) }
+pub fn min_index<V>(data: &V) -> usize
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe { sys::gsl_stats_min_index(V::as_slice(data).as_ptr(), V::stride(data), V::len(data)) }
 }
 
 /// This function returns the indexes min_index, max_index of the minimum and maximum values in data
@@ -537,11 +836,20 @@ pub fn min_index(data: &[f64], stride: usize, n: usize) -> usize {
 ///
 /// Returns `(min_index, max_index)`.
 #[doc(alias = "gsl_stats_minmax_index")]
-pub fn minmax_index(data: &[f64], stride: usize, n: usize) -> (usize, usize) {
+pub fn minmax_index<V>(data: &V) -> (usize, usize)
+where
+    V: Vector<f64> + ?Sized,
+{
     let mut min_index = 0;
     let mut max_index = 0;
     unsafe {
-        sys::gsl_stats_minmax_index(&mut min_index, &mut max_index, data.as_ptr(), stride, n)
+        sys::gsl_stats_minmax_index(
+            &mut min_index,
+            &mut max_index,
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
     };
     (min_index, max_index)
 }
@@ -555,8 +863,17 @@ pub fn minmax_index(data: &[f64], stride: usize, n: usize) -> (usize, usize) {
 /// values, elements (n-1)/2 and n/2. Since the algorithm for computing the median involves
 /// interpolation this function always returns a floating-point number, even for integer data types.
 #[doc(alias = "gsl_stats_median_from_sorted_data")]
-pub fn median_from_sorted_data(data: &[f64], stride: usize, n: usize) -> f64 {
-    unsafe { sys::gsl_stats_median_from_sorted_data(data.as_ptr(), stride, n) }
+pub fn median_from_sorted_data<V>(data: &V) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_median_from_sorted_data(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+        )
+    }
 }
 
 /// This function returns a quantile value of sorted_data, a double-precision array of length n with
@@ -578,6 +895,16 @@ pub fn median_from_sorted_data(data: &[f64], stride: usize, n: usize) -> f64 {
 /// to 0.5. Since the algorithm for computing quantiles involves interpolation this function always
 /// returns a floating-point number, even for integer data types.
 #[doc(alias = "gsl_stats_quantile_from_sorted_data")]
-pub fn quantile_from_sorted_data(data: &[f64], stride: usize, n: usize, f: f64) -> f64 {
-    unsafe { sys::gsl_stats_quantile_from_sorted_data(data.as_ptr(), stride, n, f) }
+pub fn quantile_from_sorted_data<V>(data: &V, f: f64) -> f64
+where
+    V: Vector<f64> + ?Sized,
+{
+    unsafe {
+        sys::gsl_stats_quantile_from_sorted_data(
+            V::as_slice(data).as_ptr(),
+            V::stride(data),
+            V::len(data),
+            f,
+        )
+    }
 }
