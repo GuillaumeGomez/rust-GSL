@@ -165,22 +165,35 @@ is desirable for better locality of memory accesses).
 ///
 /// The functions return a value of crate::Value::Success if no errors were detected, or Value::Dom if the length n is not a power of two.
 pub mod radix2 {
-    use crate::{vector::VectorMut, Value};
+    use crate::{
+        vector::{ComplexSlice, VectorMut},
+        Value,
+    };
+    use num_complex::Complex;
 
     #[doc(alias = "gsl_fft_complex_radix2_forward")]
-    pub fn forward(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_forward(data.as_mut_ptr(), stride, n) };
+    pub fn forward<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_forward(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_fft_complex_radix2_transform")]
-    pub fn transform<V: VectorMut<f64> + ?Sized>(
+    pub fn transform<V: VectorMut<Complex<f64>> + ?Sized>(
         data: &mut V,
         sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_transform(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
                 sign.into(),
@@ -192,11 +205,11 @@ pub mod radix2 {
     #[doc(alias = "gsl_fft_complex_radix2_backward")]
     pub fn backward<V>(data: &mut V) -> Result<(), Value>
     where
-        V: VectorMut<f64> + ?Sized,
+        V: VectorMut<Complex<f64>> + ?Sized,
     {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_backward(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
             )
@@ -207,11 +220,11 @@ pub mod radix2 {
     #[doc(alias = "gsl_fft_complex_radix2_inverse")]
     pub fn inverse<V>(data: &mut V) -> Result<(), Value>
     where
-        V: VectorMut<f64> + ?Sized,
+        V: VectorMut<Complex<f64>> + ?Sized,
     {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_inverse(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
             )
@@ -223,11 +236,11 @@ pub mod radix2 {
     #[doc(alias = "gsl_fft_complex_radix2_dif_forward")]
     pub fn dif_forward<V>(data: &mut V) -> Result<(), Value>
     where
-        V: VectorMut<f64> + ?Sized,
+        V: VectorMut<Complex<f64>> + ?Sized,
     {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_dif_forward(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
             )
@@ -237,13 +250,13 @@ pub mod radix2 {
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     #[doc(alias = "gsl_fft_complex_radix2_dif_transform")]
-    pub fn dif_transform<V: VectorMut<f64> + ?Sized>(
+    pub fn dif_transform<V: VectorMut<Complex<f64>> + ?Sized>(
         data: &mut V,
         sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_dif_transform(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
                 sign.into(),
@@ -256,11 +269,11 @@ pub mod radix2 {
     #[doc(alias = "gsl_fft_complex_radix2_dif_backward")]
     pub fn dif_backward<V>(data: &mut V) -> Result<(), Value>
     where
-        V: VectorMut<f64> + ?Sized,
+        V: VectorMut<Complex<f64>> + ?Sized,
     {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_dif_backward(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
             )
@@ -272,11 +285,11 @@ pub mod radix2 {
     #[doc(alias = "gsl_fft_complex_radix2_dif_inverse")]
     pub fn dif_inverse<V>(data: &mut V) -> Result<(), Value>
     where
-        V: VectorMut<f64> + ?Sized,
+        V: VectorMut<Complex<f64>> + ?Sized,
     {
         let ret = unsafe {
             sys::gsl_fft_complex_radix2_dif_inverse(
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
                 V::len(data),
             )
