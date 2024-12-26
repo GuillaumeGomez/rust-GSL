@@ -12,7 +12,7 @@ Some examples might require a higher GSL version. `rgsl` supports versions throu
 So for example:
 
 ```bash
-$ cargo run --bin largefit --features GSL/v2_2
+$ cargo run --bin largefit --features v2_2
 ```
 
 # Original examples

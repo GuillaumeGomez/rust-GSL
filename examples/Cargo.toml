@@ -2,6 +2,13 @@
 name = "gsl-examples"
 version = "0.4.6"
 authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
+edition = "2021"
+
+[features]
+v2_1 = ["GSL/v2_1"]
+v2_2 = ["GSL/v2_2", "v2_1"]
+v2_5 = ["GSL/v2_5", "v2_2"]
+v2_7 = ["GSL/v2_7", "v2_5"]
 
 [dependencies.GSL]
 path = "../"
@@ -56,22 +63,22 @@ path = "./fftmr.rs"
 [[bin]]
 name = "filt_edge"
 path = "./filt_edge.rs"
-required-features = ["GSL/v2_5"]
+required-features = ["v2_5"]
 
 [[bin]]
 name = "fitreg"
 path = "./fitreg.rs"
-required-features = ["GSL/v2_1"]
+required-features = ["v2_1"]
 
 [[bin]]
 name = "fitreg2"
 path = "./fitreg2.rs"
-required-features = ["GSL/v2_1"]
+required-features = ["v2_1"]
 
 [[bin]]
 name = "fitting"
 path = "./fitting.rs"
-required-features = ["GSL/v2_5"]
+required-features = ["v2_5"]
 
 [[bin]]
 name = "fitting3"
@@ -80,12 +87,12 @@ path = "./fitting3.rs"
 [[bin]]
 name = "gaussfilt"
 path = "./gaussfilt.rs"
-required-features = ["GSL/v2_5"]
+required-features = ["v2_5"]
 
 [[bin]]
 name = "gaussfilt2"
 path = "./gaussfilt2.rs"
-required-features = ["GSL/v2_5"]
+required-features = ["v2_5"]
 
 [[bin]]
 name = "histogram2d"
@@ -94,7 +101,7 @@ path = "./histogram2d.rs"
 [[bin]]
 name = "impulse"
 path = "./impulse.rs"
-required-features = ["GSL/v2_5"]
+required-features = ["v2_5"]
 
 [[bin]]
 name = "integration"
@@ -111,7 +118,7 @@ path = "./intro.rs"
 [[bin]]
 name = "largefit"
 path = "./largefit.rs"
-required-features = ["GSL/v2_2"]
+required-features = ["v2_2"]
 
 [[bin]]
 name = "rng"

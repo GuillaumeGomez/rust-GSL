@@ -35,7 +35,7 @@ jobs:
         run: cargo test --features v2_7
       - name: check examples
         working-directory: examples
-        run: cargo check --features GSL/v2_7
+        run: cargo check --features v2_7
       - name: run examples
         working-directory: examples
         run: python3 run-examples.py
@@ -65,7 +65,7 @@ jobs:
       - run: cargo check --features v2_7
       - name: check examples
         working-directory: examples
-        run: cargo check --features GSL/v2_7
+        run: cargo check --features v2_7
 
   fmt:
     name: rust fmt
