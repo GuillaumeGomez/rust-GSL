@@ -35,3 +35,36 @@ rustdoc-args = ["--generate-link-to-definition"]
 [lib]
 name = "rgsl"
 crate-type = ["dylib", "rlib"]
+
+# Examples with special requirements
+[[example]]
+name = "filt_edge"
+required-features = ["v2_5"]
+
+[[example]]
+name = "fitreg"
+required-features = ["v2_5"]
+
+[[example]]
+name = "fitreg2"
+required-features = ["v2_5"]
+
+[[example]]
+name = "fitting"
+required-features = ["v2_5"]
+
+[[example]]
+name = "gaussfilt"
+required-features = ["v2_5"]
+
+[[example]]
+name = "gaussfilt2"
+required-features = ["v2_5"]
+
+[[example]]
+name = "impulse"
+required-features = ["v2_5"]
+
+[[example]]
+name = "largefit"
+required-features = ["v2_2"]

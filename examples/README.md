@@ -3,7 +3,7 @@
 This folder contains the `rgsl` examples. To run one, just use `cargo`:
 
 ```bash
-$ cargo run --bin intro
+$ cargo run --example intro
 ```
 
 And that's it!
@@ -12,7 +12,7 @@ Some examples might require a higher GSL version. `rgsl` supports versions throu
 So for example:
 
 ```bash
-$ cargo run --bin largefit --features v2_2
+$ cargo run --example largefit --features v2_2
 ```
 
 # Original examples
