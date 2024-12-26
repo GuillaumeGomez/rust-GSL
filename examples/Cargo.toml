@@ -15,6 +15,7 @@ path = "../"
 
 [dependencies]
 libc = "~0.2"
+num-complex = "0.4.6"
 
 [[bin]]
 name = "blas"

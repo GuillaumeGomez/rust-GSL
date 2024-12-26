@@ -818,3 +818,27 @@ impl_AsRef!(f64);
 impl_AsRef!(Complex<f32>);
 #[cfg(feature = "complex")]
 impl_AsRef!(Complex<f64>);
+
+// Helper trait to convert Complex slices.
+pub(crate) trait ComplexSlice<T> {
+    // fn as_ptr_fXX(&self) -> *const T;
+    fn as_mut_ptr_fXX(&mut self) -> *mut T;
+}
+
+macro_rules! impl_ComplexSlice {
+    ($ty: ty) => {
+        impl ComplexSlice<$ty> for [Complex<$ty>] {
+            // fn as_ptr_fXX(&self) -> *const $ty {
+            //     // Complex<f64> layout is two consecutive f64 values.
+            //     self.as_ptr() as *const $ty
+            // }
+
+            fn as_mut_ptr_fXX(&mut self) -> *mut $ty {
+                self.as_mut_ptr() as *mut $ty
+            }
+        }
+    };
+}
+
+impl_ComplexSlice!(f64);
+impl_ComplexSlice!(f32);

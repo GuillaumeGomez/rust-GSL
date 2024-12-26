@@ -3,7 +3,11 @@
 //
 
 use crate::ffi::FFI;
-use crate::{vector::VectorMut, Value};
+use crate::{
+    vector::{ComplexSlice, VectorMut},
+    Value,
+};
+use num_complex::Complex;
 use paste::paste;
 
 macro_rules! gsl_fft_wavetable {
@@ -74,20 +78,16 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _forward)]
-    pub fn forward<V: VectorMut<$ty> + ?Sized>(
+    pub fn forward<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
     ) -> Result<(), Value> {
-        if V::len(data) % 2 == 1 {
-            panic!("{}: the length of the data must be even",
-                stringify!($complex_rust_name::forward));
-        }
         let ret = unsafe {
             sys::[<$name $($extra)? _forward>](
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
-                V::len(data) / 2, // FIXME: use complex vectors?
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
@@ -96,21 +96,17 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _transform)]
-    pub fn transform<V: VectorMut<$ty> + ?Sized>(
+    pub fn transform<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
         sign: crate::FftDirection,
     ) -> Result<(), Value> {
-        if V::len(data) % 2 == 1 {
-            panic!("{}: the length of the data must be even",
-                stringify!($complex_rust_name::transform));
-        }
         let ret = unsafe {
             sys::[<$name $($extra)? _transform>](
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
-                V::len(data) / 2, // FIXME: use complex vectors?
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
                 sign.into(),
@@ -120,20 +116,16 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _backward)]
-    pub fn backward<V: VectorMut<$ty> + ?Sized>(
+    pub fn backward<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
     ) -> Result<(), Value> {
-        if V::len(data) % 2 == 1 {
-            panic!("{}: the length of the data must be even",
-                stringify!($complex_rust_name::backward));
-        }
         let ret = unsafe {
             sys::[<$name $($extra)? _backward>](
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
-                V::len(data) / 2, // FIXME: use complex vectors?
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
@@ -142,20 +134,16 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _inverse)]
-    pub fn inverse<V: VectorMut<$ty> + ?Sized>(
+    pub fn inverse<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
     ) -> Result<(), Value> {
-        if V::len(data) % 2 == 1 {
-            panic!("{}: the length of the data must be even",
-                stringify!($complex_rust_name::inverse));
-        }
         let ret = unsafe {
             sys::[<$name $($extra)? _inverse>](
-                V::as_mut_slice(data).as_mut_ptr(),
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
                 V::stride(data),
-                V::len(data) / 2, // FIXME: use complex vectors?
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
