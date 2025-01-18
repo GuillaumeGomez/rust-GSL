@@ -262,7 +262,6 @@ impl<'a> MultiMinFdfFunction<'a> {
     }
 
     #[allow(clippy::wrong_self_convention)]
-
     fn to_raw(&mut self) -> *mut sys::gsl_multimin_function_fdf {
         self.intern.n = self.n;
         self.intern.params = self as *mut MultiMinFdfFunction as *mut c_void;

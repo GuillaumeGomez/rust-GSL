@@ -165,71 +165,135 @@ is desirable for better locality of memory accesses).
 ///
 /// The functions return a value of crate::Value::Success if no errors were detected, or Value::Dom if the length n is not a power of two.
 pub mod radix2 {
-    use crate::Value;
+    use crate::{
+        vector::{ComplexSlice, VectorMut},
+        Value,
+    };
+    use num_complex::Complex;
 
     #[doc(alias = "gsl_fft_complex_radix2_forward")]
-    pub fn forward(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_forward(data.as_mut_ptr(), stride, n) };
+    pub fn forward<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_forward(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_fft_complex_radix2_transform")]
-    pub fn transform(
-        data: &mut [f64],
-        stride: usize,
-        n: usize,
+    pub fn transform<V: VectorMut<Complex<f64>> + ?Sized>(
+        data: &mut V,
         sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
-            sys::gsl_fft_complex_radix2_transform(data.as_mut_ptr(), stride, n, sign.into())
+            sys::gsl_fft_complex_radix2_transform(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+                sign.into(),
+            )
         };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_fft_complex_radix2_backward")]
-    pub fn backward(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_backward(data.as_mut_ptr(), stride, n) };
+    pub fn backward<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_backward(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     #[doc(alias = "gsl_fft_complex_radix2_inverse")]
-    pub fn inverse(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_inverse(data.as_mut_ptr(), stride, n) };
+    pub fn inverse<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_inverse(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     #[doc(alias = "gsl_fft_complex_radix2_dif_forward")]
-    pub fn dif_forward(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_dif_forward(data.as_mut_ptr(), stride, n) };
+    pub fn dif_forward<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_dif_forward(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     #[doc(alias = "gsl_fft_complex_radix2_dif_transform")]
-    pub fn dif_transform(
-        data: &mut [f64],
-        stride: usize,
-        n: usize,
+    pub fn dif_transform<V: VectorMut<Complex<f64>> + ?Sized>(
+        data: &mut V,
         sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
-            sys::gsl_fft_complex_radix2_dif_transform(data.as_mut_ptr(), stride, n, sign.into())
+            sys::gsl_fft_complex_radix2_dif_transform(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+                sign.into(),
+            )
         };
         result_handler!(ret, ())
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     #[doc(alias = "gsl_fft_complex_radix2_dif_backward")]
-    pub fn dif_backward(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_dif_backward(data.as_mut_ptr(), stride, n) };
+    pub fn dif_backward<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_dif_backward(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     /// This is decimation-in-frequency version of the radix-2 FFT function.
     #[doc(alias = "gsl_fft_complex_radix2_dif_inverse")]
-    pub fn dif_inverse(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_complex_radix2_dif_inverse(data.as_mut_ptr(), stride, n) };
+    pub fn dif_inverse<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<Complex<f64>> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_complex_radix2_dif_inverse(
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 }
@@ -237,7 +301,10 @@ pub mod radix2 {
 /// This section describes radix-2 FFT algorithms for real data. They use the Cooley-Tukey algorithm to compute in-place FFTs for lengths which
 /// are a power of 2.
 pub mod real_radix2 {
-    use crate::Value;
+    use crate::{
+        vector::{check_equal_len, Vector, VectorMut},
+        Value,
+    };
 
     /// This function computes an in-place radix-2 FFT of length n and stride stride on the real array data. The output is a half-complex sequence,
     /// which is stored in-place. The arrangement of the half-complex terms uses the following scheme: for k < n/2 the real part of the k-th term
@@ -270,24 +337,51 @@ pub mod real_radix2 {
     /// Note that the output data can be converted into the full complex sequence using the function gsl_fft_halfcomplex_radix2_unpack described
     /// below.
     #[doc(alias = "gsl_fft_real_radix2_transform")]
-    pub fn transform(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_real_radix2_transform(data.as_mut_ptr(), stride, n) };
+    pub fn transform<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<f64> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_real_radix2_transform(
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     /// This function computes the inverse or backwards in-place radix-2 FFT of length n and stride stride on the half-complex sequence data
     /// stored according the output scheme used by gsl_fft_real_radix2. The result is a real array stored in natural order.
     #[doc(alias = "gsl_fft_halfcomplex_radix2_inverse")]
-    pub fn inverse(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_halfcomplex_radix2_inverse(data.as_mut_ptr(), stride, n) };
+    pub fn inverse<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<f64> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_halfcomplex_radix2_inverse(
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
     /// This function computes the inverse or backwards in-place radix-2 FFT of length n and stride stride on the half-complex sequence data
     /// stored according the output scheme used by gsl_fft_real_radix2. The result is a real array stored in natural order.
     #[doc(alias = "gsl_fft_halfcomplex_radix2_backward")]
-    pub fn backward(data: &mut [f64], stride: usize, n: usize) -> Result<(), Value> {
-        let ret = unsafe { sys::gsl_fft_halfcomplex_radix2_backward(data.as_mut_ptr(), stride, n) };
+    pub fn backward<V>(data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<f64> + ?Sized,
+    {
+        let ret = unsafe {
+            sys::gsl_fft_halfcomplex_radix2_backward(
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
+            )
+        };
         result_handler!(ret, ())
     }
 
@@ -322,18 +416,21 @@ pub mod real_radix2 {
     ///   }
     /// ```
     #[doc(alias = "gsl_fft_halfcomplex_radix2_unpack")]
-    pub fn unpack(
-        halfcomplex_coefficient: &mut [f64],
-        complex_coefficient: &mut [f64],
-        stride: usize,
-        n: usize,
-    ) -> Result<(), Value> {
+    pub fn unpack<V1, V2>(
+        halfcomplex_coefficient: &V1,
+        complex_coefficient: &mut V2, // FIXME: Complex
+    ) -> Result<(), Value>
+    where
+        V1: Vector<f64> + ?Sized,
+        V2: VectorMut<f64> + ?Sized,
+    {
+        check_equal_len(halfcomplex_coefficient, halfcomplex_coefficient)?;
         let ret = unsafe {
             sys::gsl_fft_halfcomplex_radix2_unpack(
-                halfcomplex_coefficient.as_mut_ptr(),
-                complex_coefficient.as_mut_ptr(),
-                stride,
-                n,
+                V1::as_slice(halfcomplex_coefficient).as_ptr(),
+                V2::as_mut_slice(complex_coefficient).as_mut_ptr(),
+                V1::stride(halfcomplex_coefficient),
+                V1::len(halfcomplex_coefficient),
             )
         };
         result_handler!(ret, ())

@@ -3,15 +3,19 @@
 //
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::{
+    complex::{FromC, ToC},
+    Value,
+};
+use num_complex::Complex;
 use paste::paste;
 use std::fmt::{self, Debug, Formatter};
 
 macro_rules! gsl_matrix_complex {
-    ($rust_name:ident, $name:ident, $complex:ident, $complex_c:ident) => (
+    ($rust_name:ident, $name:ident, $complex: ty, $complex_c:ident) => (
 paste! {
 
-use crate::types::{$complex, [<Vector $complex>], [<Vector $complex View>]};
+use crate::types::{[<Vector $complex>], [<Vector $complex View>]};
 
 ffi_wrapper!(
     $rust_name,
@@ -49,7 +53,8 @@ impl $rust_name {
     /// invoked and 0 is returned.
     #[doc(alias = $name _get)]
     pub fn get(&self, y: usize, x: usize) -> $complex {
-        unsafe { std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), y, x)) }
+        // FIXME: check that i, j are not out of bounds.
+        unsafe { sys::[<$name _get>](self.unwrap_shared(), y, x).wrap() }
     }
 
     /// This function sets the value of the (i,j)-th element of the matrix to value.
@@ -58,7 +63,7 @@ impl $rust_name {
     #[doc(alias = $name _set)]
     pub fn set(&mut self, y: usize, x: usize, value: &$complex) -> &Self {
         unsafe {
-            sys::[<$name _set>](self.unwrap_unique(), y, x, std::mem::transmute(*value))
+            sys::[<$name _set>](self.unwrap_unique(), y, x, value.unwrap())
         };
         self
     }
@@ -66,7 +71,7 @@ impl $rust_name {
     /// This function sets all the elements of the matrix to the value x.
     #[doc(alias = $name _set_all)]
     pub fn set_all(&mut self, x: &$complex) -> &Self {
-        unsafe { sys::[<$name _set_all>](self.unwrap_unique(), std::mem::transmute(*x)) };
+        unsafe { sys::[<$name _set_all>](self.unwrap_unique(), x.unwrap()) };
         self
     }
 
@@ -260,7 +265,7 @@ impl $rust_name {
     #[doc(alias = $name _scale)]
     pub fn scale(&mut self, x: &$complex) -> Result<(), Value> {
         let ret = unsafe {
-            sys::[<$name _scale>](self.unwrap_unique(), std::mem::transmute(*x))
+            sys::[<$name _scale>](self.unwrap_unique(), x.unwrap())
         };
         result_handler!(ret, ())
     }
@@ -270,7 +275,7 @@ impl $rust_name {
     #[doc(alias = $name _add_constant)]
     pub fn add_constant(&mut self, x: &$complex) -> Result<(), Value> {
         let ret = unsafe {
-            sys::[<$name _add_constant>](self.unwrap_unique(), std::mem::transmute(*x))
+            sys::[<$name _add_constant>](self.unwrap_unique(), x.unwrap())
         };
         result_handler!(ret, ())
     }
@@ -402,12 +407,15 @@ impl Debug for $rust_name {
 ); // end of macro block
 }
 
+type ComplexF64 = Complex<f64>;
 gsl_matrix_complex!(
     MatrixComplexF64,
     gsl_matrix_complex,
     ComplexF64,
     gsl_vector_complex
 );
+
+type ComplexF32 = Complex<f32>;
 gsl_matrix_complex!(
     MatrixComplexF32,
     gsl_matrix_complex_float,

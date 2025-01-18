@@ -355,17 +355,22 @@ impl From<sys::gsl_integration_qawo_enum> for IntegrationQawo {
     }
 }
 
-/// Used by VegasMonteCarlo struct
+/// Used by [`VegasParams`][crate::VegasParams].
 ///
-/// The possible choices are GSL_VEGAS_MODE_IMPORTANCE, GSL_VEGAS_MODE_
-/// STRATIFIED, GSL_VEGAS_MODE_IMPORTANCE_ONLY. This determines whether vegas
-/// will use importance sampling or stratified sampling, or whether it can pick on
-/// its own. In low dimensions vegas uses strict stratified sampling (more precisely,
-/// stratified sampling is chosen if there are fewer than 2 bins per box).
+/// This determines whether vegas will use importance sampling or
+/// stratified sampling, or whether it can pick on its own.  In low
+/// dimensions vegas uses strict stratified sampling (more precisely,
+/// stratified sampling is chosen if there are fewer than 2 bins per
+/// box).
 #[derive(Clone, PartialEq, PartialOrd, Debug, Copy)]
 pub enum VegasMode {
+    /// Importance sampling: allocate more sample points where the
+    /// integrand is larger.
     Importance,
+    /// Exclusively use importance sampling without any stratification.
     ImportanceOnly,
+    /// Stratified sampling: divides the integration region into
+    /// sub-regions and sample each sub-region separately.
     Stratified,
 }
 

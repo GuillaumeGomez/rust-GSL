@@ -440,16 +440,19 @@ impl MultiRootFdfSolver {
         std::str::from_utf8(slice).ok().map(|x| x.to_owned())
     }
 
-    /// Perform a single iteration of the solver. If the iteration encounters an
-    /// unexpected problem then an error code will be returned,
+    /// Perform a single iteration of the solver. If the iteration
+    /// encounters an unexpected problem then an error code will be
+    /// returned,
     ///
-    /// * `crate::Value::BadFunc` the iteration encountered a singular point where the function or its derivative evaluated to Inf or NaN.
+    /// * `crate::Value::BadFunc` the iteration encountered a singular
+    ///   point where the function or its derivative evaluated to Inf or NaN.
     ///
     /// * `crate::Value::NoProgress` the iteration is not making any progress,
-    /// preventing the algorithm from continuing.
+    ///    preventing the algorithm from continuing.
     ///
-    /// The solver maintains a current best estimate of the root and its function value at all times.
-    /// This information can be accessed with `root`, `f`, and `dx` functions.
+    /// The solver maintains a current best estimate of the root and
+    /// its function value at all times.  This information can be
+    /// accessed with `root`, `f`, and `dx` functions.
     #[doc(alias = "gsl_multiroot_fdfsolver_iterate")]
     pub fn iterate(&mut self) -> Result<(), Value> {
         let ret = unsafe { sys::gsl_multiroot_fdfsolver_iterate(self.unwrap_unique()) };

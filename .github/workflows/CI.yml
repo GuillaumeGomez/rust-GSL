@@ -8,16 +8,14 @@ name: CI
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:23.10
     strategy:
       matrix:
         rust:
           - stable
           - nightly
     steps:
-      - run: apt-get update -y
-      - run: apt-get install -y libgsl0-dev curl build-essential python3
+      - run: sudo apt-get update -y
+      - run: sudo apt-get install -y libgsl0-dev curl build-essential python3
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
@@ -36,10 +34,8 @@ jobs:
       - name: run tests
         run: cargo test --features v2_7
       - name: check examples
-        working-directory: examples
-        run: cargo check --features GSL/v2_7
+        run: cargo check --features v2_7
       - name: run examples
-        working-directory: examples
         run: python3 run-examples.py
 
   build-osx:
@@ -67,7 +63,7 @@ jobs:
       - run: cargo check --features v2_7
       - name: check examples
         working-directory: examples
-        run: cargo check --features GSL/v2_7
+        run: cargo check --features v2_7
 
   fmt:
     name: rust fmt

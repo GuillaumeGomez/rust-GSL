@@ -3,18 +3,20 @@
 //
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::{
+    complex::{FromC, ToC},
+    Value,
+};
+use num_complex::Complex;
 use paste::paste;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
-use std::marker::PhantomData;
+use std::{
+    fmt::{self, Debug, Formatter},
+    marker::PhantomData,
+};
 
 macro_rules! gsl_vec_complex {
     ($rust_name:ident, $name:ident, $complex:ident, $rust_ty:ident) => {
         paste! {
-
-        use crate::types::$complex;
-
         pub struct $rust_name {
             vec: *mut sys::$name,
             can_free: bool,
@@ -129,7 +131,7 @@ macro_rules! gsl_vec_complex {
             /// 0 to n-1 then the error handler is invoked and 0 is returned.
             #[doc(alias = $name _get)]
             pub fn get(&self, i: usize) -> $complex {
-                unsafe { std::mem::transmute(sys::[<$name _get>](self.unwrap_shared(), i)) }
+                unsafe { sys::[<$name _get>](self.unwrap_shared(), i).wrap() }
             }
 
             /// This function sets the value of the i-th element of a vector v to x. If i lies outside the
@@ -137,7 +139,7 @@ macro_rules! gsl_vec_complex {
             #[doc(alias = $name _set)]
             pub fn set(&mut self, i: usize, x: &$complex) -> &Self {
                 unsafe {
-                    sys::[<$name _set>](self.unwrap_unique(), i, std::mem::transmute(*x))
+                    sys::[<$name _set>](self.unwrap_unique(), i, x.unwrap())
                 };
                 self
             }
@@ -146,7 +148,7 @@ macro_rules! gsl_vec_complex {
             #[doc(alias = $name _set_all)]
             pub fn set_all(&mut self, x: &$complex) -> &Self {
                 unsafe {
-                    sys::[<$name _set_all>](self.unwrap_unique(), std::mem::transmute(*x))
+                    sys::[<$name _set_all>](self.unwrap_unique(), x.unwrap())
                 };
                 self
             }
@@ -261,7 +263,7 @@ macro_rules! gsl_vec_complex {
             #[doc(alias = $name _scale)]
             pub fn scale(&mut self, x: &$complex) -> Result<(), Value> {
                 let ret = unsafe {
-                    sys::[<$name _scale>](self.unwrap_unique(), std::mem::transmute(*x))
+                    sys::[<$name _scale>](self.unwrap_unique(), x.unwrap())
                 };
                 result_handler!(ret, ())
             }
@@ -273,7 +275,7 @@ macro_rules! gsl_vec_complex {
                 let ret = unsafe {
                     sys::[<$name _add_constant>](
                         self.unwrap_unique(),
-                        std::mem::transmute(*x),
+                        x.unwrap(),
                     )
                 };
                 result_handler!(ret, ())
@@ -459,7 +461,7 @@ macro_rules! gsl_vec_complex {
             /// n elements with a step-size of stride from one element to the next in the original
             /// array. Mathematically, the i-th element of the new vector v’ is given by,
             ///
-            /// v'(i) = base[i*stride]
+            /// v'(i) = base\[i*stride\]
             ///
             /// where the index i runs from 0 to n-1.
             ///
@@ -509,5 +511,7 @@ macro_rules! gsl_vec_complex {
     }; // end of macro block
 }
 
-gsl_vec_complex!(VectorComplexF32, gsl_vector_complex_float, ComplexF32, f32);
-gsl_vec_complex!(VectorComplexF64, gsl_vector_complex, ComplexF64, f64);
+type C32 = Complex<f32>;
+gsl_vec_complex!(VectorComplexF32, gsl_vector_complex_float, C32, f32);
+type C64 = Complex<f64>;
+gsl_vec_complex!(VectorComplexF64, gsl_vector_complex, C64, f64);

@@ -145,7 +145,7 @@ G. H. Golub, C. F. Van Loan, Matrix Computations (3rd Ed, 1996), Johns Hopkins U
 The LAPACK library is described in the following manual,
 
 LAPACK Users’ Guide (Third Edition, 1999), Published by SIAM, ISBN 0-89871-447-8.
-http://www.netlib.org/lapack
+<http://www.netlib.org/lapack>
 
 The LAPACK source code can be found at the website above, along with an online copy of the users guide.
 
@@ -158,14 +158,14 @@ J.C. Nash, “A one-sided transformation method for the singular value decomposi
 1 (1975), p 74–76
 J.C. Nash and S. Shlien “Simple algorithms for the partial singular value decomposition”, Computer Journal, Volume 30 (1987), p 268–275.
 James Demmel, Krešimir Veselić, “Jacobi’s Method is more accurate than QR”, Lapack Working Note 15 (LAWN-15), October 1989. Available from netlib,
-http://www.netlib.org/lapack/ in the lawns or lawnspdf directories.
+<http://www.netlib.org/lapack/> in the lawns or lawnspdf directories.
 !*/
 
+use crate::complex::ToC;
 use crate::enums;
 use crate::ffi::FFI;
-use crate::Value;
-
-use crate::types::complex::FFFI;
+use crate::{complex::FromC, Value};
+use num_complex::Complex;
 
 /// Factorise a general N x N matrix A into,
 ///
@@ -381,7 +381,7 @@ pub fn LU_det(lu: &mut crate::MatrixF64, signum: i32) -> f64 {
 /// This function computes the determinant of a matrix A from its LU decomposition, LU. The determinant is computed as the product of the
 /// diagonal elements of U and the sign of the row permutation signum.
 #[doc(alias = "gsl_linalg_complex_LU_det")]
-pub fn complex_LU_det(lu: &mut crate::MatrixComplexF64, signum: i32) -> crate::ComplexF64 {
+pub fn complex_LU_det(lu: &mut crate::MatrixComplexF64, signum: i32) -> Complex<f64> {
     unsafe { sys::gsl_linalg_complex_LU_det(lu.unwrap_unique(), signum).wrap() }
 }
 
@@ -406,7 +406,7 @@ pub fn LU_sgndet(lu: &mut crate::MatrixF64, signum: i32) -> i32 {
 
 /// This function computes the sign or phase factor of the determinant of a matrix A, \det(A)/|\det(A)|, from its LU decomposition, LU.
 #[doc(alias = "gsl_linalg_complex_LU_sgndet")]
-pub fn complex_LU_sgndet(lu: &mut crate::MatrixComplexF64, signum: i32) -> crate::ComplexF64 {
+pub fn complex_LU_sgndet(lu: &mut crate::MatrixComplexF64, signum: i32) -> Complex<f64> {
     unsafe { sys::gsl_linalg_complex_LU_sgndet(lu.unwrap_unique(), signum).wrap() }
 }
 
@@ -1271,12 +1271,8 @@ pub fn householder_transform(v: &mut crate::VectorF64) -> f64 {
 /// This function prepares a Householder transformation P = I - \tau v v^T which can be used to zero all the elements of the input vector except
 /// the first. On output the transformation is stored in the vector v and the scalar \tau is returned.
 #[doc(alias = "gsl_linalg_complex_householder_transform")]
-pub fn complex_householder_transform(v: &mut crate::VectorComplexF64) -> crate::ComplexF64 {
-    unsafe {
-        std::mem::transmute(sys::gsl_linalg_complex_householder_transform(
-            v.unwrap_unique(),
-        ))
-    }
+pub fn complex_householder_transform(v: &mut crate::VectorComplexF64) -> Complex<f64> {
+    unsafe { sys::gsl_linalg_complex_householder_transform(v.unwrap_unique()).wrap() }
 }
 
 /// This function applies the Householder matrix P defined by the scalar tau and the vector v to the left-hand side of the matrix A. On output
@@ -1295,16 +1291,12 @@ pub fn householder_hm(
 /// the result P A is stored in A.
 #[doc(alias = "gsl_linalg_complex_householder_hm")]
 pub fn complex_householder_hm(
-    tau: &crate::ComplexF64,
+    tau: &Complex<f64>,
     v: &crate::VectorComplexF64,
     a: &mut crate::MatrixComplexF64,
 ) -> Result<(), Value> {
     let ret = unsafe {
-        sys::gsl_linalg_complex_householder_hm(
-            std::mem::transmute(*tau),
-            v.unwrap_shared(),
-            a.unwrap_unique(),
-        )
+        sys::gsl_linalg_complex_householder_hm(tau.unwrap(), v.unwrap_shared(), a.unwrap_unique())
     };
     result_handler!(ret, ())
 }
@@ -1325,16 +1317,12 @@ pub fn householder_mh(
 /// the result A P is stored in A.
 #[doc(alias = "gsl_linalg_complex_householder_mh")]
 pub fn complex_householder_mh(
-    tau: &crate::ComplexF64,
+    tau: &Complex<f64>,
     v: &crate::VectorComplexF64,
     a: &mut crate::MatrixComplexF64,
 ) -> Result<(), Value> {
     let ret = unsafe {
-        sys::gsl_linalg_complex_householder_mh(
-            std::mem::transmute(*tau),
-            v.unwrap_shared(),
-            a.unwrap_unique(),
-        )
+        sys::gsl_linalg_complex_householder_mh(tau.unwrap(), v.unwrap_shared(), a.unwrap_unique())
     };
     result_handler!(ret, ())
 }
@@ -1355,16 +1343,12 @@ pub fn householder_hv(
 /// w is stored in w.
 #[doc(alias = "gsl_linalg_complex_householder_hv")]
 pub fn complex_householder_hv(
-    tau: &crate::ComplexF64,
+    tau: &Complex<f64>,
     v: &crate::VectorComplexF64,
     w: &mut crate::VectorComplexF64,
 ) -> Result<(), Value> {
     let ret = unsafe {
-        sys::gsl_linalg_complex_householder_hv(
-            std::mem::transmute(*tau),
-            v.unwrap_shared(),
-            w.unwrap_unique(),
-        )
+        sys::gsl_linalg_complex_householder_hv(tau.unwrap(), v.unwrap_shared(), w.unwrap_unique())
     };
     result_handler!(ret, ())
 }

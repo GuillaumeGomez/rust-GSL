@@ -318,15 +318,22 @@ impl Histogram {
     }
 }
 
-ffi_wrapper!(HistogramPdf, *mut sys::gsl_histogram_pdf, gsl_histogram_pdf_free,
-"The probability distribution function for a histogram consists of a set of bins which measure the \
-probability of an event falling into a given range of a continuous variable x. A probability \
-distribution function is defined by the following struct, which actually stores the cumulative \
-probability distribution function. This is the natural quantity for generating samples via the \
-inverse transform method, because there is a one-to-one mapping between the cumulative probability \
-distribution and the range [0,1]. It can be shown that by taking a uniform random number in this \
-range and finding its corresponding coordinate in the cumulative probability distribution we obtain \
-samples with the desired probability distribution.");
+ffi_wrapper!(
+    HistogramPdf,
+    *mut sys::gsl_histogram_pdf,
+    gsl_histogram_pdf_free,
+    "The probability distribution function for a histogram consists of \
+a set of bins which measure the probability of an event falling into a \
+given range of a continuous variable x. A probability distribution \
+function is defined by the following struct, which actually stores the \
+cumulative probability distribution function.  This is the natural \
+quantity for generating samples via the inverse transform method, \
+because there is a one-to-one mapping between the cumulative probability \
+distribution and the range \\[0,1\\]. It can be shown that by taking \
+a uniform random number in this range and finding its corresponding \
+coordinate in the cumulative probability distribution we obtain \
+samples with the desired probability distribution."
+);
 
 impl HistogramPdf {
     /// This function allocates memory for a probability distribution with n bins and returns a pointer to a newly initialized gsl_histogram_pdf

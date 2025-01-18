@@ -880,7 +880,7 @@ impl<'a> ODEiv2Driver<'a> {
     }
 }
 
-impl<'a> Drop for ODEiv2Driver<'a> {
+impl Drop for ODEiv2Driver<'_> {
     #[doc(alias = "gsl_odeiv2_driver_free")]
     fn drop(&mut self) {
         unsafe { sys::gsl_odeiv2_driver_free(self.d) };

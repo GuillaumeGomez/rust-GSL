@@ -15,8 +15,9 @@ For further information see Abramowitz & Stegun, Chapter 22.
 
 ## Definitions
 
-The approximation is made over the range [a,b] using order+1 terms, including the coefficient
-`c[0]`. The series is computed using the following convention,
+The approximation is made over the range \[a,b\] using order+1 terms,
+including the coefficient `c[0]`.  The series is computed using the
+following convention,
 
 f(x) = (c_0 / 2) + \sum_{n=1} c_n T_n(x)
 

@@ -27,23 +27,22 @@ level of the transform.
 /// 2 or if insufficient workspace is provided.
 pub mod one_dimension {
     use crate::ffi::FFI;
+    use crate::vector::VectorMut;
     use crate::Value;
 
     #[doc(alias = "gsl_wavelet_transform")]
-    pub fn transform(
+    pub fn transform<V: VectorMut<f64> + ?Sized>(
         w: &crate::Wavelet,
-        data: &mut [f64],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         dir: crate::WaveletDirection,
         work: &mut crate::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_wavelet_transform(
                 w.unwrap_shared(),
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
                 dir.into(),
                 work.unwrap_unique(),
             )
@@ -52,19 +51,17 @@ pub mod one_dimension {
     }
 
     #[doc(alias = "gsl_wavelet_transform_forward")]
-    pub fn transform_forward(
+    pub fn transform_forward<V: VectorMut<f64> + ?Sized>(
         w: &crate::Wavelet,
-        data: &mut [f64],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         work: &mut crate::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_wavelet_transform_forward(
                 w.unwrap_shared(),
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
                 work.unwrap_unique(),
             )
         };
@@ -72,19 +69,17 @@ pub mod one_dimension {
     }
 
     #[doc(alias = "gsl_wavelet_transform_inverse")]
-    pub fn transform_inverse(
+    pub fn transform_inverse<V: VectorMut<f64> + ?Sized>(
         w: &crate::Wavelet,
-        data: &mut [f64],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         work: &mut crate::WaveletWorkspace,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_wavelet_transform_inverse(
                 w.unwrap_shared(),
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
                 work.unwrap_unique(),
             )
         };
@@ -119,6 +114,7 @@ pub mod two_dimension {
     #[doc(alias = "gsl_wavelet2d_transform")]
     pub fn transform(
         w: &crate::Wavelet,
+        // FIXME: needs a Matrix<f64>
         data: &mut [f64],
         tda: usize,
         size1: usize,

@@ -10,6 +10,10 @@ use crate::{MatrixComplexF32, MatrixComplexF64, MatrixF32, VectorF64};
 use std::fmt::{self, Debug, Formatter};
 use std::slice;
 
+use super::vector::VectorMut;
+
+// FIXME: Permutations have the same representation as vectors.
+// Do we want to wrap vectors?  (The wrapping is to preserve invariants.)
 ffi_wrapper!(Permutation, *mut sys::gsl_permutation, gsl_permutation_free);
 
 /// ## Permutations in cyclic form
@@ -161,20 +165,36 @@ impl Permutation {
 
     /// This function applies the permutation to the array data of size n with stride stride.
     #[doc(alias = "gsl_permute")]
-    pub fn permute(&mut self, data: &mut [f64], stride: usize) -> Result<(), Value> {
+    pub fn permute<V>(&mut self, data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<f64> + ?Sized,
+    {
         let ret = unsafe {
             let data_ptr = sys::gsl_permutation_data(self.unwrap_shared());
-            sys::gsl_permute(data_ptr, data.as_mut_ptr(), stride, data.len() as _)
+            sys::gsl_permute(
+                data_ptr,
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
+            )
         };
         result_handler!(ret, ())
     }
 
     /// This function applies the inverse of the permutation p to the array data of size n with stride stride.
     #[doc(alias = "gsl_permute_inverse")]
-    pub fn permute_inverse(&mut self, data: &mut [f64], stride: usize) -> Result<(), Value> {
+    pub fn permute_inverse<V>(&mut self, data: &mut V) -> Result<(), Value>
+    where
+        V: VectorMut<f64> + ?Sized,
+    {
         let ret = unsafe {
             let data_ptr = sys::gsl_permutation_data(self.unwrap_shared());
-            sys::gsl_permute_inverse(data_ptr, data.as_mut_ptr(), stride, data.len() as _)
+            sys::gsl_permute_inverse(
+                data_ptr,
+                V::as_mut_slice(data).as_mut_ptr(),
+                V::stride(data),
+                V::len(data),
+            )
         };
         result_handler!(ret, ())
     }

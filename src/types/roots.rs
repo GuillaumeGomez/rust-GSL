@@ -92,7 +92,7 @@ impl RootFSolverType {
     /// The Brent-Dekker method (referred to here as Brent’s method) combines an interpo-
     /// lation strategy with the bisection algorithm. This produces a fast algorithm which is
     /// still robust.
-
+    ///
     /// On each iteration Brent’s method approximates the function using an interpolating
     /// curve. On the first iteration this is a linear interpolation of the two endpoints. For
     /// subsequent iterations the algorithm uses an inverse quadratic fit to the last three

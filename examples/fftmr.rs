@@ -4,35 +4,25 @@
 
 extern crate rgsl;
 
+use num_complex::c64;
 use rgsl::{FftComplexF64WaveTable, FftComplexF64Workspace};
 
-macro_rules! real {
-    ($z:ident, $i:expr) => {
-        $z[2 * ($i)]
-    };
-}
-macro_rules! imag {
-    ($z:ident, $i:expr) => {
-        $z[2 * ($i) + 1]
-    };
-}
-
-const N: usize = 630;
+const N: usize = 128;
 
 fn main() {
-    let data = &mut [0.; 2 * N];
+    let data = &mut [c64(0., 0.); N];
     let wavetable = FftComplexF64WaveTable::new(N).expect("FftComplexF64WaveTable::new failed");
     let mut workspace = FftComplexF64Workspace::new(N).expect("FftComplexF64Workspace::new failed");
 
-    data[0] = 1.;
+    data[0].re = 1.;
 
     for i in 1..=10 {
-        real!(data, i) = 1.;
-        real!(data, N - i) = 1.;
+        data[i].re = 1.;
+        data[N - i].re = 1.;
     }
 
     for i in 0..N {
-        println!("{}: {} {}", i, real!(data, i), imag!(data, i));
+        println!("{}: {}", i, data[i]);
     }
     println!();
 
@@ -40,9 +30,9 @@ fn main() {
         println!("# factor {}: {}", i, wavetable.factor()[i]);
     }
 
-    workspace.forward(data, 1, N, &wavetable).unwrap();
+    workspace.forward(data, &wavetable).unwrap();
 
     for i in 0..N {
-        println!("{}: {} {}", i, real!(data, i), imag!(data, i));
+        println!("{}: {}", i, data[i]);
     }
 }

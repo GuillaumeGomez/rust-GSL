@@ -5,7 +5,7 @@ import sys
 
 def run_example(example_name):
     print("====> Running {}".format(example_name))
-    command = ["cargo", "run", "--bin", example_name, "--features", "GSL/v2_7"]
+    command = ["cargo", "run", "--example", example_name, "--features", "v2_7"]
     child = subprocess.Popen(command)
     child.communicate()
     if child.returncode != 0:
@@ -16,7 +16,7 @@ def run_example(example_name):
 
 def run_examples():
     ret = 0
-    for example in [f for f in os.listdir('.') if os.path.isfile(f)]:
+    for example in [f for f in os.listdir('examples')]:
         if not example.endswith('.rs'):
             continue
         if not run_example(example[:-3]):

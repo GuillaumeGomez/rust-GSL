@@ -3,7 +3,11 @@
 //
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::{
+    vector::{ComplexSlice, VectorMut},
+    Value,
+};
+use num_complex::Complex;
 use paste::paste;
 
 macro_rules! gsl_fft_wavetable {
@@ -74,18 +78,16 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _forward)]
-    pub fn forward(
+    pub fn forward<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
-        data: &mut [$ty],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         wavetable: &$rust_name,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::[<$name $($extra)? _forward>](
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
@@ -94,19 +96,17 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _transform)]
-    pub fn transform(
+    pub fn transform<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
-        data: &mut [$ty],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         wavetable: &$rust_name,
         sign: crate::FftDirection,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::[<$name $($extra)? _transform>](
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
                 sign.into(),
@@ -116,18 +116,16 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _backward)]
-    pub fn backward(
+    pub fn backward<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
-        data: &mut [$ty],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         wavetable: &$rust_name,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::[<$name $($extra)? _backward>](
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )
@@ -136,18 +134,16 @@ impl $complex_rust_name {
     }
 
     #[doc(alias = $name $($extra)? _inverse)]
-    pub fn inverse(
+    pub fn inverse<V: VectorMut<Complex<$ty>> + ?Sized>(
         &mut self,
-        data: &mut [$ty],
-        stride: usize,
-        n: usize,
+        data: &mut V,
         wavetable: &$rust_name,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::[<$name $($extra)? _inverse>](
-                data.as_mut_ptr(),
-                stride,
-                n,
+                V::as_mut_slice(data).as_mut_ptr_fXX(),
+                V::stride(data),
+                V::len(data),
                 wavetable.unwrap_shared(),
                 self.unwrap_unique(),
             )

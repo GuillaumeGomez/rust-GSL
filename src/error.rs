@@ -156,6 +156,7 @@ pub fn str_error(error: crate::Value) -> &'static str {
     }
 }
 
+// FIXME: Can do better?
 static mut CALLBACK: Option<fn(&str, &str, u32, crate::Value)> = None;
 
 /// `f` is the type of GSL error handler functions. An error handler will be passed four arguments
@@ -197,6 +198,7 @@ static mut CALLBACK: Option<fn(&str, &str, u32, crate::Value)> = None;
 /// let old_handler = set_error_handler(None);
 /// ```
 #[doc(alias = "gsl_set_error_handler")]
+#[allow(static_mut_refs)]
 pub fn set_error_handler(
     f: Option<fn(&str, &str, u32, crate::Value)>,
 ) -> Option<fn(&str, &str, u32, crate::Value)> {
@@ -220,6 +222,7 @@ pub fn set_error_handler(
 /// routines must be checked. This is the recommended behavior for production programs. The previous
 /// handler is returned (so that you can restore it later).
 #[doc(alias = "gsl_set_error_handler_off")]
+#[allow(static_mut_refs)]
 pub fn set_error_handler_off() -> Option<fn(&str, &str, u32, crate::Value)> {
     unsafe {
         sys::gsl_set_error_handler_off();

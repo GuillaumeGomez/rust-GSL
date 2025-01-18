@@ -14,7 +14,7 @@ C. Moler, G. Stewart, “An Algorithm for Generalized Matrix Eigenvalue Problems
 Eigensystem routines for very large matrices can be found in the Fortran library LAPACK. The LAPACK library is described in,
 
 LAPACK Users’ Guide (Third Edition, 1999), Published by SIAM, ISBN 0-89871-447-8.
-http://www.netlib.org/lapack
+<http://www.netlib.org/lapack>
 
 The LAPACK source code can be found at the website above along with an online copy of the users guide.
 !*/

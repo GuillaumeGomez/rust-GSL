@@ -4,8 +4,13 @@
 
 pub mod level1 {
     use crate::ffi::FFI;
-    use crate::types::complex::CFFI;
-    use crate::{types, Value};
+    use crate::{
+        types,
+        types::complex::{FromC, ToC},
+        Value,
+    };
+    use crate::{VectorF32, VectorF64};
+    use num_complex::Complex;
 
     /// This function computes the sum \alpha + x^T y for the vectors x and y, returning the result
     /// in result.
@@ -61,10 +66,10 @@ pub mod level1 {
     pub fn cdotu(
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
-    ) -> Result<types::ComplexF32, Value> {
-        let mut dotu = types::ComplexF32::default().unwrap();
+    ) -> Result<Complex<f32>, Value> {
+        let mut dotu = Complex::<f32>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_cdotu(x.unwrap_shared(), y.unwrap_shared(), &mut dotu) };
-        result_handler!(ret, types::ComplexF32::wrap(dotu))
+        result_handler!(ret, dotu.wrap())
     }
 
     /// This function computes the complex scalar product x^T y for the vectors x and y, returning
@@ -75,10 +80,10 @@ pub mod level1 {
     pub fn zdotu(
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
-    ) -> Result<types::ComplexF64, Value> {
-        let mut dotu = types::ComplexF64::default().unwrap();
+    ) -> Result<Complex<f64>, Value> {
+        let mut dotu = Complex::<f64>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_zdotu(x.unwrap_shared(), y.unwrap_shared(), &mut dotu) };
-        result_handler!(ret, types::ComplexF64::wrap(dotu))
+        result_handler!(ret, dotu.wrap())
     }
 
     /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
@@ -89,10 +94,10 @@ pub mod level1 {
     pub fn cdotc(
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
-    ) -> Result<types::ComplexF32, Value> {
-        let mut dotc = types::ComplexF32::default().unwrap();
+    ) -> Result<Complex<f32>, Value> {
+        let mut dotc = Complex::<f32>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_cdotc(x.unwrap_shared(), y.unwrap_shared(), &mut dotc) };
-        result_handler!(ret, types::ComplexF32::wrap(dotc))
+        result_handler!(ret, dotc.wrap())
     }
 
     /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
@@ -103,10 +108,10 @@ pub mod level1 {
     pub fn zdotc(
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
-    ) -> Result<types::ComplexF64, Value> {
-        let mut dotc = types::ComplexF64::default().unwrap();
+    ) -> Result<Complex<f64>, Value> {
+        let mut dotc = Complex::<f64>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_zdotc(x.unwrap_shared(), y.unwrap_shared(), &mut dotc) };
-        result_handler!(ret, types::ComplexF64::wrap(dotc))
+        result_handler!(ret, dotc.wrap())
     }
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
@@ -278,34 +283,24 @@ pub mod level1 {
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     #[doc(alias = "gsl_blas_caxpy")]
     pub fn caxpy(
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         x: &types::VectorComplexF32,
         y: &mut types::VectorComplexF32,
     ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_caxpy(
-                std::mem::transmute(*alpha),
-                x.unwrap_shared(),
-                y.unwrap_unique(),
-            )
-        };
+        let ret =
+            unsafe { sys::gsl_blas_caxpy(alpha.unwrap(), x.unwrap_shared(), y.unwrap_unique()) };
         result_handler!(ret, ())
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     #[doc(alias = "gsl_blas_zaxpy")]
     pub fn zaxpy(
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         x: &types::VectorComplexF64,
         y: &mut types::VectorComplexF64,
     ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_zaxpy(
-                std::mem::transmute(*alpha),
-                x.unwrap_shared(),
-                y.unwrap_unique(),
-            )
-        };
+        let ret =
+            unsafe { sys::gsl_blas_zaxpy(alpha.unwrap(), x.unwrap_shared(), y.unwrap_unique()) };
         result_handler!(ret, ())
     }
 
@@ -323,14 +318,14 @@ pub mod level1 {
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     #[doc(alias = "gsl_blas_cscal")]
-    pub fn cscal(alpha: &types::ComplexF32, x: &mut types::VectorComplexF32) {
-        unsafe { sys::gsl_blas_cscal(std::mem::transmute(*alpha), x.unwrap_unique()) }
+    pub fn cscal(alpha: &Complex<f32>, x: &mut types::VectorComplexF32) {
+        unsafe { sys::gsl_blas_cscal(alpha.unwrap(), x.unwrap_unique()) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
     #[doc(alias = "gsl_blas_zscal")]
-    pub fn zscal(alpha: &types::ComplexF64, x: &mut types::VectorComplexF64) {
-        unsafe { sys::gsl_blas_zscal(std::mem::transmute(*alpha), x.unwrap_unique()) }
+    pub fn zscal(alpha: &Complex<f64>, x: &mut types::VectorComplexF64) {
+        unsafe { sys::gsl_blas_zscal(alpha.unwrap(), x.unwrap_unique()) }
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
@@ -349,44 +344,32 @@ pub mod level1 {
     ///
     /// ```text
     /// [  c  s ] [ a ] = [ r ]
-    ///
     /// [ -s  c ] [ b ]   [ 0 ]
     /// ```
     ///
-    /// The variables a and b are overwritten by the routine.
+    /// Return `(c, s, r)`.
     #[doc(alias = "gsl_blas_srotg")]
-    pub fn srotg(a: &mut [f32], b: &mut [f32], c: &mut [f32], d: &mut [f32]) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_srotg(
-                a.as_mut_ptr(),
-                b.as_mut_ptr(),
-                c.as_mut_ptr(),
-                d.as_mut_ptr(),
-            )
-        };
-        result_handler!(ret, ())
+    pub fn srotg(mut a: f32, mut b: f32) -> Result<(f32, f32, f32), Value> {
+        let mut c = 0.;
+        let mut s = 0.;
+        let ret = unsafe { sys::gsl_blas_srotg(&mut a, &mut b, &mut c, &mut s) };
+        result_handler!(ret, (c, s, a))
     }
 
     /// This function computes a Givens rotation (c,s) which zeroes the vector (a,b),
     ///
     /// ```text
     /// [  c  s ] [ a ] = [ r ]
-    ///
     /// [ -s  c ] [ b ]   [ 0 ]
     /// ```
     ///
-    /// The variables a and b are overwritten by the routine.
+    /// Return `(c, s, r)`.
     #[doc(alias = "gsl_blas_drotg")]
-    pub fn drotg(a: &mut [f64], b: &mut [f64], c: &mut [f64], d: &mut [f64]) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_drotg(
-                a.as_mut_ptr(),
-                b.as_mut_ptr(),
-                c.as_mut_ptr(),
-                d.as_mut_ptr(),
-            )
-        };
-        result_handler!(ret, ())
+    pub fn drotg(mut a: f64, mut b: f64) -> Result<(f64, f64, f64), Value> {
+        let mut c = 0.;
+        let mut s = 0.;
+        let ret = unsafe { sys::gsl_blas_drotg(&mut a, &mut b, &mut c, &mut s) };
+        result_handler!(ret, (c, s, a))
     }
 
     /// This function applies a Givens rotation (x', y') = (c x + s y, -s x + c y) to the vectors x, y.
@@ -413,48 +396,24 @@ pub mod level1 {
         result_handler!(ret, ())
     }
 
-    /// This function computes a modified Givens transformation.
-    /// The modified Givens transformation is defined in the original Level-1 BLAS specification, given in the references.
+    /// Return a modified Givens transformation.
+    /// The modified Givens transformation is defined in the original
+    /// [Level-1 BLAS specification](https://help.imsl.com/fortran/fnlmath/current/basic-linear-algebra-sub.htm#mch9_1817247609_srotmg).
     #[doc(alias = "gsl_blas_srotmg")]
-    pub fn srotmg(
-        d1: &mut [f32],
-        d2: &mut [f32],
-        b1: &mut [f32],
-        b2: f32,
-        P: &mut [f32],
-    ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_srotmg(
-                d1.as_mut_ptr(),
-                d2.as_mut_ptr(),
-                b1.as_mut_ptr(),
-                b2,
-                P.as_mut_ptr(),
-            )
-        };
-        result_handler!(ret, ())
+    pub fn srotmg(mut d1: f32, mut d2: f32, mut b1: f32, b2: f32) -> Result<[f32; 5], Value> {
+        let mut p = [f32::NAN; 5];
+        let ret = unsafe { sys::gsl_blas_srotmg(&mut d1, &mut d2, &mut b1, b2, p.as_mut_ptr()) };
+        result_handler!(ret, p)
     }
 
-    /// This function computes a modified Givens transformation.
-    /// The modified Givens transformation is defined in the original Level-1 BLAS specification, given in the references.
+    /// Return a modified Givens transformation.
+    /// The modified Givens transformation is defined in the original
+    /// [Level-1 BLAS specification](https://help.imsl.com/fortran/fnlmath/current/basic-linear-algebra-sub.htm#mch9_1817247609_srotmg).
     #[doc(alias = "gsl_blas_drotmg")]
-    pub fn drotmg(
-        d1: &mut [f64],
-        d2: &mut [f64],
-        b1: &mut [f64],
-        b2: f64,
-        P: &mut [f64],
-    ) -> Result<(), Value> {
-        let ret = unsafe {
-            sys::gsl_blas_drotmg(
-                d1.as_mut_ptr(),
-                d2.as_mut_ptr(),
-                b1.as_mut_ptr(),
-                b2,
-                P.as_mut_ptr(),
-            )
-        };
-        result_handler!(ret, ())
+    pub fn drotmg(mut d1: f64, mut d2: f64, mut b1: f64, b2: f64) -> Result<[f64; 5], Value> {
+        let mut p = [f64::NAN; 5];
+        let ret = unsafe { sys::gsl_blas_drotmg(&mut d1, &mut d2, &mut b1, b2, p.as_mut_ptr()) };
+        result_handler!(ret, p)
     }
 
     /// This function applies a modified Givens transformation.
@@ -462,10 +421,14 @@ pub mod level1 {
     pub fn srotm(
         x: &mut types::VectorF32,
         y: &mut types::VectorF32,
-        P: &mut [f32],
+        p: [f32; 5],
     ) -> Result<(), Value> {
-        let ret =
-            unsafe { sys::gsl_blas_srotm(x.unwrap_unique(), y.unwrap_unique(), P.as_mut_ptr()) };
+        let lenx = VectorF32::len(x);
+        let leny = VectorF32::len(y);
+        if lenx != leny {
+            panic!("rgsl::blas::srotm: len(x) = {lenx} != len(y) = {leny}")
+        }
+        let ret = unsafe { sys::gsl_blas_srotm(x.unwrap_unique(), y.unwrap_unique(), p.as_ptr()) };
         result_handler!(ret, ())
     }
 
@@ -474,17 +437,44 @@ pub mod level1 {
     pub fn drotm(
         x: &mut types::VectorF64,
         y: &mut types::VectorF64,
-        P: &mut [f64],
+        p: [f64; 5],
     ) -> Result<(), Value> {
-        let ret =
-            unsafe { sys::gsl_blas_drotm(x.unwrap_unique(), y.unwrap_unique(), P.as_mut_ptr()) };
+        let lenx = VectorF64::len(x);
+        let leny = VectorF64::len(y);
+        if lenx != leny {
+            panic!("rgsl::blas::drotm: len(x) = {lenx} != len(y) = {leny}")
+        }
+        let ret = unsafe { sys::gsl_blas_drotm(x.unwrap_unique(), y.unwrap_unique(), p.as_ptr()) };
         result_handler!(ret, ())
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn test_srotg() {
+            let (c, s, r) = srotg(3., 4.).unwrap();
+            assert_eq!(c, 0.6);
+            assert_eq!(s, 0.8);
+            assert_eq!(r, 5.);
+        }
+
+        #[test]
+        fn test_drotg() {
+            let (c, s, r) = drotg(3., 4.).unwrap();
+            assert!((c - 0.6).abs() < 5e-16, "|{c} - 0.6| >= 5e-16");
+            assert!((s - 0.8).abs() < 5e-16, "|{s} - 0.8| >= 5e-16");
+            assert!((r - 5.).abs() < 1e-15, "|{r} - 5.| >= 1e-15");
+        }
     }
 }
 
 pub mod level2 {
+    use crate::complex::ToC;
     use crate::ffi::FFI;
     use crate::{enums, types, Value};
+    use num_complex::Complex;
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
     #[doc(alias = "gsl_blas_sgemv")]
@@ -536,19 +526,19 @@ pub mod level2 {
     #[doc(alias = "gsl_blas_cgemv")]
     pub fn cgemv(
         transA: enums::CblasTranspose,
-        alpha: &types::ComplexF32,
+        alpha: Complex<f32>,
         A: &types::MatrixComplexF32,
         x: &types::VectorComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         y: &mut types::VectorComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_cgemv(
                 transA.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 y.unwrap_unique(),
             )
         };
@@ -559,19 +549,19 @@ pub mod level2 {
     #[doc(alias = "gsl_blas_zgemv")]
     pub fn zgemv(
         transA: enums::CblasTranspose,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         x: &types::VectorComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         y: &mut types::VectorComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zgemv(
                 transA.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 y.unwrap_unique(),
             )
         };
@@ -818,19 +808,19 @@ pub mod level2 {
     #[doc(alias = "gsl_blas_chemv")]
     pub fn chemv(
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         x: &types::VectorComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         y: &mut types::VectorComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_chemv(
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 y.unwrap_unique(),
             )
         };
@@ -843,19 +833,19 @@ pub mod level2 {
     #[doc(alias = "gsl_blas_zhemv")]
     pub fn zhemv(
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         x: &types::VectorComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         y: &mut types::VectorComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zhemv(
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 x.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 y.unwrap_unique(),
             )
         };
@@ -903,14 +893,14 @@ pub mod level2 {
     /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
     #[doc(alias = "gsl_blas_cgeru")]
     pub fn cgeru(
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_cgeru(
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -922,14 +912,14 @@ pub mod level2 {
     /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
     #[doc(alias = "gsl_blas_zgeru")]
     pub fn zgeru(
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zgeru(
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -941,14 +931,14 @@ pub mod level2 {
     /// This function computes the conjugate rank-1 update A = \alpha x y^H + A of the matrix A.
     #[doc(alias = "gsl_blas_cgerc")]
     pub fn cgerc(
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_cgerc(
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -960,14 +950,14 @@ pub mod level2 {
     /// This function computes the conjugate rank-1 update A = \alpha x y^H + A of the matrix A.
     #[doc(alias = "gsl_blas_zgerc")]
     pub fn zgerc(
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zgerc(
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -1089,7 +1079,7 @@ pub mod level2 {
     #[doc(alias = "gsl_blas_cher2")]
     pub fn cher2(
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
@@ -1097,7 +1087,7 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_cher2(
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -1113,7 +1103,7 @@ pub mod level2 {
     #[doc(alias = "gsl_blas_zher2")]
     pub fn zher2(
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
@@ -1121,7 +1111,7 @@ pub mod level2 {
         let ret = unsafe {
             sys::gsl_blas_zher2(
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 x.unwrap_shared(),
                 y.unwrap_shared(),
                 A.unwrap_unique(),
@@ -1133,7 +1123,8 @@ pub mod level2 {
 
 pub mod level3 {
     use crate::ffi::FFI;
-    use crate::{enums, types, Value};
+    use crate::{complex::ToC, enums, types, Value};
+    use num_complex::Complex;
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
     #[doc(alias = "gsl_blas_sgemm")]
@@ -1190,20 +1181,20 @@ pub mod level3 {
     pub fn cgemm(
         transA: enums::CblasTranspose,
         transB: enums::CblasTranspose,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &types::MatrixComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_cgemm(
                 transA.into(),
                 transB.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1215,20 +1206,20 @@ pub mod level3 {
     pub fn zgemm(
         transA: enums::CblasTranspose,
         transB: enums::CblasTranspose,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &types::MatrixComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zgemm(
                 transA.into(),
                 transB.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1293,20 +1284,20 @@ pub mod level3 {
     pub fn csymm(
         side: enums::CblasSide,
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &types::MatrixComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_csymm(
                 side.into(),
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1319,20 +1310,20 @@ pub mod level3 {
     pub fn zsymm(
         side: enums::CblasSide,
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &types::MatrixComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zsymm(
                 side.into(),
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1346,20 +1337,20 @@ pub mod level3 {
     pub fn chemm(
         side: enums::CblasSide,
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &types::MatrixComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_chemm(
                 side.into(),
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1373,20 +1364,20 @@ pub mod level3 {
     pub fn zhemm(
         side: enums::CblasSide,
         uplo: enums::CblasUplo,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &types::MatrixComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zhemm(
                 side.into(),
                 uplo.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1459,7 +1450,7 @@ pub mod level3 {
         uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
         diag: enums::CblasDiag,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
@@ -1469,7 +1460,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1487,7 +1478,7 @@ pub mod level3 {
         uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
         diag: enums::CblasDiag,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
@@ -1497,7 +1488,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1571,7 +1562,7 @@ pub mod level3 {
         uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
         diag: enums::CblasDiag,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
@@ -1581,7 +1572,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1599,7 +1590,7 @@ pub mod level3 {
         uplo: enums::CblasUplo,
         transA: enums::CblasTranspose,
         diag: enums::CblasDiag,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
@@ -1609,7 +1600,7 @@ pub mod level3 {
                 uplo.into(),
                 transA.into(),
                 diag.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_unique(),
             )
@@ -1674,18 +1665,18 @@ pub mod level3 {
     pub fn csyrk(
         uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_csyrk(
                 uplo.into(),
                 trans.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1699,18 +1690,18 @@ pub mod level3 {
     pub fn zsyrk(
         uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zsyrk(
                 uplo.into(),
                 trans.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1830,20 +1821,20 @@ pub mod level3 {
     pub fn csyr2k(
         uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &types::MatrixComplexF32,
-        beta: &types::ComplexF32,
+        beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_csyr2k(
                 uplo.into(),
                 trans.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1857,20 +1848,20 @@ pub mod level3 {
     pub fn zsyr2k(
         uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &types::MatrixComplexF64,
-        beta: &types::ComplexF64,
+        beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
     ) -> Result<(), Value> {
         let ret = unsafe {
             sys::gsl_blas_zsyr2k(
                 uplo.into(),
                 trans.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
-                std::mem::transmute(*beta),
+                beta.unwrap(),
                 C.unwrap_unique(),
             )
         };
@@ -1885,7 +1876,7 @@ pub mod level3 {
     pub fn cher2k(
         uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
-        alpha: &types::ComplexF32,
+        alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &types::MatrixComplexF32,
         beta: f32,
@@ -1895,7 +1886,7 @@ pub mod level3 {
             sys::gsl_blas_cher2k(
                 uplo.into(),
                 trans.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
                 beta,
@@ -1913,7 +1904,7 @@ pub mod level3 {
     pub fn zher2k(
         uplo: enums::CblasUplo,
         trans: enums::CblasTranspose,
-        alpha: &types::ComplexF64,
+        alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &types::MatrixComplexF64,
         beta: f64,
@@ -1923,7 +1914,7 @@ pub mod level3 {
             sys::gsl_blas_zher2k(
                 uplo.into(),
                 trans.into(),
-                std::mem::transmute(*alpha),
+                alpha.unwrap(),
                 A.unwrap_shared(),
                 B.unwrap_shared(),
                 beta,

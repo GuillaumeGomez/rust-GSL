@@ -29,13 +29,13 @@ fn main() {
     for i in 0..4 {
         let eval_i = eval.get(i);
         evec.column(i, |evec_i| {
-            println!("eigenvalue = {} + {}", eval_i.real(), eval_i.imaginary());
+            println!("eigenvalue = {eval_i}");
             evec_i.expect("Failed to get get column").vector(|v| {
                 let v = v.expect("Failed to get vector from column");
                 println!("eigenvector = ");
                 for j in 0..4 {
                     let z = v.get(j);
-                    println!("{} + {}", z.real(), z.imaginary());
+                    println!("{z}");
                 }
             });
         });

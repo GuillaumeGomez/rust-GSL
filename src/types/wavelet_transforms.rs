@@ -46,7 +46,7 @@ The coefficients for the individual wavelet families implemented by the library 
 I. Daubechies. Orthonormal Bases of Compactly Supported Wavelets. Communications on Pure and Applied Mathematics, 41 (1988) 909–996.
 A. Cohen, I. Daubechies, and J.-C. Feauveau. Biorthogonal Bases of Compactly Supported Wavelets. Communications on Pure and Applied
 Mathematics, 45 (1992) 485–560.
-The PhysioNet archive of physiological datasets can be found online at http://www.physionet.org/ and is described in the following paper,
+The PhysioNet archive of physiological datasets can be found online at <http://www.physionet.org/> and is described in the following paper,
 
 Goldberger et al. PhysioBank, PhysioToolkit, and PhysioNet: Components of a New Research Resource for Complex Physiologic Signals.
 Circulation 101(23):e215-e220 2000.

@@ -32,11 +32,198 @@ vector.
 
 use crate::ffi::FFI;
 use crate::Value;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
-use std::marker::PhantomData;
+use std::{
+    fmt::{self, Debug, Formatter},
+    marker::PhantomData,
+    ops::Range,
+};
 
 use paste::paste;
+
+#[cfg(feature = "complex")]
+extern crate num_complex;
+#[cfg(feature = "complex")]
+use self::num_complex::Complex;
+
+#[allow(clippy::len_without_is_empty)]
+/// Trait implemented by types that are considered vectors by this crate.
+/// Elements of the vector are of type `F` (`f32` or `f64`).
+///
+/// Bring this trait into scope in order to add methods to specify
+/// strides to the types implementing `Vector`.
+///
+/// # Safety
+/// One must make sore that `(len - 1) * stride` does not exceed the
+/// length of the underlying slice.
+pub unsafe trait Vector<F> {
+    /// Return the number of elements in the vector.
+    ///
+    /// This is an associated function rather than a method to avoid
+    /// conflicting with similarly named methods.
+    fn len(x: &Self) -> usize;
+
+    /// The distance in the slice between two consecutive elements of
+    /// the vector in [`Vector::as_slice`] and [`VectorMut::as_mut_slice`].
+    fn stride(x: &Self) -> usize;
+
+    /// Return a reference to the underlying slice.  Note that the
+    /// `i`th element of the vector, `0 <= i < len(x)`, is the
+    /// `i * stride` element in the slice.
+    ///
+    /// This is an associated function rather than a method to avoid
+    /// conflicting with similarly named methods.
+    fn as_slice(x: &Self) -> &[F];
+
+    fn slice(&self, r: Range<usize>) -> Option<Slice<'_, F>> {
+        // The fields of `Slice` are not public, hence there is no way
+        // to implement this function outside this module.  This
+        // guarantee that there is no out-of-bounds access as soon as
+        // the above methods are correctly implemented.
+        let stride = Self::stride(self);
+        let slice = Self::as_slice(self);
+        // FIXME: use std::slice::SliceIndex methods when stable.
+        if r.end == 0 {
+            return Some(Slice {
+                vec: &slice[0..0],
+                len: 0,
+                stride: 1,
+            });
+        }
+        let end = (r.end - 1) * stride + 1;
+        if r.start > r.end || end > slice.len() {
+            None
+        } else {
+            let start = r.start * stride;
+            Some(Slice {
+                vec: &slice[start..end],
+                len: r.end - r.start,
+                stride,
+            })
+        }
+    }
+}
+
+/// Trait implemented by types that are considered *mutable* vectors
+/// by this crate.  Elements of the vector are of type `F` (`f32` or `f64`).
+///
+/// Bring this trait into scope in order to add methods to specify
+/// strides to the types implementing `Vector`.
+///
+/// # Safety
+/// One must make sore that `(len - 1) * stride` does not exceed the
+/// length of the underlying slice.
+pub unsafe trait VectorMut<F>: Vector<F> {
+    /// Same as [`Vector::as_slice`] but mutable.
+    fn as_mut_slice(x: &mut Self) -> &mut [F];
+
+    /// Same as [`Vector::slice`] but mutable.
+    fn slice_mut(&mut self, r: Range<usize>) -> Option<SliceMut<'_, F>> {
+        let stride = Self::stride(self);
+        let slice = Self::as_mut_slice(self);
+        // FIXME: use std::slice::SliceIndex methods when stable.
+        if r.end == 0 {
+            return Some(SliceMut {
+                vec: &mut slice[0..0],
+                len: 0,
+                stride: 1,
+            });
+        }
+        let end = (r.end - 1) * stride + 1;
+        if r.start > r.end || end > slice.len() {
+            None
+        } else {
+            let start = r.start * stride;
+            Some(SliceMut {
+                vec: &mut slice[start..end],
+                len: r.end - r.start,
+                stride,
+            })
+        }
+    }
+}
+
+pub struct Slice<'a, F> {
+    vec: &'a [F],
+    len: usize,
+    stride: usize,
+}
+
+pub struct SliceMut<'a, F> {
+    vec: &'a mut [F],
+    len: usize,
+    stride: usize,
+}
+
+unsafe impl<F> Vector<F> for Slice<'_, F> {
+    #[inline]
+    fn len(x: &Self) -> usize {
+        x.len
+    }
+    #[inline]
+    fn stride(x: &Self) -> usize {
+        x.stride
+    }
+    #[inline]
+    fn as_slice(x: &Self) -> &[F] {
+        x.vec
+    }
+}
+
+unsafe impl<F> Vector<F> for SliceMut<'_, F> {
+    #[inline]
+    fn len(x: &Self) -> usize {
+        x.len
+    }
+    #[inline]
+    fn stride(x: &Self) -> usize {
+        x.stride
+    }
+    #[inline]
+    fn as_slice(x: &Self) -> &[F] {
+        x.vec
+    }
+}
+
+unsafe impl<F> VectorMut<F> for SliceMut<'_, F> {
+    #[inline]
+    fn as_mut_slice(x: &mut Self) -> &mut [F] {
+        x.vec
+    }
+}
+
+/// Return the length of `x` as a `i32` value (to use in CBLAS calls).
+#[inline]
+pub(crate) fn len<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
+    T::len(x).try_into().expect("Length must fit in `i32`")
+}
+
+#[inline]
+pub(crate) fn as_ptr<F, T: Vector<F> + ?Sized>(x: &T) -> *const F {
+    T::as_slice(x).as_ptr()
+}
+
+#[inline]
+pub(crate) fn as_mut_ptr<F, T: VectorMut<F> + ?Sized>(x: &mut T) -> *mut F {
+    T::as_mut_slice(x).as_mut_ptr()
+}
+
+/// Return the stride of `x` as a `i32` value (to use in CBLAS calls).
+#[inline]
+pub(crate) fn stride<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
+    T::stride(x).try_into().expect("Stride must fit in `i32`")
+}
+
+#[inline]
+pub(crate) fn check_equal_len<T1, T2, F>(x: &T1, y: &T2) -> Result<(), Value>
+where
+    T1: Vector<F> + ?Sized,
+    T2: Vector<F> + ?Sized,
+{
+    if T1::len(x) != T2::len(y) {
+        return Err(Value::Invalid);
+    }
+    Ok(())
+}
 
 macro_rules! gsl_vec {
     ($rust_name:ident, $name:ident, $rust_ty:ident) => (
@@ -511,7 +698,7 @@ impl<'a> [<$rust_name View>]<'a> {
     /// n elements with a step-size of stride from one element to the next in the original
     /// array. Mathematically, the i-th element of the new vector v’ is given by,
     ///
-    /// v'(i) = base[i*stride]
+    /// v'(i) = base\[i*stride\]
     ///
     /// where the index i runs from 0 to n-1.
     ///
@@ -556,6 +743,32 @@ impl<'a> [<$rust_name View>]<'a> {
     }
 } // end of impl block
 
+    unsafe impl Vector<$rust_ty> for $rust_name {
+        #[inline]
+        fn len(x: &Self) -> usize {
+            $rust_name::len(x)
+        }
+        #[inline]
+        fn stride(x: &Self) -> usize {
+            let ptr = x.unwrap_shared();
+            if ptr.is_null() {
+                1
+            } else {
+                unsafe { (*ptr).stride }
+            }
+        }
+        #[inline]
+        fn as_slice(x: &Self) -> &[$rust_ty] {
+            $rust_name::as_slice(x).unwrap_or(&[])
+        }
+    }
+    unsafe impl VectorMut<$rust_ty> for $rust_name {
+        #[inline]
+        fn as_mut_slice(x: &mut Self) -> &mut [$rust_ty] {
+            $rust_name::as_slice_mut(x).unwrap_or(&mut [])
+        }
+    }
+
 } // end of paste! block
 ); // end of gsl_vec macro
 }
@@ -564,3 +777,68 @@ gsl_vec!(VectorF32, gsl_vector_float, f32);
 gsl_vec!(VectorF64, gsl_vector, f64);
 gsl_vec!(VectorI32, gsl_vector_int, i32);
 gsl_vec!(VectorU32, gsl_vector_uint, u32);
+
+// Implement the `Vector` trait on standard vectors.
+
+macro_rules! impl_AsRef {
+    ($ty: ty) => {
+        unsafe impl<T> Vector<$ty> for T
+        where
+            T: AsRef<[$ty]> + ?Sized,
+        {
+            #[inline]
+            fn len(x: &Self) -> usize {
+                x.as_ref().len()
+            }
+            #[inline]
+            fn stride(_: &Self) -> usize {
+                1
+            }
+            #[inline]
+            fn as_slice(x: &Self) -> &[$ty] {
+                x.as_ref()
+            }
+        }
+
+        unsafe impl<T> VectorMut<$ty> for T
+        where
+            T: Vector<$ty> + AsMut<[$ty]> + ?Sized,
+        {
+            #[inline]
+            fn as_mut_slice(x: &mut Self) -> &mut [$ty] {
+                x.as_mut()
+            }
+        }
+    };
+}
+
+impl_AsRef!(f32);
+impl_AsRef!(f64);
+#[cfg(feature = "complex")]
+impl_AsRef!(Complex<f32>);
+#[cfg(feature = "complex")]
+impl_AsRef!(Complex<f64>);
+
+// Helper trait to convert Complex slices.
+pub(crate) trait ComplexSlice<T> {
+    // fn as_ptr_fXX(&self) -> *const T;
+    fn as_mut_ptr_fXX(&mut self) -> *mut T;
+}
+
+macro_rules! impl_ComplexSlice {
+    ($ty: ty) => {
+        impl ComplexSlice<$ty> for [Complex<$ty>] {
+            // fn as_ptr_fXX(&self) -> *const $ty {
+            //     // Complex<f64> layout is two consecutive f64 values.
+            //     self.as_ptr() as *const $ty
+            // }
+
+            fn as_mut_ptr_fXX(&mut self) -> *mut $ty {
+                self.as_mut_ptr() as *mut $ty
+            }
+        }
+    };
+}
+
+impl_ComplexSlice!(f64);
+impl_ComplexSlice!(f32);

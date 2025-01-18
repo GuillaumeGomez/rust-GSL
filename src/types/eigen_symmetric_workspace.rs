@@ -890,17 +890,18 @@ fn eigen_symmetric_vworkspace() {
 // ```
 #[test]
 fn eigen_hermitian_workspace() {
-    use crate::ComplexF64;
+    use crate::complex::ComplexOps;
+    use num_complex::Complex;
     use MatrixComplexF64;
     use VectorF64;
 
     let mut e = EigenHermitianWorkspace::new(3).unwrap();
     let mut m = MatrixComplexF64::new(2, 2).unwrap();
 
-    m.set(0, 0, &ComplexF64::rect(5., 5.));
-    m.set(0, 1, &ComplexF64::rect(1., 4.));
-    m.set(1, 0, &ComplexF64::rect(2., 3.));
-    m.set(1, 1, &ComplexF64::rect(5., 7.));
+    m.set(0, 0, &Complex::<f64>::rect(5., 5.));
+    m.set(0, 1, &Complex::<f64>::rect(1., 4.));
+    m.set(1, 0, &Complex::<f64>::rect(2., 3.));
+    m.set(1, 1, &Complex::<f64>::rect(5., 7.));
 
     let mut v = VectorF64::new(2).unwrap();
     e.herm(&mut m, &mut v).unwrap();
@@ -944,15 +945,16 @@ fn eigen_hermitian_workspace() {
 // ```
 #[test]
 fn eigen_hermitian_vworkspace() {
-    use crate::ComplexF64;
+    use crate::complex::ComplexOps;
+    use num_complex::Complex;
 
     let mut e = EigenHermitianVWorkspace::new(3).unwrap();
     let mut m = MatrixComplexF64::new(2, 2).unwrap();
 
-    m.set(0, 0, &ComplexF64::rect(5., 5.));
-    m.set(0, 1, &ComplexF64::rect(1., 4.));
-    m.set(1, 0, &ComplexF64::rect(2., 3.));
-    m.set(1, 1, &ComplexF64::rect(5., 7.));
+    m.set(0, 0, &Complex::<f64>::rect(5., 5.));
+    m.set(0, 1, &Complex::<f64>::rect(1., 4.));
+    m.set(1, 0, &Complex::<f64>::rect(2., 3.));
+    m.set(1, 1, &Complex::<f64>::rect(5., 7.));
 
     let mut v = VectorF64::new(2).unwrap();
     let mut m2 = MatrixComplexF64::new(2, 2).unwrap();
@@ -961,20 +963,20 @@ fn eigen_hermitian_vworkspace() {
     assert_eq!(
         &format!(
             "({:.4}, {:.4}) ({:.4}, {:.4})",
-            m2.get(0, 0).dat[0],
-            m2.get(0, 0).dat[1],
-            m2.get(0, 1).dat[0],
-            m2.get(0, 1).dat[1]
+            m2.get(0, 0).re,
+            m2.get(0, 0).im,
+            m2.get(0, 1).re,
+            m2.get(0, 1).im
         ),
         "(0.7071, 0.0000) (0.7071, 0.0000)"
     );
     assert_eq!(
         &format!(
             "({:.4}, {:.4}) ({:.4}, {:.4})",
-            m2.get(1, 0).dat[0],
-            m2.get(1, 0).dat[1],
-            m2.get(1, 1).dat[0],
-            m2.get(1, 1).dat[1]
+            m2.get(1, 0).re,
+            m2.get(1, 0).im,
+            m2.get(1, 1).re,
+            m2.get(1, 1).im
         ),
         "(0.3922, 0.5883) (-0.3922, -0.5883)"
     );

@@ -13,8 +13,10 @@ edition = "2021"
 [dependencies]
 sys = { path = "gsl-sys", package = "GSL-sys", version = "3.0.0" }
 paste = "1.0"
+num-complex = { version = "0.4.6", optional = true }
 
 [features]
+default = ["complex"]
 v2_1 = ["sys/v2_1"]
 v2_2 = ["sys/v2_2", "v2_1"]
 v2_3 = ["sys/v2_3", "v2_2"]
@@ -23,6 +25,8 @@ v2_5 = ["sys/v2_5", "v2_4"]
 v2_6 = ["sys/v2_6", "v2_5"]
 v2_7 = ["sys/v2_7", "v2_6"]
 dox = ["v2_7", "sys/dox"]
+# Enable complex number functions:
+complex = ["dep:num-complex"]
 
 [package.metadata.docs.rs]
 features = ["dox"]
@@ -31,3 +35,36 @@ rustdoc-args = ["--generate-link-to-definition"]
 [lib]
 name = "rgsl"
 crate-type = ["dylib", "rlib"]
+
+# Examples with special requirements
+[[example]]
+name = "filt_edge"
+required-features = ["v2_5"]
+
+[[example]]
+name = "fitreg"
+required-features = ["v2_5"]
+
+[[example]]
+name = "fitreg2"
+required-features = ["v2_5"]
+
+[[example]]
+name = "fitting"
+required-features = ["v2_5"]
+
+[[example]]
+name = "gaussfilt"
+required-features = ["v2_5"]
+
+[[example]]
+name = "gaussfilt2"
+required-features = ["v2_5"]
+
+[[example]]
+name = "impulse"
+required-features = ["v2_5"]
+
+[[example]]
+name = "largefit"
+required-features = ["v2_2"]

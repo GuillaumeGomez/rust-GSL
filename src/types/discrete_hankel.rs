@@ -31,14 +31,18 @@ g_m = (2 / j_(\nu,M)^2)
       \sum_{k=1}^{M-1} f(j_(\nu,k)/j_(\nu,M))
           (J_\nu(j_(\nu,m) j_(\nu,k) / j_(\nu,M)) / J_(\nu+1)(j_(\nu,k))^2).
 
-It is this discrete expression which defines the discrete Hankel transform. The kernel in the
-summation above defines the matrix of the \nu-Hankel transform of size M-1. The coefficients of this
-matrix, being dependent on \nu and M, must be precomputed and stored; the gsl_dht object
-encapsulates this data. The allocation function gsl_dht_alloc returns a gsl_dht object which must be
-properly initialized with gsl_dht_init before it can be used to perform transforms on data sample
-vectors, for fixed \nu and M, using the gsl_dht_apply function. The implementation allows a scaling
-of the fundamental interval, for convenience, so that one can assume the function is defined on the
-interval [0,X], rather than the unit interval.
+It is this discrete expression which defines the discrete Hankel
+transform. The kernel in the summation above defines the matrix of the
+\nu-Hankel transform of size M-1. The coefficients of this matrix,
+being dependent on \nu and M, must be precomputed and stored; the
+gsl_dht object encapsulates this data. The allocation function
+gsl_dht_alloc returns a gsl_dht object which must be properly
+initialized with gsl_dht_init before it can be used to perform
+transforms on data sample vectors, for fixed \nu and M, using the
+gsl_dht_apply function. The implementation allows a scaling of the
+fundamental interval, for convenience, so that one can assume the
+function is defined on the interval \[0,X\], rather than the unit
+interval.
 
 Notice that by assumption f(t) vanishes at the endpoints of the interval, consistent with the
 inversion formula and the sampling formula given above. Therefore, this transform corresponds to an
