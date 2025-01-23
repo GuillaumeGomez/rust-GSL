@@ -8,7 +8,7 @@ repository = "https://github.com/GuillaumeGomez/rust-GSL"
 documentation = "https://docs.rs/crate/GSL-sys/"
 readme = "README.md"
 keywords = ["mathematics", "library", "GSL"]
-license = "GPL-3.0+"
+license = "GPL-3.0-or-later"
 
 build = "build.rs"
 

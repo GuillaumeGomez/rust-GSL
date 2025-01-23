@@ -7,7 +7,7 @@ repository = "https://github.com/GuillaumeGomez/rust-GSL"
 documentation = "https://docs.rs/crate/GSL/"
 readme = "README.md"
 keywords = ["mathematics", "library", "GSL"]
-license = "GPL-3.0+"
+license = "GPL-3.0-or-later"
 edition = "2021"
 
 [dependencies]
