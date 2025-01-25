@@ -58,7 +58,7 @@ D. Lemoine, J. Chem. Phys. 101, 3936 (1994).
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(DiscreteHankel, *mut sys::gsl_dht, gsl_dht_free);
 
@@ -90,9 +90,9 @@ impl DiscreteHankel {
 
     /// This function initializes the transform `self` for the given values of `nu` and `xmax`.
     #[doc(alias = "gsl_dht_init")]
-    pub fn init(&mut self, nu: f64, xmax: f64) -> Result<(), Value> {
+    pub fn init(&mut self, nu: f64, xmax: f64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_dht_init(self.unwrap_unique(), nu, xmax) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function applies the transform t to the array f_in whose size is equal to the size of
@@ -101,7 +101,7 @@ impl DiscreteHankel {
     /// Applying this function to its output gives the original data multiplied by (1/j_(\nu,M))^2,
     /// up to numerical errors.
     #[doc(alias = "gsl_dht_apply")]
-    pub fn apply(&mut self, f_in: &[f64]) -> Result<Vec<f64>, Value> {
+    pub fn apply(&mut self, f_in: &[f64]) -> Result<Vec<f64>, Error> {
         unsafe {
             assert!(
                 (*self.unwrap_shared()).size == f_in.len() as _,
@@ -113,7 +113,7 @@ impl DiscreteHankel {
                 f_in.as_ptr() as usize as *mut _,
                 f_out.as_mut_ptr(),
             );
-            result_handler!(ret, f_out)
+            Error::handle(ret, f_out)
         }
     }
 

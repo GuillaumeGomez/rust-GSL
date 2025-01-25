@@ -6,7 +6,7 @@
 
 /// The Riemann zeta function is defined by the infinite sum \zeta(s) = \sum_{k=1}^\infty k^{-s}.
 pub mod riemann {
-    use crate::{types, Value};
+    use crate::{types, Error};
     use std::mem::MaybeUninit;
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
@@ -17,11 +17,11 @@ pub mod riemann {
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
     #[doc(alias = "gsl_sf_zeta_int_e")]
-    pub fn zeta_int_e(n: i32) -> Result<types::Result, Value> {
+    pub fn zeta_int_e(n: i32) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_zeta_int_e(n, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the Riemann zeta function \zeta(s) for arbitrary s, s \ne 1.
@@ -32,18 +32,18 @@ pub mod riemann {
 
     /// This routine computes the Riemann zeta function \zeta(s) for arbitrary s, s \ne 1.
     #[doc(alias = "gsl_sf_zeta_e")]
-    pub fn zeta_e(x: f64) -> Result<types::Result, Value> {
+    pub fn zeta_e(x: f64) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_zeta_e(x, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 }
 
 /// For large positive argument, the Riemann zeta function approaches one.
 /// In this region the fractional part is interesting, and therefore we need a function to evaluate it explicitly.
 pub mod riemann_mins_one {
-    use crate::{types, Value};
+    use crate::{types, Error};
     use std::mem::MaybeUninit;
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
@@ -54,11 +54,11 @@ pub mod riemann_mins_one {
 
     /// This routine computes the Riemann zeta function \zeta(n) for integer n, n \ne 1.
     #[doc(alias = "gsl_sf_zetam1_int_e")]
-    pub fn zetam1_int_e(n: i32) -> Result<types::Result, Value> {
+    pub fn zetam1_int_e(n: i32) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_zetam1_int_e(n, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes \zeta(s) - 1 for arbitrary s, s \ne 1.
@@ -69,17 +69,17 @@ pub mod riemann_mins_one {
 
     /// This routine computes \zeta(s) - 1 for arbitrary s, s \ne 1.
     #[doc(alias = "gsl_sf_zetam1_e")]
-    pub fn zetam1_e(x: f64) -> Result<types::Result, Value> {
+    pub fn zetam1_e(x: f64) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_zetam1_e(x, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 }
 
 /// The Hurwitz zeta function is defined by \zeta(s,q) = \sum_0^\infty (k+q)^{-s}.
 pub mod hurwitz {
-    use crate::{types, Value};
+    use crate::{types, Error};
     use std::mem::MaybeUninit;
 
     /// This routine computes the Hurwitz zeta function \zeta(s,q) for s > 1, q > 0.
@@ -90,17 +90,17 @@ pub mod hurwitz {
 
     /// This routine computes the Hurwitz zeta function \zeta(s,q) for s > 1, q > 0.
     #[doc(alias = "gsl_sf_hzeta_e")]
-    pub fn hzeta_e(s: f64, q: f64) -> Result<types::Result, Value> {
+    pub fn hzeta_e(s: f64, q: f64) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_hzeta_e(s, q, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 }
 
 /// The eta function is defined by \eta(s) = (1-2^{1-s}) \zeta(s).
 pub mod eta {
-    use crate::{types, Value};
+    use crate::{types, Error};
     use std::mem::MaybeUninit;
 
     /// This routine computes the eta function \eta(n) for integer n.
@@ -111,11 +111,11 @@ pub mod eta {
 
     /// This routine computes the eta function \eta(n) for integer n.
     #[doc(alias = "gsl_sf_eta_int_e")]
-    pub fn eta_int_e(n: i32) -> Result<types::Result, Value> {
+    pub fn eta_int_e(n: i32) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_eta_int_e(n, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 
     /// This routine computes the eta function \eta(s) for arbitrary s.
@@ -126,10 +126,10 @@ pub mod eta {
 
     /// This routine computes the eta function \eta(s) for arbitrary s.
     #[doc(alias = "gsl_sf_eta_e")]
-    pub fn eta_e(s: f64) -> Result<types::Result, Value> {
+    pub fn eta_e(s: f64) -> Result<types::Result, Error> {
         let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
         let ret = unsafe { sys::gsl_sf_eta_e(s, result.as_mut_ptr()) };
 
-        result_handler!(ret, unsafe { result.assume_init() }.into())
+        Error::handle(ret, unsafe { result.assume_init() }.into())
     }
 }

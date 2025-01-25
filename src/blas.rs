@@ -7,7 +7,7 @@ pub mod level1 {
     use crate::{
         types,
         types::complex::{FromC, ToC},
-        Value,
+        Error,
     };
     use crate::{VectorF32, VectorF64};
     use num_complex::Complex;
@@ -17,12 +17,12 @@ pub mod level1 {
     ///
     /// Returns `result`.
     #[doc(alias = "gsl_blas_sdsdot")]
-    pub fn sdsdot(alpha: f32, x: &types::VectorF32, y: &types::VectorF32) -> Result<f32, Value> {
+    pub fn sdsdot(alpha: f32, x: &types::VectorF32, y: &types::VectorF32) -> Result<f32, Error> {
         let mut result = 0.;
         let ret = unsafe {
             sys::gsl_blas_sdsdot(alpha, x.unwrap_shared(), y.unwrap_shared(), &mut result)
         };
-        result_handler!(ret, result)
+        Error::handle(ret, result)
     }
 
     /// This function computes the scalar product x^T y for the vectors x and y, returning the
@@ -30,10 +30,10 @@ pub mod level1 {
     ///
     /// Returns `result`.
     #[doc(alias = "gsl_blas_sdot")]
-    pub fn sdot(x: &types::VectorF32, y: &types::VectorF32) -> Result<f32, Value> {
+    pub fn sdot(x: &types::VectorF32, y: &types::VectorF32) -> Result<f32, Error> {
         let mut result = 0.;
         let ret = unsafe { sys::gsl_blas_sdot(x.unwrap_shared(), y.unwrap_shared(), &mut result) };
-        result_handler!(ret, result)
+        Error::handle(ret, result)
     }
 
     /// This function computes the scalar product x^T y for the vectors x and y, returning the
@@ -41,10 +41,10 @@ pub mod level1 {
     ///
     /// Returns `result`.
     #[doc(alias = "gsl_blas_dsdot")]
-    pub fn dsdot(x: &types::VectorF32, y: &types::VectorF32) -> Result<f64, Value> {
+    pub fn dsdot(x: &types::VectorF32, y: &types::VectorF32) -> Result<f64, Error> {
         let mut result = 0.;
         let ret = unsafe { sys::gsl_blas_dsdot(x.unwrap_shared(), y.unwrap_shared(), &mut result) };
-        result_handler!(ret, result)
+        Error::handle(ret, result)
     }
 
     /// This function computes the scalar product x^T y for the vectors x and y, returning the
@@ -52,10 +52,10 @@ pub mod level1 {
     ///
     /// Returns `result`.
     #[doc(alias = "gsl_blas_ddot")]
-    pub fn ddot(x: &types::VectorF64, y: &types::VectorF64) -> Result<f64, Value> {
+    pub fn ddot(x: &types::VectorF64, y: &types::VectorF64) -> Result<f64, Error> {
         let mut result = 0.;
         let ret = unsafe { sys::gsl_blas_ddot(x.unwrap_shared(), y.unwrap_shared(), &mut result) };
-        result_handler!(ret, result)
+        Error::handle(ret, result)
     }
 
     /// This function computes the complex scalar product x^T y for the vectors x and y, returning
@@ -66,10 +66,10 @@ pub mod level1 {
     pub fn cdotu(
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
-    ) -> Result<Complex<f32>, Value> {
+    ) -> Result<Complex<f32>, Error> {
         let mut dotu = Complex::<f32>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_cdotu(x.unwrap_shared(), y.unwrap_shared(), &mut dotu) };
-        result_handler!(ret, dotu.wrap())
+        Error::handle(ret, dotu.wrap())
     }
 
     /// This function computes the complex scalar product x^T y for the vectors x and y, returning
@@ -80,10 +80,10 @@ pub mod level1 {
     pub fn zdotu(
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
-    ) -> Result<Complex<f64>, Value> {
+    ) -> Result<Complex<f64>, Error> {
         let mut dotu = Complex::<f64>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_zdotu(x.unwrap_shared(), y.unwrap_shared(), &mut dotu) };
-        result_handler!(ret, dotu.wrap())
+        Error::handle(ret, dotu.wrap())
     }
 
     /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
@@ -94,10 +94,10 @@ pub mod level1 {
     pub fn cdotc(
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
-    ) -> Result<Complex<f32>, Value> {
+    ) -> Result<Complex<f32>, Error> {
         let mut dotc = Complex::<f32>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_cdotc(x.unwrap_shared(), y.unwrap_shared(), &mut dotc) };
-        result_handler!(ret, dotc.wrap())
+        Error::handle(ret, dotc.wrap())
     }
 
     /// This function computes the complex conjugate scalar product x^H y for the vectors x and y,
@@ -108,10 +108,10 @@ pub mod level1 {
     pub fn zdotc(
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
-    ) -> Result<Complex<f64>, Value> {
+    ) -> Result<Complex<f64>, Error> {
         let mut dotc = Complex::<f64>::default().unwrap();
         let ret = unsafe { sys::gsl_blas_zdotc(x.unwrap_shared(), y.unwrap_shared(), &mut dotc) };
-        result_handler!(ret, dotc.wrap())
+        Error::handle(ret, dotc.wrap())
     }
 
     /// This function computes the Euclidean norm ||x||_2 = \sqrt {\sum x_i^2} of the vector x.
@@ -200,16 +200,16 @@ pub mod level1 {
 
     /// This function exchanges the elements of the vectors x and y.
     #[doc(alias = "gsl_blas_sswap")]
-    pub fn sswap(x: &mut types::VectorF32, y: &mut types::VectorF32) -> Result<(), Value> {
+    pub fn sswap(x: &mut types::VectorF32, y: &mut types::VectorF32) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_sswap(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function exchanges the elements of the vectors x and y.
     #[doc(alias = "gsl_blas_dswap")]
-    pub fn dswap(x: &mut types::VectorF64, y: &mut types::VectorF64) -> Result<(), Value> {
+    pub fn dswap(x: &mut types::VectorF64, y: &mut types::VectorF64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_dswap(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function exchanges the elements of the vectors x and y.
@@ -217,9 +217,9 @@ pub mod level1 {
     pub fn cswap(
         x: &mut types::VectorComplexF32,
         y: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_cswap(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function exchanges the elements of the vectors x and y.
@@ -227,23 +227,23 @@ pub mod level1 {
     pub fn zswap(
         x: &mut types::VectorComplexF64,
         y: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_zswap(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function copy the elements of the vector x into the vector y.
     #[doc(alias = "gsl_blas_scopy")]
-    pub fn scopy(x: &mut types::VectorF32, y: &mut types::VectorF32) -> Result<(), Value> {
+    pub fn scopy(x: &mut types::VectorF32, y: &mut types::VectorF32) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_scopy(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function copy the elements of the vector x into the vector y.
     #[doc(alias = "gsl_blas_dcopy")]
-    pub fn dcopy(x: &mut types::VectorF64, y: &mut types::VectorF64) -> Result<(), Value> {
+    pub fn dcopy(x: &mut types::VectorF64, y: &mut types::VectorF64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_dcopy(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function copy the elements of the vector x into the vector y.
@@ -251,9 +251,9 @@ pub mod level1 {
     pub fn ccopy(
         x: &mut types::VectorComplexF32,
         y: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_ccopy(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function copy the elements of the vector x into the vector y.
@@ -261,23 +261,23 @@ pub mod level1 {
     pub fn zcopy(
         x: &mut types::VectorComplexF64,
         y: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_zcopy(x.unwrap_unique(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     #[doc(alias = "gsl_blas_saxpy")]
-    pub fn saxpy(alpha: f32, x: &types::VectorF32, y: &mut types::VectorF32) -> Result<(), Value> {
+    pub fn saxpy(alpha: f32, x: &types::VectorF32, y: &mut types::VectorF32) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_saxpy(alpha, x.unwrap_shared(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
     #[doc(alias = "gsl_blas_daxpy")]
-    pub fn daxpy(alpha: f64, x: &types::VectorF64, y: &mut types::VectorF64) -> Result<(), Value> {
+    pub fn daxpy(alpha: f64, x: &types::VectorF64, y: &mut types::VectorF64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_daxpy(alpha, x.unwrap_shared(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
@@ -286,10 +286,10 @@ pub mod level1 {
         alpha: &Complex<f32>,
         x: &types::VectorComplexF32,
         y: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_blas_caxpy(alpha.unwrap(), x.unwrap_shared(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the sum y = \alpha x + y for the vectors x and y.
@@ -298,10 +298,10 @@ pub mod level1 {
         alpha: &Complex<f64>,
         x: &types::VectorComplexF64,
         y: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_blas_zaxpy(alpha.unwrap(), x.unwrap_shared(), y.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function rescales the vector x by the multiplicative factor alpha.
@@ -349,11 +349,11 @@ pub mod level1 {
     ///
     /// Return `(c, s, r)`.
     #[doc(alias = "gsl_blas_srotg")]
-    pub fn srotg(mut a: f32, mut b: f32) -> Result<(f32, f32, f32), Value> {
+    pub fn srotg(mut a: f32, mut b: f32) -> Result<(f32, f32, f32), Error> {
         let mut c = 0.;
         let mut s = 0.;
         let ret = unsafe { sys::gsl_blas_srotg(&mut a, &mut b, &mut c, &mut s) };
-        result_handler!(ret, (c, s, a))
+        Error::handle(ret, (c, s, a))
     }
 
     /// This function computes a Givens rotation (c,s) which zeroes the vector (a,b),
@@ -365,11 +365,11 @@ pub mod level1 {
     ///
     /// Return `(c, s, r)`.
     #[doc(alias = "gsl_blas_drotg")]
-    pub fn drotg(mut a: f64, mut b: f64) -> Result<(f64, f64, f64), Value> {
+    pub fn drotg(mut a: f64, mut b: f64) -> Result<(f64, f64, f64), Error> {
         let mut c = 0.;
         let mut s = 0.;
         let ret = unsafe { sys::gsl_blas_drotg(&mut a, &mut b, &mut c, &mut s) };
-        result_handler!(ret, (c, s, a))
+        Error::handle(ret, (c, s, a))
     }
 
     /// This function applies a Givens rotation (x', y') = (c x + s y, -s x + c y) to the vectors x, y.
@@ -379,9 +379,9 @@ pub mod level1 {
         b: &mut types::VectorF32,
         c: f32,
         d: f32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_srot(a.unwrap_unique(), b.unwrap_unique(), c, d) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function applies a Givens rotation (x', y') = (c x + s y, -s x + c y) to the vectors x, y.
@@ -391,29 +391,29 @@ pub mod level1 {
         b: &mut types::VectorF64,
         c: f64,
         d: f64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_blas_drot(a.unwrap_unique(), b.unwrap_unique(), c, d) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Return a modified Givens transformation.
     /// The modified Givens transformation is defined in the original
     /// [Level-1 BLAS specification](https://help.imsl.com/fortran/fnlmath/current/basic-linear-algebra-sub.htm#mch9_1817247609_srotmg).
     #[doc(alias = "gsl_blas_srotmg")]
-    pub fn srotmg(mut d1: f32, mut d2: f32, mut b1: f32, b2: f32) -> Result<[f32; 5], Value> {
+    pub fn srotmg(mut d1: f32, mut d2: f32, mut b1: f32, b2: f32) -> Result<[f32; 5], Error> {
         let mut p = [f32::NAN; 5];
         let ret = unsafe { sys::gsl_blas_srotmg(&mut d1, &mut d2, &mut b1, b2, p.as_mut_ptr()) };
-        result_handler!(ret, p)
+        Error::handle(ret, p)
     }
 
     /// Return a modified Givens transformation.
     /// The modified Givens transformation is defined in the original
     /// [Level-1 BLAS specification](https://help.imsl.com/fortran/fnlmath/current/basic-linear-algebra-sub.htm#mch9_1817247609_srotmg).
     #[doc(alias = "gsl_blas_drotmg")]
-    pub fn drotmg(mut d1: f64, mut d2: f64, mut b1: f64, b2: f64) -> Result<[f64; 5], Value> {
+    pub fn drotmg(mut d1: f64, mut d2: f64, mut b1: f64, b2: f64) -> Result<[f64; 5], Error> {
         let mut p = [f64::NAN; 5];
         let ret = unsafe { sys::gsl_blas_drotmg(&mut d1, &mut d2, &mut b1, b2, p.as_mut_ptr()) };
-        result_handler!(ret, p)
+        Error::handle(ret, p)
     }
 
     /// This function applies a modified Givens transformation.
@@ -422,14 +422,14 @@ pub mod level1 {
         x: &mut types::VectorF32,
         y: &mut types::VectorF32,
         p: [f32; 5],
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let lenx = VectorF32::len(x);
         let leny = VectorF32::len(y);
         if lenx != leny {
             panic!("rgsl::blas::srotm: len(x) = {lenx} != len(y) = {leny}")
         }
         let ret = unsafe { sys::gsl_blas_srotm(x.unwrap_unique(), y.unwrap_unique(), p.as_ptr()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function applies a modified Givens transformation.
@@ -438,14 +438,14 @@ pub mod level1 {
         x: &mut types::VectorF64,
         y: &mut types::VectorF64,
         p: [f64; 5],
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let lenx = VectorF64::len(x);
         let leny = VectorF64::len(y);
         if lenx != leny {
             panic!("rgsl::blas::drotm: len(x) = {lenx} != len(y) = {leny}")
         }
         let ret = unsafe { sys::gsl_blas_drotm(x.unwrap_unique(), y.unwrap_unique(), p.as_ptr()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[cfg(test)]
@@ -473,7 +473,7 @@ pub mod level1 {
 pub mod level2 {
     use crate::complex::ToC;
     use crate::ffi::FFI;
-    use crate::{enums, types, Value};
+    use crate::{enums, types, Error};
     use num_complex::Complex;
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -485,7 +485,7 @@ pub mod level2 {
         x: &types::VectorF32,
         beta: f32,
         y: &mut types::VectorF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_sgemv(
                 transA.into(),
@@ -496,7 +496,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -508,7 +508,7 @@ pub mod level2 {
         x: &types::VectorF64,
         beta: f64,
         y: &mut types::VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dgemv(
                 transA.into(),
@@ -519,7 +519,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -531,7 +531,7 @@ pub mod level2 {
         x: &types::VectorComplexF32,
         beta: &Complex<f32>,
         y: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cgemv(
                 transA.into(),
@@ -542,7 +542,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product and sum y = \alpha op(A) x + \beta y, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -554,7 +554,7 @@ pub mod level2 {
         x: &types::VectorComplexF64,
         beta: &Complex<f64>,
         y: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zgemv(
                 transA.into(),
@@ -565,7 +565,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -578,7 +578,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixF32,
         x: &mut types::VectorF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_strmv(
                 uplo.into(),
@@ -588,7 +588,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -601,7 +601,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixF64,
         x: &mut types::VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dtrmv(
                 uplo.into(),
@@ -611,7 +611,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -624,7 +624,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixComplexF32,
         x: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ctrmv(
                 uplo.into(),
@@ -634,7 +634,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-vector product x = op(A) x for the triangular matrix A, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -647,7 +647,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixComplexF64,
         x: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ztrmv(
                 uplo.into(),
@@ -657,7 +657,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -670,7 +670,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixF32,
         x: &mut types::VectorF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_strsv(
                 uplo.into(),
@@ -680,7 +680,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -693,7 +693,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixF64,
         x: &mut types::VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dtrsv(
                 uplo.into(),
@@ -703,7 +703,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -716,7 +716,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixComplexF32,
         x: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ctrsv(
                 uplo.into(),
@@ -726,7 +726,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes inv(op(A)) x for x, where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans.
@@ -739,7 +739,7 @@ pub mod level2 {
         diag: enums::CblasDiag,
         A: &types::MatrixComplexF64,
         x: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ztrsv(
                 uplo.into(),
@@ -749,7 +749,7 @@ pub mod level2 {
                 x.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the symmetric matrix A.
@@ -763,7 +763,7 @@ pub mod level2 {
         x: &types::VectorF32,
         beta: f32,
         y: &mut types::VectorF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ssymv(
                 uplo.into(),
@@ -774,7 +774,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the symmetric matrix A.
@@ -788,7 +788,7 @@ pub mod level2 {
         x: &types::VectorF64,
         beta: f64,
         y: &mut types::VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dsymv(
                 uplo.into(),
@@ -799,7 +799,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the hermitian matrix A.
@@ -813,7 +813,7 @@ pub mod level2 {
         x: &types::VectorComplexF32,
         beta: &Complex<f32>,
         y: &mut types::VectorComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_chemv(
                 uplo.into(),
@@ -824,7 +824,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the matrix-vector product and sum y = \alpha A x + \beta y for the hermitian matrix A.
@@ -838,7 +838,7 @@ pub mod level2 {
         x: &types::VectorComplexF64,
         beta: &Complex<f64>,
         y: &mut types::VectorComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zhemv(
                 uplo.into(),
@@ -849,7 +849,7 @@ pub mod level2 {
                 y.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
@@ -859,7 +859,7 @@ pub mod level2 {
         x: &types::VectorF32,
         y: &types::VectorF32,
         A: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_sger(
                 alpha,
@@ -868,7 +868,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
@@ -878,7 +878,7 @@ pub mod level2 {
         x: &types::VectorF64,
         y: &types::VectorF64,
         A: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dger(
                 alpha,
@@ -887,7 +887,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
@@ -897,7 +897,7 @@ pub mod level2 {
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cgeru(
                 alpha.unwrap(),
@@ -906,7 +906,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the rank-1 update A = \alpha x y^T + A of the matrix A.
@@ -916,7 +916,7 @@ pub mod level2 {
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zgeru(
                 alpha.unwrap(),
@@ -925,7 +925,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the conjugate rank-1 update A = \alpha x y^H + A of the matrix A.
@@ -935,7 +935,7 @@ pub mod level2 {
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cgerc(
                 alpha.unwrap(),
@@ -944,7 +944,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the conjugate rank-1 update A = \alpha x y^H + A of the matrix A.
@@ -954,7 +954,7 @@ pub mod level2 {
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zgerc(
                 alpha.unwrap(),
@@ -963,7 +963,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the symmetric rank-1 update A = \alpha x x^T + A of the symmetric matrix A. Since the matrix A is symmetric only its upper half or lower half need to be stored.
@@ -974,10 +974,10 @@ pub mod level2 {
         alpha: f32,
         x: &types::VectorF32,
         A: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_blas_ssyr(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the symmetric rank-1 update A = \alpha x x^T + A of the symmetric matrix A. Since the matrix A is symmetric only its upper half or lower half need to be stored.
@@ -988,10 +988,10 @@ pub mod level2 {
         alpha: f64,
         x: &types::VectorF64,
         A: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_blas_dsyr(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the hermitian rank-1 update A = \alpha x x^H + A of the hermitian matrix A.
@@ -1004,10 +1004,10 @@ pub mod level2 {
         alpha: f32,
         x: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_blas_cher(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the hermitian rank-1 update A = \alpha x x^H + A of the hermitian matrix A.
@@ -1020,10 +1020,10 @@ pub mod level2 {
         alpha: f64,
         x: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_blas_zher(uplo.into(), alpha, x.unwrap_shared(), A.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the symmetric rank-2 update A = \alpha x y^T + \alpha y x^T + A of the symmetric matrix A.
@@ -1036,7 +1036,7 @@ pub mod level2 {
         x: &types::VectorF32,
         y: &types::VectorF32,
         A: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ssyr2(
                 uplo.into(),
@@ -1046,7 +1046,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the symmetric rank-2 update A = \alpha x y^T + \alpha y x^T + A of the symmetric matrix A.
@@ -1059,7 +1059,7 @@ pub mod level2 {
         x: &types::VectorF64,
         y: &types::VectorF64,
         A: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dsyr2(
                 uplo.into(),
@@ -1069,7 +1069,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the hermitian rank-2 update A = \alpha x y^H + \alpha^* y x^H + A of the hermitian matrix A.
@@ -1083,7 +1083,7 @@ pub mod level2 {
         x: &types::VectorComplexF32,
         y: &types::VectorComplexF32,
         A: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cher2(
                 uplo.into(),
@@ -1093,7 +1093,7 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the hermitian rank-2 update A = \alpha x y^H + \alpha^* y x^H + A of the hermitian matrix A.
@@ -1107,7 +1107,7 @@ pub mod level2 {
         x: &types::VectorComplexF64,
         y: &types::VectorComplexF64,
         A: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zher2(
                 uplo.into(),
@@ -1117,13 +1117,13 @@ pub mod level2 {
                 A.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
 pub mod level3 {
     use crate::ffi::FFI;
-    use crate::{complex::ToC, enums, types, Value};
+    use crate::{complex::ToC, enums, types, Error};
     use num_complex::Complex;
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
@@ -1136,7 +1136,7 @@ pub mod level3 {
         B: &types::MatrixF32,
         beta: f32,
         C: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_sgemm(
                 transA.into(),
@@ -1148,7 +1148,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
@@ -1161,7 +1161,7 @@ pub mod level3 {
         B: &types::MatrixF64,
         beta: f64,
         C: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dgemm(
                 transA.into(),
@@ -1173,7 +1173,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
@@ -1186,7 +1186,7 @@ pub mod level3 {
         B: &types::MatrixComplexF32,
         beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cgemm(
                 transA.into(),
@@ -1198,7 +1198,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha op(A) op(B) + \beta C where op(A) = A, A^T, A^H for TransA = CblasNoTrans, CblasTrans, CblasConjTrans and similarly for the parameter TransB.
@@ -1211,7 +1211,7 @@ pub mod level3 {
         B: &types::MatrixComplexF64,
         beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zgemm(
                 transA.into(),
@@ -1223,7 +1223,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
@@ -1237,7 +1237,7 @@ pub mod level3 {
         B: &types::MatrixF32,
         beta: f32,
         C: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ssymm(
                 side.into(),
@@ -1249,7 +1249,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
@@ -1263,7 +1263,7 @@ pub mod level3 {
         B: &types::MatrixF64,
         beta: f64,
         C: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dsymm(
                 side.into(),
@@ -1275,7 +1275,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
@@ -1289,7 +1289,7 @@ pub mod level3 {
         B: &types::MatrixComplexF32,
         beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_csymm(
                 side.into(),
@@ -1301,7 +1301,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is symmetric.
@@ -1315,7 +1315,7 @@ pub mod level3 {
         B: &types::MatrixComplexF64,
         beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zsymm(
                 side.into(),
@@ -1327,7 +1327,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is Left and C = \alpha B A + \beta C for Side is Right, where the matrix A is hermitian.
@@ -1342,7 +1342,7 @@ pub mod level3 {
         B: &types::MatrixComplexF32,
         beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_chemm(
                 side.into(),
@@ -1354,7 +1354,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product and sum C = \alpha A B + \beta C for Side is CblasLeft and C = \alpha B A + \beta C for Side is CblasRight, where the matrix A is hermitian.
@@ -1369,7 +1369,7 @@ pub mod level3 {
         B: &types::MatrixComplexF64,
         beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zhemm(
                 side.into(),
@@ -1381,7 +1381,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
@@ -1397,7 +1397,7 @@ pub mod level3 {
         alpha: f32,
         A: &types::MatrixF32,
         B: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_strmm(
                 side.into(),
@@ -1409,7 +1409,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
@@ -1425,7 +1425,7 @@ pub mod level3 {
         alpha: f64,
         A: &types::MatrixF64,
         B: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dtrmm(
                 side.into(),
@@ -1437,7 +1437,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
@@ -1453,7 +1453,7 @@ pub mod level3 {
         alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ctrmm(
                 side.into(),
@@ -1465,7 +1465,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the matrix-matrix product B = \alpha op(A) B for Side is Left and B = \alpha B op(A) for Side is CblasRight.
@@ -1481,7 +1481,7 @@ pub mod level3 {
         alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ztrmm(
                 side.into(),
@@ -1493,7 +1493,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
@@ -1509,7 +1509,7 @@ pub mod level3 {
         alpha: f32,
         A: &types::MatrixF32,
         B: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_strsm(
                 side.into(),
@@ -1521,7 +1521,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
@@ -1537,7 +1537,7 @@ pub mod level3 {
         alpha: f64,
         A: &types::MatrixF64,
         B: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dtrsm(
                 side.into(),
@@ -1549,7 +1549,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
@@ -1565,7 +1565,7 @@ pub mod level3 {
         alpha: &Complex<f32>,
         A: &types::MatrixComplexF32,
         B: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ctrsm(
                 side.into(),
@@ -1577,7 +1577,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the inverse-matrix matrix product B = \alpha op(inv(A))B for Side is Left and B = \alpha B op(inv(A)) for Side is Right.
@@ -1593,7 +1593,7 @@ pub mod level3 {
         alpha: &Complex<f64>,
         A: &types::MatrixComplexF64,
         B: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ztrsm(
                 side.into(),
@@ -1605,7 +1605,7 @@ pub mod level3 {
                 B.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
@@ -1619,7 +1619,7 @@ pub mod level3 {
         A: &types::MatrixF32,
         beta: f32,
         C: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ssyrk(
                 uplo.into(),
@@ -1630,7 +1630,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
@@ -1644,7 +1644,7 @@ pub mod level3 {
         A: &types::MatrixF64,
         beta: f64,
         C: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dsyrk(
                 uplo.into(),
@@ -1655,7 +1655,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
@@ -1669,7 +1669,7 @@ pub mod level3 {
         A: &types::MatrixComplexF32,
         beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_csyrk(
                 uplo.into(),
@@ -1680,7 +1680,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-k update of the symmetric matrix C, C = \alpha A A^T + \beta C when Trans is NoTrans and C = \alpha A^T A + \beta C when Trans is Trans.
@@ -1694,7 +1694,7 @@ pub mod level3 {
         A: &types::MatrixComplexF64,
         beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zsyrk(
                 uplo.into(),
@@ -1705,7 +1705,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute a rank-k update of the hermitian matrix C, C = \alpha A A^H + \beta C when Trans is NoTrans and C = \alpha A^H A + \beta C when Trans is ConjTrans.
@@ -1720,7 +1720,7 @@ pub mod level3 {
         A: &types::MatrixComplexF32,
         beta: f32,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cherk(
                 uplo.into(),
@@ -1731,7 +1731,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute a rank-k update of the hermitian matrix C, C = \alpha A A^H + \beta C when Trans is NoTrans and C = \alpha A^H A + \beta C when Trans is ConjTrans.
@@ -1746,7 +1746,7 @@ pub mod level3 {
         A: &types::MatrixComplexF64,
         beta: f64,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zherk(
                 uplo.into(),
@@ -1757,7 +1757,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
@@ -1772,7 +1772,7 @@ pub mod level3 {
         B: &types::MatrixF32,
         beta: f32,
         C: &mut types::MatrixF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_ssyr2k(
                 uplo.into(),
@@ -1784,7 +1784,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
@@ -1799,7 +1799,7 @@ pub mod level3 {
         B: &types::MatrixF64,
         beta: f64,
         C: &mut types::MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_dsyr2k(
                 uplo.into(),
@@ -1811,7 +1811,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
@@ -1826,7 +1826,7 @@ pub mod level3 {
         B: &types::MatrixComplexF32,
         beta: &Complex<f32>,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_csyr2k(
                 uplo.into(),
@@ -1838,7 +1838,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-2k update of the symmetric matrix C, C = \alpha A B^T + \alpha B A^T + \beta C when Trans is NoTrans and C = \alpha A^T B + \alpha B^T A + \beta C when Trans is Trans.
@@ -1853,7 +1853,7 @@ pub mod level3 {
         B: &types::MatrixComplexF64,
         beta: &Complex<f64>,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zsyr2k(
                 uplo.into(),
@@ -1865,7 +1865,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-2k update of the hermitian matrix C, C = \alpha A B^H + \alpha^* B A^H + \beta C when Trans is NoTrans and C = \alpha A^H B + \alpha^* B^H A + \beta C when Trans is ConjTrans.
@@ -1881,7 +1881,7 @@ pub mod level3 {
         B: &types::MatrixComplexF32,
         beta: f32,
         C: &mut types::MatrixComplexF32,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_cher2k(
                 uplo.into(),
@@ -1893,7 +1893,7 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a rank-2k update of the hermitian matrix C, C = \alpha A B^H + \alpha^* B A^H + \beta C when Trans is NoTrans and C = \alpha A^H B + \alpha^* B^H A + \beta C when Trans is ConjTrans.
@@ -1909,7 +1909,7 @@ pub mod level3 {
         B: &types::MatrixComplexF64,
         beta: f64,
         C: &mut types::MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_blas_zher2k(
                 uplo.into(),
@@ -1921,6 +1921,6 @@ pub mod level3 {
                 C.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }

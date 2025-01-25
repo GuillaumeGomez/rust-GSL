@@ -214,7 +214,7 @@ int main(void) {
 */
 
 use crate::ffi::{self, FFI};
-use crate::{Value, VectorF64, View};
+use crate::{Error, MatrixF64, VectorF64, View};
 use std::os::raw::{c_int, c_void};
 
 ffi_wrapper!(MultiFitFSolverType, *mut sys::gsl_multifit_fsolver_type);
@@ -241,7 +241,7 @@ impl MultiFitFSolver {
     /// parameters p.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
-    /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    /// pointer and the error handler is invoked with an error code of `Error::NoMemory`.
     #[doc(alias = "gsl_multifit_fsolver_alloc")]
     pub fn new(t: &MultiFitFSolverType, n: usize, p: usize) -> Option<MultiFitFSolver> {
         let tmp = unsafe { sys::gsl_multifit_fsolver_alloc(t.unwrap_shared(), n, p) };
@@ -255,7 +255,7 @@ impl MultiFitFSolver {
 
     #[doc(alias = "gsl_multifit_fsolver_set")]
     #[allow(unknown_lints, clippy::needless_pass_by_ref_mut)]
-    pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> Result<(), Value> {
+    pub fn set(&mut self, f: &mut MultiFitFunction, x: &mut VectorF64) -> Result<(), Error> {
         // unsafe {
         //     let func = (*self.0).function;
         //     if !func.is_null() {
@@ -265,13 +265,13 @@ impl MultiFitFSolver {
         let ret = unsafe {
             sys::gsl_multifit_fsolver_set(self.unwrap_unique(), &mut f.0, x.unwrap_shared())
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_fsolver_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multifit_fsolver_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_fsolver_name")]
@@ -312,11 +312,11 @@ impl MultiFitFdfSolver {
     /// This function initializes, or reinitializes, an existing solver s to use the function f and
     /// the initial guess x.
     #[doc(alias = "gsl_multifit_fdfsolver_set")]
-    pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &VectorF64) -> Result<(), Value> {
+    pub fn set(&mut self, f: &mut MultiFitFunctionFdf, x: &VectorF64) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_fdfsolver_set(self.unwrap_unique(), f.to_raw(), x.unwrap_shared())
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     pub fn x(&self) -> View<'_, VectorF64> {
@@ -352,9 +352,9 @@ impl MultiFitFdfSolver {
     /// unexpected problem then an error code will be returned. The solver maintains a current
     /// estimate of the best-fit parameters at all times.
     #[doc(alias = "gsl_multifit_fdfsolver_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multifit_fdfsolver_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the current position (i.e. best-fit parameters) s->x of the solver s.
@@ -369,8 +369,8 @@ impl MultiFitFdfSolver {
     // checker:ignore
     #[allow(unused_assignments)]
     #[doc(alias = "gsl_multifit_test_delta")]
-    pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> Result<(), Value> {
-        let mut status = Value::Failure;
+    pub fn driver(&mut self, max_iter: usize, epsabs: f64, epsrel: f64) -> Result<(), Error> {
+        let mut status = sys::GSL_FAILURE;
         let ptr = self.unwrap_shared();
 
         if !ptr.is_null() {
@@ -379,21 +379,15 @@ impl MultiFitFdfSolver {
                 self.iterate()?;
 
                 /* test for convergence */
-                status = Value::from(unsafe {
-                    sys::gsl_multifit_test_delta((*ptr).dx, (*ptr).x, epsabs, epsrel)
-                });
+                status =
+                    unsafe { sys::gsl_multifit_test_delta((*ptr).dx, (*ptr).x, epsabs, epsrel) };
                 iter += 1;
-                if status != Value::Continue || iter >= max_iter {
+                if status != sys::GSL_CONTINUE || iter >= max_iter {
                     break;
                 }
             }
         }
-
-        if status != Value::Success {
-            Err(status)
-        } else {
-            Ok(())
-        }
+        Error::handle(status, ())
     }
 }
 
@@ -415,9 +409,9 @@ impl MultiFitFdfSolverType {
 }
 
 pub struct MultiFitFunctionFdf {
-    pub f: Option<Box<dyn Fn(crate::VectorF64, crate::VectorF64) -> Value>>,
-    pub df: Option<Box<dyn Fn(crate::VectorF64, crate::MatrixF64) -> Value>>,
-    pub fdf: Option<Box<dyn Fn(crate::VectorF64, crate::VectorF64, crate::MatrixF64) -> Value>>,
+    pub f: Option<Box<dyn Fn(VectorF64, VectorF64) -> Result<(), Error>>>,
+    pub df: Option<Box<dyn Fn(VectorF64, MatrixF64) -> Result<(), Error>>>,
+    pub fdf: Option<Box<dyn Fn(VectorF64, VectorF64, MatrixF64) -> Result<(), Error>>>,
     pub n: usize,
     pub p: usize,
     intern: sys::gsl_multifit_function_fdf,
@@ -460,15 +454,14 @@ unsafe extern "C" fn f(
     pf: *mut sys::gsl_vector,
 ) -> c_int {
     let t = params as *mut MultiFitFunctionFdf;
-    if let Some(ref i_f) = (*t).f {
+    Error::to_c(if let Some(ref i_f) = (*t).f {
         i_f(
             ffi::FFI::soft_wrap(x as usize as *mut _),
             ffi::FFI::soft_wrap(pf),
         )
-        .into()
     } else {
-        Value::Success.into()
-    }
+        Ok(())
+    })
 }
 
 unsafe extern "C" fn df(
@@ -477,15 +470,14 @@ unsafe extern "C" fn df(
     pdf: *mut sys::gsl_matrix,
 ) -> c_int {
     let t = params as *mut MultiFitFunctionFdf;
-    if let Some(ref i_df) = (*t).df {
+    Error::to_c(if let Some(ref i_df) = (*t).df {
         i_df(
             ffi::FFI::soft_wrap(x as usize as *mut _),
             ffi::FFI::soft_wrap(pdf),
         )
-        .into()
     } else {
-        Value::Success.into()
-    }
+        Ok(())
+    })
 }
 
 unsafe extern "C" fn fdf(
@@ -495,14 +487,13 @@ unsafe extern "C" fn fdf(
     pdf: *mut sys::gsl_matrix,
 ) -> c_int {
     let t = params as *mut MultiFitFunctionFdf;
-    if let Some(ref i_fdf) = (*t).fdf {
+    Error::to_c(if let Some(ref i_fdf) = (*t).fdf {
         i_fdf(
             ffi::FFI::soft_wrap(x as usize as *mut _),
             ffi::FFI::soft_wrap(pf),
             ffi::FFI::soft_wrap(pdf),
         )
-        .into()
     } else {
-        Value::Success.into()
-    }
+        Ok(())
+    })
 }

@@ -12,7 +12,7 @@ Multisets are useful, for example, when iterating over the indices of a k-th ord
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use std::io;
 
 ffi_wrapper!(MultiSet, *mut sys::gsl_multiset, gsl_multiset_free);
@@ -65,9 +65,9 @@ impl MultiSet {
     /// This function copies the elements of the multiset `self` into the multiset dest. The two
     /// multisets must have the same size.
     #[doc(alias = "gsl_multiset_memcpy")]
-    pub fn copy(&self, dest: &mut MultiSet) -> Result<(), Value> {
+    pub fn copy(&self, dest: &mut MultiSet) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multiset_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the value of the i-th element of the multiset c. If i lies outside the
@@ -113,31 +113,32 @@ impl MultiSet {
     ///
     /// Returns `OK(())` if valid.
     #[doc(alias = "gsl_multiset_valid")]
-    pub fn valid(&self) -> Result<(), Value> {
+    pub fn valid(&self) -> Result<(), Error> {
         // Little trick here: the function is expecting a mutable pointer whereas it doesn't need
         // to be...
         let ret = unsafe { sys::gsl_multiset_valid(self.inner) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function advances the multiset self to the next multiset element in lexicographic order
     /// and returns `Ok(())`. If no further multisets elements are available it returns
-    /// [`Err(Value::Failure)`](Value::Failure) and leaves self unmodified. Starting with the first
+    /// [`Err(Error::Failure)`](Error::Failure) and leaves self unmodified. Starting with the first
     /// multiset and repeatedly applying this function will iterate through all possible multisets
     /// of a given order.
     #[doc(alias = "gsl_multiset_next")]
-    pub fn next(&mut self) -> Result<(), Value> {
+    pub fn next(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multiset_next(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
-    /// This function steps backwards from the multiset self to the previous multiset element in
-    /// lexicographic order, returning [`Value::Success`]. If no previous multiset is available it
-    /// returns [`Value::Failure`] and leaves self unmodified.
+    /// This function steps backwards from the multiset self to the
+    /// previous multiset element in lexicographic order, returning
+    /// [`Ok(())`].  If no previous multiset is available it returns
+    /// [`Error::Failure`] and leaves self unmodified.
     #[doc(alias = "gsl_multiset_prev")]
-    pub fn prev(&mut self) -> Result<(), Value> {
+    pub fn prev(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multiset_prev(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     pub fn print<W: io::Write>(&self, writer: &mut W) -> io::Result<()> {

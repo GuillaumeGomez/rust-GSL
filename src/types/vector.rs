@@ -31,7 +31,7 @@ vector.
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use std::{
     fmt::{self, Debug, Formatter},
     marker::PhantomData,
@@ -214,13 +214,13 @@ pub(crate) fn stride<F, T: Vector<F> + ?Sized>(x: &T) -> i32 {
 }
 
 #[inline]
-pub(crate) fn check_equal_len<T1, T2, F>(x: &T1, y: &T2) -> Result<(), Value>
+pub(crate) fn check_equal_len<T1, T2, F>(x: &T1, y: &T2) -> Result<(), Error>
 where
     T1: Vector<F> + ?Sized,
     T2: Vector<F> + ?Sized,
 {
     if T1::len(x) != T2::len(y) {
-        return Err(Value::Invalid);
+        return Err(Error::Invalid);
     }
     Ok(())
 }
@@ -379,93 +379,93 @@ impl $rust_name {
     /// This function copies the elements of the other vector into the self vector. The two vectors
     /// must have the same length.
     #[doc(alias = $name _memcpy)]
-    pub fn copy_from(&mut self, other: &$rust_name) -> Result<(), Value> {
+    pub fn copy_from(&mut self, other: &$rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _memcpy>](
                 self.unwrap_unique(),
                 other.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function copies the elements of the self vector into the other vector. The two vectors
     /// must have the same length.
     #[doc(alias = $name _memcpy)]
-    pub fn copy_to(&self, other: &mut $rust_name) -> Result<(), Value> {
+    pub fn copy_to(&self, other: &mut $rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _memcpy>](other.unwrap_unique(), self.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function exchanges the elements of the vectors by copying. The two vectors must have
     /// the same length.
     #[doc(alias = $name _swap)]
-    pub fn swap(&mut self, other: &mut $rust_name) -> Result<(), Value> {
+    pub fn swap(&mut self, other: &mut $rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _swap>](other.unwrap_unique(), self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function exchanges the i-th and j-th elements of the vector v in-place.
     #[doc(alias = $name _swap_elements)]
-    pub fn swap_elements(&mut self, i: usize, j: usize) -> Result<(), Value> {
+    pub fn swap_elements(&mut self, i: usize, j: usize) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _swap_elements>](self.unwrap_unique(), i, j) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function reverses the order of the elements of the vector v.
     #[doc(alias = $name _reverse)]
-    pub fn reverse(&mut self) -> Result<(), Value> {
+    pub fn reverse(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _reverse>](self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function adds the elements of the other vector to the elements of the self vector.
     /// The result a_i <- a_i + b_i is stored in self and other remains unchanged. The two vectors
     /// must have the same length.
     #[doc(alias = $name _add)]
-    pub fn add(&mut self, other: &$rust_name) -> Result<(), Value> {
+    pub fn add(&mut self, other: &$rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _add>](self.unwrap_unique(), other.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function subtracts the elements of the self vector from the elements of the other
     /// vector. The result a_i <- a_i - b_i is stored in self and other remains unchanged. The two
     /// vectors must have the same length.
     #[doc(alias = $name _sub)]
-    pub fn sub(&mut self, other: &$rust_name) -> Result<(), Value> {
+    pub fn sub(&mut self, other: &$rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _sub>](self.unwrap_unique(), other.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function multiplies the elements of the self vector a by the elements of the other
     /// vector. The result `a_i <- a_i * b_i` is stored in self and other remains unchanged. The two
     /// vectors must have the same length.
     #[doc(alias = $name _mul)]
-    pub fn mul(&mut self, other: &$rust_name) -> Result<(), Value> {
+    pub fn mul(&mut self, other: &$rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _mul>](self.unwrap_unique(), other.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function divides the elements of the self vector by the elements of the other vector.
     /// The result `a_i <- a_i / b_i` is stored in self and other remains unchanged. The two vectors
     /// must have the same length.
     #[doc(alias = $name _div)]
-    pub fn div(&mut self, other: &$rust_name) -> Result<(), Value> {
+    pub fn div(&mut self, other: &$rust_name) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _div>](self.unwrap_unique(), other.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function multiplies the elements of the self vector by the constant factor x. The
     /// result `a_i <- a_i` is stored in `self`.
     #[doc(alias = $name _scale)]
-    pub fn scale(&mut self, x: $rust_ty) -> Result<(), Value> {
+    pub fn scale(&mut self, x: $rust_ty) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _scale>](self.unwrap_unique(), x) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function adds the constant value x to the elements of the self vector. The result
     /// `a_i <- a_i + x` is stored in `self`.
     #[doc(alias = $name _add_constant)]
-    pub fn add_constant(&mut self, x: $rust_ty) -> Result<(), Value> {
+    pub fn add_constant(&mut self, x: $rust_ty) -> Result<(), Error> {
         let ret = unsafe { sys::[<$name _add_constant>](self.unwrap_unique(), x) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the maximum value in the self vector.

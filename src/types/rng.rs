@@ -71,7 +71,7 @@ Thanks to Makoto Matsumoto, Takuji Nishimura and Yoshiharu Kurita for making the
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use std::os::raw::c_ulong;
 
 ffi_wrapper!(Rng, *mut sys::gsl_rng, gsl_rng_free);
@@ -209,9 +209,9 @@ impl Rng {
 
     /// This function copies the random number generator src into the pre-existing generator dest, making dest into an exact copy of src. The two generators must be of the same type.
     #[doc(alias = "gsl_rng_memcpy")]
-    pub fn copy(&self, other: &mut Rng) -> Result<(), Value> {
+    pub fn copy(&self, other: &mut Rng) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_rng_memcpy(other.unwrap_unique(), self.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the size of the state of generator r. You can use this information to access the state directly. For example, the following code will write the state of a generator to a stream,
@@ -277,7 +277,7 @@ impl Rng {
     /// gsl_ran_choose (r, a, 3, b, 100, sizeof (double));
     /// ```
     #[doc(alias = "gsl_ran_choose")]
-    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> Result<(), Value> {
+    pub fn choose<T>(&mut self, src: &[T], dest: &mut [T]) -> Result<(), Error> {
         assert!(src.len() <= dest.len());
         let ret = unsafe {
             sys::gsl_ran_choose(
@@ -289,7 +289,7 @@ impl Rng {
                 std::mem::size_of::<T>() as _,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is like gsl_ran_choose but samples k items from the original array of n items src with replacement, so the same object can appear more

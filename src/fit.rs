@@ -10,7 +10,7 @@ The functions described in this section can be used to perform least-squares fit
 
 use crate::{
     vector::{check_equal_len, Vector},
-    Value,
+    Error,
 };
 
 /// This function computes the best-fit linear regression coefficients
@@ -37,10 +37,10 @@ use crate::{
 /// let (c0, c1, _, _, _, _) = fit::linear(&[0., 1.], &[0., 1.])?;
 /// assert_eq!(c0, 0.);
 /// assert_eq!(c1, 1.);
-/// # Ok::<(), rgsl::Value>(())
+/// # Ok::<(), rgsl::Error>(())
 /// ```
 #[doc(alias = "gsl_fit_linear")]
-pub fn linear<T>(x: &T, y: &T) -> Result<(f64, f64, f64, f64, f64, f64), Value>
+pub fn linear<T>(x: &T, y: &T) -> Result<(f64, f64, f64, f64, f64, f64), Error>
 where
     T: Vector<f64> + ?Sized,
 {
@@ -66,7 +66,7 @@ where
             &mut sumsq,
         )
     };
-    result_handler!(ret, (c0, c1, cov00, cov01, cov11, sumsq))
+    Error::handle(ret, (c0, c1, cov00, cov01, cov11, sumsq))
 }
 
 /// This function computes the best-fit linear regression coefficients
@@ -88,7 +88,7 @@ pub fn wlinear<T: Vector<f64> + ?Sized>(
     x: &T,
     w: &T,
     y: &T,
-) -> Result<(f64, f64, f64, f64, f64, f64), Value> {
+) -> Result<(f64, f64, f64, f64, f64, f64), Error> {
     check_equal_len(x, y)?;
     check_equal_len(x, w)?;
     let mut c0 = 0.;
@@ -114,7 +114,7 @@ pub fn wlinear<T: Vector<f64> + ?Sized>(
             &mut chisq,
         )
     };
-    result_handler!(ret, (c0, c1, cov00, cov01, cov11, chisq))
+    Error::handle(ret, (c0, c1, cov00, cov01, cov11, chisq))
 }
 
 /// This function uses the best-fit linear regression coefficients c0, c1 and their covariance
@@ -130,12 +130,12 @@ pub fn linear_est(
     cov00: f64,
     cov01: f64,
     cov11: f64,
-) -> Result<(f64, f64), Value> {
+) -> Result<(f64, f64), Error> {
     let mut y = 0.;
     let mut y_err = 0.;
     let ret =
         unsafe { sys::gsl_fit_linear_est(x, c0, c1, cov00, cov01, cov11, &mut y, &mut y_err) };
-    result_handler!(ret, (y, y_err))
+    Error::handle(ret, (y, y_err))
 }
 
 /// This function computes the best-fit linear regression coefficient c1 of the model Y = c_1 X for
@@ -146,7 +146,7 @@ pub fn linear_est(
 ///
 /// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_mul")]
-pub fn mul<T: Vector<f64> + ?Sized>(x: &T, y: &T) -> Result<(f64, f64, f64), Value> {
+pub fn mul<T: Vector<f64> + ?Sized>(x: &T, y: &T) -> Result<(f64, f64, f64), Error> {
     check_equal_len(x, y)?;
     let mut c1 = 0.;
     let mut cov11 = 0.;
@@ -163,12 +163,12 @@ pub fn mul<T: Vector<f64> + ?Sized>(x: &T, y: &T) -> Result<(f64, f64, f64), Val
             &mut sumsq,
         )
     };
-    result_handler!(ret, (c1, cov11, sumsq))
+    Error::handle(ret, (c1, cov11, sumsq))
 }
 
 /// Returns `(c1, cov11, sumsq)`.
 #[doc(alias = "gsl_fit_wmul")]
-pub fn wmul<T: Vector<f64> + ?Sized>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f64), Value> {
+pub fn wmul<T: Vector<f64> + ?Sized>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f64), Error> {
     check_equal_len(x, y)?;
     check_equal_len(x, w)?;
     let mut c1 = 0.;
@@ -188,7 +188,7 @@ pub fn wmul<T: Vector<f64> + ?Sized>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f
             &mut sumsq,
         )
     };
-    result_handler!(ret, (c1, cov11, sumsq))
+    Error::handle(ret, (c1, cov11, sumsq))
 }
 
 /// This function uses the best-fit linear regression coefficient c1 and its covariance cov11 to
@@ -197,9 +197,9 @@ pub fn wmul<T: Vector<f64> + ?Sized>(x: &T, w: &T, y: &T) -> Result<(f64, f64, f
 ///
 /// Returns `(y, y_err)`.
 #[doc(alias = "gsl_fit_mul_est")]
-pub fn mul_est(x: f64, c1: f64, cov11: f64) -> Result<(f64, f64), Value> {
+pub fn mul_est(x: f64, c1: f64, cov11: f64) -> Result<(f64, f64), Error> {
     let mut y = 0.;
     let mut y_err = 0.;
     let ret = unsafe { sys::gsl_fit_mul_est(x, c1, cov11, &mut y, &mut y_err) };
-    result_handler!(ret, (y, y_err))
+    Error::handle(ret, (y, y_err))
 }

@@ -3,7 +3,7 @@
 //
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(
     RStatQuantileWorkspace,
@@ -25,15 +25,15 @@ impl RStatQuantileWorkspace {
     #[cfg(feature = "v2_2")]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_2")))]
     #[doc(alias = "gsl_rstat_quantile_reset")]
-    pub fn reset(&mut self) -> Result<(), Value> {
+    pub fn reset(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_rstat_quantile_reset(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_rstat_quantile_add")]
-    pub fn add(&mut self, x: f64) -> Result<(), Value> {
+    pub fn add(&mut self, x: f64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_rstat_quantile_add(x, self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_rstat_quantile_get")]
@@ -65,9 +65,9 @@ impl RStatWorkspace {
     }
 
     #[doc(alias = "gsl_rstat_add")]
-    pub fn add(&mut self, x: f64) -> Result<(), Value> {
+    pub fn add(&mut self, x: f64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_rstat_add(x, self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_rstat_min")]
@@ -123,8 +123,8 @@ impl RStatWorkspace {
     }
 
     #[doc(alias = "gsl_rstat_reset")]
-    pub fn reset(&mut self) -> Result<(), Value> {
+    pub fn reset(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_rstat_reset(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }

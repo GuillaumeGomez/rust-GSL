@@ -1,7 +1,8 @@
 [package]
 name = "GSL"
 version = "7.0.0"
-authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
+authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>",
+	   "Christophe Troestler <Christophe.Troestler@umons.ac.be>"]
 description = "A rust binding for the GSL (the GNU scientific library)"
 repository = "https://github.com/GuillaumeGomez/rust-GSL"
 documentation = "https://docs.rs/crate/GSL/"

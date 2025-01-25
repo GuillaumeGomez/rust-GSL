@@ -28,7 +28,7 @@ R. L. Burden and J. D. Faires, Numerical Analysis, 9th edition, ISBN 0-538-73351
 pub mod evaluation {
     use crate::{
         types::complex::{FromC, ToC},
-        Value,
+        Error,
     };
     use num_complex::Complex;
 
@@ -61,7 +61,7 @@ pub mod evaluation {
     /// This function evaluates a polynomial and its derivatives storing the results in the array res of size lenres. The output array contains
     /// the values of d^k P/d x^k for the specified value of x starting with k = 0.
     #[doc(alias = "gsl_poly_eval_derivs")]
-    pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> Result<(), Value> {
+    pub fn poly_eval_derivs(c: &[f64], x: f64, res: &mut [f64]) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_poly_eval_derivs(
                 c.as_ptr(),
@@ -71,7 +71,7 @@ pub mod evaluation {
                 res.len() as _,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -92,17 +92,17 @@ pub mod evaluation {
 /// where the elements of z = \{x_0,x_0,x_1,x_1,...,x_n,x_n\} are defined by z_{2k} = z_{2k+1} = x_k. The divided-differences [z_0,z_1,...,z_k]
 /// are discussed in Burden and Faires, section 3.4.
 pub mod divided_difference_representation {
-    use crate::Value;
+    use crate::Error;
 
     /// This function computes a divided-difference representation of the interpolating polynomial for the points (x, y) stored in the arrays
     /// xa and ya of length size. On output the divided-differences of (xa,ya) are stored in the array dd, also of length size. Using the
     /// notation above, `dd[k] = [x_0,x_1,...,x_k]`.
     #[doc(alias = "gsl_poly_dd_init")]
-    pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> Result<(), Value> {
+    pub fn poly_dd_init(dd: &mut [f64], xa: &[f64], ya: &[f64]) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_poly_dd_init(dd.as_mut_ptr(), xa.as_ptr(), ya.as_ptr(), dd.len() as _)
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function evaluates the polynomial stored in divided-difference form in the arrays dd and xa of length size at the point x.
@@ -121,7 +121,7 @@ pub mod divided_difference_representation {
         dd: &[f64],
         xa: &[f64],
         w: &mut [f64],
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_poly_dd_taylor(
                 c.as_mut_ptr(),
@@ -132,7 +132,7 @@ pub mod divided_difference_representation {
                 w.as_mut_ptr(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes a divided-difference representation of the interpolating Hermite polynomial for the points (x, y) stored in the
@@ -148,7 +148,7 @@ pub mod divided_difference_representation {
         xa: &[f64],
         ya: &[f64],
         dya: &[f64],
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_poly_dd_hermite_init(
                 dd.as_mut_ptr(),
@@ -159,12 +159,12 @@ pub mod divided_difference_representation {
                 dd.len() as _,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
 pub mod quadratic_equations {
-    use crate::Value;
+    use crate::Error;
     use num_complex::Complex;
     use std::mem::transmute;
 
@@ -187,11 +187,11 @@ pub mod quadratic_equations {
     ///
     /// Returns `(x0, x1)`.
     #[doc(alias = "gsl_poly_solve_quadratic")]
-    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> Result<(f64, f64), Value> {
+    pub fn poly_solve_quadratic(a: f64, b: f64, c: f64) -> Result<(f64, f64), Error> {
         let mut x0 = 0.;
         let mut x1 = 0.;
         let ret = unsafe { sys::gsl_poly_solve_quadratic(a, b, c, &mut x0, &mut x1) };
-        result_handler!(ret, (x0, x1))
+        Error::handle(ret, (x0, x1))
     }
 
     /// This function finds the complex roots of the quadratic equation,
@@ -209,15 +209,15 @@ pub mod quadratic_equations {
         c: f64,
         z0: &mut Complex<f64>,
         z1: &mut Complex<f64>,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_poly_complex_solve_quadratic(a, b, c, transmute(z0), transmute(z1)) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
 pub mod cubic_equations {
-    use crate::Value;
+    use crate::Error;
     use num_complex::Complex;
     use std::mem::transmute;
 
@@ -235,12 +235,12 @@ pub mod cubic_equations {
     ///
     /// Returns `(x0, x1, x2)`.
     #[doc(alias = "gsl_poly_solve_cubic")]
-    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> Result<(f64, f64, f64), Value> {
+    pub fn poly_solve_cubic(a: f64, b: f64, c: f64) -> Result<(f64, f64, f64), Error> {
         let mut x0 = 0.;
         let mut x1 = 0.;
         let mut x2 = 0.;
         let ret = unsafe { sys::gsl_poly_solve_cubic(a, b, c, &mut x0, &mut x1, &mut x2) };
-        result_handler!(ret, (x0, x1, x2))
+        Error::handle(ret, (x0, x1, x2))
     }
 
     /// This function finds the complex roots of the cubic equation,
@@ -259,10 +259,10 @@ pub mod cubic_equations {
         z0: &mut Complex<f64>,
         z1: &mut Complex<f64>,
         z2: &mut Complex<f64>,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_poly_complex_solve_cubic(a, b, c, transmute(z0), transmute(z1), transmute(z2))
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }

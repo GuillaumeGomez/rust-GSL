@@ -3,7 +3,7 @@
 //
 
 use crate::ffi::FFI;
-use crate::{FilterEnd, FilterScale, Value, VectorF64, VectorI32};
+use crate::{Error, FilterEnd, FilterScale, VectorF64, VectorI32};
 
 ffi_wrapper!(
     FilterGaussianWorkspace,
@@ -35,7 +35,7 @@ impl FilterGaussianWorkspace {
         order: usize,
         x: &VectorF64,
         y: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_filter_gaussian(
                 endtype.into(),
@@ -46,7 +46,7 @@ impl FilterGaussianWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -73,7 +73,7 @@ impl FilterMedianWorkspace {
         endtype: FilterEnd,
         x: &VectorF64,
         y: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_filter_median(
                 endtype.into(),
@@ -82,7 +82,7 @@ impl FilterMedianWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -109,7 +109,7 @@ impl FilterRMedianWorkspace {
         endtype: FilterEnd,
         x: &VectorF64,
         y: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_filter_rmedian(
                 endtype.into(),
@@ -118,7 +118,7 @@ impl FilterRMedianWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -151,7 +151,7 @@ impl FilterImpulseWorkspace {
         xmedian: &mut VectorF64,
         xsigma: &mut VectorF64,
         ioutlier: &mut VectorI32,
-    ) -> Result<usize, Value> {
+    ) -> Result<usize, Error> {
         let mut noutlier = 0;
         let ret = unsafe {
             sys::gsl_filter_impulse(
@@ -167,6 +167,6 @@ impl FilterImpulseWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, noutlier)
+        Error::handle(ret, noutlier)
     }
 }

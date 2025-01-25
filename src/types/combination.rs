@@ -19,7 +19,7 @@ Donald L. Kreher, Douglas R. Stinson, Combinatorial Algorithms: Generation, Enum
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use std::fmt::{self, Debug, Formatter};
 
 ffi_wrapper!(Combination, *mut sys::gsl_combination, gsl_combination_free);
@@ -72,10 +72,10 @@ impl Combination {
     /// This function copies the elements of the combination self into the combination dest. The two
     /// combinations must have the same size.
     #[doc(alias = "gsl_combination_memcpy")]
-    pub fn copy(&self, dest: &mut Combination) -> Result<(), Value> {
+    pub fn copy(&self, dest: &mut Combination) -> Result<(), Error> {
         let ret =
             unsafe { sys::gsl_combination_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the value of the i-th element of the combination self. If i lies
@@ -127,10 +127,10 @@ impl Combination {
     /// range 0 to n-1, with each value occurring once at most and in increasing order.
     // checker:ignore
     #[doc(alias = "gsl_combination_valid")]
-    pub fn is_valid(&self) -> Result<(), Value> {
+    pub fn is_valid(&self) -> Result<(), Error> {
         // Little hack because `gsl_combination_valid` doesn't in fact need a mutable object...
         let ret = unsafe { sys::gsl_combination_valid(self.inner) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function advances the combination self to the next combination in lexicographic order
@@ -138,18 +138,18 @@ impl Combination {
     /// leaves self unmodified. Starting with the first combination and repeatedly applying this
     /// function will iterate through all possible combinations of a given order.
     #[doc(alias = "gsl_combination_next")]
-    pub fn next(&mut self) -> Result<(), Value> {
+    pub fn next(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_combination_next(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function steps backwards from the combination self to the previous combination in
     /// lexicographic order, returning `Success`. If no previous combination is available it returns
     /// `Failure` and leaves self unmodified.
     #[doc(alias = "gsl_combination_prev")]
-    pub fn prev(&mut self) -> Result<(), Value> {
+    pub fn prev(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_combination_prev(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 

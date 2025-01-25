@@ -67,7 +67,7 @@ You must provide a parametric function of n variables for the minimizers to oper
 */
 
 use crate::ffi::FFI;
-use crate::{Value, VectorF64, View};
+use crate::{Error, VectorF64, View};
 use sys::libc::c_void;
 
 ffi_wrapper!(
@@ -102,7 +102,7 @@ impl<'a> Minimizer<'a> {
         f: F,
         x: &VectorF64,
         step_size: &VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         unsafe extern "C" fn inner_f<F: Fn(&VectorF64) -> f64>(
             x: *const sys::gsl_vector,
             params: *mut c_void,
@@ -127,7 +127,7 @@ impl<'a> Minimizer<'a> {
                 step_size.unwrap_shared(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns a pointer to the name of the minimizer.
@@ -164,13 +164,13 @@ impl<'a> Minimizer<'a> {
     }
 
     /// This function performs a single iteration of the minimizer s. If the iteration encounters
-    /// an unexpected problem then an error code will be returned. The error code `Value::NoProgress`
+    /// an unexpected problem then an error code will be returned. The error code `Error::NoProgress`
     /// signifies that the minimizer is unable to improve on its current estimate, either due
     /// to numerical difficulty or because a genuine local minimum has been reached.
     #[doc(alias = "gsl_multimin_fminimizer_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multimin_fminimizer_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -302,7 +302,7 @@ impl MinimizerFdf {
         x: &VectorF64,
         step_size: f64,
         tol: f64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multimin_fdfminimizer_set(
                 self.unwrap_unique(),
@@ -312,7 +312,7 @@ impl MinimizerFdf {
                 tol,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns a pointer to the name of the minimizer.
@@ -362,13 +362,13 @@ impl MinimizerFdf {
     }
 
     /// This function performs a single iteration of the minimizer s. If the iteration encounters
-    /// an unexpected problem then an error code will be returned. The error code `Value::NoProgress`
+    /// an unexpected problem then an error code will be returned. The error code `Error::NoProgress`
     /// signifies that the minimizer is unable to improve on its current estimate, either due
     /// to numerical difficulty or because a genuine local minimum has been reached.
     #[doc(alias = "gsl_multimin_fdfminimizer_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multimin_fdfminimizer_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function resets the minimizer to use the current point as a new starting point.
@@ -497,25 +497,26 @@ mod test {
         let max_iter = 100_usize;
         let eps_abs = 0.01;
 
-        let mut status = Value::Continue;
+        let mut status = Error::Continue;
         let mut iter = 0_usize;
 
-        while matches!(status, Value::Continue) && iter < max_iter {
+        while matches!(status, Error::Continue) && iter < max_iter {
             // iterate for next value
             min.iterate().unwrap(); // fails here w/ segfault
 
             // test for convergence
             let size = min.size();
 
-            status = test_size(size, eps_abs);
-
-            // check if iteration succeeded
-            if matches!(status, Value::Success) {
-                println!("Converged");
-            }
-
             // print current iteration
             print_f_state(&min, iter);
+
+            match test_size(size, eps_abs) {
+                Ok(()) => {
+                    println!("Converged");
+                    break;
+                }
+                Err(e) => status = e,
+            }
 
             iter += 1;
         }
@@ -547,22 +548,23 @@ mod test {
         let max_iter = 100_usize;
         let eps_abs = 0.01;
 
-        let mut status = Value::Continue;
+        let mut status = Error::Continue;
         let mut iter = 0_usize;
 
-        while matches!(status, Value::Continue) && iter < max_iter {
+        while matches!(status, Error::Continue) && iter < max_iter {
             // iterate for next value
             min.iterate().unwrap(); // fails here w/ segfault
 
-            status = test_gradient(&min.gradient(), eps_abs);
-
-            // check if iteration succeeded
-            if matches!(status, Value::Success) {
-                println!("Converged");
-            }
-
             // print current iteration
             print_fdf_state(&min, iter);
+
+            match test_gradient(&min.gradient(), eps_abs) {
+                Ok(()) => {
+                    println!("Converged");
+                    break;
+                }
+                Err(e) => status = e,
+            }
 
             iter += 1;
         }

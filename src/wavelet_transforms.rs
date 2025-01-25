@@ -23,12 +23,12 @@ level of the transform.
 /// where the first element is the smoothing coefficient s_{-1,0}, followed by the detail coefficients d_{j,k} for each level j. The
 /// backward transform inverts these coefficients to obtain the original data.
 ///
-/// These functions return a status of crate::Value::Success upon successful completion. crate::Inval is returned if n is not an integer power of
+/// These functions return a status of crate::Error::Success upon successful completion. crate::Inval is returned if n is not an integer power of
 /// 2 or if insufficient workspace is provided.
 pub mod one_dimension {
     use crate::ffi::FFI;
     use crate::vector::VectorMut;
-    use crate::Value;
+    use crate::Error;
 
     #[doc(alias = "gsl_wavelet_transform")]
     pub fn transform<V: VectorMut<f64> + ?Sized>(
@@ -36,7 +36,7 @@ pub mod one_dimension {
         data: &mut V,
         dir: crate::WaveletDirection,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet_transform(
                 w.unwrap_shared(),
@@ -47,7 +47,7 @@ pub mod one_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_wavelet_transform_forward")]
@@ -55,7 +55,7 @@ pub mod one_dimension {
         w: &crate::Wavelet,
         data: &mut V,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet_transform_forward(
                 w.unwrap_shared(),
@@ -65,7 +65,7 @@ pub mod one_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_wavelet_transform_inverse")]
@@ -73,7 +73,7 @@ pub mod one_dimension {
         w: &crate::Wavelet,
         data: &mut V,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet_transform_inverse(
                 w.unwrap_shared(),
@@ -83,7 +83,7 @@ pub mod one_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -101,7 +101,7 @@ pub mod one_dimension {
 /// The non-standard form of the discrete wavelet transform is typically used in image analysis.
 pub mod two_dimension {
     use crate::ffi::FFI;
-    use crate::Value;
+    use crate::Error;
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
     /// data stored in row-major form with dimensions size1 and size2 and physical row length tda. The dimensions must be equal
@@ -109,7 +109,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     ///
-    /// The functions return a status of crate::Value::Success upon successful completion. crate::Inval is returned if size1 and size2 are not
+    /// The functions return a status of crate::Error::Success upon successful completion. crate::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     #[doc(alias = "gsl_wavelet2d_transform")]
     pub fn transform(
@@ -121,7 +121,7 @@ pub mod two_dimension {
         size2: usize,
         dir: crate::WaveletDirection,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_transform(
                 w.unwrap_shared(),
@@ -133,7 +133,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
@@ -142,7 +142,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     ///
-    /// The functions return a status of crate::Value::Success upon successful completion. crate::Inval is returned if size1 and size2 are not
+    /// The functions return a status of crate::Error::Success upon successful completion. crate::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     #[doc(alias = "gsl_wavelet2d_transform_forward")]
     pub fn transform_forward(
@@ -152,7 +152,7 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_transform_forward(
                 w.unwrap_shared(),
@@ -163,7 +163,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute two-dimensional in-place forward and inverse discrete wavelet transforms in standard form on the array
@@ -172,7 +172,7 @@ pub mod two_dimension {
     /// forward (+1) or backward (-1). A workspace work of the appropriate size must be provided. On exit, the appropriate elements of
     /// the array data are replaced by their two-dimensional wavelet transform.
     ///
-    /// The functions return a status of crate::Value::Success upon successful completion. crate::Inval is returned if size1 and size2 are not
+    /// The functions return a status of crate::Error::Success upon successful completion. crate::Inval is returned if size1 and size2 are not
     /// equal and integer powers of 2, or if insufficient workspace is provided.
     #[doc(alias = "gsl_wavelet2d_transform_inverse")]
     pub fn transform_inverse(
@@ -182,7 +182,7 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_transform_inverse(
                 w.unwrap_shared(),
@@ -193,7 +193,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
@@ -203,7 +203,7 @@ pub mod two_dimension {
         m: &mut crate::MatrixF64,
         dir: crate::WaveletDirection,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_transform_matrix(
                 w.unwrap_shared(),
@@ -212,7 +212,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
@@ -221,7 +221,7 @@ pub mod two_dimension {
         w: &crate::Wavelet,
         m: &mut crate::MatrixF64,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_transform_matrix_forward(
                 w.unwrap_shared(),
@@ -229,7 +229,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the two-dimensional in-place wavelet transform on a matrix a.
@@ -238,7 +238,7 @@ pub mod two_dimension {
         w: &crate::Wavelet,
         m: &mut crate::MatrixF64,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_transform_matrix_inverse(
                 w.unwrap_shared(),
@@ -246,7 +246,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
@@ -259,7 +259,7 @@ pub mod two_dimension {
         size2: usize,
         dir: crate::WaveletDirection,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_nstransform(
                 w.unwrap_shared(),
@@ -271,7 +271,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
@@ -283,7 +283,7 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_forward(
                 w.unwrap_shared(),
@@ -294,7 +294,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the two-dimensional wavelet transform in non-standard form.
@@ -306,7 +306,7 @@ pub mod two_dimension {
         size1: usize,
         size2: usize,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_inverse(
                 w.unwrap_shared(),
@@ -317,7 +317,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
@@ -327,7 +327,7 @@ pub mod two_dimension {
         m: &mut crate::MatrixF64,
         dir: crate::WaveletDirection,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_matrix(
                 w.unwrap_shared(),
@@ -336,7 +336,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
@@ -345,7 +345,7 @@ pub mod two_dimension {
         w: &crate::Wavelet,
         m: &mut crate::MatrixF64,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_matrix_forward(
                 w.unwrap_shared(),
@@ -353,7 +353,7 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// These functions compute the non-standard form of the two-dimensional in-place wavelet transform on a matrix a.
@@ -362,7 +362,7 @@ pub mod two_dimension {
         w: &crate::Wavelet,
         m: &mut crate::MatrixF64,
         work: &mut crate::WaveletWorkspace,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_wavelet2d_nstransform_matrix_inverse(
                 w.unwrap_shared(),
@@ -370,6 +370,6 @@ pub mod two_dimension {
                 work.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }

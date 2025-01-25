@@ -38,7 +38,7 @@ D.M. Young, R.T. Gregory A Survey of Numerical Mathematics (Volume 1), Chapter 6
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 /// Evaluation accelerator.
 #[derive(Clone)]
@@ -105,7 +105,7 @@ impl Interp {
     ///
     /// Asserts that `ya.len() >= xa.len()`.
     #[doc(alias = "gsl_interp_init")]
-    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Result<(), Value> {
+    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Result<(), Error> {
         assert!(ya.len() >= xa.len());
         let ret = unsafe {
             sys::gsl_interp_init(
@@ -115,7 +115,7 @@ impl Interp {
                 xa.len() as _,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the name of the interpolation type used by interp. For example,
@@ -232,7 +232,7 @@ impl Spline {
     }
 
     #[doc(alias = "gsl_spline_init")]
-    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Result<(), Value> {
+    pub fn init(&mut self, xa: &[f64], ya: &[f64]) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_spline_init(
                 self.unwrap_unique(),
@@ -241,7 +241,7 @@ impl Spline {
                 xa.len() as _,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_spline_name")]
@@ -267,10 +267,10 @@ impl Spline {
 
     /// Returns `y`.
     #[doc(alias = "gsl_spline_eval_e")]
-    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
+    pub fn eval_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Error> {
         let mut y = 0.;
         let ret = unsafe { sys::gsl_spline_eval_e(self.unwrap_shared(), x, &mut acc.0, &mut y) };
-        result_handler!(ret, y)
+        Error::handle(ret, y)
     }
 
     #[doc(alias = "gsl_spline_eval_deriv")]
@@ -280,11 +280,11 @@ impl Spline {
 
     /// Returns `d`.
     #[doc(alias = "gsl_spline_eval_deriv_e")]
-    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
+    pub fn eval_deriv_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Error> {
         let mut d = 0.;
         let ret =
             unsafe { sys::gsl_spline_eval_deriv_e(self.unwrap_shared(), x, &mut acc.0, &mut d) };
-        result_handler!(ret, d)
+        Error::handle(ret, d)
     }
 
     #[doc(alias = "gsl_spline_eval_deriv2")]
@@ -294,11 +294,11 @@ impl Spline {
 
     /// Returns `d2`.
     #[doc(alias = "gsl_spline_eval_deriv2_e")]
-    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
+    pub fn eval_deriv2_e(&self, x: f64, acc: &mut InterpAccel) -> Result<f64, Error> {
         let mut d2 = 0.;
         let ret =
             unsafe { sys::gsl_spline_eval_deriv2_e(self.unwrap_shared(), x, &mut acc.0, &mut d2) };
-        result_handler!(ret, d2)
+        Error::handle(ret, d2)
     }
 
     #[doc(alias = "gsl_spline_eval_integ")]
@@ -308,11 +308,11 @@ impl Spline {
 
     /// Returns `d2`.
     #[doc(alias = "gsl_spline_eval_integ_e")]
-    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel) -> Result<f64, Value> {
+    pub fn eval_integ_e(&self, a: f64, b: f64, acc: &mut InterpAccel) -> Result<f64, Error> {
         let mut result = 0.;
         let ret = unsafe {
             sys::gsl_spline_eval_integ_e(self.unwrap_shared(), a, b, &mut acc.0, &mut result)
         };
-        result_handler!(ret, result)
+        Error::handle(ret, result)
     }
 }

@@ -2,13 +2,11 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-extern crate rgsl;
-
 #[cfg(feature = "v2_2")]
 mod example {
     use rgsl::{
-        blas, error, MatrixF64, MultilargeLinearType, MultilargeLinearWorkspace, Rng, RngType,
-        VectorF64,
+        blas, set_error_handler_off, MatrixF64, MultilargeLinearType, MultilargeLinearWorkspace,
+        Rng, RngType, VectorF64,
     };
 
     // number of observations
@@ -147,7 +145,7 @@ mod example {
         let mut c_normal = VectorF64::new(P).expect("VectorF64::new failed");
 
         // turn off error handler so normal equations method won't abort
-        error::set_error_handler_off();
+        set_error_handler_off();
 
         // solve system with TSQR method
         solve_system(true, MultilargeLinearType::tsqr(), &mut c_tsqr);

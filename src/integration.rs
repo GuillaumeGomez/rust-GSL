@@ -81,7 +81,7 @@ P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using Explicit I
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 /// This function applies the Gauss-Kronrod 10-point, 21-point, 43-point and 87-point integration
 /// rules in succession until an estimate of the integral of f over (a,b) is achieved within the
@@ -99,7 +99,7 @@ pub fn qng<F: Fn(f64) -> f64>(
     b: f64,
     eps_abs: f64,
     eps_rel: f64,
-) -> Result<(f64, f64, usize), Value> {
+) -> Result<(f64, f64, usize), Error> {
     let function = wrap_callback!(f, F);
     let mut result = 0.;
     let mut abs_err = 0.;
@@ -117,7 +117,7 @@ pub fn qng<F: Fn(f64) -> f64>(
             &mut n_eval,
         )
     };
-    result_handler!(ret, (result, abs_err, n_eval))
+    Error::handle(ret, (result, abs_err, n_eval))
 }
 
 /// Gauss quadrature weights and kronrod quadrature abscissae and weights as evaluated with 80
@@ -364,7 +364,7 @@ pub fn qawf<F: Fn(f64) -> f64>(
     workspace: &mut crate::IntegrationWorkspace,
     cycle_workspace: &mut crate::IntegrationWorkspace,
     wf: &mut crate::IntegrationQawoTable,
-) -> Result<(f64, f64), Value> {
+) -> Result<(f64, f64), Error> {
     let mut result = 0.;
     let mut abs_err = 0.;
 
@@ -382,5 +382,5 @@ pub fn qawf<F: Fn(f64) -> f64>(
             &mut abs_err,
         )
     };
-    result_handler!(ret, (result, abs_err))
+    Error::handle(ret, (result, abs_err))
 }

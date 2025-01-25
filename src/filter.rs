@@ -3,7 +3,7 @@
 //
 
 use crate::ffi::FFI;
-use crate::{Value, VectorF64};
+use crate::{Error, VectorF64};
 
 /// This function constructs a Gaussian kernel parameterized by `alpha` and stores the output in
 /// `kernel`. The parameter `order` specifies the derivative order, with `0` corresponding to a
@@ -16,9 +16,9 @@ pub fn gaussian_kernel(
     order: usize,
     normalize: bool,
     kernel: &mut VectorF64,
-) -> Result<(), Value> {
+) -> Result<(), Error> {
     let ret = unsafe {
         sys::gsl_filter_gaussian_kernel(alpha, order, normalize as _, kernel.unwrap_unique())
     };
-    result_handler!(ret, ())
+    Error::handle(ret, ())
 }

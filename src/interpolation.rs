@@ -3,7 +3,7 @@
 //
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 /// This function returns the index i of the array x_array such that `x_array[i] <= x < x_array[i+1]`.
 /// The index is searched for in the range `[index_lo,index_hi]`.
@@ -46,7 +46,7 @@ pub fn eval_e(
     ya: &[f64],
     x: f64,
     acc: &mut crate::InterpAccel,
-) -> Result<f64, Value> {
+) -> Result<f64, Error> {
     let mut y = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_e(
@@ -58,7 +58,7 @@ pub fn eval_e(
             &mut y,
         )
     };
-    result_handler!(ret, y)
+    Error::handle(ret, y)
 }
 
 /// This function returns the derivative d of an interpolated function for a given point x, using
@@ -93,7 +93,7 @@ pub fn eval_deriv_e(
     ya: &[f64],
     x: f64,
     acc: &mut crate::InterpAccel,
-) -> Result<f64, Value> {
+) -> Result<f64, Error> {
     let mut d = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_deriv_e(
@@ -105,7 +105,7 @@ pub fn eval_deriv_e(
             &mut d,
         )
     };
-    result_handler!(ret, d)
+    Error::handle(ret, d)
 }
 
 /// This function returns the second derivative d2 of an interpolated function for a given point x,
@@ -140,7 +140,7 @@ pub fn eval_deriv2_e(
     ya: &[f64],
     x: f64,
     acc: &mut crate::InterpAccel,
-) -> Result<f64, Value> {
+) -> Result<f64, Error> {
     let mut d2 = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_deriv2_e(
@@ -152,7 +152,7 @@ pub fn eval_deriv2_e(
             &mut d2,
         )
     };
-    result_handler!(ret, d2)
+    Error::handle(ret, d2)
 }
 
 /// This function returns the numerical integral result of an interpolated function over the range
@@ -190,7 +190,7 @@ pub fn eval_integ_e(
     a: f64,
     b: f64,
     acc: &mut crate::InterpAccel,
-) -> Result<f64, Value> {
+) -> Result<f64, Error> {
     let mut result = 0.;
     let ret = unsafe {
         sys::gsl_interp_eval_integ_e(
@@ -203,5 +203,5 @@ pub fn eval_integ_e(
             &mut result,
         )
     };
-    result_handler!(ret, result)
+    Error::handle(ret, result)
 }

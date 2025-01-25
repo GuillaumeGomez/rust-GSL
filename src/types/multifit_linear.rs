@@ -3,7 +3,7 @@
 //
 
 use crate::ffi::FFI;
-use crate::{MatrixF64, Value, VectorF64};
+use crate::{Error, MatrixF64, VectorF64};
 
 ffi_wrapper!(
     MultifitLinearWorkspace,
@@ -30,7 +30,7 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-    ) -> Result<f64, Value> {
+    ) -> Result<f64, Error> {
         let mut chisq = 0.;
         let ret = unsafe {
             sys::gsl_multifit_linear(
@@ -42,7 +42,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, chisq)
+        Error::handle(ret, chisq)
     }
 
     /// Returns `(chisq, rank)`.
@@ -56,7 +56,7 @@ impl MultifitLinearWorkspace {
         tol: f64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-    ) -> Result<(f64, usize), Value> {
+    ) -> Result<(f64, usize), Error> {
         let mut chisq = 0.;
         let mut rank = 0;
         let ret = unsafe {
@@ -71,19 +71,19 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, (chisq, rank))
+        Error::handle(ret, (chisq, rank))
     }
 
     #[doc(alias = "gsl_multifit_linear_svd")]
-    pub fn linear_svd(&mut self, x: &mut MatrixF64) -> Result<(), Value> {
+    pub fn linear_svd(&mut self, x: &mut MatrixF64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multifit_linear_svd(x.unwrap_unique(), self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_bsvd")]
-    pub fn linear_bsvd(&mut self, x: &mut MatrixF64) -> Result<(), Value> {
+    pub fn linear_bsvd(&mut self, x: &mut MatrixF64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multifit_linear_bsvd(x.unwrap_unique(), self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[cfg(feature = "v2_3")]
@@ -101,7 +101,7 @@ impl MultifitLinearWorkspace {
         x: &MatrixF64,
         y: &VectorF64,
         c: &mut VectorF64,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut rnorm = 0.;
         let mut snorm = 0.;
         let ret = unsafe {
@@ -115,7 +115,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, (rnorm, snorm))
+        Error::handle(ret, (rnorm, snorm))
     }
 
     #[doc(alias = "gsl_multifit_linear_stdform1")]
@@ -126,7 +126,7 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         xs: &mut MatrixF64,
         ys: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_stdform1(
                 l.unwrap_shared(),
@@ -137,7 +137,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_wstdform1")]
@@ -149,7 +149,7 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         xs: &mut MatrixF64,
         ys: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_wstdform1(
                 l.unwrap_shared(),
@@ -161,7 +161,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_stdform2")]
@@ -174,7 +174,7 @@ impl MultifitLinearWorkspace {
         xs: &mut MatrixF64,
         ys: &mut VectorF64,
         m: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_stdform2(
                 lqr.unwrap_shared(),
@@ -187,7 +187,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_wstdform2")]
@@ -201,7 +201,7 @@ impl MultifitLinearWorkspace {
         xs: &mut MatrixF64,
         ys: &mut VectorF64,
         m: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_wstdform2(
                 lqr.unwrap_shared(),
@@ -215,7 +215,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_genform1")]
@@ -224,7 +224,7 @@ impl MultifitLinearWorkspace {
         l: &VectorF64,
         cs: &VectorF64,
         c: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_genform1(
                 l.unwrap_shared(),
@@ -233,7 +233,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_genform2")]
@@ -246,7 +246,7 @@ impl MultifitLinearWorkspace {
         cs: &VectorF64,
         m: &MatrixF64,
         c: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_genform2(
                 lqr.unwrap_shared(),
@@ -259,7 +259,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_wgenform2")]
@@ -273,7 +273,7 @@ impl MultifitLinearWorkspace {
         cs: &VectorF64,
         m: &MatrixF64,
         c: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_wgenform2(
                 lqr.unwrap_shared(),
@@ -287,7 +287,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_lcurve")]
@@ -297,7 +297,7 @@ impl MultifitLinearWorkspace {
         reg_param: &mut VectorF64,
         rho: &mut VectorF64,
         eta: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_lcurve(
                 y.unwrap_shared(),
@@ -307,7 +307,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_multifit_linear_Lsobolev")]
@@ -317,7 +317,7 @@ impl MultifitLinearWorkspace {
         kmax: usize,
         alpha: &VectorF64,
         l: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_Lsobolev(
                 p,
@@ -327,7 +327,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Returns `chisq`.
@@ -339,7 +339,7 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-    ) -> Result<f64, Value> {
+    ) -> Result<f64, Error> {
         let mut chisq = 0.;
         let ret = unsafe {
             sys::gsl_multifit_wlinear(
@@ -352,7 +352,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, chisq)
+        Error::handle(ret, chisq)
     }
 
     /// Returns `(chisq, rank)`.
@@ -367,7 +367,7 @@ impl MultifitLinearWorkspace {
         tol: f64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-    ) -> Result<(f64, usize), Value> {
+    ) -> Result<(f64, usize), Error> {
         let mut chisq = 0.;
         let mut rank = 0;
         let ret = unsafe {
@@ -383,7 +383,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, (chisq, rank))
+        Error::handle(ret, (chisq, rank))
     }
 
     /// Returns `(rank, chisq)`.
@@ -396,7 +396,7 @@ impl MultifitLinearWorkspace {
         tol: f64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-    ) -> Result<(usize, f64), Value> {
+    ) -> Result<(usize, f64), Error> {
         let mut rank = 0;
         let mut chisq = 0.;
         let ret = unsafe {
@@ -412,7 +412,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, (rank, chisq))
+        Error::handle(ret, (rank, chisq))
     }
 
     /// Returns `(rank, chisq)`.
@@ -425,7 +425,7 @@ impl MultifitLinearWorkspace {
         tol: f64,
         c: &mut VectorF64,
         cov: &mut MatrixF64,
-    ) -> Result<(usize, f64), Value> {
+    ) -> Result<(usize, f64), Error> {
         let mut rank = 0;
         let mut chisq = 0.;
         let ret = unsafe {
@@ -441,7 +441,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, (rank, chisq))
+        Error::handle(ret, (rank, chisq))
     }
 
     #[cfg(feature = "v2_1")]
@@ -458,7 +458,7 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         reg_param: &mut VectorF64,
         UTy: &mut VectorF64,
-    ) -> Result<f64, Value> {
+    ) -> Result<f64, Error> {
         let mut delta0 = 0.;
         let ret = unsafe {
             sys::gsl_multifit_linear_gcv_init(
@@ -469,7 +469,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, delta0)
+        Error::handle(ret, delta0)
     }
 
     #[doc(alias = "gsl_multifit_linear_gcv_curve")]
@@ -479,7 +479,7 @@ impl MultifitLinearWorkspace {
         UTy: &VectorF64,
         delta0: f64,
         g: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multifit_linear_gcv_curve(
                 reg_param.unwrap_shared(),
@@ -489,7 +489,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Returns `lambda`.
@@ -500,7 +500,7 @@ impl MultifitLinearWorkspace {
         UTy: &VectorF64,
         g: &VectorF64,
         delta0: f64,
-    ) -> Result<f64, Value> {
+    ) -> Result<f64, Error> {
         let mut lambda = 0.;
         let ret = unsafe {
             sys::gsl_multifit_linear_gcv_min(
@@ -512,7 +512,7 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, lambda)
+        Error::handle(ret, lambda)
     }
 
     #[doc(alias = "gsl_multifit_linear_gcv_calc")]
@@ -534,7 +534,7 @@ impl MultifitLinearWorkspace {
         y: &VectorF64,
         reg_param: &mut VectorF64,
         g: &mut VectorF64,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut lambda = 0.;
         let mut g_lambda = 0.;
         let ret = unsafe {
@@ -547,6 +547,6 @@ impl MultifitLinearWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, (lambda, g_lambda))
+        Error::handle(ret, (lambda, g_lambda))
     }
 }

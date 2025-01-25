@@ -57,7 +57,7 @@ The algorithms estimate the matrix J or J^{-1} by approximate methods.
 !*/
 
 use crate::ffi::FFI;
-use crate::{MatrixF64, Value, VectorF64, View};
+use crate::{Error, MatrixF64, VectorF64, View};
 use sys::libc::{c_int, c_void};
 
 ffi_wrapper!(
@@ -139,7 +139,7 @@ ffi_wrapper!(
     *mut sys::gsl_multiroot_fsolver,
     gsl_multiroot_fsolver_free
     ;inner_call: sys::gsl_multiroot_function_struct => sys::gsl_multiroot_function_struct{ f: None, n: 0, params: std::ptr::null_mut() };
-    ;inner_closure: Option<Box<dyn Fn(&VectorF64, &mut VectorF64) -> Value + 'a>> => None;,
+    ;inner_closure: Option<Box<dyn Fn(&VectorF64, &mut VectorF64) -> Result<(), Error> + 'a>> => None;,
     "This is a workspace for multidimensional root-finding without derivatives."
 );
 
@@ -148,7 +148,7 @@ impl<'a> MultiRootFSolver<'a> {
     /// `n` unknowns.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
-    /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    /// pointer and the error handler is invoked with an error code of `Error::NoMemory`.
     #[doc(alias = "gsl_multiroot_fsolver_alloc")]
     pub fn new(t: &MultiRootFSolverType, n: usize) -> Option<MultiRootFSolver<'a>> {
         let ptr = unsafe { sys::gsl_multiroot_fsolver_alloc(t.unwrap_shared(), n) };
@@ -163,20 +163,23 @@ impl<'a> MultiRootFSolver<'a> {
     /// This function initializes, or reinitializes, an existing solver `s` to use the multi
     /// function `f` with `n` unknowns.
     #[doc(alias = "gsl_multiroot_fsolver_set")]
-    pub fn set<F: Fn(&VectorF64, &mut VectorF64) -> Value + 'a>(
+    pub fn set<F: Fn(&VectorF64, &mut VectorF64) -> Result<(), Error> + 'a>(
         &mut self,
         f: F,
         n: usize,
         x: &VectorF64,
-    ) -> Result<(), Value> {
-        unsafe extern "C" fn inner_f<A: Fn(&VectorF64, &mut VectorF64) -> Value>(
+    ) -> Result<(), Error> {
+        unsafe extern "C" fn inner_f<A>(
             x: *const sys::gsl_vector,
             params: *mut c_void,
             f: *mut sys::gsl_vector,
-        ) -> c_int {
+        ) -> c_int
+        where
+            A: Fn(&VectorF64, &mut VectorF64) -> Result<(), Error>,
+        {
             let g: &A = &*(params as *const A);
             let x_new = VectorF64::soft_wrap(x as *const _ as *mut _);
-            Value::into(g(&x_new, &mut VectorF64::soft_wrap(f)))
+            Error::to_c(g(&x_new, &mut VectorF64::soft_wrap(f)))
         }
 
         self.inner_call = sys::gsl_multiroot_function_struct {
@@ -193,25 +196,25 @@ impl<'a> MultiRootFSolver<'a> {
                 x.unwrap_shared(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function performs a single iteration of the minimizer s. If the iteration encounters an
     /// unexpected problem then an error code will be returned,
     ///
-    /// `Value::BadFunc`
+    /// `Error::BadFunc`
     /// the iteration encountered a singular point where the function evaluated to Inf or NaN.
     ///
-    /// `Value::Failure`
+    /// `Error::Failure`
     /// the algorithm could not improve the current best approximation or bounding interval.
     ///
     /// The minimizer maintains a current best estimate of the position of the minimum at all times,
     /// and the current interval bounding the minimum. This information can be accessed with the
     /// following auxiliary functions,
     #[doc(alias = "gsl_multiroot_fsolver_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multiroot_fsolver_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns the current estimate of the root for the solver `s`, given by `s->x`.
@@ -266,8 +269,8 @@ impl MultiRootFdfSolverType {
     /// The speed of the algorithm is increased by computing the changes to the Jacobian approximately,
     /// using a rank-1 update. If two successive attempts fail to reduce the residual then the full
     /// Jacobian is recomputed. The algorithm also monitors the progress of the solution and returns an error if several steps fail to make any improvement,
-    /// `crate::Value::NoProgress` the iteration is not making any progress, preventing the algorithm from continuing.
-    /// `crate::Value::NoProgressJacobian` re-evaluations of the Jacobian indicate that the iteration is not making any progress, preventing the algorithm from continuing.
+    /// `crate::Error::NoProgress` the iteration is not making any progress, preventing the algorithm from continuing.
+    /// `crate::Error::NoProgressJacobian` re-evaluations of the Jacobian indicate that the iteration is not making any progress, preventing the algorithm from continuing.
     #[doc(alias = "gsl_multiroot_fdfsolver_hybridsj")]
     pub fn hybridsj() -> Self {
         ffi_wrap!(gsl_multiroot_fdfsolver_hybridsj)
@@ -288,7 +291,7 @@ impl MultiRootFdfSolverType {
     /// where the Jacobian matrix J is computed from the derivative functions provided by f.
     /// The step dx is obtained by solving the linear system, J dx = - f(x)
     /// using LU decomposition. If the Jacobian matrix is singular, an error code of
-    /// `crate::Value::Domain` is returned.
+    /// `crate::Error::Domain` is returned.
     #[doc(alias = "gsl_multiroot_fdfsolver_newton")]
     pub fn newton() -> Self {
         ffi_wrap!(gsl_multiroot_fdfsolver_newton)
@@ -307,9 +310,9 @@ impl MultiRootFdfSolverType {
 }
 
 pub struct MultiRootFdfSolverFunction<'a> {
-    pub f: Box<dyn Fn(&VectorF64, &mut VectorF64) -> Value + 'a>,
-    pub df: Box<dyn Fn(&VectorF64, &mut MatrixF64) -> Value + 'a>,
-    pub fdf: Box<dyn Fn(&VectorF64, &mut VectorF64, &mut MatrixF64) -> Value + 'a>,
+    pub f: Box<dyn Fn(&VectorF64, &mut VectorF64) -> Result<(), Error> + 'a>,
+    pub df: Box<dyn Fn(&VectorF64, &mut MatrixF64) -> Result<(), Error> + 'a>,
+    pub fdf: Box<dyn Fn(&VectorF64, &mut VectorF64, &mut MatrixF64) -> Result<(), Error> + 'a>,
     pub n: usize,
     intern: sys::gsl_multiroot_function_fdf,
 }
@@ -317,9 +320,9 @@ pub struct MultiRootFdfSolverFunction<'a> {
 impl<'a> MultiRootFdfSolverFunction<'a> {
     #[doc(alias = "gsl_multiroot_function_fdf")]
     pub fn new<
-        F: Fn(&VectorF64, &mut VectorF64) -> Value + 'a,
-        DF: Fn(&VectorF64, &mut MatrixF64) -> Value + 'a,
-        FDF: Fn(&VectorF64, &mut VectorF64, &mut MatrixF64) -> Value + 'a,
+        F: Fn(&VectorF64, &mut VectorF64) -> Result<(), Error> + 'a,
+        DF: Fn(&VectorF64, &mut MatrixF64) -> Result<(), Error> + 'a,
+        FDF: Fn(&VectorF64, &mut VectorF64, &mut MatrixF64) -> Result<(), Error> + 'a,
     >(
         f: F,
         df: DF,
@@ -333,11 +336,10 @@ impl<'a> MultiRootFdfSolverFunction<'a> {
         ) -> i32 {
             let t = &*(params as *mut MultiRootFdfSolverFunction);
             let i_f = &t.f;
-            i_f(
+            Error::to_c(i_f(
                 &VectorF64::soft_wrap(x as *const _ as *mut _),
                 &mut VectorF64::soft_wrap(f as *const _ as *mut _),
-            )
-            .into()
+            ))
         }
 
         unsafe extern "C" fn inner_df(
@@ -347,11 +349,10 @@ impl<'a> MultiRootFdfSolverFunction<'a> {
         ) -> i32 {
             let t = &*(params as *mut MultiRootFdfSolverFunction);
             let i_df = &t.df;
-            i_df(
+            Error::to_c(i_df(
                 &VectorF64::soft_wrap(x as *const _ as *mut _),
                 &mut MatrixF64::soft_wrap(J as *const _ as *mut _),
-            )
-            .into()
+            ))
         }
 
         unsafe extern "C" fn inner_fdf(
@@ -362,12 +363,11 @@ impl<'a> MultiRootFdfSolverFunction<'a> {
         ) -> i32 {
             let t = &*(params as *mut MultiRootFdfSolverFunction);
             let i_fdf = &t.fdf;
-            i_fdf(
+            Error::to_c(i_fdf(
                 &VectorF64::soft_wrap(x as *const _ as *mut _),
                 &mut VectorF64::soft_wrap(f as *const _ as *mut _),
                 &mut MatrixF64::soft_wrap(J as *const _ as *mut _),
-            )
-            .into()
+            ))
         }
 
         MultiRootFdfSolverFunction {
@@ -415,11 +415,11 @@ impl MultiRootFdfSolver {
 
     /// These functions set, or reset, an existing solver to use the functions `f`, and the initial guess `x.
     #[doc(alias = "gsl_multiroot_fdfsolver_set")]
-    pub fn set(&mut self, f: &mut MultiRootFdfSolverFunction, x: &VectorF64) -> Result<(), Value> {
+    pub fn set(&mut self, f: &mut MultiRootFdfSolverFunction, x: &VectorF64) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_multiroot_fdfsolver_set(self.unwrap_unique(), f.to_raw(), x.unwrap_shared())
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Return the name of the solver.
@@ -444,19 +444,19 @@ impl MultiRootFdfSolver {
     /// encounters an unexpected problem then an error code will be
     /// returned,
     ///
-    /// * `crate::Value::BadFunc` the iteration encountered a singular
+    /// * `crate::Error::BadFunc` the iteration encountered a singular
     ///   point where the function or its derivative evaluated to Inf or NaN.
     ///
-    /// * `crate::Value::NoProgress` the iteration is not making any progress,
+    /// * `crate::Error::NoProgress` the iteration is not making any progress,
     ///    preventing the algorithm from continuing.
     ///
     /// The solver maintains a current best estimate of the root and
     /// its function value at all times.  This information can be
     /// accessed with `root`, `f`, and `dx` functions.
     #[doc(alias = "gsl_multiroot_fdfsolver_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_multiroot_fdfsolver_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Returns the current estimate of the root for the solver.
@@ -492,7 +492,7 @@ mod tests {
     ///         println!("==> {:?}", dummy);
     ///         y.set(0, 1.0 - x.get(0));
     ///         y.set(1, x.get(0) - x.get(1));
-    ///         rgsl::Value::Success}, 2, &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap());
+    ///         rgsl::Error::Success}, 2, &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap());
     /// }
     ///
     /// let mut root = MultiRootFSolver::new(&MultiRootFSolverType::hybrid(), 2).unwrap();
@@ -510,7 +510,9 @@ mod tests {
     ///     root.set(|x, y| {
     ///         y.set(0, 1.0 - x.get(0));
     ///         y.set(1, x.get(0) - x.get(1));
-    ///         rgsl::Value::Success}, 2, &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap());
+    ///         Ok(())
+    ///     },
+    ///     2, &rgsl::VectorF64::from_slice(&[-10.0, 1.0]).unwrap());
     /// }
     ///
     /// let mut root = MultiRootFSolver::new(&MultiRootFSolverType::hybrid(), 2).unwrap();
@@ -525,24 +527,24 @@ mod tests {
 
     /// checking a test function
     /// must return a success criteria (or failure)
-    fn rosenbrock_f(x: &VectorF64, f: &mut VectorF64) -> Value {
+    fn rosenbrock_f(x: &VectorF64, f: &mut VectorF64) -> Result<(), Error> {
         f.set(0, RPARAMS.0 * (1.0 - x.get(0)));
         f.set(1, RPARAMS.1 * (x.get(1) - x.get(0).powf(2.0)));
-        Value::Success
+        Ok(())
     }
 
-    fn rosenbrock_df(x: &VectorF64, J: &mut MatrixF64) -> Value {
+    fn rosenbrock_df(x: &VectorF64, J: &mut MatrixF64) -> Result<(), Error> {
         J.set(0, 0, -RPARAMS.0);
         J.set(0, 1, 0f64);
         J.set(1, 0, -2.0 * RPARAMS.1 * x.get(0));
         J.set(1, 1, RPARAMS.1);
-        Value::Success
+        Ok(())
     }
 
-    fn rosenbrock_fdf(x: &VectorF64, f: &mut VectorF64, J: &mut MatrixF64) -> Value {
-        rosenbrock_f(x, f);
-        rosenbrock_df(x, J);
-        Value::Success
+    fn rosenbrock_fdf(x: &VectorF64, f: &mut VectorF64, J: &mut MatrixF64) -> Result<(), Error> {
+        rosenbrock_f(x, f)?;
+        rosenbrock_df(x, J)?;
+        Ok(())
     }
 
     fn print_state(solver: &mut MultiRootFSolver, iteration: usize) {
@@ -586,12 +588,12 @@ mod tests {
         let mut iter = 0;
 
         // convergence checks
-        let mut status = crate::Value::Continue;
+        let mut status = Err(Error::Continue);
         let epsabs = 1e-6;
 
         print_state(&mut multi_root, 0);
 
-        while matches!(status, crate::Value::Continue) && iter < max_iter {
+        while matches!(status, Err(Error::Continue)) && iter < max_iter {
             // iterate solver
             multi_root.iterate().unwrap();
 
@@ -601,15 +603,13 @@ mod tests {
             // test for convergence
             let f_value = multi_root.f();
             status = test_residual(&f_value, epsabs);
-
-            // check if iteration succeeded
-            if matches!(status, crate::Value::Success) {
+            if status.is_ok() {
                 println!("Converged");
             }
 
             iter += 1;
         }
-        assert!(matches!(status, crate::Value::Success))
+        assert!(status.is_ok())
     }
 
     #[test]
@@ -631,12 +631,12 @@ mod tests {
         let mut iter = 0;
 
         // convergence checks
-        let mut status = crate::Value::Continue;
+        let mut status = Err(Error::Continue);
         let epsabs = 1e-6;
 
         print_fdf_state(&mut multi_root, 0);
 
-        while matches!(status, crate::Value::Continue) && iter < max_iter {
+        while matches!(status, Err(Error::Continue)) && iter < max_iter {
             // iterate solver
             multi_root.iterate().unwrap();
 
@@ -646,14 +646,12 @@ mod tests {
             // test for convergence
             let f_value = multi_root.f();
             status = test_residual(&f_value, epsabs);
-
-            // check if iteration succeeded
-            if matches!(status, crate::Value::Success) {
+            if status.is_ok() {
                 println!("Converged");
             }
 
             iter += 1;
         }
-        assert!(matches!(status, crate::Value::Success))
+        assert!(status.is_ok())
     }
 }

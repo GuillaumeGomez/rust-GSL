@@ -97,7 +97,7 @@ used is the QZ method due to Moler and Stewart (see references).
 
 use crate::ffi::FFI;
 use crate::types::{MatrixComplexF64, MatrixF64, VectorComplexF64, VectorF64};
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(
     EigenSymmetricWorkspace,
@@ -124,7 +124,7 @@ impl EigenSymmetricWorkspace {
     /// triangular part is not referenced. The eigenvalues are stored in the vector `eval` and are
     /// unordered.
     #[doc(alias = "gsl_eigen_symm")]
-    pub fn symm(&mut self, A: &mut MatrixF64, eval: &mut VectorF64) -> Result<(), Value> {
+    pub fn symm(&mut self, A: &mut MatrixF64, eval: &mut VectorF64) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_symm(
                 A.unwrap_unique(),
@@ -132,7 +132,7 @@ impl EigenSymmetricWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -169,7 +169,7 @@ impl EigenSymmetricVWorkspace {
         A: &mut MatrixF64,
         eval: &mut VectorF64,
         evec: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_symmv(
                 A.unwrap_unique(),
@@ -178,7 +178,7 @@ impl EigenSymmetricVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -208,7 +208,7 @@ impl EigenHermitianWorkspace {
     /// part is not referenced. The imaginary parts of the diagonal are assumed to be zero and are
     /// not referenced. The eigenvalues are stored in the vector `eval` and are unordered.
     #[doc(alias = "gsl_eigen_herm")]
-    pub fn herm(&mut self, A: &mut MatrixComplexF64, eval: &mut VectorF64) -> Result<(), Value> {
+    pub fn herm(&mut self, A: &mut MatrixComplexF64, eval: &mut VectorF64) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_herm(
                 A.unwrap_unique(),
@@ -216,7 +216,7 @@ impl EigenHermitianWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -255,7 +255,7 @@ impl EigenHermitianVWorkspace {
         A: &mut MatrixComplexF64,
         eval: &mut VectorF64,
         evec: &mut MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_hermv(
                 A.unwrap_unique(),
@@ -264,7 +264,7 @@ impl EigenHermitianVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -327,7 +327,7 @@ impl EigenNonSymmetricWorkspace {
     /// returned and the number of converged eigenvalues is stored in w->n_evals. The converged
     /// eigenvalues are stored in the beginning of `eval`.
     #[doc(alias = "gsl_eigen_nonsymm")]
-    pub fn nonsymm(&mut self, A: &mut MatrixF64, eval: &mut VectorComplexF64) -> Result<(), Value> {
+    pub fn nonsymm(&mut self, A: &mut MatrixF64, eval: &mut VectorComplexF64) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_nonsymm(
                 A.unwrap_unique(),
@@ -335,7 +335,7 @@ impl EigenNonSymmetricWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is identical to gsl_eigen_nonsymm except that it also computes the Schur
@@ -346,7 +346,7 @@ impl EigenNonSymmetricWorkspace {
         A: &mut MatrixF64,
         eval: &mut VectorComplexF64,
         Z: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_nonsymm_Z(
                 A.unwrap_unique(),
@@ -355,7 +355,7 @@ impl EigenNonSymmetricWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     pub fn n_evals(&self) -> usize {
@@ -405,7 +405,7 @@ impl EigenNonSymmetricVWorkspace {
         A: &mut MatrixF64,
         eval: &mut VectorComplexF64,
         evec: &mut MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_nonsymmv(
                 A.unwrap_unique(),
@@ -414,7 +414,7 @@ impl EigenNonSymmetricVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is identical to gsl_eigen_nonsymmv except that it also saves the Schur vectors
@@ -426,7 +426,7 @@ impl EigenNonSymmetricVWorkspace {
         eval: &mut VectorComplexF64,
         evec: &mut MatrixComplexF64,
         Z: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_nonsymmv_Z(
                 A.unwrap_unique(),
@@ -436,7 +436,7 @@ impl EigenNonSymmetricVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -469,7 +469,7 @@ impl EigenGenSymmWorkspace {
         mut A: MatrixF64,
         B: &mut MatrixF64,
         eval: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_gensymm(
                 A.unwrap_unique(),
@@ -478,7 +478,7 @@ impl EigenGenSymmWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -513,7 +513,7 @@ impl EigenGenSymmVWorkspace {
         B: &mut MatrixF64,
         eval: &mut VectorF64,
         evec: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_gensymmv(
                 A.unwrap_unique(),
@@ -523,7 +523,7 @@ impl EigenGenSymmVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -556,7 +556,7 @@ impl EigenGenHermWorkspace {
         mut A: MatrixComplexF64,
         B: &mut MatrixComplexF64,
         eval: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_genherm(
                 A.unwrap_unique(),
@@ -565,7 +565,7 @@ impl EigenGenHermWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -599,7 +599,7 @@ impl EigenGenHermVWorkspace {
         B: &mut MatrixComplexF64,
         eval: &mut VectorF64,
         evec: &mut MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_genhermv(
                 A.unwrap_unique(),
@@ -609,7 +609,7 @@ impl EigenGenHermVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -670,7 +670,7 @@ impl EigenGenWorkspace {
         B: &mut MatrixF64,
         alpha: &mut VectorComplexF64,
         beta: &mut VectorF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_gen(
                 A.unwrap_unique(),
@@ -680,7 +680,7 @@ impl EigenGenWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is identical to gsl_eigen_gen except that it also computes the left and right
@@ -694,7 +694,7 @@ impl EigenGenWorkspace {
         beta: &mut VectorF64,
         Q: &mut MatrixF64,
         Z: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_gen_QZ(
                 A.unwrap_unique(),
@@ -706,7 +706,7 @@ impl EigenGenWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -746,7 +746,7 @@ impl EigenGenVWorkspace {
         alpha: &mut VectorComplexF64,
         beta: &mut VectorF64,
         evec: &mut MatrixComplexF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_genv(
                 A.unwrap_unique(),
@@ -757,7 +757,7 @@ impl EigenGenVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is identical to gsl_eigen_genv except that it also computes the left and right
@@ -772,7 +772,7 @@ impl EigenGenVWorkspace {
         evec: &mut MatrixComplexF64,
         Q: &mut MatrixF64,
         Z: &mut MatrixF64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_eigen_genv_QZ(
                 A.unwrap_unique(),
@@ -785,7 +785,7 @@ impl EigenGenVWorkspace {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 

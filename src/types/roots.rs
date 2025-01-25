@@ -42,7 +42,7 @@ its derivative (hence the name fdf) to be supplied by the user.
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use sys::libc::{c_double, c_void};
 
 ffi_wrapper!(
@@ -122,7 +122,7 @@ impl<'a> RootFSolver<'a> {
     /// This function returns a pointer to a newly allocated instance of a solver of type T.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
-    /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    /// pointer and the error handler is invoked with an error code of `Error::NoMemory`.
     #[doc(alias = "gsl_root_fsolver_alloc")]
     pub fn new(t: RootFSolverType) -> Option<RootFSolver<'a>> {
         let tmp = unsafe { sys::gsl_root_fsolver_alloc(t.unwrap_shared()) };
@@ -142,14 +142,14 @@ impl<'a> RootFSolver<'a> {
         f: F,
         x_lower: f64,
         x_upper: f64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
         let ret = unsafe {
             sys::gsl_root_fsolver_set(self.unwrap_unique(), &mut self.inner_call, x_lower, x_upper)
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// The following function drives the iteration of each algorithm. Each function performs one
@@ -163,9 +163,9 @@ impl<'a> RootFSolver<'a> {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     #[doc(alias = "gsl_root_fsolver_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_root_fsolver_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Returns the solver type name.
@@ -248,7 +248,7 @@ impl<'a> RootFdfSolver<'a> {
     /// solver of type T.
     ///
     /// If there is insufficient memory to create the solver then the function returns a null
-    /// pointer and the error handler is invoked with an error code of `Value::NoMemory`.
+    /// pointer and the error handler is invoked with an error code of `Error::NoMemory`.
     #[doc(alias = "gsl_root_fdfsolver_alloc")]
     pub fn new(t: RootFdfSolverType) -> Option<RootFdfSolver<'a>> {
         let tmp = unsafe { sys::gsl_root_fdfsolver_alloc(t.unwrap_shared()) };
@@ -273,7 +273,7 @@ impl<'a> RootFdfSolver<'a> {
         df: DF,
         fdf: FDF,
         root: f64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         // convert rust functions to C
         unsafe extern "C" fn inner_f<'a, F: Fn(f64) -> f64 + 'a>(
             x: c_double,
@@ -314,7 +314,7 @@ impl<'a> RootFdfSolver<'a> {
         let ret = unsafe {
             sys::gsl_root_fdfsolver_set(self.unwrap_unique(), &mut self.inner_call, root)
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// The following function drives the iteration of each algorithm. Each function performs one
@@ -328,9 +328,9 @@ impl<'a> RootFdfSolver<'a> {
     /// The solver maintains a current best estimate of the root at all times. The bracketing
     /// solvers also keep track of the current best interval bounding the root.
     #[doc(alias = "gsl_root_fdfsolver_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_root_fdfsolver_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// Returns the solver type name.
@@ -418,13 +418,13 @@ mod test {
         let epsabs = 0.0001;
         let epsrel = 0.0000001;
 
-        let mut status = Value::Continue;
+        let mut status = Err(Error::Continue);
         let mut iter = 0usize;
 
         println!("Testing: {}", root.name());
 
         println!("iter, \t [x_lo, x_hi], \t min, \t error");
-        while matches!(status, Value::Continue) && iter < max_iter {
+        while matches!(status, Err(Error::Continue)) && iter < max_iter {
             root.iterate().unwrap();
 
             // test for convergence
@@ -435,7 +435,7 @@ mod test {
             status = test_interval(x_lo, x_hi, epsabs, epsrel);
 
             // check if iteration succeeded
-            if status == Value::Success {
+            if status.is_ok() {
                 println!("Converged");
             }
 
@@ -449,7 +449,7 @@ mod test {
             );
             iter += 1;
         }
-        assert!(matches!(status, Value::Success))
+        assert!(status.is_ok())
     }
 
     #[test]
@@ -473,7 +473,7 @@ mod test {
         let epsabs = 0.0001;
         let epsrel = 0.0000001;
 
-        let mut status = Value::Continue;
+        let mut status = Err(Error::Continue);
         let mut iter = 0usize;
 
         println!("Testing: {}", root.name().unwrap());
@@ -481,7 +481,7 @@ mod test {
         println!("iter, \t root, \t rel error \t abs error");
 
         let mut x = guess_value;
-        while matches!(status, Value::Continue) && iter < max_iter {
+        while matches!(status, Err(Error::Continue)) && iter < max_iter {
             root.iterate().unwrap();
 
             // test for convergence
@@ -490,7 +490,7 @@ mod test {
             // check if iteration succeeded
             status = test_delta(x, x_0, epsabs, epsrel);
 
-            if matches!(status, Value::Success) {
+            if status.is_ok() {
                 println!("Converged");
             }
 
@@ -504,6 +504,6 @@ mod test {
             );
             iter += 1;
         }
-        assert!(matches!(status, Value::Success))
+        assert!(status.is_ok())
     }
 }

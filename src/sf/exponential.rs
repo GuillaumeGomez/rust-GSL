@@ -2,7 +2,7 @@
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
 
-use crate::{types, Value};
+use crate::{types, Error};
 use std::mem::MaybeUninit;
 
 /// This routine provides an exponential function \exp(x) using GSL semantics and error checking.
@@ -13,11 +13,11 @@ pub fn exp(x: f64) -> f64 {
 
 /// This routine provides an exponential function \exp(x) using GSL semantics and error checking.
 #[doc(alias = "gsl_sf_exp_e")]
-pub fn exp_e(x: f64) -> Result<types::Result, Value> {
+pub fn exp_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This function computes the exponential \exp(x) using the gsl_sf_result_e10 type to return a
@@ -25,11 +25,11 @@ pub fn exp_e(x: f64) -> Result<types::Result, Value> {
 ///
 /// This function may be useful if the value of \exp(x) would overflow the numeric range of double.
 #[doc(alias = "gsl_sf_exp_e10_e")]
-pub fn exp_e10_e(x: f64) -> Result<types::ResultE10, Value> {
+pub fn exp_e10_e(x: f64) -> Result<types::ResultE10, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_e10_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine exponentiates x and multiply by the factor y to return the product y \exp(x).
@@ -40,11 +40,11 @@ pub fn exp_mult(x: f64, y: f64) -> f64 {
 
 /// This routine exponentiates x and multiply by the factor y to return the product y \exp(x).
 #[doc(alias = "gsl_sf_exp_mult_e")]
-pub fn exp_mult_e(x: f64, y: f64) -> Result<types::Result, Value> {
+pub fn exp_mult_e(x: f64, y: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_mult_e(x, y, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This function computes the exponential \exp(x) using the gsl_sf_result_e10 type to return a
@@ -52,11 +52,11 @@ pub fn exp_mult_e(x: f64, y: f64) -> Result<types::Result, Value> {
 ///
 /// This function may be useful if the value of \exp(x) would overflow the numeric range of double.
 #[doc(alias = "gsl_sf_exp_mult_e10_e")]
-pub fn exp_mult_e10_e(x: f64, y: f64) -> Result<types::ResultE10, Value> {
+pub fn exp_mult_e10_e(x: f64, y: f64) -> Result<types::ResultE10, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_mult_e10_e(x, y, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the quantity \exp(x)-1 using an algorithm that is accurate for small x.
@@ -67,11 +67,11 @@ pub fn expm1(x: f64) -> f64 {
 
 /// This routine computes the quantity \exp(x)-1 using an algorithm that is accurate for small x.
 #[doc(alias = "gsl_sf_expm1_e")]
-pub fn expm1_e(x: f64) -> Result<types::Result, Value> {
+pub fn expm1_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_expm1_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the quantity (\exp(x)-1)/x using an algorithm that is accurate for small
@@ -86,11 +86,11 @@ pub fn exprel(x: f64) -> f64 {
 /// x. For small x the algorithm is based on the expansion
 /// `(\exp(x)-1)/x = 1 + x/2 + x^2/(2*3) + x^3/(2*3*4) + \dots`.
 #[doc(alias = "gsl_sf_exprel_e")]
-pub fn exprel_e(x: f64) -> Result<types::Result, Value> {
+pub fn exprel_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exprel_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the quantity 2(\exp(x)-1-x)/x^2 using an algorithm that is accurate for
@@ -105,11 +105,11 @@ pub fn exprel_2(x: f64) -> f64 {
 /// small x. For small x the algorithm is based on the expansion
 /// `2(\exp(x)-1-x)/x^2 = 1 + x/3 + x^2/(3*4) + x^3/(3*4*5) + \dots`.
 #[doc(alias = "gsl_sf_exprel_2_e")]
-pub fn exprel_2_e(x: f64) -> Result<types::Result, Value> {
+pub fn exprel_2_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exprel_2_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the N-relative exponential, which is the n-th generalization of the
@@ -140,48 +140,48 @@ pub fn exprel_n(n: i32, x: f64) -> f64 {
 ///             = 1F1 (1,1+N,x)
 /// ```
 #[doc(alias = "gsl_sf_exprel_n_e")]
-pub fn exprel_n_e(n: i32, x: f64) -> Result<types::Result, Value> {
+pub fn exprel_n_e(n: i32, x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exprel_n_e(n, x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This function exponentiates x with an associated absolute error dx.
 #[doc(alias = "gsl_sf_exp_err_e")]
-pub fn exp_err_e(x: f64, dx: f64) -> Result<types::Result, Value> {
+pub fn exp_err_e(x: f64, dx: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_err_e(x, dx, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This function exponentiates a quantity x with an associated absolute error dx using the
 /// [`ResultE10`][crate::ResultE10] type to return a result with extended range.
 #[doc(alias = "gsl_sf_exp_err_e10_e")]
-pub fn exp_err_e10_e(x: f64, dx: f64) -> Result<types::ResultE10, Value> {
+pub fn exp_err_e10_e(x: f64, dx: f64) -> Result<types::ResultE10, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_err_e10_e(x, dx, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the product y \exp(x) for the quantities x, y with associated absolute
 /// errors dx, dy.
 #[doc(alias = "gsl_sf_exp_mult_err_e")]
-pub fn exp_mult_err_e(x: f64, dx: f64, y: f64, dy: f64) -> Result<types::Result, Value> {
+pub fn exp_mult_err_e(x: f64, dx: f64, y: f64, dy: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_mult_err_e(x, dx, y, dy, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the product y \exp(x) for the quantities x, y with associated absolute
 /// errors dx, dy using the gsl_sf_result_e10 type to return a result with extended range.
 #[doc(alias = "gsl_sf_exp_mult_err_e10_e")]
-pub fn exp_mult_err_e10_e(x: f64, dx: f64, y: f64, dy: f64) -> Result<types::ResultE10, Value> {
+pub fn exp_mult_err_e10_e(x: f64, dx: f64, y: f64, dy: f64) -> Result<types::ResultE10, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result_e10>::uninit();
     let ret = unsafe { sys::gsl_sf_exp_mult_err_e10_e(x, dx, y, dy, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }

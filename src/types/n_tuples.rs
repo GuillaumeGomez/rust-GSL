@@ -29,7 +29,7 @@ Further information on the use of ntuples can be found in the documentation for 
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use std::ffi::CString;
 use std::mem::MaybeUninit;
 use std::os::raw::{c_char, c_void};
@@ -63,24 +63,24 @@ impl WriteNTuples {
     /// This function writes the current ntuple ntuple->ntuple_data of size ntuple->size to the
     /// corresponding file.
     #[doc(alias = "gsl_ntuple_write")]
-    pub fn write<T: Sized>(&mut self, data: &T) -> Result<(), Value> {
+    pub fn write<T: Sized>(&mut self, data: &T) -> Result<(), Error> {
         let ret = unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
             (*self.n).size = std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_write(self.n)
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is a synonym for NTuples::write.
     #[doc(alias = "gsl_ntuple_bookdata")]
-    pub fn bookdata<T: Sized>(&mut self, data: &T) -> Result<(), Value> {
+    pub fn bookdata<T: Sized>(&mut self, data: &T) -> Result<(), Error> {
         let ret = unsafe {
             (*self.n).ntuple_data = data as *const T as usize as *mut _;
             (*self.n).size = std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_bookdata(self.n)
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -118,7 +118,7 @@ impl ReadNTuples {
     /// This function reads the current row of the ntuple file for ntuple and stores the values in
     /// ntuple->data.
     #[doc(alias = "gsl_ntuple_read")]
-    pub fn read<T: Sized>(&mut self) -> Result<T, Value> {
+    pub fn read<T: Sized>(&mut self) -> Result<T, Error> {
         let mut data = MaybeUninit::<T>::uninit();
 
         let ret = unsafe {
@@ -126,7 +126,7 @@ impl ReadNTuples {
             (*self.n).size = std::mem::size_of::<T>() as _;
             sys::gsl_ntuple_read(self.n)
         };
-        result_handler!(ret, unsafe { data.assume_init() })
+        Error::handle(ret, unsafe { data.assume_init() })
     }
 }
 
@@ -152,7 +152,7 @@ macro_rules! impl_project {
                 h: &mut crate::Histogram,
                 value_func: V,
                 select_func: S,
-            ) -> Result<(), Value> {
+            ) -> Result<(), Error> {
                 unsafe extern "C" fn value_trampoline<T: Sized, F: Fn(&T) -> f64>(
                     x: *mut c_void,
                     params: *mut c_void,
@@ -192,7 +192,7 @@ macro_rules! impl_project {
                         &mut select_function,
                     )
                 };
-                result_handler!(ret, ())
+                Error::handle(ret, ())
             }
         }
     };

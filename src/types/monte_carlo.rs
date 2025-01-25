@@ -74,7 +74,7 @@ The estimates are averaged using the arithmetic mean, but no error is computed.
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 use std::marker::PhantomData;
 use std::os::raw::c_void;
 use std::slice;
@@ -116,9 +116,9 @@ impl PlainMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different
     /// integrations.
     #[doc(alias = "gsl_monte_plain_init")]
-    pub fn init(&mut self) -> Result<(), Value> {
+    pub fn init(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_monte_plain_init(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This routines uses the plain Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined
@@ -139,7 +139,7 @@ impl PlainMonteCarlo {
         xu: &[f64],
         t_calls: usize,
         r: &mut crate::Rng,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -162,7 +162,7 @@ impl PlainMonteCarlo {
                 &mut abserr,
             )
         };
-        result_handler!(ret, (result, abserr))
+        Error::handle(ret, (result, abserr))
     }
 }
 
@@ -216,9 +216,9 @@ impl MiserMonteCarlo {
 
     /// This function initializes a previously allocated integration state. This allows an existing workspace to be reused for different integrations.
     #[doc(alias = "gsl_monte_miser_init")]
-    pub fn init(&mut self) -> Result<(), Value> {
+    pub fn init(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_monte_miser_init(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This routines uses the MISER Monte Carlo algorithm to integrate the function f over the dim-dimensional hypercubic region defined by
@@ -239,7 +239,7 @@ impl MiserMonteCarlo {
         xu: &[f64],
         t_calls: usize,
         r: &mut crate::Rng,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -262,7 +262,7 @@ impl MiserMonteCarlo {
                 &mut abserr,
             )
         };
-        result_handler!(ret, (result, abserr))
+        Error::handle(ret, (result, abserr))
     }
 
     /// This function copies the parameters of the integrator state into the user-supplied params structure.
@@ -374,9 +374,9 @@ impl VegasMonteCarlo {
     /// This function initializes a previously allocated integration state. This allows an existing workspace
     /// to be reused for different integrations.
     #[doc(alias = "gsl_monte_vegas_init")]
-    pub fn init(&mut self) -> Result<(), Value> {
+    pub fn init(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_monte_vegas_init(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This routines uses the VEGAS Monte Carlo algorithm to integrate the function f over the dim-dimensional
@@ -401,7 +401,7 @@ impl VegasMonteCarlo {
         xu: &[f64],
         t_calls: usize,
         r: &mut crate::Rng,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         assert!(xl.len() == xu.len());
         let mut result = 0f64;
         let mut abserr = 0f64;
@@ -424,7 +424,7 @@ impl VegasMonteCarlo {
                 &mut abserr,
             )
         };
-        result_handler!(ret, (result, abserr))
+        Error::handle(ret, (result, abserr))
     }
 
     /// This function returns the chi-squared per degree of freedom for the weighted estimate of the integral.

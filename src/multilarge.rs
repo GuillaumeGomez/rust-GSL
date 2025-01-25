@@ -3,11 +3,11 @@
 //
 
 use crate::ffi::FFI;
-use crate::{MatrixF64, Value, VectorF64};
+use crate::{Error, MatrixF64, VectorF64};
 
 #[doc(alias = "gsl_multilarge_linear_L_decomp")]
-pub fn linear_L_decomp(L: &mut MatrixF64, tau: &mut VectorF64) -> Result<(), Value> {
+pub fn linear_L_decomp(L: &mut MatrixF64, tau: &mut VectorF64) -> Result<(), Error> {
     let ret =
         unsafe { sys::gsl_multilarge_linear_L_decomp(L.unwrap_unique(), tau.unwrap_unique()) };
-    result_handler!(ret, ())
+    Error::handle(ret, ())
 }

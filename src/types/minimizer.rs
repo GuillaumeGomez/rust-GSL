@@ -97,7 +97,7 @@ provided the function is well-behaved.
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(
     Minimizer<'a>,
@@ -135,7 +135,7 @@ impl<'a> Minimizer<'a> {
     /// search interval [x_lower, x_upper], with a guess for the location of the minimum x_minimum.
     ///
     /// If the interval given does not contain a minimum, then the function returns an error code of
-    /// `Value::Invalid`.
+    /// `Error::Invalid`.
     #[doc(alias = "gsl_min_fminimizer_set")]
     pub fn set<F: Fn(f64) -> f64 + 'a>(
         &mut self,
@@ -143,7 +143,7 @@ impl<'a> Minimizer<'a> {
         x_minimum: f64,
         x_lower: f64,
         x_upper: f64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
@@ -156,7 +156,7 @@ impl<'a> Minimizer<'a> {
                 x_upper,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function is equivalent to gsl_min_fminimizer_set but uses the values f_minimum, f_lower
@@ -171,7 +171,7 @@ impl<'a> Minimizer<'a> {
         f_lower: f64,
         x_upper: f64,
         f_upper: f64,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         self.inner_call = wrap_callback!(f, F + 'a);
         self.inner_closure = Some(Box::new(f));
 
@@ -187,7 +187,7 @@ impl<'a> Minimizer<'a> {
                 f_upper,
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = "gsl_min_fminimizer_name")]
@@ -245,19 +245,19 @@ impl<'a> Minimizer<'a> {
     /// This function performs a single iteration of the minimizer s. If the iteration encounters an
     /// unexpected problem then an error code will be returned,
     ///
-    /// `Value::BadFunc`
+    /// `Error::BadFunc`
     /// the iteration encountered a singular point where the function evaluated to Inf or NaN.
     ///
-    /// `Value::Failure`
+    /// `Error::Failure`
     /// the algorithm could not improve the current best approximation or bounding interval.
     ///
     /// The minimizer maintains a current best estimate of the position of the minimum at all times,
     /// and the current interval bounding the minimum. This information can be accessed with the
     /// following auxiliary functions,
     #[doc(alias = "gsl_min_fminimizer_iterate")]
-    pub fn iterate(&mut self) -> Result<(), Value> {
+    pub fn iterate(&mut self) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_min_fminimizer_iterate(self.unwrap_unique()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 
@@ -331,10 +331,10 @@ mod test {
         let eps_abs = 0.0001;
         let eps_rel = 0.0000001;
 
-        let mut status = Value::Continue;
+        let mut status = Error::Continue;
         let mut iter = 0_usize;
 
-        while matches!(status, Value::Continue) && iter < max_iter {
+        while matches!(status, Error::Continue) && iter < max_iter {
             // iterate for next value
             min.iterate().unwrap(); // fails here w/ segfault
 
@@ -343,15 +343,16 @@ mod test {
             let x_lo = min.x_lower();
             let x_hi = min.x_upper();
 
-            status = test_interval(x_lo, x_hi, eps_abs, eps_rel);
-
-            // check if iteration succeeded
-            if matches!(status, Value::Success) {
-                println!("Converged");
-            }
-
             // print current iteration
             println!("{} [{}, {}] {} {}", iter, x_lo, x_hi, r, x_hi - x_lo);
+
+            match test_interval(x_lo, x_hi, eps_abs, eps_rel) {
+                Ok(()) => {
+                    println!("Converged");
+                    break;
+                }
+                Err(e) => status = e,
+            }
 
             iter += 1;
         }

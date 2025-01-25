@@ -5,7 +5,7 @@
 use crate::ffi::FFI;
 use crate::{
     vector::{ComplexSlice, VectorMut},
-    Value,
+    Error,
 };
 use num_complex::Complex;
 use paste::paste;
@@ -82,7 +82,7 @@ impl $complex_rust_name {
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::[<$name $($extra)? _forward>](
                 V::as_mut_slice(data).as_mut_ptr_fXX(),
@@ -92,7 +92,7 @@ impl $complex_rust_name {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = $name $($extra)? _transform)]
@@ -101,7 +101,7 @@ impl $complex_rust_name {
         data: &mut V,
         wavetable: &$rust_name,
         sign: crate::FftDirection,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::[<$name $($extra)? _transform>](
                 V::as_mut_slice(data).as_mut_ptr_fXX(),
@@ -112,7 +112,7 @@ impl $complex_rust_name {
                 sign.into(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = $name $($extra)? _backward)]
@@ -120,7 +120,7 @@ impl $complex_rust_name {
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::[<$name $($extra)? _backward>](
                 V::as_mut_slice(data).as_mut_ptr_fXX(),
@@ -130,7 +130,7 @@ impl $complex_rust_name {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     #[doc(alias = $name $($extra)? _inverse)]
@@ -138,7 +138,7 @@ impl $complex_rust_name {
         &mut self,
         data: &mut V,
         wavetable: &$rust_name,
-    ) -> Result<(), Value> {
+    ) -> Result<(), Error> {
         let ret = unsafe {
             sys::[<$name $($extra)? _inverse>](
                 V::as_mut_slice(data).as_mut_ptr_fXX(),
@@ -148,7 +148,7 @@ impl $complex_rust_name {
                 self.unwrap_unique(),
             )
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 

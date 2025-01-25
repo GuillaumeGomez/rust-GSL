@@ -19,7 +19,7 @@ Transactions on Mathematical Software, Vol. 20, No. 4, December, 1994, p. 494–
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(QRng, *mut sys::gsl_qrng, gsl_qrng_free);
 
@@ -27,7 +27,7 @@ impl QRng {
     /// This function returns a pointer to a newly-created instance of a quasi-random sequence
     /// generator of type T and dimension d. If there is insufficient memory to create the generator
     /// then the function returns a null pointer and the error handler is invoked with an error code
-    /// of [`Value::NoMemory`].
+    /// of [`Error::NoMemory`].
     #[doc(alias = "gsl_qrng_alloc")]
     pub fn new(t: QRngType, d: u32) -> Option<Self> {
         let tmp = unsafe { sys::gsl_qrng_alloc(t.unwrap_shared(), d) };
@@ -50,9 +50,9 @@ impl QRng {
     /// space available for x must match the dimension of the generator. The point x will lie in the
     /// range 0 < x_i < 1 for each x_i.
     #[doc(alias = "gsl_qrng_get")]
-    pub fn get(&self, x: &mut [f64]) -> Result<(), Value> {
+    pub fn get(&self, x: &mut [f64]) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_qrng_get(self.unwrap_shared(), x.as_mut_ptr()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function returns a pointer to the name of the generator.
@@ -105,9 +105,9 @@ impl QRng {
     /// type.
     // checker:ignore
     #[doc(alias = "gsl_qrng_memcpy")]
-    pub fn copy(&self, dest: &mut QRng) -> Result<(), Value> {
+    pub fn copy(&self, dest: &mut QRng) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_qrng_memcpy(dest.unwrap_unique(), self.unwrap_shared()) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 }
 

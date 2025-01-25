@@ -4,7 +4,7 @@
 
 //! Information on the properties of the Logarithm function can be found in Abramowitz & Stegun, Chapter 4.
 
-use crate::{types, Value};
+use crate::{types, Error};
 use std::mem::MaybeUninit;
 
 /// This routine computes the logarithm of x, \log(x), for x > 0.
@@ -15,11 +15,11 @@ pub fn log(x: f64) -> f64 {
 
 /// This routine computes the logarithm of x, \log(x), for x > 0.
 #[doc(alias = "gsl_sf_log_e")]
-pub fn log_e(x: f64) -> Result<types::Result, Value> {
+pub fn log_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_log_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the logarithm of the magnitude of x, \log(|x|), for x \ne 0.
@@ -30,11 +30,11 @@ pub fn log_abs(x: f64) -> f64 {
 
 /// This routine computes the logarithm of the magnitude of x, \log(|x|), for x \ne 0.
 #[doc(alias = "gsl_sf_log_abs_e")]
-pub fn log_abs_e(x: f64) -> Result<types::Result, Value> {
+pub fn log_abs_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_log_abs_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes the complex logarithm of z = z_r + i z_i.
@@ -43,17 +43,17 @@ pub fn log_abs_e(x: f64) -> Result<types::Result, Value> {
 pub fn complex_log_e(
     zr: f64,
     zi: f64,
-) -> Result<(crate::types::Result, crate::types::Result), Value> {
+) -> Result<(crate::types::Result, crate::types::Result), Error> {
     let mut lnr = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let mut theta = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_complex_log_e(zr, zi, lnr.as_mut_ptr(), theta.as_mut_ptr()) };
 
-    result_handler!(
+    Error::handle(
         ret,
         (
             unsafe { lnr.assume_init() }.into(),
             unsafe { theta.assume_init() }.into(),
-        )
+        ),
     )
 }
 
@@ -65,11 +65,11 @@ pub fn log_1plusx(x: f64) -> f64 {
 
 /// This routine computes \log(1 + x) for x > -1 using an algorithm that is accurate for small x.
 #[doc(alias = "gsl_sf_log_1plusx_e")]
-pub fn log_1plusx_e(x: f64) -> Result<types::Result, Value> {
+pub fn log_1plusx_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_log_1plusx_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }
 
 /// This routine computes \log(1 + x) - x for x > -1 using an algorithm that is accurate for small x.
@@ -80,9 +80,9 @@ pub fn log_1plusx_mx(x: f64) -> f64 {
 
 /// This routine computes \log(1 + x) - x for x > -1 using an algorithm that is accurate for small x.
 #[doc(alias = "gsl_sf_log_1plusx_mx_e")]
-pub fn log_1plusx_mx_e(x: f64) -> Result<types::Result, Value> {
+pub fn log_1plusx_mx_e(x: f64) -> Result<types::Result, Error> {
     let mut result = MaybeUninit::<sys::gsl_sf_result>::uninit();
     let ret = unsafe { sys::gsl_sf_log_1plusx_mx_e(x, result.as_mut_ptr()) };
 
-    result_handler!(ret, unsafe { result.assume_init() }.into())
+    Error::handle(ret, unsafe { result.assume_init() }.into())
 }

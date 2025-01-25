@@ -50,7 +50,7 @@ Herbert H. H. Homeier, Scalar Levin-Type Sequence Transformations, <http://arxiv
 !*/
 
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(
     LevinUWorkspace,
@@ -80,7 +80,7 @@ impl LevinUWorkspace {
     ///
     /// Returns `(Value, sum_accel, abserr)`.
     #[doc(alias = "gsl_sum_levin_u_accel")]
-    pub fn accel(&mut self, array: &[f64]) -> Result<(f64, f64), Value> {
+    pub fn accel(&mut self, array: &[f64]) -> Result<(f64, f64), Error> {
         let mut sum_accel = 0.;
         let mut abserr = 0.;
         let ret = unsafe {
@@ -92,7 +92,7 @@ impl LevinUWorkspace {
                 &mut abserr,
             )
         };
-        result_handler!(ret, (sum_accel, abserr))
+        Error::handle(ret, (sum_accel, abserr))
     }
 
     pub fn sum_plain(&self) -> f64 {
@@ -135,7 +135,7 @@ impl LevinUTruncWorkspace {
     ///
     /// Returns `(Value, sum_accel, abserr_trunc)`.
     #[doc(alias = "gsl_sum_levin_utrunc_accel")]
-    pub fn accel(&mut self, array: &[f64]) -> Result<(f64, f64), Value> {
+    pub fn accel(&mut self, array: &[f64]) -> Result<(f64, f64), Error> {
         let mut sum_accel = 0.;
         let mut abserr_trunc = 0.;
         let ret = unsafe {
@@ -147,7 +147,7 @@ impl LevinUTruncWorkspace {
                 &mut abserr_trunc,
             )
         };
-        result_handler!(ret, (sum_accel, abserr_trunc))
+        Error::handle(ret, (sum_accel, abserr_trunc))
     }
 
     pub fn sum_plain(&self) -> f64 {

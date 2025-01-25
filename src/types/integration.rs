@@ -6,7 +6,7 @@
 
 use crate::enums;
 use crate::ffi::FFI;
-use crate::Value;
+use crate::Error;
 
 ffi_wrapper!(IntegrationFixedType, *const sys::gsl_integration_fixed_type);
 
@@ -100,13 +100,13 @@ impl IntegrationFixedWorkspace {
     }
 
     #[doc(alias = "gsl_integration_fixed")]
-    pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> Result<f64, Value> {
+    pub fn fixed<F: Fn(f64) -> f64>(&self, f: F) -> Result<f64, Error> {
         let mut result = 0.;
         let function = wrap_callback!(f, F);
 
         let ret =
             unsafe { sys::gsl_integration_fixed(&function, &mut result, self.unwrap_shared()) };
-        result_handler!(ret, result)
+        Error::handle(ret, result)
     }
 }
 
@@ -187,7 +187,7 @@ impl IntegrationWorkspace {
         epsrel: f64,
         limit: usize,
         key: enums::GaussKronrodRule,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -206,7 +206,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 
     /// This function applies the Gauss-Kronrod 21-point integration rule adaptively until an
@@ -229,7 +229,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -247,7 +247,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 
     /// This function applies the adaptive integration algorithm QAGS taking account of the
@@ -279,7 +279,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let function = wrap_callback!(f, F);
@@ -297,7 +297,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 
     /// This function computes the integral of the function f over the infinite interval
@@ -323,7 +323,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -339,7 +339,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval
@@ -364,7 +364,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -381,7 +381,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 
     /// This function computes the integral of the function f over the semi-infinite interval
@@ -406,7 +406,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -423,7 +423,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 
     /// This function computes the Cauchy principal value of the integral of f over `(a,b)`, with a
@@ -451,7 +451,7 @@ impl IntegrationWorkspace {
         epsabs: f64,
         epsrel: f64,
         limit: usize,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -470,7 +470,7 @@ impl IntegrationWorkspace {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 }
 
@@ -519,11 +519,11 @@ impl IntegrationQawsTable {
 
     /// This function modifies the parameters (\alpha, \beta, \mu, \nu)
     #[doc(alias = "gsl_integration_qaws_table_set")]
-    pub fn set(&mut self, alpha: f64, beta: f64, mu: i32, nu: i32) -> Result<(), Value> {
+    pub fn set(&mut self, alpha: f64, beta: f64, mu: i32, nu: i32) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_integration_qaws_table_set(self.unwrap_unique(), alpha, beta, mu, nu)
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function computes the integral of the function f(x) over the interval (a,b) with the
@@ -551,7 +551,7 @@ impl IntegrationQawsTable {
         epsrel: f64,
         limit: usize,
         workspace: &mut IntegrationWorkspace,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut result = 0.;
         let mut abs_err = 0.;
         let mut function = wrap_callback!(f, F);
@@ -570,7 +570,7 @@ impl IntegrationQawsTable {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 }
 
@@ -625,18 +625,18 @@ impl IntegrationQawoTable {
 
     /// This function changes the parameters omega, L and sine of the existing self workspace.
     #[doc(alias = "gsl_integration_qawo_table_set")]
-    pub fn set(&mut self, omega: f64, l: f64, sine: crate::IntegrationQawo) -> Result<(), Value> {
+    pub fn set(&mut self, omega: f64, l: f64, sine: crate::IntegrationQawo) -> Result<(), Error> {
         let ret = unsafe {
             sys::gsl_integration_qawo_table_set(self.unwrap_unique(), omega, l, sine.into())
         };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function allows the length parameter l of the self workspace to be changed.
     #[doc(alias = "gsl_integration_qawo_table_set_length")]
-    pub fn set_length(&mut self, l: f64) -> Result<(), Value> {
+    pub fn set_length(&mut self, l: f64) -> Result<(), Error> {
         let ret = unsafe { sys::gsl_integration_qawo_table_set_length(self.unwrap_unique(), l) };
-        result_handler!(ret, ())
+        Error::handle(ret, ())
     }
 
     /// This function uses an adaptive algorithm to compute the integral of f over (a,b) with the
@@ -665,7 +665,7 @@ impl IntegrationQawoTable {
         epsrel: f64,
         limit: usize,
         workspace: &mut IntegrationWorkspace,
-    ) -> Result<(f64, f64), Value> {
+    ) -> Result<(f64, f64), Error> {
         let mut function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -683,7 +683,7 @@ impl IntegrationQawoTable {
                 &mut abs_err,
             )
         };
-        result_handler!(ret, (result, abs_err))
+        Error::handle(ret, (result, abs_err))
     }
 }
 
@@ -742,7 +742,7 @@ impl CquadWorkspace {
         b: f64,
         epsabs: f64,
         epsrel: f64,
-    ) -> Result<(f64, f64, usize), Value> {
+    ) -> Result<(f64, f64, usize), Error> {
         let function = wrap_callback!(f, F);
         let mut result = 0.;
         let mut abs_err = 0.;
@@ -761,7 +761,7 @@ impl CquadWorkspace {
                 &mut n_evals,
             )
         };
-        result_handler!(ret, (result, abs_err, n_evals))
+        Error::handle(ret, (result, abs_err, n_evals))
     }
 }
 
@@ -796,13 +796,13 @@ impl GLFixedTable {
     ///
     /// Returns `(xi, wi)` if it succeeded.
     #[doc(alias = "gsl_integration_glfixed_point")]
-    pub fn glfixed_point(&self, a: f64, b: f64, i: usize) -> Result<(f64, f64), Value> {
+    pub fn glfixed_point(&self, a: f64, b: f64, i: usize) -> Result<(f64, f64), Error> {
         let mut xi = 0.;
         let mut wi = 0.;
         let ret = unsafe {
             sys::gsl_integration_glfixed_point(a, b, i, &mut xi, &mut wi, self.unwrap_shared())
         };
-        result_handler!(ret, (xi, wi))
+        Error::handle(ret, (xi, wi))
     }
 
     /// This function applies the Gauss-Legendre integration rule contained in table self and
