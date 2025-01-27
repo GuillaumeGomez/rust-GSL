@@ -30,8 +30,8 @@ dox = ["v2_7", "sys/dox"]
 complex = ["dep:num-complex"]
 
 [package.metadata.docs.rs]
-features = ["dox"]
-rustdoc-args = ["--generate-link-to-definition"]
+features = ["dox", "complex"]
+rustdoc-args = ["--generate-link-to-definition", "--html-in-header", "src/_docs/header.html"]
 
 [lib]
 name = "rgsl"
