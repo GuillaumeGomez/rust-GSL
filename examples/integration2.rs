@@ -4,7 +4,10 @@
 
 extern crate rgsl;
 
-use rgsl::{gamma_beta, IntegrationFixedType, IntegrationFixedWorkspace};
+use rgsl::{
+    gamma_beta,
+    integration::{IntegrationFixedType, IntegrationFixedWorkspace},
+};
 use std::f64::consts::PI;
 
 const M: usize = 10;

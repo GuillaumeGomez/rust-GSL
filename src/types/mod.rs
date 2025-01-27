@@ -26,10 +26,6 @@ pub use self::filter::{
     FilterGaussianWorkspace, FilterImpulseWorkspace, FilterMedianWorkspace, FilterRMedianWorkspace,
 };
 pub use self::histograms::{Histogram, Histogram2D, Histogram2DPdf, HistogramPdf};
-pub use self::integration::{
-    CquadWorkspace, GLFixedTable, IntegrationFixedType, IntegrationFixedWorkspace,
-    IntegrationQawoTable, IntegrationQawsTable, IntegrationWorkspace,
-};
 pub use self::interpolation::{Interp, InterpAccel, InterpType, Spline};
 pub use self::mathieu::MathieuWorkspace;
 pub use self::matrix::{
@@ -83,7 +79,6 @@ pub mod fast_fourier_transforms;
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v2_5")))]
 pub mod filter;
 pub mod histograms;
-pub mod integration;
 pub mod interpolation;
 pub mod mathieu;
 pub mod matrix;

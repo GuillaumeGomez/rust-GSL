@@ -1,21 +1,20 @@
 //
 // A rust binding for the GSL library by Guillaume Gomez (guillaume1.gomez@gmail.com)
 //
-
-extern crate rgsl;
-
+use rgsl::integration::{qags, IntegrationWorkspace};
 use std::f64::consts;
 
-fn main() {
+fn main() -> Result<(), rgsl::Error> {
     // This is the example from https://www.gnu.org/software/gsl/doc/html/integration.html#adaptive-integration-example
-    let mut w = rgsl::IntegrationWorkspace::new(1000).expect("IntegrationWorkspace::new failed");
-
     let alpha: f64 = 1.0;
     let expected: f64 = -4.0;
 
-    let (result, error) = w
-        .qags(|x| (alpha * x).ln() / x.sqrt(), 0., 1., 0., 1e-7, 1000)
-        .unwrap();
+    let mut w = IntegrationWorkspace::new(1000).expect("Workspace");
+    let (result, error) = qags(|x| (alpha * x).ln() / x.sqrt(), 0., 1.)
+        .epsabs(0.)
+        .epsrel(1e-7)
+        .workspace(&mut w)
+        .val_err()?;
 
     println!("== Adaptive integration ==");
     println!("result          = {}", result);
@@ -27,8 +26,8 @@ fn main() {
     // This is the example from https://www.gnu.org/software/gsl/doc/html/integration.html#fixed-point-quadrature-example
     let n = 6;
     let m = 10;
-    let w = rgsl::IntegrationFixedWorkspace::new(
-        rgsl::IntegrationFixedType::hermite(),
+    let w = rgsl::integration::IntegrationFixedWorkspace::new(
+        rgsl::integration::IntegrationFixedType::hermite(),
         n,
         0.,
         1.,
@@ -53,4 +52,6 @@ fn main() {
     println!("result          = {}", result);
     println!("exact result    = {}", expected);
     println!("actual error    = {}", result - expected);
+
+    Ok(())
 }

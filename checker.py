@@ -21,10 +21,12 @@ def read_file(path):
         return fd.read()
 
 
-def read_dirs(dir_path, errors, totals, functions_to_call):
+def read_dirs(dir_path, excluded, errors, totals, functions_to_call):
     for root, _, files in walk(dir_path):
         for file in files:
             file_path = join(root, file)
+            if file_path in excluded:
+                continue
             content = read_file(file_path)
             for func in functions_to_call:
                 func(file_path, content, errors, totals)
@@ -243,7 +245,8 @@ def main():
         "test_count": 0,
         "ignored": 0,
     }
-    read_dirs("src", errors, totals, [check_file_header, check_macros])
+    excluded = ["src/_docs/header.html", "src/integration.rs"]
+    read_dirs("src", excluded, errors, totals, [check_file_header, check_macros])
     check_counts(errors, totals)
     if len(errors) > 0:
         for err in errors:
