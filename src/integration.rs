@@ -182,7 +182,7 @@ The CQUAD integration algorithm is described in the following paper:
 - P. Gonnet, “Increasing the Reliability of Adaptive Quadrature Using
   Explicit Interpolants”, ACM Transactions on Mathematical Software,
   Volume 37 (2010), Issue 3, Article 26.
-!*/
+*/
 
 use crate::ffi::FFI;
 use crate::Error;
@@ -245,10 +245,10 @@ enum BorrowedOrOwned<'a, T> {
     Owned(T),
 }
 
-impl<'a, T> BorrowedOrOwned<'a, T> {
+impl<T> BorrowedOrOwned<'_, T> {
     fn to_mut(&mut self) -> &mut T {
         match self {
-            Self::Borrowed(t) => *t,
+            Self::Borrowed(t) => t,
             Self::Owned(ref mut t) => t,
         }
     }
@@ -291,10 +291,10 @@ macro_rules! integ_builder_workspace {
 
         impl<'w, $($l,)* F> $name<'w, $($l,)* F> {
             /// Use the workspace `w` to compute the integral.
-            pub fn workspace<'a>(
+            pub fn workspace(
                 self,
-                w: &'a mut IntegrationWorkspace
-            ) -> $name<'a, $($l,)* F> {
+                w: &mut IntegrationWorkspace
+            ) -> $name<'_, $($l,)* F> {
                 $name {
                     workspace: Some(BorrowedOrOwned::Borrowed(w)),
                     .. self
@@ -513,7 +513,7 @@ integ_builder_workspace! {
     a f64, b f64, key GaussKronrodRule,
 }
 
-impl<'w, F: Fn(f64) -> f64> Qag<'w, F> {
+impl<F: Fn(f64) -> f64> Qag<'_, F> {
     pub fn rule(mut self, key: GaussKronrodRule) -> Self {
         self.key = key;
         self
@@ -569,7 +569,7 @@ integ_builder_workspace! {
     a f64, b f64,
 }
 
-impl<'w, F: Fn(f64) -> f64> Qags<'w, F> {
+impl<F: Fn(f64) -> f64> Qags<'_, F> {
     /// Return $(∫_a^b f, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -616,7 +616,7 @@ impl<'w, F: Fn(f64) -> f64> Qags<'w, F> {
 /// If you know the locations of the singular points in the
 /// integration region then this routine will be faster than QAGS.
 #[doc(alias = "gsl_integration_qagp")]
-pub fn qagp<'p, F: Fn(f64) -> f64>(f: F, pts: &'p mut [f64]) -> Qagp<'static, 'p, F> {
+pub fn qagp<F: Fn(f64) -> f64>(f: F, pts: &mut [f64]) -> Qagp<'static, '_, F> {
     Qagp::with_workspace(f, pts)
 }
 
@@ -626,7 +626,7 @@ integ_builder_workspace! {
     pts &'pts mut [f64],
 }
 
-impl<'w, 'pts, F: Fn(f64) -> f64> Qagp<'w, 'pts, F> {
+impl<F: Fn(f64) -> f64> Qagp<'_, '_, F> {
     /// Return $(∫_a^b f, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -676,7 +676,7 @@ integ_builder_workspace! {
     Qagi<>,
 }
 
-impl<'w, F: Fn(f64) -> f64> Qagi<'w, F> {
+impl<F: Fn(f64) -> f64> Qagi<'_, F> {
     /// Return $(∫_{-∞}^∞ f, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -720,7 +720,7 @@ integ_builder_workspace! {
     a f64,
 }
 
-impl<'w, F: Fn(f64) -> f64> Qagiu<'w, F> {
+impl<F: Fn(f64) -> f64> Qagiu<'_, F> {
     /// Return $(∫_a^∞ f, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -765,7 +765,7 @@ integ_builder_workspace! {
     b f64,
 }
 
-impl<'w, F: Fn(f64) -> f64> Qagil<'w, F> {
+impl<F: Fn(f64) -> f64> Qagil<'_, F> {
     /// Return $(∫_{-∞}^b f, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -818,7 +818,7 @@ integ_builder_workspace! {
     a f64, b f64, c f64,
 }
 
-impl<'w, F: Fn(f64) -> f64> Qawc<'w, F> {
+impl<F: Fn(f64) -> f64> Qawc<'_, F> {
     /// Return $(∫_a^b f, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -920,7 +920,7 @@ pub struct QawsWeight<F> {
 }
 
 impl<F> QawsWeight<F> {
-    pub fn table<'t>(self, t: &'t mut QawsTable) -> Qaws<'static, 't, F> {
+    pub fn table(self, t: &mut QawsTable) -> Qaws<'static, '_, F> {
         Qaws::with_workspace(self.f, self.a, self.b, BorrowedOrOwned::Borrowed(t))
     }
 
@@ -938,7 +938,7 @@ integ_builder_workspace! {
     a f64, b f64, table BorrowedOrOwned<'t, QawsTable>,
 }
 
-impl<'w, 't, F: Fn(f64) -> f64> Qaws<'w, 't, F> {
+impl<F: Fn(f64) -> f64> Qaws<'_, '_, F> {
     /// Return $(∫_a^b f(x) w(x) dx, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         let mut result = 0.;
@@ -1088,7 +1088,7 @@ pub struct QawoWeight<F> {
 }
 
 impl<F> QawoWeight<F> {
-    pub fn table<'t>(self, wf: &'t mut QawoTable) -> Qawo<'static, 't, F> {
+    pub fn table(self, wf: &mut QawoTable) -> Qawo<'static, '_, F> {
         Qawo::with_workspace(
             self.f,
             self.a,
@@ -1118,7 +1118,7 @@ integ_builder_workspace! {
     omega f64, l f64, sine QawOsc,
 }
 
-impl<'w, 't, F: Fn(f64) -> f64> Qawo<'w, 't, F> {
+impl<F: Fn(f64) -> f64> Qawo<'_, '_, F> {
     /// Return $(∫_a^b f(x) w(x) dx, \abserr)$.
     pub fn val_err(&mut self) -> Result<(f64, f64), Error> {
         if self.table.is_none() {
@@ -1214,7 +1214,7 @@ impl<F> QawfWeight<F> {
     /// Set the sine or cosine and the parameter $ω$ through the table
     /// `wf` (the value of $L$ does not matter, it is overridden to a
     /// value appropriate for Fourier integration).
-    pub fn table<'t>(self, wf: &'t mut QawoTable) -> Qawf<'static, 'static, 't, F> {
+    pub fn table(self, wf: &mut QawoTable) -> Qawf<'static, 'static, '_, F> {
         Qawf::with_workspace(
             self.f,
             self.a,
@@ -1247,7 +1247,7 @@ integ_builder_workspace! {no-epsrel;
     omega f64,
 }
 
-impl<'w, 'cw, 't, F: Fn(f64) -> f64> Qawf<'w, 'cw, 't, F> {
+impl<'w, 't, F: Fn(f64) -> f64> Qawf<'w, '_, 't, F> {
     pub fn cycle_workspace<'a>(self, w: &'a mut IntegrationWorkspace) -> Qawf<'w, 'a, 't, F> {
         Qawf {
             cycle_workspace: Some(BorrowedOrOwned::Borrowed(w)),
@@ -1351,9 +1351,9 @@ integ_builder! {
     a f64, b f64,
 }
 
-impl<'w, F: Fn(f64) -> f64> Cquad<'w, F> {
+impl<F: Fn(f64) -> f64> Cquad<'_, F> {
     /// Use the workspace `w` to compute the integral.
-    pub fn workspace<'a>(self, w: &'a mut CquadWorkspace) -> Cquad<'a, F> {
+    pub fn workspace(self, w: &mut CquadWorkspace) -> Cquad<'_, F> {
         Cquad {
             workspace: Some(BorrowedOrOwned::Borrowed(w)),
             ..self
